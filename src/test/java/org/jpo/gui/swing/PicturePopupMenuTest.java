@@ -3,8 +3,8 @@ package org.jpo.gui.swing;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,8 +16,9 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -103,7 +104,7 @@ public class PicturePopupMenuTest {
      * Creates the objects for testing. Runs on the EDT.
      *
      */
-    @Before
+    @BeforeEach
     public void setUp()  {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         myPictureInfo.setDescription("My Picture");
@@ -253,9 +254,9 @@ public class PicturePopupMenuTest {
                 showPictureEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, showPictureEventCount);
+        assertEquals( 0, showPictureEventCount);
         showPicture.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, showPictureEventCount);
+        assertEquals( 1, showPictureEventCount);
     }
 
     private int showMapEventCount = 0;
@@ -272,9 +273,11 @@ public class PicturePopupMenuTest {
                 showMapEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, showMapEventCount);
+        // Before clicking on the node the event count should be 0
+        assertEquals(0, showMapEventCount);
         showMap.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, showMapEventCount);
+        // After clicking on the node the event count should be 1
+        assertEquals(1, showMapEventCount);
     }
 
     private int openFolderEventCount = 0;
@@ -290,9 +293,11 @@ public class PicturePopupMenuTest {
                 openFolderEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, openFolderEventCount);
+        // Before clicking on the node the event count should be 0
+        assertEquals(0, openFolderEventCount);
         openFolder.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, openFolderEventCount);
+        // After clicking on the node the event count should be 1
+        assertEquals(1, openFolderEventCount);
     }
 
     private int navigateToEventCount = 0;
@@ -306,9 +311,9 @@ public class PicturePopupMenuTest {
                 navigateToEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, navigateToEventCount);
+        assertEquals(0, navigateToEventCount);
         navigateTo_0.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, navigateToEventCount);
+        assertEquals(1, navigateToEventCount);
     }
 
     private int categoriesEventCount = 0;
@@ -322,9 +327,9 @@ public class PicturePopupMenuTest {
                 categoriesEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, categoriesEventCount);
+        assertEquals(0, categoriesEventCount);
         categories.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, categoriesEventCount);
+        assertEquals(1, categoriesEventCount);
     }
 
     private int addToMailSelectEventCount = 0;
@@ -338,9 +343,9 @@ public class PicturePopupMenuTest {
                 addToMailSelectEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, addToMailSelectEventCount);
+        assertEquals(0, addToMailSelectEventCount);
         selectForEmail.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, addToMailSelectEventCount);
+        assertEquals(1, addToMailSelectEventCount);
     }
 
     private int removeFromMailSelectEventCount = 0;
@@ -354,9 +359,9 @@ public class PicturePopupMenuTest {
                 removeFromMailSelectEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, removeFromMailSelectEventCount);
+        assertEquals(0, removeFromMailSelectEventCount);
         unselectForEmail.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, removeFromMailSelectEventCount);
+        assertEquals(1, removeFromMailSelectEventCount);
     }
 
     private int clearEmailSelectionEventCount = 0;
@@ -370,9 +375,9 @@ public class PicturePopupMenuTest {
                 clearEmailSelectionEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, clearEmailSelectionEventCount);
+        assertEquals(0, clearEmailSelectionEventCount);
         clearEmailSelection.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, clearEmailSelectionEventCount);
+        assertEquals( 1, clearEmailSelectionEventCount);
     }
 
     // TODO: Test the selection logic of the Select for EMail and unselect for EMail
@@ -387,11 +392,11 @@ public class PicturePopupMenuTest {
                 userFunctionEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, userFunctionEventCount);
+        assertEquals( 0, userFunctionEventCount);
         userFunction_0.doClick();
         userFunction_1.doClick();
         userFunction_2.doClick();
-        assertEquals("After clicking on the node the event count should be 3", 3, userFunctionEventCount);
+        assertEquals( 3, userFunctionEventCount);
     }
 
     private int rotationEventCount = 0;
@@ -411,12 +416,12 @@ public class PicturePopupMenuTest {
             }
 
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, rotationEventCount);
+        assertEquals( 0, rotationEventCount);
         rotate90.doClick();
         rotate180.doClick();
         rotate270.doClick();
         rotate0.doClick();
-        assertEquals("After clicking on the node the event count should be 4", 4, rotationEventCount);
+        assertEquals( 4, rotationEventCount);
     }
 
     private int refreshEventCount = 0;
@@ -430,9 +435,9 @@ public class PicturePopupMenuTest {
                 refreshEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, refreshEventCount);
+        assertEquals( 0, refreshEventCount);
         refreshThumbnail.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, refreshEventCount);
+        assertEquals( 1, refreshEventCount);
     }
 
     private int moveEventCount = 0;
@@ -471,14 +476,14 @@ public class PicturePopupMenuTest {
                 moveEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, moveEventCount);
+        assertEquals( 0, moveEventCount);
         moveToTop.doClick();
         moveDown.doClick();
         moveUp.doClick();
         moveToBottom.doClick();
         moveIndent.doClick();
         moveOutdent.doClick();
-        assertEquals("After clicking on the nodes the event count should be 6", 6, moveEventCount);
+        assertEquals( 6, moveEventCount);
     }
 
     private int clipboardEventCount = 0;
@@ -492,9 +497,9 @@ public class PicturePopupMenuTest {
                 clipboardEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, clipboardEventCount);
+        assertEquals( 0, clipboardEventCount);
         copyToClipboard.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, clipboardEventCount);
+        assertEquals( 1, clipboardEventCount);
     }
 
     private int removeEventCount = 0;
@@ -508,9 +513,9 @@ public class PicturePopupMenuTest {
                 removeEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, removeEventCount);
+        assertEquals( 0, removeEventCount);
         removeNode.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, removeEventCount);
+        assertEquals( 1, removeEventCount);
     }
 
     private int moveToNewLocationEventCount = 0;
@@ -524,9 +529,9 @@ public class PicturePopupMenuTest {
                 moveToNewLocationEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, moveToNewLocationEventCount);
+        assertEquals( 0, moveToNewLocationEventCount);
         moveToNewLocation.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, moveToNewLocationEventCount);
+        assertEquals( 1, moveToNewLocationEventCount);
     }
 
 
@@ -541,9 +546,9 @@ public class PicturePopupMenuTest {
                 renameEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, renameEventCount);
+        assertEquals( 0, renameEventCount);
         fileOperationsRename.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, renameEventCount);
+        assertEquals( 1, renameEventCount);
     }
 
     private int deleteEventCount = 0;
@@ -557,9 +562,9 @@ public class PicturePopupMenuTest {
                 deleteEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, deleteEventCount);
+        assertEquals( 0, deleteEventCount);
         fileOperationsDelete.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, deleteEventCount);
+        assertEquals( 1, deleteEventCount);
     }
 
     private int propertiesEventCount = 0;
@@ -573,9 +578,9 @@ public class PicturePopupMenuTest {
                 propertiesEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, propertiesEventCount);
+        assertEquals( 0, propertiesEventCount);
         properties.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, propertiesEventCount);
+        assertEquals( 1, propertiesEventCount);
     }
 
     private int consolidateHereEventCount = 0;
@@ -589,9 +594,9 @@ public class PicturePopupMenuTest {
                 consolidateHereEventCount++;
             }
         });
-        assertEquals("Before clicking on the node the event count should be 0", 0, consolidateHereEventCount);
+        assertEquals( 0, consolidateHereEventCount);
         consolidateHere.doClick();
-        assertEquals("After clicking on the node the event count should be 1", 1, consolidateHereEventCount);
+        assertEquals( 1, consolidateHereEventCount);
     }
 
     @Test

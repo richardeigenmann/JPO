@@ -1,8 +1,8 @@
 package org.jpo.datamodel;
 
 import com.google.common.hash.HashCode;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -18,7 +18,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  Copyright (C) 2017 - 2020 Richard Eigenmann.
@@ -50,7 +50,7 @@ public class PictureInfoTest {
     @Test
     public void testToString() {
         PictureInfo pi = new PictureInfo(new File("c:\\picture.jpg"), "My Sample Picture");
-        assertEquals("Should return the description", "My Sample Picture", pi.toString());
+        assertEquals("My Sample Picture", pi.toString());
     }
 
     /**
@@ -93,11 +93,14 @@ public class PictureInfoTest {
         PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> countEvents += 1;
         pi.addPictureInfoChangeListener(picl);
         pi.setDescription("A picture description");
-        assertEquals("Expecting what went in to come out", "A picture description", pi.getDescription());
-        assertEquals("Expecting 1 change event", 1, countEvents);
+        // Expecting what went in to come out
+        assertEquals("A picture description", pi.getDescription());
+        assertEquals(1, countEvents);
         pi.setDescription("A picture description");
-        assertEquals("Expecting what went in to come out", "A picture description", pi.getDescription());
-        assertEquals("Expecting no new change event because it was the same that went in", 1, countEvents);
+        // Expecting what went in to come out
+        assertEquals( "A picture description", pi.getDescription());
+        // Expecting no new change event because it was the same that went in
+        assertEquals( 1, countEvents);
     }
 
     /**
@@ -118,7 +121,8 @@ public class PictureInfoTest {
     public void testDescriptionContains() {
         PictureInfo pi = new PictureInfo();
         pi.setDescription("A picture of a big town at sunset");
-        assertTrue("Expecting to find a substring", pi.descriptionContains("town"));
+        // Expecting to find a substring
+        assertTrue( pi.descriptionContains("town"));
     }
 
     /**
@@ -146,14 +150,15 @@ public class PictureInfoTest {
     public void testGetImageFile() {
         PictureInfo pi = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
         File f = pi.getImageFile();
-        assertEquals("Checking getHighresFile", new File("/dir/picture.jpg"), f);
+        // Checking getHighresFile
+        assertEquals( new File("/dir/picture.jpg"), f);
     }
 
     /**
      * Test of getImageURIOrNull method, of class PictureInfo.
      */
     @Test
-    @Ignore("Was Deprecated")
+    @Disabled("Was Deprecated")
     public void testGetImageURIOrNull() {
         PictureInfo pi = new PictureInfo();
         String goodLocation = "/image.jpg";
@@ -247,15 +252,18 @@ public class PictureInfoTest {
     public void testPictureInfoChangeListener() {
         eventsReceived = 0;
         PictureInfo pi = new PictureInfo();
-        assertEquals("To start off there should be no events", 0, eventsReceived);
+        assertEquals( 0, eventsReceived);
         pi.setDescription("Step 1");
-        assertEquals("There is no listener attached so there is no event", 0, eventsReceived);
+        // There is no listener attached so there is no event
+        assertEquals( 0, eventsReceived);
         pi.addPictureInfoChangeListener(pictureInfoChangeListener);
         pi.setDescription("Step 2");
-        assertEquals("The listener should have fired and we should have 1 event", 1, eventsReceived);
+        // The listener should have fired and we should have 1 event
+        assertEquals( 1, eventsReceived);
         pi.removePictureInfoChangeListener(pictureInfoChangeListener);
         pi.setDescription("Step 3");
-        assertEquals("The detached listener should not have fired", 1, eventsReceived);
+        // The detached listener should not have fired
+        assertEquals( 1, eventsReceived);
     }
 
     /**

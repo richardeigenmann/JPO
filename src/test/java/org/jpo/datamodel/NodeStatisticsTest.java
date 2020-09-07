@@ -4,14 +4,14 @@
  */
 package org.jpo.datamodel;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -42,7 +42,7 @@ public class NodeStatisticsTest{
 
     private final PictureInfo pi5 = new PictureInfo(new File("images/image5.jpg"), "Fifth Picture");
 
-    @Before
+    @BeforeEach
     public void setUp()  {
         rootNode = new SortableDefaultMutableTreeNode();
         group1 = new SortableDefaultMutableTreeNode(gr1);
@@ -77,10 +77,11 @@ public class NodeStatisticsTest{
     @Test
     public void testSetGetNode() {
         NodeStatistics ns = new NodeStatistics(null);
-        assertNull("A null node should return null", ns.getNode());
+        assertNull( ns.getNode());
 
         NodeStatistics ns1 = new NodeStatistics(rootNode);
-        assertEquals("When we set a node it should be the one coming back", rootNode, ns1.getNode());
+        // When we set a node it should be the one coming back
+        assertEquals( rootNode, ns1.getNode());
 
     }
 
@@ -90,7 +91,7 @@ public class NodeStatisticsTest{
     @Test
     public void testGetNumberOfNodes() {
         NodeStatistics ns1 = new NodeStatistics(rootNode);
-        assertEquals("Counting number of nodes", 9, ns1.getNumberOfNodes());
+        assertEquals( 9, ns1.getNumberOfNodes());
     }
 
     /**
@@ -99,7 +100,7 @@ public class NodeStatisticsTest{
     @Test
     public void testGetNumberOfGroups() {
         NodeStatistics ns = new NodeStatistics(rootNode);
-        assertEquals("Counting number of groups", 3, ns.getNumberOfGroups());
+        assertEquals( 3, ns.getNumberOfGroups());
     }
 
     /**
@@ -108,7 +109,7 @@ public class NodeStatisticsTest{
     @Test
     public void testGetNumberOfPictures() {
         NodeStatistics ns = new NodeStatistics(rootNode);
-        assertEquals("Counting number of pictures", 5, ns.getNumberOfPictures());
+        assertEquals( 5, ns.getNumberOfPictures());
     }
 
     /**
@@ -116,8 +117,10 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testCountPictures() {
-        assertEquals("Recursive picture count", 3, NodeStatistics.countPictures(group1, true));
-        assertEquals("Non Recursive picture count", 2, NodeStatistics.countPictures(group1, false));
+        // Recursive picture count
+        assertEquals(3, NodeStatistics.countPictures(group1, true));
+        // Non Recursive picture count
+        assertEquals(2, NodeStatistics.countPictures(group1, false));
     }
 
     

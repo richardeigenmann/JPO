@@ -1,9 +1,9 @@
 package org.jpo.datamodel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -21,7 +21,8 @@ public class SaxEventHandlerTest {
         // the method resolveEntity does.
         //InputSource s = new InputSource( Settings.CLASS_LOADER.getResourceAsStream( "org.jpo/collection.dtd" ) );
         InputSource s = SaxEventHandler.getCollectionDtdInputSource();
-        assertNotNull( "No org.jpo/collection.dtd found", s );
+        // No org.jpo/collection.dtd found
+        assertNotNull( s );
     }
 
 }

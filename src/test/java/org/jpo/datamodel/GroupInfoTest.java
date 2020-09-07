@@ -1,6 +1,6 @@
 package org.jpo.datamodel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,8 +10,8 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.
@@ -99,18 +99,22 @@ public class GroupInfoTest {
         eventsReceived = 0;
         Settings.getPictureCollection().setSendModelUpdates( true );
         GroupInfo gi = new GroupInfo( "Step0" );
-        assertEquals( "To start off there should be no events", 0, eventsReceived );
+        assertEquals( 0, eventsReceived );
         gi.setGroupName( "Step 1" );
-        assertEquals( "There is no listener attached so there is no event", 0, eventsReceived );
+        // There is no listener attached so there is no event
+        assertEquals(  0, eventsReceived );
         gi.addGroupInfoChangeListener( groupInfoChangeListener );
         gi.setGroupName( "Step 2" );
-        assertEquals( "The listener should have fired and we should have 1 event", 1, eventsReceived );
+        // The listener should have fired and we should have 1 event
+        assertEquals( 1, eventsReceived );
         Settings.getPictureCollection().setSendModelUpdates( false );
         gi.setGroupName( "Step 3" );
-        assertEquals( "We should remain at 1 event", 1, eventsReceived );
+        // We should remain at 1 event
+        assertEquals( 1, eventsReceived );
         gi.removeGroupInfoChangeListener( groupInfoChangeListener );
         gi.setGroupName( "Step 4" );
-        assertEquals( "The detached listener should not have fired", 1, eventsReceived );
+        // The detached listener should not have fired
+        assertEquals(  1, eventsReceived );
         Settings.getPictureCollection().setSendModelUpdates( true );
     }
 

@@ -1,14 +1,16 @@
 package org.jpo.gui.swing;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 /*
  Copyright (C) 2019,  Richard Eigenmann, Zürich
@@ -43,11 +45,11 @@ public class ThumbnailTest {
                 final Thumbnail thumbnail = new Thumbnail( );
                 assertNotNull( thumbnail );
 
-                assertNotNull("SELECTED_ICON must not be null", thumbnail.getSelectedIcon());
-                assertNotNull("MAIL_ICON must not be null", thumbnail.getMailIcon());
-                assertNotNull("OFFLINE_ICON must not be null", thumbnail.getOfflineIcon());
-                assertNotNull("LARGE_FOLDER_ICON must not be null", thumbnail.getLargeFolderIcon());
-                assertNotNull("QUEUE_ICON must not be null", thumbnail.getQueueIcon());
+                assertNotNull( thumbnail.getSelectedIcon());
+                assertNotNull( thumbnail.getMailIcon());
+                assertNotNull( thumbnail.getOfflineIcon());
+                assertNotNull( thumbnail.getLargeFolderIcon());
+                assertNotNull( thumbnail.getQueueIcon());
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");

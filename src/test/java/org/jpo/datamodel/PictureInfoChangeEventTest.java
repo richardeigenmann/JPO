@@ -1,11 +1,8 @@
 package org.jpo.datamodel;
 
-import junit.framework.TestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for the PictureInfo class
@@ -21,7 +18,7 @@ public class PictureInfoChangeEventTest {
     public void testConstructor() {
         PictureInfo pictureInfo = new PictureInfo();
         PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent( pictureInfo );
-        Assert.assertNotNull( pictureInfoChangeEvent );
+        assertNotNull( pictureInfoChangeEvent );
         assertEquals( pictureInfo, pictureInfoChangeEvent.getPictureInfo() );
     }
 
@@ -32,7 +29,7 @@ public class PictureInfoChangeEventTest {
         assertFalse( pictureInfoChangeEvent.getThumbnailChanged() );
         
         pictureInfoChangeEvent.setThumbnailChanged();
-        TestCase.assertTrue(pictureInfoChangeEvent.getThumbnailChanged());
+        assertTrue(pictureInfoChangeEvent.getThumbnailChanged());
     }
     
     @Test
@@ -42,7 +39,7 @@ public class PictureInfoChangeEventTest {
         assertFalse( pictureInfoChangeEvent.getCreationTimeChanged() );
         
         pictureInfoChangeEvent.setCreationTimeChanged();
-        TestCase.assertTrue(pictureInfoChangeEvent.getCreationTimeChanged());
+        assertTrue(pictureInfoChangeEvent.getCreationTimeChanged());
     }
     
     

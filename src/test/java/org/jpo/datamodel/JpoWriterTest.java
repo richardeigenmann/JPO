@@ -1,13 +1,13 @@
 package org.jpo.datamodel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JpoWriterTest {
 
@@ -18,11 +18,11 @@ public class JpoWriterTest {
             System.out.println(tempDirWithPrefix);
             File tempDir = tempDirWithPrefix.toFile();
             File expectedDtdFile = new File(tempDir, "collection.dtd");
-            assertFalse("File should not exist", expectedDtdFile.exists() );
+            assertFalse( expectedDtdFile.exists() );
             JpoWriter.writeCollectionDTD(tempDirWithPrefix.toFile());
-            assertTrue("File should exist after writing", expectedDtdFile.exists() );
-            assertTrue("could not delete the temp file", expectedDtdFile.delete());
-            assertTrue ("could not delete the temp directory", tempDir.delete() );
+            assertTrue( expectedDtdFile.exists() );
+            assertTrue( expectedDtdFile.delete());
+            assertTrue ( tempDir.delete() );
         } catch (IOException e) {
             fail("Failed to write the DTD. Exception: " + e.getMessage());
         }

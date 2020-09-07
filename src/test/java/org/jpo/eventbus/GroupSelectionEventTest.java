@@ -3,9 +3,9 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
  Copyright (C) 2017-2020  Richard Eigenmann.
@@ -51,8 +51,8 @@ public class GroupSelectionEventTest {
 
         GroupSelectionEvent newEvent = new GroupSelectionEvent( node );
         jpoEventBus.post( newEvent );
-        assertEquals( "After firing a GroupSelectionEvent we expect it to be received by the listener",
-                newEvent, receivedEvent);
+        // After firing a GroupSelectionEvent we expect it to be received by the listener
+        assertEquals(              newEvent, receivedEvent);
         assertEquals( node, receivedEvent.getNode() );
     }
 

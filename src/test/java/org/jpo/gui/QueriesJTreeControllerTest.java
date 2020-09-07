@@ -1,14 +1,14 @@
 package org.jpo.gui;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2019,  Richard Eigenmann, Zürich
@@ -35,7 +35,7 @@ public class QueriesJTreeControllerTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final QueriesJTreeController c = new QueriesJTreeController();
-                Assert.assertNotNull(c);
+                assertNotNull(c);
             });
         } catch (InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());

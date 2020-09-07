@@ -1,9 +1,9 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
  Copyright (C) 2020  Richard Eigenmann.
@@ -42,8 +42,8 @@ public class ClearEmailSelectionRequestTest {
 
         ClearEmailSelectionRequest newRequest = new ClearEmailSelectionRequest();
         jpoEventBus.post( newRequest );
-        assertEquals( "After firing a ClearEmailSelectionRequest we expect it to be received by the listener",
-                receivedEvent, newRequest );
+        // After firing a ClearEmailSelectionRequest we expect it to be received by the listener
+        assertEquals(                 receivedEvent, newRequest );
     }
 
     /**

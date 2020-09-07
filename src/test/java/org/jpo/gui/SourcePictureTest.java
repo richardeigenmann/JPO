@@ -1,9 +1,9 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.Settings;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -17,15 +17,13 @@ import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class SourcePictureTest {
 
-    @BeforeClass
-    public static void beforeClass() {
+    @BeforeAll
+    public static void beforeAll() {
         Settings.loadSettings(); // We need to start the cache
     }
 
@@ -41,7 +39,7 @@ public class SourcePictureTest {
             fail(e.getMessage());
         }
         s.loadPicture(imageFile, 0.0);
-        assertEquals("Height", 233, s.getHeight());
+        assertEquals(233, s.getHeight());
     }
 
     @Test
@@ -57,13 +55,13 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 90.0);
-        assertEquals("Height", 350, s.getHeight());
+        assertEquals(350, s.getHeight());
     }
 
     @Test
     public void getHeightNullPicture() {
         final SourcePicture s = new SourcePicture();
-        assertEquals("Height", 0, s.getHeight());
+        assertEquals(0, s.getHeight());
     }
 
 
@@ -80,7 +78,7 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertEquals("Width", 350, s.getWidth());
+        assertEquals(350, s.getWidth());
     }
 
     @Test
@@ -96,13 +94,13 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 90.0);
-        assertEquals("Height", 233, s.getWidth());
+        assertEquals(233, s.getWidth());
     }
 
     @Test
     public void getWidthNullPicture() {
         final SourcePicture s = new SourcePicture();
-        assertEquals("Height", 0, s.getWidth());
+        assertEquals(0, s.getWidth());
     }
 
     @Test
@@ -118,7 +116,7 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertEquals("Size", new Dimension(350, 233), s.getSize());
+        assertEquals(new Dimension(350, 233), s.getSize());
     }
 
     @Test
@@ -134,13 +132,13 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 270.0);
-        assertEquals("Size", new Dimension(233, 350), s.getSize());
+        assertEquals(new Dimension(233, 350), s.getSize());
     }
 
     @Test
     public void getSizeNullPicture() {
         final SourcePicture s = new SourcePicture();
-        assertEquals("Size", new Dimension(0, 0), s.getSize());
+        assertEquals(new Dimension(0, 0), s.getSize());
     }
 
     @Test
@@ -156,9 +154,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a jpg image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 233, s.getHeight());
-        assertEquals("Width", 350, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(233, s.getHeight());
+        assertEquals(350, s.getWidth());
     }
 
     @Test
@@ -168,8 +166,8 @@ public class SourcePictureTest {
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
+            // Found reader should start with \"com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader\" but reads: " + reader.toString()
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for jpg image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -182,8 +180,9 @@ public class SourcePictureTest {
         final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
         try {
-            File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a jpg image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            File image = new File(imageUrl.toURI());
+            // We were trying to load a jpg image but the JVM doesn't think it has a reader for it
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -202,9 +201,10 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a bmp image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        // We were trying to load a bmp image but it was null!
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -214,8 +214,8 @@ public class SourcePictureTest {
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader\" but reads: " + reader.toString(),
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for bmp image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -228,8 +228,9 @@ public class SourcePictureTest {
         final String BMP_IMAGE_FILE = "bmp.bmp";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a bmp image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            // We were trying to load a bmp image but the JVM doesn't think it has a reader for it
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -249,9 +250,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a tiff image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 200, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(200, s.getWidth());
     }
 
     @Test
@@ -261,8 +262,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader\" but reads: " + reader.toString(),
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for tiff image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -275,8 +276,8 @@ public class SourcePictureTest {
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a tiff image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -296,9 +297,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a hdr image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 768, s.getHeight());
-        assertEquals("Width", 512, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(768, s.getHeight());
+        assertEquals(512, s.getWidth());
     }
 
     @Test
@@ -308,8 +309,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader\" but reads: " + reader.toString(),
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for hdr image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -322,14 +323,16 @@ public class SourcePictureTest {
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a hdf image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            // We were trying to load a hdf image but the JVM doesn't think it has a reader for it
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
     }
+
     @Test
-    @Ignore("ImageIO PDF doesn't seem to work")
+    @Disabled("ImageIO PDF doesn't seem to work")
     public void testPdfImage() {
         final SourcePicture s = new SourcePicture();
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
@@ -342,21 +345,22 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a pdf image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 768, s.getHeight());
-        assertEquals("Width", 512, s.getWidth());
+        // We were trying to load a pdf image but it was null!
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(768, s.getHeight());
+        assertEquals(512, s.getWidth());
     }
 
     @Test
-    @Ignore("ImageIO PDF doesn't seem to work")
+    @Disabled("ImageIO PDF doesn't seem to work")
     public void testGetPdfImageIOReader() {
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.pdf.PdfImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pdf.PDFImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.pdf.PdfImageReader\" but reads: " + reader.toString()
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pdf.PDFImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for pdf document for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -365,13 +369,14 @@ public class SourcePictureTest {
     }
 
     @Test
-    @Ignore("ImageIO PDF doesn't seem to work")
+    @Disabled("ImageIO PDF doesn't seem to work")
     public void testHasPdfImageReader() {
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a pdf document but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            // We were trying to load a pdf document but the JVM doesn't think it has a reader for it
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -385,10 +390,10 @@ public class SourcePictureTest {
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
         try {
             s.loadPicture(new File(imageUrl.toURI()), 0.0);
-            assertNotNull("We were trying to load a svg image but it was null!", s.getSourceBufferedImage());
+            assertNotNull(s.getSourceBufferedImage());
             // Size is not stable. Sometimes we get 400, Sometimes 900
-            //assertEquals("Height", 400, s.getHeight());
-            //assertEquals("Width", 400, s.getWidth());
+            //assertEquals(400, s.getHeight());
+            //assertEquals(400, s.getWidth());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -401,8 +406,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.svg.SVGImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.svg.SVGImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.svg.SVGImageReader\" but reads: " + reader.toString(),
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.svg.SVGImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for svg image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -415,8 +420,8 @@ public class SourcePictureTest {
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
         try {
-            File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a svg image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -436,9 +441,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a pnm image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -448,8 +453,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader\" but reads: " + reader.toString(),
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for pnm image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -462,13 +467,12 @@ public class SourcePictureTest {
         final String PNM_IMAGE_FILE = "pnm.pnm";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a pnm image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
     }
-
 
 
     @Test
@@ -484,9 +488,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a sgi image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -496,8 +500,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader\" but reads: " + reader.toString(),
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for sgi image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -510,8 +514,8 @@ public class SourcePictureTest {
         final String SGI_IMAGE_FILE = "sgi.sgi";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a sgi image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -530,9 +534,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a tga image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -542,12 +546,12 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.tga.TGAImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tga.TGAImageReader"));
+            // Found reader should start with \"com.twelvemonkeys.imageio.plugins.tga.TGAImageReader\
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tga.TGAImageReader"));
         } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for tga image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+            fail(e.getMessage());
         } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -556,8 +560,8 @@ public class SourcePictureTest {
         final String TGA_IMAGE_FILE = "tga.tga";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a tga image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -577,9 +581,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a psd image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -589,8 +593,7 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.psd.PSDImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.psd.PSDImageReader"));
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.psd.PSDImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for psd image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -603,8 +606,8 @@ public class SourcePictureTest {
         final String PSD_IMAGE_FILE = "psd.psd";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a psd image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -623,9 +626,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load an ico image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 64, s.getHeight());
-        assertEquals("Width", 64, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(64, s.getHeight());
+        assertEquals(64, s.getWidth());
     }
 
     @Test
@@ -635,12 +638,11 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.bmp.ICOImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.ICOImageReader"));
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.ICOImageReader"));
         } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for ico image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+            fail(e.getMessage());
         } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -649,8 +651,8 @@ public class SourcePictureTest {
         final String ICO_IMAGE_FILE = "favicon.ico";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load an ico image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -669,9 +671,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a png image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -682,8 +684,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             // Note: No 12 monkeys here!
-            assertTrue("Found reader should start with \"com.sun.imageio.png.PNGImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.sun.imageio.plugins.png.PNGImageReader"));
+            assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.png.PNGImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for png image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -696,8 +697,8 @@ public class SourcePictureTest {
         final String PNG_IMAGE_FILE = "png.png";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a png image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -716,9 +717,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a gif image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -729,8 +730,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             // Note: No 12 monkeys here!
-            assertTrue("Found reader should start with \"com.sun.imageio.gif.GIFImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.sun.imageio.plugins.gif.GIFImageReader"));
+            assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.gif.GIFImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for gif image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -743,8 +743,8 @@ public class SourcePictureTest {
         final String GIF_IMAGE_FILE = "gif.gif";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a gif image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -763,9 +763,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a iff image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 150, s.getHeight());
-        assertEquals("Width", 200, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(150, s.getHeight());
+        assertEquals(200, s.getWidth());
     }
 
     @Test
@@ -775,8 +775,7 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.iff.IFFImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.iff.IFFImageReader"));
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.iff.IFFImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for iff image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -789,8 +788,8 @@ public class SourcePictureTest {
         final String IFF_IMAGE_FILE = "AmigaAmiga.iff";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a iff image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -809,9 +808,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a pcx image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 100, s.getHeight());
-        assertEquals("Width", 150, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(100, s.getHeight());
+        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -821,8 +820,7 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.pcx.PCXImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pcx.PCXImageReader"));
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pcx.PCXImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for pcx image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -835,8 +833,8 @@ public class SourcePictureTest {
         final String PCX_IMAGE_FILE = "pcx.pcx";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a pcx image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -855,9 +853,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a pct image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 194, s.getHeight());
-        assertEquals("Width", 146, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(194, s.getHeight());
+        assertEquals(146, s.getWidth());
     }
 
     @Test
@@ -867,8 +865,7 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.pict.PICTImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pict.PICTImageReader"));
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pict.PICTImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for pct image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -881,8 +878,8 @@ public class SourcePictureTest {
         final String PICT_IMAGE_FILE = "food.pct";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a pct image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -901,9 +898,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a clipPath image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 1800, s.getHeight());
-        assertEquals("Width", 857, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(1800, s.getHeight());
+        assertEquals(857, s.getWidth());
     }
 
     @Test
@@ -913,8 +910,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader\" but reads: " + reader.toString()
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for clipPath image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (IOException e) {
@@ -927,8 +924,8 @@ public class SourcePictureTest {
         final String CLIP_PATH_IMAGE_FILE = "grape_with_path.jpg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a clipPath image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -947,9 +944,9 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a icns image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 16, s.getHeight());
-        assertEquals("Width", 16, s.getWidth());
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(16, s.getHeight());
+        assertEquals(16, s.getWidth());
     }
 
     @Test
@@ -959,8 +956,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader"));
+            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader\" but reads: " + reader.toString()
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for icns image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -973,8 +970,8 @@ public class SourcePictureTest {
         final String ICNS_IMAGE_FILE = "7zIcon.icns";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a icns image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -993,9 +990,10 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        assertNotNull("We were trying to load a ThumbsDb image but it was null!", s.getSourceBufferedImage());
-        assertEquals("Height", 96, s.getHeight());
-        assertEquals("Width", 96, s.getWidth());
+        // We were trying to load a ThumbsDb image but it was null!
+        assertNotNull(s.getSourceBufferedImage());
+        assertEquals(96, s.getHeight());
+        assertEquals(96, s.getWidth());
     }
 
     @Test
@@ -1005,8 +1003,8 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            assertTrue("Found reader should start with \"com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader\" but reads: " + reader.toString(),
-                    reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader"));
+            // Found reader should start with \"com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader\" but reads:  + reader.toString()
+            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader"));
         } catch (final NoSuchElementException e) {
             fail("Failed to find a reader for ThumbsDb image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
         } catch (final IOException e) {
@@ -1019,8 +1017,9 @@ public class SourcePictureTest {
         final String THUMBS_DB_IMAGE_FILE = "Thumbs.db";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
         try {
-            final File image = new File( imageUrl.toURI());
-            assertTrue("We were trying to load a ThumbsDb image but the JVM doesn't think it has a reader for it", SourcePicture.jvmHasReader(image));
+            final File image = new File(imageUrl.toURI());
+            // We were trying to load a ThumbsDb image but the JVM doesn't think it has a reader for it
+            assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }

@@ -1,13 +1,7 @@
 package org.jpo.cache;
 
-import org.jpo.datamodel.Settings;
-import org.junit.Test;
-
-import java.util.Objects;
-import java.util.Properties;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.

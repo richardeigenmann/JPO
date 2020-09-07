@@ -1,14 +1,14 @@
 package org.jpo.gui;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Tests for the PictureViewer
@@ -29,7 +29,7 @@ public class PictureViewerTest {
                 assertNotNull( pictureViewer );
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
-            fail( "This test didn't work. Exception: " + ex.getMessage() );
+            fail( ex.getMessage() );
             Thread.currentThread().interrupt();
         }
 

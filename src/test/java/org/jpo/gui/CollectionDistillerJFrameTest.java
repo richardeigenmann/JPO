@@ -1,16 +1,16 @@
 package org.jpo.gui;
 
-import org.jpo.eventbus.ExportGroupToNewCollectionRequest;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.junit.Assert;
-import org.junit.Test;
+import org.jpo.eventbus.ExportGroupToNewCollectionRequest;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2019  Richard Eigenmann.
@@ -45,7 +45,7 @@ public class CollectionDistillerJFrameTest {
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 final ExportGroupToNewCollectionRequest exportGroupToNewCollectionRequest = new ExportGroupToNewCollectionRequest(node);
                 final CollectionDistillerJFrame collectionDistillerJFrame = new CollectionDistillerJFrame(exportGroupToNewCollectionRequest);
-                Assert.assertNotNull(collectionDistillerJFrame);
+                assertNotNull(collectionDistillerJFrame);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());

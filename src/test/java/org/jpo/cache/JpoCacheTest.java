@@ -1,12 +1,12 @@
 package org.jpo.cache;
 
 import org.jpo.datamodel.Settings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 import java.util.Properties;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.
@@ -36,6 +36,7 @@ public class JpoCacheTest {
     public void testLoadProperties() {
         Settings.loadSettings();
         Properties props = JpoCache.loadProperties();
-        assertTrue( "Expecting more than 30 properties to be defined", Objects.requireNonNull(props).entrySet().size()  > 30);
+        // Expecting more than 30 properties to be defined
+        assertTrue( Objects.requireNonNull(props).entrySet().size()  > 30);
     }
 }

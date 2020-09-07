@@ -1,9 +1,9 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
  Copyright (C) 2020  Richard Eigenmann.
@@ -42,8 +42,8 @@ public class CloseApplicationRequestTest {
 
         CloseApplicationRequest newRequest = new CloseApplicationRequest();
         jpoEventBus.post( newRequest );
-        assertEquals( "After firing a CloseApplicationRequest we expect it to be received by the listener",
-                receivedEvent, newRequest );
+        // After firing a CloseApplicationRequest we expect it to be received by the listener
+        assertEquals(                receivedEvent, newRequest );
     }
 
     /**

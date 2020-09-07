@@ -1,16 +1,13 @@
 package org.jpo.export;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WebsiteGeneratorTest {
 
@@ -22,7 +19,8 @@ public class WebsiteGeneratorTest {
         String filename = "directory\\file.xml";  // actually contains directory\file.xml
         String wanted = "directory_file.xml";  // actually contains directory\file.xml
         String got = WebsiteGenerator.cleanupFilename( filename );
-        assertEquals( "A backslash could be made into an underscore", wanted, got );
+        // A backslash could be made into an underscore
+        assertEquals( wanted, got );
     }
 
     /**
@@ -34,11 +32,14 @@ public class WebsiteGeneratorTest {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeCss( path.toFile() );
             File cssFile = new File( path.toFile(), "jpo.css" );
-            assertTrue( "org.jpo.css was supposed to exists in directory " + path.toString(), cssFile.exists() );
-            assertTrue( "The org.jpo.css file could not be deleted", cssFile.delete() );
-            assertTrue( "The temporary directory could not be deleted", path.toFile().delete() );
+            // org.jpo.css was supposed to exists in directory " + path.toString()
+            assertTrue( cssFile.exists() );
+            // The org.jpo.css file could not be deleted
+            assertTrue( cssFile.delete() );
+            // The temporary directory could not be deleted
+            assertTrue(  path.toFile().delete() );
         } catch ( IOException ex ) {
-            fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );
+            fail( ex.getMessage() );
         }
     }
 
@@ -51,11 +52,14 @@ public class WebsiteGeneratorTest {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeRobotsTxt( path.toFile() );
             File cssFile = new File( path.toFile(), "robots.txt" );
-            assertTrue( "robots.txt was supposed to exists in directory " + path.toString(), cssFile.exists() );
-            assertTrue( "The robots.txt file could not be deleted", cssFile.delete() );
-            assertTrue( "The temporary directory could not be deleted", path.toFile().delete() );
+            // robots.txt was supposed to exists in directory " + path.toString()
+            assertTrue( cssFile.exists() );
+            // The robots.txt file could not be deleted
+            assertTrue( cssFile.delete() );
+            // The temporary directory could not be deleted
+            assertTrue( path.toFile().delete() );
         } catch ( IOException ex ) {
-            fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );
+            fail( ex.getMessage() );
         }
     }
 
@@ -68,9 +72,12 @@ public class WebsiteGeneratorTest {
             Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeJpoJs( path.toFile() );
             File cssFile = new File( path.toFile(), "jpo.js" );
-            assertTrue( "org.jpo.js was supposed to exists in directory " + path.toString(), cssFile.exists() );
-            assertTrue( "The org.jpo.js file could not be deleted", cssFile.delete() );
-            assertTrue( "The temporary directory could not be deleted", path.toFile().delete() );
+            // org.jpo.js was supposed to exists in directory " + path.toString()
+            assertTrue( cssFile.exists() );
+            // The org.jpo.js file could not be deleted
+            assertTrue( cssFile.delete() );
+            // The temporary directory could not be deleted
+            assertTrue( path.toFile().delete() );
         } catch ( IOException ex ) {
             fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );
         }
@@ -79,7 +86,7 @@ public class WebsiteGeneratorTest {
     @Test
     public void getFilenameRoot() {
         String root = WebsiteGenerator.getFilenameRoot("gaga.txt");
-        Assert.assertEquals("gaga", root);
+        assertEquals("gaga", root);
     }
 
 }

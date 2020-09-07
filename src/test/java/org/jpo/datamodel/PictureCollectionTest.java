@@ -1,7 +1,7 @@
 package org.jpo.datamodel;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -62,7 +62,7 @@ public class PictureCollectionTest {
     /**
      * Set up tests
      */
-    @Before
+    @BeforeEach
     public void setUp()  {
         pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add( group1 );
@@ -84,7 +84,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups() {
-        assertNotNull( "Test that something is returned when looking for parent groups", pictureCollection.findParentGroups( picture1 ) );
+        // Test that something is returned when looking for parent groups
+        assertNotNull( pictureCollection.findParentGroups( picture1 ) );
     }
 
     /**
@@ -92,7 +93,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups1() {
-        assertNull( "Test that it returns null if the node is not a PictureInfo node", pictureCollection.findParentGroups( group1 ) );
+        // Test that it returns null if the node is not a PictureInfo node
+        assertNull( pictureCollection.findParentGroups( group1 ) );
     }
 
     /**
@@ -106,7 +108,8 @@ public class PictureCollectionTest {
         for ( SortableDefaultMutableTreeNode sdmtn : sdmtns ) {
             found = found || ( sdmtn.equals( group1 ) );
         }
-        assertTrue( "Test that the parent group is amongst the found groups", found );
+        // Test that the parent group is amongst the found groups
+        assertTrue( found );
     }
 
     /**
@@ -116,7 +119,8 @@ public class PictureCollectionTest {
     public void testFindParentGroups3() {
         //test that the 4 groups which refer to the same picture are returned
         SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
-        assertEquals( "Test that the 3 groups referring to the same picture are found", 4, sdmtns.length );
+        // Test that the 3 groups referring to the same picture are found
+        assertEquals( 4, sdmtns.length );
     }
 
     /**
@@ -127,11 +131,13 @@ public class PictureCollectionTest {
         File f = new File( "dir/test.xml" );
         pictureCollection.setXmlFile( f );
         File f2 = pictureCollection.getXmlFile();
-        assertEquals( "Checking that we get the same file back that we put in", f, f2 );
+        // Checking that we get the same file back that we put in
+        assertEquals( f, f2 );
 
         pictureCollection.clearCollection();
         File f3 = pictureCollection.getXmlFile();
-        assertNull( "Check that a clearCollection sets the file name to null", f3 );
+        // Check that a clearCollection sets the file name to null
+        assertNull( f3 );
     }
 
     /**
@@ -140,30 +146,36 @@ public class PictureCollectionTest {
      */
     @Test
     public void testSelections() {
-        assertEquals( "Testing that the selection array is empty before we start", 0, pictureCollection.getSelection().size() );
+        assertEquals( 0, pictureCollection.getSelection().size() );
         pictureCollection.addToSelectedNodes( group1 );
         pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.getSelection().size() );
-        assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.countSelectedNodes() );
-        assertTrue( "We should find that the node we selected is actually in the selected set", pictureCollection.isSelected( group1 ) );
-        assertTrue( "We should find that the second node we selected is actually in the selected set", pictureCollection.isSelected( picture1 ) );
-        assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isSelected( group2 ) );
+        assertEquals( 2, pictureCollection.getSelection().size() );
+        assertEquals( 2, pictureCollection.countSelectedNodes() );
+        // We should find that the node we selected is actually in the selected set
+        assertTrue( pictureCollection.isSelected( group1 ) );
+        // We should find that the second node we selected is actually in the selected set
+        assertTrue( pictureCollection.isSelected( picture1 ) );
+        // A Node that was not selected should not be in the selection
+        assertFalse( pictureCollection.isSelected( group2 ) );
 
         pictureCollection.removeFromSelection( group1 );
-        assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getSelection().size() );
-        assertFalse( "We should find that the node we deselected is actually gone", pictureCollection.isSelected( group1 ) );
-        assertTrue( "We should find that the second node we selected is still in the selected set", pictureCollection.isSelected( picture1 ) );
-        assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isSelected( group2 ) );
+        assertEquals(  1, pictureCollection.getSelection().size() );
+        // We should find that the node we deselected is actually gone
+        assertFalse( pictureCollection.isSelected( group1 ) );
+        // We should find that the second node we selected is still in the selected set
+        assertTrue(  pictureCollection.isSelected( picture1 ) );
+        // A Node that was not selected should not be in the selection
+        assertFalse( pictureCollection.isSelected( group2 ) );
 
         pictureCollection.addToSelectedNodes( group1 );
         pictureCollection.addToSelectedNodes( group1 ); //why not add it again?
-        assertEquals( "Twice the same node plus one equals 2", 2, pictureCollection.getSelection().size() );
+        assertEquals( 2, pictureCollection.getSelection().size() );
 
         pictureCollection.clearSelection(); // this is where we the concurrent modification happened
-        assertEquals( "Testing that the selection array is empty again", 0, pictureCollection.getSelection().size() );
+        assertEquals( 0, pictureCollection.getSelection().size() );
 
         pictureCollection.removeFromSelection( group1 ); // How about removing something that is not there?
-        assertEquals( "Testing that the selection array stayed", 0, pictureCollection.getSelection().size() );
+        assertEquals( 0, pictureCollection.getSelection().size() );
     }
 
     /**
@@ -172,32 +184,42 @@ public class PictureCollectionTest {
      */
     @Test
     public void testMailSelections() {
-        assertEquals( "Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().size() );
+        assertEquals( 0, pictureCollection.getMailSelectedNodes().size() );
         pictureCollection.addToMailSelection( group1 );
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "We should have 2 nodes selected now", 2, pictureCollection.getMailSelectedNodes().size() );
-        assertTrue( "We should find that the node we selected is actually in the selected set", pictureCollection.isMailSelected( group1 ) );
-        assertTrue( "We should find that the second node we selected is actually in the selected set", pictureCollection.isMailSelected( picture1 ) );
-        assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isMailSelected( group2 ) );
+        assertEquals( 2, pictureCollection.getMailSelectedNodes().size() );
+        // We should find that the node we selected is actually in the selected set
+        assertTrue( pictureCollection.isMailSelected( group1 ) );
+        // We should find that the second node we selected is actually in the selected set
+        assertTrue( pictureCollection.isMailSelected( picture1 ) );
+        // A Node that was not selected should not be in the selection
+        assertFalse( pictureCollection.isMailSelected( group2 ) );
 
         pictureCollection.removeFromMailSelection( group1 );
-        assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size() );
-        assertFalse( "We should find that the node we deselected is actually gone", pictureCollection.isMailSelected( group1 ) );
-        assertTrue( "We should find that the second node we selected is still in the selected set", pictureCollection.isMailSelected( picture1 ) );
-        assertFalse( "A Node that was not selected should not be in the selection", pictureCollection.isMailSelected( group2 ) );
+        // We should have 1 nodes selected now
+        assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
+        // We should find that the node we deselected is actually gone
+        assertFalse(  pictureCollection.isMailSelected( group1 ) );
+        // We should find that the second node we selected is still in the selected set
+        assertTrue( pictureCollection.isMailSelected( picture1 ) );
+        // A Node that was not selected should not be in the selection
+        assertFalse(  pictureCollection.isMailSelected( group2 ) );
 
         pictureCollection.addToMailSelection( group1 );
         pictureCollection.addToMailSelection( group1 ); //why not add it again?
-        assertEquals( "Twice the same node plus one picture equals 2", 2, pictureCollection.getMailSelectedNodes().size() );
+        // Twice the same node plus one picture equals 2
+        assertEquals( 2, pictureCollection.getMailSelectedNodes().size() );
 
         pictureCollection.toggleMailSelected( picture1 );
-        assertEquals( "Should be only group1 selected now", 1, pictureCollection.getMailSelectedNodes().size() );
+        // Should be only group1 selected now
+        assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
 
         pictureCollection.clearMailSelection(); // this is where we the concurrent modification happened
-        assertEquals( "Testing that the selection array is empty again", 0, pictureCollection.getMailSelectedNodes().size() );
+        // Testing that the selection array is empty again
+        assertEquals( 0, pictureCollection.getMailSelectedNodes().size() );
 
         pictureCollection.removeFromMailSelection( group1 ); // How about removing something that is not there?
-        assertEquals( "Testing that the selection array stayed", 0, pictureCollection.getMailSelectedNodes().size() );
+        assertEquals( 0, pictureCollection.getMailSelectedNodes().size() );
     }
 
     /**
@@ -206,11 +228,11 @@ public class PictureCollectionTest {
      */
     @Test
     public void testAddToMailSelection() {
-        assertEquals( "Testing that the mail selection array is empty before we start", 0, pictureCollection.getMailSelectedNodes().size() );
+        assertEquals(  0, pictureCollection.getMailSelectedNodes().size() );
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size() );
+        assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
         pictureCollection.addToMailSelection( picture1 ); //adding the same node again
-        assertEquals( "We should have 1 nodes selected now", 1, pictureCollection.getMailSelectedNodes().size() );
+        assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
     }
     /**
      * Let's create a quick and dirty change listener
@@ -244,31 +266,39 @@ public class PictureCollectionTest {
         selectedCount = 0;
         unselectedCount = 0;
         pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( "We should have received a notification that the picture was selected", 1, selectedCount );
+        // We should have received a notification that the picture was selected
+        assertEquals(  1, selectedCount );
 
         // do it again.
         pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( "As we are adding the same node again we should not get a change event", 1, selectedCount );
+        // As we are adding the same node again we should not get a change event
+        assertEquals( 1, selectedCount );
 
         // add another node where we are not listening.
         pictureCollection.addToSelectedNodes( picture2 );
-        assertEquals( "As we are not listening on the second node we should still be with 1 event", 1, selectedCount );
+        // As we are not listening on the second node we should still be with 1 event
+        assertEquals( 1, selectedCount );
 
         pictureCollection.removeFromSelection( picture1 );
-        assertEquals( "We should have received a notification that the picture was unselected", 1, unselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals( 1, unselectedCount );
 
         pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( "We should have received a notification that the picture was selected", 2, selectedCount );
+        // We should have received a notification that the picture was selected
+        assertEquals( 2, selectedCount );
 
         pictureCollection.clearSelection();
-        assertEquals( "We should have received a notification that the picture was unselected", 2, unselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals( 2, unselectedCount );
 
         pi1.removePictureInfoChangeListener( listener );
         pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( "We should not have received a notification that the picture was selected", 2, selectedCount );
+        // We should not have received a notification that the picture was selected
+        assertEquals( 2, selectedCount );
 
         pictureCollection.clearSelection();
-        assertEquals( "We should have received a notification that the picture was unselected", 2, unselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals( 2, unselectedCount );
     }
 
     /**
@@ -280,11 +310,14 @@ public class PictureCollectionTest {
         mailSelectedCount = 0;
         mailUnselectedCount = 0;
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "We should have received a notification that the picture was selected", 1, mailSelectedCount );
+        // We should have received a notification that the picture was selected
+        assertEquals(  1, mailSelectedCount );
 
-        assertEquals( "Before the removal we should have 0 unselect events", 0, mailUnselectedCount );
+        // Before the removal we should have 0 unselect events
+        assertEquals( 0, mailUnselectedCount );
         pictureCollection.clearMailSelection();
-        assertEquals( "We should have received a notification that the picture was unselected", 1, mailUnselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals( 1, mailUnselectedCount );
     }
 
     /**
@@ -296,32 +329,41 @@ public class PictureCollectionTest {
         mailSelectedCount = 0;
         mailUnselectedCount = 0;
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "We should have received a notification that the picture was selected", 1, mailSelectedCount );
+        // We should have received a notification that the picture was selected
+        assertEquals(  1, mailSelectedCount );
 
         // do it again.
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "As we are adding the same node again we should not get a change event", 1, mailSelectedCount );
+        // As we are adding the same node again we should not get a change event
+        assertEquals( 1, mailSelectedCount );
 
         // add another node where we are not listening.
         pictureCollection.addToMailSelection( picture2 );
-        assertEquals( "As we are not listening on the second node we should still be with 1 event", 1, mailSelectedCount );
+        // As we are not listening on the second node we should still be with 1 event
+        assertEquals( 1, mailSelectedCount );
 
-        assertEquals( "Before the removal we should have 0 unselect events", 0, mailUnselectedCount );
+        // Before the removal we should have 0 unselect events
+        assertEquals( 0, mailUnselectedCount );
         pictureCollection.removeFromMailSelection( picture1 );
-        assertEquals( "We should have received a notification that the picture was unselected", 1, mailUnselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals( 1, mailUnselectedCount );
 
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "We should have received a notification that the picture was selected", 2, mailSelectedCount );
+        // We should have received a notification that the picture was selected
+        assertEquals( 2, mailSelectedCount );
 
         pictureCollection.clearMailSelection();
-        assertEquals( "We should have received a notification that the picture was unselected", 2, mailUnselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals( 2, mailUnselectedCount );
 
         pi1.removePictureInfoChangeListener( listener );
         pictureCollection.addToMailSelection( picture1 );
-        assertEquals( "We should not have received a notification that the picture was selected", 2, mailSelectedCount );
+        // We should not have received a notification that the picture was selected
+        assertEquals( 2, mailSelectedCount );
 
         pictureCollection.clearSelection();
-        assertEquals( "We should have received a notification that the picture was unselected", 2, mailUnselectedCount );
+        // We should have received a notification that the picture was unselected
+        assertEquals(  2, mailUnselectedCount );
 
     }
 
@@ -366,7 +408,7 @@ public class PictureCollectionTest {
         //TODO: review this; why does the root node, the model and the picture collection have to be tied together
         // via the Settings?
         Settings.setPictureCollection( pictureCollection );
-        assertEquals( "Before updating the description we should have 0 nodes changed: ", 0, nodesChanged);
+        assertEquals( 0, nodesChanged);
         pi1.setDescription( "Changed Description" );
         try {
             Thread.sleep( 80 );  // give the threads some time to do the notifications.
@@ -374,10 +416,14 @@ public class PictureCollectionTest {
             Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
             Thread.currentThread().interrupt();
         }
-        assertEquals( "After updating the description we should have 1 node changed: ", 1, nodesChanged);
-        assertEquals( "No nodes should have been inserted: ", 0, nodesInserted);
-        assertEquals( "No nodes should have been removed: ", 0, nodesRemoved);
-        assertEquals( "No nodes structure change should have been notified: ", 0, nodeStructureChanged);
+        // After updating the description we should have 1 node changed
+        assertEquals(  1, nodesChanged);
+        // No nodes should have been inserted
+        assertEquals(  0, nodesInserted);
+        // No nodes should have been removed
+        assertEquals( 0, nodesRemoved);
+        // No nodes structure change should have been notified
+        assertEquals( 0, nodeStructureChanged);
     }
     
      /**
@@ -386,11 +432,14 @@ public class PictureCollectionTest {
     @Test
     public void testSendModelUpdates() {
         PictureCollection pc = new PictureCollection();
-        assertTrue("Default of sendModelUpdates should be true", pc.getSendModelUpdates());
+        // Default of sendModelUpdates should be true
+        assertTrue( pc.getSendModelUpdates());
         pc.setSendModelUpdates( false );
-        assertFalse("sendModelUpdates should be false when changed", pc.getSendModelUpdates());
+        // sendModelUpdates should be false when changed
+        assertFalse(pc.getSendModelUpdates());
         pc.setSendModelUpdates( true );
-        assertTrue("sendModelUpdates should be true when turned on again", pc.getSendModelUpdates());
+        // sendModelUpdates should be true when turned on again
+        assertTrue( pc.getSendModelUpdates());
     }
         
 }

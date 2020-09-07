@@ -4,15 +4,15 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ComponentMock;
 import org.jpo.gui.PictureViewer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017  Richard Eigenmann.

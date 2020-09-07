@@ -282,13 +282,14 @@ public class PictureInfo implements Serializable {
 
 
     /**
-     * Sets the image location. Why does it not send a sendImageLocationChangedEvent?
+     * Sets the image location and sends a sendImageLocationChangedEvent.
      *
      * @param file The new file of the picture.
      */
     public synchronized void setImageLocation(@NonNull File file) {
         Objects.requireNonNull(file);
         imageFile = file;
+        sendImageLocationChangedEvent();
     }
 
     private String myImageLocation = "";

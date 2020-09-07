@@ -16,15 +16,17 @@ package org.jpo.gui.swing;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.junit.Assert;
-import org.junit.Test;
 
-import javax.swing.*;
-import java.awt.*;
+import org.junit.jupiter.api.Test;
+
+import javax.swing.SwingUtilities;
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 /**
  * @author Richard Eigenmann
@@ -38,11 +40,11 @@ public class CollectionJTreeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final CollectionJTree c = new CollectionJTree();
-                Assert.assertNotNull(c);
+                assertNotNull(c);
 
-                Assert.assertNotNull("PICTURE_ICON must not be null", c.getPictureIcon());
-                Assert.assertNotNull("CLOSED_FOLDER_ICON must not be null", c.getClosedFolderIcon());
-                Assert.assertNotNull("OPEN_FOLDER_ICON must not be null", c.getOpenFolderIcon());
+                assertNotNull( c.getPictureIcon());
+                assertNotNull( c.getClosedFolderIcon());
+                assertNotNull( c.getOpenFolderIcon());
 
             });
         } catch (final InterruptedException | InvocationTargetException ex) {

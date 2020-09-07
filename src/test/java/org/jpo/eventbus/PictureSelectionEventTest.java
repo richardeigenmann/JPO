@@ -3,9 +3,9 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Picture Selection Event Tests
@@ -42,7 +42,8 @@ public class PictureSelectionEventTest {
                         )
                 );
         jpoEventBus.post( myPictureSelectionEvent );
-        assertEquals( "After firing a PictureSelectionEvent we expect it to be received by the listener", myPictureSelectionEvent, responseEvent );
+        // After firing a PictureSelectionEvent we expect it to be received by the listener
+        assertEquals(  myPictureSelectionEvent, responseEvent );
     }
 
     /**

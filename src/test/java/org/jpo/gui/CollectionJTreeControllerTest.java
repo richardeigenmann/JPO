@@ -1,16 +1,15 @@
 package org.jpo.gui;
 
-import junit.framework.TestCase;
 import org.jpo.datamodel.PictureCollection;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static junit.framework.TestCase.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
@@ -43,9 +42,9 @@ public class CollectionJTreeControllerTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final PictureCollection pc = new PictureCollection();
-                TestCase.assertNotNull(pc.getRootNode());
+                assertNotNull(pc.getRootNode());
                 final CollectionJTreeController cjtc = new CollectionJTreeController(pc);
-                Assert.assertNotNull( cjtc );
+                assertNotNull( cjtc );
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( ex.getCause().getMessage() );

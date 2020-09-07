@@ -44,36 +44,13 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
 public class ThumbnailDescriptionController
         implements PictureInfoChangeListener, GroupInfoChangeListener {
 
+    private final ThumbnailDescriptionPanel panel = new ThumbnailDescriptionPanel();
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This
      * allows thumbnails to be selected by sending a nodeSelected event to the
      * data model.
      */
     protected SortableDefaultMutableTreeNode referringNode;
-
-    private final ThumbnailDescriptionPanel panel = new ThumbnailDescriptionPanel();
-
-    public JPanel getPanel() {
-        return panel;
-    }
-
-
-
-    /**
-     * choices for the Description size
-     */
-    public enum DescriptionSize {
-
-        /**
-         * Descriptions should be in a large font
-         */
-        LARGE_DESCRIPTION,
-        /**
-         * Descriptions should be in a small font
-         */
-        MINI_INFO
-    }
-
     /**
      * This field controls how the description panel is shown. It can be set to
      * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
@@ -87,6 +64,40 @@ public class ThumbnailDescriptionController
      */
     public ThumbnailDescriptionController() {
         initComponents();
+    }
+
+    public static Optional<JPopupMenu> correctTextPopupMenu(@NonNull String text, @NonNull JTextArea textArea) {
+        Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
+        Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
+        if (oSpace.isPresent() || oUnderstore.isPresent()) {
+            JPopupMenu popupmenu = new JPopupMenu();
+            final String REPLACE_WITH = Settings.jpoResources.getString("ReplaceWith");
+            if (oSpace.isPresent()) {
+                JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
+                replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
+                popupmenu.add(replaceSpace);
+            }
+            if (oUnderstore.isPresent()) {
+                JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderstore.get());
+                replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderstore.get()));
+                popupmenu.add(replaceUnderscore);
+            }
+            if (oUnderstore.isPresent() && oSpace.isPresent()) {
+                Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
+                if (spaceUnderscore.isPresent()) {
+                    // to be expected...
+                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
+                    replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
+                    popupmenu.add(replaceSpaceAndUnderscore);
+                }
+            }
+            return Optional.of(popupmenu);
+        }
+        return Optional.empty();
+    }
+
+    public JPanel getPanel() {
+        return panel;
     }
 
     private void initComponents() {
@@ -124,36 +135,6 @@ public class ThumbnailDescriptionController
 
     }
 
-    public static Optional<JPopupMenu> correctTextPopupMenu(@NonNull String text, @NonNull JTextArea textArea) {
-        Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
-        Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
-        if (oSpace.isPresent() || oUnderstore.isPresent()) {
-            JPopupMenu popupmenu = new JPopupMenu();
-            final String REPLACE_WITH = Settings.jpoResources.getString("ReplaceWith");
-            if (oSpace.isPresent()) {
-                JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
-                replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
-                popupmenu.add(replaceSpace);
-            }
-            if (oUnderstore.isPresent()) {
-                JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderstore.get());
-                replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderstore.get()));
-                popupmenu.add(replaceUnderscore);
-            }
-            if (oUnderstore.isPresent() && oSpace.isPresent()) {
-                Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
-                if (spaceUnderscore.isPresent()) {
-                    // to be expected...
-                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
-                    replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
-                    popupmenu.add(replaceSpaceAndUnderscore);
-                }
-            }
-            return Optional.of(popupmenu);
-        }
-        return Optional.empty();
-    }
-
     /**
      * doUpdate writes the changed text back to the data model and submits an
      * nodeChanged notification on the model. It gets called by the
@@ -174,72 +155,41 @@ public class ThumbnailDescriptionController
         }
     }
 
-    /**
-     * This method sets the node which the ThumbnailDescriptionJPanel should
-     * display. If it should display nothing then set it to null.
-     *
-     * @param referringNode The Node to be displayed
-     */
-    public void setNode(SortableDefaultMutableTreeNode referringNode) {
-        if (this.referringNode == referringNode) {
-            // Don't refresh the node if it hasn't changed
-            return;
-        }
-
-        // flush any uncommitted changes
-        doUpdate();
-
-        // unattach the change Listener
-        if (this.referringNode != null)  {
-            if  (this.referringNode.getUserObject() instanceof PictureInfo){
-                PictureInfo pi = (PictureInfo) this.referringNode.getUserObject();
-                pi.removePictureInfoChangeListener(this);
-            } else if (this.referringNode.getUserObject() instanceof GroupInfo){
-                GroupInfo gi = (GroupInfo) this.referringNode.getUserObject();
-                gi.removeGroupInfoChangeListener(this);
-            }
-        }
-
-        this.referringNode = referringNode;
-
-        // attach the change Listener
-        if (referringNode != null) {
-            if (referringNode.getUserObject() instanceof PictureInfo) {
-                PictureInfo pictureInfo = (PictureInfo) referringNode.getUserObject();
-                pictureInfo.addPictureInfoChangeListener(this);
-            } else if (referringNode.getUserObject() instanceof GroupInfo) {
-                GroupInfo gi = (GroupInfo) referringNode.getUserObject();
-                gi.addGroupInfoChangeListener(this);
-            }
-        }
-
-        String legend;
-        if (referringNode == null) {
-            legend = Settings.jpoResources.getString("ThumbnailDescriptionNoNodeError");
-            setVisible(false);
-        } else if (referringNode.getUserObject() instanceof PictureInfo) {
-            PictureInfo pi = (PictureInfo) referringNode.getUserObject();
-            legend = pi.getDescription();
-            panel.getHighresLocationJTextField().setText(pi.getImageLocation());
-            setVisible(true);
-        } else if (referringNode.getUserObject() instanceof GroupInfo) {
-            legend = ((GroupInfo) referringNode.getUserObject()).getGroupName();
-            panel.getHighresLocationJTextField().setText("");
-            setVisible(true);
-        } else {
-            legend = "Error";
-            panel.getHighresLocationJTextField().setText("");
-            setVisible(true);
-        }
-        panel.setDescription(legend);
-
-        formatDescription();
-        showSlectionStatus();
-    }
-
     @TestOnly
     public String getDescription() {
         return panel.getDescription();
+    }
+
+    private void setDescription() {
+        String legend;
+        if (referringNode == null) {
+            legend = Settings.jpoResources.getString("ThumbnailDescriptionNoNodeError");
+        } else if (referringNode.getUserObject() instanceof PictureInfo) {
+            PictureInfo pi = (PictureInfo) referringNode.getUserObject();
+            legend = pi.getDescription();
+        } else if (referringNode.getUserObject() instanceof GroupInfo) {
+            legend = ((GroupInfo) referringNode.getUserObject()).getGroupName();
+        } else {
+            legend = "Error";
+        }
+        panel.setDescription(legend);
+    }
+
+    private void setFileLocation() {
+        if (referringNode == null) {
+            panel.getHighresLocationJTextField().setText("null");
+        } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
+            panel.getHighresLocationJTextField().setText(pi.getImageLocation());
+        } else if (referringNode.getUserObject() instanceof GroupInfo) {
+            panel.getHighresLocationJTextField().setText("");
+        } else {
+            panel.getHighresLocationJTextField().setText("Error");
+        }
+    }
+
+    @TestOnly
+    public String getFileLocation() {
+        return panel.getHighresLocationJTextField().getText();
     }
 
     /**
@@ -273,7 +223,6 @@ public class ThumbnailDescriptionController
 
     }
 
-
     /**
      * Overridden method to allow the better tuning of visibility
      *
@@ -292,7 +241,6 @@ public class ThumbnailDescriptionController
     public void showSlectionStatus() {
         panel.showAsSelected(Settings.getPictureCollection().isSelected(referringNode));
     }
-
 
     /**
      * Returns the preferred size for the ThumbnailDescription as a Dimension
@@ -330,6 +278,54 @@ public class ThumbnailDescriptionController
     }
 
     /**
+     * This method sets the node which the ThumbnailDescriptionJPanel should
+     * display. If it should display nothing then set it to null.
+     *
+     * @param referringNode The Node to be displayed
+     */
+    public void setNode(SortableDefaultMutableTreeNode referringNode) {
+        if (this.referringNode == referringNode) {
+            // Don't refresh the node if it hasn't changed
+            return;
+        }
+
+        // flush any uncommitted changes
+        doUpdate();
+
+        // unattach the change Listener
+        if (this.referringNode != null) {
+            if (this.referringNode.getUserObject() instanceof PictureInfo) {
+                PictureInfo pi = (PictureInfo) this.referringNode.getUserObject();
+                pi.removePictureInfoChangeListener(this);
+            } else if (this.referringNode.getUserObject() instanceof GroupInfo) {
+                GroupInfo gi = (GroupInfo) this.referringNode.getUserObject();
+                gi.removeGroupInfoChangeListener(this);
+            }
+        }
+
+        this.referringNode = referringNode;
+
+        // attach the change Listener
+        if (referringNode != null) {
+            if (referringNode.getUserObject() instanceof PictureInfo) {
+                PictureInfo pictureInfo = (PictureInfo) referringNode.getUserObject();
+                pictureInfo.addPictureInfoChangeListener(this);
+            } else if (referringNode.getUserObject() instanceof GroupInfo) {
+                GroupInfo gi = (GroupInfo) referringNode.getUserObject();
+                gi.addGroupInfoChangeListener(this);
+            }
+        }
+
+        // If the Controller is not showing a node then it should not be visible
+        setVisible( referringNode != null);
+        setDescription();
+        setFileLocation();
+
+        formatDescription();
+        showSlectionStatus();
+    }
+
+    /**
      * here we get notified by the PictureInfo object that something has
      * changed.
      */
@@ -337,11 +333,11 @@ public class ThumbnailDescriptionController
     public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
         Runnable runnable = () -> {
             if (pictureInfoChangeEvent.getDescriptionChanged()) {
-                panel.setDescription(pictureInfoChangeEvent.getPictureInfo().getDescription());
+                setDescription();
             }
 
             if (pictureInfoChangeEvent.getHighresLocationChanged()) {
-                panel.getHighresLocationJTextField().setText(pictureInfoChangeEvent.getPictureInfo().getImageLocation());
+                setFileLocation();
             }
 
             if (pictureInfoChangeEvent.getWasSelected()) {
@@ -362,7 +358,7 @@ public class ThumbnailDescriptionController
     public void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent) {
         Runnable runnable = () -> {
             if (groupInfoChangeEvent.getGroupNameChanged()) {
-                panel.setDescription(groupInfoChangeEvent.getGroupeInfo().getGroupName());
+                setDescription();
             }
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -371,6 +367,21 @@ public class ThumbnailDescriptionController
             SwingUtilities.invokeLater(runnable);
         }
 
+    }
+
+    /**
+     * choices for the Description size
+     */
+    public enum DescriptionSize {
+
+        /**
+         * Descriptions should be in a large font
+         */
+        LARGE_DESCRIPTION,
+        /**
+         * Descriptions should be in a small font
+         */
+        MINI_INFO
     }
 
 }

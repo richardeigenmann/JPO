@@ -2,8 +2,8 @@ package org.jpo.gui.swing;
 
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +12,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 /**
  * Tests for the GroupPopupMenu Class
@@ -46,7 +47,7 @@ public class GroupPopupMenuTest {
     private JMenuItem properties;
 
 
-    @Before
+    @BeforeEach
     public void setUp()  {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         myGroupPopupMenu = new GroupPopupMenu( myNode );

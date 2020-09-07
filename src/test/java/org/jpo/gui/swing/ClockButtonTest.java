@@ -1,14 +1,15 @@
 package org.jpo.gui.swing;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 /*
  Copyright (C) 2017-2019,  Richard Eigenmann, Zürich
@@ -43,8 +44,8 @@ public class ClockButtonTest {
                 final ClockButton clockButton = new ClockButton( );
                 assertNotNull( clockButton );
 
-                assertNotNull("ICON_CLOCK_ON must not be null", clockButton.getClockIconOn());
-                assertNotNull("ICON_CLOCK_OFF must not be null", clockButton.getClockIconOff());
+                assertNotNull(clockButton.getClockIconOn());
+                assertNotNull(clockButton.getClockIconOff());
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("Failed to create a PictureFrame");

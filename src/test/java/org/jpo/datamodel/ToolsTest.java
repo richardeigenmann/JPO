@@ -1,14 +1,14 @@
 package org.jpo.datamodel;
 
 import org.jpo.gui.swing.EdtViolationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
-import static junit.framework.TestCase.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -51,7 +51,7 @@ public class ToolsTest {
         t.start();
         try {
             t.join();
-            assertTrue( "When not on EDT must throw an error", notOnEDT_ErrorThrown );
+            assertTrue(  notOnEDT_ErrorThrown );
         } catch ( InterruptedException ex ) {
             fail( "EDT violation not thrown" );
             Thread.currentThread().interrupt();
@@ -74,7 +74,7 @@ public class ToolsTest {
                 } catch ( EdtViolationException ex ) {
                     onEDTErrorThrown = true;
                 }
-                assertFalse("When on EDT must not throw an error", onEDTErrorThrown);
+                assertFalse(onEDTErrorThrown);
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Something went wrong with the EDT thread test" );

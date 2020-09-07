@@ -3,7 +3,7 @@ package org.jpo.gui.swing;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +12,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Objects;
 
-import static junit.framework.TestCase.*;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 /**
  * Tests for the PictureInfoEditor
@@ -62,11 +63,12 @@ public class PictureInfoEditorTest {
                 assertNotNull( pictureInfoEditor );
 
                 pictureInfoEditor.callSaveFieldData();
-                assertEquals("Expectation is that after saving without changing file stays the same",  imageFile, pictureInfo.getImageFile());
+                // Expectation is that after saving without changing file stays the same
+                assertEquals( imageFile, pictureInfo.getImageFile());
                 ThumbnailCreationQueue.clear();  // the created request confuses other tests
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( "This test didn't work. Exception: " + ex.getMessage() );
+            fail( ex.getMessage() );
             Thread.currentThread().interrupt();
         }
     }

@@ -2,7 +2,7 @@ package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
 import org.jpo.gui.ThumbnailControllerTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,8 +10,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.*;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
 
 public class ThumbnailDescriptionPanelTest {
 

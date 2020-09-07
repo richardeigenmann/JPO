@@ -1,13 +1,13 @@
+import org.jpo.Main;
 import org.jpo.eventbus.CloseApplicationRequest;
 import org.jpo.eventbus.JpoEventBus;
-import org.jpo.Main;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static junit.framework.TestCase.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -16,7 +16,7 @@ import static junit.framework.TestCase.fail;
 public class MainTest {
 
     @Test
-    @Ignore("Crashes with an NPE somewhere")
+    @Disabled("Crashes with an NPE somewhere")
     public void constructorTest() {
         try {
             SwingUtilities.invokeAndWait( () -> {

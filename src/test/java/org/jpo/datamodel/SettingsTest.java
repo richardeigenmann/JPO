@@ -1,11 +1,11 @@
 package org.jpo.datamodel;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
 import static java.util.stream.IntStream.range;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  Copyright (C) 2017-2018  Richard Eigenmann.
@@ -36,7 +36,8 @@ public class SettingsTest {
      */
     @Test
     public void testCurrentLocale() {
-        assertNotNull("Testing that current locale exists", Settings.getCurrentLocale());
+        // Testing that current locale exists
+        assertNotNull( Settings.getCurrentLocale());
     }
 
     /**
@@ -45,9 +46,11 @@ public class SettingsTest {
     @Test
     public void testSetLocale() {
         Settings.setLocale(Locale.GERMAN);
-        assertEquals("Testing the locale change to German", Locale.GERMAN, Settings.getCurrentLocale());
+        // Testing the locale change to German
+        assertEquals( Locale.GERMAN, Settings.getCurrentLocale());
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
-        assertEquals("Testing the locale change to Simplified Chinese", Locale.SIMPLIFIED_CHINESE, Settings.getCurrentLocale());
+        // Testing the locale change to Simplified Chinese
+        assertEquals( Locale.SIMPLIFIED_CHINESE, Settings.getCurrentLocale());
     }
 
     /**
@@ -56,9 +59,11 @@ public class SettingsTest {
     @Test
     public void testSetLocaleResourceBundleEffect() {
         Settings.setLocale(Locale.GERMAN);
-        assertEquals("Testing the ResourceBundle change to German", Locale.GERMAN, Settings.jpoResources.getLocale());
+        // Testing the ResourceBundle change to German
+        assertEquals(Locale.GERMAN, Settings.jpoResources.getLocale());
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
-        assertEquals("Testing the ResourceBundle change to Simplified Chinese", Locale.SIMPLIFIED_CHINESE, Settings.jpoResources.getLocale());
+        // Testing the ResourceBundle change to Simplified Chinese
+        assertEquals( Locale.SIMPLIFIED_CHINESE, Settings.jpoResources.getLocale());
     }
 
     /**
@@ -67,9 +72,11 @@ public class SettingsTest {
     @Test
     public void testSetLocaleResourceBundleStrings() {
         Settings.setLocale(Locale.GERMAN);
-        assertEquals("Testing the German string", "Neue Sammlung", Settings.jpoResources.getString("FileNewJMenuItem"));
+        // Testing the German string
+        assertEquals( "Neue Sammlung", Settings.jpoResources.getString("FileNewJMenuItem"));
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
-        assertEquals("Testing the Simplified Chinese string", "新建图片集", Settings.jpoResources.getString("FileNewJMenuItem"));
+        // Testing the Simplified Chinese string
+        assertEquals( "新建图片集", Settings.jpoResources.getString("FileNewJMenuItem"));
     }
 
     /**
@@ -87,19 +94,23 @@ public class SettingsTest {
         //System.out.println("testReadWriteSettingsLocale: Setting Locale to English and writing settings");
         Settings.setLocale(Locale.ENGLISH);
         Settings.writeSettings();
-        assertEquals("Locale should not have changed after writing settings!", Locale.ENGLISH, Settings.getCurrentLocale());
+        // Locale should not have changed after writing settings!
+        assertEquals( Locale.ENGLISH, Settings.getCurrentLocale());
         //System.out.println("testReadWriteSettingsLocale: now changing the Locale to German and loading the settings");
         Settings.setLocale(Locale.GERMAN);
         Settings.loadSettings();
-        assertEquals("Locale should be back to English after the load!", Locale.ENGLISH, Settings.getCurrentLocale());
+        // Locale should be back to English after the load!
+        assertEquals( Locale.ENGLISH, Settings.getCurrentLocale());
 
         // and do it all again to be sure that the saved Settings aren't tricking us here:
         Settings.setLocale(Locale.GERMAN);
         Settings.writeSettings();
-        assertEquals("Locale should not have changed after writing settings #2", Locale.GERMAN, Settings.getCurrentLocale());
+        // Locale should not have changed after writing settings #2
+        assertEquals( Locale.GERMAN, Settings.getCurrentLocale());
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         Settings.loadSettings();
-        assertEquals("Locale should be back to German after the second load!", Locale.GERMAN, Settings.getCurrentLocale());
+        // Locale should be back to German after the second load!
+        assertEquals( Locale.GERMAN, Settings.getCurrentLocale());
 
         // write the original settings back to prevent developer frustration
         Settings.setLocale(saveLocale);
@@ -114,20 +125,24 @@ public class SettingsTest {
         int saveMaxThumbnails = Settings.maxThumbnails;
         Settings.maxThumbnails = -1; //a value that it never should have
         Settings.loadSettings();
-        assertTrue("After loading the settings the maxThumbnails should not be -1 any more!", (-1 != Settings.maxThumbnails));
+        // After loading the settings the maxThumbnails should not be -1 any more!
+        assertTrue( (-1 != Settings.maxThumbnails));
 
         Settings.maxThumbnails = -2; //another value that it never should never have
         Settings.writeSettings();
-        assertEquals("After saving the settings the maxThumbnails should still be -2", -2, Settings.maxThumbnails);
+        // After saving the settings the maxThumbnails should still be -2
+        assertEquals( -2, Settings.maxThumbnails);
 
         Settings.loadSettings();
-        assertEquals("After loading the negative value should have been replaced with" + Settings.DEFAULT_MAX_THUMBNAILS, Settings.DEFAULT_MAX_THUMBNAILS, Settings.maxThumbnails);
+        // After loading the negative value should have been replaced with" + Settings.DEFAULT_MAX_THUMBNAILS
+        assertEquals(Settings.DEFAULT_MAX_THUMBNAILS, Settings.maxThumbnails);
 
         Settings.maxThumbnails = 53;
         Settings.writeSettings();
         Settings.maxThumbnails = 54;
         Settings.loadSettings();
-        assertEquals("After reloading the settings the maxThumbnails should be back at 53 not 54", 53, Settings.maxThumbnails);
+        // After reloading the settings the maxThumbnails should be back at 53 not 54
+        assertEquals( 53, Settings.maxThumbnails);
 
         // write the original settings back to prevent developer frustration
         Settings.maxThumbnails = saveMaxThumbnails;
@@ -138,37 +153,45 @@ public class SettingsTest {
     @Test
     public void testMemorizeGroupOfDropLocation() {
         Settings.recentDropNodes.clear();
-        SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode();
-        assertNotEquals("First Element should not be our new node", n, Settings.recentDropNodes.peek());
+        final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode();
+        // First Element should not be our new node
+        assertNotEquals( n, Settings.recentDropNodes.peek());
         Settings.memorizeGroupOfDropLocation(n);
-        assertEquals("First Element should now be our new node", n, Settings.recentDropNodes.element());
+        // First Element should now be our new node
+        assertEquals( n, Settings.recentDropNodes.element());
     }
 
     @Test
     public void testMemorizeGroupOfDropLocationPushDown() {
         Settings.recentDropNodes.clear();
-        SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode();
-        assertNotEquals("First Element should not be our new node", n1, Settings.recentDropNodes.peek());
+        final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode();
+        // First Element should not be our new node
+        assertNotEquals( n1, Settings.recentDropNodes.peek());
         Settings.memorizeGroupOfDropLocation(n1);
-        assertEquals("First Element should now be our new node", n1, Settings.recentDropNodes.element());
+        // First Element should now be our new node
+        assertEquals( n1, Settings.recentDropNodes.element());
 
-        SortableDefaultMutableTreeNode n2 = new SortableDefaultMutableTreeNode();
+        final SortableDefaultMutableTreeNode n2 = new SortableDefaultMutableTreeNode();
         Settings.memorizeGroupOfDropLocation(n2);
-        assertEquals("First Element should now be our new node n2", n1, Settings.recentDropNodes.poll());
-        assertEquals("Second Element should now be our new node n1", n2, Settings.recentDropNodes.element());
+        // First Element should now be our new node n2
+        assertEquals(n1, Settings.recentDropNodes.poll());
+        // Second Element should now be our new node n1
+        assertEquals(n2, Settings.recentDropNodes.element());
     }
 
     @Test
     public void testMemorizeGroupOfDropLocationOverfill() {
-        SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
-        assertFalse("First Element should not be our new node", Settings.recentDropNodes.contains(n1));
+        final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
+        // First Element should not be our new node
+        assertFalse(Settings.recentDropNodes.contains(n1));
         Settings.memorizeGroupOfDropLocation(n1);
-        assertEquals("First Element should now be our new node", n1, Settings.recentDropNodes.element());
+        // First Element should now be our new node
+        assertEquals(n1, Settings.recentDropNodes.element());
 
         range(1, Settings.MAX_DROPNODES).forEach(
                 itr -> Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("Any other node"))));
-
-        assertTrue("The n1 node should still be on the queue", Settings.recentDropNodes.contains(n1));
+        // The n1 node should still be on the queue
+        assertTrue( Settings.recentDropNodes.contains(n1));
 
         Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("One more node")));
         assertFalse(Settings.recentDropNodes.contains(n1));
@@ -177,32 +200,38 @@ public class SettingsTest {
     @Test
     public void testRemoveRecentDropNode() {
         Settings.recentDropNodes.clear();
-        SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
-        assertFalse("First Element should not be our new node", Settings.recentDropNodes.contains(n1));
+        final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
+        // First Element should not be our new node
+        assertFalse( Settings.recentDropNodes.contains(n1));
         Settings.memorizeGroupOfDropLocation(n1);
-        assertEquals("First Element should now be our new node", n1, Settings.recentDropNodes.element());
+        // First Element should now be our new node
+        assertEquals( n1, Settings.recentDropNodes.element());
         Settings.recentDropNodes.remove(n1);
-        assertFalse("First Element should not be our new node", Settings.recentDropNodes.contains(n1));
+        // First Element should not be our new node
+        assertFalse( Settings.recentDropNodes.contains(n1));
     }
 
     @Test
     public void testRemoveRecentDropNodeAndCompress() {
         Settings.recentDropNodes.clear();
-        SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
+        final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         Settings.memorizeGroupOfDropLocation(n1);
         Settings.recentDropNodes.remove(n1);
-        SortableDefaultMutableTreeNode n2 = new SortableDefaultMutableTreeNode(new GroupInfo("N2"));
+        final SortableDefaultMutableTreeNode n2 = new SortableDefaultMutableTreeNode(new GroupInfo("N2"));
         Settings.memorizeGroupOfDropLocation(n2);
-        assertEquals("First Element should be our new node", n2, Settings.recentDropNodes.element());
+        // First Element should be our new node
+        assertEquals( n2, Settings.recentDropNodes.element());
     }
 
     @Test
     public void testClearRecentDropNodes() {
-        SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
+        final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         Settings.memorizeGroupOfDropLocation(n1);
-        assertTrue("First Element should be our new node", Settings.recentDropNodes.contains(n1));
+        // First Element should be our new node
+        assertTrue(Settings.recentDropNodes.contains(n1));
         Settings.recentDropNodes.clear();
-        assertFalse("First Element should no longer be our node", Settings.recentDropNodes.contains(n1));
+        // First Element should no longer be our node
+        assertFalse( Settings.recentDropNodes.contains(n1));
     }
 
 }

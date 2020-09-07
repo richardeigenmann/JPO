@@ -1,14 +1,14 @@
 package org.jpo.datamodel;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static junit.framework.TestCase.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -31,11 +31,12 @@ public class GroupNavigatorTest {
     /**
      * Test of setNode method, of class GroupNavigator.
      */
-    @Before
+    @BeforeEach
     public void testSetNode() {
         GroupNavigator gn = new GroupNavigator();
         gn.setNode( groupNode2 );
-        assertEquals( "After setNode the Navigator should return the new node", groupNode2, gn.getGroupNode() );
+        // After setNode the Navigator should return the new node
+        assertEquals( groupNode2, gn.getGroupNode() );
     }
 
     /**
@@ -55,10 +56,10 @@ public class GroupNavigatorTest {
     public void testGetNumberOfNodes() {
         GroupNavigator gn = new GroupNavigator();
         gn.setNode( groupNode );
-        assertEquals( "Empty group has no nodes", 0, gn.getNumberOfNodes() );
+        assertEquals(  0, gn.getNumberOfNodes() );
         groupNode.add( pictureNode1 );
         groupNode.add( pictureNode2 );
-        assertEquals( "After adding 2 nodes we expect to have 2 nodes", 2, gn.getNumberOfNodes() );
+        assertEquals( 2, gn.getNumberOfNodes() );
         try {
             SwingUtilities.invokeAndWait(groupNode::removeAllChildren);
         } catch ( InterruptedException | InvocationTargetException ex ) {
@@ -66,7 +67,8 @@ public class GroupNavigatorTest {
             Thread.currentThread().interrupt();
         }
 
-        assertEquals( "After removing all children we expect to have 0 nodes", 0, gn.getNumberOfNodes() );
+        // After removing all children we expect to have 0 nodes
+        assertEquals( 0, gn.getNumberOfNodes() );
     }
 
 }

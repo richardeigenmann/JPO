@@ -19,8 +19,20 @@ plugins {
 
 apply plugin: "com.github.johnrengelman.shadow"
 
-sourceCompatibility = 1.11
-targetCompatibility = 1.11
+sourceCompatibility = 1.14
+targetCompatibility = 1.14
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += "--enable-preview"
+}
+
+tasks.withType(Test) {
+    jvmArgs += "--enable-preview"
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
+}
 
 compileJava {
     group = 'build'
@@ -118,9 +130,14 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6'
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6'
-    testImplementation 'junit:junit:4.13'
+    //testImplementation 'junit:junit:4.13'
+    testImplementation('org.junit.jupiter:junit-jupiter-api:5.5.2')
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    //testRuntime("org.junit.platform:junit-platform-runner:1.5.2")
 }
-
+test {
+    useJUnitPlatform()
+}
 
 sourceSets {
     main {

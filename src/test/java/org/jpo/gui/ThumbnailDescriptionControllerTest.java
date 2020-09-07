@@ -1,15 +1,17 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class ThumbnailDescriptionControllerTest {
 
@@ -26,6 +28,9 @@ public class ThumbnailDescriptionControllerTest {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
+    }
+
+    private void assumeFalse(boolean headless) {
     }
 
     @Test
@@ -196,6 +201,32 @@ public class ThumbnailDescriptionControllerTest {
                 pc.getRootNode().remove(0);
 
 
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    public void testNodeListenerOnRename() {
+        // test to fix the bug that on File Rename the file location is not updated
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
+                final PictureInfo pictureInfo = new PictureInfo();
+                final String ORIGINAL_FILENAME = "gaga.jpg";
+                pictureInfo.setImageLocation(new File(ORIGINAL_FILENAME));
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
+                controller.setNode(node);
+                assertEquals(ORIGINAL_FILENAME,pictureInfo.getImageFile().getName());
+                assertEquals(ORIGINAL_FILENAME, Paths.get(controller.getFileLocation()).getFileName().toString());
+
+                final String NEW_FILENAME = "newfile.jpg";
+                pictureInfo.setImageLocation(new File(NEW_FILENAME));
+                assertEquals(NEW_FILENAME, pictureInfo.getImageFile().getName());
+                assertEquals(NEW_FILENAME, Paths.get(controller.getFileLocation()).getFileName().toString());
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());

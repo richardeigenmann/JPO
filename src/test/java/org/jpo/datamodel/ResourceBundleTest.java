@@ -1,13 +1,13 @@
 package org.jpo.datamodel;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for the resource bundles
@@ -24,7 +24,7 @@ public class ResourceBundleTest {
     /**
      * Set up for each test
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         try {
             jpoResources1 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.ENGLISH );
@@ -42,10 +42,14 @@ public class ResourceBundleTest {
      */
     @Test
     public void testResourceBundlesFound() {
-        assertNotNull( "Testing English bundle found", jpoResources1 );
-        assertNotNull( "Testing German bundle found", jpoResources2 );
-        assertNotNull( "Testing SimplifiedChinese bundle found", jpoResources3 );
-        assertNotNull( "Testing TraditionalChinese bundle found", jpoResources4 );
+        // Testing English bundle found
+        assertNotNull( jpoResources1 );
+        // Testing German bundle found
+        assertNotNull( jpoResources2 );
+        // Testing SimplifiedChinese bundle found
+        assertNotNull( jpoResources3 );
+        // Testing TraditionalChinese bundle found
+        assertNotNull( jpoResources4 );
     }
 
     /**
@@ -53,7 +57,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testResourceLocale1() {
-        assertEquals( "Testing English bundle locale", Locale.ENGLISH, jpoResources1.getLocale() );
+        // Testing English bundle locale
+        assertEquals( Locale.ENGLISH, jpoResources1.getLocale() );
     }
 
     /**
@@ -61,7 +66,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testResourceLocale2() {
-        assertEquals( "Testing German bundle locale", Locale.GERMAN, jpoResources2.getLocale() );
+        // Testing German bundle locale
+        assertEquals( Locale.GERMAN, jpoResources2.getLocale() );
     }
 
     /**
@@ -69,7 +75,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testResourceLocale3() {
-        assertEquals( "Testing SimplifiedChinese bundle locale", Locale.SIMPLIFIED_CHINESE, jpoResources3.getLocale() );
+        // Testing SimplifiedChinese bundle locale
+        assertEquals( Locale.SIMPLIFIED_CHINESE, jpoResources3.getLocale() );
     }
 
     /**
@@ -77,7 +84,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testResourceLocale4() {
-        assertEquals( "Testing TraditionalChinese bundle locale", Locale.TRADITIONAL_CHINESE, jpoResources4.getLocale() );
+        // Testing TraditionalChinese bundle locale
+        assertEquals( Locale.TRADITIONAL_CHINESE, jpoResources4.getLocale() );
     }
 
     /**
@@ -85,7 +93,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testRetrieveResourceLocale1() {
-        assertEquals( "Testing English bundle locale", "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
+        // Testing English bundle locale
+        assertEquals(  "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
     }
 
     /**
@@ -93,7 +102,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testRetrieveResourceLocale2() {
-        assertEquals( "Testing German bundle locale", "Neue Sammlung", jpoResources2.getString( "FileNewJMenuItem" ) );
+        // Testing German bundle locale
+        assertEquals( "Neue Sammlung", jpoResources2.getString( "FileNewJMenuItem" ) );
     }
 
     /**
@@ -101,7 +111,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testRetrieveResourceLocale3() {
-        assertEquals( "Testing Simplified Chinese bundle locale", "新建图片集", jpoResources3.getString( "FileNewJMenuItem" ) );
+        // Testing Simplified Chinese bundle locale
+        assertEquals(  "新建图片集", jpoResources3.getString( "FileNewJMenuItem" ) );
     }
 
     /**
@@ -109,7 +120,8 @@ public class ResourceBundleTest {
      */
     @Test
     public void testRetrieveResourceLocale4() {
-        assertEquals( "Testing Traditional Chinese bundle locale", "新建圖片集", jpoResources4.getString( "FileNewJMenuItem" ) );
+        // Testing Traditional Chinese bundle locale
+        assertEquals( "新建圖片集", jpoResources4.getString( "FileNewJMenuItem" ) );
     }
 
     /**
@@ -120,7 +132,8 @@ public class ResourceBundleTest {
         assertEquals( "Testing English bundle locale", "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
         jpoResources1 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.GERMAN );
         assertEquals( "Testing getString from the changed bundle", "Neue Sammlung", jpoResources1.getString( "FileNewJMenuItem" ) );
-        assertEquals( "Testing verifying that the changed bundle is now German", Locale.GERMAN, jpoResources1.getLocale() );
+        // Testing verifying that the changed bundle is now German
+        assertEquals( Locale.GERMAN, jpoResources1.getLocale() );
     }
 
 }

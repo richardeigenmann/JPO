@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,8 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeFalse;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
@@ -73,18 +73,18 @@ public class ThumbnailsPanelControllerTest {
                     final Point bottomRight = new Point( 70, 230 );
                     Rectangle r1 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, bottomRight );
 
-                    assertEquals( "Checking top left x", topLeft.x, r1.x );
-                    assertEquals( "Checking top left y", topLeft.y, r1.y );
-                    assertEquals( "Checking width", bottomRight.x - topLeft.x, r1.width );
-                    assertEquals( "Checking height", bottomRight.y - topLeft.y, r1.height );
+                    assertEquals( topLeft.x, r1.x );
+                    assertEquals(  topLeft.y, r1.y );
+                    assertEquals(  bottomRight.x - topLeft.x, r1.width );
+                    assertEquals(  bottomRight.y - topLeft.y, r1.height );
 
                     final Point higherLeftPoint = new Point( 20, 30 );
                     final Rectangle r2 = (Rectangle) getMouseRectangle.invoke( thumbnailsPanelController, higherLeftPoint );
 
-                    assertEquals( "Checking top left x of r2", higherLeftPoint.x, r2.x );
-                    assertEquals( "Checking top left y or r2", higherLeftPoint.y, r2.y );
-                    assertEquals( "Checking width", topLeft.x - higherLeftPoint.x, r2.width );
-                    assertEquals( "Checking height", topLeft.y - higherLeftPoint.y, r2.height );
+                    assertEquals(  higherLeftPoint.x, r2.x );
+                    assertEquals(  higherLeftPoint.y, r2.y );
+                    assertEquals(  topLeft.x - higherLeftPoint.x, r2.width );
+                    assertEquals(  topLeft.y - higherLeftPoint.y, r2.height );
                 } catch ( final NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException | NoSuchMethodException | InvocationTargetException ex ) {
                     fail( ex.getMessage() );
                 }

@@ -1,12 +1,12 @@
 package org.jpo.cache;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static junit.framework.TestCase.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -19,7 +19,7 @@ public class ThumbnailCreationFactoryTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( 500 );
-                Assert.assertNotNull( tcf );
+                assertNotNull( tcf );
                 tcf.endThread();
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
