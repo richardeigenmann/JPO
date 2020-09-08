@@ -166,12 +166,9 @@ public class SourcePictureTest {
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // Found reader should start with \"com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader\" but reads: " + reader.toString()
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for jpg image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -181,7 +178,6 @@ public class SourcePictureTest {
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
         try {
             File image = new File(imageUrl.toURI());
-            // We were trying to load a jpg image but the JVM doesn't think it has a reader for it
             assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -214,12 +210,9 @@ public class SourcePictureTest {
         try (InputStream input = imageUrl.openStream();
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader\" but reads: " + reader.toString(),
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for bmp image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -229,7 +222,6 @@ public class SourcePictureTest {
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE));
         try {
             final File image = new File(imageUrl.toURI());
-            // We were trying to load a bmp image but the JVM doesn't think it has a reader for it
             assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
@@ -262,12 +254,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader\" but reads: " + reader.toString(),
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for tiff image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -309,12 +298,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader\" but reads: " + reader.toString(),
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for hdr image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -324,7 +310,6 @@ public class SourcePictureTest {
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
         try {
             final File image = new File(imageUrl.toURI());
-            // We were trying to load a hdf image but the JVM doesn't think it has a reader for it
             assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -345,7 +330,6 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        // We were trying to load a pdf image but it was null!
         assertNotNull(s.getSourceBufferedImage());
         assertEquals(768, s.getHeight());
         assertEquals(512, s.getWidth());
@@ -359,12 +343,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.pdf.PdfImageReader\" but reads: " + reader.toString()
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pdf.PDFImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for pdf document for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -375,7 +356,6 @@ public class SourcePictureTest {
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
         try {
             final File image = new File(imageUrl.toURI());
-            // We were trying to load a pdf document but the JVM doesn't think it has a reader for it
             assertTrue(SourcePicture.jvmHasReader(image));
         } catch (URISyntaxException e) {
             fail(e.getMessage());
@@ -406,12 +386,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.svg.SVGImageReader\" but reads: " + reader.toString(),
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.svg.SVGImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for svg image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -453,12 +430,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader\" but reads: " + reader.toString(),
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for pnm image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -500,12 +474,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader\" but reads: " + reader.toString(),
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for sgi image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -546,7 +517,6 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // Found reader should start with \"com.twelvemonkeys.imageio.plugins.tga.TGAImageReader\
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tga.TGAImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -592,10 +562,8 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.psd.PSDImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for psd image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -637,9 +605,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.ICOImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail(e.getMessage());
-        } catch (final IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
         }
     }
@@ -681,12 +647,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // Note: No 12 monkeys here!
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.png.PNGImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for png image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -727,12 +690,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // Note: No 12 monkeys here!
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.gif.GIFImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for gif image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -774,10 +734,8 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.iff.IFFImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for iff image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -819,10 +777,8 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pcx.PCXImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for pcx image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -864,10 +820,8 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pict.PICTImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for pct image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -908,7 +862,6 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader\" but reads: " + reader.toString()
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
         } catch (NoSuchElementException e) {
             fail("Failed to find a reader for clipPath image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
@@ -954,12 +907,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // "Found reader should start with \"com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader\" but reads: " + reader.toString()
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for icns image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail( e.getMessage());
         }
     }
 
@@ -988,7 +938,6 @@ public class SourcePictureTest {
         }
 
         s.loadPicture(imageFile, 0.0);
-        // We were trying to load a ThumbsDb image but it was null!
         assertNotNull(s.getSourceBufferedImage());
         assertEquals(96, s.getHeight());
         assertEquals(96, s.getWidth());
@@ -1001,12 +950,9 @@ public class SourcePictureTest {
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
-            // Found reader should start with \"com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader\" but reads:  + reader.toString()
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail("Failed to find a reader for ThumbsDb image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (final IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail(e.getMessage());
         }
     }
 
@@ -1016,12 +962,10 @@ public class SourcePictureTest {
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
         try {
             final File image = new File(imageUrl.toURI());
-            // We were trying to load a ThumbsDb image but the JVM doesn't think it has a reader for it
             assertTrue(SourcePicture.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
-
 
 }

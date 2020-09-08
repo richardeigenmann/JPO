@@ -6,6 +6,7 @@ import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.io.*;
@@ -72,18 +73,7 @@ public class FlatFileReader {
                     continue;
                 }
 
-                try ( FileInputStream fis = new FileInputStream( testFile );
-                        ImageInputStream iis = ImageIO.createImageInputStream( fis )) {
-                    final Iterator i = ImageIO.getImageReaders( iis );
-                    if ( !i.hasNext() ) {
-                        LOGGER.log( Level.INFO, "No reader for file: {0}", line);
-                        continue;
-                    }
-                    LOGGER.log( Level.INFO, "I do have a reader for file: {0}", line);
-                } catch ( IOException ex ) {
-                    LOGGER.info( ex.getLocalizedMessage() );
-                    continue;
-                }
+                if (! jvmHasReader(testFile)) continue;
 
                 LOGGER.log( Level.INFO, "adding file to node: {0}", line);
                 SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
@@ -101,6 +91,20 @@ public class FlatFileReader {
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
         }
+    }
+
+    private static boolean jvmHasReader(File testFile) {
+        try (final FileInputStream fis = new FileInputStream(testFile);
+             final ImageInputStream iis = ImageIO.createImageInputStream( fis )) {
+            final Iterator<ImageReader> i = ImageIO.getImageReaders( iis );
+            if ( i.hasNext() ) {
+                LOGGER.log( Level.INFO, "I do have a reader for file: {0}", testFile);
+                return true;
+            }
+        } catch ( IOException ex ) {
+            LOGGER.info( ex.getLocalizedMessage() );
+        }
+        return false;
     }
 
 }
