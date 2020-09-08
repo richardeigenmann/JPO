@@ -29,15 +29,12 @@ public class WebsiteGeneratorTest {
     @Test
     public void testWriteCss() {
         try {
-            Path path = Files.createTempDirectory( "UnitTestsTempDir" );
+            final Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeCss( path.toFile() );
-            File cssFile = new File( path.toFile(), "jpo.css" );
-            // org.jpo.css was supposed to exists in directory " + path.toString()
+            final File cssFile = new File( path.toFile(), "jpo.css" );
             assertTrue( cssFile.exists() );
-            // The org.jpo.css file could not be deleted
-            assertTrue( cssFile.delete() );
-            // The temporary directory could not be deleted
-            assertTrue(  path.toFile().delete() );
+            Files.delete(cssFile.toPath() );
+            Files.delete(path);
         } catch ( IOException ex ) {
             fail( ex.getMessage() );
         }
@@ -49,15 +46,12 @@ public class WebsiteGeneratorTest {
     @Test
     public void testWriteRobotsTxt() {
         try {
-            Path path = Files.createTempDirectory( "UnitTestsTempDir" );
+            final Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeRobotsTxt( path.toFile() );
-            File cssFile = new File( path.toFile(), "robots.txt" );
-            // robots.txt was supposed to exists in directory " + path.toString()
-            assertTrue( cssFile.exists() );
-            // The robots.txt file could not be deleted
-            assertTrue( cssFile.delete() );
-            // The temporary directory could not be deleted
-            assertTrue( path.toFile().delete() );
+            final File robotsFile = new File( path.toFile(), "robots.txt" );
+            assertTrue( robotsFile.exists() );
+            Files.delete(robotsFile.toPath());
+            Files.delete( path );
         } catch ( IOException ex ) {
             fail( ex.getMessage() );
         }
@@ -69,17 +63,14 @@ public class WebsiteGeneratorTest {
     @Test
     public void testWriteJpoJs() {
         try {
-            Path path = Files.createTempDirectory( "UnitTestsTempDir" );
+            final Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeJpoJs( path.toFile() );
-            File cssFile = new File( path.toFile(), "jpo.js" );
-            // org.jpo.js was supposed to exists in directory " + path.toString()
-            assertTrue( cssFile.exists() );
-            // The org.jpo.js file could not be deleted
-            assertTrue( cssFile.delete() );
-            // The temporary directory could not be deleted
-            assertTrue( path.toFile().delete() );
+            final File jsFile = new File( path.toFile(), "jpo.js" );
+            assertTrue( jsFile.exists() );
+            Files.delete( jsFile.toPath() );
+            Files.delete( path );
         } catch ( IOException ex ) {
-            fail( "Was not supposed to fail with the following Exception: " + ex.getMessage() );
+            fail(  ex.getMessage() );
         }
     }
 

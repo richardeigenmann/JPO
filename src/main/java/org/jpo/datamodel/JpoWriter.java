@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
@@ -133,16 +134,16 @@ public class JpoWriter {
      * @param bufferedWriter The writer
      * @throws IOException bubble-up IOException
      */
-    private static void enumerateGroup( SortableDefaultMutableTreeNode startNode, SortableDefaultMutableTreeNode groupNode,
-            BufferedWriter bufferedWriter,
-            File highresTargetDir,
-            boolean copyPics ) throws IOException {
-        GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
+    private static void enumerateGroup( final SortableDefaultMutableTreeNode startNode, final SortableDefaultMutableTreeNode groupNode,
+            final BufferedWriter bufferedWriter,
+            final File highresTargetDir,
+            final boolean copyPics ) throws IOException {
+        final GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
 
         groupInfo.dumpToXml( bufferedWriter, groupNode.equals( startNode), groupNode.getPictureCollection().getAllowEdits() );
 
         SortableDefaultMutableTreeNode childNode;
-        final Enumeration kids = groupNode.children();
+        final Enumeration<TreeNode> kids = groupNode.children();
         while ( kids.hasMoreElements() ) {
             childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if ( childNode.getUserObject() instanceof GroupInfo ) {

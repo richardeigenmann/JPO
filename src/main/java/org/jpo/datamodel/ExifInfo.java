@@ -130,11 +130,16 @@ public class ExifInfo {
      */
 
     private  String exifHeight = "";
+
+    public int getRotation() {
+        return rotation;
+    }
+
     /**
      * A full dump of the Exif information
      */
 
-    public int rotation;  // default is 0
+    private int rotation;  // default is 0
 
     /**
      * A full dump of the Exif information

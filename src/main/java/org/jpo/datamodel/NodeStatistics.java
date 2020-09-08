@@ -96,7 +96,7 @@ public class NodeStatistics {
         TreeNode n;
         final Enumeration<? extends TreeNode> nodes = start.children();
         while ( nodes.hasMoreElements() ) {
-            n = (TreeNode) nodes.nextElement();
+            n = nodes.nextElement();
             if ( n.getChildCount() > 0 ) {
                 count += countNodes( n );
             } else {

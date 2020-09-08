@@ -992,10 +992,15 @@ public class PictureInfo implements Serializable {
     }
 
     //----------------------------------------
+
+    public Set<Object> getCategoryAssignments() {
+        return categoryAssignments;
+    }
+
     /**
      * The category assignments are held in the categoryAssignments HashSet.
      */
-    public Set<Object> categoryAssignments;
+    private HashSet<Object> categoryAssignments;
 
     /**
      * removes all category Assignments

@@ -148,10 +148,9 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageFile() {
-        PictureInfo pi = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
-        File f = pi.getImageFile();
-        // Checking getHighresFile
-        assertEquals( new File("/dir/picture.jpg"), f);
+        final String FILENAME = "/dir/picture.jpg";
+        final PictureInfo pi = new PictureInfo(new File(FILENAME), "My Sample Picture");
+        assertEquals( new File(FILENAME), pi.getImageFile());
     }
 
     /**

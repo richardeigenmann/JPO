@@ -58,7 +58,7 @@ public class ExifInfoTest {
         assertEquals(ZERO, exifInfo.getLatLng().getY());
         assertEquals("", exifInfo.getLens());
         assertEquals("", exifInfo.getShutterSpeed());
-        assertEquals(0, exifInfo.rotation);
+        assertEquals(0, exifInfo.getRotation());
     }
 
     /**
@@ -81,7 +81,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("24-120mm f/3.5-5.6", exifInfo.getLens());
             assertEquals("1/750 sec", exifInfo.getShutterSpeed());
-            assertEquals(0, exifInfo.rotation);
+            assertEquals(0, exifInfo.getRotation());
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -108,7 +108,7 @@ public class ExifInfoTest {
             assertEquals( ZERO, exifInfo.getLatLng().getY());
             assertEquals( "", exifInfo.getLens());
             assertEquals( "1/1883 sec", exifInfo.getShutterSpeed());
-            assertEquals( 0, exifInfo.rotation);
+            assertEquals( 0, exifInfo.getRotation());
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -135,7 +135,7 @@ public class ExifInfoTest {
             assertEquals( 9.812583916666668, exifInfo.getLatLng().getY());
             assertEquals( "", exifInfo.getLens());
             assertEquals( "1/1879 sec", exifInfo.getShutterSpeed());
-            assertEquals( 0, exifInfo.rotation);
+            assertEquals( 0, exifInfo.getRotation());
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -162,7 +162,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
             assertEquals("", exifInfo.getShutterSpeed());
-            assertEquals(0, exifInfo.rotation);
+            assertEquals(0, exifInfo.getRotation());
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -189,7 +189,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
             assertEquals("", exifInfo.getShutterSpeed());
-            assertEquals(90, exifInfo.rotation);
+            assertEquals(90, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -216,7 +216,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
             assertEquals("", exifInfo.getShutterSpeed());
-            assertEquals(270, exifInfo.rotation);
+            assertEquals(270, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -243,7 +243,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
             assertEquals("", exifInfo.getShutterSpeed());
-            assertEquals(180, exifInfo.rotation);
+            assertEquals(180, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -296,7 +296,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getX());
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("EF-S17-85mm f/4-5.6 IS USM", exifInfo.getLens());
-            assertEquals(0, exifInfo.rotation);
+            assertEquals(0, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -322,7 +322,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getX());
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
-            assertEquals(0, exifInfo.rotation);
+            assertEquals(0, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -348,7 +348,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getX());
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
-            assertEquals(0, exifInfo.rotation);
+            assertEquals(0, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -374,7 +374,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getX());
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
-            assertEquals(0, exifInfo.rotation);
+            assertEquals(0, exifInfo.getRotation());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }

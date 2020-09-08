@@ -1,16 +1,27 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.*;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureCollection;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 public class ThumbnailDescriptionControllerTest {
@@ -30,8 +41,6 @@ public class ThumbnailDescriptionControllerTest {
         }
     }
 
-    private void assumeFalse(boolean headless) {
-    }
 
     @Test
     public void testSetNodeEmpty() {
@@ -39,7 +48,7 @@ public class ThumbnailDescriptionControllerTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 assertEquals("Error", panel.getDescription());
             } );
@@ -55,10 +64,10 @@ public class ThumbnailDescriptionControllerTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
-                PictureInfo pictureInfo = new PictureInfo();
+                final PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
                 controller.setNode(node);
                 assertEquals(pictureInfoDescription, controller.getDescription());
             } );
@@ -75,8 +84,8 @@ public class ThumbnailDescriptionControllerTest {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
                 final String groupDescription = "A GroupInfo description";
-                GroupInfo groupInfo = new GroupInfo(groupDescription);
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
+                final GroupInfo groupInfo = new GroupInfo(groupDescription);
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
                 controller.setNode(node);
                 assertEquals(groupDescription, controller.getDescription());
             } );

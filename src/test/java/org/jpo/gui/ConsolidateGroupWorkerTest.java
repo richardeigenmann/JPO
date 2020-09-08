@@ -12,7 +12,10 @@ import java.io.InputStream;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /*
  ConsolidateGroupWorkerTest.java: 
@@ -73,7 +76,7 @@ public class ConsolidateGroupWorkerTest {
         pi.setImageLocation( sourceImageFile );
 
         final File tempTargetDirectory = Files.createTempDir();
-        boolean returnCode = ConsolidateGroupWorker.needToMovePicture(pi, tempTargetDirectory);
+        final boolean returnCode = ConsolidateGroupWorker.needToMovePicture(pi, tempTargetDirectory);
         // Based on the info in the filenames the picture would need to be moved
         assertTrue(returnCode);
         assertTrue(tempSourceDirectory.delete());
@@ -88,8 +91,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -99,7 +102,7 @@ public class ConsolidateGroupWorkerTest {
         // test that is really exists
         assertTrue( sourceImageFile.canRead() );
 
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setImageLocation( sourceImageFile );
 
         boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempSourceDirectory );
@@ -117,8 +120,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File imageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+                final FileOutputStream fout = new FileOutputStream( imageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -128,7 +131,7 @@ public class ConsolidateGroupWorkerTest {
         // test that is really exists
         assertTrue( imageFile.canRead() );
 
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setImageLocation( imageFile );
 
         File tempTargetDirectory = Files.createTempDir();
@@ -154,8 +157,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
-        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -169,7 +172,7 @@ public class ConsolidateGroupWorkerTest {
             assertFalse( sourceImageFile.canWrite() );
         }
 
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setImageLocation( sourceImageFile );
 
         final File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
@@ -191,7 +194,7 @@ public class ConsolidateGroupWorkerTest {
         final File tempTargetDirectory = Files.createTempDir();
 
         try {
-            boolean returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory );
+            final boolean returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory );
             // Consolidation of a PictureInfo with a \"null\" highres file should return false
             assertFalse( returnCode );
         } catch ( NullPointerException ex ) {
@@ -210,7 +213,7 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
                 FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
@@ -224,7 +227,7 @@ public class ConsolidateGroupWorkerTest {
         final PictureInfo pi = new PictureInfo();
         pi.setImageLocation( sourceImageFile );
 
-        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempSourceDirectory );
+        final boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempSourceDirectory );
         // Consolidation of a PictureInfo to the same directory should return true
         assertTrue( returnCode );
 
@@ -242,8 +245,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -259,7 +262,7 @@ public class ConsolidateGroupWorkerTest {
         final File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
         assertTrue(tempTargetDirectory.mkdir());
 
-        boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
+        final boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
         // Consolidation of a PictureInfo to a new directory should succeed
         assertTrue( returnCode );
 
@@ -282,8 +285,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
-        try ( InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
+                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -301,7 +304,7 @@ public class ConsolidateGroupWorkerTest {
         pictureInfo.setImageLocation( sourceImageFile );
 
         final File tempTargetDirectory = Files.createTempDir();
-        boolean returnCode = ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory );
+        final boolean returnCode = ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory );
         // Consolidation of a readonly PictureInfo to a new directory should succeed but the move from " + sourceImageFile + " to " + tempTargetDirectory + " seems to have failed!"
         assertTrue(  returnCode );
 

@@ -548,9 +548,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             // Found reader should start with \"com.twelvemonkeys.imageio.plugins.tga.TGAImageReader\
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tga.TGAImageReader"));
-        } catch (final NoSuchElementException e) {
-            fail(e.getMessage());
-        } catch (final IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
         }
     }

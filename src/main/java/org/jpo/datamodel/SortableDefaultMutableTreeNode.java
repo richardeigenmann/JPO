@@ -1334,7 +1334,7 @@ public class SortableDefaultMutableTreeNode
         exifInfo.decodeExifTags();
         newPictureInfo.setCreationTime(exifInfo.getCreateDateTime());
         newPictureInfo.setLatLng(exifInfo.getLatLng());
-        newPictureInfo.setRotation(exifInfo.rotation);
+        newPictureInfo.setRotation(exifInfo.getRotation());
 
         return true;
     }

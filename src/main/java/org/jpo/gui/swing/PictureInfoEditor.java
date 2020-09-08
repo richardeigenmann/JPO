@@ -497,7 +497,7 @@ public class PictureInfoEditor extends JFrame {
             String category = myNode.getPictureCollection().getCategory(key);
             Category categoryObject = new Category(key, category);
             listModel.addElement(categoryObject);
-            if ((pictureInfo.categoryAssignments != null) && (pictureInfo.categoryAssignments.contains(key))) {
+            if ((pictureInfo.getCategoryAssignments() != null) && (pictureInfo.getCategoryAssignments().contains(key))) {
                 selections.add(listModel.indexOf(categoryObject));
             }
         });
