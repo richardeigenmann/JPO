@@ -19,20 +19,24 @@ import java.util.prefs.Preferences;
  */
 public class PrefObj {
 
+    private PrefObj() {
+        throw new IllegalStateException("Utility class");
+    }
+
     // Max byte count is 3/4 max string length (see Preferences
     // documentation).
 
-    static private final int PIECE_LENGTH
+    private static final int PIECE_LENGTH
             = ( ( 3 * Preferences.MAX_VALUE_LENGTH ) / 4 );
 
-    static private byte[] object2Bytes( Object o ) throws IOException {
+    private static byte[] object2Bytes( Object o ) throws IOException {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final ObjectOutputStream oos = new ObjectOutputStream( baos );
         oos.writeObject( o );
         return baos.toByteArray();
     }
 
-    static private byte[][] breakIntoPieces(byte[] raw) {
+    private static byte[][] breakIntoPieces(byte[] raw) {
         final int numPieces = ( raw.length + PIECE_LENGTH - 1 ) / PIECE_LENGTH;
         final byte[][] pieces = new byte[numPieces][];
         for ( int i = 0; i < numPieces; ++i ) {
@@ -48,7 +52,7 @@ public class PrefObj {
         return pieces;
     }
 
-    static private void writePieces( Preferences prefs, String key,
+    private static void writePieces( Preferences prefs, String key,
                                      byte[][] pieces) throws BackingStoreException {
         final Preferences node = prefs.node( key );
         node.clear();
@@ -57,7 +61,7 @@ public class PrefObj {
         }
     }
 
-    static private byte[][] readPieces( Preferences prefs, String key )
+    private static byte[][] readPieces( Preferences prefs, String key )
             throws BackingStoreException {
         final Preferences node = prefs.node( key );
         final String[] keys = node.keys();
@@ -69,7 +73,7 @@ public class PrefObj {
         return pieces;
     }
 
-    static private byte[] combinePieces(byte[][] pieces) {
+    private static byte[] combinePieces(byte[][] pieces) {
         int length = 0;
         for (byte[] piece : pieces) {
             length += piece.length;
@@ -83,7 +87,7 @@ public class PrefObj {
         return raw;
     }
 
-    static private Object bytes2Object(byte[] raw)
+    private static Object bytes2Object(byte[] raw)
             throws IOException, ClassNotFoundException {
         final ByteArrayInputStream bais = new ByteArrayInputStream( raw );
         final ObjectInputStream ois = new ObjectInputStream( bais );
@@ -99,7 +103,7 @@ public class PrefObj {
      * @throws IOException Error when no good
      * @throws BackingStoreException Error when no good
      */
-    static public void putObject( Preferences prefs, String key, Object o )
+    public static void putObject( Preferences prefs, String key, Object o )
             throws IOException, BackingStoreException {
         final byte[] raw = object2Bytes(o);
         final byte[][] pieces = breakIntoPieces(raw);
@@ -116,7 +120,7 @@ public class PrefObj {
      * @throws BackingStoreException Error if no good
      * @throws ClassNotFoundException Error if no good
      */
-    static public Object getObject( Preferences prefs, String key )
+    public static Object getObject( Preferences prefs, String key )
             throws IOException, BackingStoreException, ClassNotFoundException {
         final byte[][] pieces = readPieces(prefs, key);
         final byte[] raw = combinePieces(pieces);

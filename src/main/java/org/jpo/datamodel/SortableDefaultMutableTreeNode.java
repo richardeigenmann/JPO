@@ -4,9 +4,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
 import org.jpo.eventbus.JpoEventBus;
-import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.gui.JpoTransferable;
 import org.jpo.gui.ProgressGui;
 import org.jpo.gui.SourcePicture;
@@ -14,6 +14,7 @@ import org.jpo.gui.SourcePicture;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -683,14 +684,13 @@ public class SortableDefaultMutableTreeNode
      * @return a new node which is a clone of the old one
      */
     public SortableDefaultMutableTreeNode getClone() {
-        SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode();
-        if (this.getUserObject() instanceof PictureInfo) {
-            newNode.setUserObject(((PictureInfo) this.getUserObject()).getClone());
-        } else if (this.getUserObject() instanceof GroupInfo) {
-            newNode.setUserObject(((GroupInfo) this.getUserObject()).getClone());
-            Enumeration e = children();
+        final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode();
+        if (this.getUserObject() instanceof PictureInfo pi) {
+            newNode.setUserObject(pi.getClone());
+        } else if (this.getUserObject() instanceof GroupInfo gi) {
+            newNode.setUserObject(gi.getClone());
+            final Enumeration<TreeNode> e = children();
             while (e.hasMoreElements()) {
-                //logger.info( String.format( "Next Element: %s", e.nextElement().toString() ) );
                 newNode.add(((SortableDefaultMutableTreeNode) e.nextElement()).getClone());
             }
         }
@@ -728,7 +728,7 @@ public class SortableDefaultMutableTreeNode
      */
     public SortableDefaultMutableTreeNode addGroupNode(String description) {
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode newNode
+            final SortableDefaultMutableTreeNode newNode
                     = new SortableDefaultMutableTreeNode(
                     new GroupInfo(description));
             add(newNode);
@@ -775,8 +775,8 @@ public class SortableDefaultMutableTreeNode
             return false;
         }
 
-        PictureInfo pictureInfo = (PictureInfo) this.getUserObject();
-        File originalFile = pictureInfo.getImageFile();
+        final PictureInfo pictureInfo = (PictureInfo) this.getUserObject();
+        final File originalFile = pictureInfo.getImageFile();
 
         if (targetFile.exists()) {
             if (!targetFile.isDirectory()) {
@@ -831,7 +831,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final SortableDefaultMutableTreeNode parentNode = this.getParent();
             // abort if this action was attempted on the top node
             if (parentNode.getIndex(this) < 1) {
                 return;
@@ -871,7 +871,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final SortableDefaultMutableTreeNode parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
             int currentIndex = parentNode.getIndex(this);
             // abort if this action was attempted on the bottom node
@@ -894,7 +894,7 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final SortableDefaultMutableTreeNode parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
             // abort if this action was attempted on the bottom node
             if ((parentNode.getIndex(this) == -1)
@@ -917,14 +917,14 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final SortableDefaultMutableTreeNode parentNode = this.getParent();
             SortableDefaultMutableTreeNode childBefore = this;
             do {
                 childBefore = (SortableDefaultMutableTreeNode) parentNode.getChildBefore(childBefore);
             } while ((childBefore != null) && (!(childBefore.getUserObject() instanceof GroupInfo)));
 
             if (childBefore == null) {
-                SortableDefaultMutableTreeNode newGroup
+                final SortableDefaultMutableTreeNode newGroup
                         = new SortableDefaultMutableTreeNode(
                         new GroupInfo(Settings.jpoResources.getString("newGroup")));
                 parentNode.insert(newGroup, 0);
@@ -946,13 +946,13 @@ public class SortableDefaultMutableTreeNode
         if (this.isRoot()) {
             return;  // don't do anything with a root node.
         }
-        SortableDefaultMutableTreeNode parentNode = this.getParent();
+        final SortableDefaultMutableTreeNode parentNode = this.getParent();
         if (parentNode.isRoot()) {
             return;  // don't do anything with a root parent node.
         }
 
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode grandParentNode = parentNode.getParent();
+            final SortableDefaultMutableTreeNode grandParentNode = parentNode.getParent();
             int index = grandParentNode.getIndex(parentNode);
 
             this.removeFromParent();
@@ -1005,7 +1005,7 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized (targetNode.getRoot()) {
-            SortableDefaultMutableTreeNode targetParentNode = targetNode.getParent();
+            final SortableDefaultMutableTreeNode targetParentNode = targetNode.getParent();
             int targetIndex = targetParentNode.getIndex(targetNode);
             return moveToIndex(targetParentNode, targetIndex);
         }
@@ -1057,44 +1057,6 @@ public class SortableDefaultMutableTreeNode
         return super.getAllowsChildren();
     }
 
-    /*
-     * Copies the pictures from the source tree to the target directory and adds
-     * them to the collection creating a progress GUI.
-     *
-     * @param sourceDir          The source directory for the pictures
-     * @param targetDir          The target directory for the pictures
-     * @param groupName          the new name for the group
-     * @param newOnly            If true only pictures not yet in the collection will be
-     *                           added.
-     * @param retainDirectories  indicates that the directory structure should be
-     *                           preserved.
-     * @param selectedCategories the categories to be applied to the newly
-     *                           loaded pictures.
-     * @return the new group
-     *
-    public SortableDefaultMutableTreeNode copyAddPictures(File sourceDir,
-                                                          File targetDir, String groupName, boolean newOnly,
-                                                          boolean retainDirectories, HashSet<Object> selectedCategories) {
-        File[] files = sourceDir.listFiles();
-        ProgressGui progGui = new ProgressGui(Tools.countfiles(files),
-                Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
-                Settings.jpoResources.getString("picturesAdded"));
-
-        SortableDefaultMutableTreeNode newGroup
-                = new SortableDefaultMutableTreeNode(
-                new GroupInfo(groupName));
-
-        getPictureCollection().setSendModelUpdates(false);
-        boolean picturesAdded = copyAddPictures1(Objects.requireNonNull(files), targetDir, newGroup, progGui, newOnly, retainDirectories, selectedCategories);
-        progGui.switchToDoneMode();
-        getPictureCollection().setSendModelUpdates(true);
-        if (picturesAdded) {
-            add(newGroup);
-        } else {
-            newGroup = null;
-        }
-        return newGroup;
-    }*/
 
     /**
      * Copies the pictures from the source tree to the target directory and adds
@@ -1161,11 +1123,11 @@ public class SortableDefaultMutableTreeNode
     public static long copyPicture(File sourceFile, File targetFile) {
         LOGGER.fine(String.format("Copying file %s to file %s", sourceFile.toString(), targetFile.toString()));
         try (
-                InputStream in = new FileInputStream(sourceFile);
-                OutputStream out = new FileOutputStream(targetFile)) {
+                final InputStream in = new FileInputStream(sourceFile);
+                final OutputStream out = new FileOutputStream(targetFile)) {
 
-            BufferedInputStream bin = new BufferedInputStream(in);
-            BufferedOutputStream bout = new BufferedOutputStream(out);
+            final BufferedInputStream bin = new BufferedInputStream(in);
+            final BufferedOutputStream bout = new BufferedOutputStream(out);
 
             return copyBufferedStream(bin, bout);
         } catch (IOException e) {
@@ -1196,7 +1158,7 @@ public class SortableDefaultMutableTreeNode
                                 boolean copyMode, final JProgressBar progressBar) {
         LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir});
         getPictureCollection().setSendModelUpdates(false);
-        for (File file : fileCollection) {
+        for (final File file : fileCollection) {
             LOGGER.log(Level.FINE, "Processing file {}", file);
             if (progressBar != null) {
                 SwingUtilities.invokeLater(

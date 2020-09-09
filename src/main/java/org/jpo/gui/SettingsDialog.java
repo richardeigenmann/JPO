@@ -573,7 +573,7 @@ public class SettingsDialog extends JDialog {
 
         autoLoadJTextField.setText( Settings.autoLoad );
 
-        startupSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximiseJpoOnStartup, Settings.mainFrameDimensions ) );
+        startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.mainFrameDimensions ) );
         viewerSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximisePictureViewerWindow, Settings.pictureViewerDefaultDimensions ) );
 
         maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
@@ -651,10 +651,10 @@ public class SettingsDialog extends JDialog {
         Settings.tagCloudWords = (Integer) tagCloudWordsJSpinner.getValue();
 
         if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
-            Settings.maximiseJpoOnStartup = true;
+            Settings.setMaximiseJpoOnStartup(true);
             Settings.mainFrameDimensions = new Dimension( 0, 0 );
         } else {
-            Settings.maximiseJpoOnStartup = false;
+            Settings.setMaximiseJpoOnStartup(false);
             Settings.mainFrameDimensions = new Dimension( Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()] );
         }
 

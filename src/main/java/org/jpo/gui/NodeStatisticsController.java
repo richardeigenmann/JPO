@@ -92,7 +92,7 @@ public class NodeStatisticsController {
                 nodeStatisticsBean.setNumberOfPictures( nodeStatistics.getNumberOfPicturesString() );
                 nodeStatisticsBean.setSizeOfPictures( nodeStatistics.getSizeOfPicturesString() );
 
-                if ( Settings.writeLog ) {
+                if (Settings.isWriteLog()) {
                     nodeStatisticsBean.setFreeMemory( Tools.freeMemory() );
                     nodeStatisticsBean.setQueueCount( Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size() );
                     nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.getPictureCollection().getSelection().size() ) );

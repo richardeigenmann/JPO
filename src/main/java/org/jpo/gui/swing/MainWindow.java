@@ -121,7 +121,7 @@ public class MainWindow extends JFrame {
         statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
         pack();
 
-        if ( Settings.maximiseJpoOnStartup ) {
+        if (Settings.isMaximiseJpoOnStartup()) {
             setExtendedState( MAXIMIZED_BOTH );
         }
 

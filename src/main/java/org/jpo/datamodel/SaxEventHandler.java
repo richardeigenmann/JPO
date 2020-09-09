@@ -30,6 +30,7 @@ import static org.jpo.datamodel.Settings.FieldCodes.*;
  */
 public class SaxEventHandler extends DefaultHandler {
 
+    private static final String LINE_SEPERATOR = System.getProperty("line.separator");
     private final LabelFrame loadProgressGui;
 
     /**
@@ -78,9 +79,9 @@ public class SaxEventHandler extends DefaultHandler {
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
             if ( attrs.getValue( "collection_icon" ).length() > 1 ) {
-                lowresUrls.append( System.getProperty( "line.separator" ) );
+                lowresUrls.append(LINE_SEPERATOR);
                 lowresUrls.append( attrs.getValue( "collection_icon" ) );
-                lowresUrls.append( System.getProperty( "line.separator" ) );
+                lowresUrls.append(LINE_SEPERATOR);
             }
             currentGroup.setUserObject(groupInfo);
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
@@ -89,7 +90,7 @@ public class SaxEventHandler extends DefaultHandler {
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null ? attrs.getValue( "group_name" ) : "" );
             if ( attrs.getValue( "group_icon" ).length() > 1 ) {
                 lowresUrls.append( attrs.getValue( "group_icon" ) );
-                lowresUrls.append( System.getProperty( "line.separator" ) );
+                lowresUrls.append(LINE_SEPERATOR);
             }
             SortableDefaultMutableTreeNode nextCurrentGroup
                     = new SortableDefaultMutableTreeNode(groupInfo);
@@ -164,7 +165,7 @@ public class SaxEventHandler extends DefaultHandler {
                     currentGroup = currentGroup.getParent();
                     break;
                 case "file_lowres_URL":
-                    lowresUrls.append( System.getProperty( "line.separator" ) );
+                    lowresUrls.append(LINE_SEPERATOR);
                     break;
                 case "ROTATION":
                     ( (PictureInfo) currentPicture.getUserObject() ).parseRotation();
@@ -180,7 +181,6 @@ public class SaxEventHandler extends DefaultHandler {
                     temporaryCategory = "";
                     break;
                 default:
-                    //LOGGER.severe( "Don't recognize qName: " + qName + " Ignoring" );
                     //Nothing needs to be done on the other types of endElement
                     break;
             }
@@ -207,7 +207,6 @@ public class SaxEventHandler extends DefaultHandler {
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToImageLocation( s );
                 break;
             case FILE_LOWRES_URL:
-                //( (PictureInfo) currentPicture.getUserObject() ).appendToLowresLocation( s );
                 lowresUrls.append( s );
                 break;
             case FILM_REFERENCE:
@@ -265,12 +264,10 @@ public class SaxEventHandler extends DefaultHandler {
 
     public static InputSource getCollectionDtdInputSource() {
         final String COLLECTION_DTD_FILE_NAME = "collection.dtd";
-        LOGGER.info( "Trying to load the collection.dtd from the resource: "
-                + COLLECTION_DTD_FILE_NAME );
+        LOGGER.log(Level.INFO, "Trying to load the collection.dtd from the resource: {0}", COLLECTION_DTD_FILE_NAME );
         URL collectionDtd = XmlReader.class.getClassLoader().getResource( COLLECTION_DTD_FILE_NAME );
         if ( collectionDtd == null ) {
-            LOGGER.severe( "Failed to find the file " + COLLECTION_DTD_FILE_NAME
-                    + ". Did something go wrong in the packaging of the application?" );
+            LOGGER.log(Level.SEVERE, "Failed to find the file {0}. Did something go wrong in the packaging of the application?" , COLLECTION_DTD_FILE_NAME);
             return null;
         } else {
             LOGGER.info( "Loading collection.dtd from URL: " + collectionDtd.toString() );

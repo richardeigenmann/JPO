@@ -4,25 +4,14 @@ import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -707,6 +696,7 @@ public class PictureCollection {
 
     /**
      * Is a thread loading a file?
+     *
      * @return true if a thread is loading a file
      */
     public boolean isFileLoading() {
@@ -776,7 +766,7 @@ public class PictureCollection {
      * @throws FileNotFoundException When no good
      */
     public static void fileLoad(File fileToLoad, SortableDefaultMutableTreeNode node) throws FileNotFoundException {
-        LOGGER.log(Level.INFO,"Loading file: {0}", fileToLoad);
+        LOGGER.log(Level.INFO, "Loading file: {0}", fileToLoad);
         final InputStream is = new FileInputStream(fileToLoad);
         streamLoad(is, node);
     }
@@ -831,17 +821,17 @@ public class PictureCollection {
             final File temporaryFile = new File(xmlFile.getPath() + ".!!!");
             JpoWriter.write(temporaryFile, getRootNode(), false);
             final File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
-            if ( ! xmlFile.renameTo(backupOriginalFile) ) {
-                LOGGER.log(Level.SEVERE,"Could not rename original file to {0}", backupOriginalFile);
+            if (!xmlFile.renameTo(backupOriginalFile)) {
+                LOGGER.log(Level.SEVERE, "Could not rename original file to {0}", backupOriginalFile);
             } else {
-                if ( ! temporaryFile.renameTo(xmlFile) ) {
-                    LOGGER.log(Level.SEVERE,"Could not rename temp file {0} to {1}", new Object[]{temporaryFile, xmlFile});
+                if (!temporaryFile.renameTo(xmlFile)) {
+                    LOGGER.log(Level.SEVERE, "Could not rename temp file {0} to {1}", new Object[]{temporaryFile, xmlFile});
                 } else {
                     setUnsavedUpdates(false);
                     try {
                         Files.delete(backupOriginalFile.toPath());
                     } catch (IOException e) {
-                        LOGGER.log(Level.SEVERE,"Could not delete backed up original file {0}\n{1}", new Object[]{backupOriginalFile, e.getMessage()});
+                        LOGGER.log(Level.SEVERE, "Could not delete backed up original file {0}\n{1}", new Object[]{backupOriginalFile, e.getMessage()});
                     }
                     Settings.pushRecentCollection(xmlFile.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
@@ -876,11 +866,10 @@ public class PictureCollection {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = testNode.getUserObject();
             if (nodeObject instanceof PictureInfo pi && pi.getImageFile().equals(comparingFile)) {
-                    testNodeParent = testNode.getParent();
-                    if (!parentGroups.contains(testNodeParent)) {
-                        LOGGER.log(Level.FINE, "adding node: {0}", testNodeParent.toString());
-                        parentGroups.add(testNodeParent);
-                    }
+                testNodeParent = testNode.getParent();
+                if (!parentGroups.contains(testNodeParent)) {
+                    LOGGER.log(Level.FINE, "adding node: {0}", testNodeParent.toString());
+                    parentGroups.add(testNodeParent);
                 }
             }
         }

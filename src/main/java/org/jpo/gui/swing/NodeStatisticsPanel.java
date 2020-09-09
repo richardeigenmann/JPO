@@ -93,7 +93,7 @@ public class NodeStatisticsPanel extends JPanel {
         collectionGroupsLabel.setText( nodeStatisticsBean.getNumberOfGroups() );
         collectionPicturesLabel.setText( nodeStatisticsBean.getNumberOfPictures() );
         collectionSizeJLabel.setText( nodeStatisticsBean.getSizeOfPictures() );
-        if ( Settings.writeLog ) {
+        if (Settings.isWriteLog()) {
             freeMemoryJLabel.setText( nodeStatisticsBean.getFreeMemory() );
             freeMemoryJLabel.setVisible( true );
             queueCountJLabel.setText( nodeStatisticsBean.getQueueCount() );

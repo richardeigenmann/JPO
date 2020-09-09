@@ -65,21 +65,33 @@ public class Settings {
         Settings.pictureCollection = pictureCollection;
     }
 
+    public static boolean isWriteLog() {
+        return writeLog;
+    }
+
     /**
      * flag to indicate that debug information should be logged
      */
-    public static boolean writeLog = false;
+    private static boolean writeLog = false;
 
     /**
      * the filename of the logfile
      */
-    public static File logfile;
+    private static File logfile;
+
+    public static boolean isMaximiseJpoOnStartup() {
+        return maximiseJpoOnStartup;
+    }
+
+    public static void setMaximiseJpoOnStartup(boolean maximiseJpoOnStartup) {
+        Settings.maximiseJpoOnStartup = maximiseJpoOnStartup;
+    }
 
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or
      * left for the OS to decide on the size together with the JVM
      */
-    public static boolean maximiseJpoOnStartup = true;
+    private static boolean maximiseJpoOnStartup = true;
 
     /**
      * the dimensions of the main JPO frame
