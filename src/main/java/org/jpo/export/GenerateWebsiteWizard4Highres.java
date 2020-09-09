@@ -85,7 +85,7 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel( new MigLayout() );
+        final JPanel wizardPanel = new JPanel( new MigLayout() );
 
         // create checkbox for highres export
         exportHighresJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setExportHighres( exportHighresJCheckBox.isSelected() ));
@@ -111,5 +111,6 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 }

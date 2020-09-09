@@ -53,6 +53,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(WebsiteGenerator.class.getName());
+    private static final String JPO_CSS = "jpo.css";
+    private static final String ROBOTS_TXT = "robots.txt";
 
     /**
      * Temporary object to scale the image for the html output.
@@ -134,8 +136,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         if (options.isGenerateZipfile()) {
             try (
-                    FileOutputStream dest = new FileOutputStream(new File(options.getTargetDirectory(), options.getDownloadZipFileName()));
-                    BufferedOutputStream buf = new BufferedOutputStream(dest)) {
+                    final FileOutputStream dest = new FileOutputStream(new File(options.getTargetDirectory(), options.getDownloadZipFileName()));
+                    final BufferedOutputStream buf = new BufferedOutputStream(dest)) {
                 zipFile = new ZipOutputStream(buf);
             } catch (FileNotFoundException x) {
                 LOGGER.log(Level.SEVERE, "Error creating Zipfile. Coninuing without Zip\n{0}", x.toString());
@@ -144,10 +146,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
 
         writeCss(options.getTargetDirectory());
-        files.add(new File(options.getTargetDirectory(), "jpo.css"));
+        files.add(new File(options.getTargetDirectory(), JPO_CSS));
         if (options.isWriteRobotsTxt()) {
             writeRobotsTxt(options.getTargetDirectory());
-            files.add(new File(options.getTargetDirectory(), "robots.txt"));
+            files.add(new File(options.getTargetDirectory(), ROBOTS_TXT));
         }
         LOGGER.info("Done static files");
 
@@ -163,20 +165,20 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
 
         if (folderIconRequired) {
-            File folderIconFile = new File(options.getTargetDirectory(), "jpo_folder_icon.gif");
+            final File folderIconFile = new File(options.getTargetDirectory(), "jpo_folder_icon.gif");
             try (
-                    InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/icon_folder.gif")).openStream();
-                    FileOutputStream outStream = new FileOutputStream(folderIconFile);
-                    BufferedInputStream bin = new BufferedInputStream(inStream);
-                    BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+                    final InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/icon_folder.gif")).openStream();
+                    final FileOutputStream outStream = new FileOutputStream(folderIconFile);
+                    final BufferedInputStream bin = new BufferedInputStream(inStream);
+                    final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
                 files.add(folderIconFile);
 
                 int count;
-                byte[] data = new byte[BUFFER_SIZE];
+                final byte[] data = new byte[BUFFER_SIZE];
                 while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
                     bout.write(data, 0, count);
                 }
-            } catch (IOException x) {
+            } catch (final IOException x) {
                 JOptionPane.showMessageDialog(
                         Settings.anchorFrame,
                         "got an IOException copying icon_folder.gif\n" + x.getMessage(),
@@ -220,7 +222,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         try {
             URI uri = new URI("file://" + options.getTargetDirectory() + "/index.htm");
             Desktop.getDesktop().browse(uri);
-        } catch (IOException | URISyntaxException ex) {
+        } catch (final IOException | URISyntaxException ex) {
             LOGGER.severe(ex.getLocalizedMessage());
         }
     }
@@ -247,8 +249,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 groupFile = new File(options.getTargetDirectory(), "jpo_" + hashCode + ".htm");
             }
             files.add(groupFile);
-            BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
-            DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(options.getPicsPerRow(), out);
+            final BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
+            final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(options.getPicsPerRow(), out);
 
             LOGGER.info(String.format("Writing: %s", groupFile.toString()));
             out.write("<!DOCTYPE HTML>");
@@ -361,18 +363,18 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param    descriptionsBuffer    A buffer for the thumbnails page
      */
     private void writePicture(
-            SortableDefaultMutableTreeNode pictureNode,
-            BufferedWriter out,
-            File groupFile,
-            int childNumber,
-            int childCount,
-            DescriptionsBuffer descriptionsBuffer)
+            final SortableDefaultMutableTreeNode pictureNode,
+            final BufferedWriter out,
+            final File groupFile,
+            final int childNumber,
+            final int childCount,
+            final DescriptionsBuffer descriptionsBuffer)
             throws IOException {
 
-        PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
+        final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
         publish(String.format("Writing picture node %d: %s", picsWroteCounter, pictureInfo.toString()));
 
-        String extension = FilenameUtils.getExtension(pictureInfo.getImageFile().getName());
+        final String extension = FilenameUtils.getExtension(pictureInfo.getImageFile().getName());
         File lowresFile;
         File midresFile;
         File highresFile;
@@ -381,24 +383,24 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.info("Before Switch");
         switch (options.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
+                final String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
                 lowresFile = new File(options.getTargetDirectory(), rootName + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), rootName + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), rootName + "_h." + extension);
                 midresHtmlFileName = rootName + ".htm";
                 break;
             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 1);
-                String padding = "00000";
-                String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                String root = "jpo_" + formattedNumber;
+                final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 1);
+                final String padding = "00000";
+                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                final String root = "jpo_" + formattedNumber;
                 lowresFile = new File(options.getTargetDirectory(), root + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), root + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), root + "_h." + extension);
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
                 break;
             default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                String fn = "jpo_" + pictureNode.hashCode();
+                final String fn = "jpo_" + pictureNode.hashCode();
                 lowresFile = new File(options.getTargetDirectory(), fn + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), fn + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), fn + "_h." + extension);
@@ -1199,8 +1201,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void writeCss(File directory) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = Objects.requireNonNull(cl.getResource("jpo.css")).openStream();
-                FileOutputStream outStream = new FileOutputStream(new File(directory, "jpo.css"));
+                InputStream in = Objects.requireNonNull(cl.getResource(JPO_CSS)).openStream();
+                FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_CSS));
                 BufferedInputStream bin = new BufferedInputStream(in);
                 BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
             int c;
@@ -1226,8 +1228,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void writeRobotsTxt(File directory) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = Objects.requireNonNull(cl.getResource("robots.txt")).openStream();
-                FileOutputStream outStream = new FileOutputStream(new File(directory, "robots.txt"));
+                InputStream in = Objects.requireNonNull(cl.getResource(ROBOTS_TXT)).openStream();
+                FileOutputStream outStream = new FileOutputStream(new File(directory, ROBOTS_TXT));
                 BufferedInputStream bin = new BufferedInputStream(in);
                 BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
             int c;

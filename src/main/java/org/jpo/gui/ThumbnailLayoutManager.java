@@ -38,7 +38,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param widthProvider The width providing JComponent. Typically the
      * JViewport of the JScrollPane showing the thumbnails.
      */
-    public ThumbnailLayoutManager( JComponent widthProvider ) {
+    public ThumbnailLayoutManager( final JComponent widthProvider ) {
         this.widthProvider = widthProvider;
     }
 
@@ -54,7 +54,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param comp component
      */
     @Override
-    public void addLayoutComponent( String name, Component comp ) {
+    public void addLayoutComponent( final String name, final Component comp ) {
+        // noop
     }
 
     /**
@@ -63,7 +64,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param comp component
      */
     @Override
-    public void removeLayoutComponent( Component comp ) {
+    public void removeLayoutComponent( final Component comp ) {
+        // noop
     }
 
     /**
@@ -73,11 +75,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @return preferred size
      */
     @Override
-    public Dimension preferredLayoutSize( Container parent ) {
+    public Dimension preferredLayoutSize( final Container parent ) {
         synchronized ( parent.getTreeLock() ) {
             calculateCols();
-            int columns = getCols();
-            int width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
+            final int columns = getCols();
+            final int width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
             int height = 0;
 
             int rowComponentHeight;
@@ -103,7 +105,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @return preferred size
      */
     @Override
-    public Dimension minimumLayoutSize( Container target ) {
+    public Dimension minimumLayoutSize( final Container target ) {
         return preferredLayoutSize( target );
     }
 
@@ -118,7 +120,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      *
      * @param newThumbnailWidth The width of the thumbnails in the layout.
      */
-    public void setThumbnailWidth( int newThumbnailWidth ) {
+    public void setThumbnailWidth( final int newThumbnailWidth ) {
         thumbnailWidth = newThumbnailWidth;
     }
 
@@ -141,7 +143,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      *
      * @param newGutter The amount of pixels to use as gutter.
      */
-    public void setHorizontalGutter( int newGutter ) {
+    public void setHorizontalGutter( final int newGutter ) {
         horizontalGutter = newGutter;
     }
 
@@ -164,7 +166,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      *
      * @param newGutter The amount of pixels to use as gutter.
      */
-    public void setVerticalGutter( int newGutter ) {
+    public void setVerticalGutter( final int newGutter ) {
         verticalGutter = newGutter;
     }
 
@@ -185,10 +187,10 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param parent Parent
      */
     @Override
-    public void layoutContainer( Container parent ) {
+    public void layoutContainer( final Container parent ) {
         synchronized ( parent.getTreeLock() ) {
             calculateCols();
-            int columns = getCols();
+            final int columns = getCols();
 
             int column = 0;
             int rowBaseline = -getVerticalGutter();
@@ -203,7 +205,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
                 }
 
                 // coordinates for a Thumbnail
-                int width = getThumbnailWidth();
+                final int width = getThumbnailWidth();
                 int height = parent.getComponent( i ).getPreferredSize().height;
                 int x = ( column * width ) + ( ( 1 + column ) * getHorizontalGutter() );
                 int y = rowBaseline - height;
@@ -228,7 +230,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param cols The number of columns in the row
      * @return The height of the row
      */
-    private int getHeightOfRow( Container parent, int index, int cols ) {
+    private int getHeightOfRow( final Container parent, final int index, final int cols ) {
         int height = 0;
         for ( int i = 0; ( ( 2 * i ) + index < parent.getComponentCount() ) && ( i < cols ); i++ ) {
             height = Math.max( height, parent.getComponent( index + ( 2 * i ) ).getPreferredSize().height );
@@ -241,7 +243,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * result.
      */
     public void calculateCols() {
-        int newCols = calculateCols( widthProvider.getWidth() );
+        final int newCols = calculateCols( widthProvider.getWidth() );
         if ( newCols != getCols() ) {
             setCols( newCols );
         }
@@ -253,7 +255,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param width Width
      * @return the number of columns
      */
-    public int calculateCols( int width ) {
+    public int calculateCols( final int width ) {
         int newCols = ( width / ( getThumbnailWidth() + getHorizontalGutter() ) );
         if ( newCols < 1 ) {
             newCols = 1;
@@ -270,7 +272,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @param parent Parent
      * @return the width of the parent component.
      */
-    public static int getParentComponentWidth( Container parent ) {
+    public static int getParentComponentWidth( final Container parent ) {
         LOGGER.info( parent.toString() );
         Container queryComponent = parent;
         if ( parent.getParent() != null ) {
@@ -305,7 +307,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      *
      * @param cols The new number of columns-
      */
-    private void setCols( int cols ) {
+    private void setCols( final int cols ) {
         this.cols = cols;
     }
 }

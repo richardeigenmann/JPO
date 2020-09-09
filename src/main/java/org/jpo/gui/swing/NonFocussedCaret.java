@@ -39,6 +39,7 @@ public class NonFocussedCaret
      * @param nloc rectangle
      */
     @Override
-    protected void adjustVisibility( Rectangle nloc ) {
+    protected void adjustVisibility( final Rectangle nloc ) {
+        // noop
     }
 } 

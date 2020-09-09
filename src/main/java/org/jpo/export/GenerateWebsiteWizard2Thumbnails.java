@@ -96,12 +96,13 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]" ) );
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "picsPerRowText" ) ), "align label" );
+        final JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]" ) );
+        final String ALIGN_LABEL= "align label";
+        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "picsPerRowText" ) ), ALIGN_LABEL);
         picsPerRow.addChangeListener( ( ChangeEvent arg0 ) -> options.setPicsPerRow( ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).getNumber().intValue() ));
         wizardPanel.add( picsPerRow, "wrap" );
 
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), "align label" );
+        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), ALIGN_LABEL);
         thumbWidth.addChangeListener( ( ChangeEvent arg0 ) -> options.setThumbnailWidth( ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue() ));
         wizardPanel.add( thumbWidth, "split 3" );
         wizardPanel.add( new JLabel( " x " ) );
@@ -111,7 +112,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         // Thumbnail Quality Slider
         wizardPanel.add(
                 new JLabel(
-                        Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ), "align label" );
+                        Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ), ALIGN_LABEL);
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(
                 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );

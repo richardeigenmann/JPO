@@ -905,6 +905,6 @@ public class GenerateWebsiteRequest implements Request {
         Settings.htmlBackgroundColor = getBackgroundColor();
         Settings.htmlFontColor = getFontColor();
         Settings.writeRobotsTxt = isWriteRobotsTxt();
-        Settings.unsavedSettingChanges = true;
+        Settings.setUnsavedSettingChanges(true);
     }
 }

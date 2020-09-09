@@ -12,10 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.IndexColorModel;
-import java.awt.image.RenderedImage;
+import java.awt.image.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -595,21 +592,21 @@ public class ScalablePicture
         if (renderedImage == null ) {
             return;
         }
-        Iterator writers = ImageIO.getImageWritersByFormatName( "jpg" );
-        ImageWriter writer = (ImageWriter) writers.next();
-        JPEGImageWriteParam params = new JPEGImageWriteParam( null );
+        final Iterator writers = ImageIO.getImageWritersByFormatName( "jpg" );
+        final ImageWriter writer = (ImageWriter) writers.next();
+        final JPEGImageWriteParam params = new JPEGImageWriteParam( null );
         params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
         params.setCompressionQuality( jpgQuality );
         params.setProgressiveMode( ImageWriteParam.MODE_DISABLED );
         params.setDestinationType(
-                new ImageTypeSpecifier( IndexColorModel.getRGBdefault(),
-                        IndexColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
+                new ImageTypeSpecifier( ColorModel.getRGBdefault(),
+                        ColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
 
-        try ( ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(
+        try ( final ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(
                 new FileOutputStream( targetFile ) ) ) {
             writer.setOutput( imageOutputStream );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
-        } catch ( IOException e ) {
+        } catch ( final IOException e ) {
             LOGGER.severe( e.getMessage() );
         }
         writer.dispose();
@@ -623,21 +620,21 @@ public class ScalablePicture
      * @param	renderedImage	The RenderedImage (BufferedImage) to be written
      * @param	jpgQuality	The quality with which to compress to jpg
      */
-    public static void writeJpg( OutputStream writeStream,
-            RenderedImage renderedImage, float jpgQuality ) {
-        Iterator writers = ImageIO.getImageWritersByFormatName( "jpg" );
-        ImageWriter writer = (ImageWriter) writers.next();
-        JPEGImageWriteParam params = new JPEGImageWriteParam( null );
+    public static void writeJpg( final OutputStream writeStream,
+            final RenderedImage renderedImage, final float jpgQuality ) {
+        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName( "jpg" );
+        final ImageWriter writer = writers.next();
+        final JPEGImageWriteParam params = new JPEGImageWriteParam( null );
         params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
         params.setCompressionQuality( jpgQuality );
         params.setProgressiveMode( ImageWriteParam.MODE_DISABLED );
-        params.setDestinationType( new ImageTypeSpecifier( java.awt.image.IndexColorModel.getRGBdefault(),
-                IndexColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
+        params.setDestinationType( new ImageTypeSpecifier( ColorModel.getRGBdefault(),
+                ColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
 
-        try ( ImageOutputStream ios = ImageIO.createImageOutputStream( writeStream ) ) {
+        try ( final ImageOutputStream ios = ImageIO.createImageOutputStream( writeStream ) ) {
             writer.setOutput( ios );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
-        } catch ( IOException e ) {
+        } catch ( final IOException e ) {
             LOGGER.info( "Caught IOException: " + e.getMessage() );
         }
         writer.dispose();

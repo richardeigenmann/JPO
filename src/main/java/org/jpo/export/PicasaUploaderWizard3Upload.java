@@ -70,14 +70,17 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
 
             @Override
             public void wizardFinished( WizardModelEvent wme ) {
+                // noop
             }
 
             @Override
             public void wizardModelChanged( WizardModelEvent wme ) {
+                // noop
             }
 
             @Override
             public void stepShown( WizardModelEvent wme ) {
+                // noop
             }
         } );
     }
@@ -90,8 +93,8 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel();
-        MigLayout layout = new MigLayout( "wrap 1" );
+        final JPanel wizardPanel = new JPanel();
+        final MigLayout layout = new MigLayout( "wrap 1" );
         wizardPanel.setLayout( layout );
 
         progressBar.setStringPainted( true );

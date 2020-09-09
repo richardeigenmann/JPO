@@ -55,8 +55,7 @@ public class GenerateWebsiteWizard {
     public GenerateWebsiteWizard( SortableDefaultMutableTreeNode startNode ) {
         options.setStartNode( startNode );
 
-        // JWizz stuff
-        WizardModel model = new DefaultWizardModel( new Step[]{
+        final WizardModel model = new DefaultWizardModel( new Step[]{
             new GenerateWebsiteWizard1Welcome( options ),
             new GenerateWebsiteWizard2Thumbnails( options ),
             new GenerateWebsiteWizard3Midres( options ),
@@ -69,10 +68,12 @@ public class GenerateWebsiteWizard {
         model.addWizardModelListener( new WizardModelListener() {
             @Override
             public void stepShown( WizardModelEvent arg0 ) {
+                // noop
             }
 
             @Override
             public void wizardCanceled( WizardModelEvent arg0 ) {
+                // noop
             }
 
             @Override
@@ -83,10 +84,11 @@ public class GenerateWebsiteWizard {
 
             @Override
             public void wizardModelChanged( WizardModelEvent arg0 ) {
+                // noop
             }
         } );
 
-        Wizard wizard = new Wizard( model, Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
+        final Wizard wizard = new Wizard( model, Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 
         wizard.pack();
         wizard.setLocationRelativeTo( Settings.anchorFrame );

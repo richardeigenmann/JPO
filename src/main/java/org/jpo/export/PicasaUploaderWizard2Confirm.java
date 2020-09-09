@@ -51,13 +51,13 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel();
-        MigLayout layout = new MigLayout( "wrap 1" );
+        final JPanel wizardPanel = new JPanel();
+        final MigLayout layout = new MigLayout( "wrap 1" );
         wizardPanel.setLayout( layout );
 
         wizardPanel.add( info );
-        SortableDefaultMutableTreeNode node = myRequest.getNode();
-        String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
+        final SortableDefaultMutableTreeNode node = myRequest.getNode();
+        final String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
         int pics = NodeStatistics.countPictures( node, false );
         info.setText( String.format( "Uploading Album%n%s%nwith %d pictures to Picasa", albumName, pics ) );
 
@@ -69,5 +69,6 @@ public class PicasaUploaderWizard2Confirm extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 }

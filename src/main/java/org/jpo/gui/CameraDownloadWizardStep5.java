@@ -62,16 +62,16 @@ public class CameraDownloadWizardStep5
      */
     @Override
     protected JComponent createComponent() {
-        JPanel stepComponent = new JPanel();
+        final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
-        JLabel label1 = new JLabel( "After loading, sort by:" );
+        final JLabel label1 = new JLabel( "After loading, sort by:" );
         label1.setAlignmentX( Component.LEFT_ALIGNMENT );
         stepComponent.add( label1 );
         stepComponent.add( Box.createVerticalGlue() );
 
 
-        List<SortOption> sortOptions = Settings.getSortOptions();
-        JComboBox <SortOption> sortChoice = new JComboBox<>( sortOptions.toArray( new SortOption[0]) );
+        final List<SortOption> sortOptions = Settings.getSortOptions();
+        final JComboBox <SortOption> sortChoice = new JComboBox<>( sortOptions.toArray( new SortOption[0]) );
         for ( int i = 0; i < sortOptions.size(); i++ ) {
             if ( sortOptions.get(i).getSortCode() == dataModel.getSortCode() ) {
                 sortChoice.setSelectedIndex( i );
@@ -102,6 +102,7 @@ public class CameraDownloadWizardStep5
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 
 

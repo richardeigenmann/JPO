@@ -67,6 +67,7 @@ public class ApplicationEventHandler {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandler.class.getName());
+    private static final String GENERIC_ERROR = Settings.jpoResources.getString("genericError");
 
     /**
      * This class handles most of the events flying around the JPO application
@@ -217,7 +218,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleCloseApplicationRequest(CloseApplicationRequest request) {
         JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest());
-        if (Settings.unsavedSettingChanges) {
+        if (Settings.isUnsavedSettingChanges()) {
             Settings.writeSettings();
         }
 
@@ -332,7 +333,7 @@ public class ApplicationEventHandler {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this.toString(),
-                    Settings.jpoResources.getString("genericError"),
+                    GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -362,7 +363,7 @@ public class ApplicationEventHandler {
                     JOptionPane.showMessageDialog(
                             Settings.anchorFrame,
                             Settings.jpoResources.getString("dateRangeError"),
-                            Settings.jpoResources.getString("genericError"),
+                            GENERIC_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -576,7 +577,7 @@ public class ApplicationEventHandler {
                                 LOGGER.log(Level.INFO, "FileNotFoundException: {0}", ex.getMessage());
                                 JOptionPane.showMessageDialog(Settings.anchorFrame,
                                         ex.getMessage(),
-                                        Settings.jpoResources.getString("genericError"),
+                                        GENERIC_ERROR,
                                         JOptionPane.ERROR_MESSAGE);
                                 JpoEventBus.getInstance().post(new StartNewCollectionRequest());
                             }
@@ -722,7 +723,7 @@ public class ApplicationEventHandler {
             LOGGER.log(Level.INFO, "{0}.fileToLoad: FileNotFoundException: {1}", new Object[]{this.getClass().toString(), x.getMessage()});
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     "File not found:\n" + fileToLoad.getPath(),
-                    Settings.jpoResources.getString("genericError"),
+                    GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
         }
         newNode.getPictureCollection().setUnsavedUpdates(true);
@@ -946,7 +947,7 @@ public class ApplicationEventHandler {
         if (!request.getTargetLocation().canWrite()) {
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     Settings.jpoResources.getString("htmlDistCanWriteError"),
-                    Settings.jpoResources.getString("genericError"),
+                    GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -978,7 +979,7 @@ public class ApplicationEventHandler {
         if (!request.getTargetLocation().isDirectory()) {
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     Settings.jpoResources.getString("htmlDistIsDirError"),
-                    Settings.jpoResources.getString("genericError"),
+                    GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -986,7 +987,7 @@ public class ApplicationEventHandler {
         if (!request.getTargetLocation().canWrite()) {
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     Settings.jpoResources.getString("htmlDistCanWriteError"),
-                    Settings.jpoResources.getString("genericError"),
+                    GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -1313,7 +1314,7 @@ public class ApplicationEventHandler {
             if (!ok) {
                 JOptionPane.showMessageDialog(Settings.anchorFrame,
                         Settings.jpoResources.getString("fileDeleteError") + highresFile.toString(),
-                        Settings.jpoResources.getString("genericError"),
+                        GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -1362,7 +1363,7 @@ public class ApplicationEventHandler {
                     if (!ok) {
                         JOptionPane.showMessageDialog(Settings.anchorFrame,
                                 Settings.jpoResources.getString("fileDeleteError") + highresFile.toString(),
-                                Settings.jpoResources.getString("genericError"),
+                                GENERIC_ERROR,
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
@@ -1396,7 +1397,7 @@ public class ApplicationEventHandler {
                     LOGGER.log(Level.INFO, "FileNotFoundException: {0}", ex.getMessage());
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             ex.getMessage(),
-                            Settings.jpoResources.getString("genericError"),
+                            GENERIC_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -1516,10 +1517,10 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleUnsavedUpdatesDialogRequest(UnsavedUpdatesDialogRequest request) {
+    public void handleUnsavedUpdatesDialogRequest(final UnsavedUpdatesDialogRequest request) {
         Tools.checkEDT();
         if (Settings.getPictureCollection().getUnsavedUpdates()) {
-            Object[] options = {
+            final Object[] options = {
                     Settings.jpoResources.getString("discardChanges"),
                     Settings.jpoResources.getString("genericSaveButtonLabel"),
                     Settings.jpoResources.getString("FileSaveAsMenuItemText"),
@@ -1539,14 +1540,17 @@ public class ApplicationEventHandler {
                     JpoEventBus.getInstance().post(request.getNextRequest());
                     break;
                 case 1:
-                    FileSaveRequest fileSaveRequest = new FileSaveRequest();
+                    final FileSaveRequest fileSaveRequest = new FileSaveRequest();
                     fileSaveRequest.setOnSuccessNextRequest(request.getNextRequest());
                     JpoEventBus.getInstance().post(fileSaveRequest);
                     break;
                 case 2:
-                    FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
+                    final FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
                     fileSaveAsRequest.setOnSuccessNextRequest(request.getNextRequest());
                     JpoEventBus.getInstance().post(fileSaveAsRequest);
+                    break;
+                default:
+                    // do a cancel if no other option was chosen
                     break;
             }
         } else {
@@ -1561,14 +1565,14 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRefreshThumbnailRequest(RefreshThumbnailRequest request) {
-        for (SortableDefaultMutableTreeNode node : request.getNodes()) {
+    public void handleRefreshThumbnailRequest(final RefreshThumbnailRequest request) {
+        for (final SortableDefaultMutableTreeNode node : request.getNodes()) {
             if (node.isRoot()) {
                 LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
                 return;
             }
             LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thumbnail", this.toString()));
-            ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
+            final ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
             t.setNode(new SingleNodeNavigator(node), 0);
         }
     }
@@ -1579,11 +1583,11 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRotatePictureRequestRequest(RotatePictureRequest request) {
-        PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
+    public void handleRotatePictureRequestRequest(final RotatePictureRequest request) {
+        final PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
         pictureInfo.rotate(request.getAngle());
         LOGGER.info("Changed the rotation");
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(request.getNode());
         nodes.add(request.getNode().getParent());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, request.getPriority()));
@@ -1611,7 +1615,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleOpenCategoryEditorRequest(OpenCategoryEditorRequest request) {
+    public void handleOpenCategoryEditorRequest(final OpenCategoryEditorRequest request) {
         new CategoryEditorJFrame();
     }
 
@@ -1621,9 +1625,9 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowGroupPopUpMenuRequest(ShowGroupPopUpMenuRequest request) {
-        Runnable r = () -> {
-            GroupPopupMenu groupPopupMenu = new GroupPopupMenu(request.getNode());
+    public void handleShowGroupPopUpMenuRequest(final ShowGroupPopUpMenuRequest request) {
+        final Runnable r = () -> {
+            final GroupPopupMenu groupPopupMenu = new GroupPopupMenu(request.getNode());
             groupPopupMenu.show(request.getInvoker(), request.getX(), request.getY());
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -1639,9 +1643,9 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowPicturePopUpMenuRequest(ShowPicturePopUpMenuRequest request) {
-        Runnable r = () -> {
-            PicturePopupMenu picturePopupMenu = new PicturePopupMenu(request.getNodes(), request.getIndex());
+    public void handleShowPicturePopUpMenuRequest(final ShowPicturePopUpMenuRequest request) {
+        final Runnable r = () -> {
+            final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(request.getNodes(), request.getIndex());
             picturePopupMenu.show(request.getInvoker(), request.getX(), request.getY());
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -1658,7 +1662,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRunUserFunctionRequest(RunUserFunctionRequest request) {
+    public void handleRunUserFunctionRequest(final RunUserFunctionRequest request) {
         try {
             runUserFunction(request.getUserFunctionIndex(), request.getPictureInfo());
         } catch (ClassCastException | NullPointerException x) {
@@ -1677,7 +1681,7 @@ public class ApplicationEventHandler {
      * @param myObject     The PictureInfo upon which the user function should be
      *                     executed.
      */
-    private static void runUserFunction(int userFunction, PictureInfo myObject) {
+    private static void runUserFunction(final int userFunction, final PictureInfo myObject) {
         if ((userFunction < 0) || (userFunction >= Settings.MAX_USER_FUNCTIONS)) {
             LOGGER.info("Error: called with an out of bounds index");
             return;
@@ -1688,16 +1692,16 @@ public class ApplicationEventHandler {
             return;
         }
 
-        String filename = (myObject).getImageFile().toString();
+        final String filename = (myObject).getImageFile().toString();
         command = command.replaceAll("%f", filename);
 
-        String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
+        final String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
         command = command.replaceAll("%e", escapedFilename);
 
         try {
-            URL pictureURL = myObject.getImageFile().toURI().toURL();
+            final URL pictureURL = myObject.getImageFile().toURI().toURL();
             command = command.replaceAll("%u", pictureURL.toString());
-        } catch (MalformedURLException x) {
+        } catch (final MalformedURLException x) {
             LOGGER.log(Level.SEVERE, "Could not substitute %u with the URL: {0}", x.getMessage());
             return;
         }
@@ -1709,16 +1713,16 @@ public class ApplicationEventHandler {
             // which messes up the filename parameters
             int blank = command.indexOf(' ');
             if (blank > -1) {
-                String[] cmdarray = new String[2];
+                final String[] cmdarray = new String[2];
                 cmdarray[0] = command.substring(0, blank);
                 cmdarray[1] = command.substring(blank + 1);
                 Runtime.getRuntime().exec(cmdarray);
             } else {
-                String[] cmdarray = new String[1];
+                final String[] cmdarray = new String[1];
                 cmdarray[0] = command;
                 Runtime.getRuntime().exec(cmdarray);
             }
-        } catch (IOException x) {
+        } catch (final IOException x) {
             LOGGER.log(Level.INFO, "Runtime.exec collapsed with and IOException: {0}", x.getMessage());
         }
     }
@@ -1761,7 +1765,7 @@ public class ApplicationEventHandler {
 
         @Override
         public void treeNodesChanged(TreeModelEvent e) {
-            TreePath tp = e.getTreePath();
+            final TreePath tp = e.getTreePath();
             LOGGER.fine(String.format("The main app model listener trapped a tree node change event on the tree path: %s", tp.toString()));
             if (tp.getPathCount() == 1) { //if the root node sent the event
                 LOGGER.fine("Since this is the root node we will update the ApplicationTitle");
@@ -1782,7 +1786,7 @@ public class ApplicationEventHandler {
 
         @Override
         public void treeStructureChanged(TreeModelEvent e) {
-            TreePath tp = e.getTreePath();
+            final TreePath tp = e.getTreePath();
             if (tp.getPathCount() == 1) { //if the root node sent the event
                 updateApplicationTitle();
             }

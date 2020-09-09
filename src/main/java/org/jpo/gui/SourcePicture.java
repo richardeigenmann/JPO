@@ -192,8 +192,7 @@ public class SourcePicture {
             sourcePictureBufferedImage = null;
             return;
         }
-        try (ByteArrayInputStream bis = imageBytes.getByteArrayInputStream();
-             ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
+        try (final ByteArrayInputStream bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
             reader = getImageIOReader(iis);
             if (reader == null) {
                 LOGGER.severe(String.format("No reader found for URL: %s", imageFile.toString()));
@@ -211,9 +210,9 @@ public class SourcePicture {
                 if (sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
                     LOGGER.fine(String.format("Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR));
 
-                    BufferedImage newImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
+                    final BufferedImage newImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
                             sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-                    Graphics2D g = newImage.createGraphics();
+                    final Graphics2D g = newImage.createGraphics();
                     g.drawImage(sourcePictureBufferedImage, 0, 0, null);
                     g.dispose();
                     sourcePictureBufferedImage = newImage;
@@ -233,8 +232,7 @@ public class SourcePicture {
             }
             reader.removeIIOReadProgressListener(myIIOReadProgressListener);
             reader.dispose();
-            //iis.close();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             sourcePictureBufferedImage = null;
         }
@@ -242,17 +240,17 @@ public class SourcePicture {
         if (!abortFlag) {
             if (rotation != 0) {
                 setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageFile.toString());
-                int xRot = sourcePictureBufferedImage.getWidth() / 2;
-                int yRot = sourcePictureBufferedImage.getHeight() / 2;
-                AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
+                final int xRot = sourcePictureBufferedImage.getWidth() / 2;
+                final int yRot = sourcePictureBufferedImage.getHeight() / 2;
+                final AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
                 AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
                 Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
                 // a simple AffineTransform would give negative top left coordinates -->
                 // do another transform to get 0,0 as top coordinates again.
-                double minX = newBounds.getMinX();
-                double minY = newBounds.getMinY();
+                final double minX = newBounds.getMinX();
+                final double minY = newBounds.getMinY();
 
-                AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
+                final AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
                 rotateAf.preConcatenate(translateAf);
                 op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
                 newBounds = op.getBounds2D(sourcePictureBufferedImage);
@@ -260,7 +258,7 @@ public class SourcePicture {
                 // this piece of code is so essential!!! Otherwise the internal image format
                 // is totally altered and either the AffineTransformOp decides it doesn't
                 // want to rotate the image or web browsers can't read the resulting image.
-                BufferedImage targetImage = new BufferedImage(
+                final BufferedImage targetImage = new BufferedImage(
                         (int) newBounds.getWidth(),
                         (int) newBounds.getHeight(),
                         BufferedImage.TYPE_3BYTE_BGR);
@@ -285,10 +283,10 @@ public class SourcePicture {
      * @param file The file to be checked
      * @return true if the JVM has a reader false if not.
      */
-    public static boolean jvmHasReader(File file) {
-        try (FileImageInputStream testStream = new FileImageInputStream(file)) {
+    public static boolean jvmHasReader(final File file) {
+        try (final FileImageInputStream testStream = new FileImageInputStream(file)) {
             return ImageIO.getImageReaders(testStream).hasNext();
-        } catch (IOException x) {
+        } catch (final IOException x) {
             LOGGER.log(Level.INFO, x.getLocalizedMessage());
             return false;
         }
@@ -296,9 +294,9 @@ public class SourcePicture {
 
 
     @TestOnly
-    public static ImageReader getImageIOReader(ImageInputStream iis) {
-        Iterator readerIterator = ImageIO.getImageReaders(iis);
-        return (ImageReader) readerIterator.next();
+    public static ImageReader getImageIOReader(final ImageInputStream iis) {
+        final Iterator<ImageReader> readerIterator = ImageIO.getImageReaders(iis);
+        return readerIterator.next();
     }
 
     /**
@@ -316,7 +314,7 @@ public class SourcePicture {
      * @param exemptionFile The exemption URL
      * @return True if loading in progress, false if not
      */
-    public boolean stopLoadingExcept(File exemptionFile) {
+    public boolean stopLoadingExcept(final File exemptionFile) {
         if ((imageFile == null) || (exemptionFile == null)) {
             LOGGER.fine("exiting on a null parameter. How did this happen?");
             return false; // has never been used yet
@@ -487,19 +485,19 @@ public class SourcePicture {
     private class MyIIOReadProgressListener
             implements IIOReadProgressListener {
 
-        private void notifySourceLoadProgressListeners(SourcePictureStatus statusCode,
-                                                       int percentage) {
+        private void notifySourceLoadProgressListeners(final SourcePictureStatus statusCode,
+                                                       final int percentage) {
             percentLoaded = percentage;
             sourcePictureListeners.forEach((sourcePictureListener) -> sourcePictureListener.sourceLoadProgressNotification(statusCode, percentage));
         }
 
         @Override
-        public void imageComplete(ImageReader source) {
+        public void imageComplete(final ImageReader source) {
             notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_COMPLETED, 100);
         }
 
         @Override
-        public void imageProgress(ImageReader source, float percentageDone) {
+        public void imageProgress(final ImageReader source, final float percentageDone) {
             if (abortFlag) {
                 reader.abort();
             }
@@ -507,36 +505,40 @@ public class SourcePicture {
         }
 
         @Override
-        public void imageStarted(ImageReader source, int imageIndex) {
+        public void imageStarted(final ImageReader source, final int imageIndex) {
             notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_STARTED, 0);
         }
 
         @Override
-        public void readAborted(ImageReader source) {
+        public void readAborted(final ImageReader source) {
+            // noop
         }
 
         @Override
-        public void sequenceComplete(ImageReader source) {
+        public void sequenceComplete(final ImageReader source) {
+            // noop
         }
 
         @Override
-        public void sequenceStarted(ImageReader source, int minIndex) {
+        public void sequenceStarted(final ImageReader source, final int minIndex) {
+            // noop
         }
 
         @Override
-        public void thumbnailComplete(ImageReader source) {
+        public void thumbnailComplete(final ImageReader source) {
+            // noop
         }
 
         @Override
-        public void thumbnailProgress(ImageReader source, float percentageDone) {
+        public void thumbnailProgress(final ImageReader source, final float percentageDone) {
             if (abortFlag) {
                 reader.abort();
             }
         }
 
         @Override
-        public void thumbnailStarted(ImageReader source, int imageIndex,
-                                     int thumbnailIndex) {
+        public void thumbnailStarted(final ImageReader source, final int imageIndex,
+                                     final int thumbnailIndex) {
         }
     }
 }

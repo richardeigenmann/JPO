@@ -52,7 +52,6 @@ public class CameraDownloadWizardStep3
      * @param dataModel The data model
      */
     public CameraDownloadWizardStep3( CameraDownloadWizardData dataModel ) {
-        //pass step title and description
         super( Settings.jpoResources.getString( "DownloadCameraWizardStep3Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep3Description" ) );
         this.dataModel = dataModel;
     }
@@ -70,8 +69,7 @@ public class CameraDownloadWizardStep3
      */
     @Override
     protected JComponent createComponent() {
-        //return component shown to the user
-        JPanel stepComponent = new JPanel();
+        final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         final JCheckBox createSubGroupCheckBox = new JCheckBox( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text0" ) );
         createSubGroupCheckBox.setAlignmentX( Component.LEFT_ALIGNMENT );
@@ -128,7 +126,7 @@ public class CameraDownloadWizardStep3
         collectionJTree.addTreeSelectionListener(( TreeSelectionEvent e ) -> {
             LOGGER.fine( String.format( "listening to a value changed event e: %s", e.toString() ) );
             // Are we trying to get the last clicked node? Not sure this is best...
-            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
             try {
                 if ( node.getUserObject() instanceof GroupInfo ) {
                     dataModel.setTargetNode( node );
@@ -144,19 +142,19 @@ public class CameraDownloadWizardStep3
         });
 
         // if there is only a root node in the collection, select it by default
-        Object root = dataModel.getTreeModel().getRoot();
+        final Object root = dataModel.getTreeModel().getRoot();
         if ( dataModel.getTreeModel().isLeaf( root ) ) {
-            TreePath rp = new TreePath( root );
+            final TreePath rp = new TreePath( root );
             collectionJTree.setSelectionPath( rp );
         }
 
         // if no node is selected, select the root node
         if ( collectionJTree.getSelectionCount() < 1 ) {
-            TreePath rp = new TreePath( root );
+            final TreePath rp = new TreePath( root );
             collectionJTree.setSelectionPath( rp );
         }
 
-        JScrollPane jsp = new JScrollPane( collectionJTree );
+        final JScrollPane jsp = new JScrollPane( collectionJTree );
         stepComponent.add( jsp );
         jsp.setAlignmentX( Component.LEFT_ALIGNMENT );
         return stepComponent;
@@ -167,5 +165,6 @@ public class CameraDownloadWizardStep3
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 }

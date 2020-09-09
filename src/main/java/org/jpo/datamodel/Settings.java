@@ -264,10 +264,19 @@ public class Settings {
      * the path to the jar file; derived from jarAutostartList
      */
     public static String jarRoot = null;
+
+    public static boolean isUnsavedSettingChanges() {
+        return unsavedSettingChanges;
+    }
+
+    public static void setUnsavedSettingChanges(boolean unsavedSettingChanges) {
+        Settings.unsavedSettingChanges = unsavedSettingChanges;
+    }
+
     /**
      * variable that tracks if there are unsaved changes in these settings.
      */
-    public static boolean unsavedSettingChanges = false;
+    private static boolean unsavedSettingChanges = false;
     /**
      * URL of the document type definition in the xml file.
      */
@@ -1004,12 +1013,13 @@ public class Settings {
         prefs.putInt("NumberOfCameras", cameras.size());
         int i = 0;
         for (Camera c : cameras) {
-            prefs.put("Camera[" + i + "].description", c.getDescription());
-            prefs.put("Camera[" + i + "].cameraMountPoint", c.getCameraMountPoint());
-            prefs.putBoolean("Camera[" + i + "].useFilename", c.getUseFilename());
-            prefs.putBoolean("Camera[" + i + "].monitor", c.getMonitorForNewPictures());
+            final String camera = "Camera[" + i + "]";
+            prefs.put(camera + ".description", c.getDescription());
+            prefs.put(camera + ".cameraMountPoint", c.getCameraMountPoint());
+            prefs.putBoolean(camera + ".useFilename", c.getUseFilename());
+            prefs.putBoolean(camera + ".monitor", c.getMonitorForNewPictures());
             try {
-                PrefObj.putObject(prefs, "Camera[" + i + "].oldImage", c.getOldImage());
+                PrefObj.putObject(prefs, camera + ".oldImage", c.getOldImage());
             } catch (IOException | BackingStoreException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }
@@ -1024,15 +1034,16 @@ public class Settings {
     public static void loadCameraSettings() {
         int numberOfCameras = prefs.getInt("NumberOfCameras", 0);
         for (int i = 0; i < numberOfCameras; i++) {
-            Camera camera = new Camera();
-            camera.setDescription(prefs.get("Camera[" + i + "].description", "unknown"));
-            camera.setCameraMountPoint(prefs.get("Camera[" + i + "].cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString()));
-            camera.setUseFilename(prefs.getBoolean("Camera[" + i + "].useFilename", true));
-            camera.setMonitorForNewPictures(prefs.getBoolean("Camera[" + i + "].monitor", true));
+            final Camera camera = new Camera();
+            final String CAMERA = "Camera[" + i + "]";
+            camera.setDescription(prefs.get(CAMERA + ".description", "unknown"));
+            camera.setCameraMountPoint(prefs.get(CAMERA + ".cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString()));
+            camera.setUseFilename(prefs.getBoolean(CAMERA + ".useFilename", true));
+            camera.setMonitorForNewPictures(prefs.getBoolean(CAMERA + ".monitor", true));
 
             camera.setOldImage(new HashMap<>());
             try {
-                camera.setOldImage((HashMap) PrefObj.getObject(prefs, "Camera[" + i + "].oldImage"));
+                camera.setOldImage((HashMap) PrefObj.getObject(prefs, CAMERA + ".oldImage"));
             } catch (IOException | BackingStoreException | ClassNotFoundException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }

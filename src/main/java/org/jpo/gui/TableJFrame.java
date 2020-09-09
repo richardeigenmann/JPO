@@ -59,12 +59,10 @@ public class TableJFrame extends JFrame {
         this.groupNode = groupNode;
         setTitle( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() );
 
-        MyTableModel myModel = new MyTableModel();
-        TableSorter sorter = new TableSorter( myModel );
-        JTable table = new JTable( sorter );
+        final MyTableModel myModel = new MyTableModel();
+        final TableSorter sorter = new TableSorter( myModel );
+        final JTable table = new JTable( sorter );
         table.setCellSelectionEnabled( true );
-
-        //JTableCopyPasteClipboardAdapter myExcelAdapter = new JTableCopyPasteClipboardAdapter( table );
 
         sorter.addMouseListenerToHeaderInTable( table );
         table.setPreferredScrollableViewportSize( new Dimension( 1000, 700 ) );
@@ -83,9 +81,9 @@ public class TableJFrame extends JFrame {
         addKeyListener( new KeyListener() {
             @Override
             public void keyTyped( KeyEvent e ) {
+                // noop
             }
 
-            //TODO Doesn't work! Attach to the Cell Editor instead?
             @Override
             public void keyPressed( KeyEvent e ) {
                 if ( e.getKeyCode() == KeyEvent.VK_DELETE ) {
@@ -95,6 +93,7 @@ public class TableJFrame extends JFrame {
 
             @Override
             public void keyReleased( KeyEvent e ) {
+                // noop
             }
         } );
 
@@ -159,30 +158,30 @@ public class TableJFrame extends JFrame {
          * underlying data model in the JTree
          */
         @Override
-        public Object getValueAt( int row, int col ) {
+        public Object getValueAt( final int row, final int col ) {
             if ( col == 0 ) {
                 return row + 1; // index
             }
-            SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
-            Object userObject = queryNode.getUserObject();
-            if ( userObject instanceof PictureInfo ) {
+            final SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
+            final Object userObject = queryNode.getUserObject();
+            if ( userObject instanceof PictureInfo pi ) {
                 switch ( col ) {
                     case 1:
-                        return ( (PictureInfo) userObject ).getDescription();
+                        return pi.getDescription();
                     case 2:
-                        return ( (PictureInfo) userObject ).getImageLocation();
+                        return pi.getImageLocation();
                     case 3:
-                        return ( (PictureInfo) userObject ).getFilmReference();
+                        return pi.getFilmReference();
                     case 4:
-                        return ( (PictureInfo) userObject ).getCreationTime();
+                        return pi.getCreationTime();
                     case 5:
-                        return ( (PictureInfo) userObject ).getComment();
+                        return pi.getComment();
                     case 6:
-                        return ( (PictureInfo) userObject ).getPhotographer();
+                        return pi.getPhotographer();
                     case 7:
-                        return ( (PictureInfo) userObject ).getCopyrightHolder();
+                        return pi.getCopyrightHolder();
                     case 8:
-                        return ( (PictureInfo) userObject ).getLatLngString();
+                        return pi.getLatLngString();
                     default:
                         return "Unknown Column: " + col;
                 }
@@ -200,35 +199,35 @@ public class TableJFrame extends JFrame {
          * underlying data model in the JTree
          */
         @Override
-        public void setValueAt( Object value, int row, int col ) {
-            SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
-            Object userObject = queryNode.getUserObject();
-            String newString = value.toString();
-            if ( userObject instanceof PictureInfo ) {
+        public void setValueAt( final Object value, final int row, final int col ) {
+            final SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
+            final Object userObject = queryNode.getUserObject();
+            final String newString = value.toString();
+            if ( userObject instanceof PictureInfo pi) {
                 switch ( col ) {
                     case 1:
-                        ( (PictureInfo) userObject ).setDescription( newString );
+                        pi.setDescription( newString );
                         break;
                     case 2:
-                        ( (PictureInfo) userObject ).setImageLocation( new File( newString ) );
+                        pi.setImageLocation( new File( newString ) );
                         break;
                     case 3:
-                        ( (PictureInfo) userObject ).setFilmReference( newString );
+                        pi.setFilmReference( newString );
                         break;
                     case 4:
-                        ( (PictureInfo) userObject ).setCreationTime( newString );
+                        pi.setCreationTime( newString );
                         break;
                     case 5:
-                        ( (PictureInfo) userObject ).setComment( newString );
+                        pi.setComment( newString );
                         break;
                     case 6:
-                        ( (PictureInfo) userObject ).setPhotographer( newString );
+                        pi.setPhotographer( newString );
                         break;
                     case 7:
-                        ( (PictureInfo) userObject ).setCopyrightHolder( newString );
+                        pi.setCopyrightHolder( newString );
                         break;
                     case 8:
-                        ( (PictureInfo) userObject ).setLatLng( newString );
+                        pi.setLatLng( newString );
                         break;
                     default:
                         LOGGER.log( Level.INFO, "Bad column: {0}", Integer.toString( col ));

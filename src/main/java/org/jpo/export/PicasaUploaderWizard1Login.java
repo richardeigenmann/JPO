@@ -68,8 +68,8 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel();
-        MigLayout layout = new MigLayout( "wrap 2" );
+        final JPanel wizardPanel = new JPanel();
+        final MigLayout layout = new MigLayout( "wrap 2" );
         wizardPanel.setLayout( layout );
 
         final Dimension minimumSize = new Dimension( 250, 28 );
@@ -94,7 +94,7 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
                     Settings.rememberGoogleCredentials = true;
                     Settings.googleUsername = userNameJTextField.getText();
                     Settings.googlePassword = new String( passwordJPasswordField.getPassword() );
-                    Settings.unsavedSettingChanges = true;
+                    Settings.setUnsavedSettingChanges(true);
                 } else {
                     LOGGER.info( "wiping" );
                     Settings.rememberGoogleCredentials = false;
@@ -135,5 +135,6 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 }

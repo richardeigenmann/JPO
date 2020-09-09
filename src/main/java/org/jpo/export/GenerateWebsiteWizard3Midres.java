@@ -109,20 +109,21 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
+        final JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
 
         generateMidresHtmlJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
             generateMapJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
             mouseoverJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
             options.setGenerateMidresHtml( generateMidresHtmlJCheckBox.isSelected() );
         });
-        wizardPanel.add( generateMidresHtmlJCheckBox, "spanx, wrap" );
+        final String SPANX_WRAP = "spanx, wrap";
+        wizardPanel.add( generateMidresHtmlJCheckBox, SPANX_WRAP);
 
         generateMapJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMap( generateMapJCheckBox.isSelected() ));
-        wizardPanel.add( generateMapJCheckBox, "spanx, wrap" );
+        wizardPanel.add( generateMapJCheckBox, SPANX_WRAP);
 
         mouseoverJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMouseover( mouseoverJCheckBox.isSelected() ));
-        wizardPanel.add( mouseoverJCheckBox, "spanx, wrap" );
+        wizardPanel.add( mouseoverJCheckBox, SPANX_WRAP);
 
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), "align label" );
         midresWidthJSpinner.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() ));
