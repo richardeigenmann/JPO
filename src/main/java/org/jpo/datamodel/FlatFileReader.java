@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.eventbus.AddFlatFileRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
@@ -57,16 +58,8 @@ public class FlatFileReader {
 
         try ( BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8)  ) ) {
             while ( in.ready() ) {
-                String line = in.readLine();
-                File testFile;
-                try {
-                    testFile = new File( new URI( line ) );
-                } catch ( URISyntaxException | IllegalArgumentException x ) {
-                    LOGGER.info( x.getLocalizedMessage() );
-                    // The filename might just be a plain filename without URI format try this:
-                    testFile = new File (line );
-                    line = testFile.toURI().toString();
-                }
+                final String line = in.readLine();
+                final File testFile = getFile(line);
 
                 if ( !testFile.canRead() ) {
                     LOGGER.log( Level.INFO, "Can''t read file: {0}", line);
@@ -76,21 +69,34 @@ public class FlatFileReader {
                 if (! jvmHasReader(testFile)) continue;
 
                 LOGGER.log( Level.INFO, "adding file to node: {0}", line);
-                SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
-                        new PictureInfo( new File(line), FilenameUtils.getBaseName( testFile.getName() ) ) );
+                final SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
+                        new PictureInfo( testFile, FilenameUtils.getBaseName( testFile.getName() ) ) );
                 newNode.add( newPictureNode );
             }
             request.getNode().add( newNode );
             request.getNode().getPictureCollection().sendNodeStructureChanged( request.getNode() );
             request.getNode().getPictureCollection().setUnsavedUpdates( false );
             JpoEventBus.getInstance().post( new ShowGroupRequest( newNode ) );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
             JOptionPane.showMessageDialog( Settings.anchorFrame,
                     ex.getLocalizedMessage(),
                     Settings.jpoResources.getString( "genericError" ),
                     JOptionPane.ERROR_MESSAGE );
         }
+    }
+
+    @NotNull
+    private static File getFile(String filename) {
+        File testFile;
+        try {
+            testFile = new File( new URI(filename) );
+        } catch ( URISyntaxException | IllegalArgumentException x ) {
+            LOGGER.info( x.getLocalizedMessage() );
+            // The filename might just be a plain filename without URI format try this:
+            testFile = new File (filename);
+        }
+        return testFile;
     }
 
     private static boolean jvmHasReader(File testFile) {

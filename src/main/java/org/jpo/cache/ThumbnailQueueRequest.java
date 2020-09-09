@@ -24,18 +24,17 @@ import java.awt.Dimension;
 /**
  * The ThumbnailQueueRequest is the type of object that will sit on the
  * {@link ThumbnailCreationQueue} with a references to the
- * {@link org.jpo.gui.ThumbnailController}, the queue priority and an indicator whether the
- * thumbnail creation must be forced. TODO: Analyse how often a new picture is
- * thrown on the queue. Could be a bit too often... TODO: Perhaps we should not
- * throw thumbnails on the queue but lowresimages as these are not exactly the
- * same as a GUI component which is what a ThumbnailController is.
+ * {@link org.jpo.gui.ThumbnailQueueRequestCallbackHandler} and the queue priority.
+ * When the Thumbnail has been created the
+ * {@link ThumbnailQueueRequestCallbackHandler#callbackThumbnailCreated}
+ * method will be fired and the caller can process the new Thumbnail.
  */
 public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> {
 
     /**
      *
      */
-    protected ThumbnailQueueRequestCallbackHandler callbackHandler;
+    protected final ThumbnailQueueRequestCallbackHandler callbackHandler;
 
     /**
      * the priority the request has on the queue.

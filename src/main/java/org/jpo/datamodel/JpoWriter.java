@@ -64,19 +64,10 @@ public class JpoWriter {
      * @param startNode The node to start from
      * @param copyPics whether to copy the pictures to the target dir
      */
-    public static void write( File xmlOutputFile, SortableDefaultMutableTreeNode startNode, boolean copyPics ) {
-        File highresTargetDir = null;
+    public static void write( final File xmlOutputFile, final SortableDefaultMutableTreeNode startNode, final boolean copyPics ) {
+        File highresTargetDir = getHighresTargetDir(copyPics, xmlOutputFile);
         try {
-            if ( copyPics ) {
-                highresTargetDir = new File( xmlOutputFile.getParentFile(), "Highres" );
-
-                if ( (! highresTargetDir.mkdirs() ) && (! highresTargetDir.canWrite() ) ) {
-                    LOGGER.log(Level.SEVERE, "There was a problem creating dir {0}", highresTargetDir );
-                    return;
-                }
-            }
-
-            try (BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), StandardCharsets.UTF_8) )) {
+            try (final BufferedWriter bufferedWriter = new BufferedWriter( new OutputStreamWriter( new FileOutputStream( xmlOutputFile ), StandardCharsets.UTF_8) )) {
 
                 // header
                 bufferedWriter.write( "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" );
@@ -90,7 +81,7 @@ public class JpoWriter {
                 bufferedWriter.write( "<categories>" );
                 bufferedWriter.newLine();
 
-                Iterator i = startNode.getPictureCollection().getCategoryIterator();
+                Iterator<Integer> i = startNode.getPictureCollection().getCategoryIterator();
                 Integer key;
                 String category;
                 while ( i.hasNext() ) {
@@ -127,6 +118,20 @@ public class JpoWriter {
         }
     }
 
+    private static File getHighresTargetDir(boolean copyPics, File xmlOutputFile){
+        File highresTargetDir = null;
+
+        if ( copyPics ) {
+            highresTargetDir = new File(xmlOutputFile.getParentFile(), "Highres");
+
+
+            if ((!highresTargetDir.mkdirs()) && (!highresTargetDir.canWrite())) {
+                LOGGER.log(Level.SEVERE, "There was a problem creating dir {0}", highresTargetDir);
+                return null;
+            }
+        }
+        return highresTargetDir;
+    }
     /**
      * recursively invoked method to report all groups.
      *
