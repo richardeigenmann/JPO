@@ -56,7 +56,7 @@ public class ThumbnailDescriptionController
      * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
      * ThumbnailDescriptionJPanel.MINI_INFO,
      */
-    private DescriptionSize displayMode = MINI_INFO;
+    private DescriptionSize displayMode = LARGE_DESCRIPTION;
 
 
     /**
@@ -147,10 +147,10 @@ public class ThumbnailDescriptionController
         Object userObject = referringNode.getUserObject();
         if (userObject != null && !panel.getDescription().equals(userObject.toString())) {
             // the description was changed
-            if (userObject instanceof PictureInfo) {
-                ((PictureInfo) referringNode.getUserObject()).setDescription(panel.getDescription());
-            } else if (userObject instanceof GroupInfo) {
-                ((GroupInfo) referringNode.getUserObject()).setGroupName(panel.getDescription());
+            if (userObject instanceof PictureInfo pi) {
+                pi.setDescription(panel.getDescription());
+            } else if (userObject instanceof GroupInfo gi) {
+                gi.setGroupName(panel.getDescription());
             }
         }
     }
@@ -215,7 +215,7 @@ public class ThumbnailDescriptionController
         }
         panel.setTextAreaSize();
 
-        panel.getHighresLocationJTextField().setVisible(
+        panel.showFilename(
                 (referringNode != null)
                         && (referringNode.getUserObject() instanceof PictureInfo)
                         && (displayMode == MINI_INFO)
@@ -230,8 +230,8 @@ public class ThumbnailDescriptionController
      */
     public void setVisible(boolean visibility) {
         panel.setVisible(visibility);
-        panel.getPictureDescriptionJTA().setVisible(visibility);
-        panel.getPictureDescriptionJSP().setVisible(visibility);
+        //panel.getPictureDescriptionJTA().setVisible(visibility);
+        //panel.getPictureDescriptionJSP().setVisible(visibility);
     }
 
     /**
@@ -294,11 +294,9 @@ public class ThumbnailDescriptionController
 
         // unattach the change Listener
         if (this.referringNode != null) {
-            if (this.referringNode.getUserObject() instanceof PictureInfo) {
-                PictureInfo pi = (PictureInfo) this.referringNode.getUserObject();
+            if (this.referringNode.getUserObject() instanceof PictureInfo pi) {
                 pi.removePictureInfoChangeListener(this);
-            } else if (this.referringNode.getUserObject() instanceof GroupInfo) {
-                GroupInfo gi = (GroupInfo) this.referringNode.getUserObject();
+            } else if (this.referringNode.getUserObject() instanceof GroupInfo gi) {
                 gi.removeGroupInfoChangeListener(this);
             }
         }
@@ -307,11 +305,9 @@ public class ThumbnailDescriptionController
 
         // attach the change Listener
         if (referringNode != null) {
-            if (referringNode.getUserObject() instanceof PictureInfo) {
-                PictureInfo pictureInfo = (PictureInfo) referringNode.getUserObject();
-                pictureInfo.addPictureInfoChangeListener(this);
-            } else if (referringNode.getUserObject() instanceof GroupInfo) {
-                GroupInfo gi = (GroupInfo) referringNode.getUserObject();
+            if (referringNode.getUserObject() instanceof PictureInfo pi) {
+                pi.addPictureInfoChangeListener(this);
+            } else if (referringNode.getUserObject() instanceof GroupInfo gi) {
                 gi.addGroupInfoChangeListener(this);
             }
         }
@@ -356,7 +352,7 @@ public class ThumbnailDescriptionController
 
     @Override
     public void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent) {
-        Runnable runnable = () -> {
+        final Runnable runnable = () -> {
             if (groupInfoChangeEvent.getGroupNameChanged()) {
                 setDescription();
             }
@@ -366,7 +362,21 @@ public class ThumbnailDescriptionController
         } else {
             SwingUtilities.invokeLater(runnable);
         }
+    }
 
+    /**
+     * Makes the filename visible or hidden depending on the supplied parameter.
+     * @param showFilename send true to make it visible, false to hide it.
+     */
+    public void showFilename(final boolean showFilename) {
+        if (showFilename
+                && (referringNode != null)
+                && (referringNode.getUserObject() != null)
+                && ! (referringNode.getUserObject() instanceof PictureInfo)) {
+            // ignore the instruction and turn it off:
+            panel.showFilename(false);
+        }
+        panel.showFilename(showFilename);
     }
 
     /**

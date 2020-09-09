@@ -89,10 +89,10 @@ public class ThumbnailDescriptionPanel extends JPanel {
         this.setBackground(Color.WHITE);
         this.setLayout(new MigLayout());
 
-        highresLocationJTextField.setText("gaga.txt");
         highresLocationJTextField.setEditable(false);
         highresLocationJTextField.setBorder(BorderFactory.createEmptyBorder());
         this.add(highresLocationJTextField, "hidemode 2, wrap");
+        highresLocationJTextField.setVisible(false);
 
         pictureDescriptionJTA.setWrapStyleWord(true);
         pictureDescriptionJTA.setLineWrap(true);
@@ -153,7 +153,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * This method is EDT safe.
      */
     public void showAsSelected() {
-        Runnable r = () -> getPictureDescriptionJTA().setBackground(Settings.SELECTED_COLOR_TEXT);
+        final Runnable r = () -> getPictureDescriptionJTA().setBackground(Settings.SELECTED_COLOR_TEXT);
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {
@@ -167,7 +167,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        Runnable runnable = () -> getPictureDescriptionJTA().setBackground(Settings.UNSELECTED_COLOR);
+        final Runnable runnable = () -> getPictureDescriptionJTA().setBackground(Settings.UNSELECTED_COLOR);
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
         } else {
@@ -254,8 +254,20 @@ public class ThumbnailDescriptionPanel extends JPanel {
         }
     }
 
+    /**
+     * Turns on the filename display or turns it off
+     * @param showFilename true to turn on, false to turn off
+     */
     public void showFilename(boolean showFilename) {
-        highresLocationJTextField.setVisible((showFilename));
-        this.revalidate();
+        final Runnable runnable = () -> {
+            highresLocationJTextField.setVisible((showFilename));
+            this.revalidate();
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeLater(runnable);
+        }
+
     }
 }

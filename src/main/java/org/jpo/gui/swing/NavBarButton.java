@@ -21,7 +21,7 @@ public class NavBarButton extends JButton {
         super( icon );
         setBorderPainted( false );
         setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        Dimension navButtonSize = new Dimension(24, 24);
+        final Dimension navButtonSize = new Dimension(24, 24);
         setMinimumSize(navButtonSize);
         setPreferredSize(navButtonSize);
         setMaximumSize(navButtonSize);

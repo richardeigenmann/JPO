@@ -174,10 +174,11 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         initThumbnailsArray();
 
         // Wire up the events
-        titleJPanel.firstThumbnailsPageButton.addActionListener((ActionEvent e) -> goToFirstPage());
-        titleJPanel.previousThumbnailsPageButton.addActionListener((ActionEvent e) -> goToPreviousPage());
-        titleJPanel.nextThumbnailsPageButton.addActionListener((ActionEvent e) -> goToNextPage());
-        titleJPanel.lastThumbnailsPageButton.addActionListener((ActionEvent e) -> goToLastPage());
+        titleJPanel.getFirstThumbnailsPageButton().addActionListener((ActionEvent e) -> goToFirstPage());
+        titleJPanel.getPreviousThumbnailsPageButton().addActionListener((ActionEvent e) -> goToPreviousPage());
+        titleJPanel.getNextThumbnailsPageButton().addActionListener((ActionEvent e) -> goToNextPage());
+        titleJPanel.getLastThumbnailsPageButton().addActionListener((ActionEvent e) -> goToLastPage());
+        titleJPanel.getShowFienamesButton().addActionListener((ActionEvent e) -> showFilenamesButtonClicked());
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
             JSlider source = (JSlider) e.getSource();
@@ -280,6 +281,18 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                         }
                     }
                 });
+    }
+
+    private boolean showFilenamesState = false;
+
+    /**
+     * If the button was clicked, flip the state and show or hide the filenames.
+     */
+    private void showFilenamesButtonClicked() {
+        showFilenamesState = ! showFilenamesState;
+        for (int i = 0; i < Settings.maxThumbnails; i++) {
+            thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
+        }
     }
 
     public void resizeAllThumbnails(float thumbnailSizeFactor) {
@@ -542,20 +555,20 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void setButtonStatus() {
         Tools.checkEDT();
         if (startIndex == 0) {
-            titleJPanel.firstThumbnailsPageButton.setEnabled(false);
-            titleJPanel.previousThumbnailsPageButton.setEnabled(false);
+            titleJPanel.getFirstThumbnailsPageButton().setEnabled(false);
+            titleJPanel.getPreviousThumbnailsPageButton().setEnabled(false);
         } else {
-            titleJPanel.firstThumbnailsPageButton.setEnabled(true);
-            titleJPanel.previousThumbnailsPageButton.setEnabled(true);
+            titleJPanel.getFirstThumbnailsPageButton().setEnabled(true);
+            titleJPanel.getPreviousThumbnailsPageButton().setEnabled(true);
         }
 
         int count = mySetOfNodes.getNumberOfNodes();
         if ((startIndex + Settings.maxThumbnails) < count) {
-            titleJPanel.lastThumbnailsPageButton.setEnabled(true);
-            titleJPanel.nextThumbnailsPageButton.setEnabled(true);
+            titleJPanel.getLastThumbnailsPageButton().setEnabled(true);
+            titleJPanel.getNextThumbnailsPageButton().setEnabled(true);
         } else {
-            titleJPanel.lastThumbnailsPageButton.setEnabled(false);
-            titleJPanel.nextThumbnailsPageButton.setEnabled(false);
+            titleJPanel.getLastThumbnailsPageButton().setEnabled(false);
+            titleJPanel.getNextThumbnailsPageButton().setEnabled(false);
         }
     }
 

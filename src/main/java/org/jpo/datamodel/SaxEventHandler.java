@@ -50,7 +50,7 @@ public class SaxEventHandler extends DefaultHandler {
      */
     private Settings.FieldCodes currentField;
 
-    public SaxEventHandler( SortableDefaultMutableTreeNode startNode, LabelFrame loadProgressGui, StringBuilder lowresUrls ) {
+    public SaxEventHandler( final SortableDefaultMutableTreeNode startNode, final LabelFrame loadProgressGui, final StringBuilder lowresUrls ) {
         currentGroup = startNode;
         this.loadProgressGui = loadProgressGui;
         this.lowresUrls = lowresUrls;
@@ -70,10 +70,10 @@ public class SaxEventHandler extends DefaultHandler {
      * @param attrs attributes
      */
     @Override
-    public void startElement( String namespaceURI,
-            String lName,
-            String qName,
-            Attributes attrs )
+    public void startElement( final String namespaceURI,
+            final String lName,
+            final String qName,
+            final Attributes attrs )
             {
         GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
@@ -155,9 +155,9 @@ public class SaxEventHandler extends DefaultHandler {
      * @param qName the qualified name
      */
     @Override
-    public void endElement( String namespaceURI,
-            String sName, // simple name
-            String qName // qualified name
+    public void endElement( final String namespaceURI,
+            final String sName, // simple name
+            final String qName // qualified name
     ) {
         if ( null != qName ) {
             switch ( qName ) {
@@ -197,8 +197,8 @@ public class SaxEventHandler extends DefaultHandler {
      * @param len Length
      */
     @Override
-    public void characters(char[] buf, int offset, int len ) {
-        String s = new String( buf, offset, len );
+    public void characters(final char[] buf, final int offset, final int len ) {
+        final String s = new String( buf, offset, len );
         switch ( currentField ) {
             case DESCRIPTION:
                 ( (PictureInfo) currentPicture.getUserObject() ).appendToDescription( s );
@@ -256,7 +256,7 @@ public class SaxEventHandler extends DefaultHandler {
      * @return the dtd as an input source
      */
     @Override
-    public InputSource resolveEntity( String publicId, String systemId ) {
+    public InputSource resolveEntity( final String publicId, final String systemId ) {
         LOGGER.log(Level.INFO, "resolveEntity called with params publicId: {0} systemId: {1}", new Object[]{ publicId, systemId });
         return getCollectionDtdInputSource();
     }
@@ -264,17 +264,17 @@ public class SaxEventHandler extends DefaultHandler {
     public static InputSource getCollectionDtdInputSource() {
         final String COLLECTION_DTD_FILE_NAME = "collection.dtd";
         LOGGER.log(Level.INFO, "Trying to load the collection.dtd from the resource: {0}", COLLECTION_DTD_FILE_NAME );
-        URL collectionDtd = XmlReader.class.getClassLoader().getResource( COLLECTION_DTD_FILE_NAME );
+        final URL collectionDtd = XmlReader.class.getClassLoader().getResource( COLLECTION_DTD_FILE_NAME );
         if ( collectionDtd == null ) {
             LOGGER.log(Level.SEVERE, "Failed to find the file {0}. Did something go wrong in the packaging of the application?" , COLLECTION_DTD_FILE_NAME);
             return null;
         } else {
-            LOGGER.log(Level.INFO, "Loading collection.dtd from URL: {0}", collectionDtd.toString() );
+            LOGGER.log(Level.INFO, "Loading collection.dtd from URL: {0}", collectionDtd );
         }
         try {
-            InputStream collectionDtdInputStream = collectionDtd.openStream();
+            final InputStream collectionDtdInputStream = collectionDtd.openStream();
             return new InputSource( collectionDtdInputStream );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.log( Level.SEVERE, "Could not open the collection.dtd XML Document Type Descriptor.\nException: {0}", ex.getMessage() );
             return null;
         }

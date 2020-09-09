@@ -40,28 +40,49 @@ public class ThumbnailPanelTitle
     }
 
 
+    public JButton getFirstThumbnailsPageButton() {
+        return firstThumbnailsPageButton;
+    }
+
+    public JButton getNextThumbnailsPageButton() {
+        return nextThumbnailsPageButton;
+    }
+
+    public JButton getLastThumbnailsPageButton() {
+        return lastThumbnailsPageButton;
+    }
+
+    public JButton getPreviousThumbnailsPageButton() {
+        return previousThumbnailsPageButton;
+    }
+
+    public JButton getShowFienamesButton() {
+        return showFienamesButton;
+    }
+
+    private final JButton showFienamesButton = new JButton("Filenames");
+
     /**
      *  a button to navigate back to the first page
      **/
-    public final JButton firstThumbnailsPageButton =
-            //new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("org/jpo/images/icon_first.gif"))) );
+    private final JButton firstThumbnailsPageButton =
             new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_first.gif"))) );
     /**
      *  a button to navigate to the next page
      **/
-    public final JButton nextThumbnailsPageButton =
+    private final JButton nextThumbnailsPageButton =
             new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Forward24.gif"))) );
 
     /**
      *  a button to navigate to the last page
      **/
-    public final JButton lastThumbnailsPageButton =
+    private final JButton lastThumbnailsPageButton =
             new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_last.gif"))) );
 
     /**
      *  a button to navigate to the first page
      **/
-    public final JButton previousThumbnailsPageButton =
+    private final JButton previousThumbnailsPageButton =
             new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Back24.gif"))) );
 
     /**
@@ -161,6 +182,8 @@ public class ThumbnailPanelTitle
         resizeJSlider.setPaintTicks( true );
         resizeJSlider.setPaintLabels( false );
         add( resizeJSlider );
+
+        add(showFienamesButton);
 
         title.setFont( Settings.titleFont );
     }
