@@ -966,16 +966,16 @@ public class Settings {
         prefs.putBoolean("pictureViewerFastScale", pictureViewerFastScale);
         prefs.putBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         n = 0;
-        Iterator itr = emailSenders.iterator();
-        while (itr.hasNext()) {
-            prefs.put("emailSender-" + n, (String) itr.next());
+        final Iterator<Object> senders = emailSenders.iterator();
+        while (senders.hasNext()) {
+            prefs.put("emailSender-" + n, (String) senders.next());
             n++;
         }
         prefs.putInt("emailSenders", n);
         n = 0;
-        itr = emailRecipients.iterator();
-        while (itr.hasNext()) {
-            prefs.put("emailRecipient-" + n, (String) itr.next());
+        final Iterator<Object> recipients = emailRecipients.iterator();
+        while (recipients.hasNext()) {
+            prefs.put("emailRecipient-" + n, (String) recipients.next());
             n++;
         }
         prefs.putInt("emailRecipients", n);
@@ -1012,7 +1012,7 @@ public class Settings {
     public static void writeCameraSettings() {
         prefs.putInt("NumberOfCameras", cameras.size());
         int i = 0;
-        for (Camera c : cameras) {
+        for (final Camera c : cameras) {
             final String camera = "Camera[" + i + "]";
             prefs.put(camera + ".description", c.getDescription());
             prefs.put(camera + ".cameraMountPoint", c.getCameraMountPoint());
@@ -1061,7 +1061,7 @@ public class Settings {
      *
      * @param recentFile The collection file name to be memorised
      */
-    public static void pushRecentCollection(String recentFile) {
+    public static void pushRecentCollection(final String recentFile) {
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             if ((recentCollections[i] != null)
                     && (recentCollections[i].equals(recentFile))) {
@@ -1151,7 +1151,7 @@ public class Settings {
      * @param newLocale the new locale
      * @return true if the locale was changed, false if not.
      */
-    public static boolean setLocale(Locale newLocale) {
+    public static boolean setLocale(final Locale newLocale) {
         Locale oldLocale = currentLocale;
         try {
             jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", newLocale);
@@ -1201,7 +1201,7 @@ public class Settings {
      *
      * @param recentNode The recent drop target to add
      */
-    public static void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode recentNode) {
+    public static void memorizeGroupOfDropLocation(final SortableDefaultMutableTreeNode recentNode) {
         if (!recentDropNodes.contains(recentNode)) {
             recentDropNodes.add(recentNode);
         }
@@ -1232,23 +1232,7 @@ public class Settings {
      *
      * @param location The new location to memorise
      */
-    public static void memorizeCopyLocation(String location) {
-        /*for (int i = 0; i < MAX_MEMORISE; i++) {
-            if ((copyLocations[i] != null) && (copyLocations[i].equals(location))) {
-                for (int j = i; j > 0; j--) {
-                    copyLocations[j] = copyLocations[j - 1];
-                }
-                copyLocations[0] = location;
-                return;
-            }
-        }
-
-        // move all the elements down by one
-        for (int i = MAX_MEMORISE - 1; i > 0; i--) {
-            copyLocations[i] = copyLocations[i - 1];
-        }
-        copyLocations[0] = location;*/
-
+    public static void memorizeCopyLocation(final String location) {
         if (!copyLocations.contains(location)) {
             copyLocations.add(location);
         }
@@ -1262,7 +1246,7 @@ public class Settings {
      *
      * @param location The new zip file to memorise
      */
-    public static void memorizeZipFile(String location) {
+    public static void memorizeZipFile(final String location) {
         if (!memorizedZipFiles.contains(location)) {
             memorizedZipFiles.add(location);
         }
@@ -1334,7 +1318,5 @@ public class Settings {
     public static MainWindow getMainWindow() {
         return mainWindow;
     }
-
-    //public static String myDoggyWindowsLayout = "";
 
 }
