@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import com.sun.source.tree.Tree;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
@@ -483,7 +484,7 @@ public class PictureCollection {
      */
     public static int countCategoryUsage(Object key,
                                          SortableDefaultMutableTreeNode startNode) {
-        Enumeration nodes = startNode.children();
+        final Enumeration<TreeNode> nodes = startNode.children();
         int count = 0;
         SortableDefaultMutableTreeNode n;
         while (nodes.hasMoreElements()) {
@@ -508,8 +509,8 @@ public class PictureCollection {
      */
     public static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
             Object key, SortableDefaultMutableTreeNode startNode) {
-        List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
-        Enumeration nodes = startNode.children();
+        final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
+        final Enumeration<TreeNode> nodes = startNode.children();
         SortableDefaultMutableTreeNode n;
         while (nodes.hasMoreElements()) {
             n = (SortableDefaultMutableTreeNode) nodes.nextElement();
@@ -532,7 +533,7 @@ public class PictureCollection {
      */
     public void removeCategoryUsage(Object key,
                                     SortableDefaultMutableTreeNode startNode) {
-        Enumeration nodes = startNode.children();
+        final Enumeration<TreeNode> nodes = startNode.children();
         while (nodes.hasMoreElements()) {
             SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
             if (n.getUserObject() instanceof PictureInfo) {
@@ -563,9 +564,9 @@ public class PictureCollection {
             return;
         }
         mailSelection.add(node);
-        Object userObject = node.getUserObject();
-        if (userObject instanceof PictureInfo) {
-            ((PictureInfo) userObject).sendWasMailSelectedEvent();
+        final Object userObject = node.getUserObject();
+        if (userObject instanceof PictureInfo pi) {
+            pi.sendWasMailSelectedEvent();
         }
     }
 
@@ -587,7 +588,7 @@ public class PictureCollection {
      */
     public void clearMailSelection() {
         //can't use iterator directly or we have a concurrent modification exception
-        List<SortableDefaultMutableTreeNode> clone = new ArrayList<>(mailSelection.size());
+        final List<SortableDefaultMutableTreeNode> clone = new ArrayList<>(mailSelection.size());
         clone.addAll(mailSelection);
 
         for (SortableDefaultMutableTreeNode node : clone) {
@@ -653,12 +654,12 @@ public class PictureCollection {
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
         File highresFile;
-        Enumeration e = getRootNode().preorderEnumeration();
+        final Enumeration<TreeNode> e = getRootNode().preorderEnumeration();
         while (e.hasMoreElements()) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
-            if (nodeObject instanceof PictureInfo) {
-                highresFile = ((PictureInfo) nodeObject).getImageFile();
+            if (nodeObject instanceof PictureInfo pi) {
+                highresFile = pi.getImageFile();
                 LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile().toString());
                 if ((highresFile != null) && (highresFile.compareTo(file) == 0)) {
                     LOGGER.log(Level.INFO, "Found a match on: {0}", ((PictureInfo) nodeObject).getDescription());
@@ -679,13 +680,13 @@ public class PictureCollection {
     public boolean isInCollection(long checksum) {
         SortableDefaultMutableTreeNode node;
         Object nodeObject;
-        Enumeration e = getRootNode().preorderEnumeration();
+        final Enumeration<TreeNode> e = getRootNode().preorderEnumeration();
         while (e.hasMoreElements()) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
-            if (nodeObject instanceof PictureInfo) {
+            if (nodeObject instanceof PictureInfo pi) {
                 LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile().toString());
-                if (((PictureInfo) nodeObject).getChecksum() == checksum) {
+                if (pi.getChecksum() == checksum) {
                     LOGGER.log(Level.FINE, "Found a match on: {0}", ((PictureInfo) nodeObject).getDescription());
                     return true;
                 }
@@ -766,7 +767,7 @@ public class PictureCollection {
      */
     public static void fileLoad(File fileToLoad, SortableDefaultMutableTreeNode node) throws FileNotFoundException {
         LOGGER.log(Level.INFO,"Loading file: {0}", fileToLoad);
-        InputStream is = new FileInputStream(fileToLoad);
+        final InputStream is = new FileInputStream(fileToLoad);
         streamLoad(is, node);
     }
 
@@ -788,13 +789,11 @@ public class PictureCollection {
 
         DefaultMutableTreeNode testNode;
         Object nodeObject;
-        PictureInfo pi;
         Calendar cal;
-        for (Enumeration e = getRootNode().breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (final Enumeration<TreeNode> e = getRootNode().breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (DefaultMutableTreeNode) e.nextElement();
             nodeObject = testNode.getUserObject();
-            if ((nodeObject instanceof PictureInfo)) {
-                pi = (PictureInfo) nodeObject;
+            if (nodeObject instanceof PictureInfo pi) {
                 cal = pi.getCreationTimeAsDate();
                 if (cal != null) {
                     int year = cal.get(Calendar.YEAR);
@@ -819,9 +818,9 @@ public class PictureCollection {
         if (xmlFile == null) {
             LOGGER.severe("xmlFile is null. Not saving!");
         } else {
-            File temporaryFile = new File(xmlFile.getPath() + ".!!!");
+            final File temporaryFile = new File(xmlFile.getPath() + ".!!!");
             JpoWriter.write(temporaryFile, getRootNode(), false);
-            File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
+            final File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
             if ( ! xmlFile.renameTo(backupOriginalFile) ) {
                 LOGGER.log(Level.SEVERE,"Could not rename original file to {0}", backupOriginalFile);
             } else {
@@ -852,23 +851,21 @@ public class PictureCollection {
      */
     public SortableDefaultMutableTreeNode[] findParentGroups(
             SortableDefaultMutableTreeNode suppliedNode) {
-        Object userObject = suppliedNode.getUserObject();
+        final Object userObject = suppliedNode.getUserObject();
         if (!(userObject instanceof PictureInfo)) {
             return null;
         }
 
-        List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
 
-        File comparingFile = ((PictureInfo) userObject).getImageFile();
+        final File comparingFile = ((PictureInfo) userObject).getImageFile();
         SortableDefaultMutableTreeNode testNode;
         SortableDefaultMutableTreeNode testNodeParent;
         Object nodeObject;
-        PictureInfo pi;
-        for (Enumeration e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
+        for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = testNode.getUserObject();
-            if ((nodeObject instanceof PictureInfo)) {
-                pi = (PictureInfo) nodeObject;
+            if ((nodeObject instanceof PictureInfo pi)) {
                 if (pi.getImageFile().equals(comparingFile)) {
                     testNodeParent = testNode.getParent();
                     if (!parentGroups.contains(testNodeParent)) {
@@ -899,10 +896,10 @@ public class PictureCollection {
         }
         selection.add(node);
         Object userObject = node.getUserObject();
-        if (userObject instanceof PictureInfo) {
-            ((PictureInfo) userObject).sendWasSelectedEvent();
-        } else if (userObject instanceof GroupInfo) {
-            ((GroupInfo) userObject).sendWasSelectedEvent();
+        if (userObject instanceof PictureInfo pi) {
+            pi.sendWasSelectedEvent();
+        } else if (userObject instanceof GroupInfo gi) {
+            gi.sendWasSelectedEvent();
         }
     }
 
