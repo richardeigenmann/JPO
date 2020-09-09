@@ -1,18 +1,28 @@
 package org.jpo.datamodel;
 
-import com.sun.source.tree.Tree;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -853,7 +863,7 @@ public class PictureCollection {
             SortableDefaultMutableTreeNode suppliedNode) {
         final Object userObject = suppliedNode.getUserObject();
         if (!(userObject instanceof PictureInfo)) {
-            return null;
+            return new SortableDefaultMutableTreeNode[0];
         }
 
         final List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
@@ -865,8 +875,7 @@ public class PictureCollection {
         for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = testNode.getUserObject();
-            if ((nodeObject instanceof PictureInfo pi)) {
-                if (pi.getImageFile().equals(comparingFile)) {
+            if (nodeObject instanceof PictureInfo pi && pi.getImageFile().equals(comparingFile)) {
                     testNodeParent = testNode.getParent();
                     if (!parentGroups.contains(testNodeParent)) {
                         LOGGER.log(Level.FINE, "adding node: {0}", testNodeParent.toString());

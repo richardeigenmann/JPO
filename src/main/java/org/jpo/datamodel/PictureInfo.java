@@ -157,7 +157,7 @@ public class PictureInfo implements Serializable {
         }
 
         if (categoryAssignments != null) {
-            final Iterator i = categoryAssignments.iterator();
+            final Iterator<Object> i = categoryAssignments.iterator();
             Integer assignment;
             while (i.hasNext()) {
                 assignment = (Integer) i.next();
@@ -1078,7 +1078,7 @@ public class PictureInfo implements Serializable {
             categoryAssignmentString = "";
             addCategoryAssignment(category);
         } catch (NumberFormatException x) {
-            LOGGER.log(Level.INFO, "NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{categoryAssignmentString, getImageFile().toString(), x.getMessage()});
+            LOGGER.log(Level.INFO, "NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{categoryAssignmentString, getImageFile(), x.getMessage()});
         }
         sendCategoryAssignmentsChangedEvent();
     }
