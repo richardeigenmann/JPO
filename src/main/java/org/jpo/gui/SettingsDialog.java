@@ -573,7 +573,7 @@ public class SettingsDialog extends JDialog {
 
         autoLoadJTextField.setText( Settings.autoLoad );
 
-        startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.mainFrameDimensions ) );
+        startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()) );
         viewerSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximisePictureViewerWindow, Settings.pictureViewerDefaultDimensions ) );
 
         maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
@@ -652,10 +652,10 @@ public class SettingsDialog extends JDialog {
 
         if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
             Settings.setMaximiseJpoOnStartup(true);
-            Settings.mainFrameDimensions = new Dimension( 0, 0 );
+            Settings.setMainFrameDimensions(new Dimension(0, 0));
         } else {
             Settings.setMaximiseJpoOnStartup(false);
-            Settings.mainFrameDimensions = new Dimension( Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()] );
+            Settings.setMainFrameDimensions(new Dimension(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()]));
         }
 
         Settings.maximumPictureSize = maximumPictureSizeJTextField.getValue();

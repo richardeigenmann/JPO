@@ -53,25 +53,23 @@ public class FlatFileReader {
      * @param request The request
      */
     public static void handleRequest( AddFlatFileRequest request ) {
-        SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
+        final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
                 new GroupInfo( request.getFile().getName() ) );
 
-        try ( BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8)  ) ) {
+        try ( final BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8)  ) ) {
             while ( in.ready() ) {
                 final String line = in.readLine();
                 final File testFile = getFile(line);
 
                 if ( !testFile.canRead() ) {
                     LOGGER.log( Level.INFO, "Can''t read file: {0}", line);
-                    continue;
+                } else if ( jvmHasReader(testFile)) {
+
+                    LOGGER.log(Level.INFO, "adding file to node: {0}", line);
+                    final SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
+                            new PictureInfo(testFile, FilenameUtils.getBaseName(testFile.getName())));
+                    newNode.add(newPictureNode);
                 }
-
-                if (! jvmHasReader(testFile)) continue;
-
-                LOGGER.log( Level.INFO, "adding file to node: {0}", line);
-                final SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
-                        new PictureInfo( testFile, FilenameUtils.getBaseName( testFile.getName() ) ) );
-                newNode.add( newPictureNode );
             }
             request.getNode().add( newNode );
             request.getNode().getPictureCollection().sendNodeStructureChanged( request.getNode() );

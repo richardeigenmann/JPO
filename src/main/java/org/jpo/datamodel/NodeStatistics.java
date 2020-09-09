@@ -148,7 +148,7 @@ public class NodeStatistics {
                     count += countGroups( n );
                 }
             } catch ( ClassCastException ex ) {
-                // ignore if we get a cast error from the nextElement function;
+                // ignore if we get a cast error from the nextElement function
             }
         }
         return count;

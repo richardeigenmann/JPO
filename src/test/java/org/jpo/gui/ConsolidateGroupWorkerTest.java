@@ -45,6 +45,7 @@ public class ConsolidateGroupWorkerTest {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( ConsolidateGroupWorkerTest.class.getName() );
+    private static final String NIKON_D100_JPG = "exif-test-nikon-d100-1.jpg";
 
     /**
      * Show that a null image file doesn't need to be moved.
@@ -91,8 +92,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -120,8 +121,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File imageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                final FileOutputStream fout = new FileOutputStream( imageFile ) ) {
+        try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final FileOutputStream fout = new FileOutputStream( imageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -157,8 +158,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
-        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -213,8 +214,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -245,8 +246,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 
-        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {
@@ -285,8 +286,8 @@ public class ConsolidateGroupWorkerTest {
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
 
-        try ( final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream( "exif-test-nikon-d100-1.jpg" );
-                final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+        try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
         } catch ( IOException ex ) {

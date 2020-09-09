@@ -105,7 +105,7 @@ public class MainWindow extends JFrame {
         setTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
 
         setMinimumSize( Settings.jpoJFrameMinimumSize );
-        setPreferredSize( Settings.mainFrameDimensions );
+        setPreferredSize(Settings.getMainFrameDimensions());
 
         ApplicationJMenuBar menuBar = new ApplicationJMenuBar();
         setJMenuBar( menuBar );

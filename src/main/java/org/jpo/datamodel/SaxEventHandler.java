@@ -257,8 +257,7 @@ public class SaxEventHandler extends DefaultHandler {
      */
     @Override
     public InputSource resolveEntity( String publicId, String systemId ) {
-        LOGGER.info( "resolveEntity called with params publicId: "
-                + publicId + " systemId: " + systemId );
+        LOGGER.log(Level.INFO, "resolveEntity called with params publicId: {0} systemId: {1}", new Object[]{ publicId, systemId });
         return getCollectionDtdInputSource();
     }
 
@@ -270,7 +269,7 @@ public class SaxEventHandler extends DefaultHandler {
             LOGGER.log(Level.SEVERE, "Failed to find the file {0}. Did something go wrong in the packaging of the application?" , COLLECTION_DTD_FILE_NAME);
             return null;
         } else {
-            LOGGER.info( "Loading collection.dtd from URL: " + collectionDtd.toString() );
+            LOGGER.log(Level.INFO, "Loading collection.dtd from URL: {0}", collectionDtd.toString() );
         }
         try {
             InputStream collectionDtdInputStream = collectionDtd.openStream();

@@ -93,10 +93,18 @@ public class Settings {
      */
     private static boolean maximiseJpoOnStartup = true;
 
+    public static Dimension getMainFrameDimensions() {
+        return mainFrameDimensions;
+    }
+
+    public static void setMainFrameDimensions(Dimension mainFrameDimensions) {
+        Settings.mainFrameDimensions = mainFrameDimensions;
+    }
+
     /**
      * the dimensions of the main JPO frame
      */
-    public static Dimension mainFrameDimensions;
+    private static Dimension mainFrameDimensions;
 
     /**
      * A set of window sizes that the user can choose his preferred size from.
