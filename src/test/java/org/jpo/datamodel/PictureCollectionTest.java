@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -450,9 +451,7 @@ public class PictureCollectionTest {
     public void fileSave() {
         final PictureCollection pictureCollection = new PictureCollection();
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                pictureCollection.clearCollection();
-            } );
+            SwingUtilities.invokeAndWait( () -> pictureCollection.clearCollection() );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -463,9 +462,10 @@ public class PictureCollectionTest {
             pictureCollection.setXmlFile(tempFile);
             pictureCollection.fileSave();
             assertTrue(tempFile.exists());
-            assertEquals(7, Files.lines(tempFile.toPath()).count());
+            try (final Stream s = Files.lines(tempFile.toPath())) {
+                assertEquals(7,s.count());
+            }
         } catch (final IOException e) {
-            e.printStackTrace();
             fail(e.getMessage());
         }
     }
@@ -474,9 +474,7 @@ public class PictureCollectionTest {
     public void fileSaveNoPriorFile() {
         final PictureCollection pictureCollection = new PictureCollection();
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                pictureCollection.clearCollection();
-            } );
+            SwingUtilities.invokeAndWait( () ->  pictureCollection.clearCollection() );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -491,9 +489,10 @@ public class PictureCollectionTest {
             pictureCollection.setXmlFile(tempFile);
             pictureCollection.fileSave();
             assertTrue(tempFile.exists());
-            assertEquals(7, Files.lines(tempFile.toPath()).count());
+            try (final Stream<String> s = Files.lines(tempFile.toPath())) {
+                assertEquals(7,s.count());
+            }
         } catch (final IOException e) {
-            e.printStackTrace();
             fail(e.getMessage());
         }
     }

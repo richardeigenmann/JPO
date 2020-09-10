@@ -111,7 +111,7 @@ public class Settings {
     /**
      * the dimensions of the main JPO frame
      */
-    private static Dimension mainFrameDimensions = new Dimension(windowSizes[4]);;
+    private static Dimension mainFrameDimensions = new Dimension(windowSizes[4]);
 
 
     public static Dimension[] getWindowSizes() {

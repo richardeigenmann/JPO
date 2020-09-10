@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,7 +21,9 @@ public class JpoWriterTest {
             assertFalse( expectedDtdFile.exists() );
             JpoWriter.writeCollectionDTDTestOnly(tempDirWithPrefix.toFile());
             assertTrue( expectedDtdFile.exists() );
-            assertEquals(80, Files.lines(expectedDtdFile.toPath()).count());
+            try (final Stream<String> s = Files.lines(expectedDtdFile.toPath())) {
+                assertEquals(80, s.count());
+            }
         } catch (final IOException e) {
             fail(e.getMessage());
         }
@@ -38,7 +41,9 @@ public class JpoWriterTest {
                 pictureCollection.addCategory("Dogs");
                 JpoWriter.writeCategoriesBlockTestOnly(pictureCollection, bout);
             }
-            assertEquals(14, Files.lines(tempFile.toPath()).count());
+            try (final Stream<String> s = Files.lines(tempFile.toPath())) {
+                assertEquals(14, s.count());
+            }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
@@ -52,7 +57,9 @@ public class JpoWriterTest {
             try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
                 JpoWriter.writeXmlHeaderTestOnly(bout);
             }
-            assertEquals(2, Files.lines(tempFile.toPath()).count());
+            try (final Stream<String> s = Files.lines(tempFile.toPath())) {
+                assertEquals(2, s.count());
+            }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
@@ -73,7 +80,10 @@ public class JpoWriterTest {
                 pictureInfo.setPhotographer("A master");
                 JpoWriter.writePictureTestOnly(pictureInfo, bout, null, false);
             }
-            assertEquals(8, Files.lines(tempFile.toPath()).count());
+
+            try(final Stream<String> s = Files.lines(tempFile.toPath())) {
+                assertEquals(8, s.count());
+            }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
