@@ -3,9 +3,13 @@ package org.jpo.datamodel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,8 +97,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups1() {
-        // Test that it returns null if the node is not a PictureInfo node
-        assertNull( pictureCollection.findParentGroups( group1 ) );
+        // Test that it returns an empty array if the node is not a PictureInfo node
+        assertEquals( 0, pictureCollection.findParentGroups( group1 ).length );
     }
 
     /**
@@ -441,5 +445,57 @@ public class PictureCollectionTest {
         // sendModelUpdates should be true when turned on again
         assertTrue( pc.getSendModelUpdates());
     }
-        
+
+    @Test
+    public void fileSave() {
+        final PictureCollection pictureCollection = new PictureCollection();
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                pictureCollection.clearCollection();
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+
+        try {
+            final File tempFile = File.createTempFile("testPictureCollection", ".xml");
+            pictureCollection.setXmlFile(tempFile);
+            pictureCollection.fileSave();
+            assertTrue(tempFile.exists());
+            assertEquals(7, Files.lines(tempFile.toPath()).count());
+        } catch (final IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void fileSaveNoPriorFile() {
+        final PictureCollection pictureCollection = new PictureCollection();
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                pictureCollection.clearCollection();
+            } );
+        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+
+        try {
+            // createTempFile actually creates the file
+            final File tempFile = File.createTempFile("testPictureCollection", ".xml");
+            // So let's just go and delete it
+            Files.delete(tempFile.toPath());
+            assertFalse(tempFile.exists());
+            pictureCollection.setXmlFile(tempFile);
+            pictureCollection.fileSave();
+            assertTrue(tempFile.exists());
+            assertEquals(7, Files.lines(tempFile.toPath()).count());
+        } catch (final IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
 }

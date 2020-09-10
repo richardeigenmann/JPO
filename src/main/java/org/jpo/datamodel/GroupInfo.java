@@ -155,8 +155,6 @@ public class GroupInfo implements Serializable {
         } else {
             out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\"" );
         }
-        out.newLine();
-
         out.write( ">" );
         out.newLine();
     }

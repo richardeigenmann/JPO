@@ -1024,7 +1024,7 @@ public class PictureInfo implements Serializable {
      *
      * @param string Text fragment
      */
-    public synchronized void appendToCategoryAssignment(String string) {
+    public synchronized void appendToCategoryAssignment(final String string) {
         if (string.length() > 0) {
             categoryAssignmentString = categoryAssignmentString.concat(string);
         }
@@ -1035,7 +1035,7 @@ public class PictureInfo implements Serializable {
      *
      * @param string Text fragment
      */
-    public synchronized void addCategoryAssignment(String string) {
+    public synchronized void addCategoryAssignment(final String string) {
         if (string.length() > 0) {
             categoryAssignmentString = string;
             parseCategoryAssignment();
@@ -1074,7 +1074,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseCategoryAssignment() {
         try {
-            Integer category = Integer.valueOf(categoryAssignmentString);
+            final Integer category = Integer.valueOf(categoryAssignmentString);
             categoryAssignmentString = "";
             addCategoryAssignment(category);
         } catch (NumberFormatException x) {
@@ -1089,7 +1089,7 @@ public class PictureInfo implements Serializable {
      * @param key the key
      * @return true if the key was in the categories
      */
-    public synchronized boolean containsCategory(Object key) {
+    public synchronized boolean containsCategory(final Object key) {
         if (categoryAssignments == null) {
             return false;
         }
@@ -1101,7 +1101,7 @@ public class PictureInfo implements Serializable {
      *
      * @param key the key to search for
      */
-    public synchronized void removeCategory(Object key) {
+    public synchronized void removeCategory(final Object key) {
         if (categoryAssignments != null && categoryAssignments.remove(key)) {
             sendCategoryAssignmentsChangedEvent();
         }
@@ -1113,7 +1113,7 @@ public class PictureInfo implements Serializable {
      */
     private void sendCategoryAssignmentsChangedEvent() {
         if (Settings.getPictureCollection().getSendModelUpdates()) {
-            PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
+            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setCategoryAssignmentsChanged();
             sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();

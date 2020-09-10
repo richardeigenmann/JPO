@@ -1,12 +1,15 @@
 package org.jpo.datamodel;
 
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
 
 import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Objects;
@@ -52,11 +55,19 @@ public class JpoWriter {
      *
      * @param request The request
      */
-    public static void write(ExportGroupToCollectionRequest request) {
-        Thread t = new Thread(()
-                -> write(request.getTargetFile(), request.getNode(), request.getExportPictures())
-        );
-        t.start();
+    public static void writeInThread(final ExportGroupToCollectionRequest request) {
+        new Thread(()
+                -> write(request)
+        ).start();
+    }
+
+    /**
+     * Writes the collection as per the request object
+     *
+     * @param request The request
+     */
+    public static void write(final ExportGroupToCollectionRequest request) {
+        write(request.getTargetFile(), request.getNode(), request.getExportPictures());
     }
 
 
@@ -67,38 +78,12 @@ public class JpoWriter {
      * @param startNode     The node to start from
      * @param copyPics      whether to copy the pictures to the target dir
      */
-    public static void write(final File xmlOutputFile, final SortableDefaultMutableTreeNode startNode, final boolean copyPics) {
+    private static void write(final File xmlOutputFile, final SortableDefaultMutableTreeNode startNode, final boolean copyPics) {
         final File highresTargetDir = getHighresTargetDir(copyPics, xmlOutputFile);
         try (final BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlOutputFile), StandardCharsets.UTF_8))) {
-
-            // header
-            bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            bufferedWriter.newLine();
-            bufferedWriter.write("<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">");
-            bufferedWriter.newLine();
-
+            writeXmlHeader(bufferedWriter);
             enumerateGroup(startNode, startNode, bufferedWriter, highresTargetDir, copyPics);
-
-            // categories
-            bufferedWriter.write("<categories>");
-            bufferedWriter.newLine();
-
-            final Iterator<Integer> i = startNode.getPictureCollection().getCategoryIterator();
-            Integer key;
-            String category;
-            while (i.hasNext()) {
-                key = i.next();
-                category = startNode.getPictureCollection().getCategory(key);
-                bufferedWriter.write("\t<category index=\"" + key.toString() + "\">");
-                bufferedWriter.newLine();
-                bufferedWriter.write("\t\t<categoryDescription><![CDATA[" + category + "]]></categoryDescription>");
-                bufferedWriter.newLine();
-                bufferedWriter.write("\t</category>");
-                bufferedWriter.newLine();
-            }
-
-            bufferedWriter.write("</categories>");
-            bufferedWriter.newLine();
+            writeCategoriesBlock(startNode.getPictureCollection(), bufferedWriter);
 
             bufferedWriter.write("</collection>");
             bufferedWriter.newLine();
@@ -115,6 +100,43 @@ public class JpoWriter {
                     "XmlDistiller: SecurityException",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private static void writeXmlHeader(final BufferedWriter bufferedWriter) throws IOException {
+        bufferedWriter.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        bufferedWriter.newLine();
+        bufferedWriter.write("<!DOCTYPE collection SYSTEM \"" + Settings.COLLECTION_DTD + "\">");
+        bufferedWriter.newLine();
+    }
+
+    @TestOnly
+    public static void writeXmlHeaderTestOnly(final BufferedWriter bufferedWriter) throws IOException {
+        writeXmlHeader(bufferedWriter);
+    }
+
+    private static void writeCategoriesBlock(final PictureCollection pictureCollection, final BufferedWriter bufferedWriter) throws IOException {
+        bufferedWriter.write("<categories>");
+        bufferedWriter.newLine();
+
+        final Iterator<Integer> i = pictureCollection.getCategoryIterator();
+        Integer key;
+        while (i.hasNext()) {
+            key = i.next();
+            bufferedWriter.write("\t<category index=\"" + key.toString() + "\">");
+            bufferedWriter.newLine();
+            bufferedWriter.write("\t\t<categoryDescription><![CDATA[" + pictureCollection.getCategory(key) + "]]></categoryDescription>");
+            bufferedWriter.newLine();
+            bufferedWriter.write("\t</category>");
+            bufferedWriter.newLine();
+        }
+
+        bufferedWriter.write("</categories>");
+        bufferedWriter.newLine();
+    }
+
+    @TestOnly
+    public static void writeCategoriesBlockTestOnly(final PictureCollection pictureCollection, final BufferedWriter bufferedWriter) throws IOException {
+        writeCategoriesBlock(pictureCollection, bufferedWriter);
     }
 
     private static File getHighresTargetDir(boolean copyPics, File xmlOutputFile) {
@@ -153,8 +175,10 @@ public class JpoWriter {
             childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if (childNode.getUserObject() instanceof GroupInfo) {
                 enumerateGroup(startNode, childNode, bufferedWriter, highresTargetDir, copyPics);
+            } else if (childNode.getUserObject() instanceof PictureInfo pi) {
+                writePicture(pi, bufferedWriter, highresTargetDir, copyPics);
             } else {
-                writePicture(childNode, bufferedWriter, highresTargetDir, copyPics);
+                LOGGER.log(Level.SEVERE, "Can't write node {0}", childNode);
             }
         }
 
@@ -164,21 +188,19 @@ public class JpoWriter {
     /**
      * write a picture to the output
      *
-     * @param pictureNode    the picture to write
+     * @param pictureInfo    the picture to write
      * @param bufferedWriter the writer to which to write
      * @throws IOException bubble-up IOException
      */
-    private static void writePicture(SortableDefaultMutableTreeNode pictureNode,
-                                     BufferedWriter bufferedWriter,
-                                     File highresTargetDir,
-                                     boolean copyPics
+    private static void writePicture(final PictureInfo pictureInfo,
+                                     final BufferedWriter bufferedWriter,
+                                     final File highresTargetDir,
+                                     final boolean copyPics
     ) throws IOException {
-        PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
-
         if (copyPics) {
-            File targetHighresFile = Tools.inventPicFilename(highresTargetDir, pictureInfo.getImageFile().getName());
+            final File targetHighresFile = Tools.inventPicFilename(highresTargetDir, pictureInfo.getImageFile().getName());
             FileUtils.copyFile(pictureInfo.getImageFile(), targetHighresFile);
-            PictureInfo tempPi = pictureInfo.getClone();
+            final PictureInfo tempPi = pictureInfo.getClone();
             tempPi.setImageLocation(targetHighresFile);
             tempPi.dumpToXml(bufferedWriter);
         } else {
@@ -186,29 +208,41 @@ public class JpoWriter {
         }
     }
 
+    @TestOnly
+    public static void writePictureTestOnly(final PictureInfo pictureInfo,
+                                            final BufferedWriter bufferedWriter,
+                                            final File highresTargetDir,
+                                            final boolean copyPics) throws IOException {
+        writePicture(pictureInfo, bufferedWriter, highresTargetDir, copyPics);
+    }
+
+
     /**
      * Write the collection.dtd file to the target directory.
      *
      * @param directory The directory to write to
      */
-    public static void writeCollectionDTD(File directory) {
-        ClassLoader cl = JpoWriter.class.getClassLoader();
+    private static void writeCollectionDTD(final File directory) {
+        final ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = Objects.requireNonNull(cl.getResource("collection.dtd")).openStream();
-                FileOutputStream outStream = new FileOutputStream(new File(directory, "collection.dtd"));
-                BufferedInputStream bin = new BufferedInputStream(in);
-                BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
-
-            while ((c = bin.read()) != -1) {
-                bout.write(c);
-            }
-        } catch (IOException e) {
+                final InputStream in = Objects.requireNonNull(cl.getResource("collection.dtd")).openStream();
+                final BufferedInputStream bin = new BufferedInputStream(in);) {
+            final File targetFile = new File(directory, "collection.dtd");
+            Files.copy(
+                    bin,
+                    targetFile.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+        } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
                     Settings.jpoResources.getString("DtdCopyError") + e.getMessage(),
                     Settings.jpoResources.getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @TestOnly
+    public static void writeCollectionDTDTestOnly(final File directory) {
+        writeCollectionDTD(directory);
     }
 }

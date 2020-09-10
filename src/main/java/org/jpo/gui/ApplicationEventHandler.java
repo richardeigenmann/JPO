@@ -812,7 +812,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleExportGroupToCollectionRequest(ExportGroupToCollectionRequest request) {
-        JpoWriter.write(request);
+        JpoWriter.writeInThread(request);
     }
 
     /**

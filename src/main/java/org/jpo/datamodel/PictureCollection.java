@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.jpo.cache.ThumbnailCreationQueue;
+import org.jpo.eventbus.ExportGroupToCollectionRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
 
@@ -39,6 +40,68 @@ public class PictureCollection {
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PictureCollection.class.getName());
+    /**
+     * This variable refers to the tree model.
+     */
+    private final DefaultTreeModel treeModel;
+    /**
+     * This HashMap holds the categories that will be available for this
+     * collection. It is only populated on the root node.
+     */
+    private final HashMap<Integer, String> categories;
+    /**
+     * This Hash Set hold references to the selected nodes for mailing. It works
+     * just like the selection HashSet only that the purpose is a different one.
+     * As such it has different behaviour.
+     */
+    private final List<SortableDefaultMutableTreeNode> mailSelection;
+    /**
+     * A reference to the selected nodes.
+     */
+    private final List<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
+    /**
+     * controls whether updates should be fired from add, delete, insert methods
+     */
+    private boolean sendModelUpdates = true;
+    /**
+     * The root node of the tree data model. It holds all the branches to the
+     * groups and pictures
+     */
+    private SortableDefaultMutableTreeNode rootNode;
+    /**
+     * This variable indicates whether uncommitted changes exist for this
+     * collection. Care should be taken when adding removing or changing nodes
+     * to update this flag. It should be queried before exiting the application.
+     * Also when a new collection is loaded this flag should be checked so as
+     * not to loose modifications. This flag should be set only on the root
+     * node.
+     *
+     * @see #setUnsavedUpdates()
+     * @see #setUnsavedUpdates(boolean)
+     * @see #getUnsavedUpdates()
+     */
+    private boolean unsavedUpdates; // default is false
+    /**
+     * This flag controls whether this collection can be edited. This is queried
+     * by several menus and will restrict the options a use has if it returns
+     * true.
+     */
+    private boolean allowEdits;
+    /**
+     * This variable holds the reference to the queries executed against the
+     * collection.
+     */
+    private DefaultTreeModel queriesTreeModel;
+    private DefaultMutableTreeNode yearsTreeNode;
+    /**
+     * status variable to find out if a thread is loading a file
+     */
+    private boolean fileLoading;  // default is false
+    /**
+     * A file reference to the file that was loaded. It will come in handy when
+     * a save instruction comes along.
+     */
+    private File xmlFile;
 
     /**
      * Constructs a new PictureCollection object with a root object
@@ -53,11 +116,87 @@ public class PictureCollection {
     }
 
     /**
+     * Counts the number of nodes using the category
+     *
+     * @param key       The Key
+     * @param startNode the node to start from
+     * @return the number of nodes
+     */
+    public static int countCategoryUsage(Object key,
+                                         SortableDefaultMutableTreeNode startNode) {
+        final Enumeration<TreeNode> nodes = startNode.children();
+        int count = 0;
+        SortableDefaultMutableTreeNode n;
+        while (nodes.hasMoreElements()) {
+            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            if (n.getUserObject() instanceof PictureInfo
+                    && ((PictureInfo) n.getUserObject()).containsCategory(key)) {
+                count++;
+            }
+            if (n.getChildCount() > 0) {
+                count += countCategoryUsage(key, n);
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Returns an List of the nodes that match this category
+     *
+     * @param key       The key of the category to find
+     * @param startNode the node at which to start
+     * @return the list of nodes
+     */
+    public static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
+            Object key, SortableDefaultMutableTreeNode startNode) {
+        final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
+        final Enumeration<TreeNode> nodes = startNode.children();
+        SortableDefaultMutableTreeNode n;
+        while (nodes.hasMoreElements()) {
+            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            if (n.getUserObject() instanceof PictureInfo
+                    && ((PictureInfo) n.getUserObject()).containsCategory(key)) {
+                resultList.add(n);
+            }
+            if (n.getChildCount() > 0) {
+                resultList.addAll(getCategoryUsageNodes(key, n));
+            }
+        }
+        return resultList;
+    }
+
+    /**
+     * Loads the collection indicated by the File at the supplied node
+     *
+     * @param fileToLoad The File object that is to be loaded.
+     * @param node       the node to load it into
+     * @throws FileNotFoundException When no good
+     */
+    public static void fileLoad(File fileToLoad, SortableDefaultMutableTreeNode node) throws FileNotFoundException {
+        LOGGER.log(Level.INFO, "Loading file: {0}", fileToLoad);
+        final InputStream is = new FileInputStream(fileToLoad);
+        streamLoad(is, node);
+    }
+
+    /**
+     * Loads the collection indicated by the Input stream at the "this" node.
+     *
+     * @param is   The InputStream that is to be loaded.
+     * @param node the node to load it into
+     */
+    public static void streamLoad(InputStream is, SortableDefaultMutableTreeNode node) {
+        node.getPictureCollection().setSendModelUpdates(false); // turn off model notification of each add for performance
+        new XmlReader(is, node);
+        node.getPictureCollection().setSendModelUpdates(true);
+        node.getPictureCollection().sendNodeStructureChanged(node);
+    }
+
+    /**
      * This method wipes out the data in the picture collection. As it updates
      * the TreeModel it has been made synchronous on the EDT.
      */
     public void clearCollection() {
-        Runnable runnable = () -> {
+        final Runnable runnable = () -> {
             getRootNode().removeAllChildren();
             getRootNode().setUserObject(new GroupInfo(Settings.jpoResources.getString("DefaultRootNodeText")));
             clearQueriesTreeModel();
@@ -83,11 +222,6 @@ public class PictureCollection {
     }
 
     /**
-     * This variable refers to the tree model.
-     */
-    private final DefaultTreeModel treeModel;
-
-    /**
      * The DefaultTreeModel allows notification of tree change events to
      * listening objects.
      *
@@ -96,11 +230,6 @@ public class PictureCollection {
     public DefaultTreeModel getTreeModel() {
         return (treeModel);
     }
-
-    /**
-     * controls whether updates should be fired from add, delete, insert methods
-     */
-    private boolean sendModelUpdates = true;
 
     /**
      * Returns true if edits are allowed on this collection
@@ -193,12 +322,6 @@ public class PictureCollection {
     }
 
     /**
-     * The root node of the tree data model. It holds all the branches to the
-     * groups and pictures
-     */
-    private SortableDefaultMutableTreeNode rootNode;
-
-    /**
      * This method returns the root node of the collection
      *
      * @return the root node
@@ -217,38 +340,12 @@ public class PictureCollection {
     }
 
     /**
-     * This variable indicates whether uncommitted changes exist for this
-     * collection. Care should be taken when adding removing or changing nodes
-     * to update this flag. It should be queried before exiting the application.
-     * Also when a new collection is loaded this flag should be checked so as
-     * not to loose modifications. This flag should be set only on the root
-     * node.
-     *
-     * @see #setUnsavedUpdates()
-     * @see #setUnsavedUpdates(boolean)
-     * @see #getUnsavedUpdates()
-     */
-    private boolean unsavedUpdates; // default is false
-
-    /**
      * This method marks the root node of the tree as having unsaved updates.
      *
      * @see #unsavedUpdates
      */
     public void setUnsavedUpdates() {
         setUnsavedUpdates(true);
-    }
-
-    /**
-     * This method allows the programmer to set whether the tree has unsaved
-     * updates or not.
-     *
-     * @param unsavedUpdates Set to true if there are unsaved updates, false if
-     *                       there are none
-     * @see #unsavedUpdates
-     */
-    public void setUnsavedUpdates(boolean unsavedUpdates) {
-        this.unsavedUpdates = unsavedUpdates;
     }
 
     /**
@@ -263,11 +360,16 @@ public class PictureCollection {
     }
 
     /**
-     * This flag controls whether this collection can be edited. This is queried
-     * by several menus and will restrict the options a use has if it returns
-     * true.
+     * This method allows the programmer to set whether the tree has unsaved
+     * updates or not.
+     *
+     * @param unsavedUpdates Set to true if there are unsaved updates, false if
+     *                       there are none
+     * @see #unsavedUpdates
      */
-    private boolean allowEdits;
+    public void setUnsavedUpdates(boolean unsavedUpdates) {
+        this.unsavedUpdates = unsavedUpdates;
+    }
 
     /**
      * Returns true if edits are allowed on this collection
@@ -288,12 +390,6 @@ public class PictureCollection {
     }
 
     /**
-     * This variable holds the reference to the queries executed against the
-     * collection.
-     */
-    private DefaultTreeModel queriesTreeModel;
-
-    /**
      * Call this method when you need the TreeModel for the queries
      *
      * @return The treemodel of the queries
@@ -306,21 +402,21 @@ public class PictureCollection {
     }
 
     /**
-     * Call this method when you need the root Node for the queries
-     *
-     * @return the root node
-     */
-    public DefaultMutableTreeNode getQueriesRootNode() {
-        return ((DefaultMutableTreeNode) getQueriesTreeModel().getRoot());
-    }
-
-    /**
      * Call this method when you need to set the TreeModel for the queries
      *
      * @param defaultTreeModel the tree model
      */
     public void setQueriesTreeModel(DefaultTreeModel defaultTreeModel) {
         queriesTreeModel = defaultTreeModel;
+    }
+
+    /**
+     * Call this method when you need the root Node for the queries
+     *
+     * @return the root node
+     */
+    public DefaultMutableTreeNode getQueriesRootNode() {
+        return ((DefaultMutableTreeNode) getQueriesTreeModel().getRoot());
     }
 
     /**
@@ -333,8 +429,6 @@ public class PictureCollection {
         rememberYearsTreeNode(byYearsTreeNode);
         getQueriesRootNode().add(byYearsTreeNode);
     }
-
-    private DefaultMutableTreeNode yearsTreeNode;
 
     /**
      * Remembers the node on which the years were added
@@ -384,13 +478,6 @@ public class PictureCollection {
         getQueriesRootNode().add(newNode);
         queriesTreeModel.nodesWereInserted(getQueriesRootNode(), new int[]{getQueriesRootNode().getIndex(newNode)});
     }
-
-    /**
-     * This HashMap holds the categories that will be available for this
-     * collection. It is only populated on the root node.
-     */
-    private final HashMap<Integer, String> categories;
-
 
     /**
      * This adds a category to the HashMap
@@ -475,56 +562,6 @@ public class PictureCollection {
     }
 
     /**
-     * Counts the number of nodes using the category
-     *
-     * @param key       The Key
-     * @param startNode the node to start from
-     * @return the number of nodes
-     */
-    public static int countCategoryUsage(Object key,
-                                         SortableDefaultMutableTreeNode startNode) {
-        final Enumeration<TreeNode> nodes = startNode.children();
-        int count = 0;
-        SortableDefaultMutableTreeNode n;
-        while (nodes.hasMoreElements()) {
-            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (n.getUserObject() instanceof PictureInfo
-                    && ((PictureInfo) n.getUserObject()).containsCategory(key)) {
-                count++;
-            }
-            if (n.getChildCount() > 0) {
-                count += countCategoryUsage(key, n);
-            }
-        }
-        return count;
-    }
-
-    /**
-     * Returns an List of the nodes that match this category
-     *
-     * @param key       The key of the category to find
-     * @param startNode the node at which to start
-     * @return the list of nodes
-     */
-    public static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
-            Object key, SortableDefaultMutableTreeNode startNode) {
-        final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
-        final Enumeration<TreeNode> nodes = startNode.children();
-        SortableDefaultMutableTreeNode n;
-        while (nodes.hasMoreElements()) {
-            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (n.getUserObject() instanceof PictureInfo
-                    && ((PictureInfo) n.getUserObject()).containsCategory(key)) {
-                resultList.add(n);
-            }
-            if (n.getChildCount() > 0) {
-                resultList.addAll(getCategoryUsageNodes(key, n));
-            }
-        }
-        return resultList;
-    }
-
-    /**
      * Removes the category from the nodes using it
      *
      * @param key       The category to poll
@@ -543,14 +580,6 @@ public class PictureCollection {
             }
         }
     }
-
-
-    /**
-     * This Hash Set hold references to the selected nodes for mailing. It works
-     * just like the selection HashSet only that the purpose is a different one.
-     * As such it has different behaviour.
-     */
-    private final List<SortableDefaultMutableTreeNode> mailSelection;
 
     /**
      * This method places the current SDMTN into the mailSelection HashSet.
@@ -704,14 +733,13 @@ public class PictureCollection {
     }
 
     /**
-     * status variable to find out if a thread is loading a file
+     * This method returns the xml file for the collection
+     *
+     * @return The xml file of the collection
      */
-    private boolean fileLoading;  // default is false
-    /**
-     * A file reference to the file that was loaded. It will come in handy when
-     * a save instruction comes along.
-     */
-    private File xmlFile;
+    public File getXmlFile() {
+        return xmlFile;
+    }
 
     /**
      * This method sets the file which represents the current collection. It
@@ -721,15 +749,6 @@ public class PictureCollection {
      */
     public void setXmlFile(File file) {
         xmlFile = file;
-    }
-
-    /**
-     * This method returns the xml file for the collection
-     *
-     * @return The xml file of the collection
-     */
-    public File getXmlFile() {
-        return xmlFile;
     }
 
     /**
@@ -756,32 +775,6 @@ public class PictureCollection {
             fileLoading = false;
             throw ex;
         }
-    }
-
-    /**
-     * Loads the collection indicated by the File at the supplied node
-     *
-     * @param fileToLoad The File object that is to be loaded.
-     * @param node       the node to load it into
-     * @throws FileNotFoundException When no good
-     */
-    public static void fileLoad(File fileToLoad, SortableDefaultMutableTreeNode node) throws FileNotFoundException {
-        LOGGER.log(Level.INFO, "Loading file: {0}", fileToLoad);
-        final InputStream is = new FileInputStream(fileToLoad);
-        streamLoad(is, node);
-    }
-
-    /**
-     * Loads the collection indicated by the Input stream at the "this" node.
-     *
-     * @param is   The InputStream that is to be loaded.
-     * @param node the node to load it into
-     */
-    public static void streamLoad(InputStream is, SortableDefaultMutableTreeNode node) {
-        node.getPictureCollection().setSendModelUpdates(false); // turn off model notification of each add for performance
-        new XmlReader(is, node);
-        node.getPictureCollection().setSendModelUpdates(true);
-        node.getPictureCollection().sendNodeStructureChanged(node);
     }
 
     private void addYearQueries() {
@@ -819,19 +812,23 @@ public class PictureCollection {
             LOGGER.severe("xmlFile is null. Not saving!");
         } else {
             final File temporaryFile = new File(xmlFile.getPath() + ".!!!");
-            JpoWriter.write(temporaryFile, getRootNode(), false);
+            final ExportGroupToCollectionRequest exportRequest = new ExportGroupToCollectionRequest(getRootNode(), temporaryFile, false);
+            JpoWriter.write(exportRequest);
+            final boolean anOriginalFileExists = xmlFile.exists();
             final File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
-            if (!xmlFile.renameTo(backupOriginalFile)) {
+            if (anOriginalFileExists && !xmlFile.renameTo(backupOriginalFile)) {
                 LOGGER.log(Level.SEVERE, "Could not rename original file to {0}", backupOriginalFile);
             } else {
                 if (!temporaryFile.renameTo(xmlFile)) {
                     LOGGER.log(Level.SEVERE, "Could not rename temp file {0} to {1}", new Object[]{temporaryFile, xmlFile});
                 } else {
                     setUnsavedUpdates(false);
-                    try {
-                        Files.delete(backupOriginalFile.toPath());
-                    } catch (IOException e) {
-                        LOGGER.log(Level.SEVERE, "Could not delete backed up original file {0}\n{1}", new Object[]{backupOriginalFile, e.getMessage()});
+                    if (anOriginalFileExists) {
+                        try {
+                            Files.delete(backupOriginalFile.toPath());
+                        } catch (final IOException e) {
+                            LOGGER.log(Level.SEVERE, "Could not delete backed up original file {0}\n{1}", new Object[]{backupOriginalFile, e.getMessage()});
+                        }
                     }
                     Settings.pushRecentCollection(xmlFile.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
@@ -850,7 +847,7 @@ public class PictureCollection {
      * @return group nodes that have a child with the same picture
      */
     public SortableDefaultMutableTreeNode[] findParentGroups(
-            SortableDefaultMutableTreeNode suppliedNode) {
+            final SortableDefaultMutableTreeNode suppliedNode) {
         final Object userObject = suppliedNode.getUserObject();
         if (!(userObject instanceof PictureInfo)) {
             return new SortableDefaultMutableTreeNode[0];
@@ -877,23 +874,18 @@ public class PictureCollection {
     }
 
     /**
-     * A reference to the selected nodes.
-     */
-    private final List<SortableDefaultMutableTreeNode> selection = new ArrayList<>();
-
-    /**
      * This method places the current {@link SortableDefaultMutableTreeNode}
      * into the selection HashSet.
      *
      * @param node The node
      */
-    public void addToSelectedNodes(SortableDefaultMutableTreeNode node) {
+    public void addToSelectedNodes(final SortableDefaultMutableTreeNode node) {
         if (isSelected(node)) {
             LOGGER.fine(String.format("The node %s is already selected. Leaving it selected.", node.toString()));
             return;
         }
         selection.add(node);
-        Object userObject = node.getUserObject();
+        final Object userObject = node.getUserObject();
         if (userObject instanceof PictureInfo pi) {
             pi.sendWasSelectedEvent();
         } else if (userObject instanceof GroupInfo gi) {
@@ -906,13 +898,13 @@ public class PictureCollection {
      *
      * @param node the node to poll
      */
-    public void removeFromSelection(SortableDefaultMutableTreeNode node) {
+    public void removeFromSelection(final SortableDefaultMutableTreeNode node) {
         selection.remove(node);
-        Object userObject = node.getUserObject();
-        if (userObject instanceof PictureInfo) {
-            ((PictureInfo) userObject).sendWasUnselectedEvent();
-        } else if (userObject instanceof GroupInfo) {
-            ((GroupInfo) userObject).sendWasUnselectedEvent();
+        final Object userObject = node.getUserObject();
+        if (userObject instanceof PictureInfo pi) {
+            pi.sendWasUnselectedEvent();
+        } else if (userObject instanceof GroupInfo gi) {
+            gi.sendWasUnselectedEvent();
         }
     }
 
@@ -922,8 +914,8 @@ public class PictureCollection {
      */
     public void clearSelection() {
         //can't use iterator or there is a concurrent modification exception
-        Object[] array = selection.toArray();
-        for (Object node : array) {
+        final Object[] array = selection.toArray();
+        for (final Object node : array) {
             removeFromSelection((SortableDefaultMutableTreeNode) node);
         }
     }
@@ -934,10 +926,10 @@ public class PictureCollection {
      * @param node the node
      * @return true if the node is selected
      */
-    public boolean isSelected(SortableDefaultMutableTreeNode node) {
+    public boolean isSelected(final SortableDefaultMutableTreeNode node) {
         try {
             return selection.contains(node);
-        } catch (NullPointerException x) {
+        } catch (final NullPointerException x) {
             return false;
         }
     }

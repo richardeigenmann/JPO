@@ -38,7 +38,7 @@ public class ExportGroupToCollectionRequest implements Request {
      * @param targetFile the target file
      * @param exportPictures whether to export pictures
      */
-    public ExportGroupToCollectionRequest(SortableDefaultMutableTreeNode node, File targetFile, boolean exportPictures) {
+    public ExportGroupToCollectionRequest(final SortableDefaultMutableTreeNode node, final File targetFile, final boolean exportPictures) {
         this.node = node;
         this.targetFile = targetFile;
         this.exportPictures = exportPictures;

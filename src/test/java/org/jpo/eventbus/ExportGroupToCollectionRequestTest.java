@@ -5,18 +5,16 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * Picture Selection Event Tests
- * @author Richard Eigenmann
- */
-public class PictureSelectionEventTest {
+public class ExportGroupToCollectionRequestTest {
 
     /**
-     * Constructor for the PictureSelectionEvent tests 
+     * Constructor for the ExportGroupToCollectionRequest tests
      */
-    public PictureSelectionEventTest() {
+    public ExportGroupToCollectionRequestTest() {
         jpoEventBus = JpoEventBus.getInstance();
     }
 
@@ -25,31 +23,30 @@ public class PictureSelectionEventTest {
      */
     private final JpoEventBus jpoEventBus;
 
-    
+
 
     /**
      * sends an event and hopes to receive it back
      */
     @Test
     public void testReceivingEvent() {
-        final EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
+        final ExportGroupToCollectionRequestTest.EventBusSubscriber myEventBusSubscriber = new ExportGroupToCollectionRequestTest.EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
-        final PictureSelectionEvent myPictureSelectionEvent
-                = new PictureSelectionEvent(
-                        new SortableDefaultMutableTreeNode(
-                                new PictureInfo()
-                        )
-                );
-        jpoEventBus.post( myPictureSelectionEvent );
-        // After firing a PictureSelectionEvent we expect it to be received by the listener
-        assertEquals(  myPictureSelectionEvent, responseEvent );
+        final ExportGroupToCollectionRequest myExportGroupToCollectionRequest
+                = new ExportGroupToCollectionRequest(
+                new SortableDefaultMutableTreeNode(
+                        new PictureInfo()
+                ), new File("."), false
+        );
+        jpoEventBus.post( myExportGroupToCollectionRequest );
+        assertEquals(  myExportGroupToCollectionRequest, responseEvent );
     }
 
     /**
      *Here we are supposed to receive the event
      */
-    private PictureSelectionEvent responseEvent;
+    private ExportGroupToCollectionRequest responseEvent;
 
     /**
      * Handler to receive the event.
@@ -61,9 +58,10 @@ public class PictureSelectionEventTest {
          * @param event The event
          */
         @Subscribe
-        public void handlePictureSelectionEvent( PictureSelectionEvent event ) {
+        public void handleExportGroupToCollectionRequest( ExportGroupToCollectionRequest event ) {
             responseEvent = event;
         }
     }
+
 
 }

@@ -77,7 +77,7 @@ public class Settings {
     /**
      * the filename of the logfile
      */
-    private static File logfile;
+    private static File logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
 
     public static boolean isMaximiseJpoOnStartup() {
         return maximiseJpoOnStartup;
@@ -101,16 +101,18 @@ public class Settings {
         Settings.mainFrameDimensions = mainFrameDimensions;
     }
 
-    /**
-     * the dimensions of the main JPO frame
-     */
-    private static Dimension mainFrameDimensions;
 
     /**
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
      */
     private static final Dimension[] windowSizes = {new Dimension(0, 0), new Dimension(1050, 760), new Dimension(1250, 900), new Dimension(1450, 1190), new Dimension(2150, 1300)};
+
+    /**
+     * the dimensions of the main JPO frame
+     */
+    private static Dimension mainFrameDimensions = new Dimension(windowSizes[4]);;
+
 
     public static Dimension[] getWindowSizes() {
         return windowSizes;
@@ -125,7 +127,7 @@ public class Settings {
     /**
      * the dimensions of the "Default" picture viewer
      */
-    public static Dimension pictureViewerDefaultDimensions;
+    public static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
 
     /**
      * variable to indicate that the window size should be stored when the
@@ -141,7 +143,12 @@ public class Settings {
     /**
      * the default place for the left side divider.
      */
-    public static int preferredLeftDividerSpot;
+    public static int preferredLeftDividerSpot = mainFrameDimensions.height - 200;
+    static {
+        if (preferredLeftDividerSpot < 0) {
+            preferredLeftDividerSpot = 150;
+        }
+    }
 
     /**
      * the default width of the divider
@@ -258,7 +265,7 @@ public class Settings {
     /**
      * a flag that indicates that small images should not be enlarged
      */
-    public static boolean dontEnlargeSmallImages;
+    public static boolean dontEnlargeSmallImages = true;
 
     /**
      * the path to the jar file; derived from jarAutostartList
@@ -292,13 +299,17 @@ public class Settings {
      * public static int maxCache;
      */
 
-    public static String thumbnailCacheDirectory;
+    public static String thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
+            + System.getProperty("file.separator")
+            + "Jpo-Thumbnail-Cache";
+
 
     /**
      * The maximum size a picture is zoomed to. This is to stop the Java engine
      * creating enormous temporary images which lock the computer up completely.
      */
-    public static int maximumPictureSize;
+    public static int maximumPictureSize = 6000;
+
     /**
      * standard size for all JTextFields that need to record a filename.
      */
@@ -702,22 +713,6 @@ public class Settings {
         setLocale(currentLocale);
 
         clearAutoLoad();
-        logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
-
-        mainFrameDimensions = new Dimension(windowSizes[4]);
-        preferredLeftDividerSpot = mainFrameDimensions.height - 200;
-        if (preferredLeftDividerSpot < 0) {
-            preferredLeftDividerSpot = 150;
-        }
-
-        maximumPictureSize = 6000;
-        thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
-                + System.getProperty("file.separator")
-                + "Jpo-Thumbnail-Cache";
-
-        pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
-        dontEnlargeSmallImages = true;
-        maxThumbnails = DEFAULT_MAX_THUMBNAILS;
     }
 
     /**
