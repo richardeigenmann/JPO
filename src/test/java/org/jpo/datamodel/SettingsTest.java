@@ -122,30 +122,30 @@ public class SettingsTest {
      */
     @Test
     public void testReadWriteMaxThumbnails() {
-        int saveMaxThumbnails = Settings.maxThumbnails;
-        Settings.maxThumbnails = -1; //a value that it never should have
+        int saveMaxThumbnails = Settings.getMaxThumbnails();
+        Settings.setMaxThumbnails(-1); //a value that it never should have
         Settings.loadSettings();
         // After loading the settings the maxThumbnails should not be -1 any more!
-        assertTrue( (-1 != Settings.maxThumbnails));
+        assertTrue( (-1 != Settings.getMaxThumbnails()));
 
-        Settings.maxThumbnails = -2; //another value that it never should never have
+        Settings.setMaxThumbnails(-2); //another value that it never should never have
         Settings.writeSettings();
         // After saving the settings the maxThumbnails should still be -2
-        assertEquals( -2, Settings.maxThumbnails);
+        assertEquals( -2, Settings.getMaxThumbnails());
 
         Settings.loadSettings();
         // After loading the negative value should have been replaced with" + Settings.DEFAULT_MAX_THUMBNAILS
-        assertEquals(Settings.DEFAULT_MAX_THUMBNAILS, Settings.maxThumbnails);
+        assertEquals(Settings.DEFAULT_MAX_THUMBNAILS, Settings.getMaxThumbnails());
 
-        Settings.maxThumbnails = 53;
+        Settings.setMaxThumbnails(53);
         Settings.writeSettings();
-        Settings.maxThumbnails = 54;
+        Settings.setMaxThumbnails(54);
         Settings.loadSettings();
         // After reloading the settings the maxThumbnails should be back at 53 not 54
-        assertEquals( 53, Settings.maxThumbnails);
+        assertEquals( 53, Settings.getMaxThumbnails());
 
         // write the original settings back to prevent developer frustration
-        Settings.maxThumbnails = saveMaxThumbnails;
+        Settings.setMaxThumbnails(saveMaxThumbnails);
         Settings.writeSettings();
     }
 

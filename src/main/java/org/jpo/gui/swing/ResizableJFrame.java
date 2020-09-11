@@ -96,7 +96,7 @@ public class ResizableJFrame
 
         setUndecorated( !decorateWindow );
 
-        if ( Settings.maximisePictureViewerWindow ) {
+        if (Settings.isMaximisePictureViewerWindow()) {
             maximise();
             windowMode = WINDOW_FULLSCREEN;
         }

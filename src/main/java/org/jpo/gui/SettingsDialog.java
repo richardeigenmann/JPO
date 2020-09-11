@@ -574,14 +574,14 @@ public class SettingsDialog extends JDialog {
         autoLoadJTextField.setText( Settings.autoLoad );
 
         startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()) );
-        viewerSizeDropdown.setSelectedIndex( findSizeIndex( Settings.maximisePictureViewerWindow, Settings.pictureViewerDefaultDimensions ) );
+        viewerSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()) );
 
         maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
         dontEnlargeJCheckBox.setSelected( Settings.dontEnlargeSmallImages );
 
         //thumbnailPathChooser.setText( Settings.thumbnailPath.getPath() );
         thumbnailCacheDirPathChooser.setText( Settings.thumbnailCacheDirectory );
-        maxThumbnails.setValue( Settings.maxThumbnails );
+        maxThumbnails.setValue(Settings.getMaxThumbnails());
         thumbnailSize.setValue( Settings.thumbnailSize );
         //keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
         jpgQualityJSlider.setValue( (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
@@ -662,11 +662,11 @@ public class SettingsDialog extends JDialog {
         Settings.dontEnlargeSmallImages = dontEnlargeJCheckBox.isSelected();
 
         if ( viewerSizeDropdown.getSelectedIndex() == 0 ) {
-            Settings.maximisePictureViewerWindow = true;
-            Settings.pictureViewerDefaultDimensions = new Dimension( 0, 0 );
+            Settings.setMaximisePictureViewerWindow(true);
+            Settings.setPictureViewerDefaultDimensions(new Dimension(0, 0));
         } else {
-            Settings.maximisePictureViewerWindow = false;
-            Settings.pictureViewerDefaultDimensions = new Dimension( Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()] );
+            Settings.setMaximisePictureViewerWindow(false);
+            Settings.setPictureViewerDefaultDimensions(new Dimension(Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()]));
         }
 
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
@@ -681,7 +681,7 @@ public class SettingsDialog extends JDialog {
             }
         }*/
 
-        Settings.maxThumbnails = maxThumbnails.getValue();
+        Settings.setMaxThumbnails(maxThumbnails.getValue());
         Settings.thumbnailSize = thumbnailSize.getValue();
         Settings.defaultHtmlLowresQuality = ( (float) jpgQualityJSlider.getValue() ) / 100;
         Settings.thumbnailFastScale = thumbnailFastScaleJCheckBox.isSelected();

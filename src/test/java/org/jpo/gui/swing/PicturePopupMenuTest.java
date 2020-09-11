@@ -1,8 +1,11 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.assertj.swing.edt.GuiActionRunner;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,6 +45,12 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @author Richard Eigenmann
  */
 public class PicturePopupMenuTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
+
 
     /*
      * Note these tests are burdened with reflection to get at the inner
@@ -119,10 +128,9 @@ public class PicturePopupMenuTest {
         myParentNode.add(myNode);
         Settings.getPictureCollection().getRootNode().add(myParentNode);
 
-        myPicturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-
         try {
             SwingUtilities.invokeAndWait(() -> {
+                myPicturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 title = (JMenuItem) myPicturePopupMenu.getComponent(0);
                 showPicture = (JMenuItem) myPicturePopupMenu.getComponent(2);
                 showMap = (JMenuItem) myPicturePopupMenu.getComponent(3);
@@ -164,7 +172,7 @@ public class PicturePopupMenuTest {
                 properties = (JMenuItem) myPicturePopupMenu.getComponent(17);
                 consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(18);
             });
-        } catch (InterruptedException | InvocationTargetException e) {
+        } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
             Thread.currentThread().interrupt();
         }
@@ -234,7 +242,7 @@ public class PicturePopupMenuTest {
                 assertEquals("Properties", properties.getText());
                 assertEquals("Consolidate Here", consolidateHere.getText());
             });
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
         }
@@ -255,7 +263,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, showPictureEventCount);
-        showPicture.doClick();
+        GuiActionRunner.execute(() -> showPicture.doClick());
         assertEquals( 1, showPictureEventCount);
     }
 
@@ -275,7 +283,7 @@ public class PicturePopupMenuTest {
         });
         // Before clicking on the node the event count should be 0
         assertEquals(0, showMapEventCount);
-        showMap.doClick();
+        GuiActionRunner.execute(() -> showMap.doClick());
         // After clicking on the node the event count should be 1
         assertEquals(1, showMapEventCount);
     }
@@ -295,7 +303,7 @@ public class PicturePopupMenuTest {
         });
         // Before clicking on the node the event count should be 0
         assertEquals(0, openFolderEventCount);
-        openFolder.doClick();
+        GuiActionRunner.execute(() -> openFolder.doClick());
         // After clicking on the node the event count should be 1
         assertEquals(1, openFolderEventCount);
     }
@@ -312,7 +320,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, navigateToEventCount);
-        navigateTo_0.doClick();
+        GuiActionRunner.execute(() -> navigateTo_0.doClick());
         assertEquals(1, navigateToEventCount);
     }
 
@@ -328,7 +336,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, categoriesEventCount);
-        categories.doClick();
+        GuiActionRunner.execute(() -> categories.doClick());
         assertEquals(1, categoriesEventCount);
     }
 
@@ -344,7 +352,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, addToMailSelectEventCount);
-        selectForEmail.doClick();
+        GuiActionRunner.execute(() -> selectForEmail.doClick());
         assertEquals(1, addToMailSelectEventCount);
     }
 
@@ -360,7 +368,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, removeFromMailSelectEventCount);
-        unselectForEmail.doClick();
+        GuiActionRunner.execute(() -> unselectForEmail.doClick());
         assertEquals(1, removeFromMailSelectEventCount);
     }
 
@@ -376,7 +384,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, clearEmailSelectionEventCount);
-        clearEmailSelection.doClick();
+        GuiActionRunner.execute(() -> clearEmailSelection.doClick());
         assertEquals( 1, clearEmailSelectionEventCount);
     }
 
@@ -393,9 +401,11 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, userFunctionEventCount);
-        userFunction_0.doClick();
-        userFunction_1.doClick();
-        userFunction_2.doClick();
+        GuiActionRunner.execute(() -> {
+                    userFunction_0.doClick();
+                    userFunction_1.doClick();
+                    userFunction_2.doClick();
+                });
         assertEquals( 3, userFunctionEventCount);
     }
 
@@ -417,10 +427,10 @@ public class PicturePopupMenuTest {
 
         });
         assertEquals( 0, rotationEventCount);
-        rotate90.doClick();
-        rotate180.doClick();
-        rotate270.doClick();
-        rotate0.doClick();
+        GuiActionRunner.execute(() -> rotate90.doClick());
+        GuiActionRunner.execute(() -> rotate180.doClick());
+        GuiActionRunner.execute(() -> rotate270.doClick());
+        GuiActionRunner.execute(() -> rotate0.doClick());
         assertEquals( 4, rotationEventCount);
     }
 
@@ -436,7 +446,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, refreshEventCount);
-        refreshThumbnail.doClick();
+        GuiActionRunner.execute(() -> refreshThumbnail.doClick());
         assertEquals( 1, refreshEventCount);
     }
 
@@ -477,12 +487,12 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, moveEventCount);
-        moveToTop.doClick();
-        moveDown.doClick();
-        moveUp.doClick();
-        moveToBottom.doClick();
-        moveIndent.doClick();
-        moveOutdent.doClick();
+        GuiActionRunner.execute(() -> moveToTop.doClick());
+        GuiActionRunner.execute(() -> moveDown.doClick());
+        GuiActionRunner.execute(() -> moveUp.doClick());
+        GuiActionRunner.execute(() -> moveToBottom.doClick());
+        GuiActionRunner.execute(() -> moveIndent.doClick());
+        GuiActionRunner.execute(() -> moveOutdent.doClick());
         assertEquals( 6, moveEventCount);
     }
 
@@ -498,7 +508,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, clipboardEventCount);
-        copyToClipboard.doClick();
+        GuiActionRunner.execute(() -> copyToClipboard.doClick());
         assertEquals( 1, clipboardEventCount);
     }
 
@@ -514,7 +524,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, removeEventCount);
-        removeNode.doClick();
+        GuiActionRunner.execute(() -> removeNode.doClick());
         assertEquals( 1, removeEventCount);
     }
 
@@ -530,7 +540,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, moveToNewLocationEventCount);
-        moveToNewLocation.doClick();
+        GuiActionRunner.execute(() -> moveToNewLocation.doClick());
         assertEquals( 1, moveToNewLocationEventCount);
     }
 
@@ -547,7 +557,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, renameEventCount);
-        fileOperationsRename.doClick();
+        GuiActionRunner.execute(() -> fileOperationsRename.doClick());
         assertEquals( 1, renameEventCount);
     }
 
@@ -563,7 +573,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, deleteEventCount);
-        fileOperationsDelete.doClick();
+        GuiActionRunner.execute(() -> fileOperationsDelete.doClick());
         assertEquals( 1, deleteEventCount);
     }
 
@@ -579,7 +589,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, propertiesEventCount);
-        properties.doClick();
+        GuiActionRunner.execute(() -> properties.doClick());
         assertEquals( 1, propertiesEventCount);
     }
 
@@ -595,68 +605,68 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals( 0, consolidateHereEventCount);
-        consolidateHere.doClick();
+        GuiActionRunner.execute(() -> consolidateHere.doClick() );
         assertEquals( 1, consolidateHereEventCount);
     }
 
     @Test
     public void testReplaceEscapedSpaces() {
-        String s = "filename%20extension.jpg";
-        Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
+        final String s = "filename%20extension.jpg";
+        final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assert (o.isPresent());
         assertEquals("filename extension.jpg", o.get());
     }
 
     @Test
     public void testReplaceDoubleEscapedSpaces() {
-        String s = "filename%20%20extension.jpg";
-        Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
+        final String s = "filename%20%20extension.jpg";
+        final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assert (o.isPresent());
         assertEquals("filename extension.jpg", o.get());
     }
 
     @Test
     public void testReplaceNoEscapedSpaces() {
-        String s = "filenameExtension.jpg";
-        Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
+        final String s = "filenameExtension.jpg";
+        final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assertFalse(o.isPresent());
     }
 
     @Test
     public void testReplaceNoEscapedSpacesSingeChars() {
-        String s1 = "filename2Extension.jpg";
-        Optional<String> o1 = PicturePopupMenu.replaceEscapedSpaces(s1);
+        final String s1 = "filename2Extension.jpg";
+        final Optional<String> o1 = PicturePopupMenu.replaceEscapedSpaces(s1);
         o1.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s1, s)));
 
-        String s2 = "filename0Extension_.jpg";
-        Optional<String> o2 = PicturePopupMenu.replaceEscapedSpaces(s2);
+        final String s2 = "filename0Extension_.jpg";
+        final Optional<String> o2 = PicturePopupMenu.replaceEscapedSpaces(s2);
         o2.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s2, s)));
 
-        String s3 = "filename%Extension.jpg";
-        Optional<String> o3 = PicturePopupMenu.replaceEscapedSpaces(s3);
+        final String s3 = "filename%Extension.jpg";
+        final Optional<String> o3 = PicturePopupMenu.replaceEscapedSpaces(s3);
         o3.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s3, s)));
     }
 
     @Test
     public void testReplaceUnderscore() {
-        String s = "filename_extension.jpg";
-        Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
+        final String s = "filename_extension.jpg";
+        final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assert (o.isPresent());
         assertEquals("filename extension.jpg", o.get());
     }
 
     @Test
     public void testReplaceDoubleUnderscores() {
-        String s = "filename__extension.jpg";
-        Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
+        final String s = "filename__extension.jpg";
+        final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assert (o.isPresent());
         assertEquals("filename extension.jpg", o.get());
     }
 
     @Test
     public void testReplaceNoUnderscores() {
-        String s = "filenameExtension%20.jpg";
-        Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
+        final String s = "filenameExtension%20.jpg";
+        final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assertFalse(o.isPresent());
     }
 

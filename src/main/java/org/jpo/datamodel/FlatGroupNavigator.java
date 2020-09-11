@@ -84,7 +84,7 @@ public class FlatGroupNavigator
          * @param e The notification event details
          */
         @Override
-        public void treeNodesChanged(TreeModelEvent e) {
+        public void treeNodesChanged(final TreeModelEvent e) {
             // Not interested in this event
         }
 
@@ -94,7 +94,7 @@ public class FlatGroupNavigator
          * @param e The event that we will be notified on
          */
         @Override
-        public void treeNodesInserted(TreeModelEvent e) {
+        public void treeNodesInserted(final TreeModelEvent e) {
             // Not interested in this event
         }
 
@@ -106,7 +106,7 @@ public class FlatGroupNavigator
          * @param e The Notification event
          */
         @Override
-        public void treeNodesRemoved(TreeModelEvent e) {
+        public void treeNodesRemoved(final TreeModelEvent e) {
             LOGGER.log(Level.INFO, "Investigating a remove event: {0}", e);
 
             // Problem here is that if the current node was removed we are no longer on the node that was removed
@@ -119,7 +119,7 @@ public class FlatGroupNavigator
                     return; // no point in continuing the loop; the group is gone.
                 }
 
-                TreePath parentOfRemoved = e.getTreePath();
+                final TreePath parentOfRemoved = e.getTreePath();
                 if (currentNodeTreePath.equals(parentOfRemoved)) {
                     int[] childIndices = e.getChildIndices();
                     int myNodeCount = getNumberOfNodes();
@@ -136,7 +136,7 @@ public class FlatGroupNavigator
          * @param e The event
          */
         @Override
-        public void treeStructureChanged(TreeModelEvent e) {
+        public void treeStructureChanged(final TreeModelEvent e) {
             // Not interested in this event
         }
     }

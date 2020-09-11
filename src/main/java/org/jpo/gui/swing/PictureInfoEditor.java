@@ -768,7 +768,7 @@ public class PictureInfoEditor extends JFrame {
          * @param e The event
          */
         @Override
-        public void treeNodesChanged(TreeModelEvent e) {
+        public void treeNodesChanged(final TreeModelEvent e) {
         }
 
         /**
@@ -778,7 +778,7 @@ public class PictureInfoEditor extends JFrame {
          * @param e The event
          */
         @Override
-        public void treeNodesInserted(TreeModelEvent e) {
+        public void treeNodesInserted(final TreeModelEvent e) {
         }
 
         /**
@@ -790,10 +790,9 @@ public class PictureInfoEditor extends JFrame {
          * @param e The event
          */
         @Override
-        public void treeNodesRemoved(TreeModelEvent e) {
+        public void treeNodesRemoved(final TreeModelEvent e) {
             if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, e)) {
                 getRid();
-
             }
         }
 
@@ -804,7 +803,7 @@ public class PictureInfoEditor extends JFrame {
          * @param e The event
          */
         @Override
-        public void treeStructureChanged(TreeModelEvent e) {
+        public void treeStructureChanged(final TreeModelEvent e) {
         }
     };
 

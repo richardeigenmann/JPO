@@ -1764,7 +1764,7 @@ public class ApplicationEventHandler {
             implements TreeModelListener {
 
         @Override
-        public void treeNodesChanged(TreeModelEvent e) {
+        public void treeNodesChanged(final TreeModelEvent e) {
             final TreePath tp = e.getTreePath();
             LOGGER.fine(String.format("The main app model listener trapped a tree node change event on the tree path: %s", tp.toString()));
             if (tp.getPathCount() == 1) { //if the root node sent the event
@@ -1775,17 +1775,17 @@ public class ApplicationEventHandler {
         }
 
         @Override
-        public void treeNodesInserted(TreeModelEvent e) {
+        public void treeNodesInserted(final TreeModelEvent e) {
             // ignore
         }
 
         @Override
-        public void treeNodesRemoved(TreeModelEvent e) {
+        public void treeNodesRemoved(final TreeModelEvent e) {
             // ignore, the root can't be removed ... Really?
         }
 
         @Override
-        public void treeStructureChanged(TreeModelEvent e) {
+        public void treeStructureChanged(final TreeModelEvent e) {
             final TreePath tp = e.getTreePath();
             if (tp.getPathCount() == 1) { //if the root node sent the event
                 updateApplicationTitle();

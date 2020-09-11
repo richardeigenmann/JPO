@@ -290,14 +290,14 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void showFilenamesButtonClicked() {
         showFilenamesState = ! showFilenamesState;
-        for (int i = 0; i < Settings.maxThumbnails; i++) {
+        for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
         }
     }
 
     public void resizeAllThumbnails(float thumbnailSizeFactor) {
         thumbnailLayoutManager.setThumbnailWidth((int) (350 * thumbnailSizeFactor));
-        for (int i = 0; i < Settings.maxThumbnails; i++) {
+        for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i].setFactor(thumbnailSizeFactor);
             thumbnailDescriptionControllers[i].setFactor(thumbnailSizeFactor);
         }
@@ -453,7 +453,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Request that the ThumbnailPanel show the previous page of Thumbnails
      */
     private void goToPreviousPage() {
-        startIndex -= Settings.maxThumbnails;
+        startIndex -= Settings.getMaxThumbnails();
         if (startIndex < 0) {
             startIndex = 0;
         }
@@ -466,7 +466,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Request that the ThumbnailPanel show the next page of Thumbnails
      */
     private void goToNextPage() {
-        startIndex += Settings.maxThumbnails;
+        startIndex += Settings.getMaxThumbnails();
         thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         nodeLayoutChanged();
         setButtonStatus();
@@ -477,8 +477,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void goToLastPage() {
         int last = mySetOfNodes.getNumberOfNodes();
-        int tgtPage = last / Settings.maxThumbnails;
-        startIndex = tgtPage * Settings.maxThumbnails;
+        int tgtPage = last / Settings.getMaxThumbnails();
+        startIndex = tgtPage * Settings.getMaxThumbnails();
         thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         nodeLayoutChanged();
         setButtonStatus();
@@ -490,11 +490,11 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void initThumbnailsArray() {
         Tools.checkEDT();
-        thumbnailControllers = new ThumbnailController[Settings.maxThumbnails];
-        thumbnailDescriptionControllers = new ThumbnailDescriptionController[Settings.maxThumbnails];
+        thumbnailControllers = new ThumbnailController[Settings.getMaxThumbnails()];
+        thumbnailDescriptionControllers = new ThumbnailDescriptionController[Settings.getMaxThumbnails()];
         thumbnailsPane.removeAll();
-        initialisedMaxThumbnails = Settings.maxThumbnails;
-        for (int i = 0; i < Settings.maxThumbnails; i++) {
+        initialisedMaxThumbnails = Settings.getMaxThumbnails();
+        for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
             thumbnailsPane.add(thumbnailControllers[i].getThumbnail());
@@ -513,15 +513,15 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         Tools.checkEDT();
         updateTitle();
 
-        if (initialisedMaxThumbnails != Settings.maxThumbnails) {
-            LOGGER.info(String.format("There are %d initialised thumbnails which is not equal to the defined maximum number of %d. Therefore reinitialising", initialisedMaxThumbnails, Settings.maxThumbnails));
+        if (initialisedMaxThumbnails != Settings.getMaxThumbnails()) {
+            LOGGER.info(String.format("There are %d initialised thumbnails which is not equal to the defined maximum number of %d. Therefore reinitialising", initialisedMaxThumbnails, Settings.getMaxThumbnails()));
             initThumbnailsArray();
         }
 
         setPageStats();
         setButtonStatus();
 
-        for (int i = Settings.maxThumbnails - 1; i > -1; i--) {
+        for (int i = Settings.getMaxThumbnails() - 1; i > -1; i--) {
             if (!thumbnailControllers[i].isSameNode(mySetOfNodes, i + startIndex)) {
                 thumbnailControllers[i].setNode(mySetOfNodes, i + startIndex);
                 thumbnailDescriptionControllers[i].setNode(mySetOfNodes.getNode(i + startIndex));
@@ -535,7 +535,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void setPageStats() {
         Tools.checkEDT();
         final int total = mySetOfNodes.getNumberOfNodes();
-        final int lastOnPage = Math.min(startIndex + Settings.maxThumbnails, total);
+        final int lastOnPage = Math.min(startIndex + Settings.getMaxThumbnails(), total);
         titleJPanel.lblPage.setText(String.format("Thumbnails %d to %d of %d", startIndex + 1, lastOnPage, total));
     }
 
@@ -563,7 +563,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         }
 
         int count = mySetOfNodes.getNumberOfNodes();
-        if ((startIndex + Settings.maxThumbnails) < count) {
+        if ((startIndex + Settings.getMaxThumbnails()) < count) {
             titleJPanel.getLastThumbnailsPageButton().setEnabled(true);
             titleJPanel.getNextThumbnailsPageButton().setEnabled(true);
         } else {

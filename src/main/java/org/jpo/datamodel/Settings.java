@@ -118,32 +118,48 @@ public class Settings {
         return windowSizes;
     }
 
+    public static boolean isMaximisePictureViewerWindow() {
+        return maximisePictureViewerWindow;
+    }
+
+    public static void setMaximisePictureViewerWindow(boolean maximisePictureViewerWindow) {
+        Settings.maximisePictureViewerWindow = maximisePictureViewerWindow;
+    }
+
     /**
      * Flag to indicate whether the JPO window should be maximised on startup or
      * left for the OS to decide on the size together with the JVM
      */
-    public static boolean maximisePictureViewerWindow = true;
+    private static boolean maximisePictureViewerWindow = true;
+
+    public static Dimension getPictureViewerDefaultDimensions() {
+        return pictureViewerDefaultDimensions;
+    }
+
+    public static void setPictureViewerDefaultDimensions(Dimension pictureViewerDefaultDimensions) {
+        Settings.pictureViewerDefaultDimensions = pictureViewerDefaultDimensions;
+    }
 
     /**
      * the dimensions of the "Default" picture viewer
      */
-    public static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
+    private static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
 
     /**
      * variable to indicate that the window size should be stored when the
      * application closes.
      */
-    public static boolean saveSizeOnExit;
+    private static boolean saveSizeOnExit;
 
     /**
      * the default place for the divider.
      */
-    public static int preferredMasterDividerSpot = 350;
+    private static int preferredMasterDividerSpot = 350;
 
     /**
      * the default place for the left side divider.
      */
-    public static int preferredLeftDividerSpot = mainFrameDimensions.height - 200;
+    private static int preferredLeftDividerSpot = mainFrameDimensions.height - 200;
     static {
         if (preferredLeftDividerSpot < 0) {
             preferredLeftDividerSpot = 150;
@@ -153,18 +169,26 @@ public class Settings {
     /**
      * the default width of the divider
      */
-    public static int dividerWidth = 12;
+    private static int dividerWidth = 12;
 
     /**
      * the default value for maxThumbnails
      */
-    public final static int DEFAULT_MAX_THUMBNAILS = 50;
+    public static final int DEFAULT_MAX_THUMBNAILS = 50;
+
+    public static int getMaxThumbnails() {
+        return maxThumbnails;
+    }
+
+    public static void setMaxThumbnails(int maxThumbnails) {
+        Settings.maxThumbnails = maxThumbnails;
+    }
 
     /**
      * a variable that sets the maximum number of thumbnails that shall be
      * displayed at one time.
      */
-    public static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
+    private static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
 
     /**
      * Setting for the width of the thumbnails. Set by default to 350 pixels.

@@ -170,7 +170,7 @@ public class GroupNavigator extends NodeNavigator {
 
             // don't get excited and force a relayout unless the inserted node is part
             // of the current group
-            TreePath myPath = new TreePath( myNode.getPath() );
+            final TreePath myPath = new TreePath( myNode.getPath() );
             if ( myPath.equals( treeModelEvent.getTreePath() ) ) {
                 notifyNodeNavigatorListeners();
             }

@@ -111,7 +111,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param sortCriteria The criteria by which the pictures should be sorted.
      */
-    public void sortChildren(FieldCodes sortCriteria) {
+    public void sortChildren(final FieldCodes sortCriteria) {
         Tools.checkEDT();  // because of removeAllChildren
         synchronized (this.getRoot()) {
             int childCount = getChildCount();

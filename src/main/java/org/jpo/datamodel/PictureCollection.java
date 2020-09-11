@@ -215,7 +215,6 @@ public class PictureCollection {
             try {
                 SwingUtilities.invokeAndWait(runnable);
             } catch (InterruptedException | InvocationTargetException ex) {
-                // Restore interrupted state...
                 Thread.currentThread().interrupt();
             }
         }
@@ -288,8 +287,6 @@ public class PictureCollection {
     /**
      * This method sends a nodesWereInserted event through to the listeners of
      * the Collection's model.
-     * <p>
-     * TODO: why does this method not ensure this is happening on the EDT?
      *
      * @param changedNode  The node that was inserted
      * @param childIndices The Child indices

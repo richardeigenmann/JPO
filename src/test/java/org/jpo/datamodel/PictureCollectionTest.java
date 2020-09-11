@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import org.assertj.swing.edt.GuiActionRunner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -410,8 +411,6 @@ public class PictureCollectionTest {
             }
         } );
 
-        //TODO: review this; why does the root node, the model and the picture collection have to be tied together
-        // via the Settings?
         Settings.setPictureCollection( pictureCollection );
         assertEquals( 0, nodesChanged);
         pi1.setDescription( "Changed Description" );
@@ -430,13 +429,148 @@ public class PictureCollectionTest {
         // No nodes structure change should have been notified
         assertEquals( 0, nodeStructureChanged);
     }
-    
-     /**
+
+
+    @Test
+    public void testInsertNotification() {
+        nodesChanged = 0;
+        nodesInserted = 0;
+        nodesRemoved = 0;
+        nodeStructureChanged = 0;
+        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+
+            @Override
+            public void treeNodesChanged( TreeModelEvent e ) {
+                nodesChanged++;
+            }
+
+            @Override
+            public void treeNodesInserted( TreeModelEvent e ) {
+                nodesInserted++;
+            }
+
+            @Override
+            public void treeNodesRemoved( TreeModelEvent e ) {
+                nodesRemoved++;
+            }
+
+            @Override
+            public void treeStructureChanged( TreeModelEvent e ) {
+                nodeStructureChanged++;
+            }
+        } );
+
+        Settings.setPictureCollection( pictureCollection );
+        assertEquals( 0, nodesChanged);
+        SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode();
+        group1.add(newNode);
+        try {
+            Thread.sleep( 80 );  // give the threads some time to do the notifications.
+        } catch ( final InterruptedException ex ) {
+            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
+        }
+        assertEquals(  0, nodesChanged);
+        assertEquals(  1, nodesInserted);
+        assertEquals( 0, nodesRemoved);
+        assertEquals( 0, nodeStructureChanged);
+    }
+
+    @Test
+    public void testRemoveNodesNotification() {
+        nodesChanged = 0;
+        nodesInserted = 0;
+        nodesRemoved = 0;
+        nodeStructureChanged = 0;
+        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+
+            @Override
+            public void treeNodesChanged( TreeModelEvent e ) {
+                nodesChanged++;
+            }
+
+            @Override
+            public void treeNodesInserted( TreeModelEvent e ) {
+                nodesInserted++;
+            }
+
+            @Override
+            public void treeNodesRemoved( TreeModelEvent e ) {
+                nodesRemoved++;
+            }
+
+            @Override
+            public void treeStructureChanged( TreeModelEvent e ) {
+                nodeStructureChanged++;
+            }
+        } );
+
+        Settings.setPictureCollection( pictureCollection );
+        assertEquals( 0, nodesChanged);
+        group1.deleteNode();
+        try {
+            Thread.sleep( 80 );  // give the threads some time to do the notifications.
+        } catch ( final InterruptedException ex ) {
+            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
+        }
+        assertEquals(  0, nodesChanged);
+        assertEquals(  0, nodesInserted);
+        assertEquals( 1, nodesRemoved);
+        assertEquals( 0, nodeStructureChanged);
+    }
+
+    @Test
+    public void testStructureChangedNotification() {
+        nodesChanged = 0;
+        nodesInserted = 0;
+        nodesRemoved = 0;
+        nodeStructureChanged = 0;
+        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+
+            @Override
+            public void treeNodesChanged( TreeModelEvent e ) {
+                nodesChanged++;
+            }
+
+            @Override
+            public void treeNodesInserted( TreeModelEvent e ) {
+                nodesInserted++;
+            }
+
+            @Override
+            public void treeNodesRemoved( TreeModelEvent e ) {
+                nodesRemoved++;
+            }
+
+            @Override
+            public void treeStructureChanged( TreeModelEvent e ) {
+                nodeStructureChanged++;
+            }
+        } );
+
+        Settings.setPictureCollection( pictureCollection );
+        assertEquals( 0, nodesChanged);
+        GuiActionRunner.execute(() -> pictureCollection.getRootNode().sortChildren(Settings.FieldCodes.DESCRIPTION));
+        try {
+            Thread.sleep( 80 );  // give the threads some time to do the notifications.
+        } catch ( final InterruptedException ex ) {
+            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
+            Thread.currentThread().interrupt();
+        }
+        assertEquals(  0, nodesChanged);
+        assertEquals(  0, nodesInserted);
+        assertEquals( 0, nodesRemoved);
+        assertEquals( 1, nodeStructureChanged);
+    }
+
+
+    /**
      * Test sendModelUpdates
      */
     @Test
     public void testSendModelUpdates() {
-        PictureCollection pc = new PictureCollection();
+        final PictureCollection pc = new PictureCollection();
         // Default of sendModelUpdates should be true
         assertTrue( pc.getSendModelUpdates());
         pc.setSendModelUpdates( false );
@@ -497,4 +631,10 @@ public class PictureCollectionTest {
         }
     }
 
+    @Test
+    public void clearCollection() {
+        assertEquals(4, pictureCollection.getRootNode().getChildCount());
+        pictureCollection.clearCollection();
+        assertEquals(0, pictureCollection.getRootNode().getChildCount());
+    }
 }
