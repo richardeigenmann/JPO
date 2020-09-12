@@ -413,7 +413,7 @@ public class PictureInfo implements Serializable {
      */
     public HashCode calculateSha256() throws IOException {
         final HashCode hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
-        LOGGER.fine(String.format("SHA-256 of file %s is %s", getImageFile().toString(), hash.toString().toUpperCase()));
+        LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{getImageFile(), hash.toString().toUpperCase()});
         return hash;
     }
 

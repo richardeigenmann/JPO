@@ -171,7 +171,7 @@ public class GroupPopupMenu extends JPopupMenu {
             final JMenu moveGroupNodeJMenu = new JMenu(Settings.jpoResources.getString("moveNodeJMenuLabel"));
             add(moveGroupNodeJMenu);
 
-            final SortableDefaultMutableTreeNode[] nodes = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
+            final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
             for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
                 final int dropnode = i;
                 recentDropNodes[i] = new JMenuItem();
@@ -333,7 +333,7 @@ public class GroupPopupMenu extends JPopupMenu {
      */
     private void populateRecentDropNodeMenuItems() {
         boolean dropNodesVisible = false;
-        final SortableDefaultMutableTreeNode[] nodes = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
+        final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
         for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
             if (i < nodes.length && nodes[i] != null) {
                 recentDropNodes[i].setText("To Group: " + nodes[i].toString());

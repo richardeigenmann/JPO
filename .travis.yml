@@ -19,7 +19,7 @@ addons:
 
 script:
   # other script steps might be done before running the actual analysis
-  - gradle sonarqube
+  - sonar-scanner
 
 git:
   depth: false

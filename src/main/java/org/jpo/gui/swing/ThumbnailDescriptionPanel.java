@@ -122,8 +122,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
         });
 
         // it is the Scrollpane you must constrain, not the TextArea
-        pictureDescriptionJSP.setMinimumSize(new Dimension(Settings.thumbnailSize, 25));
-        pictureDescriptionJSP.setMaximumSize(new Dimension(Settings.thumbnailSize, 250));
+        pictureDescriptionJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 25));
+        pictureDescriptionJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
 
         this.add(pictureDescriptionJSP);
     }
@@ -238,7 +238,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
             }
 
             final Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
-            int targetWidth = (int) (Settings.thumbnailSize * thumbnailSizeFactor);
+            int targetWidth = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
             if ((targetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
                 highresLocationJTextField.setPreferredSize(new Dimension(targetWidth, 30));
                 highresLocationJTextField.setMaximumSize(new Dimension(targetWidth, 30));

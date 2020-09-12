@@ -353,7 +353,7 @@ public class PicturePopupMenu extends JPopupMenu {
             final int dropnode = i;
             recentDropNodeJMenuItems[i] = new JMenuItem();
             recentDropNodeJMenuItems[i].addActionListener((ActionEvent event) -> {
-                        final SortableDefaultMutableTreeNode targetNode = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0])[dropnode];
+                        final SortableDefaultMutableTreeNode targetNode = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0])[dropnode];
                         final List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
                         if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
                             movingNodes.addAll(Settings.getPictureCollection().getSelection());
@@ -363,7 +363,7 @@ public class PicturePopupMenu extends JPopupMenu {
                         }
                         JpoEventBus.getInstance().post(new MoveNodeToNodeRequest(movingNodes, targetNode));
 
-                        Settings.memorizeGroupOfDropLocation(Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0])[dropnode]);
+                        Settings.memorizeGroupOfDropLocation(Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0])[dropnode]);
                         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
                     }
                     /*
@@ -496,7 +496,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         copyJMenu.addSeparator();
 
-        final String[] copyLocationsArray = Settings.copyLocations.toArray(new String[0]);
+        final String[] copyLocationsArray = Settings.getCopyLocations().toArray(new String[0]);
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             final File loc = i < copyLocationsArray.length ? new File(copyLocationsArray[i]) : new File(".");
             copyLocationJMenuItems[i] = new JMenuItem();
@@ -553,7 +553,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
 
         final JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
-        final String[] memorizedZipFilesArray = Settings.memorizedZipFiles.toArray(new String[0]);
+        final String[] memorizedZipFilesArray = Settings.getMemorizedZipFiles().toArray(new String[0]);
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             final File loc = (i < memorizedZipFilesArray.length) ? new File(memorizedZipFilesArray[i]) : new File(".");
             memorizedZipFileJMenuItems[i] = new JMenuItem();
@@ -622,7 +622,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         fileMoveJMenu.addSeparator();
 
-        final String[] moveLocationsArray = Settings.copyLocations.toArray(new String[0]);
+        final String[] moveLocationsArray = Settings.getCopyLocations().toArray(new String[0]);
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             final File loc = i < moveLocationsArray.length ? new File(moveLocationsArray[i]) : new File(".");
             moveLocationJMenuItems[i] = new JMenuItem();
@@ -772,7 +772,7 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private void labelRecentDropNodes() {
         boolean dropNodesVisible = false;
-        final SortableDefaultMutableTreeNode[] nodes = Settings.recentDropNodes.toArray(new SortableDefaultMutableTreeNode[0]);
+        final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
         for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
             if (i < nodes.length && nodes[i] != null) {
                 recentDropNodeJMenuItems[i].setText(
@@ -812,7 +812,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * Here we update the labels of the copy locations.
      */
     private void labelCopyLocations() {
-        final String[] copyLocationsAsArray = Settings.copyLocations.toArray(new String[0]);
+        final String[] copyLocationsAsArray = Settings.getCopyLocations().toArray(new String[0]);
         for (int i = 0; i < copyLocationJMenuItems.length; i++) {
             if (i < copyLocationsAsArray.length) {
                 copyLocationJMenuItems[i].setText(copyLocationsAsArray[i]);
@@ -828,7 +828,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * Here we update the labels of the move locations.
      */
     private void labelMoveLocations() {
-        final String[] moveLocationsAsArray = Settings.copyLocations.toArray(new String[0]);
+        final String[] moveLocationsAsArray = Settings.getCopyLocations().toArray(new String[0]);
         for (int i = 0; i < moveLocationJMenuItems.length; i++) {
             if (i < moveLocationsAsArray.length) {
                 moveLocationJMenuItems[i].setText(moveLocationsAsArray[i]);

@@ -110,7 +110,7 @@ public class GroupInfoEditor {
         nodeStatisticsController.updateStats( editNode );
         tabbedPane.addTab( "Statistics", nodeStatisticsController.getJComponent() );
 
-        final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize );
+        final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
         thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 

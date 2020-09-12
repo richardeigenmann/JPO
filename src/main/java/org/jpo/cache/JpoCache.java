@@ -270,7 +270,7 @@ public class JpoCache {
             } catch (IOException ex) {
                 Logger.getLogger(JpoCache.class
                         .getName()).log(Level.SEVERE, null, ex);
-                groupThumbnailDimension = new Dimension(Settings.thumbnailSize, Settings.thumbnailSize);
+                groupThumbnailDimension = new Dimension(Settings.getThumbnailSize(), Settings.getThumbnailSize());
             }
         }
         return groupThumbnailDimension;

@@ -495,7 +495,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.removeAll();
         initialisedMaxThumbnails = Settings.getMaxThumbnails();
         for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
-            thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
+            thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
             thumbnailsPane.add(thumbnailControllers[i].getThumbnail());
             thumbnailsPane.add(thumbnailDescriptionControllers[i].getPanel());

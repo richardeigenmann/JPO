@@ -359,8 +359,8 @@ public class ApplicationEventHandler {
             JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest());
         }
 
-        if ((Settings.autoLoad != null) && (Settings.autoLoad.length() > 0)) {
-            File xmlFile = new File(Settings.autoLoad);
+        if ((Settings.getAutoLoad() != null) && (Settings.getAutoLoad().length() > 0)) {
+            File xmlFile = new File(Settings.getAutoLoad());
             JpoEventBus.getInstance().post(new FileLoadRequest(xmlFile));
         } else {
             JpoEventBus.getInstance().post(new StartNewCollectionRequest());
@@ -828,7 +828,7 @@ public class ApplicationEventHandler {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(new JLabel(Settings.jpoResources.getString("collectionSaveBody") + Settings.getPictureCollection().getXmlFile().toString()));
         final JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload"));
-        if (Settings.autoLoad != null && ((new File(Settings.autoLoad)).compareTo(Settings.getPictureCollection().getXmlFile()) == 0)) {
+        if (Settings.getAutoLoad() != null && ((new File(Settings.getAutoLoad())).compareTo(Settings.getPictureCollection().getXmlFile()) == 0)) {
             setAutoload.setSelected(true);
         }
         panel.add(setAutoload);
@@ -838,7 +838,7 @@ public class ApplicationEventHandler {
                 JOptionPane.INFORMATION_MESSAGE);
 
         if (setAutoload.isSelected()) {
-            Settings.autoLoad = request.getAutoLoadCollectionFile();
+            Settings.setAutoLoad(request.getAutoLoadCollectionFile());
             Settings.writeSettings();
         }
     }
@@ -1613,7 +1613,7 @@ public class ApplicationEventHandler {
                 return;
             }
             LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thumbnail", this.toString()));
-            final ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
+            final ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             t.setNode(new SingleNodeNavigator(node), 0);
         }
     }

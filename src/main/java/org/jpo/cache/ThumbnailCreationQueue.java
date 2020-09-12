@@ -5,11 +5,12 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2003-2019  Richard Eigenmann.
+ Copyright (C) 2003-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -118,7 +119,7 @@ public class ThumbnailCreationQueue {
      */
     public static void remove( ThumbnailQueueRequest requestToRemove ) {
        if ( ! QUEUE.remove( requestToRemove ) ) {
-           LOGGER.info( "Failed to remove request: " + requestToRemove.toString() + " from QUEUE");
+           LOGGER.log(Level.INFO, "Failed to remove request: {0} from QUEUE", requestToRemove);
        }
     }
 
@@ -131,16 +132,13 @@ public class ThumbnailCreationQueue {
      * @return The ThumbnailQueueRequest if it exists.
      */
     protected static ThumbnailQueueRequest findThumbnailQueueRequest(
-            ThumbnailQueueRequestCallbackHandler callbackHandler ) {
-        ThumbnailQueueRequest req = null;
-        ThumbnailQueueRequest test;
+            final ThumbnailQueueRequestCallbackHandler callbackHandler ) {
         for ( Iterator<ThumbnailQueueRequest> i = QUEUE.iterator(); i.hasNext(); ) {
-            test = (ThumbnailQueueRequest) i.next();
+            final ThumbnailQueueRequest test =  i.next();
             if ( ( callbackHandler != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( callbackHandler ) ) ) {
-                req = test;
-                break;
+                return test;
             }
         }
-        return req;
+        return null;
     }
 }

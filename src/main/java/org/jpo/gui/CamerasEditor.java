@@ -107,7 +107,7 @@ public class CamerasEditor extends JFrame {
 
         // take a backup
         backupCameras = new ArrayList<>();
-        Settings.cameras.stream().map((c) -> {
+        Settings.getCameras().stream().map((c) -> {
             Camera b = new Camera();
             b.setDescription(c.getDescription());
             b.setCameraMountPoint(c.getCameraMountPoint());
@@ -187,7 +187,7 @@ public class CamerasEditor extends JFrame {
         cancelJButton.setMaximumSize(Settings.defaultButtonDimension);
         cancelJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         cancelJButton.addActionListener((ActionEvent e) -> {
-            Settings.cameras = backupCameras;
+            Settings.setCameras(backupCameras);
             getRid();
         });
         buttonJPanel.add(cancelJButton);
@@ -228,7 +228,7 @@ public class CamerasEditor extends JFrame {
     private void addCameraAction() {
         singleCameraEditor.saveCamera();
         Camera cam = new Camera();
-        Settings.cameras.add(cam);
+        Settings.getCameras().add(cam);
         singleCameraEditor.setCamera(cam);
         DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(cam);
         int childNodes = rootNode.getChildCount();
@@ -254,8 +254,8 @@ public class CamerasEditor extends JFrame {
         DefaultMutableTreeNode nextSibling = node.getNextSibling();
         DefaultMutableTreeNode previousNode = node.getPreviousNode();
         treeModel.removeNodeFromParent(node);
-        synchronized (Settings.cameras) {
-            Settings.cameras.remove(node.getUserObject());
+        synchronized (Settings.getCameras()) {
+            Settings.getCameras().remove(node.getUserObject());
         }
         if (nextSibling != null) {
             cameraJTree.setSelectionPath(new TreePath(nextSibling.getPath()));
@@ -293,7 +293,7 @@ public class CamerasEditor extends JFrame {
      * to that the daemon can scan them afresh.
      */
     private void getRid() {
-        Settings.cameras.forEach((c) -> {
+        Settings.getCameras().forEach((c) -> {
             c.setLastConnectionStatus(false); // so that the daemon gets a chance
         });
 
@@ -310,7 +310,7 @@ public class CamerasEditor extends JFrame {
         Tools.checkEDT();
         rootNode.removeAllChildren();
         treeModel.nodeStructureChanged(rootNode);
-        for (Camera c : Settings.cameras) {
+        for (Camera c : Settings.getCameras()) {
             DefaultMutableTreeNode cameraNode = new DefaultMutableTreeNode(c);
             rootNode.add(cameraNode);
         }

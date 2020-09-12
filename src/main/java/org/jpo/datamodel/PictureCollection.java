@@ -206,7 +206,7 @@ public class PictureCollection {
             setUnsavedUpdates(false);
             setXmlFile(null);
             getTreeModel().reload();
-            Settings.recentDropNodes.clear();
+            Settings.getRecentDropNodes().clear();
             ThumbnailCreationQueue.clear();
         };
         if (SwingUtilities.isEventDispatchThread()) {

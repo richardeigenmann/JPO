@@ -7,7 +7,7 @@ import java.util.Set;
 /*
  NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
 
- Copyright (C) 2006-2018 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2020 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,28 +28,6 @@ import java.util.Set;
  */
 public abstract class NodeNavigator
         implements NodeNavigatorInterface {
-
-     /**
-     * The implementing class must return the title for the images being shown.
-     */
-    @Override
-    public abstract String getTitle();
-
-    /**
-     * The implementing class must return the number of nodes it contains.
-     */
-    @Override
-    public abstract int getNumberOfNodes();
-
-    /**
-     * This method returns the node for the indicated position in the group.
-     *
-     * @param index The component index that is to be returned. The number is
-     * from 0 to {@link #getNumberOfNodes}. If there are 3 nodes request
-     * getNode(0), getNode(1) and getNode(2).
-     */
-    @Override
-    public abstract SortableDefaultMutableTreeNode getNode( int index );
 
     /**
      * The listeners to notify about a structural change

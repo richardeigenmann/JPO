@@ -75,7 +75,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The Thumbnail Controller for the thumbnail being shown
      */
-    private final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize);
+    private final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
 
     /**
      * The description of the picture

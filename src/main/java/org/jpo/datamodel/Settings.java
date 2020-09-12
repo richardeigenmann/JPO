@@ -146,12 +146,6 @@ public class Settings {
     private static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
 
     /**
-     * variable to indicate that the window size should be stored when the
-     * application closes.
-     */
-    private static boolean saveSizeOnExit;
-
-    /**
      * the default place for the divider.
      */
     private static int preferredMasterDividerSpot = 350;
@@ -190,10 +184,18 @@ public class Settings {
      */
     private static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
 
+    public static int getThumbnailSize() {
+        return thumbnailSize;
+    }
+
+    public static void setThumbnailSize(int thumbnailSize) {
+        Settings.thumbnailSize = thumbnailSize;
+    }
+
     /**
      * Setting for the width of the thumbnails. Set by default to 350 pixels.
      */
-    public static int thumbnailSize = 350;
+    private static int thumbnailSize = 350;
 
     /**
      * the dimension of mini thumbnails in the group folders
@@ -256,11 +258,20 @@ public class Settings {
      * this parameter allows you to specify how much space should be left from
      * the bottom of the screen for Full screen windows.
      */
-    public static int leaveForPanel;
+    private static int leaveForPanel;
+
+    public static String getAutoLoad() {
+        return autoLoad;
+    }
+
+    public static void setAutoLoad(String autoLoad) {
+        Settings.autoLoad = autoLoad;
+    }
+
     /**
      * The collection that should be loaded automatically
      */
-    public static String autoLoad;
+    private static String autoLoad;
 
     /**
      * Method to clear the autoload collection.
@@ -285,11 +296,16 @@ public class Settings {
     /**
      * A counter that keeps track of the number of thumbnails created
      */
-    public static int thumbnailCounter = 0;
+    private static int thumbnailCounter = 0;
+
+    public static void setDontEnlargeSmallImages(boolean dontEnlargeSmallImages) {
+        Settings.dontEnlargeSmallImages = dontEnlargeSmallImages;
+    }
+
     /**
      * a flag that indicates that small images should not be enlarged
      */
-    public static boolean dontEnlargeSmallImages = true;
+    private static boolean dontEnlargeSmallImages = true;
 
     /**
      * the path to the jar file; derived from jarAutostartList
@@ -616,10 +632,18 @@ public class Settings {
      */
     public static final String ADD_FROM_CAMERA_DATE_FORMAT = "dd.MM.yyyy  HH:mm";
 
+    public static List<Camera> getCameras() {
+        return cameras;
+    }
+
+    public static void setCameras(List<Camera> cameras) {
+        Settings.cameras = cameras;
+    }
+
     /**
      * Collection of cameras
      */
-    public static List<Camera> cameras = new ArrayList<>();
+    private static List<Camera> cameras = new ArrayList<>();
 
     public static SortedSet<Object> getEmailSenders() {
         return emailSenders;
@@ -1205,10 +1229,14 @@ public class Settings {
      */
     public static final int MAX_DROPNODES = 12;
 
+    public static Queue<SortableDefaultMutableTreeNode> getRecentDropNodes() {
+        return recentDropNodes;
+    }
+
     /**
      * Recently used Drop Nodes to make it simple to re-use
      */
-    public static final Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
+    private static final Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
 
     /**
      * This method memorizes the recent drop targets so that they can be
@@ -1230,15 +1258,25 @@ public class Settings {
      * ------------------------------------------------------------------------------
      * Stuff for memorizing the copy target locations
      */
+
+    public static Queue<String> getCopyLocations() {
+        return copyLocations;
+    }
+
     /**
      * Queue of recently used directories in copy operations and other file
      * selections.
      */
-    public static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
+    private static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
+
+    public static Queue<String> getMemorizedZipFiles() {
+        return memorizedZipFiles;
+    }
+
     /**
      * Array of recently used zip files operations and other file selections.
      */
-    public static final Queue<String> memorizedZipFiles = EvictingQueue.create(MAX_MEMORISE);
+    private static final Queue<String> memorizedZipFiles = EvictingQueue.create(MAX_MEMORISE);
 
     /**
      * This method memorises the directories used in copy operations so that

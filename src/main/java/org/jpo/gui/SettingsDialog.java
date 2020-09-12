@@ -571,18 +571,18 @@ public class SettingsDialog extends JDialog {
             }
         }
 
-        autoLoadJTextField.setText( Settings.autoLoad );
+        autoLoadJTextField.setText(Settings.getAutoLoad());
 
         startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()) );
         viewerSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()) );
 
         maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
-        dontEnlargeJCheckBox.setSelected( Settings.dontEnlargeSmallImages );
+        dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
 
         //thumbnailPathChooser.setText( Settings.thumbnailPath.getPath() );
         thumbnailCacheDirPathChooser.setText( Settings.thumbnailCacheDirectory );
         maxThumbnails.setValue(Settings.getMaxThumbnails());
-        thumbnailSize.setValue( Settings.thumbnailSize );
+        thumbnailSize.setValue(Settings.getThumbnailSize());
         //keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
         jpgQualityJSlider.setValue( (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
         thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
@@ -646,7 +646,7 @@ public class SettingsDialog extends JDialog {
             JpoEventBus.getInstance().post( new LocaleChangedEvent() );
         }
 
-        Settings.autoLoad = autoLoadJTextField.getText();
+        Settings.setAutoLoad(autoLoadJTextField.getText());
 
         Settings.tagCloudWords = (Integer) tagCloudWordsJSpinner.getValue();
 
@@ -659,7 +659,7 @@ public class SettingsDialog extends JDialog {
         }
 
         Settings.maximumPictureSize = maximumPictureSizeJTextField.getValue();
-        Settings.dontEnlargeSmallImages = dontEnlargeJCheckBox.isSelected();
+        Settings.setDontEnlargeSmallImages(dontEnlargeJCheckBox.isSelected());
 
         if ( viewerSizeDropdown.getSelectedIndex() == 0 ) {
             Settings.setMaximisePictureViewerWindow(true);
@@ -682,7 +682,7 @@ public class SettingsDialog extends JDialog {
         }*/
 
         Settings.setMaxThumbnails(maxThumbnails.getValue());
-        Settings.thumbnailSize = thumbnailSize.getValue();
+        Settings.setThumbnailSize( thumbnailSize.getValue());
         Settings.defaultHtmlLowresQuality = ( (float) jpgQualityJSlider.getValue() ) / 100;
         Settings.thumbnailFastScale = thumbnailFastScaleJCheckBox.isSelected();
 

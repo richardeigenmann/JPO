@@ -152,75 +152,75 @@ public class SettingsTest {
 
     @Test
     public void testMemorizeGroupOfDropLocation() {
-        Settings.recentDropNodes.clear();
+        Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode();
         // First Element should not be our new node
-        assertNotEquals( n, Settings.recentDropNodes.peek());
+        assertNotEquals( n, Settings.getRecentDropNodes().peek());
         Settings.memorizeGroupOfDropLocation(n);
         // First Element should now be our new node
-        assertEquals( n, Settings.recentDropNodes.element());
+        assertEquals( n, Settings.getRecentDropNodes().element());
     }
 
     @Test
     public void testMemorizeGroupOfDropLocationPushDown() {
-        Settings.recentDropNodes.clear();
+        Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode();
         // First Element should not be our new node
-        assertNotEquals( n1, Settings.recentDropNodes.peek());
+        assertNotEquals( n1, Settings.getRecentDropNodes().peek());
         Settings.memorizeGroupOfDropLocation(n1);
         // First Element should now be our new node
-        assertEquals( n1, Settings.recentDropNodes.element());
+        assertEquals( n1, Settings.getRecentDropNodes().element());
 
         final SortableDefaultMutableTreeNode n2 = new SortableDefaultMutableTreeNode();
         Settings.memorizeGroupOfDropLocation(n2);
         // First Element should now be our new node n2
-        assertEquals(n1, Settings.recentDropNodes.poll());
+        assertEquals(n1, Settings.getRecentDropNodes().poll());
         // Second Element should now be our new node n1
-        assertEquals(n2, Settings.recentDropNodes.element());
+        assertEquals(n2, Settings.getRecentDropNodes().element());
     }
 
     @Test
     public void testMemorizeGroupOfDropLocationOverfill() {
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         // First Element should not be our new node
-        assertFalse(Settings.recentDropNodes.contains(n1));
+        assertFalse(Settings.getRecentDropNodes().contains(n1));
         Settings.memorizeGroupOfDropLocation(n1);
         // First Element should now be our new node
-        assertEquals(n1, Settings.recentDropNodes.element());
+        assertEquals(n1, Settings.getRecentDropNodes().element());
 
         range(1, Settings.MAX_DROPNODES).forEach(
                 itr -> Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("Any other node"))));
         // The n1 node should still be on the queue
-        assertTrue( Settings.recentDropNodes.contains(n1));
+        assertTrue( Settings.getRecentDropNodes().contains(n1));
 
         Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("One more node")));
-        assertFalse(Settings.recentDropNodes.contains(n1));
+        assertFalse(Settings.getRecentDropNodes().contains(n1));
     }
 
     @Test
     public void testRemoveRecentDropNode() {
-        Settings.recentDropNodes.clear();
+        Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         // First Element should not be our new node
-        assertFalse( Settings.recentDropNodes.contains(n1));
+        assertFalse( Settings.getRecentDropNodes().contains(n1));
         Settings.memorizeGroupOfDropLocation(n1);
         // First Element should now be our new node
-        assertEquals( n1, Settings.recentDropNodes.element());
-        Settings.recentDropNodes.remove(n1);
+        assertEquals( n1, Settings.getRecentDropNodes().element());
+        Settings.getRecentDropNodes().remove(n1);
         // First Element should not be our new node
-        assertFalse( Settings.recentDropNodes.contains(n1));
+        assertFalse( Settings.getRecentDropNodes().contains(n1));
     }
 
     @Test
     public void testRemoveRecentDropNodeAndCompress() {
-        Settings.recentDropNodes.clear();
+        Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         Settings.memorizeGroupOfDropLocation(n1);
-        Settings.recentDropNodes.remove(n1);
+        Settings.getRecentDropNodes().remove(n1);
         final SortableDefaultMutableTreeNode n2 = new SortableDefaultMutableTreeNode(new GroupInfo("N2"));
         Settings.memorizeGroupOfDropLocation(n2);
         // First Element should be our new node
-        assertEquals( n2, Settings.recentDropNodes.element());
+        assertEquals( n2, Settings.getRecentDropNodes().element());
     }
 
     @Test
@@ -228,10 +228,10 @@ public class SettingsTest {
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         Settings.memorizeGroupOfDropLocation(n1);
         // First Element should be our new node
-        assertTrue(Settings.recentDropNodes.contains(n1));
-        Settings.recentDropNodes.clear();
+        assertTrue(Settings.getRecentDropNodes().contains(n1));
+        Settings.getRecentDropNodes().clear();
         // First Element should no longer be our node
-        assertFalse( Settings.recentDropNodes.contains(n1));
+        assertFalse( Settings.getRecentDropNodes().contains(n1));
     }
 
 }

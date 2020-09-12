@@ -95,7 +95,7 @@ public class DirectoryChooser
     private void initComponents() {
         Tools.checkEDT();
         directoryJComboBox.setEditable( true );
-        for ( String copyLocation : Settings.copyLocations ) {
+        for ( String copyLocation : Settings.getCopyLocations()) {
             addDirToDropdown( copyLocation );
         }
         directoryJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );

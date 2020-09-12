@@ -351,7 +351,7 @@ public class EmailerGui extends JFrame {
      * loads the thumbnails into the preview panel
      */
     private void loadThumbnails() {
-        int thumbnailSize = Settings.thumbnailSize;
+        int thumbnailSize = Settings.getThumbnailSize();
         int desiredSize = 140;
         float factor = desiredSize / (float) thumbnailSize;
         ListNavigator listNavigator = new ListNavigator();

@@ -3,7 +3,7 @@ package org.jpo.datamodel;
 /*
 PictureInfoChangeEvent.java:  This event holds information about how the picture changed
 
-Copyright (C) 2002 - 2009  Richard Eigenmann.
+Copyright (C) 2002 - 2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -17,6 +17,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /** 
  *  Objects of this class have details about what was changed in a PictureInfo 
  *  object. Several things may have changed in a single event.
@@ -58,7 +60,7 @@ public class GroupInfoChangeEvent {
      */
     @Override
     public String toString() {
-        return "This is a GroupInfoChangeEvent from " + groupInfo.toString();
+        return "This is a GroupInfoChangeEvent from " + groupInfo;
     }
 
 //-----------------

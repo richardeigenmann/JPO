@@ -17,6 +17,8 @@ import java.awt.geom.Point2D;
 import java.io.*;
 import java.util.logging.Logger;
 
+import static com.drew.metadata.exif.ExifDirectoryBase.*;
+
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
@@ -177,20 +179,20 @@ public class ExifInfo {
 
             ExifSubIFDDirectory exifSubIFDdirectory = metadata.getFirstDirectoryOfType( ExifSubIFDDirectory.class );
             if ( exifSubIFDdirectory != null ) {
-                setCreateDateTime( tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, getCreateDateTime() ) );
-                aperture = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FNUMBER, aperture );
-                aperture = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_APERTURE, aperture );
-                shutterSpeed = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_EXPOSURE_TIME, shutterSpeed );
-                shutterSpeed = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_SHUTTER_SPEED, shutterSpeed );
-                focalLength = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_FOCAL_LENGTH, focalLength );
-                iso = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_ISO_EQUIVALENT, iso );
-                lens = tryToGetTag( exifSubIFDdirectory, ExifSubIFDDirectory.TAG_LENS, lens );
+                setCreateDateTime( tryToGetTag( exifSubIFDdirectory, TAG_DATETIME_ORIGINAL, getCreateDateTime() ) );
+                aperture = tryToGetTag( exifSubIFDdirectory, TAG_FNUMBER, aperture );
+                aperture = tryToGetTag( exifSubIFDdirectory, TAG_APERTURE, aperture );
+                shutterSpeed = tryToGetTag( exifSubIFDdirectory, TAG_EXPOSURE_TIME, shutterSpeed );
+                shutterSpeed = tryToGetTag( exifSubIFDdirectory, TAG_SHUTTER_SPEED, shutterSpeed );
+                focalLength = tryToGetTag( exifSubIFDdirectory, TAG_FOCAL_LENGTH, focalLength );
+                iso = tryToGetTag( exifSubIFDdirectory, TAG_ISO_EQUIVALENT, iso );
+                lens = tryToGetTag( exifSubIFDdirectory, TAG_LENS, lens );
             }
 
             ExifIFD0Directory exifSubIFD0directory = metadata.getFirstDirectoryOfType( ExifIFD0Directory.class );
             if ( exifSubIFD0directory != null ) {
-                camera = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_MODEL, camera ), " " );
-                String rotationString = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, ExifIFD0Directory.TAG_ORIENTATION, "" ), " " );
+                camera = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, TAG_MODEL, camera ), " " );
+                String rotationString = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, TAG_ORIENTATION, "" ), " " );
 
                 switch ( rotationString ) {
                     case "Top, left side (Horizontal / normal)":

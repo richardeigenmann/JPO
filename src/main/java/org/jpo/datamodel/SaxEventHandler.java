@@ -243,7 +243,7 @@ public class SaxEventHandler extends DefaultHandler {
                 temporaryCategory = temporaryCategory.concat( s );
                 break;
                                 default:
-                    LOGGER.severe( "Don't recognize currentField: " + currentField  );
+                    LOGGER.log(Level.SEVERE, "Don't recognize currentField: {0}", currentField );
                     break;
         }
     }
