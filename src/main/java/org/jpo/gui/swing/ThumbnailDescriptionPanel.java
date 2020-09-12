@@ -180,6 +180,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * Sets the description of the ThumbnailDescriptionPanel.
      * It calls setTextAreaSize to resize the box according to the amount of text.
      * This method is EDT safe
+     * @param newDescription the new Descriptions
      */
     public void setDescription(final String newDescription) {
         final Runnable runnable = () -> {
@@ -195,6 +196,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     /**
      * Gets the description of the ThumbnailDescriptionPanel
+     * @return the description
      */
     public String getDescription() {
         return getPictureDescriptionJTA().getText();
@@ -206,7 +208,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * This method calls setTextAreaSize to do the resizing right away.
      * It is EDT safe.
      *
-     * @param thumbnailSizeFactor
+     * @param thumbnailSizeFactor the size factor with which to multiply
      */
     public void setThumbnailSizeFactor(final float thumbnailSizeFactor) {
         this.thumbnailSizeFactor = thumbnailSizeFactor;

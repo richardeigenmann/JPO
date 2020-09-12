@@ -56,7 +56,11 @@ test {
     systemProperties = System.getProperties()
 }
 
-javadoc {options.encoding = "UTF-8"}
+javadoc {
+    options.encoding = "UTF-8"
+    options.addBooleanOption('-enable-preview', true)
+    options.addStringOption('-release', '14')
+}
 
 task openJavadocInBrowser {
     dependsOn 'javadoc'
@@ -65,6 +69,13 @@ task openJavadocInBrowser {
         java.awt.Desktop.desktop.open(new File(buildDir, "/docs/javadoc/index.html"))
     }
 }
+
+/*task generateJavadocs(type: Javadoc) {
+    options {
+        addBooleanOption('-enable-preview', true)
+        addStringOption('-release', '14')
+    }
+}*/
 
 repositories {
     mavenCentral()
@@ -347,6 +358,8 @@ allprojects { // Projects
     }
 }*/
 
+// docker run -d --name sonarqube -p 9000:9000 sonarqube:8.4.2-community
+// http://localhost admin admin
 sonarqube {
     properties {
         property("sonar.projectName", "Java Picture Organizer")

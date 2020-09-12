@@ -178,6 +178,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
 
     /**
      * Adds n to the progress counter
+     * @param n the amount to increment
      */
     public void progressIncrement(int n) {
         Tools.checkEDT();

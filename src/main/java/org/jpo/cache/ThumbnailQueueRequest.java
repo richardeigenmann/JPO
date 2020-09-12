@@ -24,7 +24,7 @@ import java.awt.Dimension;
 /**
  * The ThumbnailQueueRequest is the type of object that will sit on the
  * {@link ThumbnailCreationQueue} with a references to the
- * {@link org.jpo.gui.ThumbnailQueueRequestCallbackHandler} and the queue priority.
+ * {@link org.jpo.cache.ThumbnailQueueRequestCallbackHandler} and the queue priority.
  * When the Thumbnail has been created the
  * {@link ThumbnailQueueRequestCallbackHandler#callbackThumbnailCreated}
  * method will be fired and the caller can process the new Thumbnail.
