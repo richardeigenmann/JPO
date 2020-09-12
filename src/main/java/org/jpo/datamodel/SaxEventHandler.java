@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.Settings.FieldCodes.*;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -198,53 +198,23 @@ public class SaxEventHandler extends DefaultHandler {
      */
     @Override
     public void characters(final char[] buf, final int offset, final int len ) {
-        final String s = new String( buf, offset, len );
-        switch ( currentField ) {
-            case DESCRIPTION:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToDescription( s );
-                break;
-            case FILE_URL:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToImageLocation( s );
-                break;
-            case FILE_LOWRES_URL:
-                lowresUrls.append( s );
-                break;
-            case FILM_REFERENCE:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToFilmReference( s );
-                break;
-            case CREATION_TIME:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToCreationTime( s );
-                break;
-            case COMMENT:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToComment( s );
-                break;
-            case PHOTOGRAPHER:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToPhotographer( s );
-                break;
-            case COPYRIGHT_HOLDER:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToCopyrightHolder( s );
-                break;
-            case ROTATION:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToRotation( s );
-                break;
-            case LATLNG:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToLatLng( s );
-                break;
-            case CHECKSUM:
-                ( (PictureInfo) currentPicture.getUserObject() ).appendToChecksum( s );
-                break;
-            case CATEGORIES:
-                LOGGER.log( Level.INFO, "XmlReader: parsing string on CATEGORIES: {0}", s );
-                break;
-            case CATEGORY:
-                LOGGER.log( Level.INFO, "XmlReader: parsing string on CATEGORY: {0}", s );
-                break;
-            case CATEGORY_DESCRIPTION:
-                temporaryCategory = temporaryCategory.concat( s );
-                break;
-                                default:
-                    LOGGER.log(Level.SEVERE, "Don''t recognize currentField: {0}", currentField);
-                    break;
+        final String s = new String(buf, offset, len);
+        switch (currentField) {
+            case DESCRIPTION -> ((PictureInfo) currentPicture.getUserObject()).appendToDescription(s);
+            case FILE_URL -> ((PictureInfo) currentPicture.getUserObject()).appendToImageLocation(s);
+            case FILE_LOWRES_URL -> lowresUrls.append(s);
+            case FILM_REFERENCE -> ((PictureInfo) currentPicture.getUserObject()).appendToFilmReference(s);
+            case CREATION_TIME -> ((PictureInfo) currentPicture.getUserObject()).appendToCreationTime(s);
+            case COMMENT -> ((PictureInfo) currentPicture.getUserObject()).appendToComment(s);
+            case PHOTOGRAPHER -> ((PictureInfo) currentPicture.getUserObject()).appendToPhotographer(s);
+            case COPYRIGHT_HOLDER -> ((PictureInfo) currentPicture.getUserObject()).appendToCopyrightHolder(s);
+            case ROTATION -> ((PictureInfo) currentPicture.getUserObject()).appendToRotation(s);
+            case LATLNG -> ((PictureInfo) currentPicture.getUserObject()).appendToLatLng(s);
+            case CHECKSUM -> ((PictureInfo) currentPicture.getUserObject()).appendToChecksum(s);
+            case CATEGORIES -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORIES: {0}", s);
+            case CATEGORY -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORY: {0}", s);
+            case CATEGORY_DESCRIPTION -> temporaryCategory = temporaryCategory.concat(s);
+            default -> LOGGER.log(Level.SEVERE, "Don''t recognize currentField: {0}", currentField);
         }
     }
 

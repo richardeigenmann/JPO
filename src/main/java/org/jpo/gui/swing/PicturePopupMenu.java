@@ -2,9 +2,9 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jpo.eventbus.*;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -63,7 +63,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * allows The user to quickly select a recently used drop location for the
      * next drop.
      */
-    private final JMenuItem[] recentDropNodeJMenuItems = new JMenuItem[Settings.MAX_DROPNODES];
+    private final JMenuItem[] recentDropNodeJMenuItems = new JMenuItem[Settings.getMaxDropnodes()];
 
     /**
      * Creates a popup menu for a node holding a picture
@@ -287,12 +287,8 @@ public class PicturePopupMenu extends JPopupMenu {
         }
         pictureMailUnSelectJMenuItem.setVisible(emailUnSelectable);
 
-        if (Settings.getPictureCollection()
-                .countMailSelectedNodes() > 0) {
-            pictureMailUnselectAllJMenuItem.setVisible(true);
-        } else {
-            pictureMailUnselectAllJMenuItem.setVisible(false);
-        }
+        pictureMailUnselectAllJMenuItem.setVisible(Settings.getPictureCollection()
+                .countMailSelectedNodes() > 0);
 
         final JMenu userFunctionsJMenu = new JMenu(Settings.jpoResources.getString("userFunctionsJMenu"));
         for (int i = 0;
@@ -349,7 +345,7 @@ public class PicturePopupMenu extends JPopupMenu {
         final JMenu moveJMenu = new JMenu(Settings.jpoResources.getString("moveNodeJMenuLabel"));
         add(moveJMenu);
 
-        for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
+        for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
             final int dropnode = i;
             recentDropNodeJMenuItems[i] = new JMenuItem();
             recentDropNodeJMenuItems[i].addActionListener((ActionEvent event) -> {
@@ -773,7 +769,7 @@ public class PicturePopupMenu extends JPopupMenu {
     private void labelRecentDropNodes() {
         boolean dropNodesVisible = false;
         final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
-        for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
+        for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
             if (i < nodes.length && nodes[i] != null) {
                 recentDropNodeJMenuItems[i].setText(
                         Settings.jpoResources.getString("recentDropNodePrefix") + nodes[i].toString());

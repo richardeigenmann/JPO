@@ -18,7 +18,7 @@ import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 /*
-Copyright (C) 2017  Richard Eigenmann.
+Copyright (C) 2017 - 2020 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -44,17 +44,16 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class OverlayedPictureController extends PictureController implements ScalablePictureListener {
 
-    
-    
-    public OverlayedPictureController(ScalablePicture scalablePicture) {
-        super( scalablePicture );
-        this.scalablePicture = scalablePicture;
-        setFont( INFO_FONT );
-        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        setMinimumSize( Settings.PICTUREVIEWER_MINIMUM_SIZE );
 
-        scalablePicture.addStatusListener( this );
-        if ( Settings.pictureViewerFastScale ) {
+    public OverlayedPictureController(final ScalablePicture scalablePicture) {
+        super(scalablePicture);
+        this.scalablePicture = scalablePicture;
+        setFont(INFO_FONT);
+        setBackground(Settings.getPictureviewerBackgroundColor());
+        setMinimumSize(Settings.getPictureviewerMinimumSize());
+
+        scalablePicture.addStatusListener(this);
+        if (Settings.pictureViewerFastScale) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();
@@ -103,19 +102,11 @@ public class OverlayedPictureController extends PictureController implements Sca
      *
      */
     public void cycleInfoDisplay() {
-        switch ( showInfo ) {
-            case NO_OVERLAY:
-                showInfo = PHOTOGRAPHIC_OVERLAY;
-                break;
-            case PHOTOGRAPHIC_OVERLAY:
-                showInfo = APPLICATION_OVERLAY;
-                break;
-            case APPLICATION_OVERLAY:
-                showInfo = NO_OVERLAY;
-                break;
-            default: 
-                showInfo = NO_OVERLAY;
-                break;
+        switch (showInfo) {
+            case NO_OVERLAY -> showInfo = PHOTOGRAPHIC_OVERLAY;
+            case PHOTOGRAPHIC_OVERLAY -> showInfo = APPLICATION_OVERLAY;
+            case APPLICATION_OVERLAY -> showInfo = NO_OVERLAY;
+            default -> showInfo = NO_OVERLAY;
         }
         repaint();
     }
@@ -159,20 +150,20 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * Brings up the indicated picture on the display.
      *
-     * @param file The URL of the picture to display
-     * @param description	The description of the picture
-     * @param rotation The rotation that should be applied
+     * @param file        The URL of the picture to display
+     * @param description The description of the picture
+     * @param rotation    The rotation that should be applied
      */
-    public void setPicture(File file, String description,
-                           double rotation ) {
-        scalablePicture.stopLoadingExcept( file );
+    public void setPicture(final File file, final String description,
+                           final double rotation) {
+        scalablePicture.stopLoadingExcept(file);
 
         setCenterWhenScaled(true);
-        scalablePicture.setScaleSize( getSize() );
-        scalablePicture.loadAndScalePictureInThread( file, Thread.MAX_PRIORITY, rotation );
+        scalablePicture.setScaleSize(getSize());
+        scalablePicture.loadAndScalePictureInThread(file, Thread.MAX_PRIORITY, rotation);
 
         legend = description;
-        exifInfo = new ExifInfo( file );
+        exifInfo = new ExifInfo(file);
         exifInfo.decodeExifTags();
     }
 
@@ -182,17 +173,17 @@ public class OverlayedPictureController extends PictureController implements Sca
      * @param g Graphics
      */
     @Override
-    public void paintComponent( Graphics g ) {
-        super.paintComponent( g );
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor( INFO_FONT_COLOR );
-        switch ( showInfo ) {
+    public void paintComponent(final Graphics g) {
+        super.paintComponent(g);
+        final Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(INFO_FONT_COLOR);
+        switch (showInfo) {
             case PHOTOGRAPHIC_OVERLAY:
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoCamera" ), INFO_COORDINATES.x, INFO_COORDINATES.y);
-                g2d.drawString( exifInfo.getCamera(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y);
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoLens" ), INFO_COORDINATES.x, INFO_COORDINATES.y + (LINE_SPACING) );
-                g2d.drawString(exifInfo.getLens(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + (LINE_SPACING) );
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoShutterSpeed" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
+                g2d.drawString(Settings.jpoResources.getString("ExifInfoCamera"), INFO_COORDINATES.x, INFO_COORDINATES.y);
+                g2d.drawString(exifInfo.getCamera(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y);
+                g2d.drawString(Settings.jpoResources.getString("ExifInfoLens"), INFO_COORDINATES.x, INFO_COORDINATES.y + (LINE_SPACING));
+                g2d.drawString(exifInfo.getLens(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + (LINE_SPACING));
+                g2d.drawString(Settings.jpoResources.getString("ExifInfoShutterSpeed"), INFO_COORDINATES.x, INFO_COORDINATES.y + (2 * LINE_SPACING ) );
                 g2d.drawString(exifInfo.getShutterSpeed(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
                 g2d.drawString( Settings.jpoResources.getString( "ExifInfoAperture" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
                 g2d.drawString(exifInfo.getAperture(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );

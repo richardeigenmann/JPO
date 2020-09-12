@@ -13,7 +13,7 @@ import java.awt.*;
 /*
  PictureFrame.java:  Class that manages the frame and display of the Picutre
 
- Copyright (C) 2002-2019  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -110,8 +110,8 @@ public class PictureFrame {
     private void inittializeGui() {
         Tools.checkEDT();
 
-        viewerPanel.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        viewerPanel.setOpaque( true );
+        viewerPanel.setBackground(Settings.getPictureviewerBackgroundColor());
+        viewerPanel.setOpaque(true);
         viewerPanel.setFocusable( false );
 
         viewerPanel.setLayout( new MigLayout( "insets 0", "[grow, fill]", "[grow, fill][]" ) );
@@ -119,42 +119,42 @@ public class PictureFrame {
         viewerPanel.add( pictureController, "span, grow" );
 
         final JPanel lowerBar = new JPanel( new MigLayout( "insets 0, wrap 3", "[left][grow, fill][right]", "[]" ) );
-        lowerBar.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        lowerBar.setOpaque( true );
+        lowerBar.setBackground(Settings.getPictureviewerBackgroundColor());
+        lowerBar.setOpaque(true);
         lowerBar.setFocusable( false );
 
         loadJProgressBar.setPreferredSize( new Dimension( 120, 20 ) );
         loadJProgressBar.setMaximumSize( new Dimension( 140, 20 ) );
-        loadJProgressBar.setMinimumSize( new Dimension( 80, 20 ) );
-        loadJProgressBar.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        loadJProgressBar.setBorderPainted( true );
+        loadJProgressBar.setMinimumSize(new Dimension(80, 20));
+        loadJProgressBar.setBackground(Settings.getPictureviewerBackgroundColor());
+        loadJProgressBar.setBorderPainted(true);
         loadJProgressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
 
         loadJProgressBar.setMinimum( 0 );
         loadJProgressBar.setMaximum( 100 );
-        loadJProgressBar.setStringPainted( true );
-        loadJProgressBar.setVisible( false );
+        loadJProgressBar.setStringPainted(true);
+        loadJProgressBar.setVisible(false);
 
-        lowerBar.add( loadJProgressBar, "hidemode 2" );
+        lowerBar.add(loadJProgressBar, "hidemode 2");
 
         // The Description_Panel
-        descriptionJTextField.setFont( Font.decode( Settings.jpoResources.getString( "PictureViewerDescriptionFont" ) ) );
-        descriptionJTextField.setWrapStyleWord( true );
-        descriptionJTextField.setLineWrap( true );
-        descriptionJTextField.setEditable( true );
-        descriptionJTextField.setForeground( Settings.PICTUREVIEWER_TEXT_COLOR );
-        descriptionJTextField.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        descriptionJTextField.setCaretColor( Settings.PICTUREVIEWER_TEXT_COLOR );
-        descriptionJTextField.setOpaque( true );
-        descriptionJTextField.setBorder( new EmptyBorder( 2, 12, 0, 0 ) );
-        descriptionJTextField.setMinimumSize( new Dimension( 80, 26 ) );
+        descriptionJTextField.setFont(Font.decode(Settings.jpoResources.getString("PictureViewerDescriptionFont")));
+        descriptionJTextField.setWrapStyleWord(true);
+        descriptionJTextField.setLineWrap(true);
+        descriptionJTextField.setEditable(true);
+        descriptionJTextField.setForeground(Settings.getPictureviewerTextColor());
+        descriptionJTextField.setBackground(Settings.getPictureviewerBackgroundColor());
+        descriptionJTextField.setCaretColor(Settings.getPictureviewerTextColor());
+        descriptionJTextField.setOpaque(true);
+        descriptionJTextField.setBorder(new EmptyBorder(2, 12, 0, 0));
+        descriptionJTextField.setMinimumSize(new Dimension(80, 26));
 
-        JScrollPane descriptionJScrollPane = new JScrollPane( ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
-        descriptionJScrollPane.setViewportView( descriptionJTextField );
-        descriptionJScrollPane.setBorder( new EmptyBorder( 0, 0, 0, 0 ) );
-        descriptionJScrollPane.setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        descriptionJScrollPane.setOpaque( true );
-        lowerBar.add( descriptionJScrollPane );
+        final JScrollPane descriptionJScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        descriptionJScrollPane.setViewportView(descriptionJTextField);
+        descriptionJScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+        descriptionJScrollPane.setBackground(Settings.getPictureviewerBackgroundColor());
+        descriptionJScrollPane.setOpaque(true);
+        lowerBar.add(descriptionJScrollPane);
 
         lowerBar.add( navButtonPanel );
         viewerPanel.add( lowerBar );
@@ -185,8 +185,8 @@ public class PictureFrame {
      *
      * @param newMode new mode
      */
-    public void switchWindowMode( ResizableJFrame.WindowSize newMode ) {
-        myJFrame.switchWindowMode( newMode );
+    public void switchWindowMode(final ResizableJFrame.WindowSize newMode) {
+        myJFrame.switchWindowMode(newMode);
     }
 
     public void getRid() {
@@ -202,8 +202,8 @@ public class PictureFrame {
      *
      * @param visible true if visible, false if not.
      */
-    public void setProgressBarVisible( boolean visible ) {
-        loadJProgressBar.setVisible( visible );
+    public void setProgressBarVisible(final boolean visible) {
+        loadJProgressBar.setVisible(visible);
     }
 
     /**
@@ -211,8 +211,8 @@ public class PictureFrame {
      *
      * @param value the progress bar value
      */
-    public void setProgressBarValue( int value ) {
-        loadJProgressBar.setValue( value );
+    public void setProgressBarValue(final int value) {
+        loadJProgressBar.setValue(value);
     }
 
     public void cycleInfoDisplay() {

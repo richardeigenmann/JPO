@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 /*
 CameraDownloadWizardStep5.java: the fourth step in the download from Camera Wizard
 
-Copyright (C) 2007 - 2014  Richard Eigenmann.
+Copyright (C) 2007 - 2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -112,8 +112,8 @@ public class CameraDownloadWizardStep5
      */
     private void sortOptionPicked( final SortOption sortOption ) {
         LOGGER.fine( String.format( "Option %s with sortCode %s picked", sortOption.getDescription(), sortOption.getSortCode() ) );
-        dataModel.setSortCode( sortOption.getSortCode() );
-        Settings.lastSortChoice = sortOption.getSortCode();
+        dataModel.setSortCode(sortOption.getSortCode());
+        Settings.setLastSortChoice(sortOption.getSortCode());
     }
 }
 

@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2010-2019  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2020  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -53,7 +53,7 @@ public class Thumbnail extends JComponent {
     private void initComponents() {
         setVisible(false);
         setOpaque(false);
-        setBackground(Settings.UNSELECTED_COLOR);
+        setBackground(Settings.getUnselectedColor());
     }
 
     /**
@@ -125,7 +125,7 @@ public class Thumbnail extends JComponent {
     public void setFactor(float thumbnailSizeFactor) {
         LOGGER.fine(String.format("Scaling factor is being set to %f", thumbnailSizeFactor));
         this.thumbnailScaleFactor = thumbnailSizeFactor;
-        setVisible(isVisible());  //Todo wouldn't revalidate be better to force relayout and repainting?
+        setVisible(isVisible());
     }
 
     /**

@@ -1,13 +1,14 @@
 package org.jpo.datamodel;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
 import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2009-2017  Richard Eigenmann.
+ Copyright (C) 2009-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -53,7 +54,7 @@ public class YearlyAnalysis implements Serializable {
      *
      * @param startNode Start Node
      */
-    public YearlyAnalysis( DefaultMutableTreeNode startNode ) {
+    public YearlyAnalysis(final DefaultMutableTreeNode startNode) {
         this.startNode = startNode;
         buildMaps();
     }
@@ -69,24 +70,22 @@ public class YearlyAnalysis implements Serializable {
     private void buildMaps() {
         DefaultMutableTreeNode testNode;
         Object nodeObject;
-        PictureInfo pi;
         Calendar cal;
         yearsMap = new TreeMap<>();
-        for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (DefaultMutableTreeNode) e.nextElement();
             nodeObject = testNode.getUserObject();
-            if ( ( nodeObject instanceof PictureInfo ) ) {
-                pi = (PictureInfo) nodeObject;
-                if ( pi.getCreationTimeAsDate() != null ) {
-                    LOGGER.log( Level.FINE, "IntegrityChecker.checkDates:{0} from {1} from Node: {2}", new Object[]{ pi.getFormattedCreationTime(), pi.getCreationTime(), pi.getDescription() });
+            if ((nodeObject instanceof PictureInfo pi)) {
+                if (pi.getCreationTimeAsDate() != null) {
+                    LOGGER.log(Level.FINE, "IntegrityChecker.checkDates:{0} from {1} from Node: {2}", new Object[]{pi.getFormattedCreationTime(), pi.getCreationTime(), pi.getDescription()});
                     cal = pi.getCreationTimeAsDate();
-                    if ( cal != null ) {
-                        int year = cal.get( Calendar.YEAR );
-                        int month = cal.get( Calendar.MONTH );
+                    if (cal != null) {
+                        int year = cal.get(Calendar.YEAR);
+                        int month = cal.get(Calendar.MONTH);
                         TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.computeIfAbsent(year, k -> new TreeMap<>());
                         //monthMap.put( new Integer( month ), new HashSet<SortableDefaultMutableTreeNode>() );
-                        HashSet<DefaultMutableTreeNode> nodes = monthMap.get( month );
-                        if ( nodes == null ) {
+                        HashSet<DefaultMutableTreeNode> nodes = monthMap.get(month);
+                        if (nodes == null) {
                             nodes = new HashSet<>();
                         }
                         nodes.add( testNode );
@@ -140,10 +139,10 @@ public class YearlyAnalysis implements Serializable {
      * @param year The year to be counted
      * @return The number of nodes in a year
      */
-    public int getYearNodeCount( Integer year ) {
+    public int getYearNodeCount(final Integer year) {
         int count = 0;
-        for ( Integer month : getMonths( year ) ) {
-            count += getMonthNodeCount( year, month );
+        for (Integer month : getMonths(year)) {
+            count += getMonthNodeCount(year, month);
         }
         return count;
     }
@@ -151,16 +150,16 @@ public class YearlyAnalysis implements Serializable {
     /**
      * Returns the number of nodes in a month of a year
      *
-     * @param year The year to be counted
+     * @param year  The year to be counted
      * @param month The month to be counted
      * @return The number of nodes in a month of the year
      */
-    public int getMonthNodeCount( Integer year, Integer month ) {
-        LOGGER.log( Level.FINE, "{0}  {1}", new Object[]{ year, month });
+    public int getMonthNodeCount(final Integer year, final Integer month) {
+        LOGGER.log(Level.FINE, "{0}  {1}", new Object[]{year, month});
         try {
-            return getNodes( year, month ).size();
-        } catch ( NullPointerException ex ) {
-            LOGGER.log( Level.INFO, "Got a NPE on Year {0} Month {1}", new Object[]{ year, month });
+            return getNodes(year, month).size();
+        } catch (NullPointerException ex) {
+            LOGGER.log(Level.INFO, "Got a NPE on Year {0} Month {1}", new Object[]{year, month});
             return 0;
         }
     }
@@ -172,8 +171,8 @@ public class YearlyAnalysis implements Serializable {
      * @param year The year for which the months are to be returned
      * @return The map with the results
      */
-    public TreeMap<Integer, HashSet<DefaultMutableTreeNode>> getMonthMap( Integer year ) {
-        return yearsMap.get( year );
+    public TreeMap<Integer, HashSet<DefaultMutableTreeNode>> getMonthMap(final Integer year) {
+        return yearsMap.get(year);
     }
 
     /**
@@ -182,8 +181,8 @@ public class YearlyAnalysis implements Serializable {
      * @param year The year for which the months set should be returned
      * @return The months in the analysis.
      */
-    public Set<Integer> getMonths( Integer year ) {
-        return getMonthMap( year ).keySet();
+    public Set<Integer> getMonths(final Integer year) {
+        return getMonthMap(year).keySet();
     }
 
     /**
@@ -192,11 +191,11 @@ public class YearlyAnalysis implements Serializable {
      * @param month Month
      * @return The name of the month
      */
-    public static String getMonthName( Integer month ) {
-        final String[] monthName = { "January", "February",
-            "March", "April", "May", "June", "July",
-            "August", "September", "October", "November",
-            "December" };
+    public static String getMonthName(final Integer month) {
+        final String[] monthName = {"January", "February",
+                "March", "April", "May", "June", "July",
+                "August", "September", "October", "November",
+                "December"};
 
         return monthName[month];
     }
@@ -204,12 +203,12 @@ public class YearlyAnalysis implements Serializable {
     /**
      * Returns the set of nodes for a year and month.
      *
-     * @param year The year for which to provide the nodes
+     * @param year  The year for which to provide the nodes
      * @param month The month for which to provide the nodes
      * @return The set for the year and month
      */
-    public Set<DefaultMutableTreeNode> getNodes( Integer year, Integer month ) {
-        return getMonthMap( year ).get( month );
+    public Set<DefaultMutableTreeNode> getNodes(final Integer year, final Integer month) {
+        return getMonthMap(year).get(month);
     }
 
     /**
@@ -219,15 +218,15 @@ public class YearlyAnalysis implements Serializable {
      */
     @Override
     public String toString() {
-        String[] monthName = { "January", "February",
-            "March", "April", "May", "June", "July",
-            "August", "September", "October", "November",
-            "December" };
-        StringBuilder sb = new StringBuilder();
-        for ( Integer year : getYears() ) {
-            sb.append( String.format( "Year: %4d%n", year ) );
-            for ( Integer month : getMonths( year ) ) {
-                sb.append( String.format( "      %s  has  %d  nodes%n", monthName[month], getNodes( year, month ).size() ) );
+        final String[] monthName = {"January", "February",
+                "March", "April", "May", "June", "July",
+                "August", "September", "October", "November",
+                "December"};
+        final StringBuilder sb = new StringBuilder();
+        for (final Integer year : getYears()) {
+            sb.append(String.format("Year: %4d%n", year));
+            for (final Integer month : getMonths(year)) {
+                sb.append(String.format("      %s  has  %d  nodes%n", monthName[month], getNodes(year, month).size()));
             }
 
         }

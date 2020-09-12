@@ -4,7 +4,7 @@ import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;

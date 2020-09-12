@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  DirectoryChooserTest.java:  a object that displays a JTextFiled and has a button
  next to it which allows you to bring up a filechooser
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -94,19 +94,19 @@ public class DirectoryChooser
      */
     private void initComponents() {
         Tools.checkEDT();
-        directoryJComboBox.setEditable( true );
-        for ( String copyLocation : Settings.getCopyLocations()) {
-            addDirToDropdown( copyLocation );
+        directoryJComboBox.setEditable(true);
+        for (String copyLocation : Settings.getCopyLocations()) {
+            addDirToDropdown(copyLocation);
         }
-        directoryJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
-        directoryJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
-        directoryJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
-        add( directoryJComboBox );
+        directoryJComboBox.setPreferredSize(Settings.getFilenameFieldPreferredSize());
+        directoryJComboBox.setMinimumSize(Settings.getFilenameFieldMinimumSize());
+        directoryJComboBox.setMaximumSize(Settings.getFilenameFieldMaximumSize());
+        add(directoryJComboBox);
 
-        directoryChooserJButton.setPreferredSize( Settings.threeDotButtonSize );
-        directoryChooserJButton.setMinimumSize( Settings.threeDotButtonSize );
-        directoryChooserJButton.setMaximumSize( Settings.threeDotButtonSize );
-        add( directoryChooserJButton );
+        directoryChooserJButton.setPreferredSize(Settings.getThreeDotButtonSize());
+        directoryChooserJButton.setMinimumSize(Settings.getThreeDotButtonSize());
+        directoryChooserJButton.setMaximumSize(Settings.getThreeDotButtonSize());
+        add(directoryChooserJButton);
     }
 
     /**
@@ -125,13 +125,13 @@ public class DirectoryChooser
         } );
 
         directoryChooserJButton.addActionListener(( ActionEvent e ) -> {
-            JFileChooser jFileChooser = new JFileChooser();
+            final JFileChooser jFileChooser = new JFileChooser();
             jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
             jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "genericSelectText" ) );
             jFileChooser.setDialogTitle( chooserTitle );
             jFileChooser.setCurrentDirectory( new File( getText() ) );
-            
-            int returnVal = jFileChooser.showOpenDialog( DirectoryChooser.this );
+
+            final int returnVal = jFileChooser.showOpenDialog(DirectoryChooser.this);
             if ( returnVal == JFileChooser.APPROVE_OPTION ) {
                 setText( jFileChooser.getSelectedFile().getPath() );
                 sendChangeNotification();
@@ -192,21 +192,21 @@ public class DirectoryChooser
      * Test the supplied File on whether it is a directory and whether is can be
      * written to.
      *
-     * @param testDir Directory to test
+     * @param testDir        Directory to test
      * @param validationType the flag for which test is to be performed
      * @return true if good, false if bad
      */
-    private static boolean checkDirectory(File testDir, int validationType) {
-        switch ( validationType ) {
+    private static boolean checkDirectory(final File testDir, final int validationType) {
+        switch (validationType) {
             case DIR_MUST_EXIST:
                 return testDir.exists() && testDir.isDirectory();
             case DIR_MUST_BE_WRITABLE:
-                if ( testDir.exists() ) {
+                if (testDir.exists()) {
                     return testDir.canWrite() && testDir.isDirectory();
                 } else {
                     File testDirParent = testDir.getParentFile();
-                    if ( testDirParent != null ) {
-                        return checkDirectory( testDirParent, validationType );
+                    if (testDirParent != null) {
+                        return checkDirectory(testDirParent, validationType);
                     } else {
                         return false;
                     }
@@ -227,13 +227,13 @@ public class DirectoryChooser
      * the registered listeners.
      */
     private void sendChangeNotification() {
-        String newFieldContents = getText();
+        final String newFieldContents = getText();
         if ( !oldFieldContents.equals( newFieldContents ) ) {
             LOGGER.fine( String.format( "The field changed from %s to %s", oldFieldContents, newFieldContents ) );
             setColor();
             oldFieldContents = newFieldContents;
             synchronized ( changeListeners ) {
-                for (ChangeListener changeListener : changeListeners) {
+                for (final ChangeListener changeListener : changeListeners) {
                     changeListener.stateChanged(new ChangeEvent(this));
                 }
             }
@@ -250,8 +250,8 @@ public class DirectoryChooser
      *
      * @param listener The listener that should be notified
      */
-    public void addChangeListener( ChangeListener listener ) {
-        changeListeners.add( listener );
+    public void addChangeListener(final ChangeListener listener) {
+        changeListeners.add(listener);
     }
 
     /**
@@ -259,8 +259,8 @@ public class DirectoryChooser
      *
      * @param listener The listener to remove
      */
-    public void removeChangeListener( ChangeListener listener ) {
-        changeListeners.remove( listener );
+    public void removeChangeListener(final ChangeListener listener) {
+        changeListeners.remove(listener);
     }
 
     /**
@@ -310,23 +310,23 @@ public class DirectoryChooser
      *
      * @param directory The directory to be added to the dropdown list
      */
-    private void addDirToDropdown(@NotNull String directory) {
-        File f = new File( directory );
-        if ( f.exists() && f.isDirectory() ) {
-            directoryJComboBox.addItem( makeObj( directory ) );
+    private void addDirToDropdown(@NotNull final String directory) {
+        File f = new File(directory);
+        if (f.exists() && f.isDirectory()) {
+            directoryJComboBox.addItem(makeObj(directory));
         }
     }
 
     /**
-     * Sets the DirectoryChooser to enabled or unenabled. Delegates this down to
+     * Sets the DirectoryChooser to enabled or disabled. Delegates this down to
      * the component Swing components.
      *
      * @param enabled True if enabled, false if not.
      */
     @Override
-    public void setEnabled( boolean enabled ) {
-        directoryJComboBox.setEnabled( enabled );
-        directoryJTextField.setEnabled( enabled );
-        directoryChooserJButton.setEnabled( enabled );
+    public void setEnabled(final boolean enabled) {
+        directoryJComboBox.setEnabled(enabled);
+        directoryJTextField.setEnabled(enabled);
+        directoryChooserJButton.setEnabled(enabled);
     }
 }

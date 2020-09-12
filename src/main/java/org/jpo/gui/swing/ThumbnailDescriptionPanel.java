@@ -153,7 +153,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * This method is EDT safe.
      */
     public void showAsSelected() {
-        final Runnable r = () -> getPictureDescriptionJTA().setBackground(Settings.SELECTED_COLOR_TEXT);
+        final Runnable r = () -> getPictureDescriptionJTA().setBackground(Settings.getSelectedColorText());
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {
@@ -167,7 +167,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * This method is EDT safe
      */
     public void showAsUnselected() {
-        final Runnable runnable = () -> getPictureDescriptionJTA().setBackground(Settings.UNSELECTED_COLOR);
+        final Runnable runnable = () -> getPictureDescriptionJTA().setBackground(Settings.getUnselectedColor());
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
         } else {

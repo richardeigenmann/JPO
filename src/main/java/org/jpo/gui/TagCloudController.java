@@ -1,13 +1,13 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.ShowGroupRequest;
-import org.jpo.eventbus.ShowQueryRequest;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.TextQuery;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.ShowGroupRequest;
+import org.jpo.eventbus.ShowQueryRequest;
 import org.tagcloud.TagClickListener;
 import org.tagcloud.TagCloud;
 import org.tagcloud.WeightedWord;
@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2009-2019  Richard Eigenmann.
+ Copyright (C) 2009-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -51,8 +51,8 @@ public class TagCloudController implements TagClickListener {
      */
     public TagCloudController() {
         JpoEventBus.getInstance().register( TagCloudController.this );
-        tagCloud.addTagClickListener( TagCloudController.this );
-        tagCloud.setMaxWordsToShow( Settings.tagCloudWords );
+        tagCloud.addTagClickListener(TagCloudController.this);
+        tagCloud.setMaxWordsToShow(Settings.getTagCloudWords());
     }
 
 
@@ -81,14 +81,14 @@ public class TagCloudController implements TagClickListener {
     }
 
     @Override
-    public void tagClicked( WeightedWordInterface weightedWord ) {
-        if ( nodeWordMapper == null ) {
+    public void tagClicked(final WeightedWordInterface weightedWord) {
+        if (nodeWordMapper == null) {
             return;
         }
 
-        TextQuery textQuery = new TextQuery( weightedWord.getWord() );
-        textQuery.setStartNode( nodeWordMapper.getRootNode() );
-        JpoEventBus.getInstance().post( new ShowQueryRequest( textQuery ) );
+        final TextQuery textQuery = new TextQuery(weightedWord.getWord());
+        textQuery.setStartNode(nodeWordMapper.getRootNode());
+        JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
     }
 
     private final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList(
@@ -283,32 +283,32 @@ public class TagCloudController implements TagClickListener {
          *
          * @param description The description of split
          */
-        private void splitAndAdd( String description ) {
-            String fixAprostropheS = description.replaceAll( "\\'s", "" );
-            String noPunctuation = fixAprostropheS.replaceAll( "[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "" );
-            String noNumbers = noPunctuation.replaceAll( "\\d", "" );
+        private void splitAndAdd(final String description) {
+            final String fixAprostropheS = description.replaceAll("\\'s", "");
+            final String noPunctuation = fixAprostropheS.replaceAll("[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "");
+            String noNumbers = noPunctuation.replaceAll("\\d", "");
 
-            for ( String multiWordTerm : multiWordTerms ) {
-                if ( noNumbers.contains( multiWordTerm ) ) {
-                    noNumbers = noNumbers.replace( multiWordTerm, "" );
-                    addWord( multiWordTerm );
+            for (final String multiWordTerm : multiWordTerms) {
+                if (noNumbers.contains(multiWordTerm)) {
+                    noNumbers = noNumbers.replace(multiWordTerm, "");
+                    addWord(multiWordTerm);
                 }
             }
 
-            for ( String s : noNumbers.split( "[\\s_\\-]+" ) ) {
-                if ( !strikeWordsSet.contains( s ) ) {
-                    addWord( s );
+            for (final String s : noNumbers.split("[\\s_\\-]+")) {
+                if (!strikeWordsSet.contains(s)) {
+                    addWord(s);
                 }
             }
         }
 
         private final Map<String, Integer> wordCountMap = new HashMap<>();
 
-        private void addWord( String word ) {
-            if ( wordCountMap.containsKey( word ) ) {
-                wordCountMap.put( word, wordCountMap.get( word ) + 1 );
+        private void addWord(final String word) {
+            if (wordCountMap.containsKey(word)) {
+                wordCountMap.put(word, wordCountMap.get(word) + 1);
             } else {
-                wordCountMap.put( word, 1 );
+                wordCountMap.put(word, 1);
             }
         }
 

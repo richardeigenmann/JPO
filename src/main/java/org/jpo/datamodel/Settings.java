@@ -17,7 +17,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /*
- * Copyright (C) 2002 - 2019 Richard Eigenmann, Zürich, Switzerland This program
+ * Copyright (C) 2002 - 2020 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -365,64 +365,128 @@ public class Settings {
      */
     private static int maximumPictureSize = 6000;
 
+    public static Dimension getFilenameFieldPreferredSize() {
+        return filenameFieldPreferredSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a filename.
      */
-    public static final Dimension filenameFieldPreferredSize = new Dimension(300, 20);
+    private static final Dimension filenameFieldPreferredSize = new Dimension(300, 20);
+
+    public static Dimension getFilenameFieldMinimumSize() {
+        return filenameFieldMinimumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMinimumSize = new Dimension(150, 20);
+    private static final Dimension filenameFieldMinimumSize = new Dimension(150, 20);
+
+    public static Dimension getFilenameFieldMaximumSize() {
+        return filenameFieldMaximumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a filename
      */
-    public static final Dimension filenameFieldMaximumSize = new Dimension(600, 20);
+    private static final Dimension filenameFieldMaximumSize = new Dimension(600, 20);
+
+    public static Dimension getShortFieldPreferredSize() {
+        return shortFieldPreferredSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a short text.
      */
-    public static final Dimension shortFieldPreferredSize = new Dimension(350, 20);
+    private static final Dimension shortFieldPreferredSize = new Dimension(350, 20);
+
+    public static Dimension getShortFieldMinimumSize() {
+        return shortFieldMinimumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a short text
      */
-    public static final Dimension shortFieldMinimumSize = new Dimension(150, 20);
+    private static final Dimension shortFieldMinimumSize = new Dimension(150, 20);
+
+    public static Dimension getShortFieldMaximumSize() {
+        return shortFieldMaximumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a short text
      */
-    public static final Dimension shortFieldMaximumSize = new Dimension(1000, 20);
+    private static final Dimension shortFieldMaximumSize = new Dimension(1000, 20);
+
+    public static Dimension getTextfieldPreferredSize() {
+        return textfieldPreferredSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension textfieldPreferredSize = new Dimension(350, 20);
+    private static final Dimension textfieldPreferredSize = new Dimension(350, 20);
+
+    public static Dimension getTextfieldMinimumSize() {
+        return textfieldMinimumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension textfieldMinimumSize = new Dimension(150, 20);
+    private static final Dimension textfieldMinimumSize = new Dimension(150, 20);
+
+    public static Dimension getTextfieldMaximumSize() {
+        return textfieldMaximumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension textfieldMaximumSize = new Dimension(1000, 20);
+    private static final Dimension textfieldMaximumSize = new Dimension(1000, 20);
+
+    public static Dimension getShortNumberPreferredSize() {
+        return shortNumberPreferredSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension shortNumberPreferredSize = new Dimension(60, 20);
+    private static final Dimension shortNumberPreferredSize = new Dimension(60, 20);
+
+    public static Dimension getShortNumberMinimumSize() {
+        return shortNumberMinimumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension shortNumberMinimumSize = new Dimension(60, 20);
+    private static final Dimension shortNumberMinimumSize = new Dimension(60, 20);
+
+    public static Dimension getShortNumberMaximumSize() {
+        return shortNumberMaximumSize;
+    }
+
     /**
      * standard size for all JTextFields that need to record a normal length
      * text
      */
-    public static final Dimension shortNumberMaximumSize = new Dimension(100, 20);
+    private static final Dimension shortNumberMaximumSize = new Dimension(100, 20);
+
+    public static Dimension getThreeDotButtonSize() {
+        return threeDotButtonSize;
+    }
+
     /**
      * fixed size for the threeDotButton which opens the JFileChooser dialog
      */
-    public static final Dimension threeDotButtonSize = new Dimension(25, 20);
+    private static final Dimension threeDotButtonSize = new Dimension(25, 20);
 
     public static Font getTitleFont() {
         return titleFont;
@@ -433,19 +497,8 @@ public class Settings {
      */
     private static Font titleFont;
 
-    /**
-     * the height of the Thumbnail descriptions
-     */
-    public static final int THUMBNAIL_DESCRIPTION_HEIGHT = 200;
-    /**
-     * The interval between the timer checking to see if the picture is ready
-     * before the main delay loop should be waited. You want to give the user
-     * the specified seconds to look at the picture and not subtract from that
-     * the time it took the program to load the image.
-     */
-    public static final int ADVANCE_TIMER_POLLING_INTERVAL = 500;
 
-    public static void setDefaultHtmlPicsPerRow(int defaultHtmlPicsPerRow) {
+    public static void setDefaultHtmlPicsPerRow(final int defaultHtmlPicsPerRow) {
         Settings.defaultHtmlPicsPerRow = defaultHtmlPicsPerRow;
     }
 
@@ -462,7 +515,7 @@ public class Settings {
         return defaultHtmlThumbnailWidth;
     }
 
-    public static void setDefaultHtmlThumbnailWidth(int defaultHtmlThumbnailWidth) {
+    public static void setDefaultHtmlThumbnailWidth(final int defaultHtmlThumbnailWidth) {
         Settings.defaultHtmlThumbnailWidth = defaultHtmlThumbnailWidth;
     }
 
@@ -475,7 +528,7 @@ public class Settings {
         return defaultHtmlThumbnailHeight;
     }
 
-    public static void setDefaultHtmlThumbnailHeight(int defaultHtmlThumbnailHeight) {
+    public static void setDefaultHtmlThumbnailHeight(final int defaultHtmlThumbnailHeight) {
         Settings.defaultHtmlThumbnailHeight = defaultHtmlThumbnailHeight;
     }
 
@@ -484,7 +537,7 @@ public class Settings {
      */
     private static int defaultHtmlThumbnailHeight = 300;
 
-    public static void setDefaultGenerateMidresHtml(boolean defaultGenerateMidresHtml) {
+    public static void setDefaultGenerateMidresHtml(final boolean defaultGenerateMidresHtml) {
         Settings.defaultGenerateMidresHtml = defaultGenerateMidresHtml;
     }
 
@@ -497,7 +550,7 @@ public class Settings {
      */
     private static boolean defaultGenerateMidresHtml = true;
 
-    public static void setDefaultGenerateMap(boolean defaultGenerateMap) {
+    public static void setDefaultGenerateMap(final boolean defaultGenerateMap) {
         Settings.defaultGenerateMap = defaultGenerateMap;
     }
 
@@ -510,7 +563,7 @@ public class Settings {
      */
     private static boolean defaultGenerateMap = true;
 
-    public static void setDefaultGenerateDHTML(boolean defaultGenerateDHTML) {
+    public static void setDefaultGenerateDHTML(final boolean defaultGenerateDHTML) {
         Settings.defaultGenerateDHTML = defaultGenerateDHTML;
     }
 
@@ -523,7 +576,7 @@ public class Settings {
      */
     private static boolean defaultGenerateDHTML = true;
 
-    public static void setDefaultGenerateZipfile(boolean defaultGenerateZipfile) {
+    public static void setDefaultGenerateZipfile(final boolean defaultGenerateZipfile) {
         Settings.defaultGenerateZipfile = defaultGenerateZipfile;
     }
 
@@ -554,7 +607,7 @@ public class Settings {
         return defaultExportHighres;
     }
 
-    public static void setDefaultExportHighres(boolean defaultExportHighres) {
+    public static void setDefaultExportHighres(final boolean defaultExportHighres) {
         Settings.defaultExportHighres = defaultExportHighres;
     }
 
@@ -576,7 +629,7 @@ public class Settings {
         return defaultHtmlMidresWidth;
     }
 
-    public static void setDefaultHtmlMidresWidth(int defaultHtmlMidresWidth) {
+    public static void setDefaultHtmlMidresWidth(final int defaultHtmlMidresWidth) {
         Settings.defaultHtmlMidresWidth = defaultHtmlMidresWidth;
     }
 
@@ -585,7 +638,7 @@ public class Settings {
      */
     private static int defaultHtmlMidresWidth = 700;
 
-    public static void setDefaultHtmlMidresHeight(int defaultHtmlMidresHeight) {
+    public static void setDefaultHtmlMidresHeight(final int defaultHtmlMidresHeight) {
         Settings.defaultHtmlMidresHeight = defaultHtmlMidresHeight;
     }
 
@@ -654,7 +707,7 @@ public class Settings {
         return defaultHtmlLowresQuality;
     }
 
-    public static void setDefaultHtmlLowresQuality(float defaultHtmlLowresQuality) {
+    public static void setDefaultHtmlLowresQuality(final float defaultHtmlLowresQuality) {
         Settings.defaultHtmlLowresQuality = defaultHtmlLowresQuality;
     }
 
@@ -663,7 +716,7 @@ public class Settings {
      */
     private static float defaultHtmlLowresQuality = 0.8f;
 
-    public static void setDefaultHtmlMidresQuality(float defaultHtmlMidresQuality) {
+    public static void setDefaultHtmlMidresQuality(final float defaultHtmlMidresQuality) {
         Settings.defaultHtmlMidresQuality = defaultHtmlMidresQuality;
     }
 
@@ -913,20 +966,32 @@ public class Settings {
         return sortOptions;
     }
 
+    public static Color getSelectedColor() {
+        return SELECTED_COLOR;
+    }
+
     /**
      * The color to use when the thumbnail has been selected
      */
-    public static final Color SELECTED_COLOR = new Color(45, 47, 84);
+    private static final Color SELECTED_COLOR = new Color(45, 47, 84);
+
+    public static Color getSelectedColorText() {
+        return SELECTED_COLOR_TEXT;
+    }
 
     /**
      * The color to use for text background when the thumbnail has been selected
      */
-    public static final Color SELECTED_COLOR_TEXT = new Color(145, 149, 153);
+    private static final Color SELECTED_COLOR_TEXT = new Color(145, 149, 153);
+
+    public static Color getUnselectedColor() {
+        return UNSELECTED_COLOR;
+    }
 
     /**
      * The color to use when the thumbnail has been selected
      */
-    public static final Color UNSELECTED_COLOR = Color.WHITE;
+    private static final Color UNSELECTED_COLOR = Color.WHITE;
 
     /**
      * date format for adding new pictures from the camera
@@ -958,11 +1023,19 @@ public class Settings {
         public boolean add(Object o) {
             boolean b = super.add(o);
             if (b) {
-                unsavedSettingChanges = true;
+                setUnsavedSettingChanges(true);
             }
             return b;
         }
     };
+
+    public static File getLogfile() {
+        return logfile;
+    }
+
+    public static void setLogfile(File logfile) {
+        Settings.logfile = logfile;
+    }
 
     public static SortedSet<Object> getEmailRecipients() {
         return emailRecipients;
@@ -976,76 +1049,230 @@ public class Settings {
         public boolean add(Object o) {
             boolean b = super.add(o);
             if (b) {
-                unsavedSettingChanges = true;
+                setUnsavedSettingChanges(true);
             }
             return b;
         }
     };
+
+    public static String getEmailServer() {
+        return emailServer;
+    }
+
+    public static Logger getLOGGER() {
+        return LOGGER;
+    }
+
+    public static void setEmailServer(String emailServer) {
+        Settings.emailServer = emailServer;
+    }
+
+    public static int getPreferredMasterDividerSpot() {
+        return preferredMasterDividerSpot;
+    }
+
+    public static void setPreferredMasterDividerSpot(int preferredMasterDividerSpot) {
+        Settings.preferredMasterDividerSpot = preferredMasterDividerSpot;
+    }
+
+    public static int getPreferredLeftDividerSpot() {
+        return preferredLeftDividerSpot;
+    }
+
+    public static void setPreferredLeftDividerSpot(int preferredLeftDividerSpot) {
+        Settings.preferredLeftDividerSpot = preferredLeftDividerSpot;
+    }
+
+    public static int getDividerWidth() {
+        return dividerWidth;
+    }
+
+    public static void setDividerWidth(int dividerWidth) {
+        Settings.dividerWidth = dividerWidth;
+    }
+
+    public static int getDefaultMaxThumbnails() {
+        return DEFAULT_MAX_THUMBNAILS;
+    }
+
     /**
      * Email Server
      */
-    public static String emailServer = "";
+    private static String emailServer = "";
+
+    public static String getEmailPort() {
+        return emailPort;
+    }
+
+    public static void setEmailPort(String emailPort) {
+        Settings.emailPort = emailPort;
+    }
+
     /**
      * Email Server port
      */
-    public static String emailPort = "25";
+    private static String emailPort = "25";
+
+    public static int getEmailAuthentication() {
+        return emailAuthentication;
+    }
+
+    public static void setEmailAuthentication(int emailAuthentication) {
+        Settings.emailAuthentication = emailAuthentication;
+    }
+
     /**
      * Email authentication 0 = None 1 = Password 2 = SSL
      */
-    public static int emailAuthentication = 0;
+    private static int emailAuthentication = 0;
+
+    public static String getEmailUser() {
+        return emailUser;
+    }
+
+    public static void setEmailUser(String emailUser) {
+        Settings.emailUser = emailUser;
+    }
+
     /**
      * Email User
      */
-    public static String emailUser = "";
+    private static String emailUser = "";
     /**
      * Email Password
      */
     public static String emailPassword = "";
+
+    public static boolean isEmailScaleImages() {
+        return emailScaleImages;
+    }
+
+    public static void setEmailScaleImages(boolean emailScaleImages) {
+        Settings.emailScaleImages = emailScaleImages;
+    }
+
     /**
      * Should emails have scaled images
      */
-    public static boolean emailScaleImages = true;
+    private static boolean emailScaleImages = true;
+
+    public static Dimension getEmailDimensions() {
+        return emailDimensions;
+    }
+
+    public static void setEmailDimensions(Dimension emailDimensions) {
+        Settings.emailDimensions = emailDimensions;
+    }
+
     /**
      * The last size we scaled images to in the email dialog
      */
-    public static Dimension emailDimensions = new Dimension(350, 300);
+    private static Dimension emailDimensions = new Dimension(350, 300);
+
+    public static boolean isEmailSendOriginal() {
+        return emailSendOriginal;
+    }
+
+    public static void setEmailSendOriginal(boolean emailSendOriginal) {
+        Settings.emailSendOriginal = emailSendOriginal;
+    }
+
     /**
      * Should emails contain the original images
      */
-    public static boolean emailSendOriginal = false;
+    private static boolean emailSendOriginal = false;
+
+    public static Color getJpoBackgroundColor() {
+        return JPO_BACKGROUND_COLOR;
+    }
+
     /**
      * The default application background color.
      */
-    public static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
+    private static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
+
+    public static Color getPictureviewerBackgroundColor() {
+        return PICTUREVIEWER_BACKGROUND_COLOR;
+    }
+
     /**
      * The background color for the picture Viewer
      */
-    public static final Color PICTUREVIEWER_BACKGROUND_COLOR = Color.BLACK;
+    private static final Color PICTUREVIEWER_BACKGROUND_COLOR = Color.BLACK;
+
+    public static Color getPictureviewerTextColor() {
+        return PICTUREVIEWER_TEXT_COLOR;
+    }
+
     /**
      * The text color for the picture Viewer
      */
-    public static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
+    private static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
+
+    public static Dimension getPictureviewerMinimumSize() {
+        return PICTUREVIEWER_MINIMUM_SIZE;
+    }
+
+    public static void setWriteLog(boolean writeLog) {
+        Settings.writeLog = writeLog;
+    }
+
     /**
      * The PictureViewer minimum size
      */
-    public static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension(300, 300);
+    private static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension(300, 300);
+
+    public static int getTagCloudWords() {
+        return tagCloudWords;
+    }
+
+    public static void setTagCloudWords(int tagCloudWords) {
+        Settings.tagCloudWords = tagCloudWords;
+    }
 
     /**
      * The number of Words that the TagCloud should show.
      */
-    public static int tagCloudWords = 200;
+    private static int tagCloudWords = 200;
+
+    public static FieldCodes getLastSortChoice() {
+        return lastSortChoice;
+    }
+
+    public static void setLastSortChoice(FieldCodes lastSortChoice) {
+        Settings.lastSortChoice = lastSortChoice;
+    }
+
     /**
      * The last sort choice of the user
      */
-    public static FieldCodes lastSortChoice = FieldCodes.CREATION_TIME;
+    private static FieldCodes lastSortChoice = FieldCodes.CREATION_TIME;
+
+    public static boolean isLastCameraWizardCopyMode() {
+        return lastCameraWizardCopyMode;
+    }
+
+    public static void setLastCameraWizardCopyMode(boolean lastCameraWizardCopyMode) {
+        Settings.lastCameraWizardCopyMode = lastCameraWizardCopyMode;
+    }
+
     /**
      * The last choice in the Camera Download Wizard whether to copy or move
      */
-    public static boolean lastCameraWizardCopyMode = true;
+    private static boolean lastCameraWizardCopyMode = true;
+
+    public static boolean isRememberGoogleCredentials() {
+        return rememberGoogleCredentials;
+    }
+
+    public static void setRememberGoogleCredentials(boolean rememberGoogleCredentials) {
+        Settings.rememberGoogleCredentials = rememberGoogleCredentials;
+    }
+
     /**
      * Whether to remember the Google login credentials for the Picasa upload.
      */
-    public static boolean rememberGoogleCredentials = false;
+    private static boolean rememberGoogleCredentials = false;
     /**
      * Google user name if rememberGoogleCredentials is true
      */
@@ -1524,10 +1751,14 @@ public class Settings {
         setLocale(currentLocale);
     }
 
+    public static int getMaxDropnodes() {
+        return MAX_DROPNODES;
+    }
+
     /**
      * MAX number of recent Drop Nodes
      */
-    public static final int MAX_DROPNODES = 12;
+    private static final int MAX_DROPNODES = 12;
 
     public static Queue<SortableDefaultMutableTreeNode> getRecentDropNodes() {
         return recentDropNodes;

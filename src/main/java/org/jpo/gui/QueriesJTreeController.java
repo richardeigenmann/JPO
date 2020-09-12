@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.ShowQueryRequest;
 import org.jpo.datamodel.Query;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.ShowQueryRequest;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

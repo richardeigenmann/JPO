@@ -164,18 +164,15 @@ public class Emailer
      */
     @Override
     protected String doInBackground() {
-        switch ( Settings.emailAuthentication ) {
-            case 1:
-                sendEmailAuth();
-                break; // Password
-            case 2:
-                sendEmailSSL();
-                break;// SSL
-            default:
-                sendEmailNoAuth();
-                break; // No Authentication
+        switch (Settings.getEmailAuthentication()) {
+            // Password
+            case 1 -> sendEmailAuth();
+            // SSL
+            case 2 -> sendEmailSSL();
+            // No Authentication
+            default -> sendEmailNoAuth();
         }
-        return ( "Done" );
+        return ("Done");
     }
 
     @Override
@@ -296,16 +293,16 @@ public class Emailer
      */
     private void sendEmailNoAuth() {
         final Properties props = System.getProperties();
-        props.setProperty( "mail.smtp.host", Settings.emailServer );
-        props.setProperty( "mail.smtp.port", Settings.emailPort );
+        props.setProperty("mail.smtp.host", Settings.getEmailServer());
+        props.setProperty("mail.smtp.port", Settings.getEmailPort());
         //props.put( "mail.debug", "true" );
-        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
-        Session session = Session.getDefaultInstance( props, null );
+        props.setProperty("mail.smtp.socketFactory.port", Settings.getEmailPort());
+        Session session = Session.getDefaultInstance(props, null);
         //session.setDebug( true );
 
         // Send message
-        if ( interrupted ) {
-            LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
+        if (interrupted) {
+            LOGGER.info("Message not sent due to user clicking cancel.");
         } else {
             try {
                 publish(Settings.jpoResources.getString("EmailerSending"));
@@ -323,21 +320,21 @@ public class Emailer
      * method that sends the email
      */
     private void sendEmailAuth() {
-        Properties props = System.getProperties();
-        props.setProperty( "mail.smtp.host", Settings.emailServer );
-        props.setProperty( "mail.smtp.port", Settings.emailPort );
+        final Properties props = System.getProperties();
+        props.setProperty("mail.smtp.host", Settings.getEmailServer());
+        props.setProperty("mail.smtp.port", Settings.getEmailPort());
         //props.setProperty( "mail.debug", "true" );
-        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
-        props.setProperty( "mail.smtp.auth", "true" );
-        props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
-        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
-        props.setProperty( "mail.smtp.starttls.enable", "true" );
+        props.setProperty("mail.smtp.socketFactory.port", Settings.getEmailPort());
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
+        props.setProperty("mail.smtp.socketFactory.port", Settings.getEmailPort());
+        props.setProperty("mail.smtp.starttls.enable", "true");
 
         final Session session = Session.getDefaultInstance(props, new Authenticator() {
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(Settings.emailUser, Settings.emailPassword);
+                return new PasswordAuthentication(Settings.getEmailUser(), Settings.emailPassword);
             }
         });
         //session.setDebug( true );
@@ -348,7 +345,7 @@ public class Emailer
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
-                MimeMessage msg = buildMessage(session);
+                final MimeMessage msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );
@@ -364,29 +361,29 @@ public class Emailer
      */
     private void sendEmailSSL() {
         final Properties props = System.getProperties();
-        props.setProperty( "mail.smtp.host", Settings.emailServer );
-        props.setProperty( "mail.smtp.port", Settings.emailPort );
-        props.setProperty( "mail.smtp.auth", "true" );
+        props.setProperty("mail.smtp.host", Settings.getEmailServer());
+        props.setProperty("mail.smtp.port", Settings.getEmailPort());
+        props.setProperty("mail.smtp.auth", "true");
         //props.put( "mail.debug", "true" );
-        props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
-        props.setProperty( "mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory" );
-        props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
+        props.setProperty("mail.smtp.socketFactory.port", Settings.getEmailPort());
+        props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.setProperty("mail.smtp.socketFactory.fallback", "false");
 
         final Session session = Session.getDefaultInstance(props,
                 new Authenticator() {
 
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(Settings.emailUser, Settings.emailPassword);
+                        return new PasswordAuthentication(Settings.getEmailUser(), Settings.emailPassword);
                     }
                 });
         //session.setDebug( true );
         if ( interrupted ) {
-            LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
+            LOGGER.info("Message not sent due to user clicking cancel.");
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
-                MimeMessage msg = buildMessage(session);
+                final MimeMessage msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
                 publish( Settings.jpoResources.getString( "EmailerSent" ) );

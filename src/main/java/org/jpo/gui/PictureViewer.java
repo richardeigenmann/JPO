@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RotatePictureRequest;
 import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
 import org.jpo.eventbus.ShowPicturePopUpMenuRequest;
-import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.datamodel.*;
 import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
 import org.jpo.gui.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;
@@ -479,7 +479,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         });
         advanceTimer.start();
         pictureFrame.getPictureViewerNavBar().clockJButton.setClockBusy();
-        pictureFrame.getPictureViewerNavBar().showDelaySilder();
+        pictureFrame.getPictureViewerNavBar().showDelaySlider();
     }
 
     /**
@@ -502,7 +502,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
         advanceTimer = null;
-        pictureFrame.getPictureViewerNavBar().hideDelaySilder();
+        pictureFrame.getPictureViewerNavBar().hideDelaySlider();
     }
 
     /**

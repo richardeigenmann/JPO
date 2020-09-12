@@ -10,6 +10,8 @@ import javax.swing.event.ChangeEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
+import static javax.swing.SwingConstants.HORIZONTAL;
+
 /*
  GenerateWebsiteWizard3Midres.java:  Midres stuff
 
@@ -98,7 +100,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      */
     private final JSlider midresJpgQualityJSlider
             = new JSlider(
-            JSlider.HORIZONTAL,
+            HORIZONTAL,
             0, 100,
             (int) (Settings.getDefaultHtmlMidresQuality() * 100));
 

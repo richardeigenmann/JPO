@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 import java.util.Objects;
 
 /*
- Copyright (C) 2002-2017  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2020 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,6 +23,8 @@ import java.util.Objects;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * Creates a navigation Bar with several icons to navigate the Picture Viewer
  *
@@ -102,8 +104,8 @@ public class PictureViewerNavBar extends JToolBar {
         super( Settings.jpoResources.getString( "NavigationPanel" ) );
         Tools.checkEDT();
 
-        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
-        setFloatable( true );
+        setBackground(Settings.getPictureviewerBackgroundColor());
+        setFloatable(true);
         setRollover( true );
         setBorderPainted( false );
 
@@ -166,15 +168,15 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      * Turns on the showing of the delay slider
      */
-    public void showDelaySilder() {
-        speedSlider.setVisible( true );
+    public void showDelaySlider() {
+        speedSlider.setVisible(true);
     }
 
     /**
      * Turns off the showing of the delay slider
      */
-    public void hideDelaySilder() {
-        speedSlider.setVisible( false );
+    public void hideDelaySlider() {
+        speedSlider.setVisible(false);
     }
 
     public void setNextButtonHasRight() {

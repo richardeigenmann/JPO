@@ -60,7 +60,7 @@ public class EmailerGui extends JFrame {
     public EmailerGui() {
         emailSelected = Settings.getPictureCollection().getMailSelectedNodes();
 
-        // if no picutres have been selected pop up an error message
+        // if no pictures have been selected pop up an error message
         if ( emailSelected.size() < 1 ) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("emailNoNodes"),
@@ -70,7 +70,7 @@ public class EmailerGui extends JFrame {
         }
 
 
-        if ( "".equals( Settings.emailServer ) ) { //perhaps make this a better test of the server
+        if ("".equals(Settings.getEmailServer())) { //perhaps make this a better test of the server
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("emailNoServer"),
                     Settings.jpoResources.getString("genericError"),
@@ -156,43 +156,43 @@ public class EmailerGui extends JFrame {
         jPanel.add( imagesCountJLabel, "spanx 2, wrap" );
 
 
-        imagesJPanel.setLayout( new MigLayout() );
-        imagesJScrollPane.setMinimumSize( new Dimension( 300, 170 ) );
-        imagesJScrollPane.setPreferredSize( new Dimension( 600, 170 ) );
+        imagesJPanel.setLayout(new MigLayout());
+        imagesJScrollPane.setMinimumSize(new Dimension(300, 170));
+        imagesJScrollPane.setPreferredSize(new Dimension(600, 170));
 
-        jPanel.add( imagesJScrollPane, "spanx 2, wrap" );
+        jPanel.add(imagesJScrollPane, "spanx 2, wrap");
 
-        jPanel.add( new JLabel( Settings.jpoResources.getString( "fromJLabel" ) ), "" );
+        jPanel.add(new JLabel(Settings.jpoResources.getString("fromJLabel")), "");
 
-        fromJComboBox.setEditable( true );
-        fromJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
-        fromJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
-        fromJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
-        jPanel.add( fromJComboBox, "wrap" );
+        fromJComboBox.setEditable(true);
+        fromJComboBox.setPreferredSize(Settings.getFilenameFieldPreferredSize());
+        fromJComboBox.setMinimumSize(Settings.getFilenameFieldMinimumSize());
+        fromJComboBox.setMaximumSize(Settings.getFilenameFieldMaximumSize());
+        jPanel.add(fromJComboBox, "wrap");
 
-        jPanel.add( new JLabel( Settings.jpoResources.getString( "toJLabel" ) ), "" );
+        jPanel.add(new JLabel(Settings.jpoResources.getString("toJLabel")), "");
 
-        toJComboBox.setEditable( true );
-        toJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
-        toJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
-        toJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
-        jPanel.add( toJComboBox, "wrap" );
+        toJComboBox.setEditable(true);
+        toJComboBox.setPreferredSize(Settings.getFilenameFieldPreferredSize());
+        toJComboBox.setMinimumSize(Settings.getFilenameFieldMinimumSize());
+        toJComboBox.setMaximumSize(Settings.getFilenameFieldMaximumSize());
+        jPanel.add(toJComboBox, "wrap");
 
-        jPanel.add( new JLabel( Settings.jpoResources.getString( "subjectJLabel" ) ), "" );
+        jPanel.add(new JLabel(Settings.jpoResources.getString("subjectJLabel")), "");
 
-        subjectJTextField.setPreferredSize( Settings.filenameFieldPreferredSize );
-        subjectJTextField.setMinimumSize( Settings.filenameFieldMinimumSize );
-        subjectJTextField.setMaximumSize( Settings.filenameFieldMaximumSize );
-        jPanel.add( subjectJTextField, "wrap" );
+        subjectJTextField.setPreferredSize(Settings.getFilenameFieldPreferredSize());
+        subjectJTextField.setMinimumSize(Settings.getFilenameFieldMinimumSize());
+        subjectJTextField.setMaximumSize(Settings.getFilenameFieldMaximumSize());
+        jPanel.add(subjectJTextField, "wrap");
 
-        jPanel.add( new JLabel( Settings.jpoResources.getString( "messageJLabel" ) ), "" );
+        jPanel.add(new JLabel(Settings.jpoResources.getString("messageJLabel")), "");
 
         //messageJTextArea.setRows( 12 );
-        JScrollPane messageJScrollPane = new JScrollPane( messageJTextArea );
-        messageJScrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 0, 0, 0 ) );
-        messageJScrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED );
-        messageJScrollPane.setVerticalScrollBarPolicy( ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED );
-        messageJTextArea.setWrapStyleWord( true );
+        JScrollPane messageJScrollPane = new JScrollPane(messageJTextArea);
+        messageJScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        messageJScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        messageJScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        messageJTextArea.setWrapStyleWord(true);
         messageJTextArea.setLineWrap( true );
         messageJTextArea.setEditable( true );
         messageJTextArea.setBorder( BorderFactory.createEmptyBorder( 2, 2, 8, 2 ) );
@@ -210,7 +210,7 @@ public class EmailerGui extends JFrame {
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize4" ) );
         sizesJComboBox.addItem( Settings.jpoResources.getString( "emailSize5" ) );
         sizesJComboBox.addActionListener(( ActionEvent e ) -> {
-            JComboBox cb = (JComboBox) e.getSource();
+            final JComboBox cb = (JComboBox) e.getSource();
             String cbSelection = (String) cb.getSelectedItem();
             if ( Objects.requireNonNull(cbSelection).equals( Settings.jpoResources.getString( "emailSize1" ) ) ) {
                 imageWidthWholeNumberField.setText( "350" );
@@ -229,64 +229,64 @@ public class EmailerGui extends JFrame {
                 scalePicturesJCheckBox.setSelected( true );
             } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize4" ) ) ) {
                 imageWidthWholeNumberField.setText( "1000" );
-                imageHeightWholeNumberField.setText( "800" );
-                scalePicturesJCheckBox.setSelected( true );
-                sendOriginalsJCheckBox.setSelected( false );
-            } else if ( cbSelection.equals( Settings.jpoResources.getString( "emailSize5" ) ) ) {
-                imageWidthWholeNumberField.setText( "0" );
-                imageHeightWholeNumberField.setText( "0" );
-                scalePicturesJCheckBox.setSelected( false );
-                sendOriginalsJCheckBox.setSelected( true );
+                imageHeightWholeNumberField.setText("800");
+                scalePicturesJCheckBox.setSelected(true);
+                sendOriginalsJCheckBox.setSelected(false);
+            } else if (cbSelection.equals(Settings.jpoResources.getString("emailSize5"))) {
+                imageWidthWholeNumberField.setText("0");
+                imageHeightWholeNumberField.setText("0");
+                scalePicturesJCheckBox.setSelected(false);
+                sendOriginalsJCheckBox.setSelected(true);
             }
         });
-        sizesJComboBox.setPreferredSize( Settings.filenameFieldPreferredSize );
-        sizesJComboBox.setMinimumSize( Settings.filenameFieldMinimumSize );
-        sizesJComboBox.setMaximumSize( Settings.filenameFieldMaximumSize );
-        jPanel.add( sizesJComboBox, "wrap" );
+        sizesJComboBox.setPreferredSize(Settings.getFilenameFieldPreferredSize());
+        sizesJComboBox.setMinimumSize(Settings.getFilenameFieldMinimumSize());
+        sizesJComboBox.setMaximumSize(Settings.getFilenameFieldMaximumSize());
+        jPanel.add(sizesJComboBox, "wrap");
 
         JPanel scaleSizeJPanel = new JPanel();
         FlowLayout fl = new FlowLayout();
-        fl.setAlignment( FlowLayout.LEADING );
-        fl.setHgap( 0 );
-        scaleSizeJPanel.setLayout( fl );
-        scaleSizeJPanel.setPreferredSize( new Dimension( 550, 25 ) );
-        scaleSizeJPanel.setMinimumSize( new Dimension( 450, 25 ) );
-        scaleSizeJPanel.setMaximumSize( new Dimension( 1000, 25 ) );
+        fl.setAlignment(FlowLayout.LEADING);
+        fl.setHgap(0);
+        scaleSizeJPanel.setLayout(fl);
+        scaleSizeJPanel.setPreferredSize(new Dimension(550, 25));
+        scaleSizeJPanel.setMinimumSize(new Dimension(450, 25));
+        scaleSizeJPanel.setMaximumSize(new Dimension(1000, 25));
         //scaleSizeJPanel.setInsets( new Insets(0,0,0,0) );
 
         scalePicturesJCheckBox.addItemListener(( ItemEvent e ) -> {
             if ( e.getStateChange() == ItemEvent.DESELECTED ) {
-                imageWidthWholeNumberField.setEnabled( false );
-                imageHeightWholeNumberField.setEnabled( false );
-            } else if ( e.getStateChange() == ItemEvent.SELECTED ) {
-                imageWidthWholeNumberField.setEnabled( true );
-                imageHeightWholeNumberField.setEnabled( true );
+                imageWidthWholeNumberField.setEnabled(false);
+                imageHeightWholeNumberField.setEnabled(false);
+            } else if (e.getStateChange() == ItemEvent.SELECTED) {
+                imageWidthWholeNumberField.setEnabled(true);
+                imageHeightWholeNumberField.setEnabled(true);
             }
         });
         //scalePicturesJCheckBox.setInsets( new Insets(0,0,0,0) );
-        scaleSizeJPanel.add( scalePicturesJCheckBox );
+        scaleSizeJPanel.add(scalePicturesJCheckBox);
 
-        imageWidthWholeNumberField.setPreferredSize( Settings.shortNumberPreferredSize );
-        imageWidthWholeNumberField.setMinimumSize( Settings.shortNumberMinimumSize );
-        imageWidthWholeNumberField.setMaximumSize( Settings.shortNumberMaximumSize );
-        imageWidthWholeNumberField.setVisible( true );
-        scaleSizeJPanel.add( imageWidthWholeNumberField );
+        imageWidthWholeNumberField.setPreferredSize(Settings.getShortNumberPreferredSize());
+        imageWidthWholeNumberField.setMinimumSize(Settings.getShortNumberMinimumSize());
+        imageWidthWholeNumberField.setMaximumSize(Settings.getShortNumberMaximumSize());
+        imageWidthWholeNumberField.setVisible(true);
+        scaleSizeJPanel.add(imageWidthWholeNumberField);
 
-        scaleSizeJPanel.add( new JLabel( " x " ) );
+        scaleSizeJPanel.add(new JLabel(" x "));
 
-        imageHeightWholeNumberField.setPreferredSize( Settings.shortNumberPreferredSize );
-        imageHeightWholeNumberField.setMinimumSize( Settings.shortNumberMinimumSize );
-        imageHeightWholeNumberField.setMaximumSize( Settings.shortNumberMaximumSize );
-        imageHeightWholeNumberField.setVisible( true );
-        scaleSizeJPanel.add( imageHeightWholeNumberField );
+        imageHeightWholeNumberField.setPreferredSize(Settings.getShortNumberPreferredSize());
+        imageHeightWholeNumberField.setMinimumSize(Settings.getShortNumberMinimumSize());
+        imageHeightWholeNumberField.setMaximumSize(Settings.getShortNumberMaximumSize());
+        imageHeightWholeNumberField.setVisible(true);
+        scaleSizeJPanel.add(imageHeightWholeNumberField);
 
-        jPanel.add( scaleSizeJPanel, "spanx 2, wrap" );
+        jPanel.add(scaleSizeJPanel, "spanx 2, wrap");
 
-        jPanel.add( sendOriginalsJCheckBox, "spanx 2, wrap" );
+        jPanel.add(sendOriginalsJCheckBox, "spanx 2, wrap");
 
         final JPanel buttonJPanel = new JPanel();
-        final JButton emailJButton = new JButton( Settings.jpoResources.getString( "emailJButton" ) );
-        emailJButton.addActionListener(( ActionEvent evt ) -> {
+        final JButton emailJButton = new JButton(Settings.jpoResources.getString("emailJButton"));
+        emailJButton.addActionListener((ActionEvent evt) -> {
             prepareSend();
             getRid();
         });
@@ -317,20 +317,20 @@ public class EmailerGui extends JFrame {
      * Populates the comboboxes with values that came from the Settings.
      */
     private void getSettings() {
-        Iterator i = Settings.getEmailSenders().iterator();
-        while ( i.hasNext() ) {
-            fromJComboBox.addItem( (String) i.next() );
+        Iterator<Object> i = Settings.getEmailSenders().iterator();
+        while (i.hasNext()) {
+            fromJComboBox.addItem((String) i.next());
         }
 
         i = Settings.getEmailRecipients().iterator();
-        while ( i.hasNext() ) {
-            toJComboBox.addItem( (String) i.next() );
+        while (i.hasNext()) {
+            toJComboBox.addItem((String) i.next());
         }
 
-        scalePicturesJCheckBox.setSelected( Settings.emailScaleImages );
-        sendOriginalsJCheckBox.setSelected( Settings.emailSendOriginal );
-        imageWidthWholeNumberField.setValue( Settings.emailDimensions.width );
-        imageHeightWholeNumberField.setValue( Settings.emailDimensions.height );
+        scalePicturesJCheckBox.setSelected(Settings.isEmailScaleImages());
+        sendOriginalsJCheckBox.setSelected(Settings.isEmailSendOriginal());
+        imageWidthWholeNumberField.setValue(Settings.getEmailDimensions().width);
+        imageHeightWholeNumberField.setValue(Settings.getEmailDimensions().height);
 
         loadThumbnails();
     }
@@ -340,11 +340,11 @@ public class EmailerGui extends JFrame {
      * of the Settings.
      */
     private void putSettings() {
-        Settings.getEmailSenders().add( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
-        Settings.getEmailRecipients().add( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
-        Settings.emailScaleImages = scalePicturesJCheckBox.isSelected();
-        Settings.emailSendOriginal = sendOriginalsJCheckBox.isSelected();
-        Settings.emailDimensions = new Dimension( imageWidthWholeNumberField.getValue(), imageHeightWholeNumberField.getValue() );
+        Settings.getEmailSenders().add(Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString());
+        Settings.getEmailRecipients().add(Objects.requireNonNull(toJComboBox.getSelectedItem()).toString());
+        Settings.setEmailScaleImages(scalePicturesJCheckBox.isSelected());
+        Settings.setEmailSendOriginal(sendOriginalsJCheckBox.isSelected());
+        Settings.setEmailDimensions(new Dimension(imageWidthWholeNumberField.getValue(), imageHeightWholeNumberField.getValue()));
     }
 
     /**

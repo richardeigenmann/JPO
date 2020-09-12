@@ -1,12 +1,12 @@
 package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventbus.*;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortOption;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -51,7 +51,7 @@ public class GroupPopupMenu extends JPopupMenu {
     /**
      * menu items for the recently dropped group nodes
      */
-    private final JMenuItem[] recentDropNodes = new JMenuItem[Settings.MAX_DROPNODES];
+    private final JMenuItem[] recentDropNodes = new JMenuItem[Settings.getMaxDropnodes()];
 
     /**
      * the node we are doing the popup menu for
@@ -99,18 +99,18 @@ public class GroupPopupMenu extends JPopupMenu {
 
         if (popupNode.getPictureCollection().getAllowEdits()) {
 
-            final JMenuItem categoryUsagetJMenuItem = new JMenuItem(Settings.jpoResources.getString("categoryUsageJMenuItem"));
-            categoryUsagetJMenuItem.addActionListener((ActionEvent e) -> {
-                HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
+            final JMenuItem categoryUsageJMenuItem = new JMenuItem(Settings.jpoResources.getString("categoryUsageJMenuItem"));
+            categoryUsageJMenuItem.addActionListener((ActionEvent e) -> {
+                final HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
                 hs.add(popupNode);
                 JpoEventBus.getInstance().post(new ShowCategoryUsageEditorRequest(hs));
                 //caller.showCategoryUsageGUI( popupNode );
             });
-            add(categoryUsagetJMenuItem);
+            add(categoryUsageJMenuItem);
 
             final JMenuItem groupRefreshJMenuItem = new JMenuItem(Settings.jpoResources.getString("groupRefreshJMenuItem"));
             groupRefreshJMenuItem.addActionListener((ActionEvent e) -> {
-                List<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
+                final List<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
                 if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
                     actionNodes.addAll(Settings.getPictureCollection().getSelection());
                 } else {
@@ -172,7 +172,7 @@ public class GroupPopupMenu extends JPopupMenu {
             add(moveGroupNodeJMenu);
 
             final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
-            for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
+            for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
                 final int dropnode = i;
                 recentDropNodes[i] = new JMenuItem();
                 recentDropNodes[i].addActionListener((ActionEvent e) -> {
@@ -209,7 +209,7 @@ public class GroupPopupMenu extends JPopupMenu {
             indentJMenuItem.addActionListener((ActionEvent e) -> popupNode.indentNode());
             moveGroupNodeJMenu.add(indentJMenuItem);
 
-            // menu item that allows outdenting the group
+            // menu item that allows out-denting the group
             final JMenuItem outdentJMenuItem = new JMenuItem(Settings.jpoResources.getString("outdentJMenuItem"));
             outdentJMenuItem.addActionListener((ActionEvent e) -> popupNode.outdentNode());
             moveGroupNodeJMenu.add(outdentJMenuItem);
@@ -334,7 +334,7 @@ public class GroupPopupMenu extends JPopupMenu {
     private void populateRecentDropNodeMenuItems() {
         boolean dropNodesVisible = false;
         final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
-        for (int i = 0; i < Settings.MAX_DROPNODES; i++) {
+        for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
             if (i < nodes.length && nodes[i] != null) {
                 recentDropNodes[i].setText("To Group: " + nodes[i].toString());
                 recentDropNodes[i].setVisible(true);

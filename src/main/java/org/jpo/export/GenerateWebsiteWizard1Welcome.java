@@ -2,10 +2,10 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.datamodel.NodeStatistics;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import javax.swing.*;
 import java.util.concurrent.ExecutionException;

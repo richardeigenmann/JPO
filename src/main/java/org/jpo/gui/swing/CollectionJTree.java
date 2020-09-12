@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002 - 2019  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2020  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -57,7 +57,7 @@ public class CollectionJTree
         putClientProperty("JTree.lineStyle", "Angled");
         setShowsRootHandles(true);
         setOpaque(true);
-        setBackground(Settings.JPO_BACKGROUND_COLOR);
+        setBackground(Settings.getJpoBackgroundColor());
         setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
 
         final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
@@ -81,7 +81,7 @@ public class CollectionJTree
                     boolean leaf,
                     int row,
                     boolean hasFocus) {
-                Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+                final Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
                 super.getTreeCellRendererComponent(
                         tree, value, sel,
                         expanded, leaf, row,

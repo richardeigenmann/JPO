@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupPopUpMenuRequest;
 import org.jpo.eventbus.ShowGroupRequest;
 import org.jpo.eventbus.ShowQueryRequest;
-import org.jpo.datamodel.*;
 import org.jpo.gui.swing.Thumbnail;
 import org.jpo.gui.swing.ThumbnailPanelTitle;
 
@@ -18,7 +18,7 @@ import java.awt.event.*;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -158,7 +158,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         layeredPane.add(overlayPanel, Integer.valueOf(2));
 
         thumbnailJScrollPane.setViewportView(layeredPane);
-        thumbnailsPane.setBackground(Settings.JPO_BACKGROUND_COLOR);
+        thumbnailsPane.setBackground(Settings.getJpoBackgroundColor());
         thumbnailJScrollPane.setMinimumSize(Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE);
         thumbnailJScrollPane.setPreferredSize(Settings.thumbnailJScrollPanePreferredSize);
         thumbnailJScrollPane.setWheelScrollingEnabled(true);
@@ -192,7 +192,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.addMouseListener(new MouseInputAdapter() {
 
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(final MouseEvent e) {
                 if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator) {
                     JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(((GroupNavigator) mySetOfNodes).getGroupNode(), e.getComponent(), e.getX(), e.getY()));
                     return;
@@ -202,9 +202,9 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             }
 
             @Override
-            public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator) {
-                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(((GroupNavigator) mySetOfNodes).getGroupNode(), e.getComponent(), e.getX(), e.getY()));
+            public void mouseReleased(final MouseEvent e) {
+                if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator gn) {
+                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(gn.getGroupNode(), e.getComponent(), e.getX(), e.getY()));
                     return;
                 }
 
@@ -214,20 +214,20 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                 paintOverlay = false;
                 thumbnailsPane.repaint();
 
-                Rectangle mouseRectangle = getMouseRectangle(e.getPoint());
+                final Rectangle mouseRectangle = getMouseRectangle(e.getPoint());
 
                 // I wonder why they don't put the following two lines into the SWING library but
                 // let you work out this binary math on your own from the unhelpful description?
-                boolean ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
-                boolean shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
+                final boolean ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
+                final boolean shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
 
                 if (!(ctrlpressed || shiftpressed)) {
                     Settings.getPictureCollection().clearSelection();
                 }
 
-                Rectangle thumbnailRectangle = new Rectangle();
+                final Rectangle thumbnailRectangle = new Rectangle();
                 SortableDefaultMutableTreeNode node;
-                for (ThumbnailController thumbnailController : thumbnailControllers) {
+                for (final ThumbnailController thumbnailController : thumbnailControllers) {
                     node = thumbnailController.getNode();
                     if (node == null) {
                         continue;
@@ -244,15 +244,15 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.addMouseMotionListener(new MouseInputAdapter() {
 
             @Override
-            public void mouseDragged(MouseEvent e) {
+            public void mouseDragged(final MouseEvent e) {
                 // do the overlay painting
                 paintOverlay = true;
-                Point mouseMovedToPoint = e.getPoint();
+                final Point mouseMovedToPoint = e.getPoint();
                 overlayRectangle = getMouseRectangle(mouseMovedToPoint);
                 thumbnailsPane.repaint();
 
-                Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
-                JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
+                final Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
+                final JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
                 final int scrolltrigger = 40;
                 if (mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger) {
                     int increment = verticalScrollBar.getUnitIncrement(1);
@@ -295,7 +295,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         }
     }
 
-    public void resizeAllThumbnails(float thumbnailSizeFactor) {
+    public void resizeAllThumbnails(final float thumbnailSizeFactor) {
         thumbnailLayoutManager.setThumbnailWidth((int) (350 * thumbnailSizeFactor));
         for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i].setFactor(thumbnailSizeFactor);
@@ -318,8 +318,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * @param mousePoint mouse point
      * @return The rectangle in the coordinate space of the parent component
      */
-    private Rectangle getMouseRectangle(Point mousePoint) {
-        Rectangle rectangle = new Rectangle(mousePressedPoint,
+    private Rectangle getMouseRectangle(final Point mousePoint) {
+        final Rectangle rectangle = new Rectangle(mousePressedPoint,
                 new Dimension(mousePoint.x - mousePressedPoint.x,
                         mousePoint.y - mousePressedPoint.y));
         if (mousePoint.x < mousePressedPoint.x) {
@@ -339,9 +339,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void registerListeners() {
         JpoEventBus.getInstance().register(this);
-
-        //Netbeans says this is never used, is there a side effect?
-//        new DropTarget( thumbnailsPane, new JpoTransferrableDropTargetListener( this ) );
 
         thumbnailJScrollPane.addComponentListener(new ComponentAdapter() {
 
@@ -388,7 +385,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * @param event the ShowQueryRequest
      */
     @Subscribe
-    public void handleShowQueryRequest(ShowQueryRequest event) {
+    public void handleShowQueryRequest(final ShowQueryRequest event) {
         show(new QueryNavigator(event.getQuery()));
     }
 
@@ -404,7 +401,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      *
      * @param newNodeNavigator The Interface with the collection of nodes
      */
-    private void show(NodeNavigatorInterface newNodeNavigator) {
+    private void show(final NodeNavigatorInterface newNodeNavigator) {
         Tools.checkEDT();
 
         if (this.mySetOfNodes != null) {
@@ -486,7 +483,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
     /**
      * creates the arrays for the thumbnailControllers and the descriptions and
-     * adds them to the ThubnailPane.
+     * adds them to the ThumbnailPane.
      */
     private void initThumbnailsArray() {
         Tools.checkEDT();

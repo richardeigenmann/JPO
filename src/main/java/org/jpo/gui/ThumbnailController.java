@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
-import org.jpo.eventbus.*;
+import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.cache.ThumbnailQueueRequest;
-import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.cache.ThumbnailQueueRequestCallbackHandler;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.*;
 import org.jpo.gui.swing.Thumbnail;
 
 import javax.swing.*;

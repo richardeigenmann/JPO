@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -152,12 +152,12 @@ public class PicturePopupMenuTest {
                 rotate0 = rotation.getItem(3);
                 refreshThumbnail = (JMenuItem) myPicturePopupMenu.getComponent(12);
                 move = (JMenu) myPicturePopupMenu.getComponent(13);
-                moveToTop = move.getItem(Settings.MAX_DROPNODES + 1);
-                moveUp = move.getItem(Settings.MAX_DROPNODES + 2);
-                moveDown = move.getItem(Settings.MAX_DROPNODES + 3);
-                moveToBottom = move.getItem(Settings.MAX_DROPNODES + 4);
-                moveIndent = move.getItem(Settings.MAX_DROPNODES + 5);
-                moveOutdent = move.getItem(Settings.MAX_DROPNODES + 6);
+                moveToTop = move.getItem(Settings.getMaxDropnodes() + 1);
+                moveUp = move.getItem(Settings.getMaxDropnodes() + 2);
+                moveDown = move.getItem(Settings.getMaxDropnodes() + 3);
+                moveToBottom = move.getItem(Settings.getMaxDropnodes() + 4);
+                moveIndent = move.getItem(Settings.getMaxDropnodes() + 5);
+                moveOutdent = move.getItem(Settings.getMaxDropnodes() + 6);
                 copyImage = (JMenu) myPicturePopupMenu.getComponent(14);
                 copyImageChooseTargetDir = copyImage.getItem(0);
                 copyImageToZipFile = copyImage.getItem(12);
@@ -388,7 +388,6 @@ public class PicturePopupMenuTest {
         assertEquals( 1, clearEmailSelectionEventCount);
     }
 
-    // TODO: Test the selection logic of the Select for EMail and unselect for EMail
     private int userFunctionEventCount = 0;
 
     @Test

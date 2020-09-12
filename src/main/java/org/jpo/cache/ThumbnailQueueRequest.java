@@ -2,8 +2,8 @@ package org.jpo.cache;
 
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import javax.swing.ImageIcon;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 
 /*
  Copyright (C) 2002 - 2019  Richard Eigenmann.

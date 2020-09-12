@@ -8,7 +8,7 @@ import static java.util.stream.IntStream.range;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -188,7 +188,7 @@ public class SettingsTest {
         // First Element should now be our new node
         assertEquals(n1, Settings.getRecentDropNodes().element());
 
-        range(1, Settings.MAX_DROPNODES).forEach(
+        range(1, Settings.getMaxDropnodes()).forEach(
                 itr -> Settings.memorizeGroupOfDropLocation(new SortableDefaultMutableTreeNode(new GroupInfo("Any other node"))));
         // The n1 node should still be on the queue
         assertTrue( Settings.getRecentDropNodes().contains(n1));

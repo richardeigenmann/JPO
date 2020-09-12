@@ -12,7 +12,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
 
 /*
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -91,8 +91,8 @@ public class ResizableJFrame
         Tools.checkEDT();
 
         getContentPane().setLayout( new BorderLayout() );
-        getContentPane().add( "Center", component );
-        setBackground( Settings.PICTUREVIEWER_BACKGROUND_COLOR );
+        getContentPane().add("Center", component);
+        setBackground(Settings.getPictureviewerBackgroundColor());
 
         setUndecorated( !decorateWindow );
 
@@ -152,38 +152,15 @@ public class ResizableJFrame
      */
     @Override
     public void switchWindowMode( final WindowSize newMode ) {
-        LOGGER.info( String.format( "old mode: %s new: %s", windowMode, newMode ) );
+        LOGGER.info(String.format("old mode: %s new: %s", windowMode, newMode));
         windowMode = newMode;
-        boolean newDecoration;
+        boolean newDecoration = switch (newMode) {
+            case WINDOW_FULLSCREEN, WINDOW_LEFT, WINDOW_RIGHT -> false;
+            default -> true;
+        };
         // some intelligence as to when to have window decorations and when not.
-        switch ( newMode ) {
-            case WINDOW_FULLSCREEN:
-                newDecoration = false;
-                break;
-            case WINDOW_LEFT:
-                newDecoration = false;
-                break;
-            case WINDOW_RIGHT:
-                newDecoration = false;
-                break;
-            case WINDOW_TOP_LEFT:
-                newDecoration = true;
-                break;
-            case WINDOW_TOP_RIGHT:
-                newDecoration = true;
-                break;
-            case WINDOW_BOTTOM_LEFT:
-                newDecoration = true;
-                break;
-            case WINDOW_BOTTOM_RIGHT:
-                newDecoration = true;
-                break;
-            default: // WINDOW_DEFAULT:
-                newDecoration = true;
-                break;
-        }
-        showWindowDecorations( newDecoration );
-        resizeTo( windowMode );
+        showWindowDecorations(newDecoration);
+        resizeTo(windowMode);
     }
 
     /**
@@ -197,31 +174,15 @@ public class ResizableJFrame
      *
      */
     public void resizeTo( WindowSize newMode ) {
-        switch ( newMode ) {
-            case WINDOW_FULLSCREEN:
-                maximise();
-                break;
-            case WINDOW_LEFT:
-                resizeToLeft();
-                break;
-            case WINDOW_RIGHT:
-                resizeToRight();
-                break;
-            case WINDOW_TOP_LEFT:
-                resizeToTopLeft();
-                break;
-            case WINDOW_TOP_RIGHT:
-                resizeToTopRight();
-                break;
-            case WINDOW_BOTTOM_LEFT:
-                resizeToBottomLeft();
-                break;
-            case WINDOW_BOTTOM_RIGHT:
-                resizeToBottomRight();
-                break;
-            default: // case WINDOW_DEFAULT:
-                unMaximise();
-                break;
+        switch (newMode) {
+            case WINDOW_FULLSCREEN -> maximise();
+            case WINDOW_LEFT -> resizeToLeft();
+            case WINDOW_RIGHT -> resizeToRight();
+            case WINDOW_TOP_LEFT -> resizeToTopLeft();
+            case WINDOW_TOP_RIGHT -> resizeToTopRight();
+            case WINDOW_BOTTOM_LEFT -> resizeToBottomLeft();
+            case WINDOW_BOTTOM_RIGHT -> resizeToBottomRight();
+            default -> unMaximise();
         }
     }
 
@@ -247,10 +208,9 @@ public class ResizableJFrame
     }
 
     /**
-     * Resizes the screen to the specified size after unmaximising it.
+     * Resizes the screen to the specified size after un-maximising it.
      *
      * @param targetSize The dimension you want the Frame to have
-     *
      */
     @SuppressWarnings( "deprecation" )
     @Override
@@ -262,7 +222,7 @@ public class ResizableJFrame
     }
 
     /**
-     * Resizes the window to the left part of the screen after unmaximising it.
+     * Resizes the window to the left part of the screen after un-maximising it.
      */
     public void resizeToLeft() {
         Tools.checkEDT();
@@ -273,7 +233,7 @@ public class ResizableJFrame
 
     /**
      * Resizes the window to the top left quarter of the screen after
-     * unmaximising it.
+     * un-maximising it.
      */
     public void resizeToTopLeft() {
         Tools.checkEDT();
@@ -284,7 +244,7 @@ public class ResizableJFrame
 
     /**
      * Resizes the window to the bottom left quarter of the screen after
-     * unmaximising it.
+     * un-maximising it.
      */
     public void resizeToBottomLeft() {
         Tools.checkEDT();
@@ -294,7 +254,7 @@ public class ResizableJFrame
     }
 
     /**
-     * Resizes the window to the right part of the screen after unmaximising it.
+     * Resizes the window to the right part of the screen after un-maximising it.
      */
     public void resizeToRight() {
         Tools.checkEDT();
@@ -304,7 +264,7 @@ public class ResizableJFrame
     }
 
     /**
-     * Resizes the window to the top right part of the screen after unmaximising
+     * Resizes the window to the top right part of the screen after un-maximising
      * it.
      */
     public void resizeToTopRight() {
@@ -316,7 +276,7 @@ public class ResizableJFrame
 
     /**
      * Resizes the window to the bottom right part of the screen after
-     * unmaximising it.
+     * un-maximising it.
      */
     public void resizeToBottomRight() {
         Tools.checkEDT();

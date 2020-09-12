@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.PictureInfo;
 import org.jpo.eventbus.GroupSelectionEvent;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
-import org.jpo.datamodel.PictureInfo;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;

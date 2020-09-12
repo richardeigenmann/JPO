@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 /*
  CameraDownloadWizardStep2.java: the second step in the download from Camera Wizard
  
- Copyright (C) 2007-2019  Richard Eigenmann.
+ Copyright (C) 2007-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,26 +54,26 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
     @Override
     protected JComponent createComponent() {
         //return component shown to the user
-        JPanel stepComponent = new JPanel();
+        final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         stepComponent.add( new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text1" )
                 + dataModel.getNewPictures().size()
                 + Settings.jpoResources.getString( "DownloadCameraWizardStep2Text2" ) ) );
         stepComponent.add( Box.createVerticalStrut( 8 ) );
 
-        JRadioButton moveButton = new JRadioButton( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text3" ) );
+        final JRadioButton moveButton = new JRadioButton(Settings.jpoResources.getString("DownloadCameraWizardStep2Text3"));
         moveButton.addActionListener(( ActionEvent e ) -> {
-            dataModel.setCopyMode( false );
-            Settings.lastCameraWizardCopyMode = false;
+            dataModel.setCopyMode(false);
+            Settings.setLastCameraWizardCopyMode(false);
         });
         stepComponent.add( moveButton );
-        JRadioButton copyButton = new JRadioButton( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text4" ) );
+        final JRadioButton copyButton = new JRadioButton(Settings.jpoResources.getString("DownloadCameraWizardStep2Text4"));
         copyButton.addActionListener(( ActionEvent e ) -> {
-            dataModel.setCopyMode( true );
-            Settings.lastCameraWizardCopyMode = true;
+            dataModel.setCopyMode(true);
+            Settings.setLastCameraWizardCopyMode(true);
         });
         stepComponent.add( copyButton );
-        ButtonGroup group = new ButtonGroup();
+        final ButtonGroup group = new ButtonGroup();
         group.add( moveButton );
         group.add( copyButton );
         moveButton.setSelected( !dataModel.getCopyMode() );

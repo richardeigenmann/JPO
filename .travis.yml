@@ -1,25 +1,21 @@
 language: java
-
 jdk:
-    - openjdk14
-
+  - openjdk14
 before_install:
   - sudo apt-get install jq
-  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
-
+  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest
+    | jq -r .assets[0].browser_download_url)
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
-
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter
+    -l Java -r build/reports/jacoco/test/jacocoTestReport.xml
 addons:
   sonarcloud:
-    organization: "richardeigenmann-github" # the key of the org you chose at step #3
-    token:
-      secure: "KPo7VfmODHdsaaosBg6aJ29e1kxpi9YkbRc/NKGKGm8AzCXuZn08U6heYKE1JqdCaWisqJYNJ7YgVdVDkZntmvNeaxkt2r0Sue/6Fsaj4tNeg1wdNTiQoDHJJ/cMBDsbT57yzzfvDMPt+5JxlG7+nyXQ2s2Qt7NBJ/7JGsnioXycW6k/5/1IB95BhzvOYKOdHWfkuAtqzJWMGsABoM87I3B0aRy5zfR5KUWp3H0wW6nXP8n4xyJdjgmxrHuGnoIKcvhViC8piE62aC0r9owRMnNG8Fz+L/O5oJ8Kk110S5jyMK3AWerdrgrmmpXVUsB89QCVykqQhID7ghzYIxvmVdjrVTfiSmPsTpaGUMAI9BNdOB1vOlrPYIjiT8jyJRo5u2pK6yu4ur+ZmHHg5KUCUePeFWs++S3lOC0usF5nyFr9H2H55NAZ5EjmCJHQ98yVL0CqP3DZHRV69wDuM7qnISXPfCa86Tb1g66o9Ie3X2v9nAtlPacuqtI1qyoZWJiSJcJD62nOqs95ZHzh58j9sKGko7ccMbKVHHFpFP0BVTGEkvboRKeO+wbDyUeRaaJ6/6Yqu/Jyr8SXmysMHURG9JePdlNz5pzVvkFX6FN9Ad3RvQXkP1YMjr0BkFH4zuoTjyB93wJkTO9vJ4A/TYcOZnrSIKNbCr3F8Y7uAuql4TI="
-
+    organization: richardeigenmann-github
 script:
-  # other script steps might be done before running the actual analysis
   - sonar-scanner
-
 git:
   depth: false
+env:
+  global:
+    secure: pdM3cObAVgx/jkHYi3pKbdc1sWqcuzmDogWKv3mWIwIsx99BBXewf65Rl3+vO80ACwtYH1SyJ/SFHnb+tIymZErw+g3LzlkiK5HYVyi74eeyXhkajMTrDErYZC6wciN79mZqUgylNjzAGd8EBfAL8jJxe01SCyhivISu6W9Hpd3rqY9v//w4XBqseqkk3GdcTB4xOGSZNPqtKp7MdJCxNiRkgEakGU8cxB1XWakNfzF8+qak+Jw8yZSD2XeiNw65VbohLR+p0gXNDUbgJWXARsG172XBBQklt7IrfnhGrqsQyVGDWDi5lJtkss2vorhCA00J6tGjEm44EZxEEQhdHk51mc/HlrTOaXtL+/+sSII+7Jyr9PGAlf/1wrP5z5XNnguhioakQ1WsG8DHlMX+/7mYCoozVURVOD5CUR2C6Nr1iqiMKdlb/aT3bTG3bQYaBJjC2d8I9yZqV6oeN2YhNIUlbQgSNFMkY2dX6IGhnhOE6rGxjEBWIHDifejMXzvHI16zTLkD/PsnK+gu2sxFk+7vOGEawt9MHJhpX3e4CHlBaF+HuooCJ6F8JQanHxNC8UI1riS448oKFgG/IhGPRJi991sd1DsDGDIA1pnzN70g1FsU6k2e/S7phNZ/qGScGJs/etIiOUyPmlbFAxoc4E8mDXEby0SQd37pjWJGYqc=

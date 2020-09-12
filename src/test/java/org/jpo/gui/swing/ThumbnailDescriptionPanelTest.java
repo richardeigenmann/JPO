@@ -6,8 +6,8 @@ import org.jpo.gui.ThumbnailControllerTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.SwingUtilities;
-import java.awt.GraphicsEnvironment;
+import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,16 +47,16 @@ public class ThumbnailDescriptionPanelTest {
                 assertNotNull( panel );
 
                 panel.showAsSelected();
-                assertEquals(Settings.SELECTED_COLOR_TEXT,panel.getPictureDescriptionJTA().getBackground());
+                assertEquals(Settings.getSelectedColorText(), panel.getPictureDescriptionJTA().getBackground());
 
                 panel.showAsUnselected();
-                assertEquals(Settings.UNSELECTED_COLOR,panel.getPictureDescriptionJTA().getBackground());
+                assertEquals(Settings.getUnselectedColor(), panel.getPictureDescriptionJTA().getBackground());
 
                 panel.showAsSelected(true);
-                assertEquals(Settings.SELECTED_COLOR_TEXT,panel.getPictureDescriptionJTA().getBackground());
+                assertEquals(Settings.getSelectedColorText(), panel.getPictureDescriptionJTA().getBackground());
 
                 panel.showAsSelected(false);
-                assertEquals(Settings.UNSELECTED_COLOR,panel.getPictureDescriptionJTA().getBackground());
+                assertEquals(Settings.getUnselectedColor(), panel.getPictureDescriptionJTA().getBackground());
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );

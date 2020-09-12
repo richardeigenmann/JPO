@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 /*
  * PicasaUploaderWizard1Login.java: Login stuff for Picasa
  *
- * Copyright (C) 2012-2017 Richard Eigenmann. Zürich
+ * Copyright (C) 2012-2020 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -48,12 +48,12 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
      *
      * @param myRequest my request
      */
-    public PicasaUploaderWizard1Login( PicasaUploadRequest myRequest ) {
-        super( "Login to Picasa", "Login to Picasa" );
+    public PicasaUploaderWizard1Login(final PicasaUploadRequest myRequest) {
+        super("Login to Picasa", "Login to Picasa");
         this.myRequest = myRequest;
 
-        userNameJTextField.setText( myRequest.getUsername() );
-        passwordJPasswordField.setText( myRequest.getPassword() );
+        userNameJTextField.setText(myRequest.getUsername());
+        passwordJPasswordField.setText(myRequest.getPassword());
     }
     private final JTextField userNameJTextField = new JTextField();
     private final JPasswordField passwordJPasswordField = new JPasswordField();
@@ -90,41 +90,41 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
             try {
                 errorJTextArea.setText( "Logging in..." );
                 if ( rememberCredentialsJCheckkBox.isSelected() ) {
-                    LOGGER.info( "saving" );
-                    Settings.rememberGoogleCredentials = true;
+                    LOGGER.info("saving");
+                    Settings.setRememberGoogleCredentials(true);
                     Settings.googleUsername = userNameJTextField.getText();
                     Settings.googlePassword = new String( passwordJPasswordField.getPassword() );
                     Settings.setUnsavedSettingChanges(true);
                 } else {
-                    LOGGER.info( "wiping" );
-                    Settings.rememberGoogleCredentials = false;
+                    LOGGER.info("wiping");
+                    Settings.setRememberGoogleCredentials(false);
                     Settings.googleUsername = "";
                     Settings.googlePassword = "";
                 }
-                myRequest.setUsername( userNameJTextField.getText() );
-                myRequest.setPassword( new String( passwordJPasswordField.getPassword() ) );
-                myRequest.picasaWebService.setUserCredentials( myRequest.getUsername(), myRequest.getPassword() );
-                setCanGoNext( true );
-                errorJTextArea.setText( "Successfully logged into Picasa." );
-            } catch ( AuthenticationException ex ) {
-                LOGGER.severe( ex.getMessage() );
-                errorJTextArea.setText( ex.getMessage() );
-                setCanGoNext( false );
+                myRequest.setUsername(userNameJTextField.getText());
+                myRequest.setPassword(new String(passwordJPasswordField.getPassword()));
+                myRequest.picasaWebService.setUserCredentials(myRequest.getUsername(), myRequest.getPassword());
+                setCanGoNext(true);
+                errorJTextArea.setText("Successfully logged into Picasa.");
+            } catch (final AuthenticationException ex) {
+                LOGGER.severe(ex.getMessage());
+                errorJTextArea.setText(ex.getMessage());
+                setCanGoNext(false);
             }
         });
 
-        errorJTextArea.setMinimumSize( new Dimension( 450, 150 ) );
-        errorJTextArea.setMaximumSize( new Dimension( 550, 300 ) );
-        wizardPanel.add( errorJTextArea, "span2" );
-        setCanGoNext( false );
+        errorJTextArea.setMinimumSize(new Dimension(450, 150));
+        errorJTextArea.setMaximumSize(new Dimension(550, 300));
+        wizardPanel.add(errorJTextArea, "span2");
+        setCanGoNext(false);
 
-        rememberCredentialsJCheckkBox.setSelected( Settings.rememberGoogleCredentials );
-        if ( Settings.rememberGoogleCredentials ) {
-            LOGGER.info( "remembering" );
-            userNameJTextField.setText( Settings.googleUsername );
-            passwordJPasswordField.setText( Settings.googlePassword );
+        rememberCredentialsJCheckkBox.setSelected(Settings.isRememberGoogleCredentials());
+        if (Settings.isRememberGoogleCredentials()) {
+            LOGGER.info("remembering");
+            userNameJTextField.setText(Settings.googleUsername);
+            passwordJPasswordField.setText(Settings.googlePassword);
         } else {
-            LOGGER.info( "not remembering" );
+            LOGGER.info("not remembering");
         }
 
         return wizardPanel;

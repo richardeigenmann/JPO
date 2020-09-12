@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /*
  CameraDownloadWizardData.java:  holds the data being shown in the Camera download wizard
 
- Copyright (C) 2007 - 2014  Richard Eigenmann.
+ Copyright (C) 2007 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -128,7 +128,7 @@ public class CameraDownloadWizardData {
      * A Flag to indicate whether to copy or move the pictures from the camera
      * to the hard disk. Default is set to copy.
      */
-    private boolean copyMode = Settings.lastCameraWizardCopyMode;
+    private boolean copyMode = Settings.isLastCameraWizardCopyMode();
 
     /**
      * Sets whether to copy or move the pictures from the camera to the
@@ -136,9 +136,9 @@ public class CameraDownloadWizardData {
      * default the operation is set to copy.
      *
      * @param copyMode Set to true if the wizard should copy the pictures, false
-     * if it should move them.
+     *                 if it should move them.
      */
-    public void setCopyMode( boolean copyMode ) {
+    public void setCopyMode(final boolean copyMode) {
         this.copyMode = copyMode;
     }
 
@@ -189,9 +189,9 @@ public class CameraDownloadWizardData {
      * Sets whether to create a new Group or not.
      *
      * @param createNewGroup set to true to create a new group node or false if
-     * not desired
+     *                       not desired
      */
-    public void setShouldCreateNewGroup( boolean createNewGroup ) {
+    public void setShouldCreateNewGroup(final boolean createNewGroup) {
         this.shouldCreateNewGroup = createNewGroup;
     }
 
@@ -243,22 +243,22 @@ public class CameraDownloadWizardData {
      * @param targetNode The target node for the import operation
      * @see #getTargetNode
      */
-    public void setTargetNode( SortableDefaultMutableTreeNode targetNode ) {
-        LOGGER.fine( String.format( "Setting target node to: %s", targetNode == null ? "null" : targetNode.toString() ) );
+    public void setTargetNode(final SortableDefaultMutableTreeNode targetNode) {
+        LOGGER.fine(String.format("Setting target node to: %s", targetNode == null ? "null" : targetNode.toString()));
         this.targetNode = targetNode;
     }
 
     /**
      * Which field to sort on
      */
-    private FieldCodes sortCode = Settings.lastSortChoice;
+    private FieldCodes sortCode = Settings.getLastSortChoice();
 
     /**
      * Sets the sort Code choice
      *
      * @param sortCode the new sort code
      */
-    public void setSortCode( FieldCodes sortCode ) {
+    public void setSortCode(final FieldCodes sortCode) {
         this.sortCode = sortCode;
     }
 
@@ -275,7 +275,7 @@ public class CameraDownloadWizardData {
         return targetDir;
     }
 
-    public void setTargetDir(File targetDir) {
+    public void setTargetDir(final File targetDir) {
         this.targetDir = targetDir;
     }
 
