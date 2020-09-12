@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2006 - 2017  Richard Eigenmann.
+ Copyright (C) 2006 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -99,14 +99,14 @@ public class Emailer
      * @param scaleSize The size to scale them to
      * @param sendOriginal Whether to include originals
      */
-    public Emailer( List<SortableDefaultMutableTreeNode> emailSelected,
-            InternetAddress senderAddress,
-            InternetAddress destinationAddress,
-            String subjectLine,
-            String bodyText,
-            boolean scaleImages,
-            Dimension scaleSize,
-            boolean sendOriginal ) {
+    public Emailer(final List<SortableDefaultMutableTreeNode> emailSelected,
+                   final InternetAddress senderAddress,
+                   final InternetAddress destinationAddress,
+                   final String subjectLine,
+                   final String bodyText,
+                   final boolean scaleImages,
+                   final Dimension scaleSize,
+                   final boolean sendOriginal) {
 
         this.emailSelected = emailSelected;
         this.senderAddress = senderAddress;
@@ -119,7 +119,7 @@ public class Emailer
 
         Tools.checkEDT();
 
-        JPanel progPanel = new JPanel();
+        final JPanel progPanel = new JPanel();
         progPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         progPanel.setLayout( new MigLayout() );
 
@@ -137,7 +137,7 @@ public class Emailer
         progBar.setValue( 0 );
         progPanel.add( progBar );
 
-        JButton cancelButton = new JButton( "Cancel" );
+        final JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener( ( ActionEvent e ) -> {
             progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
             interrupted = true;
@@ -151,8 +151,8 @@ public class Emailer
         progressFrame = new JFrame( Settings.jpoResources.getString( "EmailerJFrame" ) );
         progressFrame.getContentPane().add( progPanel );
         progressFrame.pack();
-        progressFrame.setVisible( true );
-        progressFrame.setLocationRelativeTo( Settings.anchorFrame );
+        progressFrame.setVisible(true);
+        progressFrame.setLocationRelativeTo(Settings.getAnchorFrame());
 
         execute();
     }
@@ -182,15 +182,15 @@ public class Emailer
     protected void done() {
         progressFrame.dispose();
         if ( "".equals( error ) ) {
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "emailOK" ),
-                    Settings.jpoResources.getString( "genericOKText" ),
-                    JOptionPane.INFORMATION_MESSAGE );
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("emailOK"),
+                    Settings.jpoResources.getString("genericOKText"),
+                    JOptionPane.INFORMATION_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "emailSendError" ) + error,
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("emailSendError") + error,
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -200,14 +200,13 @@ public class Emailer
     private String error = "";
 
     /**
-     *
      * @param chunks Chunks
      */
     @Override
-    protected void process( java.util.List<String> chunks ) {
-        for ( String s : chunks ) {
-            progBar.setValue( progBar.getValue() + 1 );
-            progressLabel.setText( s );
+    protected void process(List<String> chunks) {
+        for (final String s : chunks) {
+            progBar.setValue(progBar.getValue() + 1);
+            progressLabel.setText(s);
         }
 
     }
@@ -218,25 +217,24 @@ public class Emailer
      * @param session the session
      * @return The MimeMessage for the email.
      */
-    private MimeMessage buildMessage( Session session ) {
-        // Define message
+    private MimeMessage buildMessage(final Session session) {
         MimeMessage message;
         try {
-            message = new MimeMessage( session );
-            message.setFrom( senderAddress );
-            message.addRecipient( Message.RecipientType.TO, destinationAddress );
-            message.setSubject( subjectLine );
+            message = new MimeMessage(session);
+            message.setFrom(senderAddress);
+            message.addRecipient(Message.RecipientType.TO, destinationAddress);
+            message.setSubject(subjectLine);
 
-            Multipart mp = new MimeMultipart();
+            final Multipart mp = new MimeMultipart();
 
-            MimeBodyPart mbp1 = new MimeBodyPart();
+            final MimeBodyPart mbp1 = new MimeBodyPart();
             mbp1.setText( bodyText );
             mp.addBodyPart( mbp1 );
 
             MimeBodyPart scaledPictureMimeBodyPart;
             MimeBodyPart originalPictureMimeBodyPart;
             MimeBodyPart pictureDescriptionMimeBodyPart;
-            ScalablePicture scalablePicture = new ScalablePicture();
+            final ScalablePicture scalablePicture = new ScalablePicture();
             scalablePicture.setScaleSize( scaleSize );
 
             File highresFile;
@@ -297,7 +295,7 @@ public class Emailer
      * method that sends the email
      */
     private void sendEmailNoAuth() {
-        Properties props = System.getProperties();
+        final Properties props = System.getProperties();
         props.setProperty( "mail.smtp.host", Settings.emailServer );
         props.setProperty( "mail.smtp.port", Settings.emailPort );
         //props.put( "mail.debug", "true" );
@@ -310,13 +308,13 @@ public class Emailer
             LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
         } else {
             try {
-                publish( Settings.jpoResources.getString( "EmailerSending" ) );
-                MimeMessage msg = buildMessage(session);
+                publish(Settings.jpoResources.getString("EmailerSending"));
+                final MimeMessage msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
-                publish( Settings.jpoResources.getString( "EmailerSent" ) );
-            } catch ( MessagingException x ) {
-                LOGGER.severe( x.getMessage() );
+                publish(Settings.jpoResources.getString("EmailerSent"));
+            } catch (final MessagingException x) {
+                LOGGER.severe(x.getMessage());
             }
         }
     }
@@ -335,18 +333,18 @@ public class Emailer
         props.setProperty( "mail.smtp.socketFactory.port", Settings.emailPort );
         props.setProperty( "mail.smtp.starttls.enable", "true" );
 
-        Session session = Session.getDefaultInstance( props, new Authenticator() {
+        final Session session = Session.getDefaultInstance(props, new Authenticator() {
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication( Settings.emailUser, Settings.emailPassword );
+                return new PasswordAuthentication(Settings.emailUser, Settings.emailPassword);
             }
-        } );
+        });
         //session.setDebug( true );
 
         // Send message
         if ( interrupted ) {
-            LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
+            LOGGER.info("Message not sent due to user clicking cancel.");
         } else {
             try {
                 publish( Settings.jpoResources.getString( "EmailerSending" ) );
@@ -365,7 +363,7 @@ public class Emailer
      * method that sends the email via SSL
      */
     private void sendEmailSSL() {
-        Properties props = System.getProperties();
+        final Properties props = System.getProperties();
         props.setProperty( "mail.smtp.host", Settings.emailServer );
         props.setProperty( "mail.smtp.port", Settings.emailPort );
         props.setProperty( "mail.smtp.auth", "true" );
@@ -374,14 +372,14 @@ public class Emailer
         props.setProperty( "mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory" );
         props.setProperty( "mail.smtp.socketFactory.fallback", "false" );
 
-        Session session = Session.getDefaultInstance( props,
+        final Session session = Session.getDefaultInstance(props,
                 new Authenticator() {
 
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication( Settings.emailUser, Settings.emailPassword );
-            }
-        } );
+                    @Override
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(Settings.emailUser, Settings.emailPassword);
+                    }
+                });
         //session.setDebug( true );
         if ( interrupted ) {
             LOGGER.info( "EmailerThread: message not sent due to user clicking cancel." );
@@ -405,8 +403,8 @@ public class Emailer
     private static class EncodedDataSource
             implements DataSource {
 
-        EncodedDataSource( String contentType, String filename,
-                ByteArrayOutputStream baos ) {
+        EncodedDataSource(final String contentType, final String filename,
+                          final ByteArrayOutputStream baos) {
             this.contentType = contentType;
             this.filename = filename;
             this.baos = baos;

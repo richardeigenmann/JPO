@@ -7,7 +7,7 @@ import net.javaprog.ui.wizard.WizardModel;
 import org.jpo.datamodel.Settings;
 
 /*
- * Copyright (C) 2012-2017 Richard Eigenmann. 
+ * Copyright (C) 2012-2020 Richard Eigenmann.
  *
  * This program is free software; you can
  * redistribute it and/or modify it under the terms of the GNU General Public
@@ -34,23 +34,23 @@ public class PicasaUploaderWizard {
      *
      * @param myRequest the request
      */
-    public PicasaUploaderWizard( PicasaUploadRequest myRequest ) {
+    public PicasaUploaderWizard(final PicasaUploadRequest myRequest) {
 
-        PicasaUploaderWizard3Upload step3 = new PicasaUploaderWizard3Upload( myRequest );
+        final PicasaUploaderWizard3Upload step3 = new PicasaUploaderWizard3Upload(myRequest);
 
         // JWizz stuff
-        WizardModel model = new DefaultWizardModel( new Step[]{
-            new PicasaUploaderWizard1Login( myRequest ),
-            new PicasaUploaderWizard2Confirm( myRequest ),
-            step3
-        } );
+        final WizardModel model = new DefaultWizardModel(new Step[]{
+                new PicasaUploaderWizard1Login(myRequest),
+                new PicasaUploaderWizard2Confirm(myRequest),
+                step3
+        });
 
         step3.attachWizardModelListener( model );
 
         Wizard wizard = new Wizard( model, "Upload to Picasa" );
 
         wizard.pack();
-        wizard.setLocationRelativeTo( Settings.anchorFrame );
-        wizard.setVisible( true );
+        wizard.setLocationRelativeTo(Settings.getAnchorFrame());
+        wizard.setVisible(true);
     }
 }

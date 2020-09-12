@@ -1,17 +1,17 @@
 package org.jpo.export;
 
 import net.javaprog.ui.wizard.*;
-import org.jpo.eventbus.GenerateWebsiteRequest;
-import org.jpo.eventbus.JpoEventBus;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.eventbus.JpoEventBus;
 
 import java.awt.*;
 
 /*
  GenerateWebsiteWizard.java: Creates a Wizard for generating a web page
 
- Copyright (C) 2008-2013  Richard Eigenmann.
+ Copyright (C) 2008-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -91,7 +91,7 @@ public class GenerateWebsiteWizard {
         final Wizard wizard = new Wizard( model, Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 
         wizard.pack();
-        wizard.setLocationRelativeTo( Settings.anchorFrame );
-        wizard.setVisible( true );
+        wizard.setLocationRelativeTo(Settings.getAnchorFrame());
+        wizard.setVisible(true);
     }
 }

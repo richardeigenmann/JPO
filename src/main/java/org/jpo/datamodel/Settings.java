@@ -253,12 +253,6 @@ public class Settings {
      * The number of thumbnail creation threads to spawn.
      */
     public static final int NUMBER_OF_THUMBNAIL_CREATION_THREADS = 5;
-    /**
-     * The KDE Panel has the unfortunate habit of insisting on being on top so
-     * this parameter allows you to specify how much space should be left from
-     * the bottom of the screen for Full screen windows.
-     */
-    private static int leaveForPanel;
 
     public static String getAutoLoad() {
         return autoLoad;
@@ -314,7 +308,7 @@ public class Settings {
     /**
      * the path to the jar file; derived from jarAutostartList
      */
-    public static String jarRoot = null;
+    private static String jarRoot = null;
 
     public static boolean isUnsavedSettingChanges() {
         return unsavedSettingChanges;
@@ -332,27 +326,49 @@ public class Settings {
      * URL of the document type definition in the xml file.
      */
     public static final String COLLECTION_DTD = "file:./collection.dtd";
+
+    public static JFrame getAnchorFrame() {
+        return anchorFrame;
+    }
+
+    public static void setAnchorFrame(JFrame anchorFrame) {
+        Settings.anchorFrame = anchorFrame;
+    }
+
     /**
      * handle to the main frame of the application. It's purpose it to have a
      * handy reference for dialog boxes and the like to have a reference object.
      */
-    public static JFrame anchorFrame = null;
+    private static JFrame anchorFrame = null;
+
+    public static String getThumbnailCacheDirectory() {
+        return thumbnailCacheDirectory;
+    }
+
     /**
      * The maximum number of pictures to keep in memory
      * <p>
      * public static int maxCache;
      */
 
-    public static String thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
+    private static String thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
             + System.getProperty("file.separator")
             + "Jpo-Thumbnail-Cache";
 
+
+    public static int getMaximumPictureSize() {
+        return maximumPictureSize;
+    }
+
+    public static void setMaximumPictureSize(int maximumPictureSize) {
+        Settings.maximumPictureSize = maximumPictureSize;
+    }
 
     /**
      * The maximum size a picture is zoomed to. This is to stop the Java engine
      * creating enormous temporary images which lock the computer up completely.
      */
-    public static int maximumPictureSize = 6000;
+    private static int maximumPictureSize = 6000;
 
     /**
      * standard size for all JTextFields that need to record a filename.

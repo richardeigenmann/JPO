@@ -1,8 +1,8 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventbus.*;
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.*;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
@@ -75,7 +75,7 @@ public class CollectionDistillerJFrame extends JFrame {
 
     public void initComponents() {
         setSize(FRAME_SIZE);
-        setLocationRelativeTo(Settings.anchorFrame);
+        setLocationRelativeTo(Settings.getAnchorFrame());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -181,7 +181,7 @@ public class CollectionDistillerJFrame extends JFrame {
         final File targetFile = new File(exportDirectory, xmlFileNameJTextField.getText());
 
         if (targetFile.exists()) {
-            int answer = JOptionPane.showConfirmDialog(Settings.anchorFrame,
+            int answer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("confirmSaveAs"),
                     Settings.jpoResources.getString("genericWarning"),
                     JOptionPane.OK_CANCEL_OPTION,
@@ -197,7 +197,7 @@ public class CollectionDistillerJFrame extends JFrame {
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
         Settings.pushRecentCollection(targetFile.toString());
         JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
-        JOptionPane.showMessageDialog(Settings.anchorFrame,
+        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 Settings.jpoResources.getString("collectionSaveBody") + targetFile.toString(),
                 Settings.jpoResources.getString("collectionSaveTitle"),
                 JOptionPane.INFORMATION_MESSAGE);

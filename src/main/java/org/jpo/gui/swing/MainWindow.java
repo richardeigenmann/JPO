@@ -2,9 +2,9 @@ package org.jpo.gui.swing;
 
 import bibliothek.gui.dock.common.*;
 import com.google.common.eventbus.Subscribe;
-import org.jpo.eventbus.*;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.*;
 import org.jpo.gui.*;
 
 import javax.swing.*;
@@ -95,7 +95,7 @@ public class MainWindow extends JFrame {
     }
 
     private void initComponents() {
-        Settings.anchorFrame = this;
+        Settings.setAnchorFrame(this);
         try {
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel( Windows );

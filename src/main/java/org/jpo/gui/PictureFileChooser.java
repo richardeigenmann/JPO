@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
-import org.jpo.eventbus.CopyLocationsChangedEvent;
-import org.jpo.eventbus.JpoEventBus;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.CopyLocationsChangedEvent;
+import org.jpo.eventbus.JpoEventBus;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;
@@ -16,7 +16,7 @@ import java.io.File;
 
 
 /*
- Copyright (C) 2002, 2019  Richard Eigenmann.
+ Copyright (C) 2002, 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,23 +54,23 @@ public class PictureFileChooser
 
         if ( !( startNode.getUserObject() instanceof GroupInfo ) ) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString( "notGroupInfo" ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+                    Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("notGroupInfo"),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         initComponents();
 
-        if ( jFileChooser.showOpenDialog( Settings.anchorFrame ) == JFileChooser.APPROVE_OPTION ) {
+        if (jFileChooser.showOpenDialog(Settings.getAnchorFrame()) == JFileChooser.APPROVE_OPTION) {
             final File[] chosenFiles = jFileChooser.getSelectedFiles();
-            Settings.memorizeCopyLocation( jFileChooser.getCurrentDirectory().getPath() );
-            JpoEventBus.getInstance().post( new CopyLocationsChangedEvent() );
+            Settings.memorizeCopyLocation(jFileChooser.getCurrentDirectory().getPath());
+            JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
 
             Settings.showThumbOnFileChooser = showThumbnailJCheckBox.isSelected();
 
-            PictureAdder pictureAdder = new PictureAdder( startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories() );
+            PictureAdder pictureAdder = new PictureAdder(startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories());
             pictureAdder.execute();
         }
     }

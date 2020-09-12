@@ -151,7 +151,7 @@ public class Tools {
             copyBufferedStream(bin, bout);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
+                    Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("copyPictureError1")
                             + sourceFile.toString()
                             + Settings.jpoResources.getString("copyPictureError2")
@@ -259,7 +259,7 @@ public class Tools {
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
         SwingUtilities.invokeLater(
-                () -> JOptionPane.showMessageDialog(Settings.anchorFrame,
+                () -> JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("outOfMemoryError"),
                         Settings.jpoResources.getString("genericError"),
                         JOptionPane.ERROR_MESSAGE)

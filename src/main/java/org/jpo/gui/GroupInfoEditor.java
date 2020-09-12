@@ -116,8 +116,8 @@ public class GroupInfoEditor {
 
         jFrame.getContentPane().add( tabbedPane );
         jFrame.pack();
-        jFrame.setLocationRelativeTo( Settings.anchorFrame );
-        jFrame.setVisible( true );
+        jFrame.setLocationRelativeTo(Settings.getAnchorFrame());
+        jFrame.setVisible(true);
     }
 
     private void populateFields() {

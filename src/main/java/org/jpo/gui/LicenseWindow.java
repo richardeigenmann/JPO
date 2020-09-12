@@ -6,7 +6,6 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 
 /*
@@ -30,11 +29,6 @@ import java.util.logging.Logger;
  * This class creates and Shows the License window
  */
 public class LicenseWindow {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( LicenseWindow.class.getName() );
 
     /**
      * Creates the License Window
@@ -71,7 +65,7 @@ public class LicenseWindow {
                 options,
                 options[0] );
 
-        final JDialog dialog = pane.createDialog( Settings.anchorFrame, "GNU General Public License" );
+        final JDialog dialog = pane.createDialog(Settings.getAnchorFrame(), "GNU General Public License");
         dialog.setVisible( true );
     }
 }

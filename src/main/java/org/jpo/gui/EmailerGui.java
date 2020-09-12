@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2004-2017  Richard Eigenmann.
+ Copyright (C) 2004-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,19 +62,19 @@ public class EmailerGui extends JFrame {
 
         // if no picutres have been selected pop up an error message
         if ( emailSelected.size() < 1 ) {
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "emailNoNodes" ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("emailNoNodes"),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
 
         if ( "".equals( Settings.emailServer ) ) { //perhaps make this a better test of the server
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
-                    Settings.jpoResources.getString( "emailNoServer" ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("emailNoServer"),
+                    Settings.jpoResources.getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -90,8 +90,8 @@ public class EmailerGui extends JFrame {
         initComponents();
 
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
 
         getSettings();
     }

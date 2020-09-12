@@ -11,7 +11,7 @@ import javax.swing.*;
 /*
  org.jpo.Main.java:  starting point for the JPO application
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -65,9 +65,9 @@ public class Main {
     public static void main( String[] args ) {
         if (! verifyJavaVersion() ) {
             String message = "The JPO application uses new features\nthat were added to the Java language in version 1.8.\nYour Java installation reports version " + System.getProperty( "java.version" ) + "\n";
-            System.out.println( message );
-            JOptionPane.showMessageDialog( Settings.anchorFrame, message, "Old Version Error", JOptionPane.ERROR_MESSAGE );
-            System.exit( 1 );
+            System.out.println(message);
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), message, "Old Version Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
         }
 
         // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007

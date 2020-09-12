@@ -6,6 +6,7 @@ import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -22,7 +23,7 @@ import java.util.logging.Logger;
  ReconcileJFrame.java:  
  a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -79,10 +80,10 @@ public class ReconcileJFrame extends JFrame {
      * stop the reconciliation. The reconciliation itself runs in it's own
      * SwingWorker.
      *
-     * @param	startNode	The node which should be used as a starting point for
+     * @param    startNode    The node which should be used as a starting point for
      * the reconciliation.
      */
-    public ReconcileJFrame( SortableDefaultMutableTreeNode startNode ) {
+    public ReconcileJFrame(final SortableDefaultMutableTreeNode startNode) {
         this.startNode = startNode;
 
         initComponents();
@@ -130,7 +131,7 @@ public class ReconcileJFrame extends JFrame {
 
         controlJPanel.add( recurseSubdirectoriesJCheckBox, "spanx 2" );
 
-        JButton cancelJButton = new JButton( Settings.jpoResources.getString( "closeJButton" ) );
+        final JButton cancelJButton = new JButton(Settings.jpoResources.getString("closeJButton"));
         cancelJButton.addActionListener(( ActionEvent e ) -> {
             if ( ( reconciler == null ) || ( reconciler.isDone() ) ) {
                 getRid();
@@ -150,7 +151,7 @@ public class ReconcileJFrame extends JFrame {
         listPositivesJCheckBox.setSelected( false );
 
         logJTextArea.setLineWrap( false );
-        JScrollPane logJScrollPane = new JScrollPane( logJTextArea );
+        final JScrollPane logJScrollPane = new JScrollPane(logJTextArea);
         logJScrollPane.setMinimumSize( new Dimension( 400, 250 ) );
         logJScrollPane.setMaximumSize( new Dimension( 2000, 1000 ) );
 
@@ -159,8 +160,8 @@ public class ReconcileJFrame extends JFrame {
         getContentPane().add( controlJPanel );
 
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
     }
 
     /**
@@ -198,10 +199,10 @@ public class ReconcileJFrame extends JFrame {
     private boolean validateDir( File reconcileDir ) {
         if ( reconcileDir == null ) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString( "ReconcileNullFileError" ),
+                    Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("ReconcileNullFileError"),
                     "Error",
-                    JOptionPane.ERROR_MESSAGE );
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -209,10 +210,10 @@ public class ReconcileJFrame extends JFrame {
             reconcileDir = reconcileDir.getParentFile();
             if ( reconcileDir == null ) {
                 JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
-                        Settings.jpoResources.getString( "ReconcileNullFileError" ),
+                        Settings.getAnchorFrame(),
+                        Settings.jpoResources.getString("ReconcileNullFileError"),
                         "Error",
-                        JOptionPane.ERROR_MESSAGE );
+                        JOptionPane.ERROR_MESSAGE);
                 return false;
             }
             LOGGER.log( Level.INFO, "File is not a directory. Using it''s parent: {0}", reconcileDir.getPath() );
@@ -220,10 +221,10 @@ public class ReconcileJFrame extends JFrame {
 
         if ( !reconcileDir.canRead() ) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
-                    Settings.jpoResources.getString( "ReconcileCantReadError" ),
+                    Settings.getAnchorFrame(),
+                    Settings.jpoResources.getString("ReconcileCantReadError"),
                     "Error",
-                    JOptionPane.ERROR_MESSAGE );
+                    JOptionPane.ERROR_MESSAGE);
             return false;
         }
         // we can read the file
@@ -289,13 +290,12 @@ public class ReconcileJFrame extends JFrame {
             //Build HashSet of all of the URIs know to the collection
             SortableDefaultMutableTreeNode node;
             Object nodeObject;
-            Enumeration e = startNode.preorderEnumeration();
+            final Enumeration<TreeNode> e = startNode.preorderEnumeration();
             while ( e.hasMoreElements() ) {
                 node = (SortableDefaultMutableTreeNode) e.nextElement();
                 nodeObject = node.getUserObject();
-                if ( nodeObject instanceof PictureInfo ) {
-                    PictureInfo pictureInfo = (PictureInfo) nodeObject;
-                    collectionUris.add( pictureInfo.getImageURIOrNull() );
+                if (nodeObject instanceof PictureInfo pictureInfo) {
+                    collectionUris.add(pictureInfo.getImageURIOrNull());
                 }
             }
 
@@ -309,17 +309,17 @@ public class ReconcileJFrame extends JFrame {
          *
          * @param reconcileDir The directory to reconcile
          */
-        private void reconcileDir( File reconcileDir ) {
-            if ( listPositivesJCheckBox.isSelected() ) {
-                publish( Settings.jpoResources.getString( "ReconcileStart" ) + reconcileDir.getPath() + "\n" );
+        private void reconcileDir(final File reconcileDir) {
+            if (listPositivesJCheckBox.isSelected()) {
+                publish(Settings.jpoResources.getString("ReconcileStart") + reconcileDir.getPath() + "\n");
             }
-            File[] fileArray = reconcileDir.listFiles();
-            if ( fileArray == null ) {
-                publish( Settings.jpoResources.getString( "ReconcileNoFiles" ) );
+            final File[] fileArray = reconcileDir.listFiles();
+            if (fileArray == null) {
+                publish(Settings.jpoResources.getString("ReconcileNoFiles"));
                 return;
             }
 
-            for ( int i = 0; ( ( i < fileArray.length ) && ( !isCancelled() ) ); i++ ) {
+            for (int i = 0; ((i < fileArray.length) && (!isCancelled())); i++) {
                 if ( fileArray[i].isDirectory() ) {
                     if ( recurseSubdirectories ) {
                         reconcileDir( fileArray[i] );
@@ -338,7 +338,7 @@ public class ReconcileJFrame extends JFrame {
         }
 
         @Override
-        protected void process( List<String> chunks ) {
+        protected void process(final List<String> chunks) {
             chunks.forEach(outputTextArea::append);
         }
 

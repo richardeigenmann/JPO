@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventbus.ShowCategoryUsageEditorRequest;
 import org.jpo.datamodel.Category;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.ShowCategoryUsageEditorRequest;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;
@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2017  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,17 +62,16 @@ public class CategoryUsageJFrame extends JFrame {
     /**
      * Creates a GUI to edit the categories of the collection
      *
-     *
      * @param request The request
      */
-    public CategoryUsageJFrame( ShowCategoryUsageEditorRequest request ) {
-        addWindowListener( new WindowAdapter() {
+    public CategoryUsageJFrame(final ShowCategoryUsageEditorRequest request) {
+        addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing( WindowEvent e ) {
-                setDefaultCloseOperation( DO_NOTHING_ON_CLOSE );
+            public void windowClosing(WindowEvent e) {
+                setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
                 getRid();
             }
-        } );
+        });
 
         categoryJScrollPane = new CategoryJScrollPane();
         listModel = categoryJScrollPane.getDefaultListModel();
@@ -139,8 +138,8 @@ public class CategoryUsageJFrame extends JFrame {
 
         getContentPane().add( jPanel, BorderLayout.CENTER );
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
 
     }
 
@@ -176,38 +175,36 @@ public class CategoryUsageJFrame extends JFrame {
 
         // zero out the categories
         Category c;
-        Enumeration categoryEnumeration = listModel.elements();
+        final Enumeration<Category> categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
-            c = (Category) categoryEnumeration.nextElement();
-            LOGGER.log( Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() } );
-            c.setStatus( Category.UNDEFINED );
+            c = categoryEnumeration.nextElement();
+            LOGGER.log(Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{c.getKey().toString(), c.toString()});
+            c.setStatus(Category.UNDEFINED);
             // force screen update:
-            listModel.setElementAt( c, listModel.indexOf( c ) );
+            listModel.setElementAt(c, listModel.indexOf(c));
         }
 
         int currentStatus;
-        PictureInfo pi;
         Object myObject;
 
         // loop through each category on the list and check we have a node that
-        categoryEnumeration = listModel.elements();
-        while ( categoryEnumeration.hasMoreElements() ) {
-            c = (Category) categoryEnumeration.nextElement();
-            LOGGER.log( Level.INFO, "Checking Category: {0} {1}", new Object[]{ c.getKey().toString(), c.toString() } );
+        final Enumeration<Category> categoryEnumeration2 = listModel.elements();
+        while (categoryEnumeration2.hasMoreElements()) {
+            c = categoryEnumeration2.nextElement();
+            LOGGER.log(Level.INFO, "Checking Category: {0} {1}", new Object[]{c.getKey().toString(), c.toString()});
 
-            for ( SortableDefaultMutableTreeNode pictureNode : selectedNodes ) {
+            for (final SortableDefaultMutableTreeNode pictureNode : selectedNodes) {
                 myObject = pictureNode.getUserObject();
-                if ( myObject instanceof PictureInfo ) {
-                    pi = (PictureInfo) myObject;
-                    if ( pi.containsCategory( c.getKey() ) ) {
+                if (myObject instanceof PictureInfo pi) {
+                    if (pi.containsCategory(c.getKey())) {
                         currentStatus = c.getStatus();
-                        LOGGER.log( Level.INFO, "Status of category is: {0}", Integer.toString( currentStatus ) );
-                        if ( currentStatus == Category.UNDEFINED ) {
-                            c.setStatus( Category.SELECTED );
+                        LOGGER.log(Level.INFO, "Status of category is: {0}", Integer.toString(currentStatus));
+                        if (currentStatus == Category.UNDEFINED) {
+                            c.setStatus(Category.SELECTED);
                             // force screen update:
-                            listModel.setElementAt( c, listModel.indexOf( c ) );
-                        } else if ( currentStatus == Category.UN_SELECTED ) {
-                            c.setStatus( Category.BOTH );
+                            listModel.setElementAt(c, listModel.indexOf(c));
+                        } else if (currentStatus == Category.UN_SELECTED) {
+                            c.setStatus(Category.BOTH);
                             // force screen update:
                             listModel.setElementAt( c, listModel.indexOf( c ) );
                         }
@@ -239,34 +236,31 @@ public class CategoryUsageJFrame extends JFrame {
     private void storeSelection() {
         int status;
         Category c;
-        Enumeration e;
 
-        HashSet<Object> selectedCategories = categoryJScrollPane.getSelectedCategories();
-        synchronized ( categoryGuiListeners ) {
-            categoryGuiListeners.forEach( (listener )
-                    -> listener.categoriesChosen( selectedCategories )
+
+        final HashSet<Object> selectedCategories = categoryJScrollPane.getSelectedCategories();
+        synchronized (categoryGuiListeners) {
+            categoryGuiListeners.forEach((listener)
+                    -> listener.categoriesChosen(selectedCategories)
             );
         }
 
         // update the selected pictures
-        if ( selectedNodes == null ) {
-            LOGGER.info( "CategoryUsageJFrame.storeSelection: called with a null selection. Aborting." );
+        if (selectedNodes == null) {
+            LOGGER.info("CategoryUsageJFrame.storeSelection: called with a null selection. Aborting.");
             return;
         }
-        PictureInfo pictureInfo;
         Object userObject;
-        for ( SortableDefaultMutableTreeNode selectedNode : selectedNodes ) {
-            userObject = selectedNode.getUserObject();
-            if ( userObject instanceof PictureInfo ) {
-                pictureInfo = (PictureInfo) userObject;
-                e = listModel.elements();
-                while ( e.hasMoreElements() ) {
-                    c = (Category) e.nextElement();
+        for (final SortableDefaultMutableTreeNode selectedNode : selectedNodes) {
+            if (selectedNode.getUserObject() instanceof PictureInfo pictureInfo) {
+                final Enumeration<Category> e = listModel.elements();
+                while (e.hasMoreElements()) {
+                    c = e.nextElement();
                     status = c.getStatus();
-                    if ( status == Category.SELECTED ) {
-                        pictureInfo.addCategoryAssignment( c.getKey() );
-                    } else if ( status == Category.UN_SELECTED ) {
-                        pictureInfo.removeCategory( c.getKey() );
+                    if (status == Category.SELECTED) {
+                        pictureInfo.addCategoryAssignment(c.getKey());
+                    } else if (status == Category.UN_SELECTED) {
+                        pictureInfo.removeCategory(c.getKey());
                     }
                 }
             }

@@ -110,8 +110,8 @@ public class JpoCache {
             return null;
         }
 
-        LOGGER.log(Level.FINE,"setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", Settings.thumbnailCacheDirectory);
-        props.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.thumbnailCacheDirectory);
+        LOGGER.log(Level.FINE,"setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", Settings.getThumbnailCacheDirectory());
+        props.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.getThumbnailCacheDirectory());
 
         return props;
     }

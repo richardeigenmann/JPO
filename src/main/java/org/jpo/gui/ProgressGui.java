@@ -149,8 +149,8 @@ public class ProgressGui extends JFrame implements ProgressListener {
         this.getRootPane().setDefaultButton( cancelJButton );
         setMinimumSize( MINIMUM_FRAME_SIZE );
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
     }
 
     /**

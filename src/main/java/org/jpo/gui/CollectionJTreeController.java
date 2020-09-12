@@ -2,17 +2,19 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
-import org.jpo.eventbus.*;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.*;
 import org.jpo.gui.swing.CollectionJTree;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2002 - 2019 Richard Eigenmann, Zurich, Switzerland This
+ * Copyright (C) 2002 - 2020 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -47,17 +49,17 @@ public class CollectionJTreeController {
      *
      * @param pictureCollection the PictureCollection to control
      */
-    public CollectionJTreeController(PictureCollection pictureCollection) {
+    public CollectionJTreeController(final PictureCollection pictureCollection) {
         Tools.checkEDT();
-        collectionJTree.setModel( pictureCollection.getTreeModel() );
-        collectionJTree.setEditable( true );
-        collectionJTree.getSelectionModel().setSelectionMode( TreeSelectionModel.SINGLE_TREE_SELECTION );
-        collectionJTree.setTransferHandler( new MyTransferHandler() );
-        collectionJTree.setDragEnabled( true );
-        collectionJTree.setDropMode( DropMode.ON_OR_INSERT );
-        ToolTipManager.sharedInstance().registerComponent( collectionJTree );
+        collectionJTree.setModel(pictureCollection.getTreeModel());
+        collectionJTree.setEditable(true);
+        collectionJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        collectionJTree.setTransferHandler(new MyTransferHandler());
+        collectionJTree.setDragEnabled(true);
+        collectionJTree.setDropMode(DropMode.ON_OR_INSERT);
+        ToolTipManager.sharedInstance().registerComponent(collectionJTree);
 
-        collectionJScrollPane.setMinimumSize( Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE );
+        collectionJScrollPane.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
         CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter();
@@ -76,8 +78,8 @@ public class CollectionJTreeController {
      * @param event The GroupSelectionEvent
      */
     @Subscribe
-    public void handleGroupSelectionEvent(GroupSelectionEvent event ) {
-        expandAndScroll( event.getNode() );
+    public void handleGroupSelectionEvent(final GroupSelectionEvent event) {
+        expandAndScroll(event.getNode());
     }
 
     /**
@@ -87,8 +89,8 @@ public class CollectionJTreeController {
      * @param request The ShowGroupRequest
      */
     @Subscribe
-    public void handleShowGroupRequest( ShowGroupRequest request ) {
-        expandAndScroll( request.getNode() );
+    public void handleShowGroupRequest(final ShowGroupRequest request) {
+        expandAndScroll(request.getNode());
     }
 
     /**
@@ -97,17 +99,17 @@ public class CollectionJTreeController {
      *
      * @param node The node
      */
-    private void expandAndScroll( SortableDefaultMutableTreeNode node ) {
-        final TreePath tp = new TreePath( node.getPath() );
-        Runnable r = () -> {
-            collectionJTree.expandPath( tp );
-            collectionJTree.scrollPathToVisible( tp );
-            collectionJTree.setSelectionPath( tp );
+    private void expandAndScroll(final SortableDefaultMutableTreeNode node) {
+        final TreePath tp = new TreePath(node.getPath());
+        final Runnable r = () -> {
+            collectionJTree.expandPath(tp);
+            collectionJTree.scrollPathToVisible(tp);
+            collectionJTree.setSelectionPath(tp);
         };
-        if ( SwingUtilities.isEventDispatchThread() ) {
+        if (SwingUtilities.isEventDispatchThread()) {
             r.run();
         } else {
-            SwingUtilities.invokeLater( r );
+            SwingUtilities.invokeLater(r);
         }
     }
 
@@ -134,16 +136,16 @@ public class CollectionJTreeController {
          * @return a transferable
          */
         @Override
-        protected Transferable createTransferable( JComponent component ) {
-            TreePath selected = collectionJTree.getSelectionPath();
-            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
-            if ( node.isRoot() ) {
-                LOGGER.info( "The Root node must not be dragged. Dragging disabled." );
+        protected Transferable createTransferable(final JComponent component) {
+            final TreePath selected = collectionJTree.getSelectionPath();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
+            if (node.isRoot()) {
+                LOGGER.info("The Root node must not be dragged. Dragging disabled.");
                 return null;
             }
             List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
-            transferableNodes.add( node );
-            return new JpoTransferable( transferableNodes );
+            transferableNodes.add(node);
+            return new JpoTransferable(transferableNodes);
         }
 
         /**
@@ -155,8 +157,8 @@ public class CollectionJTreeController {
          * @return true if the import is OK
          */
         @Override
-        public boolean canImport( TransferSupport support ) {
-            return support.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor );
+        public boolean canImport(final TransferSupport support) {
+            return support.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor);
         }
 
         /**
@@ -169,44 +171,35 @@ public class CollectionJTreeController {
          */
         @Override
         @SuppressWarnings({"unchecked"})
-        public boolean importData( TransferSupport support ) {
-            JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
-            SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            LOGGER.info( String.format( "Choosing node %s as target for path %s, ChildIndex: %d", targetNode.toString(), dropLocation.getPath(), dropLocation.getChildIndex() ) );
+        public boolean importData(final TransferSupport support) {
+            final JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
+            final SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
+            LOGGER.info(String.format("Choosing node %s as target for path %s, ChildIndex: %d", targetNode.toString(), dropLocation.getPath(), dropLocation.getChildIndex()));
 
-            int actionType = support.getDropAction();
-            if ( !( ( actionType == TransferHandler.COPY ) || ( actionType == TransferHandler.MOVE ) ) ) {
-                LOGGER.info( String.format( "The event has an odd Action Type: %d. Drop rejected. Copy is %d; Move is %d", actionType, TransferHandler.COPY, TransferHandler.MOVE ) );
+            final int actionType = support.getDropAction();
+            if (!((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE))) {
+                LOGGER.info(String.format("The event has an odd Action Type: %d. Drop rejected. Copy is %d; Move is %d", actionType, TransferHandler.COPY, TransferHandler.MOVE));
                 return false;
             }
 
-            //SortableDefaultMutableTreeNode sourceNode;
-            //Object[] arrayOfNodes;
-            List<SortableDefaultMutableTreeNode> transferableNodes;
+            final List<SortableDefaultMutableTreeNode> transferableNodes;
 
             try {
                 Transferable t = support.getTransferable();
-                Object o = t.getTransferData( JpoTransferable.jpoNodeFlavor );
+                Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
                 //arrayOfNodes = (Object[]) o;
                 transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
-            } catch ( java.awt.datatransfer.UnsupportedFlavorException x ) {
-                LOGGER.log( Level.INFO, "Caught an UnsupportedFlavorException: message: {0}", x.getMessage() );
-                return false;
-            } catch ( java.io.IOException x ) {
-                LOGGER.log( Level.INFO, "Caught an IOException: message: {0}", x.getMessage() );
-                return false;
-            } catch ( ClassCastException x ) {
-                LOGGER.log( Level.INFO, "Caught an ClassCastException: message: {0}", x.getMessage() );
+            } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
+                LOGGER.log(Level.INFO, x.getMessage());
                 return false;
             }
 
-            for ( SortableDefaultMutableTreeNode sourceNode : transferableNodes ) {
-                //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
-                if ( targetNode.isNodeAncestor( sourceNode ) ) {
-                    JOptionPane.showMessageDialog( Settings.anchorFrame,
-                            Settings.jpoResources.getString( "moveNodeError" ),
-                            Settings.jpoResources.getString( "genericError" ),
-                            JOptionPane.ERROR_MESSAGE );
+            for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
+                if (targetNode.isNodeAncestor(sourceNode)) {
+                    JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                            Settings.jpoResources.getString("moveNodeError"),
+                            Settings.jpoResources.getString("genericError"),
+                            JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
             }

@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
 /*
- Copyright (C) 2002-2019  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2020  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -17,11 +17,11 @@ package org.jpo.gui;
  */
 
 import net.miginfocom.swing.MigLayout;
+import org.jpo.cache.JpoCache;
+import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.LocaleChangedEvent;
 import org.jpo.eventbus.UserFunctionsChangedEvent;
-import org.jpo.cache.JpoCache;
-import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.WholeNumberField;
 
 import javax.swing.*;
@@ -172,13 +172,13 @@ public class SettingsDialog extends JDialog {
      *
      * @param modal flag to say if modal or not
      */
-    public SettingsDialog( boolean modal ) {
-        super( Settings.anchorFrame, modal );
+    public SettingsDialog(final boolean modal) {
+        super(Settings.getAnchorFrame(), modal);
         initComponents();
         initValues();
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
     }
 
     /**
@@ -211,14 +211,14 @@ public class SettingsDialog extends JDialog {
             @Override
             public void actionPerformed( ActionEvent e ) {
                 if ( firstrun ) {
-                    // dont change the window size when setting up the gui
+                    // don't change the window size when setting up the gui
                     firstrun = false;
                 } else {
                     if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
-                        Settings.anchorFrame.setExtendedState( Frame.MAXIMIZED_BOTH );
+                        Settings.getAnchorFrame().setExtendedState(Frame.MAXIMIZED_BOTH);
                     } else {
-                        Settings.anchorFrame.setExtendedState( Frame.NORMAL );
-                        Settings.anchorFrame.setSize( Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()] );
+                        Settings.getAnchorFrame().setExtendedState(Frame.NORMAL);
+                        Settings.getAnchorFrame().setSize(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()]);
                     }
                 }
             }
@@ -377,18 +377,18 @@ public class SettingsDialog extends JDialog {
         predefinedEmailJComboBox.addItem( "Hotmail" );
         predefinedEmailJComboBox.addItem( "Other" );
         predefinedEmailJComboBox.addActionListener(( ActionEvent e ) -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            String cbSelection = (String) cb.getSelectedItem();
-            if ( "Localhost".equals( cbSelection ) ) {
-                emailServerJTextField.setText( "localhost" );
-                emailPortJTextField.setText( "25" );
-                authenticationJComboBox.setSelectedIndex( 1 ); //Password
-            } else if ( "Compuserve".equals( cbSelection ) ) {
-                emailServerJTextField.setText( "smtp.compuserve.com" );
-                emailPortJTextField.setText( "25" );
+            final JComboBox cb = (JComboBox) e.getSource();
+            final String cbSelection = (String) cb.getSelectedItem();
+            if ("Localhost".equals(cbSelection)) {
+                emailServerJTextField.setText("localhost");
+                emailPortJTextField.setText("25");
+                authenticationJComboBox.setSelectedIndex(1); //Password
+            } else if ("Compuserve".equals(cbSelection)) {
+                emailServerJTextField.setText("smtp.compuserve.com");
+                emailPortJTextField.setText("25");
                 //emailUserJTextField.setText( "set your username" );
                 //emailPasswordJTextField.setText( "set your password" );
-                authenticationJComboBox.setSelectedIndex( 1 ); //Password
+                authenticationJComboBox.setSelectedIndex(1); //Password
             } else if ( "Gmail".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "smtp.gmail.com" );
                 emailPortJTextField.setText( "465" );
@@ -431,35 +431,35 @@ public class SettingsDialog extends JDialog {
         authenticationJComboBox.addItem( "Password" );
         authenticationJComboBox.addItem( "SSL" );
         authenticationJComboBox.addActionListener(( ActionEvent e ) -> {
-            JComboBox cb = (JComboBox) e.getSource();
-            String cbSelection = (String) cb.getSelectedItem();
+            final JComboBox cb = (JComboBox) e.getSource();
+            final String cbSelection = (String) cb.getSelectedItem();
             switch (Objects.requireNonNull(cbSelection)) {
-                case "Password":
-                    userNameJLabel.setVisible( true );
-                    emailUserJTextField.setVisible( true );
-                    passwordJLabel.setVisible( true );
-                    emailPasswordJTextField.setVisible( true );
-                    showPasswordButton.setVisible( true );
-                    showPasswordLabel.setVisible( true );
-                    break;
-                case "SSL":
-                    userNameJLabel.setVisible( true );
-                    emailUserJTextField.setVisible( true );
-                    passwordJLabel.setVisible( true );
-                    emailPasswordJTextField.setVisible( true );
-                    showPasswordButton.setVisible( true );
-                    showPasswordLabel.setVisible( true );
-                    break;
-                default: //case "None":
-                    emailUserJTextField.setText( "" );
-                    userNameJLabel.setVisible( false );
-                    emailUserJTextField.setVisible( false );
-                    emailPasswordJTextField.setText( "" );
-                    passwordJLabel.setVisible( false );
-                    emailPasswordJTextField.setVisible( false );
-                    showPasswordButton.setVisible( false );
-                    showPasswordLabel.setVisible( false );
-                    break;
+                case "Password" -> {
+                    userNameJLabel.setVisible(true);
+                    emailUserJTextField.setVisible(true);
+                    passwordJLabel.setVisible(true);
+                    emailPasswordJTextField.setVisible(true);
+                    showPasswordButton.setVisible(true);
+                    showPasswordLabel.setVisible(true);
+                }
+                case "SSL" -> {
+                    userNameJLabel.setVisible(true);
+                    emailUserJTextField.setVisible(true);
+                    passwordJLabel.setVisible(true);
+                    emailPasswordJTextField.setVisible(true);
+                    showPasswordButton.setVisible(true);
+                    showPasswordLabel.setVisible(true);
+                }
+                default -> {
+                    emailUserJTextField.setText("");
+                    userNameJLabel.setVisible(false);
+                    emailUserJTextField.setVisible(false);
+                    emailPasswordJTextField.setText("");
+                    passwordJLabel.setVisible(false);
+                    emailPasswordJTextField.setVisible(false);
+                    showPasswordButton.setVisible(false);
+                    showPasswordLabel.setVisible(false);
+                }
             }
         });
         emailServerJPanel.add( authenticationJComboBox, "wrap" );
@@ -494,23 +494,23 @@ public class SettingsDialog extends JDialog {
         cacheJPanel.add( new JScrollPane( highresStatsJTA ) );
         cacheJPanel.add( new JScrollPane( lowresStatsJTA ), "wrap" );
 
-        JButton clearHighresCacheJButton = new JButton( "Clear" );
+        final JButton clearHighresCacheJButton = new JButton("Clear");
         clearHighresCacheJButton.addActionListener(( ActionEvent e ) -> clearHighresCache());
 
-        JButton clearThumbnailCacheJButton = new JButton( "Clear" );
+        final JButton clearThumbnailCacheJButton = new JButton("Clear");
         clearThumbnailCacheJButton.addActionListener(( ActionEvent e ) -> clearThumbnailCache());
 
         cacheJPanel.add( clearHighresCacheJButton );
         cacheJPanel.add( clearThumbnailCacheJButton );
 
-        JButton updateCacheStatsJButton = new JButton( "Update" );
+        final JButton updateCacheStatsJButton = new JButton("Update");
         updateCacheStatsJButton.addActionListener(( ActionEvent e ) -> updateCacheStats());
         cacheJPanel.add( updateCacheStatsJButton );
 
         // set up the main part of the dialog
         getContentPane().setLayout( new BorderLayout() );
 
-        JTabbedPane tabbedPanel = new JTabbedPane();
+        final JTabbedPane tabbedPanel = new JTabbedPane();
         tabbedPanel.setTabPlacement( JTabbedPane.TOP );
         tabbedPanel.setPreferredSize( SETTINGS_DIALOG_SIZE );
         tabbedPanel.setBorder( BorderFactory.createEmptyBorder( 4, 4, 4, 4 ) );
@@ -576,11 +576,11 @@ public class SettingsDialog extends JDialog {
         startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()) );
         viewerSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()) );
 
-        maximumPictureSizeJTextField.setValue( Settings.maximumPictureSize );
+        maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
         dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
 
         //thumbnailPathChooser.setText( Settings.thumbnailPath.getPath() );
-        thumbnailCacheDirPathChooser.setText( Settings.thumbnailCacheDirectory );
+        thumbnailCacheDirPathChooser.setText(Settings.getThumbnailCacheDirectory());
         maxThumbnails.setValue(Settings.getMaxThumbnails());
         thumbnailSize.setValue(Settings.getThumbnailSize());
         //keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
@@ -658,7 +658,7 @@ public class SettingsDialog extends JDialog {
             Settings.setMainFrameDimensions(new Dimension(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()]));
         }
 
-        Settings.maximumPictureSize = maximumPictureSizeJTextField.getValue();
+        Settings.setMaximumPictureSize(maximumPictureSizeJTextField.getValue());
         Settings.setDontEnlargeSmallImages(dontEnlargeJCheckBox.isSelected());
 
         if ( viewerSizeDropdown.getSelectedIndex() == 0 ) {
@@ -670,16 +670,6 @@ public class SettingsDialog extends JDialog {
         }
 
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
-
-        //Settings.thumbnailPath = thumbnailPathChooser.getDirectory();
-        //Settings.thumbnailCacheDirectory = thumbnailCacheDirPathChooser.getDirectory().toString();
-        //Settings.keepThumbnails = keepThumbnailsJCheckBox.isSelected();
-
-        /*if ( ( !Settings.thumbnailPath.exists() ) && Settings.keepThumbnails ) {
-            if ( !Settings.thumbnailPath.mkdirs() ) {
-                LOGGER.severe( String.format( "Could not create directory: %s", Settings.thumbnailPath.toString() ) );
-            }
-        }*/
 
         Settings.setMaxThumbnails(maxThumbnails.getValue());
         Settings.setThumbnailSize( thumbnailSize.getValue());

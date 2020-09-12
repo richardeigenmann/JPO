@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /*
 CamerasEditor.java: A Controller and View of the cameras allows adding and removing
 
-Copyright (C) 2002 - 2019  Richard Eigenmann.
+Copyright (C) 2002 - 2020 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -62,10 +62,10 @@ public class CamerasEditor extends JFrame {
     private final DefaultTreeModel treeModel = new DefaultTreeModel(rootNode) {
 
         @Override
-        public void valueForPathChanged(TreePath path, Object newValue) {
+        public void valueForPathChanged(final TreePath path, final Object newValue) {
             LOGGER.info(String.format("valueForPathChanged on node %s, to value %s", path.toString(), newValue.toString()));
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-            Camera cam = (Camera) node.getUserObject();
+            final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+            final Camera cam = (Camera) node.getUserObject();
             cameraRenamed(cam, newValue.toString());
         }
     };
@@ -93,7 +93,7 @@ public class CamerasEditor extends JFrame {
         Tools.checkEDT();
         this.cameraJTree = new JTree(treeModel);
         setSize(500, 400);
-        setLocationRelativeTo(Settings.anchorFrame);
+        setLocationRelativeTo(Settings.getAnchorFrame());
         setTitle(Settings.jpoResources.getString("CameraEditor"));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -149,11 +149,11 @@ public class CamerasEditor extends JFrame {
             }
         });
 
-        JScrollPane camerasJScrollPane = new JScrollPane(cameraJTree);
+        final JScrollPane camerasJScrollPane = new JScrollPane(cameraJTree);
         camerasJScrollPane.setPreferredSize(new Dimension(165, 200));
 
-        JPanel addDeleteButtonPanel = new JPanel();
-        JButton addJButton = new JButton(Settings.jpoResources.getString("addJButton"));
+        final JPanel addDeleteButtonPanel = new JPanel();
+        final JButton addJButton = new JButton(Settings.jpoResources.getString("addJButton"));
         addJButton.setPreferredSize(Settings.defaultButtonDimension);
         addJButton.setMinimumSize(Settings.defaultButtonDimension);
         addJButton.setMaximumSize(Settings.defaultButtonDimension);
@@ -161,7 +161,7 @@ public class CamerasEditor extends JFrame {
         addJButton.addActionListener((ActionEvent e) -> addCameraAction());
         addDeleteButtonPanel.add(addJButton);
 
-        JButton deleteJButton = new JButton(Settings.jpoResources.getString("deleteJButton"));
+        final JButton deleteJButton = new JButton(Settings.jpoResources.getString("deleteJButton"));
         deleteJButton.setPreferredSize(Settings.defaultButtonDimension);
         deleteJButton.setMinimumSize(Settings.defaultButtonDimension);
         deleteJButton.setMaximumSize(Settings.defaultButtonDimension);
@@ -169,19 +169,19 @@ public class CamerasEditor extends JFrame {
         deleteJButton.addActionListener((ActionEvent e) -> deleteCameraAction());
         addDeleteButtonPanel.add(deleteJButton);
 
-        JPanel leftPanel = new JPanel();
+        final JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.add(camerasJScrollPane);
         leftPanel.add(addDeleteButtonPanel);
 
-        JSplitPane hjsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, singleCameraEditor);
+        final JSplitPane hjsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, singleCameraEditor);
 
 
         //  Button Panel
-        JPanel buttonJPanel = new JPanel();
+        final JPanel buttonJPanel = new JPanel();
 
 
-        JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
         cancelJButton.setPreferredSize(Settings.defaultButtonDimension);
         cancelJButton.setMinimumSize(Settings.defaultButtonDimension);
         cancelJButton.setMaximumSize(Settings.defaultButtonDimension);
@@ -192,7 +192,7 @@ public class CamerasEditor extends JFrame {
         });
         buttonJPanel.add(cancelJButton);
 
-        JButton closeJButton = new JButton(Settings.jpoResources.getString("closeJButton"));
+        final JButton closeJButton = new JButton(Settings.jpoResources.getString("closeJButton"));
         closeJButton.setPreferredSize(Settings.defaultButtonDimension);
         closeJButton.setMinimumSize(Settings.defaultButtonDimension);
         closeJButton.setMaximumSize(Settings.defaultButtonDimension);
@@ -205,20 +205,12 @@ public class CamerasEditor extends JFrame {
         });
         buttonJPanel.add(closeJButton);
 
-        JSplitPane vjsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, hjsp, buttonJPanel);
+        final JSplitPane vjsp = new JSplitPane(JSplitPane.VERTICAL_SPLIT, hjsp, buttonJPanel);
         getContentPane().add(vjsp);
 
-        /* Why are we setting the path on the empty tree in the constructor?
-        Object object = treeModel.getChild( rootNode, 0 );
-        if ( object != null ) {
-            cameraJTree.setSelectionPath( new TreePath( ( (DefaultMutableTreeNode) object ).getPath() ) );
-        }*/
-
         pack();
-        setLocationRelativeTo(Settings.anchorFrame);
+        setLocationRelativeTo(Settings.getAnchorFrame());
         setVisible(true);
-
-
     }
 
 
@@ -227,11 +219,11 @@ public class CamerasEditor extends JFrame {
      */
     private void addCameraAction() {
         singleCameraEditor.saveCamera();
-        Camera cam = new Camera();
+        final Camera cam = new Camera();
         Settings.getCameras().add(cam);
         singleCameraEditor.setCamera(cam);
-        DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(cam);
-        int childNodes = rootNode.getChildCount();
+        final DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(cam);
+        final int childNodes = rootNode.getChildCount();
         treeModel.insertNodeInto(newChild, rootNode, childNodes);
         cameraJTree.setSelectionRow(childNodes + 1);
         cameraJTree.scrollRowToVisible(childNodes + 1);
@@ -242,7 +234,7 @@ public class CamerasEditor extends JFrame {
      * Deletes camera from the list
      */
     private void deleteCameraAction() {
-        DefaultMutableTreeNode node = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
+        final DefaultMutableTreeNode node = (DefaultMutableTreeNode) cameraJTree.getLastSelectedPathComponent();
         if (node == null) {
             LOGGER.warning("got a delete event without a node. Ignoring");
             return;
@@ -251,8 +243,8 @@ public class CamerasEditor extends JFrame {
             LOGGER.fine("Not allowing the root node to be deleted");
             return;
         }
-        DefaultMutableTreeNode nextSibling = node.getNextSibling();
-        DefaultMutableTreeNode previousNode = node.getPreviousNode();
+        final DefaultMutableTreeNode nextSibling = node.getNextSibling();
+        final DefaultMutableTreeNode previousNode = node.getPreviousNode();
         treeModel.removeNodeFromParent(node);
         synchronized (Settings.getCameras()) {
             Settings.getCameras().remove(node.getUserObject());
@@ -271,7 +263,7 @@ public class CamerasEditor extends JFrame {
      *
      * @param cam The camera that the user picked
      */
-    private void cameraPicked(Camera cam) {
+    private void cameraPicked(final Camera cam) {
         singleCameraEditor.setCamera(cam);
     }
 
@@ -282,7 +274,7 @@ public class CamerasEditor extends JFrame {
      * @param cam     The camera that the user renamed
      * @param newName The new name it got
      */
-    private void cameraRenamed(Camera cam, String newName) {
+    private void cameraRenamed(final Camera cam, final String newName) {
         cam.setDescription(newName);
         singleCameraEditor.setCamera(cam);
     }
@@ -310,7 +302,7 @@ public class CamerasEditor extends JFrame {
         Tools.checkEDT();
         rootNode.removeAllChildren();
         treeModel.nodeStructureChanged(rootNode);
-        for (Camera c : Settings.getCameras()) {
+        for (final Camera c : Settings.getCameras()) {
             DefaultMutableTreeNode cameraNode = new DefaultMutableTreeNode(c);
             rootNode.add(cameraNode);
         }

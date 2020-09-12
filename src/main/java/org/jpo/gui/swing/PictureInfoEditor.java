@@ -2,9 +2,10 @@ package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
+import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.SetPictureRotationRequest;
-import org.jpo.datamodel.*;
 import org.jpo.gui.CategoryEditorJFrame;
 import org.jpo.gui.ImageFilter;
 import org.jpo.gui.ThumbnailController;
@@ -31,8 +32,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.jpo.cache.QUEUE_PRIORITY;
 
 /*
  Copyright (C) 2002-2020  Richard Eigenmann.
@@ -226,7 +225,7 @@ public class PictureInfoEditor extends JFrame {
         positionMap();
 
         pack();
-        setLocationRelativeTo(Settings.anchorFrame);
+        setLocationRelativeTo(Settings.getAnchorFrame());
         setVisible(true);
     }
 

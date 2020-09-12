@@ -170,9 +170,9 @@ public class PictureController extends JComponent {
         }
 
         // Check if the picture would get to large and cause the system to "hang"
-        if ( ( pictureControllerImage.getOriginalWidth() * pictureControllerImage.getScaleFactor() < Settings.maximumPictureSize ) && ( pictureControllerImage.getOriginalHeight() * pictureControllerImage.getScaleFactor() < Settings.maximumPictureSize ) ) {
-            pictureControllerImage.setScaleFactor( newScaleFactor );
-            pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        if ((pictureControllerImage.getOriginalWidth() * pictureControllerImage.getScaleFactor() < Settings.getMaximumPictureSize()) && (pictureControllerImage.getOriginalHeight() * pictureControllerImage.getScaleFactor() < Settings.getMaximumPictureSize())) {
+            pictureControllerImage.setScaleFactor(newScaleFactor);
+            pictureControllerImage.createScaledPictureInThread(Thread.MAX_PRIORITY);
         }
     }
 

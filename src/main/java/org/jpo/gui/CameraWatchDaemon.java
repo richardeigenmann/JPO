@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /*
  CameraWatchDaemon.java: Daemon Thread that monitors when a camera has been connected.
 
- Copyright (C) 2002 - 2017  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -69,10 +69,10 @@ public class CameraWatchDaemon implements Runnable {
                     if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
                         LOGGER.log( Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{ getClass().toString(), c.toString() } );
                         final CameraDownloadWizardData dm = new CameraDownloadWizardData();
-                        dm.setCamera( c );
-                        dm.setAnchorFrame( Settings.anchorFrame );
+                        dm.setCamera(c);
+                        dm.setAnchorFrame(Settings.getAnchorFrame());
                         SwingUtilities.invokeLater(
-                                () -> new CameraDownloadWizard( dm )
+                                () -> new CameraDownloadWizard(dm)
                         );
                     }
                     c.setLastConnectionStatus( isConnected );

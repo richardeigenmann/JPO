@@ -6,12 +6,13 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
-import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ScalablePicture;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.io.*;
 import java.net.URI;
@@ -27,7 +28,7 @@ import java.util.zip.ZipOutputStream;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 
 /*
- * Copyright (C) 2002-2018 Richard Eigenmann.
+ * Copyright (C) 2002-2020 Richard Eigenmann.
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -180,7 +181,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
             } catch (final IOException x) {
                 JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
+                        Settings.getAnchorFrame(),
                         "got an IOException copying icon_folder.gif\n" + x.getMessage(),
                         "IOExeption",
                         JOptionPane.ERROR_MESSAGE);
@@ -207,7 +208,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param messages A message that will be written to the logfile.
      */
     @Override
-    protected void process(List<String> messages) {
+    protected void process(final List<String> messages) {
         messages.stream().peek(message -> LOGGER.info(String.format("messge: %s", message))).forEachOrdered(_item
                 -> progGui.progressIncrement()
         );
@@ -220,7 +221,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     protected void done() {
         progGui.switchToDoneMode();
         try {
-            URI uri = new URI("file://" + options.getTargetDirectory() + "/index.htm");
+            final URI uri = new URI("file://" + options.getTargetDirectory() + "/index.htm");
             Desktop.getDesktop().browse(uri);
         } catch (final IOException | URISyntaxException ex) {
             LOGGER.severe(ex.getLocalizedMessage());
@@ -236,7 +237,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      *
      * @param groupNode The node at which the extraction is to start.
      */
-    public void writeGroup(SortableDefaultMutableTreeNode groupNode) {
+    public void writeGroup(final SortableDefaultMutableTreeNode groupNode) {
         LOGGER.info(String.format("Processing Group: %s", groupNode.toString()));
         try {
             publish(String.format("Processing Group: %s", groupNode.toString()));
@@ -286,7 +287,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
             } else {
                 //link to parent
-                SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
+                final SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
                 String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
                 if (parentNode.equals(options.getStartNode())) {
                     parentLink = "index.htm";
@@ -301,10 +302,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             int childCount = groupNode.getChildCount();
             int childNumber = 1;
-            Enumeration kids = groupNode.children();
+            final Enumeration<TreeNode> kids = groupNode.children();
             while (kids.hasMoreElements() && (!progGui.getInterruptSemaphore().getShouldInterrupt())) {
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
-                if (node.getUserObject() instanceof GroupInfo) {
+                if (node.getUserObject() instanceof GroupInfo gi) {
 
                     out.write("<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">");
 
@@ -314,7 +315,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     out.write("</td>");
                     out.newLine();
 
-                    descriptionsBuffer.putDescription(((GroupInfo) node.getUserObject()).getGroupName());
+                    descriptionsBuffer.putDescription(gi.getGroupName());
 
                     // recursively call the method to output that group.
                     writeGroup(node);
@@ -338,10 +339,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             out.write("</body></html>");
             out.close();
 
-        } catch (IOException x) {
+        } catch (final IOException x) {
             LOGGER.severe(x.getMessage());
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
+                    Settings.getAnchorFrame(),
                     "got an IOException??",
                     "IOExeption",
                     JOptionPane.ERROR_MESSAGE);
@@ -812,7 +813,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param string The filename to clean up
      * @return The cleaned up filename
      */
-    public static String cleanupFilename(String string) {
+    public static String cleanupFilename(final String string) {
         String returnString = string;
         if (returnString.contains(" ")) {
             returnString = returnString.replaceAll(" ", "_");  // replace blank with underscore
@@ -927,10 +928,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         /**
          * Creates a Description buffer with the indicated number of columns.
          *
-         * @param    columns    The number of columns being generated
-         * @param    out    The Thumbnail page
+         * @param columns The number of columns being generated
+         * @param out     The Thumbnail page
          */
-        DescriptionsBuffer(int columns, BufferedWriter out) {
+        DescriptionsBuffer(final int columns, final BufferedWriter out) {
             this.columns = columns;
             this.out = out;
             descriptions = new String[options.getPicsPerRow()];
@@ -943,7 +944,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
          * @param description The String to be added.
          * @throws IOException if anything went wrong with the writing.
          */
-        public void putDescription(String description) throws IOException {
+        public void putDescription(final String description) throws IOException {
             descriptions[picCounter] = description;
             picCounter++;
             flushIfNescessary();
@@ -997,34 +998,34 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
-    private void sshCopyToServer(List<File> files) {
+    private void sshCopyToServer(final List<File> files) {
         LOGGER.info("Setting up ssh connection:");
-        JSch jsch = new JSch();
+        final JSch jsch = new JSch();
         try {
             LOGGER.info(String.format("Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort()));
-            Session session = jsch.getSession(options.getSshUser(), options.getSshServer(), options.getSshPort());
+            final Session session = jsch.getSession(options.getSshUser(), options.getSshServer(), options.getSshPort());
             if (options.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
                 session.setPassword(options.getSshPassword());
             } else {
                 jsch.addIdentity(options.getSshKeyFile());
             }
-            Properties config = new Properties();
+            final Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);
             session.connect();
 
-            for (File file : files) {
+            for (final File file : files) {
                 publish(String.format("scp %s", file.getName()));
                 scp(session, file);
             }
 
             session.disconnect();
-        } catch (JSchException | IOException ex) {
+        } catch (final JSchException | IOException ex) {
             LOGGER.severe(ex.getMessage());
         }
     }
 
-    private void scp(Session session, File file) throws JSchException, IOException {
+    private void scp(final Session session, final File file) throws JSchException, IOException {
         // exec 'scp -t rfile' remotely
         String command = "cd " + options.getSshTargetDir() + "; scp -p -t " + file.getName();
 
@@ -1035,8 +1036,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         try (
                 // get I/O streams for remote scp
-                OutputStream out = channel.getOutputStream();
-                InputStream in = channel.getInputStream()) {
+                final OutputStream out = channel.getOutputStream();
+                final InputStream in = channel.getInputStream()) {
             LOGGER.info("Connecting Channel...");
             channel.connect();
 
@@ -1069,8 +1070,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             // send a content of lfile
             try (
-                    FileInputStream fis = new FileInputStream(file)) {
-                byte[] buf = new byte[1024];
+                    final FileInputStream fis = new FileInputStream(file)) {
+                final byte[] buf = new byte[1024];
                 while (true) {
                     LOGGER.log(Level.INFO, "Sending bytes: {0}", buf.length);
                     int len = fis.read(buf, 0, buf.length);
@@ -1095,7 +1096,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
-    private static int checkAck(InputStream in) throws IOException {
+    private static int checkAck(final InputStream in) throws IOException {
         int b = in.read();
         // b may be 0 for success,
         //          1 for error,
@@ -1109,7 +1110,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
 
         if (b == 1 || b == 2) {
-            StringBuilder sb = new StringBuilder();
+            final StringBuilder sb = new StringBuilder();
             int c;
             do {
                 c = in.read();
@@ -1125,7 +1126,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return b;
     }
 
-    private void ftpCopyToServer(List<File> files) {
+    private void ftpCopyToServer(final List<File> files) {
         LOGGER.info("Setting up ftp connection:");
         final FTPClient ftp = new FTPClient();
         int reply;
@@ -1153,15 +1154,15 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 ftp.enterLocalPassiveMode();
             }
 
-            for (File file : files) {
-                InputStream input = new BufferedInputStream(new FileInputStream(file));
-                String remote = options.getFtpTargetDir() + file.getName();
+            for (final File file : files) {
+                final InputStream input = new BufferedInputStream(new FileInputStream(file));
+                final String remote = options.getFtpTargetDir() + file.getName();
                 LOGGER.info(String.format("Putting file %s to %s", file.getAbsolutePath(), remote));
                 ftp.storeFile(remote, input);
                 input.close();
             }
 
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.getLogger(WebsiteGenerator.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1173,21 +1174,21 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param pictureInfo The image to add
      * @param highresFile The name of the file to add
      */
-    public static void addToZipFile(ZipOutputStream zipFile, PictureInfo pictureInfo, File highresFile) {
+    public static void addToZipFile(final ZipOutputStream zipFile, final PictureInfo pictureInfo, File highresFile) {
         LOGGER.fine(String.format("Adding to zipfile: %s", highresFile.toString()));
         try (
-                InputStream in = new FileInputStream (pictureInfo.getImageFile());
-                BufferedInputStream bin = new BufferedInputStream(in)) {
+                final InputStream in = new FileInputStream(pictureInfo.getImageFile());
+                final BufferedInputStream bin = new BufferedInputStream(in)) {
 
-            ZipEntry entry = new ZipEntry(highresFile.getName());
+            final ZipEntry entry = new ZipEntry(highresFile.getName());
             zipFile.putNextEntry(entry);
 
             int count;
-            byte[] data = new byte[BUFFER_SIZE];
+            final byte[] data = new byte[BUFFER_SIZE];
             while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
                 zipFile.write(data, 0, count);
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile.toString(), e.toString()});
         }
 
@@ -1198,22 +1199,22 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      *
      * @param directory The directory to write to
      */
-    public static void writeCss(File directory) {
+    public static void writeCss(final File directory) {
         ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = Objects.requireNonNull(cl.getResource(JPO_CSS)).openStream();
-                FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_CSS));
-                BufferedInputStream bin = new BufferedInputStream(in);
-                BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+                final InputStream in = Objects.requireNonNull(cl.getResource(JPO_CSS)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_CSS));
+                final BufferedInputStream bin = new BufferedInputStream(in);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
             int c;
 
             while ((c = bin.read()) != -1) {
                 outStream.write(c);
             }
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
+                    Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("CssCopyError") + e.getMessage(),
                     Settings.jpoResources.getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
@@ -1225,22 +1226,22 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      *
      * @param directory The directory to write to
      */
-    public static void writeRobotsTxt(File directory) {
-        ClassLoader cl = JpoWriter.class.getClassLoader();
+    public static void writeRobotsTxt(final File directory) {
+        final ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = Objects.requireNonNull(cl.getResource(ROBOTS_TXT)).openStream();
-                FileOutputStream outStream = new FileOutputStream(new File(directory, ROBOTS_TXT));
-                BufferedInputStream bin = new BufferedInputStream(in);
-                BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+                final InputStream in = Objects.requireNonNull(cl.getResource(ROBOTS_TXT)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, ROBOTS_TXT));
+                final BufferedInputStream bin = new BufferedInputStream(in);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
             int c;
 
             while ((c = bin.read()) != -1) {
                 outStream.write(c);
             }
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
+                    Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("CssCopyError") + e.getMessage(),
                     Settings.jpoResources.getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
@@ -1252,13 +1253,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      *
      * @param directory The directory to write to
      */
-    public static void writeJpoJs(File directory) {
-        ClassLoader cl = JpoWriter.class.getClassLoader();
+    public static void writeJpoJs(final File directory) {
+        final ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                InputStream in = Objects.requireNonNull(cl.getResource("jpo.js")).openStream();
-                FileOutputStream outStream = new FileOutputStream(new File(directory, "jpo.js"));
-                BufferedInputStream bin = new BufferedInputStream(in);
-                BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+                final InputStream in = Objects.requireNonNull(cl.getResource("jpo.js")).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, "jpo.js"));
+                final BufferedInputStream bin = new BufferedInputStream(in);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
             int c;
 
             while ((c = bin.read()) != -1) {
@@ -1267,7 +1268,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
+                    Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("CssCopyError") + e.getMessage(),
                     Settings.jpoResources.getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);

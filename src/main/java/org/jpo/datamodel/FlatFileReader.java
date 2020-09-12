@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2017 - 2019 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2017 - 2020 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -45,24 +45,26 @@ public class FlatFileReader {
      */
     private static final Logger LOGGER = Logger.getLogger( FlatFileReader.class.getName() );
 
-    private FlatFileReader () {
+    private FlatFileReader() {
         throw new IllegalStateException("Utility class");
     }
+
     /**
      * Constructs a FlatFileReader and imports the pictures listed in the file
+     *
      * @param request The request
      */
-    public static void handleRequest( AddFlatFileRequest request ) {
+    public static void handleRequest(final AddFlatFileRequest request) {
         final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
-                new GroupInfo( request.getFile().getName() ) );
+                new GroupInfo(request.getFile().getName()));
 
-        try ( final BufferedReader in = new BufferedReader( new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8)  ) ) {
-            while ( in.ready() ) {
+        try (final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8))) {
+            while (in.ready()) {
                 final String line = in.readLine();
                 final File testFile = getFile(line);
 
-                if ( !testFile.canRead() ) {
-                    LOGGER.log( Level.INFO, "Can''t read file: {0}", line);
+                if (!testFile.canRead()) {
+                    LOGGER.log(Level.INFO, "Can''t read file: {0}", line);
                 } else if ( jvmHasReader(testFile)) {
 
                     LOGGER.log(Level.INFO, "adding file to node: {0}", line);
@@ -77,36 +79,36 @@ public class FlatFileReader {
             JpoEventBus.getInstance().post( new ShowGroupRequest( newNode ) );
         } catch ( final IOException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
-            JOptionPane.showMessageDialog( Settings.anchorFrame,
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     ex.getLocalizedMessage(),
-                    Settings.jpoResources.getString( "genericError" ),
+                    Settings.jpoResources.getString("genericError"),
                     JOptionPane.ERROR_MESSAGE );
         }
     }
 
     @NotNull
-    private static File getFile(String filename) {
+    private static File getFile(final String filename) {
         File testFile;
         try {
-            testFile = new File( new URI(filename) );
-        } catch ( URISyntaxException | IllegalArgumentException x ) {
-            LOGGER.info( x.getLocalizedMessage() );
+            testFile = new File(new URI(filename));
+        } catch (final URISyntaxException | IllegalArgumentException x) {
+            LOGGER.info(x.getLocalizedMessage());
             // The filename might just be a plain filename without URI format try this:
-            testFile = new File (filename);
+            testFile = new File(filename);
         }
         return testFile;
     }
 
-    private static boolean jvmHasReader(File testFile) {
+    private static boolean jvmHasReader(final File testFile) {
         try (final FileInputStream fis = new FileInputStream(testFile);
-             final ImageInputStream iis = ImageIO.createImageInputStream( fis )) {
-            final Iterator<ImageReader> i = ImageIO.getImageReaders( iis );
-            if ( i.hasNext() ) {
-                LOGGER.log( Level.INFO, "I do have a reader for file: {0}", testFile);
+             final ImageInputStream iis = ImageIO.createImageInputStream(fis)) {
+            final Iterator<ImageReader> i = ImageIO.getImageReaders(iis);
+            if (i.hasNext()) {
+                LOGGER.log(Level.INFO, "I do have a reader for file: {0}", testFile);
                 return true;
             }
-        } catch ( IOException ex ) {
-            LOGGER.info( ex.getLocalizedMessage() );
+        } catch (final IOException ex) {
+            LOGGER.info(ex.getLocalizedMessage());
         }
         return false;
     }

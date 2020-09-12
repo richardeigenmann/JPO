@@ -7,6 +7,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
 /*
  IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
 
- Copyright (C) 2002-2019  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2020  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,22 +59,22 @@ public class IntegrityCheckerJFrame
      *
      * @param startNode The node from which to start
      */
-    IntegrityCheckerJFrame(SortableDefaultMutableTreeNode startNode) {
+    IntegrityCheckerJFrame(final SortableDefaultMutableTreeNode startNode) {
         this.startNode = startNode;
 
         // set up widgets
-        setTitle( Settings.jpoResources.getString( "IntegrityCheckerTitle" ) );
-        JPanel jPanel = new JPanel( new MigLayout( "insets 15" ) );
-        jPanel.add( new JLabel( Settings.jpoResources.getString( "integrityCheckerLabel" ) ), "wrap" );
-        JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
-        okJButton.setMaximumSize( Settings.defaultButtonDimension );
-        okJButton.setMinimumSize( Settings.defaultButtonDimension );
-        okJButton.setPreferredSize( Settings.defaultButtonDimension );
-        JButton correctChecksumsJButton = new JButton("Correct picture checksums");
+        setTitle(Settings.jpoResources.getString("IntegrityCheckerTitle"));
+        final JPanel jPanel = new JPanel(new MigLayout("insets 15"));
+        jPanel.add(new JLabel(Settings.jpoResources.getString("integrityCheckerLabel")), "wrap");
+        final JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
+        okJButton.setMaximumSize(Settings.defaultButtonDimension);
+        okJButton.setMinimumSize(Settings.defaultButtonDimension);
+        okJButton.setPreferredSize(Settings.defaultButtonDimension);
+        final JButton correctChecksumsJButton = new JButton("Correct picture checksums");
         jPanel.add(correctChecksumsJButton, "wrap" );
         final JScrollPane resultScrollPane = new JScrollPane( resultJTextArea );
         jPanel.add( resultScrollPane, "wrap" );
-        JButton interruptJButton = new JButton("Interrupt");
+        final JButton interruptJButton = new JButton("Interrupt");
         jPanel.add(interruptJButton, "split 2" );
         jPanel.add(okJButton, "wrap, tag ok" );
         getContentPane().add( jPanel );
@@ -92,8 +93,8 @@ public class IntegrityCheckerJFrame
 
 
         pack();
-        setLocationRelativeTo( Settings.anchorFrame );
-        setVisible( true );
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
     }
 
     /**
@@ -130,29 +131,27 @@ public class IntegrityCheckerJFrame
             int nodesProcessed = 0;
             int corrections = 0;
             SortableDefaultMutableTreeNode testNode;
-            PictureInfo pictureInfo;
             Object nodeObject;
             long oldChecksum;
             long newChecksum;
-            for ( final Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && ( !isCancelled() ); ) {
+            for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && (!isCancelled()); ) {
                 nodesProcessed++;
-                if ( nodesProcessed % 1000 == 0 ) {
-                    publish( String.format( "%d nodes processed%n", nodesProcessed ) );
+                if (nodesProcessed % 1000 == 0) {
+                    publish(String.format("%d nodes processed%n", nodesProcessed));
                 }
                 testNode = (SortableDefaultMutableTreeNode) e.nextElement();
                 nodeObject = testNode.getUserObject();
-                if ( ( nodeObject instanceof PictureInfo ) ) {
-                    pictureInfo = (PictureInfo) nodeObject;
-                    File imageFile = pictureInfo.getImageFile();
-                    if ( imageFile != null ) {
-                        newChecksum = Tools.calculateChecksum(imageFile );
-                        oldChecksum = pictureInfo.getChecksum();
-                        if ( oldChecksum != newChecksum ) {
+                if ((nodeObject instanceof PictureInfo pi)) {
+                    final File imageFile = pi.getImageFile();
+                    if (imageFile != null) {
+                        newChecksum = Tools.calculateChecksum(imageFile);
+                        oldChecksum = pi.getChecksum();
+                        if (oldChecksum != newChecksum) {
                             corrections++;
-                            pictureInfo.setChecksum( newChecksum );
-                            String logMessage = String.format( "Corrected checksum of node %s from %d to %d%n", pictureInfo.getDescription(), oldChecksum, newChecksum );
-                            publish( logMessage );
-                            LOGGER.severe( logMessage );
+                            pi.setChecksum(newChecksum);
+                            String logMessage = String.format("Corrected checksum of node %s from %d to %d%n", pi.getDescription(), oldChecksum, newChecksum);
+                            publish(logMessage);
+                            LOGGER.severe(logMessage);
                         }
                     }
                 }
@@ -162,7 +161,7 @@ public class IntegrityCheckerJFrame
         }
 
         @Override
-        protected void process( List<String> chunks ) {
+        protected void process(final List<String> chunks) {
             chunks.forEach(resultJTextArea::append);
         }
     }

@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 /*
- Copyright (C) 2015-2017  Richard Eigenmann.
+ Copyright (C) 2015-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -63,7 +63,7 @@ public class ConsolidateGroupJFrame extends JFrame {
 
     private void initComponents() {
         setSize(460, 500);
-        setLocationRelativeTo(Settings.anchorFrame);
+        setLocationRelativeTo(Settings.getAnchorFrame());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
@@ -71,17 +71,17 @@ public class ConsolidateGroupJFrame extends JFrame {
                 getRid();
             }
         });
-        JPanel contentJPanel = new JPanel();
+        final JPanel contentJPanel = new JPanel();
         contentJPanel.setLayout(new MigLayout());
-        JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.jpoResources.getString("ConsolidateGroupBlaBlaLabel"));
+        final JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.jpoResources.getString("ConsolidateGroupBlaBlaLabel"));
         contentJPanel.add(consolidateGroupBlaBlaJLabel, "span 2, wrap");
-        JLabel targetDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
+        final JLabel targetDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
         contentJPanel.add(targetDirJLabel);
         contentJPanel.add(highresDirectoryChooser, "span 2, wrap");
         recurseSubgroupsJCheckBox.setSelected(true);
         contentJPanel.add(recurseSubgroupsJCheckBox, "span 2, wrap");
-        
-        JPanel buttonJPanel = new JPanel();
+
+        final JPanel buttonJPanel = new JPanel();
         // add the consolidate button
         final JButton consolidateJButton = new JButton(Settings.jpoResources.getString("ConsolidateButton"));
         consolidateJButton.setPreferredSize(new Dimension(120, 25));

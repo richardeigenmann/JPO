@@ -6,8 +6,8 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.DirectoryChooser;
 
 import javax.swing.*;
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 import static org.jpo.eventbus.GenerateWebsiteRequest.OutputTarget.*;
 
 /*
- Copyright (C) 2008-2017  Richard Eigenmann.
+ Copyright (C) 2008-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -441,8 +441,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             try {
                 if( ! targetDirectory.mkdirs() ) {
                     JOptionPane.showMessageDialog(
-                            Settings.anchorFrame,
-                             "Could not create directory",
+                            Settings.getAnchorFrame(),
+                            "Could not create directory",
                             Settings.jpoResources.getString("genericSecurityException"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
@@ -450,7 +450,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 }
             } catch (SecurityException e) {
                 JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
+                        Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
                         Settings.jpoResources.getString("genericSecurityException"),
                         JOptionPane.ERROR_MESSAGE);
@@ -460,7 +460,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             final String GENERIC_ERROR = Settings.jpoResources.getString("genericError");
             if (!targetDirectory.isDirectory()) {
                 JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
+                        Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("htmlDistIsDirError"),
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
@@ -468,7 +468,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
             if (!targetDirectory.canWrite()) {
                 JOptionPane.showMessageDialog(
-                        Settings.anchorFrame,
+                        Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("htmlDistCanWriteError"),
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
@@ -476,7 +476,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
             if (Objects.requireNonNull(targetDirectory.listFiles()).length > 0) {
                 int option = JOptionPane.showConfirmDialog(
-                        Settings.anchorFrame,
+                        Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("htmlDistIsNotEmptyWarning"),
                         GENERIC_ERROR,
                         JOptionPane.OK_CANCEL_OPTION,

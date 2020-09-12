@@ -1,10 +1,11 @@
 package org.jpo.gui.swing;
 
-import org.jpo.eventbus.ExportGroupToFlatFileRequest;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.ExportGroupToFlatFileRequest;
 import org.jpo.gui.swing.FlatFileDistiller.DistillerResult;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
 /*
  FlatFileDistiller.java:  class that writes the filenames of the pictures to a flat file
  *
- Copyright (C) 2002-2017  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -69,14 +70,14 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         jFileChooser.setDialogTitle(Settings.jpoResources.getString("saveFlatFileTitle"));
         jFileChooser.setApproveButtonText(Settings.jpoResources.getString("saveFlatFileButtonLabel"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
-        int returnVal = jFileChooser.showSaveDialog(Settings.anchorFrame);
+        int returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
 
         outputFile = jFileChooser.getSelectedFile();
         if (outputFile.exists()) {
-            int returnCode = JOptionPane.showConfirmDialog(Settings.anchorFrame, "Overwrite file\n" + outputFile.toString(),
+            int returnCode = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(), "Overwrite file\n" + outputFile.toString(),
                     "File already exists warning",
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
@@ -88,12 +89,12 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         try {
             out = new BufferedWriter(new FileWriter(outputFile));
         } catch (SecurityException exception) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame, "Security Exception:\n" + exception.getLocalizedMessage(),
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Security Exception:\n" + exception.getLocalizedMessage(),
                     "SecurityException",
                     JOptionPane.ERROR_MESSAGE);
             return;
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame, "Input Output Exception:\n" + ex.getMessage(),
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Input Output Exception:\n" + ex.getMessage(),
                     "IOExeption",
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -130,7 +131,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
      */
     private static void enumerateGroup(SortableDefaultMutableTreeNode groupNode, BufferedWriter out) throws IOException {
         //GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
-        final Enumeration kids = groupNode.children();
+        final Enumeration<TreeNode> kids = groupNode.children();
         while (kids.hasMoreElements()) {
             final SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
             if (childNode.getUserObject() instanceof GroupInfo) {
@@ -146,31 +147,31 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
     @Override
     protected void done() {
-        DistillerResult result; // = new DistillerResult( false, new Exception( "Swing Worker failed" ) );
+        DistillerResult result;
 
         try {
             result = get();
         } catch (InterruptedException ex) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame, "Interrupted Exception:\n" + ex.getLocalizedMessage(),
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Interrupted Exception:\n" + ex.getLocalizedMessage(),
                     "InterruptedException",
                     JOptionPane.ERROR_MESSAGE);
             Thread.currentThread().interrupt();
             return;
         } catch (ExecutionException ex) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame, "Execution Exception:\n" + ex.getLocalizedMessage(),
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Execution Exception:\n" + ex.getLocalizedMessage(),
                     "ExecutionException",
                     JOptionPane.ERROR_MESSAGE);
             Thread.currentThread().interrupt();
             return;
         }
         if (!result.success) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame, "Exception:\n" + result.getException().getLocalizedMessage(),
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Exception:\n" + result.getException().getLocalizedMessage(),
                     "Exception",
                     JOptionPane.ERROR_MESSAGE);
             Thread.currentThread().interrupt();
         } else {
             Settings.memorizeCopyLocation(outputFile.getParent());
-            JOptionPane.showMessageDialog(Settings.anchorFrame, "Sucessfully wrote file.\n" + outputFile.toString(),
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Successfully wrote file.\n" + outputFile.toString(),
                     "Confirmation",
                     JOptionPane.INFORMATION_MESSAGE);
         }

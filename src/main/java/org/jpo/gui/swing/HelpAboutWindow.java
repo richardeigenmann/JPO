@@ -40,8 +40,8 @@ public class HelpAboutWindow {
      */
     public HelpAboutWindow() {
         Tools.checkEDT();
-        JOptionPane.showMessageDialog( Settings.anchorFrame,
-                Settings.jpoResources.getString( "HelpAboutText" ) + Settings.jpoResources.getString( "HelpAboutUser" ) + System.getProperty( "user.name" ) + "\n" + Settings.jpoResources.getString( "HelpAboutOs" ) + System.getProperty( "os.name" ) + " " + System.getProperty( "os.version" ) + " " + System.getProperty( "os.arch" ) + "\n" + Settings.jpoResources.getString( "HelpAboutJvm" ) + System.getProperty( "java.vendor" ) + " " + System.getProperty( "java.version" ) + "\n" + Settings.jpoResources.getString( "HelpAboutJvmMemory" ) + Long.toString( Runtime.getRuntime().maxMemory() / 1024 / 1024, 0 ) + " MB\n" + Settings.jpoResources.getString( "HelpAboutJvmFreeMemory" ) + Long.toString( Runtime.getRuntime().freeMemory() / 1024 / 1024, 0 ) + " MB\n" );
+        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                Settings.jpoResources.getString("HelpAboutText") + Settings.jpoResources.getString("HelpAboutUser") + System.getProperty("user.name") + "\n" + Settings.jpoResources.getString("HelpAboutOs") + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n" + Settings.jpoResources.getString("HelpAboutJvm") + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n" + Settings.jpoResources.getString("HelpAboutJvmMemory") + Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0) + " MB\n" + Settings.jpoResources.getString("HelpAboutJvmFreeMemory") + Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0) + " MB\n");
 
         // while we're at it dump the stuff to the log
         LOGGER.info( "HelpAboutWindow: Help About showed the following information" );

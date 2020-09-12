@@ -1,10 +1,10 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.RecentCollectionsChangedEvent;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.RecentCollectionsChangedEvent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /*
-Copyright (C) 2002 - 2019 Richard Eigenmann.
+Copyright (C) 2002 - 2020 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -41,8 +41,8 @@ public class PrivacyJFrame
         Tools.checkEDT();
         initGui();
         pack();
-        setVisible( true );
-        setLocationRelativeTo( Settings.anchorFrame );
+        setVisible(true);
+        setLocationRelativeTo(Settings.getAnchorFrame());
     }
 
     /**
@@ -89,9 +89,6 @@ public class PrivacyJFrame
         final JButton all = new JButton( Settings.jpoResources.getString( "PrivacyAll" ) );
         all.addActionListener(( ActionEvent e ) -> privacyController.clearAll());
         privacyPanel.add( all );
-
-
-
 
         getContentPane().add( privacyPanel );
 

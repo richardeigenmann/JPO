@@ -471,7 +471,7 @@ public class SortableDefaultMutableTreeNode
                         + "the current node which would orphan the tree.\n"
                         + "Ancestor node: " + sourceNode.toString()
                         + "\nCurrent node: " + this.toString());
-                JOptionPane.showMessageDialog(Settings.anchorFrame,
+                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("moveNodeError"),
                         Settings.jpoResources.getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
@@ -625,7 +625,7 @@ public class SortableDefaultMutableTreeNode
         LOGGER.fine(String.format("Delete requested for node: %s", toString()));
         if (this.isRoot()) {
             LOGGER.info("Delete attempted on Root node. Can't do this! Aborted.");
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("deleteRootNodeError"),
                     Settings.jpoResources.getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
@@ -647,7 +647,7 @@ public class SortableDefaultMutableTreeNode
             }
         }
 
-        Enumeration e = this.breadthFirstEnumeration();
+        final Enumeration<TreeNode> e = this.breadthFirstEnumeration();
         while (e.hasMoreElements()) {
             Settings.getRecentDropNodes().remove(e.nextElement());
         }
@@ -784,7 +784,7 @@ public class SortableDefaultMutableTreeNode
             }
         } else // it doesn't exist
             if (!targetFile.mkdirs()) {
-                JOptionPane.showMessageDialog(Settings.anchorFrame,
+                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("CopyImageDirError") + targetFile.toString(),
                         Settings.jpoResources.getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
@@ -793,7 +793,7 @@ public class SortableDefaultMutableTreeNode
 
         if (targetFile.isDirectory()) {
             if (!targetFile.canWrite()) {
-                JOptionPane.showMessageDialog(Settings.anchorFrame,
+                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                         Settings.jpoResources.getString("htmlDistCanWriteError"),
                         Settings.jpoResources.getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
@@ -811,7 +811,7 @@ public class SortableDefaultMutableTreeNode
         try {
             FileUtils.copyFile(pictureInfo.getImageFile(), targetFile);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     "IOException: " + e.getMessage(),
                     Settings.jpoResources.getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
@@ -1132,7 +1132,7 @@ public class SortableDefaultMutableTreeNode
             return copyBufferedStream(bin, bout);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
-                    Settings.anchorFrame,
+                    Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("copyPictureError1")
                             + sourceFile.toString()
                             + Settings.jpoResources.getString("copyPictureError2")
