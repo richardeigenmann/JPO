@@ -1,22 +1,18 @@
 package org.jpo.gui;
 
+import org.apache.commons.io.IOUtils;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*
  LicenseWindow.java:  Creates the License window
 
- Copyright (C) 2007 - 2017 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2007 - 2020 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,42 +40,38 @@ public class LicenseWindow {
      * Creates the License Window
      */
     public LicenseWindow() {
-        JTextArea licenseJTextArea = new JTextArea( "reading the file gpl.txt" );
+        final JTextArea licenseJTextArea = new JTextArea( "reading the file gpl.txt" );
         licenseJTextArea.setWrapStyleWord( true );
         licenseJTextArea.setLineWrap( true );
         licenseJTextArea.setEditable( false );
-        JScrollPane jScrollPane = new JScrollPane( licenseJTextArea,
+        final JScrollPane jScrollPane = new JScrollPane( licenseJTextArea,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
         jScrollPane.setPreferredSize( new Dimension( 500, 400 ) );
 
-        StringBuilder sb = new StringBuilder();
-        String textLine;
-        try (
-                InputStream in = LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" );
-                BufferedReader bin = new BufferedReader( new InputStreamReader(Objects.requireNonNull(in)) )) {
-            while ( ( textLine = bin.readLine() ) != null ) {
-                sb.append( textLine ).append( "\n" );
-            }
-        } catch ( IOException | NullPointerException e ) {
-            LOGGER.log( Level.SEVERE, "Jpo.java: Error while reading gpl.txt: {0}", e.getMessage());
+        String license;
+        try {
+            license = IOUtils.toString(LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" ), "UTF-8");
+        } catch (final IOException e) {
+            license = "Error loading the license text. The license is still GPL.";
         }
-        licenseJTextArea.setText( sb.toString() );
+
+        licenseJTextArea.setText( license );
         licenseJTextArea.setCaretPosition( 0 );
 
-        Object[] License = { jScrollPane };
+        final Object[] License = { jScrollPane };
 
         final String OK = "OK";
-        Object[] options = { OK };
+        final Object[] options = { OK };
 
-        JOptionPane pane = new JOptionPane( License,
+        final JOptionPane pane = new JOptionPane( License,
                 JOptionPane.INFORMATION_MESSAGE,
                 JOptionPane.OK_OPTION,
                 null,
                 options,
                 options[0] );
 
-        JDialog dialog = pane.createDialog( Settings.anchorFrame, "GNU General Public License" );
+        final JDialog dialog = pane.createDialog( Settings.anchorFrame, "GNU General Public License" );
         dialog.setVisible( true );
     }
 }

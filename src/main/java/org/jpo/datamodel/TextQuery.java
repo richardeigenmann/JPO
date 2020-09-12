@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import javax.swing.tree.TreeNode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,7 +10,7 @@ import java.util.List;
 /*
  TextQuery.java:  The parameters for a search
 
- Copyright (C) 2002 - 2015  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -53,7 +54,7 @@ public class TextQuery implements Serializable, Query {
      * fields.
      *
      */
-    public TextQuery( String anyField ) {
+    public TextQuery( final String anyField ) {
         this.anyField = anyField;
     }
 
@@ -69,7 +70,7 @@ public class TextQuery implements Serializable, Query {
      *
      * @param lowerDateRange The lower date range as String
      */
-    public void setLowerDateRange( Calendar lowerDateRange ) {
+    public void setLowerDateRange( final Calendar lowerDateRange ) {
         this.lowerDateRange = lowerDateRange;
     }
 
@@ -94,7 +95,7 @@ public class TextQuery implements Serializable, Query {
      *
      * @param upperDateRange The upper date range
      */
-    public void setUpperDateRange( Calendar upperDateRange ) {
+    public void setUpperDateRange( final Calendar upperDateRange ) {
         this.upperDateRange = upperDateRange;
     }
 
@@ -117,7 +118,7 @@ public class TextQuery implements Serializable, Query {
      *
      * @param startNode The start node
      */
-    public void setStartNode( SortableDefaultMutableTreeNode startNode ) {
+    public void setStartNode( final SortableDefaultMutableTreeNode startNode ) {
         this.startNode = startNode;
     }
 
@@ -178,7 +179,7 @@ public class TextQuery implements Serializable, Query {
         SortableDefaultMutableTreeNode testNode;
         searchResults = new ArrayList<>();
 
-        for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             if ( isMatch( testNode ) ) {
                 searchResults.add( testNode );
@@ -202,7 +203,7 @@ public class TextQuery implements Serializable, Query {
      * @param n the Node which is to be tested.
      * @return true if the node matches the query, false if not.
      */
-    public boolean isMatch( SortableDefaultMutableTreeNode n ) {
+    public boolean isMatch( final SortableDefaultMutableTreeNode n ) {
         Object nodeObject = n.getUserObject();
         if ( !( nodeObject instanceof PictureInfo ) ) {
             // it's not a pictureinfo node so it can't be a batch.
@@ -216,7 +217,7 @@ public class TextQuery implements Serializable, Query {
             match = pi.anyMatch( anyField );
         }
 
-        Calendar testNodeDate = pi.getCreationTimeAsDate();
+        final Calendar testNodeDate = pi.getCreationTimeAsDate();
         if ( match && ( lowerDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {

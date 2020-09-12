@@ -139,7 +139,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      *
      * @param selected true is the node should be shown as "selected", false if not
      */
-    public void showAsSelected(boolean selected) {
+    public void showAsSelected(final boolean selected) {
         if (selected) {
             showAsSelected();
         } else {
@@ -181,8 +181,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * It calls setTextAreaSize to resize the box according to the amount of text.
      * This method is EDT safe
      */
-    public void setDescription(String newDescription) {
-        Runnable runnable = () -> {
+    public void setDescription(final String newDescription) {
+        final Runnable runnable = () -> {
             getPictureDescriptionJTA().setText(newDescription);
             setTextAreaSize();
         };
@@ -208,7 +208,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      *
      * @param thumbnailSizeFactor
      */
-    public void setThumbnailSizeFactor(float thumbnailSizeFactor) {
+    public void setThumbnailSizeFactor(final float thumbnailSizeFactor) {
         this.thumbnailSizeFactor = thumbnailSizeFactor;
         setTextAreaSize();
     }
@@ -225,7 +225,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * This method is EDT safe.
      */
     public void setTextAreaSize() {
-        Runnable runnable = () -> {
+        final Runnable runnable = () -> {
             final Dimension textAreaSize = getPictureDescriptionJTA().getPreferredSize();
 
             int targetHeight;
@@ -237,7 +237,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
                 targetHeight = (((textAreaSize.height / 30) + 1) * 30);
             }
 
-            Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
+            final Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
             int targetWidth = (int) (Settings.thumbnailSize * thumbnailSizeFactor);
             if ((targetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
                 highresLocationJTextField.setPreferredSize(new Dimension(targetWidth, 30));

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,7 +45,7 @@ public class JpoTransferable
      *
      * @param transferableNodes The nodes to be transferred
      */
-    public JpoTransferable(List<SortableDefaultMutableTreeNode> transferableNodes) {
+    public JpoTransferable(final List<SortableDefaultMutableTreeNode> transferableNodes) {
         this.transferableNodes = transferableNodes;
     }
 
@@ -75,7 +75,7 @@ public class JpoTransferable
      * @return a well formated description of the supported transferables
      */
     private static String flavorsToString() {
-        StringBuilder sb = new StringBuilder(String.format("%d Transferable flavors supported: ", flavors.length));
+        final StringBuilder sb = new StringBuilder(String.format("%d Transferable flavors supported: ", flavors.length));
 
         for (DataFlavor flavor : flavors) {
             sb.append(flavor.toString()).append(", ");
@@ -104,7 +104,7 @@ public class JpoTransferable
      * @return whether it is supported or not
      */
     @Override
-    public boolean isDataFlavorSupported(DataFlavor flavor) {
+    public boolean isDataFlavorSupported(final DataFlavor flavor) {
         LOGGER.info(String.format("Requested flavor %s is supported: %b", flavor.toString(), Arrays.asList(flavors).contains(flavor)));
         return (Arrays.asList(flavors).contains(flavor));
     }
@@ -119,7 +119,7 @@ public class JpoTransferable
      */
     @NotNull
     @Override
-    public Object getTransferData(DataFlavor flavor)
+    public Object getTransferData(final DataFlavor flavor)
             throws UnsupportedFlavorException {
         LOGGER.fine(String.format("Transferable requested as DataFlavor: %s", flavor.toString()));
         if (flavor.equals(jpoNodeFlavor)) {
@@ -142,13 +142,11 @@ public class JpoTransferable
      * @return the transfer data as a String
      */
     private Object getStringTransferData() {
-        StringBuilder filenames = new StringBuilder();
-        for (SortableDefaultMutableTreeNode node : transferableNodes) {
+        final StringBuilder filenames = new StringBuilder();
+        for (final SortableDefaultMutableTreeNode node : transferableNodes) {
             Object userObject = node.getUserObject();
-            if (userObject instanceof PictureInfo) {
-                PictureInfo pictureInfo = (PictureInfo) userObject;
-                //filenames.append( pictureInfo.getImageFile() ).append( "\n" );
-                filenames.append("\"").append(pictureInfo.getImageFile()).append("\", ");
+            if (userObject instanceof PictureInfo pi) {
+                filenames.append("\"").append(pi.getImageFile()).append("\", ");
             }
         }
         LOGGER.info(String.format("Returning the following String as stringFlavor: %s", filenames.toString()));
@@ -161,13 +159,11 @@ public class JpoTransferable
      * @return the transferable as a List
      */
     private Object getJavaFileListTransferable() {
-        List<File> fileList = new ArrayList<>();
-        for (Object transferableNode : transferableNodes) {
-            if (transferableNode instanceof SortableDefaultMutableTreeNode) {
-                SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) transferableNode;
+        final List<File> fileList = new ArrayList<>();
+        for (final Object transferableNode : transferableNodes) {
+            if (transferableNode instanceof SortableDefaultMutableTreeNode n) {
                 Object userObject = n.getUserObject();
-                if (userObject instanceof PictureInfo) {
-                    PictureInfo pi = (PictureInfo) userObject;
+                if (userObject instanceof PictureInfo pi) {
                     fileList.add(pi.getImageFile());
                 }
             }
@@ -182,15 +178,12 @@ public class JpoTransferable
      * @return the transferable as a List of Images
      */
     private Object getImageTransferable() {
-        List<Object> imageList = new ArrayList<>();
-        for (Object transferableNode : transferableNodes) {
-            if (transferableNode instanceof SortableDefaultMutableTreeNode) {
-                SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) transferableNode;
-                Object userObject = node.getUserObject();
-                if (userObject instanceof PictureInfo) {
-                    PictureInfo pictureInfo = (PictureInfo) userObject;
-                    SourcePicture sourcePicture = new SourcePicture();
-                    sourcePicture.loadPicture(pictureInfo.getImageFile(), pictureInfo.getRotation());
+        final List<Object> imageList = new ArrayList<>();
+        for (final Object transferableNode : transferableNodes) {
+            if (transferableNode instanceof SortableDefaultMutableTreeNode node) {
+                if (node.getUserObject() instanceof PictureInfo pi) {
+                    final SourcePicture sourcePicture = new SourcePicture();
+                    sourcePicture.loadPicture(pi.getImageFile(), pi.getRotation());
                     imageList.add(sourcePicture.getSourceBufferedImage());
                 }
             }
@@ -206,7 +199,7 @@ public class JpoTransferable
      */
     @Override
     public String toString() {
-        StringBuilder objectDescriptions = new StringBuilder(String.format("JpoTransferable for %d nodes: ", transferableNodes.size()));
+        final StringBuilder objectDescriptions = new StringBuilder(String.format("JpoTransferable for %d nodes: ", transferableNodes.size()));
 
         transferableNodes.forEach((o) -> objectDescriptions.append(o.toString()).append(", "));
         return objectDescriptions.toString();
@@ -219,7 +212,7 @@ public class JpoTransferable
      * @param contents  The transferable
      */
     @Override
-    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    public void lostOwnership(final Clipboard clipboard, final Transferable contents) {
         LOGGER.info(String.format("lostOwnership clipboard: %s, Transferable: %s", clipboard.toString(), contents.toString()));
 
     }

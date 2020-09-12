@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jpo.datamodel;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +7,8 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -76,13 +73,8 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testSetGetNode() {
-        NodeStatistics ns = new NodeStatistics(null);
-        assertNull( ns.getNode());
-
         NodeStatistics ns1 = new NodeStatistics(rootNode);
-        // When we set a node it should be the one coming back
         assertEquals( rootNode, ns1.getNode());
-
     }
 
     /**
@@ -133,21 +125,7 @@ public class NodeStatisticsTest{
         assertEquals(0, NodeStatistics.countPictures(null, false));
     }
 
-    
-    /**
-     * Test sizeOfPictures returns 0 when a null node is sent in
-     */
-    @Test
-    public void testSizeOfPicturesNull() {
-        NodeStatistics ns = new NodeStatistics(null);
-        try {
-            ns.getSizeOfPictures();
-        } catch (NullPointerException ex) {
-            return;
-        }
-        fail("Should have thrown a NPE!");
-    }
-    
+
     /**
      * Test sizeOfPictures on a single PictureInfo Node
      */
@@ -157,15 +135,6 @@ public class NodeStatisticsTest{
         assertEquals( 3148102, ns.getSizeOfPictures() );
     }
 
-    
-        /**
-     * Test sizeOfPictures on a GroupInfo Node tree
-     */
-    @Test
-    public void testSizeOfPicturesGroupInfo() {
-        NodeStatistics ns = new NodeStatistics(rootNode);
-        assertEquals( 9061284, ns.getSizeOfPictures() );
-    }
 
     @Test
     public void getSizeOfPicturesSinglePictureInfo() {

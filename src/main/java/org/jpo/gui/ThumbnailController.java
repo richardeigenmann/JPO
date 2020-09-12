@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,13 +54,13 @@ public class ThumbnailController
      * @param thumbnail     The thumbnail to manage
      * @param thumbnailSize The size in which the thumbnail is to be created
      */
-    public ThumbnailController(Thumbnail thumbnail, final int thumbnailSize) {
+    public ThumbnailController(final Thumbnail thumbnail, final int thumbnailSize) {
         myThumbnail = thumbnail;
         myThumbnail.setThumbnailSize(thumbnailSize);
         myThumbnail.addMouseListener(new ThumbnailMouseAdapter());
 
         new DropTarget(myThumbnail, new JpoTransferrableDropTargetListener(this));
-        DragSource dragSource = DragSource.getDefaultDragSource();
+        final DragSource dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener());
     }
@@ -117,8 +117,8 @@ public class ThumbnailController
      * @param index         The index position that should be checked.
      * @return true if the indicated node is already showing, false if not
      */
-    public boolean isSameNode(NodeNavigatorInterface nodeNavigator,
-                              int index) {
+    public boolean isSameNode(final NodeNavigatorInterface nodeNavigator,
+                              final int index) {
         if (!nodeNavigator.equals(myNodeNavigator)) {
             return false;
         } else {
@@ -143,7 +143,7 @@ public class ThumbnailController
      * @param mySetOfNodes The {@link NodeNavigatorInterface} being tracked
      * @param index        The position of this object to be displayed.
      */
-    public void setNode(NodeNavigatorInterface mySetOfNodes, int index) {
+    public void setNode(final NodeNavigatorInterface mySetOfNodes, final int index) {
         this.myNodeNavigator = Objects.requireNonNull(mySetOfNodes);
         this.myIndex = index;
 
@@ -181,8 +181,8 @@ public class ThumbnailController
     private boolean thumbnailIsInVisibleArea() {
         try {
             if (getThumbnail().getParent().getParent().getParent() instanceof JViewport) {
-                JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
-                Thumbnail thumbnail = getThumbnail();
+                final JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
+                final Thumbnail thumbnail = getThumbnail();
                 if (thumbnail != null) {
                     Point point = thumbnail.getLocation();
                     if (viewport.getViewRect().contains(point)) {
@@ -231,15 +231,13 @@ public class ThumbnailController
 
         // attach the change Listener
         if (myNode != null) {
-            if (myNode.getUserObject() instanceof PictureInfo) {
-                PictureInfo pictureInfo = (PictureInfo) myNode.getUserObject();
-                LOGGER.fine(String.format("attaching ThumbnailController %d to PictureInfo %d", this.hashCode(), pictureInfo.hashCode()));
-                pictureInfo.addPictureInfoChangeListener(myPictureInfoChangeEventHandler);
-                registeredPictureInfoChangeListener = pictureInfo; //remember so we can poll
-            } else if (myNode.getUserObject() instanceof GroupInfo) {
-                GroupInfo groupInfo = (GroupInfo) myNode.getUserObject();
-                groupInfo.addGroupInfoChangeListener(myGroupInfoChangeEventHandler);
-                registeredGroupInfoChangeListener = groupInfo; //remember so we can poll
+            if (myNode.getUserObject() instanceof PictureInfo pi) {
+                LOGGER.fine(String.format("attaching ThumbnailController %d to PictureInfo %d", this.hashCode(), pi.hashCode()));
+                pi.addPictureInfoChangeListener(myPictureInfoChangeEventHandler);
+                registeredPictureInfoChangeListener = pi; //remember so we can poll
+            } else if (myNode.getUserObject() instanceof GroupInfo gi) {
+                gi.addGroupInfoChangeListener(myGroupInfoChangeEventHandler);
+                registeredGroupInfoChangeListener = gi; //remember so we can poll
             }
         }
     }
@@ -252,7 +250,7 @@ public class ThumbnailController
      *                 the queue
      * @return the request
      */
-    private ThumbnailQueueRequest requestThumbnailCreation(QUEUE_PRIORITY priority) {
+    private ThumbnailQueueRequest requestThumbnailCreation(final QUEUE_PRIORITY priority) {
         myThumbnail.setQueueIcon();
         return ThumbnailCreationQueue.requestThumbnailCreation(
                 this, myNode, priority, getMaximumUnscaledSize());
@@ -276,15 +274,14 @@ public class ThumbnailController
      *
      * @param nodeToCheck The Node to check
      */
-    private void drawOfflineIcon(DefaultMutableTreeNode nodeToCheck) {
+    private void drawOfflineIcon(final DefaultMutableTreeNode nodeToCheck) {
         if (nodeToCheck == null) {
             myThumbnail.drawOfflineIcon(false);
             return;
         }
 
-        Object userObject = nodeToCheck.getUserObject();
-        if (userObject instanceof PictureInfo) {
-            myThumbnail.drawOfflineIcon(!Files.isReadable(((PictureInfo) userObject).getImageFile().toPath()));
+        if (nodeToCheck.getUserObject() instanceof PictureInfo pi) {
+            myThumbnail.drawOfflineIcon(!Files.isReadable((pi.getImageFile().toPath())));
         } else {
             myThumbnail.drawOfflineIcon(false);
         }
@@ -296,7 +293,7 @@ public class ThumbnailController
      * @param thumbnailQueueRequest The request from the queue
      */
     @Override
-    public void callbackThumbnailCreated(ThumbnailQueueRequest thumbnailQueueRequest) {
+    public void callbackThumbnailCreated(final ThumbnailQueueRequest thumbnailQueueRequest) {
         getThumbnail().setImageIcon(thumbnailQueueRequest.getIcon());
         myThumbnailQueueRequest = null;
     }
@@ -312,7 +309,7 @@ public class ThumbnailController
          * the picture right away (double click) or show the popupMenu.
          */
         @Override
-        public void mouseClicked(MouseEvent e) {
+        public void mouseClicked(final MouseEvent e) {
             if (myNode == null) {
                 return;
             }
@@ -330,7 +327,7 @@ public class ThumbnailController
          *
          * @param e the mouse event
          */
-        private void leftClickResponse(MouseEvent e) {
+        private void leftClickResponse(final MouseEvent e) {
             if (e.isControlDown()) {
                 if (Settings.getPictureCollection().isSelected(myNode)) {
                     Settings.getPictureCollection().removeFromSelection(myNode);
@@ -354,7 +351,7 @@ public class ThumbnailController
          *
          * @param e Mouse event
          */
-        private void rightClickResponse(MouseEvent e) {
+        private void rightClickResponse(final MouseEvent e) {
             if (myNode.getUserObject() instanceof PictureInfo) {
                 JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( myNodeNavigator, myIndex, e.getComponent(), e.getX(), e.getY() ) );
             } else if (myNode.getUserObject() instanceof GroupInfo) {
@@ -386,7 +383,7 @@ public class ThumbnailController
          * @param pictureInfoChangeEvent event
          */
         @Override
-        public void pictureInfoChangeEvent(PictureInfoChangeEvent pictureInfoChangeEvent) {
+        public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
             if (pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged()) {
                 requestThumbnailCreation(QUEUE_PRIORITY.HIGH_PRIORITY);
             } else if (pictureInfoChangeEvent.getWasSelected()) {
@@ -410,7 +407,7 @@ public class ThumbnailController
          * @param groupInfoChangeEvent event
          */
         @Override
-        public void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent) {
+        public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
             LOGGER.fine(String.format("Got a Group Change event: %s", groupInfoChangeEvent.toString()));
             if (groupInfoChangeEvent.getWasSelected()) {
                 myThumbnail.setSelected();
@@ -439,7 +436,7 @@ public class ThumbnailController
      *
      * @param thumbnailSizeFactor Factor
      */
-    public void setFactor(float thumbnailSizeFactor) {
+    public void setFactor(final float thumbnailSizeFactor) {
         LOGGER.fine(String.format("Scaling factor is being set to %f", thumbnailSizeFactor));
         myThumbnail.setFactor(thumbnailSizeFactor);
     }
@@ -454,7 +451,7 @@ public class ThumbnailController
      *
      * @param decorateThumbnails Whether to decorate
      */
-    public void setDecorateThumbnails(boolean decorateThumbnails) {
+    public void setDecorateThumbnails(final boolean decorateThumbnails) {
         this.decorateThumbnails = decorateThumbnails;
     }
 
@@ -484,7 +481,7 @@ public class ThumbnailController
          * move we start the drag and create a Transferable.
          */
         @Override
-        public void dragGestureRecognized(DragGestureEvent event) {
+        public void dragGestureRecognized(final DragGestureEvent event) {
             if ((event.getDragAction() & DnDConstants.ACTION_COPY_OR_MOVE) == 0) {
                 return;
             }
@@ -492,7 +489,7 @@ public class ThumbnailController
             JpoTransferable transferable;
 
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
+                final List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
                 transferableNodes.add(myNode);
                 transferable = new JpoTransferable(transferableNodes);
             } else {
@@ -522,7 +519,7 @@ public class ThumbnailController
          * copy, move or no drop is possible.
          */
         @Override
-        public void dragEnter(DragSourceDragEvent event) {
+        public void dragEnter(final DragSourceDragEvent event) {
             setDragCursor(event);
         }
 
@@ -533,7 +530,7 @@ public class ThumbnailController
          * copy, move or no drop is possible.
          */
         @Override
-        public void dragOver(DragSourceDragEvent event) {
+        public void dragOver(final DragSourceDragEvent event) {
             setDragCursor(event);
         }
 
@@ -542,7 +539,7 @@ public class ThumbnailController
          * has moved on to something else.
          */
         @Override
-        public void dragExit(DragSourceEvent event) {
+        public void dragExit(final DragSourceEvent event) {
         }
 
         /**
@@ -551,7 +548,7 @@ public class ThumbnailController
          * copy / move of the operation.
          */
         @Override
-        public void dropActionChanged(DragSourceDragEvent event) {
+        public void dropActionChanged(final DragSourceDragEvent event) {
             setDragCursor(event);
         }
 
@@ -560,7 +557,7 @@ public class ThumbnailController
          * the dragging has ended.
          */
         @Override
-        public void dragDropEnd(DragSourceDropEvent event) {
+        public void dragDropEnd(final DragSourceDropEvent event) {
             Settings.getPictureCollection().clearSelection();
         }
 
@@ -570,9 +567,9 @@ public class ThumbnailController
          * @param event the DragSourceDragEvent for which the cursor is to be
          *              adjusted
          */
-        void setDragCursor(DragSourceDragEvent event) {
-            DragSourceContext context = event.getDragSourceContext();
-            int dndCode = event.getDropAction();
+        void setDragCursor(final DragSourceDragEvent event) {
+            final DragSourceContext context = event.getDragSourceContext();
+            final int dndCode = event.getDropAction();
             if ((dndCode & DnDConstants.ACTION_COPY) != 0) {
                 context.setCursor(DragSource.DefaultCopyDrop);
             } else if ((dndCode & DnDConstants.ACTION_MOVE) != 0) {
@@ -585,7 +582,7 @@ public class ThumbnailController
     }
 
     @Override
-    public void handleJpoDropTargetDropEvent(DropTargetDropEvent event) {
+    public void handleJpoDropTargetDropEvent(final DropTargetDropEvent event) {
         myNode.executeDrop(event);
     }
 }

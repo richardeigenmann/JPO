@@ -10,11 +10,13 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "3.0"
-    id "com.github.ben-manes.versions" version "0.29.0"
+    id "com.github.ben-manes.versions" version "0.31.0"
     id 'signing'
     id 'java'
     id 'jacoco'
     //id 'org.beryx.jlink' version '2.16.4'
+    id 'eclipse'
+    id 'idea'
 }
 
 apply plugin: "com.github.johnrengelman.shadow"
@@ -130,10 +132,9 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6'
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6'
-    //testImplementation 'junit:junit:4.13'
+    testImplementation('org.junit.jupiter:junit-jupiter:5.7.0-RC1')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0-RC1')
-    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.7.0-RC1')
-    //testRuntime("org.junit.platform:junit-platform-runner:1.5.2")
+    testImplementation('org.junit.jupiter:junit-jupiter-engine:5.7.0-RC1')
     testImplementation('org.assertj:assertj-core:3.17.2')
     testImplementation('org.assertj:assertj-swing:3.9.2')
 
@@ -187,6 +188,7 @@ sourceSets {
     
 
 test {
+    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"

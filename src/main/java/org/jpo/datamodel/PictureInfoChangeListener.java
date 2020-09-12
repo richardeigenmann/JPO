@@ -26,5 +26,5 @@ public interface PictureInfoChangeListener {
      *
      * @param pictureInfoChangeEvent the event object with details about what changed
      */
-    void pictureInfoChangeEvent(PictureInfoChangeEvent pictureInfoChangeEvent);
+    void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent);
 }

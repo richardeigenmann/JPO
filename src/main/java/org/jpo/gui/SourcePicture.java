@@ -32,7 +32,7 @@ import static org.jpo.gui.SourcePicture.SourcePictureStatus.*;
 /*
  SourcePicture.java:  class that can load a picture from a URL
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -139,7 +139,7 @@ public class SourcePicture {
      * @param file Image URL
      * @param rotation Image rotation
      */
-    public void loadPicture(File file, double rotation) {
+    public void loadPicture(final File file, final double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(file);
         }
@@ -157,14 +157,14 @@ public class SourcePicture {
      * @param priority The Thread priority for this thread.
      * @param rotation The rotation 0-360 to be used on this picture
      */
-    public void loadPictureInThread(File imageFile, int priority, double rotation) {
+    public void loadPictureInThread(final File imageFile, final int priority, final double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(imageFile);
         }
 
         this.imageFile = imageFile;
         this.rotation = rotation;
-        Thread t = new Thread("SourcePicture.loadPictureInThread") {
+        final Thread t = new Thread("SourcePicture.loadPictureInThread") {
 
             @Override
             public void run() {
@@ -182,12 +182,12 @@ public class SourcePicture {
      */
     private void loadPicture() {
         setStatus(SOURCE_PICTURE_LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus"));
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
         loadTime = 0;
         ImageBytes imageBytes;
         try {
             imageBytes = JpoCache.getInstance().getHighresImageBytes(imageFile);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             sourcePictureBufferedImage = null;
             return;
@@ -218,7 +218,7 @@ public class SourcePicture {
                     sourcePictureBufferedImage = newImage;
                 }
 
-            } catch (OutOfMemoryError e) {
+            } catch (final OutOfMemoryError e) {
                 LOGGER.severe("Caught an OutOfMemoryError while loading an image: " + e.getMessage());
                 iis.close();
                 reader.removeIIOReadProgressListener(myIIOReadProgressListener);
@@ -425,7 +425,7 @@ public class SourcePicture {
      * @param statusCode    status code
      * @param statusMessage status message
      */
-    private void setStatus(SourcePictureStatus statusCode, String statusMessage) {
+    private void setStatus(final SourcePictureStatus statusCode, final String statusMessage) {
         LOGGER.fine(String.format("Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size()));
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;

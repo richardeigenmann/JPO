@@ -24,7 +24,7 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE
 
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2020  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -73,7 +73,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     }
 
     private void attachListeners() {
-        OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
+        final OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
         pictureJPanel.addStatusListener(new ScalablePictureListener() {
 
             /**
@@ -89,7 +89,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             @Override
             public void scalableStatusChange(final ScalablePictureStatus pictureStatusCode,
                                              final String pictureStatusMessage) {
-                Runnable runnable = () -> {
+                final Runnable runnable = () -> {
                     switch (pictureStatusCode) {
                         case SCALABLE_PICTURE_UNINITIALISED:
                             pictureFrame.setProgressBarVisible(false);
@@ -135,7 +135,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             @Override
             public void sourceLoadProgressNotification(final SourcePictureStatus statusCode,
                                                        final int percentage) {
-                Runnable runnable = () -> {
+                final Runnable runnable = () -> {
                     switch (statusCode) {
                         case SOURCE_PICTURE_LOADING_STARTED:
                             pictureFrame.setProgressBarValue(0);
@@ -180,7 +180,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
              */
             @Override
             public void keyPressed(KeyEvent keyEvent) {
-                int k = keyEvent.getKeyCode();
+                final int k = keyEvent.getKeyCode();
                 if ((k == KeyEvent.VK_I)) {
                     pictureFrame.cycleInfoDisplay();
                     keyEvent.consume();
@@ -248,11 +248,10 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * This method saves the text of the textbox to the PictureInfo.
      */
     private void saveChangedDescription() {
-        SortableDefaultMutableTreeNode node = getCurrentNode();
+        final SortableDefaultMutableTreeNode node = getCurrentNode();
         if (node != null) {
-            Object userObject = node.getUserObject();
-            if (userObject instanceof PictureInfo) {
-                ((PictureInfo) userObject).setDescription(
+            if (node.getUserObject() instanceof PictureInfo pi) {
+                pi.setDescription(
                         pictureFrame.getDescription());
             }
         }
@@ -290,7 +289,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     private SortableDefaultMutableTreeNode getCurrentNode() {
         try {
             return mySetOfNodes.getNode(myIndex);
-        } catch (NullPointerException npe) {
+        } catch (final NullPointerException npe) {
             LOGGER.warning(String.format("Got a npe on node %d. Message: %s", myIndex, npe.getMessage()));
             return null;
         }
@@ -317,21 +316,20 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      *                     shown
      * @param myIndex      The index of the set of nodes to be shown.
      */
-    public void showNode(NodeNavigatorInterface mySetOfNodes,
-                         int myIndex) {
+    public void showNode(final NodeNavigatorInterface mySetOfNodes,
+                         final int myIndex) {
         LOGGER.fine(String.format("Navigator: %s Nodes: %d Index: %d", mySetOfNodes.toString(), mySetOfNodes.getNumberOfNodes(), myIndex));
         Tools.checkEDT();
 
         // Validate the inputs
-        SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(myIndex);
+        final SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(myIndex);
         if (node == null) {
             LOGGER.severe(String.format("The new node is null. Aborting. mySetOfNodes: %s, index: %d", mySetOfNodes.toString(), myIndex));
             closeViewer();
             return;
         }
 
-        Object userObject = node.getUserObject();
-        if (!(userObject instanceof PictureInfo)) {
+        if (!(node.getUserObject() instanceof PictureInfo)) {
             LOGGER.severe(String.format("The new node is not for a PictureInfo object. Aborting. userObject class: %s, mySetOfNodes: %s, index: %d", node.getUserObject().getClass().toString(), mySetOfNodes.toString(), myIndex));
             closeViewer();
             return;
@@ -342,7 +340,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             ((PictureInfo) this.mySetOfNodes.getNode(this.myIndex).getUserObject()).removePictureInfoChangeListener(this);
         }
         // attach the pictureinfo change listener
-        PictureInfo pictureInfo = (PictureInfo) userObject;
+        PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
         pictureInfo.addPictureInfoChangeListener(this);
 
         if (this.mySetOfNodes == null) {
@@ -375,7 +373,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      *
      * @param pictureInfo The PictureInfo object that should be displayed
      */
-    private void setPicture(PictureInfo pictureInfo) {
+    private void setPicture(final PictureInfo pictureInfo) {
         LOGGER.log(Level.FINE, "Set picture to PictureInfo: {0}", pictureInfo.toString());
         pictureFrame.getPictureController().setPicture(pictureInfo.getImageFile(), pictureInfo.getDescription(), pictureInfo.getRotation());
     }
@@ -387,7 +385,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @param pictureInfoChangedEvent The event
      */
     @Override
-    public void pictureInfoChangeEvent(PictureInfoChangeEvent pictureInfoChangedEvent) {
+    public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangedEvent) {
         if (pictureInfoChangedEvent.getDescriptionChanged()) {
             pictureFrame.setDescription(pictureInfoChangedEvent.getPictureInfo().getDescription());
         }
@@ -515,8 +513,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @return true if ready to advance
      */
     private boolean readyToAdvance() {
-        OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
-        ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
+        final OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
+        final ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
         return (status == SCALABLE_PICTURE_READY) || (status == SCALABLE_PICTURE_ERROR);
     }
 
@@ -524,9 +522,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * This function cycles to the next info display overlay.
      */
     private void cycleInfoDisplay() {
-        //PictureController pictureJPanel = pictureFrame.getPictureController();
         pictureFrame.cycleInfoDisplay();
-        //pictureJPanel.requestFocusInWindow();
     }
 
     /**

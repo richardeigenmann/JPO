@@ -29,7 +29,7 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.*;
 /*
  ScalablePicture.java:  class that can load and save images
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -176,7 +176,7 @@ public class ScalablePicture
      * @param rotation	The rotation 0-360 that the image should be put through
      * after loading.
      */
-    public void loadAndScalePictureInThread( File file, int priority, double rotation ) {
+    public void loadAndScalePictureInThread( final File file, final int priority, final double rotation ) {
         this.imageFile = file;
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
@@ -198,7 +198,7 @@ public class ScalablePicture
      * @param imageFile The Url of the image to be loaded
      * @param rotation The angle by which it is to be rotated upon loading.
      */
-    public void loadPictureImd( File imageFile, double rotation ) {
+    public void loadPictureImd( final File imageFile, final double rotation ) {
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
@@ -212,7 +212,7 @@ public class ScalablePicture
      *
      * @param file	The URL of the image which is to be loaded.
      */
-    public void stopLoadingExcept( File file ) {
+    public void stopLoadingExcept( final File file ) {
         if ( sourcePicture != null ) {
             boolean isCurrentlyLoading = sourcePicture.stopLoadingExcept( file );
             if ( !isCurrentlyLoading ) {
@@ -232,8 +232,8 @@ public class ScalablePicture
      * @param sp source picture
      */
     @Override
-    public void sourceStatusChange( SourcePictureStatus statusCode, String statusMessage,
-            SourcePicture sp ) {
+    public void sourceStatusChange( final SourcePictureStatus statusCode, final String statusMessage,
+            final SourcePicture sp ) {
 
         switch ( statusCode ) {
             case SOURCE_PICTURE_UNINITIALISED:
@@ -270,8 +270,8 @@ public class ScalablePicture
      * @param priority The priority this image takes relative to the others.
      */
     @Override
-    public void createScaledPictureInThread( int priority ) {
-        Thread t = new Thread( "ScalablePicture.createScaledPictureInThread" ) {
+    public void createScaledPictureInThread( final int priority ) {
+        final Thread t = new Thread( "ScalablePicture.createScaledPictureInThread" ) {
             @Override
             public void run() {
                 scalePicture();
@@ -317,8 +317,8 @@ public class ScalablePicture
                     factor = Math.pow( scaleFactor, 1f / getScaleSteps() );
                 }
 
-                AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
-                AffineTransformOp opStep = new AffineTransformOp(afStep, affineTransformType);
+                final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
+                final AffineTransformOp opStep = new AffineTransformOp(afStep, affineTransformType);
                 scaledPicture = sourcePicture.getSourceBufferedImage();
                 for ( int i = 0; i < getScaleSteps(); i++ ) {
                     Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
@@ -344,7 +344,7 @@ public class ScalablePicture
             } else if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
                 setStatus( SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null." );
             }
-        } catch ( OutOfMemoryError e ) {
+        } catch ( final OutOfMemoryError e ) {
             LOGGER.log( Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
             setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageFile.toString() );
             scaledPicture = null;
@@ -362,7 +362,7 @@ public class ScalablePicture
      * @param maxHeight the maximum height of the output dimension
      * @return The scale factor by which to multiply the source dimension
      */
-    public static double calcScaleSourceToTarget( int sourceWidth, int sourceHeight, int maxWidth, int maxHeight ) {
+    public static double calcScaleSourceToTarget( final int sourceWidth, final int sourceHeight, final int maxWidth, final int maxHeight ) {
         // Scale so that the entire picture fits in the component.
         if ( ( (double) sourceHeight / maxHeight ) > ( (double) sourceWidth / maxWidth ) ) {
             // Vertical scaling
@@ -385,7 +385,7 @@ public class ScalablePicture
      * @param newFactor new factor
      */
     @Override
-    public void setScaleFactor( double newFactor ) {
+    public void setScaleFactor( final double newFactor ) {
         scaleToSize = false;
         targetSize = null;
         scaleFactor = newFactor;
@@ -399,7 +399,7 @@ public class ScalablePicture
      * @param newSize new size
      */
     @Override
-    public void setScaleSize( Dimension newSize ) {
+    public void setScaleSize( final Dimension newSize ) {
         scaleToSize = true;
         if ( ( newSize.height < 1 ) || ( newSize.width < 1 ) ) {
             // to prevent the affine transform from failing on a 0 size.
@@ -565,7 +565,7 @@ public class ScalablePicture
      *
      * @param	writeFile	The File that shall receive the jpg data
      */
-    public void writeScaledJpg( File writeFile ) {
+    public void writeScaledJpg( final File writeFile ) {
         writeJpg( writeFile, scaledPicture, jpgQuality );
     }
 
@@ -575,7 +575,7 @@ public class ScalablePicture
      *
      * @param	writeStream	The Stream that shall receive the jpg data
      */
-    public void writeScaledJpg( OutputStream writeStream ) {
+    public void writeScaledJpg( final OutputStream writeStream ) {
         writeJpg( writeStream, scaledPicture, jpgQuality );
     }
 
@@ -587,13 +587,13 @@ public class ScalablePicture
      * @param	renderedImage	The RenderedImage (BufferedImage) to be written
      * @param	jpgQuality	The quality with which to compress to jpg
      */
-    public static void writeJpg( File targetFile, RenderedImage renderedImage,
+    public static void writeJpg( final File targetFile, RenderedImage renderedImage,
             float jpgQuality ) {
         if (renderedImage == null ) {
             return;
         }
-        final Iterator writers = ImageIO.getImageWritersByFormatName( "jpg" );
-        final ImageWriter writer = (ImageWriter) writers.next();
+        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName( "jpg" );
+        final ImageWriter writer = writers.next();
         final JPEGImageWriteParam params = new JPEGImageWriteParam( null );
         params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
         params.setCompressionQuality( jpgQuality );
@@ -650,7 +650,7 @@ public class ScalablePicture
      *
      * @param listener Listener
      */
-    public void addStatusListener( ScalablePictureListener listener ) {
+    public void addStatusListener( final ScalablePictureListener listener ) {
         scalablePictureStatusListeners.add( listener );
     }
 
@@ -659,7 +659,7 @@ public class ScalablePicture
      *
      * @param listener Listener
      */
-    public void removeStatusListener( ScalablePictureListener listener ) {
+    public void removeStatusListener( final ScalablePictureListener listener ) {
         scalablePictureStatusListeners.remove( listener );
     }
 
@@ -675,7 +675,7 @@ public class ScalablePicture
      * @param statusCode status code
      * @param statusMessage status message
      */
-    private void setStatus( ScalablePictureStatus statusCode, String statusMessage ) {
+    private void setStatus( final ScalablePictureStatus statusCode, String statusMessage ) {
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
 
@@ -691,7 +691,7 @@ public class ScalablePicture
      * @param percentage percentage
      */
     @Override
-    public void sourceLoadProgressNotification( SourcePictureStatus statusCode, int percentage ) {
+    public void sourceLoadProgressNotification( final SourcePictureStatus statusCode, final int percentage ) {
         scalablePictureStatusListeners.forEach( (scalablePictureListener ) -> scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage ));
     }
 
@@ -701,7 +701,6 @@ public class ScalablePicture
      * @return the status code
      */
     public ScalablePictureStatus getStatusCode() {
-        //logger.info(String.format( "Returning status code %d which corresponds to message %s", pictureStatusCode, pictureStatusMessage ));
         return pictureStatusCode;
     }
 
@@ -720,10 +719,8 @@ public class ScalablePicture
      *
      * @param quality the quality to use
      */
-    public void setJpgQuality( float quality ) {
-        //logger.info( "setJpgQuality requested with " + Float.toString( quality ) );
+    public void setJpgQuality( final float quality ) {
         if ( quality >= 0f && quality <= 1f ) {
-            //logger.info( "Quality set." );
             jpgQuality = quality;
         }
     }
@@ -756,7 +753,7 @@ public class ScalablePicture
      *
      * @param scaleSteps the scaleSteps to set
      */
-    public void setScaleSteps( int scaleSteps ) {
+    public void setScaleSteps( final int scaleSteps ) {
         this.scaleSteps = scaleSteps;
     }
 

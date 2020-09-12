@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2002 - 2017 Richard Eigenmann.
+ Copyright (C) 2002 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,7 +52,7 @@ public class PictureController extends JComponent {
         return centerWhenScaled;
     }
 
-    public void setCenterWhenScaled(boolean centerWhenScaled) {
+    public void setCenterWhenScaled(final boolean centerWhenScaled) {
         this.centerWhenScaled = centerWhenScaled;
     }
 
@@ -75,7 +75,7 @@ public class PictureController extends JComponent {
      * Constructs a PicturePane components.
      * @param pictureControllerImage image
      */
-    public PictureController( PictureControllerImage pictureControllerImage ) {
+    public PictureController( final PictureControllerImage pictureControllerImage ) {
         this.pictureControllerImage = pictureControllerImage;
         initComponents();
 
@@ -83,7 +83,7 @@ public class PictureController extends JComponent {
         this.setDoubleBuffered( false );
 
         // register an interest in mouse events
-        Listener MouseListener = new Listener();
+        final Listener MouseListener = new Listener();
         addMouseListener( MouseListener );
         addMouseMotionListener( MouseListener );
 
@@ -161,17 +161,17 @@ public class PictureController extends JComponent {
      * ready and should be repainted.
      */
     public void zoomIn() {
-        double OldScaleFactor = pictureControllerImage.getScaleFactor();
-        double NewScaleFactor = OldScaleFactor * 1.5;
+        final double oldScaleFactor = pictureControllerImage.getScaleFactor();
+        double newScaleFactor = oldScaleFactor * 1.5;
 
         // If scaling goes from scale down to scale up, set ScaleFactor to exactly 1
-        if ( ( OldScaleFactor < 1 ) && ( NewScaleFactor > 1 ) ) {
-            NewScaleFactor = 1;
+        if ( ( oldScaleFactor < 1 ) && ( newScaleFactor > 1 ) ) {
+            newScaleFactor = 1;
         }
 
         // Check if the picture would get to large and cause the system to "hang"
         if ( ( pictureControllerImage.getOriginalWidth() * pictureControllerImage.getScaleFactor() < Settings.maximumPictureSize ) && ( pictureControllerImage.getOriginalHeight() * pictureControllerImage.getScaleFactor() < Settings.maximumPictureSize ) ) {
-            pictureControllerImage.setScaleFactor( NewScaleFactor );
+            pictureControllerImage.setScaleFactor( newScaleFactor );
             pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
         }
     }
@@ -197,10 +197,7 @@ public class PictureController extends JComponent {
      */
     public void zoomToFit() {
         pictureControllerImage.setScaleSize( getSize() );
-        // prevent useless rescale events when the picture is not ready
-        //if ( pictureControllerImage.getStatusCode() == SCALABLE_PICTURE_LOADED || pictureControllerImage.getStatusCode() == SCALABLE_PICTURE_READY ) {
         pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
-        //}
     }
 
     /**
@@ -225,14 +222,11 @@ public class PictureController extends JComponent {
      * need to take place.
      */
     public void centerImage() {
-//        if ( pictureControllerImage.getOriginalImage() != null ) {
-        int originalHeight = pictureControllerImage.getOriginalHeight();
+        final int originalHeight = pictureControllerImage.getOriginalHeight();
         if ( originalHeight != 0 ) {
             setCenterLocation( pictureControllerImage.getOriginalWidth() / 2, originalHeight / 2 );
             repaint();
         }
-
-        //      }
     }
 
     /**
@@ -348,14 +342,14 @@ public class PictureController extends JComponent {
      */
     @Override
     public void paintComponent( Graphics g ) {
-        int WindowWidth = getSize().width;
-        int WindowHeight = getSize().height;
+        final int windowWidth = getSize().width;
+        final int windowHeight = getSize().height;
 
         if ( pictureControllerImage.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            int X_Offset = (int) (  ( WindowWidth /  2.0 ) - ( focusPoint.x * pictureControllerImage.getScaleFactor() ) );
-            int Y_Offset = (int) (  ( WindowHeight /  2.0 ) - ( focusPoint.y * pictureControllerImage.getScaleFactor() ) );
+            int X_Offset = (int) (  ( windowWidth /  2.0 ) - ( focusPoint.x * pictureControllerImage.getScaleFactor() ) );
+            int Y_Offset = (int) (  ( windowHeight /  2.0 ) - ( focusPoint.y * pictureControllerImage.getScaleFactor() ) );
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
@@ -369,9 +363,9 @@ public class PictureController extends JComponent {
 
         } else {
             // paint a black square
-            g.setClip( 0, 0, WindowWidth, WindowHeight );
+            g.setClip( 0, 0, windowWidth, windowHeight );
             g.setColor( getBackground() );
-            g.fillRect( 0, 0, WindowWidth, WindowHeight );
+            g.fillRect( 0, 0, windowWidth, windowHeight );
         }
     }
 
@@ -394,7 +388,7 @@ public class PictureController extends JComponent {
          * of the displayed picture.
          */
         @Override
-        public void mouseClicked( MouseEvent e ) {
+        public void mouseClicked( final MouseEvent e ) {
             if ( e.getButton() == 3 ) {
                 // Right Mousebutton zooms out
                 centerWhenScaled = false;
@@ -427,7 +421,7 @@ public class PictureController extends JComponent {
          * pressed. Moves the picture around
          */
         @Override
-        public void mouseDragged( MouseEvent e ) {
+        public void mouseDragged( final MouseEvent e ) {
             if ( !dragging ) {
                 // Switch into dragging mode and record current coordinates
                 LOGGER.fine( "PicturePane.mouseDragged: Switching to drag mode." );
@@ -462,7 +456,7 @@ public class PictureController extends JComponent {
          *
          * @param dragging true if dragging, false if not dragging
          */
-        public void setDragging( boolean dragging ) {
+        public void setDragging( final boolean dragging ) {
             this.dragging = dragging;
             if ( !this.dragging ) {
                 setDefaultCursor();
@@ -489,7 +483,7 @@ public class PictureController extends JComponent {
          * When mouse is releases we switch off the dragging mode
          */
         @Override
-        public void mouseReleased( MouseEvent e ) {
+        public void mouseReleased( final MouseEvent e ) {
             if ( dragging ) {
                 setDragging( false );
             }

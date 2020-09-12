@@ -129,9 +129,9 @@ public class ResourceBundleTest {
      */
     @Test
     public void testChangeLocale() {
-        assertEquals( "Testing English bundle locale", "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
+        assertEquals( "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
         jpoResources1 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.GERMAN );
-        assertEquals( "Testing getString from the changed bundle", "Neue Sammlung", jpoResources1.getString( "FileNewJMenuItem" ) );
+        assertEquals( "Neue Sammlung", jpoResources1.getString( "FileNewJMenuItem" ) );
         // Testing verifying that the changed bundle is now German
         assertEquals( Locale.GERMAN, jpoResources1.getLocale() );
     }

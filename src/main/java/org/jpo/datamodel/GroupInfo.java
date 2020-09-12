@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /*
  GroupInfo.java:  definitions for the group objects
 
- Copyright (C) 2002 - 2018 Richard Eigenmann.
+ Copyright (C) 2002 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

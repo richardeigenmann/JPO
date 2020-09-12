@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,8 +41,8 @@ public class GroupInfoTest {
      */
     @Test
     public void testToString() {
-        GroupInfo gi = new GroupInfo( "Test" );
-        assertEquals( "To String should give back what went in", "Test", gi.toString() );
+        final GroupInfo gi = new GroupInfo( "Test" );
+        assertEquals( "Test", gi.toString() );
     }
 
     /**
@@ -50,10 +50,10 @@ public class GroupInfoTest {
      */
     @Test
     public void testGetGroupName() {
-        GroupInfo gi = new GroupInfo( "Test" );
-        String expected = "Tarrantino";
-        gi.setGroupName( expected );
-        assertEquals( "To String should give back what went in", expected, gi.getGroupName() );
+        final GroupInfo gi = new GroupInfo( "Test" );
+        final String EXPECTED = "Tarrantino";
+        gi.setGroupName( EXPECTED );
+        assertEquals( EXPECTED, gi.getGroupName() );
     }
     
     /**
@@ -61,21 +61,20 @@ public class GroupInfoTest {
      */
     @Test
     public void testGetGroupNameHtml() {
-        GroupInfo gi = new GroupInfo( "Test" );
-        String expected = "Tarrantino";
-        gi.setGroupName( expected );
-        assertEquals( "To String should give back what went in", expected, gi.getGroupNameHtml() );
+        final GroupInfo gi = new GroupInfo( "Test" );
+        final String EXPECTED = "Tarrantino";
+        gi.setGroupName( EXPECTED );
+        assertEquals( EXPECTED, gi.getGroupNameHtml() );
         
-        String quotedString = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
-        String expectedQuotedString = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
-        gi.setGroupName( quotedString);
-        assertEquals( "Special chars are to be escaped", expectedQuotedString, gi.getGroupNameHtml() );
+        final String QUOTED_STRING = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
+        final String EXPECTED_QUOTED_STRING = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
+        gi.setGroupName( QUOTED_STRING);
+        assertEquals( EXPECTED_QUOTED_STRING, gi.getGroupNameHtml() );
         
-        String umlautString = "Rüeblitorten gären im Brötlichorb";
-        String expectedUmlautString = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlichorb";
-        gi.setGroupName( umlautString);
-        assertEquals( "German umlauts are to be escaped", expectedUmlautString, gi.getGroupNameHtml() );
-        
+        final String UMLAUT_STRING = "Rüeblitorten gären im Brötlichorb";
+        final String UMLAUT_EXPECTED_STRING = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlichorb";
+        gi.setGroupName( UMLAUT_STRING);
+        assertEquals( UMLAUT_EXPECTED_STRING, gi.getGroupNameHtml() );
     }
 
     /**
@@ -98,7 +97,7 @@ public class GroupInfoTest {
     public void testGroupInfoChangeListener() {
         eventsReceived = 0;
         Settings.getPictureCollection().setSendModelUpdates( true );
-        GroupInfo gi = new GroupInfo( "Step0" );
+        final GroupInfo gi = new GroupInfo( "Step0" );
         assertEquals( 0, eventsReceived );
         gi.setGroupName( "Step 1" );
         // There is no listener attached so there is no event
@@ -133,12 +132,12 @@ public class GroupInfoTest {
             gi.endGroupXML (bw, true);
         } catch ( final IOException ex ) {
             Logger.getLogger( GroupInfoTest.class.getName() ).log( Level.SEVERE, "The dumpToXml should really not throw an IOException", ex );
-            fail( "Unexpected IOException" );
+            fail( ex.getMessage());
         }
 
         final String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                + "\" collection_protected=\"Yes\"\n>\n\n";
+                + "\" collection_protected=\"Yes\">\n\n";
         
         final String result = sw.toString();
         assertEquals( expected, result );
@@ -163,7 +162,7 @@ public class GroupInfoTest {
 
         final String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                + "\" collection_protected=\"No\"\n>\n\n";
+                + "\" collection_protected=\"No\">\n\n";
         
         final String result = sw.toString();
         assertEquals( expected, result );
@@ -186,7 +185,7 @@ public class GroupInfoTest {
             fail( "Unexpected IOException" );
         }
 
-        final String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\"\n>\n</group>\n";
+        final String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\">\n</group>\n";
         
         final String result = sw.toString();
         assertEquals( expected, result );

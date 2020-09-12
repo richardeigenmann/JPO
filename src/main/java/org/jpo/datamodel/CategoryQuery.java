@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 /*
  CategoryQuery.java:  A type of query for Categories
 
- Copyright (C) 2006-2014  Richard Eigenmann.
+ Copyright (C) 2006-20204  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +47,7 @@ public class CategoryQuery implements Query {
      *
      * @param key The key for the category
      */
-    public CategoryQuery( Integer key ) {
+    public CategoryQuery( final Integer key ) {
         this.key = key;
         refresh();
     }

@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,7 +67,7 @@ public class CollectionDistillerJFrame extends JFrame {
      * @param request The request with the details
      *                on.
      */
-    CollectionDistillerJFrame(ExportGroupToNewCollectionRequest request) {
+    CollectionDistillerJFrame(final ExportGroupToNewCollectionRequest request) {
         super(Settings.jpoResources.getString("CollectionDistillerJFrameFrameHeading"));
         this.request = request;
         initComponents();
@@ -85,7 +85,7 @@ public class CollectionDistillerJFrame extends JFrame {
             }
         });
 
-        JPanel contentJPanel = new javax.swing.JPanel();
+        final JPanel contentJPanel = new javax.swing.JPanel();
         contentJPanel.setLayout(new MigLayout());
 
         contentJPanel.add(new JLabel(Settings.jpoResources.getString("genericTargetDirText")));
@@ -100,8 +100,8 @@ public class CollectionDistillerJFrame extends JFrame {
         xmlFileNameJTextField.setInputVerifier(new InputVerifier() {
 
             @Override
-            public boolean shouldYieldFocus(JComponent source, JComponent target) {
-                String validationFile = ((JTextComponent) source).getText();
+            public boolean shouldYieldFocus(final JComponent source, final JComponent target) {
+                final String validationFile = ((JTextComponent) source).getText();
                 if (!validationFile.toUpperCase().endsWith(".XML")) {
                     ((JTextComponent) source).setText(validationFile + ".xml");
                 }
@@ -109,7 +109,7 @@ public class CollectionDistillerJFrame extends JFrame {
             }
 
             @Override
-            public boolean verify(JComponent input) {
+            public boolean verify(final JComponent input) {
                 return true;
             }
         });
@@ -118,7 +118,7 @@ public class CollectionDistillerJFrame extends JFrame {
         exportPicsJCheckBox.setSelected(true);
         contentJPanel.add(exportPicsJCheckBox, "spanx 2, wrap");
 
-        JPanel buttonJPanel = new JPanel();
+        final JPanel buttonJPanel = new JPanel();
 
         final JButton exportJButton = new JButton(Settings.jpoResources.getString("genericExportButtonText"));
         exportJButton.setPreferredSize(Settings.defaultButtonDimension);
@@ -159,7 +159,7 @@ public class CollectionDistillerJFrame extends JFrame {
      * method that outputs the selected group to a directory
      */
     private void exportToDirectory() {
-        File exportDirectory = targetDirChooser.getDirectory();
+        final File exportDirectory = targetDirChooser.getDirectory();
 
         if (!exportDirectory.exists()) {
             try {
@@ -178,7 +178,7 @@ public class CollectionDistillerJFrame extends JFrame {
             }
         }
 
-        File targetFile = new File(exportDirectory, xmlFileNameJTextField.getText());
+        final File targetFile = new File(exportDirectory, xmlFileNameJTextField.getText());
 
         if (targetFile.exists()) {
             int answer = JOptionPane.showConfirmDialog(Settings.anchorFrame,

@@ -1,5 +1,7 @@
 package org.jpo.datamodel;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +17,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author Richard Eigenmann
  */
 public class GroupNavigatorTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     private final GroupInfo groupInfo = new GroupInfo( "Group1" );
     private final SortableDefaultMutableTreeNode groupNode = new SortableDefaultMutableTreeNode( groupInfo );
@@ -33,7 +40,7 @@ public class GroupNavigatorTest {
      */
     @BeforeEach
     public void testSetNode() {
-        GroupNavigator gn = new GroupNavigator();
+        final GroupNavigator gn = new GroupNavigator();
         gn.setNode( groupNode2 );
         // After setNode the Navigator should return the new node
         assertEquals( groupNode2, gn.getGroupNode() );
@@ -44,9 +51,9 @@ public class GroupNavigatorTest {
      */
     @Test
     public void testGetTitle() {
-        GroupNavigator gn = new GroupNavigator();
+        final GroupNavigator gn = new GroupNavigator();
         gn.setNode( groupNode );
-        assertEquals( "After creation of the Navigator we should be able to retrieve the correct title", "Group1", gn.getTitle() );
+        assertEquals( "Group1", gn.getTitle() );
     }
 
     /**
@@ -54,7 +61,7 @@ public class GroupNavigatorTest {
      */
     @Test
     public void testGetNumberOfNodes() {
-        GroupNavigator gn = new GroupNavigator();
+        final GroupNavigator gn = new GroupNavigator();
         gn.setNode( groupNode );
         assertEquals(  0, gn.getNumberOfNodes() );
         groupNode.add( pictureNode1 );

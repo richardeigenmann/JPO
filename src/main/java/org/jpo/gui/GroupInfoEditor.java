@@ -15,7 +15,7 @@ import java.awt.event.WindowEvent;
 
 /*
  GroupInfoEditor.java:  Controller and Vie for editing group properties
- Copyright (C) 2002 - 2015  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -71,10 +71,10 @@ public class GroupInfoEditor {
 
     private void initComponents() {
 
-        JPanel jPanel = new JPanel();
+        final JPanel jPanel = new JPanel();
         jPanel.setLayout( new MigLayout() );
 
-        JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "groupDescriptionLabel" ) );
+        final JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "groupDescriptionLabel" ) );
         jPanel.add( descriptionJLabel );
 
         descriptionJTextArea.setPreferredSize( new Dimension( 400, 150 ) );
@@ -83,7 +83,7 @@ public class GroupInfoEditor {
         descriptionJTextArea.setEditable( true );
         jPanel.add( descriptionJTextArea, "wrap" );
 
-        JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
+        final JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
         OkJButton.setPreferredSize( Settings.defaultButtonDimension );
         OkJButton.setMinimumSize( Settings.defaultButtonDimension );
         OkJButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -94,7 +94,7 @@ public class GroupInfoEditor {
         jFrame.getRootPane().setDefaultButton( OkJButton );
         jPanel.add( OkJButton, "tag ok, span, split 2" );
 
-        JButton CancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+        final JButton CancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
         CancelButton.setPreferredSize( Settings.defaultButtonDimension );
         CancelButton.setMinimumSize( Settings.defaultButtonDimension );
         CancelButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -103,14 +103,14 @@ public class GroupInfoEditor {
         CancelButton.addActionListener(( ActionEvent e ) -> getRid());
         jPanel.add( CancelButton, "tag cancel" );
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+        final JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.addTab( "Properties", jPanel );
 
-        NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
+        final NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
         nodeStatisticsController.updateStats( editNode );
         tabbedPane.addTab( "Statistics", nodeStatisticsController.getJComponent() );
 
-        ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize );
+        final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.thumbnailSize );
         thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 

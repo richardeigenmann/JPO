@@ -11,7 +11,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
 
 /*
  GroupPopupMenu.java: popup menu for groups
- Copyright (C) 2002-2015  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -152,7 +152,7 @@ public class ChangeWindowPopupMenu extends JPopupMenu
      *
      */
     @Override
-    public void actionPerformed( ActionEvent actionEvent ) {
+    public void actionPerformed( final ActionEvent actionEvent ) {
         // Group popup menu				
 
         if ( actionEvent.getSource() == fullScreenJMenuItem ) {

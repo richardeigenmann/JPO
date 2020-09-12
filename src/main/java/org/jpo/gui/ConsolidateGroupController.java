@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2017 -2019  Richard Eigenmann.
+ Copyright (C) 2017 -2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,11 +50,10 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
      *
      * @param request The details of the request
      */
-    public ConsolidateGroupController(ConsolidateGroupDialogRequest request) {
+    public ConsolidateGroupController(final ConsolidateGroupDialogRequest request) {
         this.request = request;
 
-        Object userObject = request.getNode().getUserObject();
-        if (!(userObject instanceof GroupInfo)) {
+        if (!(request.getNode().getUserObject() instanceof GroupInfo)) {
             LOGGER.info(String.format("Node %s is not a group", request.getNode().toString()));
             JOptionPane.showMessageDialog(
                     Settings.anchorFrame,
@@ -64,7 +63,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
             return;
         }
 
-        ConsolidateGroupJFrame consolidateGroupJFrame = new ConsolidateGroupJFrame(this );
+        final ConsolidateGroupJFrame consolidateGroupJFrame = new ConsolidateGroupJFrame(this );
 
         if (request.getTargetDir() != null) {
             consolidateGroupJFrame.setTargetDir(request.getTargetDir());
@@ -76,7 +75,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
      * @param targetDirectory target directory
      */
     @Override
-    public void consolidateGroupCallback(File targetDirectory, boolean recurseSubgroups) {
+    public void consolidateGroupCallback(final File targetDirectory, final boolean recurseSubgroups) {
         if (!targetDirectory.exists()) {
             try {
                 if (!targetDirectory.mkdirs()) {
@@ -86,7 +85,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-            } catch (SecurityException e) {
+            } catch (final SecurityException e) {
                 JOptionPane.showMessageDialog(Settings.anchorFrame,
                         String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), targetDirectory),
                         Settings.jpoResources.getString("genericError"),
