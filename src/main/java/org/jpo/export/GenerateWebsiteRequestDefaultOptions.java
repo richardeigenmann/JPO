@@ -1,7 +1,7 @@
 package org.jpo.export;
 
-import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import java.io.File;
 
@@ -37,22 +37,22 @@ public class GenerateWebsiteRequestDefaultOptions extends GenerateWebsiteRequest
      */
     public GenerateWebsiteRequestDefaultOptions() {
         super();
-        setFolderIconRequired( false );
-        setDownloadZipFileName( "download.zip" );
-        setCellspacing( 10 );
-        setTargetDirectory( new File( Settings.getMostRecentCopyLocation().toString() ) );
-        setPicsPerRow( Settings.defaultHtmlPicsPerRow );
-        setThumbnailWidth( Settings.defaultHtmlThumbnailWidth );
-        setThumbnailHeight( Settings.defaultHtmlThumbnailHeight );
-        setLowresJpgQuality( Settings.defaultHtmlLowresQuality );
-        setMidresWidth( Settings.defaultHtmlMidresWidth );
-        setMidresHeight( Settings.defaultHtmlMidresHeight );
-        setMidresJpgQuality( Settings.defaultHtmlMidresQuality );
-        setGenerateMidresHtml( Settings.defaultGenerateMidresHtml );
-        setGenerateMap( Settings.defaultGenerateMap );
-        setGenerateMouseover( Settings.defaultGenerateDHTML );
-        setGenerateZipfile( Settings.defaultGenerateZipfile );
-        setLinkToHighres( Settings.defaultLinkToHighres );
+        setFolderIconRequired(false);
+        setDownloadZipFileName("download.zip");
+        setCellspacing(10);
+        setTargetDirectory(new File(Settings.getMostRecentCopyLocation().toString()));
+        setPicsPerRow(Settings.getDefaultHtmlPicsPerRow());
+        setThumbnailWidth(Settings.getDefaultHtmlThumbnailWidth());
+        setThumbnailHeight(Settings.defaultHtmlThumbnailHeight);
+        setLowresJpgQuality(Settings.defaultHtmlLowresQuality);
+        setMidresWidth(Settings.defaultHtmlMidresWidth);
+        setMidresHeight(Settings.defaultHtmlMidresHeight);
+        setMidresJpgQuality(Settings.defaultHtmlMidresQuality);
+        setGenerateMidresHtml(Settings.defaultGenerateMidresHtml);
+        setGenerateMap(Settings.defaultGenerateMap);
+        setGenerateMouseover(Settings.defaultGenerateDHTML);
+        setGenerateZipfile(Settings.defaultGenerateZipfile);
+        setLinkToHighres(Settings.defaultLinkToHighres);
         setExportHighres( Settings.defaultExportHighres );
         setRotateHighres( Settings.defaultRotateHighres );
         setPictureNaming( Settings.defaultHtmlPictureNaming );

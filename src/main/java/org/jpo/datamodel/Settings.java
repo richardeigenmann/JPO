@@ -305,11 +305,6 @@ public class Settings {
      */
     private static boolean dontEnlargeSmallImages = true;
 
-    /**
-     * the path to the jar file; derived from jarAutostartList
-     */
-    private static String jarRoot = null;
-
     public static boolean isUnsavedSettingChanges() {
         return unsavedSettingChanges;
     }
@@ -428,14 +423,19 @@ public class Settings {
      * fixed size for the threeDotButton which opens the JFileChooser dialog
      */
     public static final Dimension threeDotButtonSize = new Dimension(25, 20);
+
+    public static Font getTitleFont() {
+        return titleFont;
+    }
+
     /**
      * the font used to display the title. Currently Arial Bold 20.
      */
-    public static Font titleFont;
+    private static Font titleFont;
     /**
      * the font used to display the captions. Currently Arial Plain 16
      */
-    public static Font captionFont;
+    private static Font captionFont;
     /**
      * the height of the Thumbnail descriptions
      */
@@ -447,14 +447,32 @@ public class Settings {
      * the time it took the program to load the image.
      */
     public static final int ADVANCE_TIMER_POLLING_INTERVAL = 500;
+
+    public static void setDefaultHtmlPicsPerRow(int defaultHtmlPicsPerRow) {
+        Settings.defaultHtmlPicsPerRow = defaultHtmlPicsPerRow;
+    }
+
+    public static int getDefaultHtmlPicsPerRow() {
+        return defaultHtmlPicsPerRow;
+    }
+
     /**
      * The default number of pictures per row for the Html export
      */
-    public static int defaultHtmlPicsPerRow = 3;
+    private static int defaultHtmlPicsPerRow = 3;
+
+    public static int getDefaultHtmlThumbnailWidth() {
+        return defaultHtmlThumbnailWidth;
+    }
+
+    public static void setDefaultHtmlThumbnailWidth(int defaultHtmlThumbnailWidth) {
+        Settings.defaultHtmlThumbnailWidth = defaultHtmlThumbnailWidth;
+    }
+
     /**
      * The default width for pictures for the Html export overview
      */
-    public static int defaultHtmlThumbnailWidth = 300;
+    private static int defaultHtmlThumbnailWidth = 300;
     /**
      * The default height for pictures for the Html export overview
      */

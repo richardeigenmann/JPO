@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.File;
 
 /*
- Copyright (C) 2008-2019,  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2020,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,9 +60,10 @@ public class GenerateWebsiteRequest implements Request {
 
     /**
      * sets the Cellspacing
+     *
      * @param cellspacing Cellspacing in the output
      */
-    public void setCellspacing(int cellspacing) {
+    public void setCellspacing(final int cellspacing) {
         this.cellspacing = cellspacing;
     }
 
@@ -74,7 +75,7 @@ public class GenerateWebsiteRequest implements Request {
         return exportHighres;
     }
 
-    public void setExportHighres(boolean exportHighres) {
+    public void setExportHighres(final boolean exportHighres) {
         this.exportHighres = exportHighres;
     }
 
@@ -82,7 +83,7 @@ public class GenerateWebsiteRequest implements Request {
         return fontColor;
     }
 
-    public void setFontColor(Color fontColor) {
+    public void setFontColor(final Color fontColor) {
         this.fontColor = fontColor;
     }
     /**
@@ -100,7 +101,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param generateMidresHtml the generateMidresHtml to set
      */
-    public void setGenerateMidresHtml(boolean generateMidresHtml) {
+    public void setGenerateMidresHtml(final boolean generateMidresHtml) {
         this.generateMidresHtml = generateMidresHtml;
     }
 
@@ -108,7 +109,7 @@ public class GenerateWebsiteRequest implements Request {
         return generateMap;
     }
 
-    public void setGenerateMap(boolean generateMap) {
+    public void setGenerateMap(final boolean generateMap) {
         this.generateMap = generateMap;
     }
 
@@ -116,7 +117,7 @@ public class GenerateWebsiteRequest implements Request {
         return generateMouseover;
     }
 
-    public void setGenerateMouseover(boolean generateDHTML) {
+    public void setGenerateMouseover(final boolean generateDHTML) {
         this.generateMouseover = generateDHTML;
     }
 
@@ -124,7 +125,7 @@ public class GenerateWebsiteRequest implements Request {
         return generateZipfile;
     }
 
-    public void setGenerateZipfile(boolean generateZipfile) {
+    public void setGenerateZipfile(final boolean generateZipfile) {
         this.generateZipfile = generateZipfile;
     }
 
@@ -261,7 +262,7 @@ public class GenerateWebsiteRequest implements Request {
         return midresHeight;
     }
 
-    public void setMidresHeight( int midresHeight ) {
+    public void setMidresHeight(final int midresHeight) {
         this.midresHeight = midresHeight;
     }
 
@@ -269,7 +270,7 @@ public class GenerateWebsiteRequest implements Request {
         return midresJpgQuality;
     }
 
-    public void setMidresJpgQuality( float midresJpgQuality ) {
+    public void setMidresJpgQuality(final float midresJpgQuality) {
         this.midresJpgQuality = midresJpgQuality;
     }
 
@@ -308,7 +309,7 @@ public class GenerateWebsiteRequest implements Request {
         return midresWidth;
     }
 
-    public void setMidresWidth( int midresWidth ) {
+    public void setMidresWidth(final int midresWidth) {
         this.midresWidth = midresWidth;
     }
 
@@ -338,7 +339,7 @@ public class GenerateWebsiteRequest implements Request {
         return picsPerRow;
     }
 
-    public void setPicsPerRow( int picsPerRow ) {
+    public void setPicsPerRow(final int picsPerRow) {
         this.picsPerRow = picsPerRow;
     }
 
@@ -351,7 +352,7 @@ public class GenerateWebsiteRequest implements Request {
         return startNode;
     }
 
-    public void setStartNode( SortableDefaultMutableTreeNode startNode ) {
+    public void setStartNode(final SortableDefaultMutableTreeNode startNode) {
         this.startNode = startNode;
     }
     /**
@@ -414,7 +415,7 @@ public class GenerateWebsiteRequest implements Request {
         return folderIconRequired;
     }
 
-    public void setFolderIconRequired( boolean folderIconRequired ) {
+    public void setFolderIconRequired(final boolean folderIconRequired) {
         this.folderIconRequired = folderIconRequired;
     }
     /**
@@ -457,7 +458,7 @@ public class GenerateWebsiteRequest implements Request {
      *
      * @param downloadZipFileName the name of the zip file to create
      */
-    public void setDownloadZipFileName( String downloadZipFileName ) {
+    public void setDownloadZipFileName(final String downloadZipFileName) {
         this.downloadZipFileName = downloadZipFileName;
     }
 
@@ -471,7 +472,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param ftpTargetDir the ftpTargetDir to set
      */
-    public void setFtpTargetDir(String ftpTargetDir) {
+    public void setFtpTargetDir(final String ftpTargetDir) {
         this.ftpTargetDir = ftpTargetDir;
     }
 
@@ -485,7 +486,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param sshServer the sshServer to set
      */
-    public void setSshServer( String sshServer ) {
+    public void setSshServer(final String sshServer) {
         this.sshServer = sshServer;
     }
 
@@ -499,7 +500,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param sshUser the sshUser to set
      */
-    public void setSshUser( String sshUser ) {
+    public void setSshUser(final String sshUser) {
         this.sshUser = sshUser;
     }
     /**
@@ -517,7 +518,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param sshPassword the sshPassword to set
      */
-    public void setSshPassword( String sshPassword ) {
+    public void setSshPassword(final String sshPassword) {
         this.sshPassword = sshPassword;
     }
 
@@ -531,7 +532,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param sshTargetDir the sshTargetDir to set
      */
-    public void setSshTargetDir( String sshTargetDir ) {
+    public void setSshTargetDir(final String sshTargetDir) {
         this.sshTargetDir = sshTargetDir;
     }
 
@@ -545,7 +546,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param sshKeyFile the sshKeyFile to set
      */
-    public void setSshKeyFile( String sshKeyFile ) {
+    public void setSshKeyFile(final String sshKeyFile) {
         this.sshKeyFile = sshKeyFile;
     }
 
@@ -576,7 +577,7 @@ public class GenerateWebsiteRequest implements Request {
      *
      * @param pictureNaming Picture Naming Type
      */
-    public void setPictureNaming( PictureNamingType pictureNaming ) {
+    public void setPictureNaming(final PictureNamingType pictureNaming) {
         this.pictureNaming = pictureNaming;
     }
     /**
@@ -594,7 +595,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param setSequentialStartNumber the setSequentialStartNumber to set
      */
-    public void setSequentialStartNumber( int setSequentialStartNumber ) {
+    public void setSequentialStartNumber(final int setSequentialStartNumber) {
         this.sequentialStartNumber = setSequentialStartNumber;
     }
     /**
@@ -612,7 +613,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param writeRobotsTxt the writeRobotsTxt to set
      */
-    public void setWriteRobotsTxt( boolean writeRobotsTxt ) {
+    public void setWriteRobotsTxt(final boolean writeRobotsTxt) {
         this.writeRobotsTxt = writeRobotsTxt;
     }
 
@@ -642,7 +643,7 @@ public class GenerateWebsiteRequest implements Request {
      *
      * @param outputTarget the output target
      */
-    public void setOutputTarget( OutputTarget outputTarget ) {
+    public void setOutputTarget(final OutputTarget outputTarget) {
         this.outputTarget = outputTarget;
     }
     
@@ -671,7 +672,7 @@ public class GenerateWebsiteRequest implements Request {
      *
      * @param sshAuthType see the documentation of ssh
      */
-    public void setSshAuthType(SshAuthType sshAuthType) {
+    public void setSshAuthType(final SshAuthType sshAuthType) {
         this.sshAuthType = sshAuthType;
     }
 
@@ -697,7 +698,7 @@ public class GenerateWebsiteRequest implements Request {
      *
      * @param ftpPort the ftp port
      */
-    public void setFtpPort(int ftpPort) {
+    public void setFtpPort(final int ftpPort) {
         this.ftpPort = ftpPort;
     }
     /**
@@ -719,7 +720,7 @@ public class GenerateWebsiteRequest implements Request {
      *
      * @param sshPort the ssh port
      */
-    public void setSshPort(int sshPort) {
+    public void setSshPort(final int sshPort) {
         this.sshPort = sshPort;
     }
     /**
@@ -737,7 +738,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param ftpServer the server address
      */
-    public void setFtpServer(String ftpServer) {
+    public void setFtpServer(final String ftpServer) {
         this.ftpServer = ftpServer;
     }
     /**
@@ -755,7 +756,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param ftpUser the ftpUser to set
      */
-    public void setFtpUser(String ftpUser) {
+    public void setFtpUser(final String ftpUser) {
         this.ftpUser = ftpUser;
     }
     /**
@@ -766,7 +767,7 @@ public class GenerateWebsiteRequest implements Request {
     /**
      * @param ftpPassword the ftpPassword to set
      */
-    public void setFtpPassword(String ftpPassword) {
+    public void setFtpPassword(final String ftpPassword) {
         this.ftpPassword = ftpPassword;
     }
 
@@ -874,9 +875,9 @@ public class GenerateWebsiteRequest implements Request {
      * they can be remembered for the next time Note: Not all of them (yet?)
      */
     public void saveToSettings() {
-        Settings.memorizeCopyLocation( getTargetDirectory().getPath() );
-        Settings.defaultHtmlPicsPerRow = getPicsPerRow();
-        Settings.defaultHtmlThumbnailWidth = getThumbnailWidth();
+        Settings.memorizeCopyLocation(getTargetDirectory().getPath());
+        Settings.setDefaultHtmlPicsPerRow(getPicsPerRow());
+        Settings.setDefaultHtmlThumbnailWidth(getThumbnailWidth());
         Settings.defaultHtmlThumbnailHeight = getThumbnailHeight();
         Settings.defaultHtmlLowresQuality = getLowresJpgQuality();
         Settings.defaultGenerateMidresHtml = isGenerateMidresHtml();

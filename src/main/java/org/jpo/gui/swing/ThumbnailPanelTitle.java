@@ -185,7 +185,7 @@ public class ThumbnailPanelTitle
 
         add(showFienamesButton);
 
-        title.setFont( Settings.titleFont );
+        title.setFont(Settings.getTitleFont());
     }
 
 
@@ -199,7 +199,7 @@ public class ThumbnailPanelTitle
      *				the name of the group
      */
     public void setTitle( final String titleString ) {
-        Runnable runnable = () -> title.setText( titleString );
+        final Runnable runnable = () -> title.setText(titleString);
         if ( ! SwingUtilities.isEventDispatchThread() ) {
             SwingUtilities.invokeLater(runnable );
         } else {
