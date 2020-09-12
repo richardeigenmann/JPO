@@ -27,25 +27,27 @@ java {
     withJavadocJar()
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).all {
     options.compilerArgs += "--enable-preview"
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).all {
     jvmArgs += "--enable-preview"
 }
 
-tasks.withType(JavaExec) {
+tasks.withType(JavaExec).all {
     jvmArgs += '--enable-preview'
 }
 
 compileJava {
     group = 'build'
     options.encoding = "UTF-8"
+    options.compilerArgs += ['--enable-preview']
 }
 compileTestJava {
     group = 'build'
     options.encoding = "UTF-8"
+    options.compilerArgs += ['--enable-preview']
 }
 
 test {
