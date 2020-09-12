@@ -432,10 +432,7 @@ public class Settings {
      * the font used to display the title. Currently Arial Bold 20.
      */
     private static Font titleFont;
-    /**
-     * the font used to display the captions. Currently Arial Plain 16
-     */
-    private static Font captionFont;
+
     /**
      * the height of the Thumbnail descriptions
      */
@@ -473,127 +470,393 @@ public class Settings {
      * The default width for pictures for the Html export overview
      */
     private static int defaultHtmlThumbnailWidth = 300;
+
+    public static int getDefaultHtmlThumbnailHeight() {
+        return defaultHtmlThumbnailHeight;
+    }
+
+    public static void setDefaultHtmlThumbnailHeight(int defaultHtmlThumbnailHeight) {
+        Settings.defaultHtmlThumbnailHeight = defaultHtmlThumbnailHeight;
+    }
+
     /**
      * The default height for pictures for the Html export overview
      */
-    public static int defaultHtmlThumbnailHeight = 300;
+    private static int defaultHtmlThumbnailHeight = 300;
+
+    public static void setDefaultGenerateMidresHtml(boolean defaultGenerateMidresHtml) {
+        Settings.defaultGenerateMidresHtml = defaultGenerateMidresHtml;
+    }
+
+    public static boolean isDefaultGenerateMidresHtml() {
+        return defaultGenerateMidresHtml;
+    }
+
     /**
      * Whether to generate the midres html pages or not
      */
-    public static boolean defaultGenerateMidresHtml = true;
+    private static boolean defaultGenerateMidresHtml = true;
+
+    public static void setDefaultGenerateMap(boolean defaultGenerateMap) {
+        Settings.defaultGenerateMap = defaultGenerateMap;
+    }
+
+    public static boolean isDefaultGenerateMap() {
+        return defaultGenerateMap;
+    }
+
     /**
      * Whether to generate a map or not
      */
-    public static boolean defaultGenerateMap = true;
+    private static boolean defaultGenerateMap = true;
+
+    public static void setDefaultGenerateDHTML(boolean defaultGenerateDHTML) {
+        Settings.defaultGenerateDHTML = defaultGenerateDHTML;
+    }
+
+    public static boolean isDefaultGenerateDHTML() {
+        return defaultGenerateDHTML;
+    }
+
     /**
      * Whether to generate DHTML effects or not
      */
-    public static boolean defaultGenerateDHTML = true;
+    private static boolean defaultGenerateDHTML = true;
+
+    public static void setDefaultGenerateZipfile(boolean defaultGenerateZipfile) {
+        Settings.defaultGenerateZipfile = defaultGenerateZipfile;
+    }
+
+    public static boolean isDefaultGenerateZipfile() {
+        return defaultGenerateZipfile;
+    }
+
     /**
      * Whether to generate a zip file with the highres pictures
      */
-    public static boolean defaultGenerateZipfile = false;
+    private static boolean defaultGenerateZipfile = false;
+
+    public static void setDefaultLinkToHighres(boolean defaultLinkToHighres) {
+        Settings.defaultLinkToHighres = defaultLinkToHighres;
+    }
+
+    public static boolean isDefaultLinkToHighres() {
+        return defaultLinkToHighres;
+    }
+
     /**
      * Whether to generate a link to highres pictures at the current location or
      * not
      */
-    public static boolean defaultLinkToHighres = false;
+    private static boolean defaultLinkToHighres = false;
+
+    public static boolean isDefaultExportHighres() {
+        return defaultExportHighres;
+    }
+
+    public static void setDefaultExportHighres(boolean defaultExportHighres) {
+        Settings.defaultExportHighres = defaultExportHighres;
+    }
+
     /**
      * Whether to export the Highres pictures or not
      */
-    public static boolean defaultExportHighres = false;
+    private static boolean defaultExportHighres = false;
+
+    public static boolean isDefaultRotateHighres() {
+        return defaultRotateHighres;
+    }
+
     /**
      * Whether to rotate the Highres pictures or not
      */
-    public static boolean defaultRotateHighres = false;
+    private static boolean defaultRotateHighres = false;
+
+    public static int getDefaultHtmlMidresWidth() {
+        return defaultHtmlMidresWidth;
+    }
+
+    public static void setDefaultHtmlMidresWidth(int defaultHtmlMidresWidth) {
+        Settings.defaultHtmlMidresWidth = defaultHtmlMidresWidth;
+    }
+
     /**
      * The default midres width for pictures for the Html export
      */
-    public static int defaultHtmlMidresWidth = 700;
+    private static int defaultHtmlMidresWidth = 700;
+
+    public static void setDefaultHtmlMidresHeight(int defaultHtmlMidresHeight) {
+        Settings.defaultHtmlMidresHeight = defaultHtmlMidresHeight;
+    }
+
+    public static int getDefaultHtmlMidresHeight() {
+        return defaultHtmlMidresHeight;
+    }
+
     /**
      * The default midres height for pictures for the Html export
      */
-    public static int defaultHtmlMidresHeight = 700;
+    private static int defaultHtmlMidresHeight = 700;
+
+    public static GenerateWebsiteRequest.PictureNamingType getDefaultHtmlPictureNaming() {
+        return defaultHtmlPictureNaming;
+    }
+
+    public static void setDefaultHtmlPictureNaming(GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming) {
+        Settings.defaultHtmlPictureNaming = defaultHtmlPictureNaming;
+    }
+
     /**
      * Picture naming convention on HTML output
      */
-    public static GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
+    private static GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
+
+    public static void setDefaultHtmlOutputTarget(GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget) {
+        Settings.defaultHtmlOutputTarget = defaultHtmlOutputTarget;
+    }
+
+    public static GenerateWebsiteRequest.OutputTarget getDefaultHtmlOutputTarget() {
+        return defaultHtmlOutputTarget;
+    }
+
     /**
      * OutputTarget convention for HTML output
      */
-    public static GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+    private static GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+
+    public static Color getHtmlBackgroundColor() {
+        return htmlBackgroundColor;
+    }
+
+    public static void setHtmlBackgroundColor(Color htmlBackgroundColor) {
+        Settings.htmlBackgroundColor = htmlBackgroundColor;
+    }
+
     /**
      * The default color for the background on the web page is white.
      */
-    public static Color htmlBackgroundColor = Color.WHITE;
+    private static Color htmlBackgroundColor = Color.WHITE;
+
+    public static void setHtmlFontColor(Color htmlFontColor) {
+        Settings.htmlFontColor = htmlFontColor;
+    }
+
+    public static Color getHtmlFontColor() {
+        return htmlFontColor;
+    }
+
     /**
      * This constant defines the text color on the web page.
      */
-    public static Color htmlFontColor = Color.BLACK;
+    private static Color htmlFontColor = Color.BLACK;
+
+    public static float getDefaultHtmlLowresQuality() {
+        return defaultHtmlLowresQuality;
+    }
+
+    public static void setDefaultHtmlLowresQuality(float defaultHtmlLowresQuality) {
+        Settings.defaultHtmlLowresQuality = defaultHtmlLowresQuality;
+    }
+
     /**
      * The default quality for Thumbnail pictures for the Html export
      */
-    public static float defaultHtmlLowresQuality = 0.8f;
+    private static float defaultHtmlLowresQuality = 0.8f;
+
+    public static void setDefaultHtmlMidresQuality(float defaultHtmlMidresQuality) {
+        Settings.defaultHtmlMidresQuality = defaultHtmlMidresQuality;
+    }
+
+    public static float getDefaultHtmlMidresQuality() {
+        return defaultHtmlMidresQuality;
+    }
+
     /**
      * The default quality for Midres pictures for the Html export
      */
-    public static float defaultHtmlMidresQuality = 0.8f;
+    private static float defaultHtmlMidresQuality = 0.8f;
+
+    public static boolean isWriteRobotsTxt() {
+        return writeRobotsTxt;
+    }
+
+    public static void setWriteRobotsTxt(boolean writeRobotsTxt) {
+        Settings.writeRobotsTxt = writeRobotsTxt;
+    }
+
     /**
      * Whether to write the robots.txt on the generate webpage
      */
-    public static boolean writeRobotsTxt = false;
+    private static boolean writeRobotsTxt = false;
+
+    public static String getDefaultHtmlFtpServer() {
+        return defaultHtmlFtpServer;
+    }
+
+    public static void setDefaultHtmlFtpServer(String defaultHtmlFtpServer) {
+        Settings.defaultHtmlFtpServer = defaultHtmlFtpServer;
+    }
+
     /**
      * The default ftp server for Html export
      */
-    public static String defaultHtmlFtpServer = "";
+    private static String defaultHtmlFtpServer = "";
+
+    public static int getDefaultHtmlFtpPort() {
+        return defaultHtmlFtpPort;
+    }
+
+    public static void setDefaultHtmlFtpPort(int defaultHtmlFtpPort) {
+        Settings.defaultHtmlFtpPort = defaultHtmlFtpPort;
+    }
+
     /**
      * The default ftp port for Html export
      */
-    public static int defaultHtmlFtpPort = 21;
+    private static int defaultHtmlFtpPort = 21;
+
+    public static String getDefaultHtmlFtpUser() {
+        return defaultHtmlFtpUser;
+    }
+
+    public static void setDefaultHtmlFtpUser(String defaultHtmlFtpUser) {
+        Settings.defaultHtmlFtpUser = defaultHtmlFtpUser;
+    }
+
     /**
      * The default ftp user for Html export
      */
-    public static String defaultHtmlFtpUser = "";
+    private static String defaultHtmlFtpUser = "";
+
+    public static String getDefaultHtmlFtpPassword() {
+        return defaultHtmlFtpPassword;
+    }
+
+    public static void setDefaultHtmlFtpPassword(String defaultHtmlFtpPassword) {
+        Settings.defaultHtmlFtpPassword = defaultHtmlFtpPassword;
+    }
+
     /**
      * The default ftp password for Html export
      */
-    public static String defaultHtmlFtpPassword = "";
+    private static String defaultHtmlFtpPassword = "";
+
+    public static String getDefaultHtmlFtpTargetDir() {
+        return defaultHtmlFtpTargetDir;
+    }
+
+    public static void setDefaultHtmlFtpTargetDir(final String defaultHtmlFtpTargetDir) {
+        Settings.defaultHtmlFtpTargetDir = defaultHtmlFtpTargetDir;
+    }
+
     /**
      * The default ftp target directory for Html export
      */
-    public static String defaultHtmlFtpTargetDir = "";
+    private static String defaultHtmlFtpTargetDir = "";
+
+    public static String getDefaultHtmlSshServer() {
+        return defaultHtmlSshServer;
+    }
+
+    public static void setDefaultHtmlSshServer(final String defaultHtmlSshServer) {
+        Settings.defaultHtmlSshServer = defaultHtmlSshServer;
+    }
+
     /**
      * The default ssh server for Html export
      */
-    public static String defaultHtmlSshServer = "";
+    private static String defaultHtmlSshServer = "";
+
+    public static int getDefaultHtmlSshPort() {
+        return defaultHtmlSshPort;
+    }
+
+    public static void setDefaultHtmlSshPort(int defaultHtmlSshPort) {
+        Settings.defaultHtmlSshPort = defaultHtmlSshPort;
+    }
+
     /**
      * The default ssh port for Html export
      */
-    public static int defaultHtmlSshPort = 22;
+    private static int defaultHtmlSshPort = 22;
+
+    public static String getDefaultHtmlSshUser() {
+        return defaultHtmlSshUser;
+    }
+
+    public static void setDefaultHtmlSshUser(String defaultHtmlSshUser) {
+        Settings.defaultHtmlSshUser = defaultHtmlSshUser;
+    }
+
     /**
      * The default ssh user for Html export
      */
-    public static String defaultHtmlSshUser = "";
+    private static String defaultHtmlSshUser = "";
+
+    public static GenerateWebsiteRequest.SshAuthType getDefaultHtmlSshAuthType() {
+        return defaultHtmlSshAuthType;
+    }
+
+    public static void setDefaultHtmlSshAuthType(GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType) {
+        Settings.defaultHtmlSshAuthType = defaultHtmlSshAuthType;
+    }
+
     /**
      * OutputTarget convention for HTML output
      */
-    public static GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD;
+    private static GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD;
+
+    public static String getDefaultHtmlSshPassword() {
+        return defaultHtmlSshPassword;
+    }
+
+    public static void setDefaultHtmlSshPassword(String defaultHtmlSshPassword) {
+        Settings.defaultHtmlSshPassword = defaultHtmlSshPassword;
+    }
+
     /**
      * The default ssh password for Html export
      */
-    public static String defaultHtmlSshPassword = "";
+    private static String defaultHtmlSshPassword = "";
+
+    public static String getDefaultHtmlSshTargetDir() {
+        return defaultHtmlSshTargetDir;
+    }
+
+    public static void setDefaultHtmlSshTargetDir(String defaultHtmlSshTargetDir) {
+        Settings.defaultHtmlSshTargetDir = defaultHtmlSshTargetDir;
+    }
+
     /**
      * The default ssh target directory for Html export
      */
-    public static String defaultHtmlSshTargetDir = "";
+    private static String defaultHtmlSshTargetDir = "";
+
+    public static String getDefaultHtmlSshKeyFile() {
+        return defaultHtmlSshKeyFile;
+    }
+
+    public static void setDefaultHtmlSshKeyFile(final String defaultHtmlSshKeyFile) {
+        Settings.defaultHtmlSshKeyFile = defaultHtmlSshKeyFile;
+    }
+
     /**
      * The default ssh key file for Html export
      */
-    public static String defaultHtmlSshKeyFile = "";
+    private static String defaultHtmlSshKeyFile = "";
+
+    public static boolean isThumbnailFastScale() {
+        return thumbnailFastScale;
+    }
+
+    public static void setThumbnailFastScale(boolean thumbnailFastScale) {
+        Settings.thumbnailFastScale = thumbnailFastScale;
+    }
+
     /**
      * true when thumbnails are supposed to scale fast
      */
-    public static boolean thumbnailFastScale = true;
+    private static boolean thumbnailFastScale = true;
     /**
      * true when the pictureViewer is supposed to scale fast
      */
@@ -1243,7 +1506,6 @@ public class Settings {
             currentLocale = DEFAULT_LOCALE;
         }
         titleFont = Font.decode(Settings.jpoResources.getString("SettingsTitleFont"));
-        captionFont = Font.decode(Settings.jpoResources.getString("SettingsCaptionFont"));
 
         return (!currentLocale.equals(oldLocale));
     }

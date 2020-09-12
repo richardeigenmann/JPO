@@ -9,7 +9,7 @@ import java.io.File;
  GenerateWebsiteRequestDefaultOptions.java:  Extends an GenerateWebsiteRequest class and
  pre-populates the options with default values.
 
- Copyright (C) 2008-2012  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2020  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -43,38 +43,38 @@ public class GenerateWebsiteRequestDefaultOptions extends GenerateWebsiteRequest
         setTargetDirectory(new File(Settings.getMostRecentCopyLocation().toString()));
         setPicsPerRow(Settings.getDefaultHtmlPicsPerRow());
         setThumbnailWidth(Settings.getDefaultHtmlThumbnailWidth());
-        setThumbnailHeight(Settings.defaultHtmlThumbnailHeight);
-        setLowresJpgQuality(Settings.defaultHtmlLowresQuality);
-        setMidresWidth(Settings.defaultHtmlMidresWidth);
-        setMidresHeight(Settings.defaultHtmlMidresHeight);
-        setMidresJpgQuality(Settings.defaultHtmlMidresQuality);
-        setGenerateMidresHtml(Settings.defaultGenerateMidresHtml);
-        setGenerateMap(Settings.defaultGenerateMap);
-        setGenerateMouseover(Settings.defaultGenerateDHTML);
-        setGenerateZipfile(Settings.defaultGenerateZipfile);
-        setLinkToHighres(Settings.defaultLinkToHighres);
-        setExportHighres( Settings.defaultExportHighres );
-        setRotateHighres( Settings.defaultRotateHighres );
-        setPictureNaming( Settings.defaultHtmlPictureNaming );
+        setThumbnailHeight(Settings.getDefaultHtmlThumbnailHeight());
+        setLowresJpgQuality(Settings.getDefaultHtmlLowresQuality());
+        setMidresWidth(Settings.getDefaultHtmlMidresWidth());
+        setMidresHeight(Settings.getDefaultHtmlMidresHeight());
+        setMidresJpgQuality(Settings.getDefaultHtmlMidresQuality());
+        setGenerateMidresHtml(Settings.isDefaultGenerateMidresHtml());
+        setGenerateMap(Settings.isDefaultGenerateMap());
+        setGenerateMouseover(Settings.isDefaultGenerateDHTML());
+        setGenerateZipfile(Settings.isDefaultGenerateZipfile());
+        setLinkToHighres(Settings.isDefaultLinkToHighres());
+        setExportHighres(Settings.isDefaultExportHighres());
+        setRotateHighres(Settings.isDefaultRotateHighres());
+        setPictureNaming(Settings.getDefaultHtmlPictureNaming());
 
-        setOutputTarget( Settings.defaultHtmlOutputTarget );
-        setFtpServer( Settings.defaultHtmlFtpServer );
-        setFtpPort( Settings.defaultHtmlFtpPort );
-        setFtpUser( Settings.defaultHtmlFtpUser );
-        setFtpPassword( Settings.defaultHtmlFtpPassword );
-        setFtpTargetDir( Settings.defaultHtmlFtpTargetDir );
-        setSshServer( Settings.defaultHtmlSshServer );
-        setSshPort( Settings.defaultHtmlSshPort );
-        setSshUser( Settings.defaultHtmlSshUser );
-        setSshAuthType( Settings.defaultHtmlSshAuthType );
-        setSshPassword( Settings.defaultHtmlSshPassword );
-        setSshTargetDir( Settings.defaultHtmlSshTargetDir );
-        setSshKeyFile( Settings.defaultHtmlSshKeyFile );
+        setOutputTarget(Settings.getDefaultHtmlOutputTarget());
+        setFtpServer(Settings.getDefaultHtmlFtpServer());
+        setFtpPort(Settings.getDefaultHtmlFtpPort());
+        setFtpUser(Settings.getDefaultHtmlFtpUser());
+        setFtpPassword(Settings.getDefaultHtmlFtpPassword());
+        setFtpTargetDir(Settings.getDefaultHtmlFtpTargetDir());
+        setSshServer(Settings.getDefaultHtmlSshServer());
+        setSshPort(Settings.getDefaultHtmlSshPort());
+        setSshUser(Settings.getDefaultHtmlSshUser());
+        setSshAuthType(Settings.getDefaultHtmlSshAuthType());
+        setSshPassword(Settings.getDefaultHtmlSshPassword());
+        setSshTargetDir(Settings.getDefaultHtmlSshTargetDir());
+        setSshKeyFile(Settings.getDefaultHtmlSshKeyFile());
 
-        setWriteRobotsTxt( Settings.writeRobotsTxt );
-        setBackgroundColor( Settings.htmlBackgroundColor );
-        setFontColor( Settings.htmlFontColor );
-        setScalingSteps( 8 );
+        setWriteRobotsTxt(Settings.isWriteRobotsTxt());
+        setBackgroundColor(Settings.getHtmlBackgroundColor());
+        setFontColor(Settings.getHtmlFontColor());
+        setScalingSteps(8);
 
     }
 }

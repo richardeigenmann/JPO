@@ -2,8 +2,8 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -13,7 +13,7 @@ import java.util.Hashtable;
 /*
  GenerateWebsiteWizard3Midres.java:  Midres stuff
 
- Copyright (C) 2008-2014  Richard Eigenmann.
+ Copyright (C) 2008-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,17 +44,17 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      *
      * @param options The link to the options object with all the settings
      */
-    public GenerateWebsiteWizard3Midres( GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "HtmlDistMidres" ), Settings.jpoResources.getString( "HtmlDistMidres" ) );
+    public GenerateWebsiteWizard3Midres(final GenerateWebsiteRequest options) {
+        super(Settings.jpoResources.getString("HtmlDistMidres"), Settings.jpoResources.getString("HtmlDistMidres"));
         this.options = options;
 
         // populate the widgets with the values from the options
-        generateMidresHtmlJCheckBox.setSelected( options.isGenerateMidresHtml() );
-        generateMapJCheckBox.setSelected( options.isGenerateMap() );
-        mouseoverJCheckBox.setSelected( options.isGenerateMouseover() );
-        midresWidthSpinnerNumberModel.setValue( options.getMidresWidth() );
-        midresHeightSpinnerNumberModel.setValue( options.getMidresHeight() );
-        midresJpgQualityJSlider.setValue( options.getMidresJpgQualityPercent() );
+        generateMidresHtmlJCheckBox.setSelected(options.isGenerateMidresHtml());
+        generateMapJCheckBox.setSelected(options.isGenerateMap());
+        mouseoverJCheckBox.setSelected(options.isGenerateMouseover());
+        midresWidthSpinnerNumberModel.setValue(options.getMidresWidth());
+        midresHeightSpinnerNumberModel.setValue(options.getMidresHeight());
+        midresJpgQualityJSlider.setValue(options.getMidresJpgQualityPercent());
     }
     /**
      * The number model for the width spinner.
@@ -98,9 +98,9 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      */
     private final JSlider midresJpgQualityJSlider
             = new JSlider(
-                    JSlider.HORIZONTAL,
-                    0, 100,
-                    (int) ( Settings.defaultHtmlMidresQuality * 100 ) );
+            JSlider.HORIZONTAL,
+            0, 100,
+            (int) (Settings.getDefaultHtmlMidresQuality() * 100));
 
     /**
      * Create the widgets.

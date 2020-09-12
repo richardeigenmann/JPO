@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2014 - 2019  Richard Eigenmann.
+ Copyright (C) 2014 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -217,12 +217,12 @@ public class JpoCache {
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnail(File file, double rotation, int maxWidth, int maxHeight) {
+    private ImageBytes createThumbnail(final File file, final double rotation, final int maxWidth, final int maxHeight) {
         final Dimension maxDimension = new Dimension(maxWidth, maxHeight);
 
         // create a new thumbnail from the highres
         final ScalablePicture scalablePicture = new ScalablePicture();
-        if (Settings.thumbnailFastScale) {
+        if (Settings.isThumbnailFastScale()) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();

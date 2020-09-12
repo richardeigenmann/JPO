@@ -2,8 +2,8 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -12,7 +12,7 @@ import java.util.Hashtable;
 /*
  GenerateWebsiteWizard2Thumbnails.java:  Specify stuff about the Thumbnails
 
- Copyright (C) 2008-2017  Richard Eigenmann. Zürich
+ Copyright (C) 2008-2020  Richard Eigenmann. Zürich
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -46,15 +46,15 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      *
      * @param options Options
      */
-    public GenerateWebsiteWizard2Thumbnails( GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "HtmlDistThumbnails" ), Settings.jpoResources.getString( "HtmlDistThumbnails" ) );
+    public GenerateWebsiteWizard2Thumbnails(final GenerateWebsiteRequest options) {
+        super(Settings.jpoResources.getString("HtmlDistThumbnails"), Settings.jpoResources.getString("HtmlDistThumbnails"));
         this.options = options;
 
         // load the options into the GUI components
-        picsPerRow.getModel().setValue( options.getPicsPerRow() );
-        thumbWidth.getModel().setValue( options.getThumbnailWidth() );
-        thumbHeight.getModel().setValue( options.getThumbnailHeight() );
-        lowresJpgQualityJSlider.setValue( options.getLowresJpgQualityPercent() );
+        picsPerRow.getModel().setValue(options.getPicsPerRow());
+        thumbWidth.getModel().setValue(options.getThumbnailWidth());
+        thumbHeight.getModel().setValue(options.getThumbnailHeight());
+        lowresJpgQualityJSlider.setValue(options.getLowresJpgQualityPercent());
     }
     /**
      * Records the number of columns to generate, 1 to 10, start at 3 increment
@@ -73,21 +73,20 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      * increment 25
      *
      */
-    private final JSpinner thumbHeight = new JSpinner( new SpinnerNumberModel( 300, 100, 1000, 25 ) );
+    private final JSpinner thumbHeight = new JSpinner(new SpinnerNumberModel(300, 100, 1000, 25));
     /**
      * Slider that allows the quality of the lowres jpg's to be specified.
      */
     private final JSlider lowresJpgQualityJSlider
             = new JSlider(
             SwingConstants.HORIZONTAL,
-                    0, 100,
-                    (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
+            0, 100,
+            (int) (Settings.getDefaultHtmlLowresQuality() * 100));
     /**
      * Modifies the height of the thumbnails, 100 to 1000, start with 300
      * increment 25
-     *
      */
-    private final JSpinner scalingSteps = new JSpinner( new SpinnerNumberModel( 8, 1, 20, 1 ) );
+    private final JSpinner scalingSteps = new JSpinner(new SpinnerNumberModel(8, 1, 20, 1));
 
     /**
      * Creates the GUI widgets
@@ -131,7 +130,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
                 true );
         lowresJpgQualityJSlider.addChangeListener( ( ChangeEvent arg0 ) -> options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() ));
 
-        JPanel sliderOwningPanel = new JPanel();
+        final JPanel sliderOwningPanel = new JPanel();
         sliderOwningPanel.add(lowresJpgQualityJSlider);
         wizardPanel.add( sliderOwningPanel, "growx, wrap" );
         wizardPanel.add( new JLabel( Settings.jpoResources.getString( "scalingSteps" ) ) );

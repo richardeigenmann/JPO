@@ -99,17 +99,17 @@ public class SettingsDialog extends JDialog {
     /**
      * fields that allows the user to capture the desired size of thumbnails
      */
-    private final WholeNumberField thumbnailSize = new WholeNumberField( 0, 6 );
+    private final WholeNumberField thumbnailSize = new WholeNumberField(0, 6);
     /**
      * slider that allows the quality of the jpg's to be specified Should this
      * really be the same as the HTLM Quality Field?
      */
-    private final JSlider jpgQualityJSlider = new JSlider( SwingConstants.HORIZONTAL,
-            0, 100, (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
+    private final JSlider jpgQualityJSlider = new JSlider(SwingConstants.HORIZONTAL,
+            0, 100, (int) (Settings.getDefaultHtmlLowresQuality() * 100));
     /**
      * tickbox that indicates whether to scale the thumbnails quickly
      */
-    private final JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox( Settings.jpoResources.getString( "thumbnailFastScale" ) );
+    private final JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox(Settings.jpoResources.getString("thumbnailFastScale"));
     /**
      * Text Filed that holds the first user Function
      */
@@ -574,7 +574,7 @@ public class SettingsDialog extends JDialog {
         autoLoadJTextField.setText(Settings.getAutoLoad());
 
         startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()) );
-        viewerSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()) );
+        viewerSizeDropdown.setSelectedIndex(findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()));
 
         maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
         dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
@@ -584,18 +584,18 @@ public class SettingsDialog extends JDialog {
         maxThumbnails.setValue(Settings.getMaxThumbnails());
         thumbnailSize.setValue(Settings.getThumbnailSize());
         //keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
-        jpgQualityJSlider.setValue( (int) ( Settings.defaultHtmlLowresQuality * 100 ) );
-        thumbnailFastScaleJCheckBox.setSelected( Settings.thumbnailFastScale );
+        jpgQualityJSlider.setValue((int) (Settings.getDefaultHtmlLowresQuality() * 100));
+        thumbnailFastScaleJCheckBox.setSelected(Settings.isThumbnailFastScale());
 
-        userFunction1NameJTextField.setText( Settings.getUserFunctionNames()[0] );
-        userFunction2NameJTextField.setText( Settings.getUserFunctionNames()[1] );
-        userFunction3NameJTextField.setText( Settings.getUserFunctionNames()[2] );
+        userFunction1NameJTextField.setText(Settings.getUserFunctionNames()[0]);
+        userFunction2NameJTextField.setText(Settings.getUserFunctionNames()[1]);
+        userFunction3NameJTextField.setText(Settings.getUserFunctionNames()[2]);
 
-        userFunction1CmdJTextField.setText( Settings.getUserFunctionCmd()[0] );
-        userFunction2CmdJTextField.setText( Settings.getUserFunctionCmd()[1] );
-        userFunction3CmdJTextField.setText( Settings.getUserFunctionCmd()[2] );
+        userFunction1CmdJTextField.setText(Settings.getUserFunctionCmd()[0]);
+        userFunction2CmdJTextField.setText(Settings.getUserFunctionCmd()[1]);
+        userFunction3CmdJTextField.setText(Settings.getUserFunctionCmd()[2]);
 
-        emailServerJTextField.setText( Settings.emailServer );
+        emailServerJTextField.setText(Settings.emailServer);
         emailPortJTextField.setText( Settings.emailPort );
         authenticationJComboBox.setSelectedIndex( Settings.emailAuthentication );
         emailUserJTextField.setText( Settings.emailUser );
@@ -672,9 +672,9 @@ public class SettingsDialog extends JDialog {
         Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
 
         Settings.setMaxThumbnails(maxThumbnails.getValue());
-        Settings.setThumbnailSize( thumbnailSize.getValue());
-        Settings.defaultHtmlLowresQuality = ( (float) jpgQualityJSlider.getValue() ) / 100;
-        Settings.thumbnailFastScale = thumbnailFastScaleJCheckBox.isSelected();
+        Settings.setThumbnailSize(thumbnailSize.getValue());
+        Settings.setDefaultHtmlLowresQuality(((float) jpgQualityJSlider.getValue()) / 100);
+        Settings.setThumbnailFastScale(thumbnailFastScaleJCheckBox.isSelected());
 
         Settings.getUserFunctionNames()[0] = userFunction1NameJTextField.getText();
         Settings.getUserFunctionNames()[1] = userFunction2NameJTextField.getText();
@@ -688,7 +688,6 @@ public class SettingsDialog extends JDialog {
         Settings.emailPort = emailPortJTextField.getText();
         Settings.emailAuthentication = authenticationJComboBox.getSelectedIndex();
         Settings.emailUser = emailUserJTextField.getText();
-        //Settings.emailPassword = emailPasswordJTextField.getText();
         Settings.emailPassword = new String( emailPasswordJTextField.getPassword() );
 
         Settings.validateSettings();
