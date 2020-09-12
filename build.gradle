@@ -274,6 +274,9 @@ jacocoTestReport {
     }
 }
 
+plugins.withType(JacocoPlugin) {
+    tasks["test"].finalizedBy 'jacocoTestReport'
+}
 check.dependsOn jacocoTestReport
 
 task uploadWebsitePages(type:Exec) {
@@ -338,3 +341,16 @@ allprojects { // Projects
         jvmArgs = ['-Dlog4j.configurationFile=./log4j2.xml']
     }
 }*/
+
+sonarqube {
+    properties {
+        property("sonar.projectName", "Java Picture Organizer")
+        property("sonar.projectKey", "richardeigenmann_JPO")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.sources", "src/main")
+        property("sonar.java.binaries", "${project.buildDir}/classes/java/main")
+        property("sonar.java.libraries", "${project.buildDir}/libs")
+        property("sonar.tests", "src/test")
+        property("sonar.tests.binaries", "${project.buildDir}/classes/java/test")
+    }
+}

@@ -42,6 +42,7 @@ jobs:
 
       # run tests!
       #- run: gradle test
-      - run: gradle check
+      #- run: gradle check
+      - run: gradle check sonarqube
       - store_test_results:
           path: build/test-results/test
