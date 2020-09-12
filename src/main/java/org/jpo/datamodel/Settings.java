@@ -302,6 +302,10 @@ public class Settings {
         Settings.dontEnlargeSmallImages = dontEnlargeSmallImages;
     }
 
+    public static boolean isDontEnlargeSmallImages() {
+        return dontEnlargeSmallImages;
+    }
+
     /**
      * a flag that indicates that small images should not be enlarged
      */

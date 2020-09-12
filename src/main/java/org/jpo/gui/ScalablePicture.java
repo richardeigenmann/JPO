@@ -295,7 +295,7 @@ public class ScalablePicture
                 if ( scaleToSize ) {
                     scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
 
-                    if ( Settings.dontEnlargeSmallImages && scaleFactor > 1 ) {
+                    if ( Settings.isDontEnlargeSmallImages() && scaleFactor > 1 ) {
                         scaleFactor = 1;
                     }
                 }
