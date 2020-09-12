@@ -1,8 +1,8 @@
 package org.jpo;
 
+import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.ApplicationStartupRequest;
 import org.jpo.eventbus.JpoEventBus;
-import org.jpo.datamodel.Settings;
 import org.jpo.gui.ApplicationEventHandler;
 
 import javax.swing.*;
@@ -74,7 +74,7 @@ public class Main {
         System.setSecurityManager( null );
 
         System.out.println( "\nJPO version 0.14\n"
-                + "Copyright (C) 2000-2019 Richard Eigenmann,\nZurich, Switzerland\n"
+                + "Copyright (C) 2000-2020 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"
@@ -117,10 +117,8 @@ public class Main {
         } else {
             System.out.println("No missing classes identified.");
         }
-
         new ApplicationEventHandler();
         JpoEventBus.getInstance().post( new ApplicationStartupRequest() );
-
     }
 
     /**

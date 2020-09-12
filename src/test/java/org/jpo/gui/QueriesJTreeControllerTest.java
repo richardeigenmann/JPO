@@ -1,5 +1,7 @@
 package org.jpo.gui;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -28,6 +30,10 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 public class QueriesJTreeControllerTest {
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     @Test
     public void testImageInitialisation() {
@@ -37,7 +43,7 @@ public class QueriesJTreeControllerTest {
                 final QueriesJTreeController c = new QueriesJTreeController();
                 assertNotNull(c);
             });
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getCause().getMessage());
             Thread.currentThread().interrupt();
         }

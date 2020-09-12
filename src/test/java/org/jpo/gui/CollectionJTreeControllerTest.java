@@ -1,6 +1,8 @@
 package org.jpo.gui;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.PictureCollection;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -33,6 +35,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 public class CollectionJTreeControllerTest {
 
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
+
     /**
      * Test Constructor
      */
@@ -46,7 +53,7 @@ public class CollectionJTreeControllerTest {
                 final CollectionJTreeController cjtc = new CollectionJTreeController(pc);
                 assertNotNull( cjtc );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail( ex.getCause().getMessage() );
             Thread.currentThread().interrupt();
         }

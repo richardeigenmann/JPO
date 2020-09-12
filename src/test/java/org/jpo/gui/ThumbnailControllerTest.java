@@ -1,6 +1,8 @@
 package org.jpo.gui;
 
+import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.Thumbnail;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -34,6 +36,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @author Richard Eigenmann
  */
 public class ThumbnailControllerTest {
+
+    @BeforeAll
+    public static void beforeAll() {
+        Settings.loadSettings(); // We need to start the cache
+    }
 
     @Test
     public void testConstructor() {

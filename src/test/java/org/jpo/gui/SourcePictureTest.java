@@ -16,6 +16,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,7 +37,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
         s.loadPicture(imageFile, 0.0);
@@ -50,7 +52,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -73,7 +75,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -89,7 +91,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -111,7 +113,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -127,7 +129,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -149,7 +151,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -167,7 +169,7 @@ public class SourcePictureTest {
              ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -177,9 +179,9 @@ public class SourcePictureTest {
         final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
         try {
-            File image = new File(imageUrl.toURI());
+            final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -192,7 +194,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -207,9 +209,9 @@ public class SourcePictureTest {
     public void testGetBmpImageIOReader() {
         final String BMP_IMAGE_FILE = "bmp.bmp";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE));
-        try (InputStream input = imageUrl.openStream();
-             ImageInputStream iis = ImageIO.createImageInputStream(input)) {
-            ImageReader reader = SourcePicture.getImageIOReader(iis);
+        try (final InputStream input = imageUrl.openStream();
+             final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
+            final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -237,7 +239,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(imageUrl.toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -255,7 +257,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -267,7 +269,7 @@ public class SourcePictureTest {
         try {
             final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -281,7 +283,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(imageUrl.toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -299,7 +301,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -311,7 +313,7 @@ public class SourcePictureTest {
         try {
             final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -325,7 +327,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(imageUrl.toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -344,7 +346,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pdf.PDFImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -357,7 +359,7 @@ public class SourcePictureTest {
         try {
             final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -372,9 +374,11 @@ public class SourcePictureTest {
             s.loadPicture(new File(imageUrl.toURI()), 0.0);
             assertNotNull(s.getSourceBufferedImage());
             // Size is not stable. Sometimes we get 400, Sometimes 900
-            //assertEquals(400, s.getHeight());
-            //assertEquals(400, s.getWidth());
-        } catch (URISyntaxException e) {
+            Logger.getLogger(SourcePictureTest.class.getName()).log(Level.INFO, "Height of {0} is {1}", new Object[]{SVG_IMAGE_FILE, s.getHeight()});
+            assertTrue( s.getHeight() == 400 || s.getHeight() == 900 );
+            Logger.getLogger(SourcePictureTest.class.getName()).log(Level.INFO, "Width of {0} is {1}", new Object[]{SVG_IMAGE_FILE, s.getWidth()});
+            assertTrue(s.getWidth() == 900 || s.getWidth() == 800);
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -387,7 +391,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.svg.SVGImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
         }
     }
@@ -397,9 +401,9 @@ public class SourcePictureTest {
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
         try {
-            File image = new File(imageUrl.toURI());
+            final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -413,7 +417,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(imageUrl.toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -431,7 +435,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -443,7 +447,7 @@ public class SourcePictureTest {
         try {
             final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -457,7 +461,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -475,7 +479,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -487,7 +491,7 @@ public class SourcePictureTest {
         try {
             final File image = new File(imageUrl.toURI());
             assertTrue(SourcePicture.jvmHasReader(image));
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -500,7 +504,7 @@ public class SourcePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(imageUrl.toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
@@ -648,7 +652,7 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.png.PNGImageReader"));
-        } catch (NoSuchElementException | IOException e) {
+        } catch (final NoSuchElementException | IOException e) {
             fail( e.getMessage());
         }
     }
@@ -863,10 +867,8 @@ public class SourcePictureTest {
              final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
-        } catch (NoSuchElementException e) {
-            fail("Failed to find a reader for clipPath image for URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
-        } catch (IOException e) {
-            fail("Failed to open inputstream from URL: " + imageUrl.toString() + "\nException: " + e.getMessage());
+        } catch (final NoSuchElementException | IOException e) {
+            fail(e.getMessage());
         }
     }
 

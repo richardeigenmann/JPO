@@ -5,6 +5,7 @@ import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JMenuItem;
@@ -26,6 +27,10 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 public class ThumbnailDescriptionControllerTest {
 
+    @BeforeAll
+    public static void beforeAll() {
+        Settings.loadSettings(); // We need to start the cache
+    }
 
     @Test
     public void testConstructor() {
@@ -144,8 +149,8 @@ public class ThumbnailDescriptionControllerTest {
 
                 // then replace the node with a GroupInfo node
                 final String groupInfoDescription = "A GroupInfo description";
-                GroupInfo groupInfo = new GroupInfo(groupInfoDescription);
-                SortableDefaultMutableTreeNode ginode = new SortableDefaultMutableTreeNode(groupInfo);
+                final GroupInfo groupInfo = new GroupInfo(groupInfoDescription);
+                final SortableDefaultMutableTreeNode ginode = new SortableDefaultMutableTreeNode(groupInfo);
                 panel.setNode(ginode);
                 assertEquals(groupInfoDescription, panel.getDescription());
 
@@ -267,13 +272,13 @@ public class ThumbnailDescriptionControllerTest {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNDERSCORE = "Text_with_underscores";
                 final String EXPECTED_RESULT = "Text with underscores";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNDERSCORE, area);
+                final Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNDERSCORE, area);
                 assertTrue(optional.isPresent());
 
-                JPopupMenu menu = optional.get();
+                final JPopupMenu menu = optional.get();
                 assertEquals(1,menu.getComponentCount());
 
-                JMenuItem item = (JMenuItem) menu.getComponent(0);
+                final JMenuItem item = (JMenuItem) menu.getComponent(0);
                 item.doClick();
                 assertEquals(area.getText(), EXPECTED_RESULT);
             } );
@@ -291,13 +296,13 @@ public class ThumbnailDescriptionControllerTest {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNICODE_SPACE = "Text%20with%20unicode%20spaces";
                 final String EXPECTED_RESULT = "Text with unicode spaces";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE, area);
+                final Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE, area);
                 assertTrue(optional.isPresent());
 
-                JPopupMenu menu = optional.get();
+                final JPopupMenu menu = optional.get();
                 assertEquals(1,menu.getComponentCount());
 
-                JMenuItem item = (JMenuItem) menu.getComponent(0);
+                final JMenuItem item = (JMenuItem) menu.getComponent(0);
                 item.doClick();
                 assertEquals(area.getText(), EXPECTED_RESULT);
             } );
@@ -315,13 +320,13 @@ public class ThumbnailDescriptionControllerTest {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES = "Text%20with%20unicode%20spaces_and_underscores";
                 final String EXPECTED_RESULT = "Text with unicode spaces and underscores";
-                Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES, area);
+                final Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES, area);
                 assertTrue(optional.isPresent());
 
-                JPopupMenu menu = optional.get();
+                final JPopupMenu menu = optional.get();
                 assertEquals(3,menu.getComponentCount());
 
-                JMenuItem item = (JMenuItem) menu.getComponent(2);
+                final JMenuItem item = (JMenuItem) menu.getComponent(2);
                 item.doClick();
                 assertEquals(area.getText(), EXPECTED_RESULT);
             } );

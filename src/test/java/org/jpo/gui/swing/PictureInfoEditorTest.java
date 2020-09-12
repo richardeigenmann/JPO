@@ -1,8 +1,10 @@
 package org.jpo.gui.swing;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -22,6 +24,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @author Richard Eigenmann
  */
 public class PictureInfoEditorTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     @Test
     public void testConstructor() {

@@ -1,6 +1,8 @@
 package org.jpo.gui;
 
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -20,6 +22,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @author Richard Eigenmann
  */
 public class DirectoryChooserTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     private int changesReceived;
     private File result;
@@ -41,7 +48,7 @@ public class DirectoryChooserTest {
                 // Checking that the changeEvent was fired
                 assertEquals( 1, changesReceived );
             } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail("This was not supposed to land in the catch clause: " + ex.getMessage());
             Thread.currentThread().interrupt();
         }

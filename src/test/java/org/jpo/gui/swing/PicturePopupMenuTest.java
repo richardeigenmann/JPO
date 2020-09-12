@@ -236,14 +236,14 @@ public class PicturePopupMenuTest {
                 assertEquals("Copy Image", copyImage.getText());
                 assertEquals("choose target directory", copyImageChooseTargetDir.getText());
                 assertEquals("to zip file", copyImageToZipFile.getText());
-                assertEquals("Copy to Clipboard", copyToClipboard.getText());
+                assertEquals("Copy Image to Clipboard", copyToClipboard.getText());
                 assertEquals("Remove Node", removeNode.getText());
                 assertEquals("File operations", fileOperations.getText());
                 assertEquals("Properties", properties.getText());
                 assertEquals("Consolidate Here", consolidateHere.getText());
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+            fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }

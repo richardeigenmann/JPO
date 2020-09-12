@@ -1,5 +1,7 @@
 package org.jpo.gui;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -16,6 +18,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @author Richard Eigenmann
  */
 public class PictureViewerTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     /**
      * Test the listener

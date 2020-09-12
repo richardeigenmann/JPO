@@ -1,5 +1,7 @@
 package org.jpo.gui.swing;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -29,6 +31,12 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 
 public class ThumbnailPanelTitleTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
+
     /**
      * Tests constructing a ThumbnailPanelTitle
      */

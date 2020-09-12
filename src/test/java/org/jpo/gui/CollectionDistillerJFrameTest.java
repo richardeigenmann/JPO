@@ -1,7 +1,9 @@
 package org.jpo.gui;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.ExportGroupToNewCollectionRequest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -33,6 +35,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 
 public class CollectionDistillerJFrameTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     /**
      * Test Constructor

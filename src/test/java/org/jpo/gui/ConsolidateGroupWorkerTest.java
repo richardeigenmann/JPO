@@ -12,10 +12,7 @@ import java.io.InputStream;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  ConsolidateGroupWorkerTest.java: 
@@ -58,7 +55,7 @@ public class ConsolidateGroupWorkerTest {
         try {
             ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory );
             fail("the needToMovePicture should not handle null inputs; the are invalid");
-        } catch ( NullPointerException ex ) {
+        } catch ( final NullPointerException ex ) {
             // this is good
         }
         assertTrue(tempTargetDirectory.delete());
@@ -96,7 +93,7 @@ public class ConsolidateGroupWorkerTest {
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
@@ -125,7 +122,7 @@ public class ConsolidateGroupWorkerTest {
              final FileOutputStream fout = new FileOutputStream( imageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
@@ -162,7 +159,7 @@ public class ConsolidateGroupWorkerTest {
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
@@ -198,7 +195,7 @@ public class ConsolidateGroupWorkerTest {
             final boolean returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory );
             // Consolidation of a PictureInfo with a \"null\" highres file should return false
             assertFalse( returnCode );
-        } catch ( NullPointerException ex ) {
+        } catch ( final NullPointerException ex ) {
             assertTrue(tempTargetDirectory.delete());
             return;
         }
@@ -218,7 +215,7 @@ public class ConsolidateGroupWorkerTest {
              FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file in test testMovePictureSameDirectory." );
         }
@@ -250,7 +247,7 @@ public class ConsolidateGroupWorkerTest {
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }
@@ -290,7 +287,7 @@ public class ConsolidateGroupWorkerTest {
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
             IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( IOException ex ) {
+        } catch ( final IOException ex ) {
             LOGGER.severe( ex.getMessage() );
             fail( "Failed to create test image file" );
         }

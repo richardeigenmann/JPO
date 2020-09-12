@@ -1,11 +1,13 @@
 package org.jpo.gui.swing;
 
+import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.Settings;
 import org.jpo.gui.ThumbnailControllerTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import java.awt.GraphicsEnvironment;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +17,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 public class ThumbnailDescriptionPanelTest {
+
+    @BeforeAll
+    public static void setUpOnce() {
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     @Test
     public void testConstructor() {

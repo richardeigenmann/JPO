@@ -1,6 +1,8 @@
 import org.jpo.Main;
+import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.CloseApplicationRequest;
 import org.jpo.eventbus.JpoEventBus;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +17,13 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 public class MainTest {
 
+    @BeforeAll
+    public static void beforeAll() {
+        Settings.loadSettings(); // We need to start the cache
+    }
+
     @Test
-    @Disabled("Crashes with an NPE somewhere")
+    @Disabled("Crashes but I don't know where")
     public void constructorTest() {
         try {
             SwingUtilities.invokeAndWait( () -> {

@@ -1,5 +1,7 @@
 package org.jpo.gui;
 
+import org.jpo.datamodel.Settings;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -36,6 +38,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  * @author Richard Eigenmann
  */
 public class ThumbnailsPanelControllerTest {
+
+    @BeforeAll
+    public static void beforeAll() {
+        Settings.loadSettings(); // We need to start the cache
+    }
 
     /**
      * Defines a logger for this class
@@ -89,10 +96,10 @@ public class ThumbnailsPanelControllerTest {
                     fail( ex.getMessage() );
                 }
             } );
-        } catch ( InterruptedException ex  ) {
+        } catch ( final InterruptedException ex  ) {
             fail( ex.getMessage() );
             Thread.currentThread().interrupt();
-        } catch ( InvocationTargetException ex ) {
+        } catch ( final InvocationTargetException ex ) {
             LOGGER.severe( "InvocationTargetException: " + ex.getMessage() );
             LOGGER.severe( "Source: " + ex.getTargetException().getMessage() );
             fail( ex.getMessage() );

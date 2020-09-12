@@ -811,24 +811,37 @@ public class PictureCollection {
             final File temporaryFile = new File(xmlFile.getPath() + ".!!!");
             final ExportGroupToCollectionRequest exportRequest = new ExportGroupToCollectionRequest(getRootNode(), temporaryFile, false);
             JpoWriter.write(exportRequest);
-            final boolean anOriginalFileExists = xmlFile.exists();
-            final File backupOriginalFile = new File(xmlFile.getPath() + ".orig");
-            if (anOriginalFileExists && !xmlFile.renameTo(backupOriginalFile)) {
-                LOGGER.log(Level.SEVERE, "Could not rename original file to {0}", backupOriginalFile);
+            replaceFile(xmlFile, temporaryFile);
+            setUnsavedUpdates(false);
+            Settings.pushRecentCollection(xmlFile.toString());
+            JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
+        }
+    }
+
+    /**
+     * This method replaces the old file with the new file by renaming the old to
+     * <<filename>>.orig and then moves the new file to that name. If there were no errors it
+     * then deletes the old file.
+     * @param oldFile
+     * @param newFile
+     */
+    private static void replaceFile(final File oldFile, final File newFile) {
+        final File backupOldFile = new File(oldFile.getPath() + ".orig");
+        final boolean anOldFileExists = oldFile.exists();
+        if (anOldFileExists && !oldFile.renameTo(backupOldFile)) {
+            LOGGER.log(Level.SEVERE, "Could not rename {0} to {1}", new Object[]{oldFile, backupOldFile});
+        } else {
+            // the renameTo above worked (side effect)
+            if (!newFile.renameTo(oldFile)) {
+                LOGGER.log(Level.SEVERE, "Could not rename temp file {0} to {1}", new Object[]{newFile, oldFile});
             } else {
-                if (!temporaryFile.renameTo(xmlFile)) {
-                    LOGGER.log(Level.SEVERE, "Could not rename temp file {0} to {1}", new Object[]{temporaryFile, xmlFile});
-                } else {
-                    setUnsavedUpdates(false);
-                    if (anOriginalFileExists) {
-                        try {
-                            Files.delete(backupOriginalFile.toPath());
-                        } catch (final IOException e) {
-                            LOGGER.log(Level.SEVERE, "Could not delete backed up original file {0}\n{1}", new Object[]{backupOriginalFile, e.getMessage()});
-                        }
+                // again, the renameTo above worked (side effect)
+                if (anOldFileExists) {
+                    try {
+                        Files.delete(backupOldFile.toPath());
+                    } catch (final IOException e) {
+                        LOGGER.log(Level.SEVERE, "Could not delete backed up old file {0}\n{1}", new Object[]{backupOldFile, e.getMessage()});
                     }
-                    Settings.pushRecentCollection(xmlFile.toString());
-                    JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
                 }
             }
         }

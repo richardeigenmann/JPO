@@ -38,7 +38,7 @@ public class ScalablePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
         scalablePicture.loadPictureImd(imageFile, 0.0);
@@ -57,7 +57,7 @@ public class ScalablePictureTest {
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
         scalablePicture.loadPictureImd(imageFile, 90.0);
@@ -73,11 +73,11 @@ public class ScalablePictureTest {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
-        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
         scalablePicture.loadPictureImd(imageFile, 90.0);
@@ -99,11 +99,11 @@ public class ScalablePictureTest {
         assertNotNull(scalablePicture);
 
         //Settings.loadSettings();
-        URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
         scalablePicture.loadPictureImd(imageFile, 0.0);
@@ -131,7 +131,7 @@ public class ScalablePictureTest {
 
             assertTrue(outputFile.delete());
             assertFalse(outputFile.exists());
-        } catch (IOException x) {
+        } catch (final IOException x) {
             fail(x.getMessage());
         }
 

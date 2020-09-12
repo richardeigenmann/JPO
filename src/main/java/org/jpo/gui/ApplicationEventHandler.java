@@ -5,12 +5,12 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jpo.eventbus.*;
 import org.jpo.cache.JpoCache;
-import org.jpo.cache.ThumbnailCreationFactory;
 import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.cache.ThumbnailCreationFactory;
 import org.jpo.datamodel.*;
 import org.jpo.datamodel.Settings.FieldCodes;
+import org.jpo.eventbus.*;
 import org.jpo.export.GenerateWebsiteWizard;
 import org.jpo.export.PicasaUploadRequest;
 import org.jpo.export.PicasaUploaderWizard;
@@ -20,6 +20,7 @@ import org.jpo.gui.swing.*;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -39,7 +40,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
 
 /*
- Copyright (C) 2014-2019  Richard Eigenmann.
+ Copyright (C) 2014-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -77,6 +78,256 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * @param request the request
+     */
+    @Subscribe
+    public static void handleMoveToNewLocationRequest(final MoveToNewLocationRequest request) {
+        final JFileChooser jFileChooser = new JFileChooser();
+
+        jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        jFileChooser.setDialogTitle(Settings.jpoResources.getString("MoveImageDialogTitle"));
+        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+
+        final int returnVal = jFileChooser.showDialog(Settings.anchorFrame, Settings.jpoResources.getString("MoveImageDialogButton"));
+        if (returnVal != JFileChooser.APPROVE_OPTION) {
+            return;
+        }
+
+        JpoEventBus.getInstance().post(new MoveToDirRequest(request.getNodes(), jFileChooser.getSelectedFile()));
+    }
+
+    /**
+     * Bring up a Dialog where the user can input a new name for a file and
+     * rename it. If the target file already exists and would overwrite the existing file
+     * A new name is suggested that the user can accept or abort the rename.
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public static void handleRenamePictureRequest(@NonNull RenamePictureRequest request) {
+        final SortableDefaultMutableTreeNode node = request.getNode();
+        final PictureInfo pi = (PictureInfo) node.getUserObject();
+
+        final File imageFile = pi.getImageFile();
+        if (imageFile == null) {
+            return;
+        }
+
+        final Object object = Settings.jpoResources.getString("FileRenameLabel1")
+                + imageFile.toString()
+                + Settings.jpoResources.getString("FileRenameLabel2");
+        final String selectedValue = JOptionPane.showInputDialog(Settings.anchorFrame,
+                object,
+                imageFile.toString());
+        if (selectedValue != null) {
+            File newName = new File(selectedValue);
+
+            if (newName.exists()) {
+                File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
+                int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.anchorFrame,
+                        String.format(Settings.jpoResources.getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
+                        Settings.jpoResources.getString("FileRenameTargetExistsTitle"),
+                        JOptionPane.OK_CANCEL_OPTION);
+                if (alternativeAnswer == JOptionPane.OK_OPTION) {
+                    newName = alternativeNewName;
+                } else {
+                    LOGGER.log(Level.INFO, "File exists and new name was not accepted by user");
+                    return;
+                }
+            }
+            JpoEventBus.getInstance().post(new RenameFileRequest(request.getNode(), newName.getName()));
+        }
+    }
+
+    /**
+     * Bring up a Dialog where the user can input a new name for a file and
+     * rename it. If the target file already exists and would overwrite the existing file
+     * A new name is suggested that the user can accept or abort the rename.
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public static void handleRenameFileRequest(@NonNull final RenameFileRequest request) {
+        final PictureInfo pi = (PictureInfo) request.getNode().getUserObject();
+        LOGGER.info(String.format("Renaming node %s (%s) to new filename: %s", request.getNode().toString(), pi.getImageFile().getPath(), request.getNewFileName()));
+        final File imageFile = pi.getImageFile();
+        final String newName = request.getNewFileName();
+        final File newFile = new File(imageFile.getParentFile(), newName);
+        if (imageFile.renameTo(newFile)) {
+            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), newName});
+            pi.setImageLocation(newFile);
+            request.getNode().getPictureCollection().setUnsavedUpdates();
+        } else {
+            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), newName});
+        }
+
+    }
+
+    /**
+     * Method that chooses an xml file or returns null
+     *
+     * @return the xml file or null
+     */
+    private static File chooseXmlFile() {
+        final JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileOpenButtonText"));
+        jFileChooser.setDialogTitle(Settings.jpoResources.getString("fileOpenHeading"));
+        jFileChooser.setFileFilter(new XmlFilter());
+        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+
+        int returnVal = jFileChooser.showOpenDialog(Settings.anchorFrame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            return jFileChooser.getSelectedFile();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Copies the pictures of the supplied nodes to the target directory
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public static void handleCopyToDirRequest(final CopyToDirRequest request) {
+        if (!request.getTargetLocation().canWrite()) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.jpoResources.getString("htmlDistCanWriteError"),
+                    GENERIC_ERROR,
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int picsCopied = 0;
+        for (SortableDefaultMutableTreeNode node : request.getNodes()) {
+            if (node.getUserObject() instanceof PictureInfo) {
+                if (node.validateAndCopyPicture(request.getTargetLocation())) {
+                    picsCopied++;
+                }
+            } else {
+                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+            }
+        }
+        JOptionPane.showMessageDialog(Settings.anchorFrame,
+                String.format(Settings.jpoResources.getString("copyToNewLocationSuccess"), picsCopied, request.getNodes().size()),
+                Settings.jpoResources.getString("genericInfo"),
+                JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    /**
+     * Moves the pictures of the supplied nodes to the target directory
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public static void handleMoveToDirRequest(final MoveToDirRequest request) {
+        if (!request.getTargetLocation().isDirectory()) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.jpoResources.getString("htmlDistIsDirError"),
+                    GENERIC_ERROR,
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (!request.getTargetLocation().canWrite()) {
+            JOptionPane.showMessageDialog(Settings.anchorFrame,
+                    Settings.jpoResources.getString("htmlDistCanWriteError"),
+                    GENERIC_ERROR,
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int picsMoved = 0;
+        for (SortableDefaultMutableTreeNode node : request.getNodes()) {
+            final Object userObject = node.getUserObject();
+            if (userObject instanceof PictureInfo pi) {
+                if (ConsolidateGroupWorker.movePicture(pi, request.getTargetLocation())) {
+                    picsMoved++;
+                }
+            } else {
+                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+            }
+        }
+        JOptionPane.showMessageDialog(Settings.anchorFrame,
+                String.format(Settings.jpoResources.getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().size()),
+                Settings.jpoResources.getString("genericInfo"),
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Copies an input stream to an output stream
+     *
+     * @param input  the input stream
+     * @param output the output stream
+     * @throws IOException The exception it can throw
+     */
+    private static void streamcopy(final InputStream input, final OutputStream output) throws IOException {
+        // 4MB buffer
+        final byte[] buffer = new byte[4096 * 1024];
+        int bytesRead;
+        while ((bytesRead = input.read(buffer)) != -1) {
+            output.write(buffer, 0, bytesRead);
+        }
+    }
+
+    /**
+     * This method fires up a user function if it can. User functions are only
+     * valid on PictureInfo nodes.
+     *
+     * @param userFunction The user function to be executed in the array
+     *                     Settings.userFunctionCmd
+     * @param myObject     The PictureInfo upon which the user function should be
+     *                     executed.
+     */
+    private static void runUserFunction(final int userFunction, final PictureInfo myObject) {
+        if ((userFunction < 0) || (userFunction >= Settings.MAX_USER_FUNCTIONS)) {
+            LOGGER.info("Error: called with an out of bounds index");
+            return;
+        }
+        String command = Settings.getUserFunctionCmd()[userFunction];
+        if ((command == null) || (command.length() == 0)) {
+            LOGGER.log(Level.INFO, "Command {0} is not properly defined", Integer.toString(userFunction));
+            return;
+        }
+
+        final String filename = (myObject).getImageFile().toString();
+        command = command.replaceAll("%f", filename);
+
+        final String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
+        command = command.replaceAll("%e", escapedFilename);
+
+        try {
+            final URL pictureURL = myObject.getImageFile().toURI().toURL();
+            command = command.replaceAll("%u", pictureURL.toString());
+        } catch (final MalformedURLException x) {
+            LOGGER.log(Level.SEVERE, "Could not substitute %u with the URL: {0}", x.getMessage());
+            return;
+        }
+
+
+        LOGGER.log(Level.INFO, "Command to run is: {0}", command);
+        try {
+            // Had big issues here because the simple exec (String) calls a StringTokenizer
+            // which messes up the filename parameters
+            int blank = command.indexOf(' ');
+            if (blank > -1) {
+                final String[] cmdarray = new String[2];
+                cmdarray[0] = command.substring(0, blank);
+                cmdarray[1] = command.substring(blank + 1);
+                Runtime.getRuntime().exec(cmdarray);
+            } else {
+                final String[] cmdarray = new String[1];
+                cmdarray[0] = command;
+                Runtime.getRuntime().exec(cmdarray);
+            }
+        } catch (final IOException x) {
+            LOGGER.log(Level.INFO, "Runtime.exec collapsed with and IOException: {0}", x.getMessage());
+        }
+    }
+
+    /**
      * Handles the application startup by posting an {@link OpenMainWindowRequest},
      * starting the {@link StartCameraWatchDaemonRequest}, starting the
      * {@link StartThumbnailCreationFactoryRequest}. If an autoLoad is defined in the Settings it
@@ -95,7 +346,7 @@ public class ApplicationEventHandler {
      * @see ApplicationEventHandler#handleStartNewCollectionRequest(StartNewCollectionRequest)
      */
     @Subscribe
-    public void handleApplicationStartupRequest(ApplicationStartupRequest request) {
+    public void handleApplicationStartupRequest(final ApplicationStartupRequest request) {
         LOGGER.info("------------------------------------------------------------\n      Starting JPO");
 
         Settings.loadSettings();
@@ -116,17 +367,15 @@ public class ApplicationEventHandler {
         }
     }
 
-
     /**
      * Start a ThumbnailCreationFactory
      *
      * @param request the request
      */
     @Subscribe
-    public void handleStartThumbnailCreationFactoryRequest(StartThumbnailCreationFactoryRequest request) {
+    public void handleStartThumbnailCreationFactoryRequest(final StartThumbnailCreationFactoryRequest request) {
         new ThumbnailCreationFactory(Settings.THUMBNAIL_CREATION_THREAD_POLLING_TIME);
     }
-
 
     /**
      * Opens the MainWindow on the EDT thread by constructing a {@link MainWindow}. We then fire a
@@ -138,7 +387,7 @@ public class ApplicationEventHandler {
      * @see MainAppModelListener
      */
     @Subscribe
-    public void handleOpenMainWindowRequest(OpenMainWindowRequest request) {
+    public void handleOpenMainWindowRequest(final OpenMainWindowRequest request) {
         try {
             // Activate OpenGL performance improvements
             //System.setProperty( "sun.java2d.opengl", "true" );
@@ -149,7 +398,7 @@ public class ApplicationEventHandler {
                         Settings.getPictureCollection().getTreeModel().addTreeModelListener(new MainAppModelListener());
                     }
             );
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             // Restore interrupted state...
             Thread.currentThread().interrupt();
@@ -162,8 +411,8 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleFindDuplicatesRequest(FindDuplicatesRequest request) {
-        DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
+    public void handleFindDuplicatesRequest(final FindDuplicatesRequest request) {
+        final DuplicatesQuery duplicatesQuery = new DuplicatesQuery();
         Settings.getPictureCollection().addQueryToTreeModel(duplicatesQuery);
         JpoEventBus.getInstance().post(new ShowQueryRequest(duplicatesQuery));
     }
@@ -174,7 +423,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCheckIntegrityRequest(CheckIntegrityRequest request) {
+    public void handleCheckIntegrityRequest(final CheckIntegrityRequest request) {
         new IntegrityCheckerJFrame(Settings.getPictureCollection().getRootNode());
     }
 
@@ -185,7 +434,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleEditSettingsRequest(EditSettingsRequest request) {
+    public void handleEditSettingsRequest(final EditSettingsRequest request) {
         new SettingsDialog(true);
     }
 
@@ -195,7 +444,7 @@ public class ApplicationEventHandler {
      * @param request the request object
      */
     @Subscribe
-    public void handleEditCamerasRequest(EditCamerasRequest request) {
+    public void handleEditCamerasRequest(final EditCamerasRequest request) {
         new CamerasEditor();
     }
 
@@ -205,7 +454,7 @@ public class ApplicationEventHandler {
      * @param request the request object
      */
     @Subscribe
-    public void handleSendEmailRequest(SendEmailRequest request) {
+    public void handleSendEmailRequest(final SendEmailRequest request) {
         new EmailerGui();
     }
 
@@ -216,7 +465,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCloseApplicationRequest(CloseApplicationRequest request) {
+    public void handleCloseApplicationRequest(final CloseApplicationRequest request) {
         JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest());
         if (Settings.isUnsavedSettingChanges()) {
             Settings.writeSettings();
@@ -238,7 +487,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCheckDirectoriesRequest(CheckDirectoriesRequest request) {
+    public void handleCheckDirectoriesRequest(final CheckDirectoriesRequest request) {
         new ReconcileJFrame(Settings.getPictureCollection().getRootNode());
     }
 
@@ -248,15 +497,15 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleStartDoublePanelSlideshowRequest(StartDoublePanelSlideshowRequest request) {
+    public void handleStartDoublePanelSlideshowRequest(final StartDoublePanelSlideshowRequest request) {
         Tools.checkEDT();
-        SortableDefaultMutableTreeNode rootNode = request.getNode();
-        PictureViewer p1 = new PictureViewer();
+        final SortableDefaultMutableTreeNode rootNode = request.getNode();
+        final PictureViewer p1 = new PictureViewer();
         p1.switchWindowMode(WINDOW_LEFT);
-        PictureViewer p2 = new PictureViewer();
+        final PictureViewer p2 = new PictureViewer();
         p2.switchWindowMode(WINDOW_RIGHT);
-        RandomNavigator rb1 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
-        RandomNavigator rb2 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
+        final RandomNavigator rb1 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
+        final RandomNavigator rb2 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
         p1.showNode(rb1, 0);
         p1.startAdvanceTimer(10);
         p2.showNode(rb2, 0);
@@ -271,9 +520,9 @@ public class ApplicationEventHandler {
      * @param request the {@link ShowPictureRequest}
      */
     @Subscribe
-    public void handleShowPictureRequest(ShowPictureRequest request) {
-        SortableDefaultMutableTreeNode node = request.getNode();
-        Object userObject = node.getUserObject();
+    public void handleShowPictureRequest(final ShowPictureRequest request) {
+        final SortableDefaultMutableTreeNode node = request.getNode();
+        final Object userObject = node.getUserObject();
 
         final NodeNavigatorInterface navigator;
         int index = 0;
@@ -306,7 +555,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowPictureInfoEditorRequest(ShowPictureInfoEditorRequest request) {
+    public void handleShowPictureInfoEditorRequest(final ShowPictureInfoEditorRequest request) {
         new PictureInfoEditor(request.getNode());
     }
 
@@ -317,7 +566,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowGroupInfoEditorRequest(ShowGroupInfoEditorRequest request) {
+    public void handleShowGroupInfoEditorRequest(final ShowGroupInfoEditorRequest request) {
         new GroupInfoEditor(request.getNode());
     }
 
@@ -327,7 +576,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleOpenSearchDialogRequest(OpenSearchDialogRequest request) {
+    public void handleOpenSearchDialogRequest(final OpenSearchDialogRequest request) {
         if (!(request.getStartNode().getUserObject() instanceof GroupInfo)) {
             LOGGER.log(Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString());
             JOptionPane.showMessageDialog(
@@ -338,8 +587,8 @@ public class ApplicationEventHandler {
             return;
         }
 
-        FindJPanel findPanel = new FindJPanel();
-        Object[] options = {"OK", "Cancel"};
+        final FindJPanel findPanel = new FindJPanel();
+        final Object[] options = {"OK", "Cancel"};
         int result = JOptionPane.showOptionDialog(
                 Settings.anchorFrame,
                 findPanel,
@@ -381,7 +630,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowCategoryUsageEditorRequest(ShowCategoryUsageEditorRequest request) {
+    public void handleShowCategoryUsageEditorRequest(final ShowCategoryUsageEditorRequest request) {
         new CategoryUsageJFrame(request);
     }
 
@@ -391,97 +640,9 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowAutoAdvanceDialog(ShowAutoAdvanceDialogRequest request) {
+    public void handleShowAutoAdvanceDialog(final ShowAutoAdvanceDialogRequest request) {
         new AutoAdvanceDialog(request);
     }
-
-    /**
-     * @param request the request
-     */
-    @Subscribe
-    public static void handleMoveToNewLocationRequest(MoveToNewLocationRequest request) {
-        JFileChooser jFileChooser = new JFileChooser();
-
-        jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("MoveImageDialogTitle"));
-        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
-
-        int returnVal = jFileChooser.showDialog(Settings.anchorFrame, Settings.jpoResources.getString("MoveImageDialogButton"));
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-
-        JpoEventBus.getInstance().post(new MoveToDirRequest(request.getNodes(), jFileChooser.getSelectedFile()));
-    }
-
-    /**
-     * Bring up a Dialog where the user can input a new name for a file and
-     * rename it. If the target file already exists and would overwrite the existing file
-     * A new name is suggested that the user can accept or abort the rename.
-     *
-     * @param request the request
-     */
-    @Subscribe
-    public static void handleRenamePictureRequest(@NonNull RenamePictureRequest request) {
-        SortableDefaultMutableTreeNode node = request.getNode();
-        PictureInfo pi = (PictureInfo) node.getUserObject();
-
-        File imageFile = pi.getImageFile();
-        if (imageFile == null) {
-            return;
-        }
-
-        Object object = Settings.jpoResources.getString("FileRenameLabel1")
-                + imageFile.toString()
-                + Settings.jpoResources.getString("FileRenameLabel2");
-        String selectedValue = JOptionPane.showInputDialog(Settings.anchorFrame,
-                object,
-                imageFile.toString());
-        if (selectedValue != null) {
-            File newName = new File(selectedValue);
-
-            if (newName.exists()) {
-                File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
-                int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.anchorFrame,
-                        String.format(Settings.jpoResources.getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
-                        Settings.jpoResources.getString("FileRenameTargetExistsTitle"),
-                        JOptionPane.OK_CANCEL_OPTION);
-                if (alternativeAnswer == JOptionPane.OK_OPTION) {
-                    newName = alternativeNewName;
-                } else {
-                    LOGGER.log(Level.INFO, "File exists and new name was not accepted by user");
-                    return;
-                }
-            }
-            JpoEventBus.getInstance().post(new RenameFileRequest(request.getNode(), newName.getName()));
-        }
-    }
-
-
-    /**
-     * Bring up a Dialog where the user can input a new name for a file and
-     * rename it. If the target file already exists and would overwrite the existing file
-     * A new name is suggested that the user can accept or abort the rename.
-     *
-     * @param request the request
-     */
-    @Subscribe
-    public static void handleRenameFileRequest(@NonNull RenameFileRequest request) {
-        PictureInfo pi = (PictureInfo) request.getNode().getUserObject();
-        LOGGER.info(String.format("Renaming node %s (%s) to new filename: %s", request.getNode().toString(), pi.getImageFile().getPath(), request.getNewFileName()));
-        File imageFile = pi.getImageFile();
-        String newName = request.getNewFileName();
-        File newFile = new File(imageFile.getParentFile(), newName);
-        if (imageFile.renameTo(newFile)) {
-            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), newName});
-            pi.setImageLocation(newFile);
-            request.getNode().getPictureCollection().setUnsavedUpdates();
-        } else {
-            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), newName});
-        }
-
-    }
-
 
     /**
      * When the app sees a ChooseAndAddCollectionRequest it will open the a
@@ -490,8 +651,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleChooseAndAddCollectionRequest(ChooseAndAddCollectionRequest request) {
-        File fileToLoad = chooseXmlFile();
+    public void handleChooseAndAddCollectionRequest(final ChooseAndAddCollectionRequest request) {
+        final File fileToLoad = chooseXmlFile();
         if (fileToLoad != null) {
             JpoEventBus.getInstance().post(new AddCollectionToGroupRequest(request.getNode(), fileToLoad));
         }
@@ -505,8 +666,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleShowGroupAsTableRequest(ShowGroupAsTableRequest request) {
-        TableJFrame tableJFrame = new TableJFrame(request.getNode());
+    public void handleShowGroupAsTableRequest(final ShowGroupAsTableRequest request) {
+        final TableJFrame tableJFrame = new TableJFrame(request.getNode());
         tableJFrame.pack();
         tableJFrame.setVisible(true);
     }
@@ -522,30 +683,9 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleFileLoadDialogRequest(FileLoadDialogRequest request) {
+    public void handleFileLoadDialogRequest(final FileLoadDialogRequest request) {
         final File fileToLoad = chooseXmlFile();
         JpoEventBus.getInstance().post(new FileLoadRequest(fileToLoad));
-    }
-
-    /**
-     * Method that chooses an xml file or returns null
-     *
-     * @return the xml file or null
-     */
-    private static File chooseXmlFile() {
-        JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileOpenButtonText"));
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("fileOpenHeading"));
-        jFileChooser.setFileFilter(new XmlFilter());
-        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
-
-        int returnVal = jFileChooser.showOpenDialog(Settings.anchorFrame);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            return jFileChooser.getSelectedFile();
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -560,7 +700,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleFileLoadRequest(FileLoadRequest request) {
+    public void handleFileLoadRequest(final FileLoadRequest request) {
         final File fileToLoad = request.getFileToLoad();
         new Thread("FileLoadRequest") {
 
@@ -595,7 +735,7 @@ public class ApplicationEventHandler {
      * @param event the event
      */
     @Subscribe
-    public void handleStartNewCollectionRequest(StartNewCollectionRequest event) {
+    public void handleStartNewCollectionRequest(final StartNewCollectionRequest event) {
         SwingUtilities.invokeLater(
                 () -> {
                     Settings.getPictureCollection().clearCollection();
@@ -612,13 +752,13 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleFileSaveRequest(FileSaveRequest request) {
+    public void handleFileSaveRequest(final FileSaveRequest request) {
         if (Settings.getPictureCollection().getXmlFile() == null) {
             FileSaveAsRequest fileSaveAsRequest = new FileSaveAsRequest();
             fileSaveAsRequest.setOnSuccessNextRequest(request.getOnSuccessNextRequest());
             JpoEventBus.getInstance().post(fileSaveAsRequest);
         } else {
-            LOGGER.info(String.format("Saving under the name: %s", Settings.getPictureCollection().getXmlFile()));
+            LOGGER.log(Level.INFO, "Saving under the name: {0}", Settings.getPictureCollection().getXmlFile());
             Settings.getPictureCollection().fileSave();
             JpoEventBus.getInstance().post(new AfterFileSaveRequest(Settings.getPictureCollection().getXmlFile().toString()));
             if (request.getOnSuccessNextRequest() != null) {
@@ -634,8 +774,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleFileSaveAsRequest(FileSaveAsRequest request) {
-        JFileChooser jFileChooser = new JFileChooser();
+    public void handleFileSaveAsRequest(final FileSaveAsRequest request) {
+        final JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
         jFileChooser.setDialogTitle(Settings.jpoResources.getString("fileSaveAsTitle"));
@@ -647,7 +787,7 @@ public class ApplicationEventHandler {
             jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
         }
 
-        int returnVal = jFileChooser.showSaveDialog(Settings.anchorFrame);
+        final int returnVal = jFileChooser.showSaveDialog(Settings.anchorFrame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File chosenFile = jFileChooser.getSelectedFile();
             chosenFile = Tools.correctFilenameExtension("xml", chosenFile);
@@ -683,11 +823,11 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAfterFileSaveRequest(AfterFileSaveRequest request) {
-        JPanel panel = new JPanel();
+    public void handleAfterFileSaveRequest(final AfterFileSaveRequest request) {
+        final JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(new JLabel(Settings.jpoResources.getString("collectionSaveBody") + Settings.getPictureCollection().getXmlFile().toString()));
-        JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload"));
+        final JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload"));
         if (Settings.autoLoad != null && ((new File(Settings.autoLoad)).compareTo(Settings.getPictureCollection().getXmlFile()) == 0)) {
             setAutoload.setSelected(true);
         }
@@ -710,17 +850,17 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAddCollectionToGroupRequest(AddCollectionToGroupRequest request) {
+    public void handleAddCollectionToGroupRequest(final AddCollectionToGroupRequest request) {
         LOGGER.info("Starting");
         Tools.checkEDT();
-        SortableDefaultMutableTreeNode popupNode = request.getNode();
-        File fileToLoad = request.getCollectionFile();
+        final SortableDefaultMutableTreeNode popupNode = request.getNode();
+        final File fileToLoad = request.getCollectionFile();
 
-        SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode("New Group");
+        final SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode("New Group");
         try {
             PictureCollection.fileLoad(fileToLoad, newNode);
-        } catch (FileNotFoundException x) {
-            LOGGER.log(Level.INFO, "{0}.fileToLoad: FileNotFoundException: {1}", new Object[]{this.getClass().toString(), x.getMessage()});
+        } catch (final FileNotFoundException x) {
+            LOGGER.severe(x.getMessage());
             JOptionPane.showMessageDialog(Settings.anchorFrame,
                     "File not found:\n" + fileToLoad.getPath(),
                     GENERIC_ERROR,
@@ -736,11 +876,11 @@ public class ApplicationEventHandler {
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleSortGroupRequest(SortGroupRequest request) {
-        SortableDefaultMutableTreeNode popupNode = request.getNode();
-        FieldCodes sortCriteria = request.getSortCriteria();
+    public void handleSortGroupRequest(final SortGroupRequest request) {
+        final SortableDefaultMutableTreeNode popupNode = request.getNode();
+        final FieldCodes sortCriteria = request.getSortCriteria();
         popupNode.sortChildren(sortCriteria);
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(popupNode);
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
@@ -752,12 +892,12 @@ public class ApplicationEventHandler {
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleAddEmptyGroupRequest(AddEmptyGroupRequest request) {
-        SortableDefaultMutableTreeNode node = request.getNode();
+    public void handleAddEmptyGroupRequest(final AddEmptyGroupRequest request) {
+        final SortableDefaultMutableTreeNode node = request.getNode();
         if (!(node.getUserObject() instanceof GroupInfo)) {
-            LOGGER.warning(String.format("node %s is of type %s instead of GroupInfo. Proceeding anyway.", node.getUserObject().toString(), node.getUserObject().getClass().toString()));
+            LOGGER.log(Level.WARNING, "node {0} is of type {1} instead of GroupInfo. Proceeding anyway.", new Object[]{node.getUserObject(), node.getUserObject().getClass()});
         }
-        SortableDefaultMutableTreeNode newNode = node.addGroupNode("New Group");
+        final SortableDefaultMutableTreeNode newNode = node.addGroupNode("New Group");
         Settings.memorizeGroupOfDropLocation(newNode);
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
         JpoEventBus.getInstance().post(new ShowGroupRequest(newNode));
@@ -769,9 +909,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToHtmlRequest(ExportGroupToHtmlRequest request) {
-        SortableDefaultMutableTreeNode nodeToExport = request.getNode();
-        new GenerateWebsiteWizard(nodeToExport);
+    public void handleExportGroupToHtmlRequest(final ExportGroupToHtmlRequest request) {
+        new GenerateWebsiteWizard(request.getNode());
     }
 
     /**
@@ -780,8 +919,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleGenerateWebsiteRequest(GenerateWebsiteRequest request) {
-        WebsiteGenerator h = new WebsiteGenerator(request);
+    public void handleGenerateWebsiteRequest(final GenerateWebsiteRequest request) {
+        final WebsiteGenerator h = new WebsiteGenerator(request);
         SwingUtilities.invokeLater(h);
     }
 
@@ -791,7 +930,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupFlatFileRequest(ExportGroupToFlatFileRequest request) {
+    public void handleExportGroupFlatFileRequest(final ExportGroupToFlatFileRequest request) {
         new FlatFileDistiller(request);
     }
 
@@ -801,7 +940,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToNewCollectionRequest(ExportGroupToNewCollectionRequest request) {
+    public void handleExportGroupToNewCollectionRequest(final ExportGroupToNewCollectionRequest request) {
         new CollectionDistillerJFrame(request);
     }
 
@@ -811,7 +950,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToCollectionRequest(ExportGroupToCollectionRequest request) {
+    public void handleExportGroupToCollectionRequest(final ExportGroupToCollectionRequest request) {
         JpoWriter.writeInThread(request);
     }
 
@@ -822,10 +961,9 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToPicasaRequest(ExportGroupToPicasaRequest request) {
-        SortableDefaultMutableTreeNode groupNode = request.getNode();
-        PicasaUploadRequest myRequest = new PicasaUploadRequest();
-        myRequest.setNode(groupNode);
+    public void handleExportGroupToPicasaRequest(final ExportGroupToPicasaRequest request) {
+        final PicasaUploadRequest myRequest = new PicasaUploadRequest();
+        myRequest.setNode(request.getNode());
         new PicasaUploaderWizard(myRequest);
     }
 
@@ -838,7 +976,7 @@ public class ApplicationEventHandler {
     public void handleAddGroupToEmailSelectionRequest(final AddGroupToEmailSelectionRequest request) {
         final SortableDefaultMutableTreeNode groupNode = request.getNode();
         SortableDefaultMutableTreeNode n;
-        for (final Enumeration e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (final Enumeration<TreeNode> e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             n = (SortableDefaultMutableTreeNode) e.nextElement();
             if (n.getUserObject() instanceof PictureInfo) {
                 Settings.getPictureCollection().addToMailSelection(n);
@@ -883,7 +1021,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleClearEmailSelectionRequest(ClearEmailSelectionRequest request) {
+    public void handleClearEmailSelectionRequest(final ClearEmailSelectionRequest request) {
         Settings.getPictureCollection().clearMailSelection();
     }
 
@@ -893,7 +1031,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleConsolidateGroupDialogRequest(ConsolidateGroupDialogRequest request) {
+    public void handleConsolidateGroupDialogRequest(final ConsolidateGroupDialogRequest request) {
         new ConsolidateGroupController(request);
     }
 
@@ -903,7 +1041,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleConsolidateGroupRequest(ConsolidateGroupRequest request) {
+    public void handleConsolidateGroupRequest(final ConsolidateGroupRequest request) {
         new ConsolidateGroupWorker(
                 request.getTargetDir(),
                 request.getNode(),
@@ -913,7 +1051,6 @@ public class ApplicationEventHandler {
                         ""));
     }
 
-
     /**
      * Brings up a JFileChooser to select the target location and then copies
      * the images to the target location
@@ -921,92 +1058,20 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToNewLocationRequest(CopyToNewLocationRequest request) {
-        JFileChooser jFileChooser = new JFileChooser();
+    public void handleCopyToNewLocationRequest(final CopyToNewLocationRequest request) {
+        final JFileChooser jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         jFileChooser.setApproveButtonText(Settings.jpoResources.getString("CopyImageDialogButton"));
         jFileChooser.setDialogTitle(Settings.jpoResources.getString("CopyImageDialogTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
-        int returnVal = jFileChooser.showSaveDialog(Settings.anchorFrame);
+        final int returnVal = jFileChooser.showSaveDialog(Settings.anchorFrame);
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
 
         JpoEventBus.getInstance().post(new CopyToDirRequest(request.getNodes(), jFileChooser.getSelectedFile()));
-    }
-
-    /**
-     * Copies the pictures of the supplied nodes to the target directory
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public static void handleCopyToDirRequest(CopyToDirRequest request) {
-        if (!request.getTargetLocation().canWrite()) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
-                    Settings.jpoResources.getString("htmlDistCanWriteError"),
-                    GENERIC_ERROR,
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        int picsCopied = 0;
-        for (SortableDefaultMutableTreeNode node : request.getNodes()) {
-            if (node.getUserObject() instanceof PictureInfo) {
-                if (node.validateAndCopyPicture(request.getTargetLocation())) {
-                    picsCopied++;
-                }
-            } else {
-                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
-            }
-        }
-        JOptionPane.showMessageDialog(Settings.anchorFrame,
-                String.format(Settings.jpoResources.getString("copyToNewLocationSuccess"), picsCopied, request.getNodes().size()),
-                Settings.jpoResources.getString("genericInfo"),
-                JOptionPane.INFORMATION_MESSAGE);
-
-    }
-
-    /**
-     * Moves the pictures of the supplied nodes to the target directory
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public static void handleMoveToDirRequest(MoveToDirRequest request) {
-        if (!request.getTargetLocation().isDirectory()) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
-                    Settings.jpoResources.getString("htmlDistIsDirError"),
-                    GENERIC_ERROR,
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        if (!request.getTargetLocation().canWrite()) {
-            JOptionPane.showMessageDialog(Settings.anchorFrame,
-                    Settings.jpoResources.getString("htmlDistCanWriteError"),
-                    GENERIC_ERROR,
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        int picsMoved = 0;
-        for (SortableDefaultMutableTreeNode node : request.getNodes()) {
-            Object userObject = node.getUserObject();
-            if (userObject instanceof PictureInfo) {
-                if (ConsolidateGroupWorker.movePicture((PictureInfo) userObject, request.getTargetLocation())) {
-                    picsMoved++;
-                }
-            } else {
-                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
-            }
-        }
-        JOptionPane.showMessageDialog(Settings.anchorFrame,
-                String.format(Settings.jpoResources.getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().size()),
-                Settings.jpoResources.getString("genericInfo"),
-                JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -1018,7 +1083,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToNewZipfileRequest(CopyToNewZipfileRequest request) {
+    public void handleCopyToNewZipfileRequest(final CopyToNewZipfileRequest request) {
         final JFileChooser jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1027,14 +1092,13 @@ public class ApplicationEventHandler {
         jFileChooser.setDialogTitle("Pick the zipfile to which the pictures should be added");
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
-        int returnVal = jFileChooser.showDialog(Settings.anchorFrame, "Select");
+        final int returnVal = jFileChooser.showDialog(Settings.anchorFrame, "Select");
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
 
         final File chosenFile = jFileChooser.getSelectedFile();
         Settings.memorizeZipFile(chosenFile.getPath());
-        //copyToZipfile( request.getNodes(), chosenFile );
 
         JpoEventBus.getInstance().post(new CopyToZipfileRequest(request.getNodes(), chosenFile));
     }
@@ -1048,24 +1112,21 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToZipfileRequest(CopyToZipfileRequest request) {
+    public void handleCopyToZipfileRequest(final CopyToZipfileRequest request) {
 
-        File tempfile = new File(request.getTargetZipfile().getAbsolutePath() + ".org.jpo.temp");
+        final File tempfile = new File(request.getTargetZipfile().getAbsolutePath() + ".org.jpo.temp");
         int picsCopied = 0;
-        PictureInfo pictureInfo;
-        File sourceFile;
-        try (ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(tempfile)) {
+        try (final ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(tempfile)) {
             zipArchiveOutputStream.setLevel(9);
             for (SortableDefaultMutableTreeNode node : request.getNodes()) {
-                if (node.getUserObject() instanceof PictureInfo) {
-                    pictureInfo = (PictureInfo) node.getUserObject();
-                    sourceFile = pictureInfo.getImageFile();
+                if (node.getUserObject() instanceof PictureInfo pi) {
+                    final File sourceFile = pi.getImageFile();
                     LOGGER.info(String.format("Processing file %s", sourceFile.toString()));
 
-                    ZipArchiveEntry entry = new ZipArchiveEntry(sourceFile, sourceFile.getName());
+                    final ZipArchiveEntry entry = new ZipArchiveEntry(sourceFile, sourceFile.getName());
                     zipArchiveOutputStream.putArchiveEntry(entry);
 
-                    try (FileInputStream fis = new FileInputStream(sourceFile)) {
+                    try (final FileInputStream fis = new FileInputStream(sourceFile)) {
                         streamcopy(fis, zipArchiveOutputStream);
                     }
                     zipArchiveOutputStream.closeArchiveEntry();
@@ -1073,7 +1134,7 @@ public class ApplicationEventHandler {
                     picsCopied++;
 
                 } else {
-                    LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+                    LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
                 }
             }
 
@@ -1081,10 +1142,10 @@ public class ApplicationEventHandler {
                 // copy the old entries over
                 try (
                         final ZipFile oldzip = new ZipFile(request.getTargetZipfile())) {
-                    final Enumeration entries = oldzip.getEntries();
+                    final Enumeration<ZipArchiveEntry> entries = oldzip.getEntries();
                     while (entries.hasMoreElements()) {
-                        final ZipArchiveEntry e = (ZipArchiveEntry) entries.nextElement();
-                        LOGGER.info(String.format("streamcopy: %s", e.getName()));
+                        final ZipArchiveEntry e = entries.nextElement();
+                        LOGGER.log(Level.INFO,"streamcopy: {0}", e.getName());
                         zipArchiveOutputStream.putArchiveEntry(e);
                         if (!e.isDirectory()) {
                             streamcopy(oldzip.getInputStream(e), zipArchiveOutputStream);
@@ -1123,30 +1184,14 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * Copies an input stream to an output stream
-     *
-     * @param input  the input stream
-     * @param output the output stream
-     * @throws IOException The exception it can throw
-     */
-    private static void streamcopy(InputStream input, OutputStream output) throws IOException {
-        // 4MB buffer
-        byte[] buffer = new byte[4096 * 1024];
-        int bytesRead;
-        while ((bytesRead = input.read(buffer)) != -1) {
-            output.write(buffer, 0, bytesRead);
-        }
-    }
-
-    /**
      * Copies the supplied picture nodes to the system clipboard
      *
      * @param request The request
      */
     @Subscribe
-    public void handleCopyImageToClipboardRequest(CopyImageToClipboardRequest request) {
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        JpoTransferable transferable = new JpoTransferable(request.getNodes());
+    public void handleCopyImageToClipboardRequest(final CopyImageToClipboardRequest request) {
+        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        final JpoTransferable transferable = new JpoTransferable(request.getNodes());
         clipboard.setContents(transferable, (Clipboard clipboard1, Transferable contents) -> LOGGER.info("Lost Ownership of clipboard - not an issue"));
     }
 
@@ -1156,13 +1201,11 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyPathToClipboardRequest(CopyPathToClipboardRequest request) {
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        StringBuilder sb = new StringBuilder();
-        for (SortableDefaultMutableTreeNode s : request.getNodes()) {
-            Object o = s.getUserObject();
-            if (o instanceof PictureInfo) {
-                PictureInfo pi = (PictureInfo) o;
+    public void handleCopyPathToClipboardRequest(final CopyPathToClipboardRequest request) {
+        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        final StringBuilder sb = new StringBuilder();
+        for (final SortableDefaultMutableTreeNode s : request.getNodes()) {
+            if (s.getUserObject() instanceof PictureInfo pi) {
                 sb.append(pi.getImageFile().getAbsoluteFile().toString());
                 sb.append(System.lineSeparator());
             }
@@ -1171,17 +1214,16 @@ public class ApplicationEventHandler {
         clipboard.setContents(stringSelection, (Clipboard clipboard1, Transferable contents) -> LOGGER.info("Lost Ownership of clipboard - not an issue"));
     }
 
-
     /**
      * Moves the node to the first position in the group
      *
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleMoveNodeToTopRequest(MoveNodeToTopRequest request) {
-        SortableDefaultMutableTreeNode popupNode = request.getNode();
+    public void handleMoveNodeToTopRequest(final MoveNodeToTopRequest request) {
+        final SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToTop();
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(popupNode.getParent());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
@@ -1192,10 +1234,10 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeUpRequest(MoveNodeUpRequest request) {
-        SortableDefaultMutableTreeNode popupNode = request.getNode();
+    public void handleMoveNodeUpRequest(final MoveNodeUpRequest request) {
+        final SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeUp();
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(popupNode.getParent());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
@@ -1206,10 +1248,10 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeDownRequest(MoveNodeDownRequest request) {
-        SortableDefaultMutableTreeNode popupNode = request.getNode();
+    public void handleMoveNodeDownRequest(final MoveNodeDownRequest request) {
+        final SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeDown();
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(popupNode.getParent());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
@@ -1220,10 +1262,10 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeToBottomRequest(MoveNodeToBottomRequest request) {
-        SortableDefaultMutableTreeNode popupNode = request.getNode();
+    public void handleMoveNodeToBottomRequest(final MoveNodeToBottomRequest request) {
+        final SortableDefaultMutableTreeNode popupNode = request.getNode();
         popupNode.moveNodeToBottom();
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(popupNode.getParent());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
@@ -1234,8 +1276,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveIndentRequest(MoveIndentRequest request) {
-        List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+    public void handleMoveIndentRequest(final MoveIndentRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
         for (SortableDefaultMutableTreeNode node : nodes) {
             node.indentNode();
         }
@@ -1249,8 +1291,8 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveOutdentRequest(MoveOutdentRequest request) {
-        List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+    public void handleMoveOutdentRequest(final MoveOutdentRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
         for (SortableDefaultMutableTreeNode node : nodes) {
             node.outdentNode();
         }
@@ -1265,9 +1307,9 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRemoveNodeRequest(RemoveNodeRequest request) {
-        List<SortableDefaultMutableTreeNode> nodesToRemove = request.getNodes();
-        SortableDefaultMutableTreeNode firstParentNode = nodesToRemove.get(0).getParent();
+    public void handleRemoveNodeRequest(final RemoveNodeRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodesToRemove = request.getNodes();
+        final SortableDefaultMutableTreeNode firstParentNode = nodesToRemove.get(0).getParent();
         for (SortableDefaultMutableTreeNode deleteNode : nodesToRemove) {
             deleteNode.deleteNode();
         }
@@ -1280,20 +1322,21 @@ public class ApplicationEventHandler {
      * @param request the request the request
      */
     @Subscribe
-    public void handleDeleteNodeFileRequest(DeleteNodeFileRequest request) {
-        SortableDefaultMutableTreeNode node = request.getNode();
-        Object userObj = node.getUserObject();
-        if (!(userObj instanceof PictureInfo)) {
+    public void handleDeleteNodeFileRequest(final DeleteNodeFileRequest request) {
+        try {
+            if (!(request.getNode().getUserObject() instanceof PictureInfo pi)) {
+                return;
+            } else {
+                if (pi.getImageFile() == null) {
+                    return;
+                }
+            }
+        } catch (NullPointerException ex) {
             return;
         }
 
-        PictureInfo pi = (PictureInfo) userObj;
-        File highresFile = pi.getImageFile();
-        if (highresFile == null) {
-            return;
-        }
-
-        int option = JOptionPane.showConfirmDialog(
+        final File highresFile = ((PictureInfo) request.getNode().getUserObject()).getImageFile();
+        final int option = JOptionPane.showConfirmDialog(
                 Settings.anchorFrame,
                 Settings.jpoResources.getString("FileDeleteLabel") + highresFile.toString() + "\n" + Settings.jpoResources.getString("areYouSure"),
                 Settings.jpoResources.getString("FileDeleteTitle"),
@@ -1309,7 +1352,7 @@ public class ApplicationEventHandler {
                 }
             }
 
-            node.deleteNode();
+            request.getNode().deleteNode();
 
             if (!ok) {
                 JOptionPane.showMessageDialog(Settings.anchorFrame,
@@ -1326,18 +1369,18 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleDeleteMultiNodeFileRequest(DeleteMultiNodeFileRequest request) {
-        List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
-        JTextArea textArea = new JTextArea();
+    public void handleDeleteMultiNodeFileRequest(final DeleteMultiNodeFileRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+        final JTextArea textArea = new JTextArea();
         textArea.setText("");
-        for (SortableDefaultMutableTreeNode selectedNode : nodes) {
+        for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
             if (selectedNode.getUserObject() instanceof PictureInfo) {
                 textArea.append(((PictureInfo) selectedNode.getUserObject()).getImageLocation() + "\n");
             }
         }
         textArea.append(Settings.jpoResources.getString("areYouSure"));
 
-        int option = JOptionPane.showConfirmDialog(
+        final int option = JOptionPane.showConfirmDialog(
                 Settings.anchorFrame, //very annoying if the main window is used as it forces itself into focus.
                 textArea,
                 Settings.jpoResources.getString("FileDeleteLabel"),
@@ -1345,12 +1388,10 @@ public class ApplicationEventHandler {
 
         if (option == 0) {
             for (SortableDefaultMutableTreeNode selectedNode : nodes) {
-                PictureInfo pi;
-                if (selectedNode.getUserObject() instanceof PictureInfo) {
-                    pi = (PictureInfo) selectedNode.getUserObject();
+                if (selectedNode.getUserObject() instanceof PictureInfo pi) {
                     boolean ok = false;
 
-                    File highresFile = pi.getImageFile();
+                    final File highresFile = pi.getImageFile();
                     if (highresFile.exists()) {
                         ok = highresFile.delete();
                         if (!ok) {
@@ -1382,7 +1423,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleOpenRecentCollectionRequest(OpenRecentCollectionRequest request) {
+    public void handleOpenRecentCollectionRequest(final OpenRecentCollectionRequest request) {
         final int i = request.getIndex();
 
         new Thread("OpenRecentCollectionRequest") {
@@ -1415,7 +1456,7 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handleChooseAndAddPicturesToGroupRequest(ChooseAndAddPicturesToGroupRequest request) {
+    public void handleChooseAndAddPicturesToGroupRequest(final ChooseAndAddPicturesToGroupRequest request) {
         new PictureFileChooser(request.getNode());
     }
 
@@ -1425,16 +1466,16 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handleChooseAndAddFlatfileRequest(ChooseAndAddFlatfileRequest request) {
-        JFileChooser jFileChooser = new JFileChooser();
+    public void handleChooseAndAddFlatfileRequest(final ChooseAndAddFlatfileRequest request) {
+        final JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
         jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileOpenButtonText"));
         jFileChooser.setDialogTitle(Settings.jpoResources.getString("addFlatFileTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
-        int returnVal = jFileChooser.showOpenDialog(Settings.anchorFrame);
+        final int returnVal = jFileChooser.showOpenDialog(Settings.anchorFrame);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File chosenFile = jFileChooser.getSelectedFile();
+            final File chosenFile = jFileChooser.getSelectedFile();
             JpoEventBus.getInstance().post(new AddFlatFileRequest(request.getNode(), chosenFile));
 
         }
@@ -1446,7 +1487,7 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handleAddFlatFileRequest(AddFlatFileRequest request) {
+    public void handleAddFlatFileRequest(final AddFlatFileRequest request) {
         FlatFileReader.handleRequest(request);
     }
 
@@ -1456,10 +1497,10 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeToNodeRequest(MoveNodeToNodeRequest request) {
-        List<SortableDefaultMutableTreeNode> movingNodes = request.getMovingNodes();
-        SortableDefaultMutableTreeNode targetGroup = request.getTargetNode();
-        for (SortableDefaultMutableTreeNode movingNode : movingNodes) {
+    public void handleMoveNodeToNodeRequest(final MoveNodeToNodeRequest request) {
+        final List<SortableDefaultMutableTreeNode> movingNodes = request.getMovingNodes();
+        final SortableDefaultMutableTreeNode targetGroup = request.getTargetNode();
+        for (final SortableDefaultMutableTreeNode movingNode : movingNodes) {
             movingNode.moveToLastChild(targetGroup);
         }
     }
@@ -1470,7 +1511,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleOpenLicenceFrameRequest(OpenLicenceFrameRequest request) {
+    public void handleOpenLicenceFrameRequest(final OpenLicenceFrameRequest request) {
         new LicenseWindow();
     }
 
@@ -1480,7 +1521,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleHelpAboutFrameRequest(OpenHelpAboutFrameRequest request) {
+    public void handleHelpAboutFrameRequest(final OpenHelpAboutFrameRequest request) {
         new HelpAboutWindow();
     }
 
@@ -1490,7 +1531,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleOpenPrivacyFrameRequest(OpenPrivacyFrameRequest request) {
+    public void handleOpenPrivacyFrameRequest(final OpenPrivacyFrameRequest request) {
         new PrivacyJFrame();
     }
 
@@ -1500,7 +1541,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleStartCameraWatchDaemonRequest(StartCameraWatchDaemonRequest request) {
+    public void handleStartCameraWatchDaemonRequest(final StartCameraWatchDaemonRequest request) {
         new CameraWatchDaemon();
     }
 
@@ -1600,10 +1641,10 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleSetPictureRotationRequest(SetPictureRotationRequest request) {
-        PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
+    public void handleSetPictureRotationRequest(final SetPictureRotationRequest request) {
+        final PictureInfo pictureInfo = (PictureInfo) request.getNode().getUserObject();
         pictureInfo.setRotation(request.getAngle());
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(request.getNode());
         nodes.add(request.getNode().getParent());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, request.getPriority()));
@@ -1670,63 +1711,6 @@ public class ApplicationEventHandler {
         }
 
     }
-
-
-    /**
-     * This method fires up a user function if it can. User functions are only
-     * valid on PictureInfo nodes.
-     *
-     * @param userFunction The user function to be executed in the array
-     *                     Settings.userFunctionCmd
-     * @param myObject     The PictureInfo upon which the user function should be
-     *                     executed.
-     */
-    private static void runUserFunction(final int userFunction, final PictureInfo myObject) {
-        if ((userFunction < 0) || (userFunction >= Settings.MAX_USER_FUNCTIONS)) {
-            LOGGER.info("Error: called with an out of bounds index");
-            return;
-        }
-        String command = Settings.getUserFunctionCmd()[userFunction];
-        if ((command == null) || (command.length() == 0)) {
-            LOGGER.log(Level.INFO, "Command {0} is not properly defined", Integer.toString(userFunction));
-            return;
-        }
-
-        final String filename = (myObject).getImageFile().toString();
-        command = command.replaceAll("%f", filename);
-
-        final String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
-        command = command.replaceAll("%e", escapedFilename);
-
-        try {
-            final URL pictureURL = myObject.getImageFile().toURI().toURL();
-            command = command.replaceAll("%u", pictureURL.toString());
-        } catch (final MalformedURLException x) {
-            LOGGER.log(Level.SEVERE, "Could not substitute %u with the URL: {0}", x.getMessage());
-            return;
-        }
-
-
-        LOGGER.log(Level.INFO, "Command to run is: {0}", command);
-        try {
-            // Had big issues here because the simple exec (String) calls a StringTokenizer
-            // which messes up the filename parameters
-            int blank = command.indexOf(' ');
-            if (blank > -1) {
-                final String[] cmdarray = new String[2];
-                cmdarray[0] = command.substring(0, blank);
-                cmdarray[1] = command.substring(blank + 1);
-                Runtime.getRuntime().exec(cmdarray);
-            } else {
-                final String[] cmdarray = new String[1];
-                cmdarray[0] = command;
-                Runtime.getRuntime().exec(cmdarray);
-            }
-        } catch (final IOException x) {
-            LOGGER.log(Level.INFO, "Runtime.exec collapsed with and IOException: {0}", x.getMessage());
-        }
-    }
-
 
     /**
      * Handles the RemoveOldLowresThumbnailsRequest request
