@@ -2,12 +2,14 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
-version: 2
+orbs:
+  gradle: circleci/gradle@6.7-rc-1
+version: 2.1
 jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:11.0.3-jdk-stretch
+      - image: circleci/openjdk:14.0.2
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
