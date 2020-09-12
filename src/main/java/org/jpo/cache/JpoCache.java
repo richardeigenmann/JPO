@@ -218,10 +218,10 @@ public class JpoCache {
      * @return the thumbnail
      */
     private ImageBytes createThumbnail(File file, double rotation, int maxWidth, int maxHeight) {
-        Dimension maxDimension = new Dimension(maxWidth, maxHeight);
+        final Dimension maxDimension = new Dimension(maxWidth, maxHeight);
 
         // create a new thumbnail from the highres
-        ScalablePicture scalablePicture = new ScalablePicture();
+        final ScalablePicture scalablePicture = new ScalablePicture();
         if (Settings.thumbnailFastScale) {
             scalablePicture.setFastScale();
         } else {
@@ -238,15 +238,15 @@ public class JpoCache {
         if (scalablePicture.getScaledPicture() == null) {
             return null;
         }
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         scalablePicture.writeScaledJpg(bos);
-        ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
+        final ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
 
         try {
-            Path imagePath = Paths.get(file.toURI());
+            final Path imagePath = Paths.get(file.toURI());
             imageBytes.setLastModification(Files.getLastModifiedTime(imagePath));
 
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             Logger.getLogger(JpoCache.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
@@ -283,21 +283,21 @@ public class JpoCache {
      * @return The thumbnail
      * @throws IOException if something went wrong
      */
-    public ImageBytes getGroupThumbnailImageBytes(List<SortableDefaultMutableTreeNode> childPictureNodes) throws IOException {
-        int leftMargin = 15;
-        int margin = 10;
-        int topMargin = 65;
-        int horizontalPics = (getThumbnailDimensions().width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
-        int verticalPics = (getThumbnailDimensions().height - topMargin) / (Settings.miniThumbnailSize.height + margin);
-        int numberOfPics = horizontalPics * verticalPics;
+    public ImageBytes getGroupThumbnailImageBytes(final List<SortableDefaultMutableTreeNode> childPictureNodes) throws IOException {
+        final int leftMargin = 15;
+        final int margin = 10;
+        final int topMargin = 65;
+        final int horizontalPics = (getThumbnailDimensions().width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+        final int verticalPics = (getThumbnailDimensions().height - topMargin) / (Settings.miniThumbnailSize.height + margin);
+        final int numberOfPics = horizontalPics * verticalPics;
 
-        StringBuilder sb = new StringBuilder("Group-");
+        final StringBuilder sb = new StringBuilder("Group-");
         for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
             PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
             sb.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
         }
 
-        String key = sb.toString();
+        final String key = sb.toString();
         ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
 
         if (imageBytes != null) {
@@ -306,9 +306,9 @@ public class JpoCache {
 
                 boolean thumbnailNeedsRefresh = false;
                 for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
-                    PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
-                    Path imagePath = Paths.get(pictureInfo.getImageURIOrNull());
-                    FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+                    final PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+                    final Path imagePath = Paths.get(pictureInfo.getImageURIOrNull());
+                    final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
                     if (lastModification.compareTo(thumbnailLastModification) > 0) {
                         thumbnailNeedsRefresh = true;
                         break;
@@ -318,7 +318,7 @@ public class JpoCache {
                     imageBytes = createGroupThumbnailAndStoreInCache(key, numberOfPics, childPictureNodes);
 
                 }
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 throw (ex);
             }
         } else {
@@ -339,31 +339,31 @@ public class JpoCache {
      * @throws IOException when things go wrong
      */
     private ImageBytes createGroupThumbnailAndStoreInCache(
-            String key,
-            int numberOfPics,
-            List<SortableDefaultMutableTreeNode> childPictureNodes)
+            final String key,
+            final int numberOfPics,
+            final List<SortableDefaultMutableTreeNode> childPictureNodes)
             throws IOException {
-        BufferedImage groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
-        Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
+        final BufferedImage groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
+        final Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
 
         int leftMargin = 15;
         int margin = 10;
         int topMargin = 65;
         int horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
 
-        ScalablePicture scalablePicture = new ScalablePicture();
+        final ScalablePicture scalablePicture = new ScalablePicture();
         FileTime mostRecentPictureModification = FileTime.fromMillis(0);
         for (int picsProcessed = 0; (picsProcessed < numberOfPics) && (picsProcessed < childPictureNodes.size()); picsProcessed++) {
-            PictureInfo pi = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
+            final PictureInfo pi = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
 
-            Path imagePath = Paths.get(pi.getImageURIOrNull());
-            FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+            final Path imagePath = Paths.get(pi.getImageURIOrNull());
+            final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
             if (lastModification.compareTo(mostRecentPictureModification) > 0) {
                 mostRecentPictureModification = lastModification;
             }
 
             int x = margin + ((picsProcessed % horizontalPics) * (Settings.miniThumbnailSize.width + margin));
-            int yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
+            final int yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
             int y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
 
             scalablePicture.loadPictureImd(pi.getImageFile(), pi.getRotation());
@@ -376,9 +376,9 @@ public class JpoCache {
             groupThumbnailGraphics.drawImage(scalablePicture.getScaledPicture(), x, y, null);
         }
 
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ScalablePicture.writeJpg(bos, groupThumbnail, 0.8f);
-        ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
+        final ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
 
         imageBytes.setLastModification(mostRecentPictureModification);
 

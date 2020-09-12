@@ -1,7 +1,6 @@
 package org.jpo.datamodel;
 
 import com.google.common.hash.HashCode;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedWriter;
@@ -108,10 +107,10 @@ public class PictureInfoTest {
      */
     @Test
     public void testAppendToDescription() {
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setDescription("A picture description");
         pi.appendToDescription(" concatenated from two texts");
-        assertEquals("Expecting that the description concatenated", "A picture description concatenated from two texts", pi.getDescription());
+        assertEquals("A picture description concatenated from two texts", pi.getDescription());
     }
 
     /**
@@ -119,9 +118,8 @@ public class PictureInfoTest {
      */
     @Test
     public void testDescriptionContains() {
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setDescription("A picture of a big town at sunset");
-        // Expecting to find a substring
         assertTrue( pi.descriptionContains("town"));
     }
 
@@ -130,15 +128,15 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetImageLocation() {
-        PictureInfo pi = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
-        String highresLocation = pi.getImageLocation();
+        final PictureInfo pi = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
+        final String highresLocation = pi.getImageLocation();
         assertEquals("file:/dir/picture.jpg", highresLocation);
     }
 
     @Test
     public void testGetImageLocationNull() {
-        PictureInfo pi = new PictureInfo();
-        String highresLocation = pi.getImageLocation();
+        final PictureInfo pi = new PictureInfo();
+        final String highresLocation = pi.getImageLocation();
         assertEquals("", highresLocation);
     }
 
@@ -157,39 +155,38 @@ public class PictureInfoTest {
      * Test of getImageURIOrNull method, of class PictureInfo.
      */
     @Test
-    @Disabled("Was Deprecated")
     public void testGetImageURIOrNull() {
-        PictureInfo pi = new PictureInfo();
-        String goodLocation = "/image.jpg";
+        final PictureInfo pi = new PictureInfo();
+        final String goodLocation = "/image.jpg";
         pi.setImageLocation(new File(goodLocation));
-        URI pulledUri = pi.getImageURIOrNull();
+        final URI pulledUri = pi.getImageURIOrNull();
         assertEquals("file:" + goodLocation, pulledUri.toString());
 
-        PictureInfo pi2 = new PictureInfo();
-        URI nullUri = pi2.getImageURIOrNull();
-        assertEquals("", nullUri.toString());
+        final PictureInfo pi2 = new PictureInfo();
+        final URI nullUri = pi2.getImageURIOrNull();
+        assertNull(nullUri);
 
-        PictureInfo pi3 = new PictureInfo();
-        String badLocation = "?äöü&~`";
+        final PictureInfo pi3 = new PictureInfo();
+        final String badLocation = "?äöü&~`";
         pi3.setImageLocation(new File(badLocation));
-        URI nullUri2 = pi3.getImageURIOrNull();
-        assertNull(nullUri2);
+        final URI nullUri2 = pi3.getImageURIOrNull();
+        assertTrue(nullUri2.toString().contains("äöü"));
 
     }
 
     @Test
     public void testSetImageLocationString() {
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setImageLocation(new File("/dir/picture.jpg"));
-        File f = pi.getImageFile();
-        assertEquals("Testing what went in comes out", f.toString(), "/dir/picture.jpg");
+        final File f = pi.getImageFile();
+        assertEquals(f.toString(), "/dir/picture.jpg");
     }
 
     @Test
     public void testSetImageLocationWithSpace() {
-        PictureInfo pi = new PictureInfo();
+        final PictureInfo pi = new PictureInfo();
         pi.setImageLocation(new File("/dir/picture file.jpg"));
-        File f = pi.getImageFile();
+        final File f = pi.getImageFile();
         assertEquals(f.toString(), "/dir/picture file.jpg");
     }
 

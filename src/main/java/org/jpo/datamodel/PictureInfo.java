@@ -275,7 +275,7 @@ public class PictureInfo implements Serializable {
     public synchronized URI getImageURIOrNull() {
         try {
             return getImageFile().toURI();
-        } catch (IllegalArgumentException ex) {
+        } catch (final NullPointerException | IllegalArgumentException ex) {
             return null;
         }
     }
