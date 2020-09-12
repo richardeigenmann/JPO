@@ -3,7 +3,7 @@
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
 orbs:
-  gradle: circleci/gradle@6.7-rc-1
+  gradle: circleci/gradle@2.2.0
 version: 2.1
 jobs:
   build:
