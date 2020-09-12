@@ -186,7 +186,7 @@ public class PictureCollection {
      */
     public static void streamLoad(InputStream is, SortableDefaultMutableTreeNode node) {
         node.getPictureCollection().setSendModelUpdates(false); // turn off model notification of each add for performance
-        new XmlReader(is, node);
+        XmlReader.read(is, node);
         node.getPictureCollection().setSendModelUpdates(true);
         node.getPictureCollection().sendNodeStructureChanged(node);
     }

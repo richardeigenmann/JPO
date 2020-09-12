@@ -45,7 +45,7 @@ public class TextQuery implements Serializable, Query {
      * This flag indicates whether dates that can't be parsed should be treaded
      * as matches or fails	;
      */
-    public final boolean includeNullDates = true;
+    private final boolean includeNullDates = true;
 
     /**
      * Constructor to create a new Query object.

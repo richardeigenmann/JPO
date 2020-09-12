@@ -5,7 +5,7 @@ import org.jpo.datamodel.Settings.FieldCodes;
 /*
 SortOption.java:  a String, int object that helps with the sortoptions
 
-Copyright (C) 2002, 2014  Richard Eigenmann.
+Copyright (C) 2002, 2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,7 +28,7 @@ public class SortOption {
     /**
      * remember the description of the sort field
      */
-    private final String sortOption;
+    private final String sortOptionText;
 
     /**
      * remember the code for this field
@@ -38,11 +38,12 @@ public class SortOption {
 
     /**
      * Constructs a SortOption with the description of the sort and the sort key
-     * @param sortOption the description of the sort
-     * @param sortCode the code for the sort
+     *
+     * @param sortOptionText the description of the sort
+     * @param sortCode       the code for the sort
      */
-    SortOption( String sortOption, FieldCodes sortCode ) {
-        this.sortOption = sortOption;
+    public SortOption(final String sortOptionText, final FieldCodes sortCode) {
+        this.sortOptionText = sortOptionText;
         this.sortCode = sortCode;
     }
 
@@ -52,7 +53,7 @@ public class SortOption {
      * @return the sort option description
      */
     public String getDescription() {
-        return sortOption;
+        return sortOptionText;
     }
 
 

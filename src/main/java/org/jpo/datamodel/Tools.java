@@ -17,7 +17,7 @@ import java.util.zip.Adler32;
 
 
 /*
- Copyright (C) 2002-2019  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -81,22 +81,22 @@ public class Tools {
      * @param fileArray The files to count
      * @return the number of real files in the array of files
      */
-    public static int countfiles(File[] fileArray) {
+    public static int countfiles(final File[] fileArray) {
         if (fileArray == null) {
             return 0;
         }
 
         int numFiles = 0;
-        for (File fileEntry : fileArray) {
+        for (final File fileEntry : fileArray) {
             try {
                 if (!fileEntry.isDirectory()) {
                     numFiles++;
                 } else {
                     numFiles += countfiles(fileEntry.listFiles());
                 }
-            } catch (SecurityException x) {
+            } catch (final SecurityException x) {
                 // Log the error and ignore it and continue
-                LOGGER.log(Level.INFO, "Tools.countfiles: got a SecurityException on file: {0} \n{1}", new Object[]{fileEntry.toString(), x.getMessage()});
+                LOGGER.log(Level.INFO, "Got a SecurityException on file: {0} \n{1}", new Object[]{fileEntry, x.getMessage()});
             }
         }
         return numFiles;
@@ -113,13 +113,13 @@ public class Tools {
      * @return true if there is at least one picture in the subdirectory, false
      * if there is nothing.
      */
-    public static boolean hasPictures(File subDirectory) {
-        File[] fileArray = subDirectory.listFiles();
+    public static boolean hasPictures(final File subDirectory) {
+        final File[] fileArray = subDirectory.listFiles();
         if (fileArray == null) {
             return false;
         }
 
-        for (File file : fileArray) {
+        for (final File file : fileArray) {
             if (file.isDirectory()) {
                 if (hasPictures(file)) {
                     return true;
@@ -137,19 +137,19 @@ public class Tools {
      * target File location. Works better because files are writable whilst most
      * URL are read only.
      *
-     * @param sourceFile  source URL
+     * @param sourceFile source URL
      * @param targetFile target file
      */
-    public static void copyPicture(File sourceFile, File targetFile) {
+    public static void copyPicture(final File sourceFile, final File targetFile) {
         try (
-            InputStream in = new FileInputStream(sourceFile);
-            OutputStream out = new FileOutputStream(targetFile)) {
+                final InputStream in = new FileInputStream(sourceFile);
+                final OutputStream out = new FileOutputStream(targetFile)) {
 
-            BufferedInputStream bin = new BufferedInputStream(in);
-            BufferedOutputStream bout = new BufferedOutputStream(out);
+            final BufferedInputStream bin = new BufferedInputStream(in);
+            final BufferedOutputStream bout = new BufferedOutputStream(out);
 
             copyBufferedStream(bin, bout);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
                     Settings.jpoResources.getString("copyPictureError1")
@@ -172,8 +172,8 @@ public class Tools {
      * @return the crc of the file
      * @throws IOException Exception of error
      */
-    public static long copyBufferedStream(BufferedInputStream bin,
-                                          BufferedOutputStream bout)
+    public static long copyBufferedStream(final BufferedInputStream bin,
+                                          final BufferedOutputStream bout)
             throws IOException {
 
         Adler32 crc = new Adler32();
@@ -202,15 +202,15 @@ public class Tools {
      * @return the new picture filename
      */
     @NotNull
-    public static File inventPicFilename(File targetDir, String startName) {
+    public static File inventPicFilename(final File targetDir, final String startName) {
         File testFile = new File(targetDir, startName);
         if (!testFile.exists()) {
             return testFile;
         }
 
         int dotPoint = startName.lastIndexOf('.');
-        String startNameRoot = startName.substring(0, dotPoint);
-        String startNameSuffix = startName.substring(dotPoint);
+        final String startNameRoot = startName.substring(0, dotPoint);
+        final String startNameSuffix = startName.substring(dotPoint);
 
         for (int i = 1; i < 50; i++) {
             testFile = new File(targetDir, startNameRoot + "_" + i + startNameSuffix);
@@ -226,7 +226,7 @@ public class Tools {
             }
         }
 
-        LOGGER.severe(String.format("Could not invent a picture filename for the directory %s and the name %s returning any long string", targetDir.toString(), startName));
+        LOGGER.severe(String.format("Could not invent a picture filename for the directory %s and the name %s returning any long string", targetDir, startName));
 
         return new File(targetDir, RandomStringUtils.random(50, true, true));
     }
@@ -265,10 +265,7 @@ public class Tools {
                         JOptionPane.ERROR_MESSAGE)
         );
 
-        // Sonar says not to run gc - don't be smarter than the garbage collector
-        //System.gc();
         System.runFinalization();
-
         LOGGER.info("ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization.");
         Tools.freeMem();
     }
@@ -281,7 +278,7 @@ public class Tools {
      * @return returns the checksum as a Long or Long.MIN_VALUE to indicate
      * failure.
      */
-    public static long calculateChecksum(File file) {
+    public static long calculateChecksum(final File file) {
         long checksum;
         try {
             checksum = calculateChecksum(new BufferedInputStream(new FileInputStream(file)));
@@ -301,9 +298,9 @@ public class Tools {
      * @return returns the checksum as a Long or Long.MIN_VALUE to indicate
      * failure.
      */
-    public static long calculateChecksum(InputStream inputStream) {
+    public static long calculateChecksum(final InputStream inputStream) {
         warnOnEDT();
-        Adler32 crc = new Adler32();
+        final Adler32 crc = new Adler32();
         int blockLen;
 
         try {
@@ -327,9 +324,9 @@ public class Tools {
      * @param formatString The format string
      * @return current date and time
      */
-    public static String currentDate(String formatString) {
-        SimpleDateFormat formatter = new SimpleDateFormat(formatString);
-        Date currentTime = new Date();
+    public static String currentDate(final String formatString) {
+        final SimpleDateFormat formatter = new SimpleDateFormat(formatString);
+        final Date currentTime = new Date();
         return formatter.format(currentTime);
     }
 
@@ -340,10 +337,10 @@ public class Tools {
      * @param dateString the String to be parsed
      * @return the Java Calendar object or null if it could not be parsed.
      */
-    public static Calendar parseDate(String dateString) {
-        SimpleDateFormat df = new SimpleDateFormat();
+    public static Calendar parseDate(final String dateString) {
+        final SimpleDateFormat df = new SimpleDateFormat();
         df.setLenient(true);
-        String[] patterns = {
+        final String[] patterns = {
                 "dd.MM.yyyy HH:mm:ss",
                 "dd.MM.yyyy HH:mm",
                 "dd.MM.yyyy",
@@ -377,7 +374,7 @@ public class Tools {
             }
         }
         if (d != null) {
-            Calendar cal = Calendar.getInstance();
+            final Calendar cal = Calendar.getInstance();
             cal.setTime(d);
             return cal;
         } else {
@@ -393,7 +390,7 @@ public class Tools {
      * happen. This method allows easy checking by writing:
      * <code>Tools.checkEDT()</code>
      */
-    public static void checkEDT() throws EdtViolationException {
+    public static void checkEDT() {
         if (!SwingUtilities.isEventDispatchThread()) {
             throw new EdtViolationException("Not on EDT! Throwing error.");
         }
@@ -408,9 +405,6 @@ public class Tools {
         if (SwingUtilities.isEventDispatchThread()) {
             LOGGER.warning("We are on the EDT and should not be! This is inefficient Continuing normally.");
             Thread.dumpStack();
-            for (StackTraceElement trace : new Throwable().getStackTrace()) {
-                LOGGER.fine(trace.toString());
-            }
         }
     }
 
