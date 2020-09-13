@@ -3,11 +3,13 @@ package org.jpo.gui;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
+import org.jpo.gui.swing.CategoryPopupMenu;
 import org.jpo.gui.swing.PicturePopupMenu;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -188,15 +190,27 @@ public class ThumbnailDescriptionController
         }
     }
 
-    private void setLabels() {
+    private void setCategories() {
+        panel.clearCategories();
         if (referringNode == null) {
-            panel.setLabels("");
+            panel.setCategories("");
         } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
-            panel.setLabels(getCategoriesText(pi));
+            panel.setCategories(getCategoriesText(pi));
+            final Collection<Integer> categories = pi.getCategoryAssignments();
+            if (!(categories == null)) {
+                categories.forEach(category -> {
+                    String categoryDescription = Settings.getPictureCollection().getCategory(category);
+                    AbstractButton component = panel.addCategory(categoryDescription);
+                    component.addActionListener(e ->
+                            ((PictureInfo) referringNode.getUserObject()).removeCategory(category)
+                    );
+                });
+            }
+
         } else if (referringNode.getUserObject() instanceof GroupInfo) {
-            panel.setLabels("");
+            panel.setCategories("");
         } else {
-            panel.setLabels("");
+            panel.setCategories("");
         }
     }
 
@@ -322,6 +336,9 @@ public class ThumbnailDescriptionController
             } else if (this.referringNode.getUserObject() instanceof GroupInfo gi) {
                 gi.removeGroupInfoChangeListener(this);
             }
+            for (ActionListener al : panel.getCategoryMenuPopupButton().getActionListeners()) {
+                panel.getCategoryMenuPopupButton().removeActionListener(al);
+            }
         }
 
         this.referringNode = referringNode;
@@ -330,6 +347,10 @@ public class ThumbnailDescriptionController
         if (referringNode != null) {
             if (referringNode.getUserObject() instanceof PictureInfo pi) {
                 pi.addPictureInfoChangeListener(this);
+                panel.getCategoryMenuPopupButton().addActionListener(e ->
+                        openCategoriesPopupMenu(panel.getCategoryMenuPopupButton(), 0, 0)
+                );
+
             } else if (referringNode.getUserObject() instanceof GroupInfo gi) {
                 gi.addGroupInfoChangeListener(this);
             }
@@ -339,11 +360,17 @@ public class ThumbnailDescriptionController
         setVisible(referringNode != null);
         setDescription();
         setFileLocation();
-        setLabels();
+        setCategories();
 
         formatDescription();
         showSlectionStatus();
     }
+
+    private void openCategoriesPopupMenu(final Component component, final int x, final int y) {
+        CategoryPopupMenu menu = new CategoryPopupMenu(referringNode);
+        menu.show(component, x, y);
+    }
+
 
     /**
      * here we get notified by the PictureInfo object that something has
@@ -361,7 +388,7 @@ public class ThumbnailDescriptionController
             }
 
             if (pictureInfoChangeEvent.getCategoryAssignmentsChanged()) {
-                setLabels();
+                setCategories();
             }
 
             if (pictureInfoChangeEvent.getWasSelected()) {

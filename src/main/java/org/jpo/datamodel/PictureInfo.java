@@ -1051,9 +1051,6 @@ public class PictureInfo implements Serializable {
      * @param key the key to add
      */
     public synchronized void addCategoryAssignment(final Integer key) {
-        if (categoryAssignments == null) {
-            categoryAssignments = new HashSet<>();
-        }
         if (categoryAssignments.add(key)) {
             sendCategoryAssignmentsChangedEvent();
         }

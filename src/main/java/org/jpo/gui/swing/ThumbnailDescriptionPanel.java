@@ -20,7 +20,6 @@ package org.jpo.gui.swing;
 
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
@@ -66,10 +65,17 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     private final JTextArea categoriesJTA = new JTextArea();
 
-    private final JScrollPane categoriesJSP = new JScrollPane(categoriesJTA,
+    private JPanel categoriesJPanel = new JPanel();
+
+    private final JScrollPane categoriesJSP = new JScrollPane(categoriesJPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
+    public JButton getCategoryMenuPopupButton() {
+        return categoryMenuPopupButton;
+    }
+
+    final JButton categoryMenuPopupButton = new JButton(">");
 
     public static Font getLargeFont() {
         return LARGE_FONT;
@@ -92,6 +98,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
     public ThumbnailDescriptionPanel() {
         initComponents();
     }
+
 
     private void initComponents() {
         this.setBackground(Color.WHITE);
@@ -116,15 +123,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 25));
         categoriesJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
 
-        final JMenu categoriesMenu = new JMenu("Categories");
-        final JMenuItem addCategoryMenuItem = new JMenuItem("Add Category");
-        categoriesMenu.add(addCategoryMenuItem);
-        final PictureCollection pictureCollection = Settings.getPictureCollection();
-        pictureCollection.getCategoryKeySet().forEach(category -> {
-            categoriesMenu.add(new JMenuItem(pictureCollection.getCategory(category)));
-        });
-
-        this.add(categoriesMenu, "hidemode 2, wrap");
+        categoriesJPanel.setLayout(new WrapLayout());
+        this.add(categoryMenuPopupButton, "hidemode 2, wrap");
 
         // this is a bit of a cludge to get the JTextArea to grow in height as text is
         // being entered. Annoyingly the getPreferredSize of the JTextArea doesn't immediately
@@ -230,10 +230,11 @@ public class ThumbnailDescriptionPanel extends JPanel {
         return getPictureDescriptionJTA().getText();
     }
 
-    public void setLabels(final String newLables) {
+    public void setCategories(final String newCategories) {
         final Runnable runnable = () -> {
-            categoriesJTA.setText(newLables);
-            categoriesJSP.setVisible(!"".equals(newLables));
+            categoriesJTA.setText(newCategories);
+            //categoriesJSP.setVisible(!"".equals(newCategories));
+            categoriesJSP.setVisible(true);
             setTextAreaSize();
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -241,6 +242,18 @@ public class ThumbnailDescriptionPanel extends JPanel {
         } else {
             SwingUtilities.invokeLater(runnable);
         }
+    }
+
+    public void clearCategories() {
+        categoriesJPanel.removeAll();
+    }
+
+    public AbstractButton addCategory(String categoryDescription) {
+        categoriesJPanel.add(new JLabel(categoryDescription));
+        final JButton removeButton = new JButton("x");
+        categoriesJPanel.add(removeButton);
+        categoriesJPanel.revalidate();
+        return removeButton;
     }
 
     /**
@@ -291,6 +304,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
                 this.revalidate();
             }
 
+            //categoriesJpanel.setSize(new Dimension(300, 1));
         };
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();

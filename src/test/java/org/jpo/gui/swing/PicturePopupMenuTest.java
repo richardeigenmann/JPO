@@ -173,6 +173,8 @@ public class PicturePopupMenuTest {
                 consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(18);
             });
         } catch (final InterruptedException | InvocationTargetException e) {
+            Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, e.getMessage());
+            e.printStackTrace();
             fail(e.getMessage());
             Thread.currentThread().interrupt();
         }
@@ -648,6 +650,7 @@ public class PicturePopupMenuTest {
 
     @Test
     public void testReplaceUnderscore() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final String s = "filename_extension.jpg";
         final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assert (o.isPresent());
