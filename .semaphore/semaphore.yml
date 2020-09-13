@@ -1,0 +1,18 @@
+version: v1.0
+name: Java
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+  containers:
+    - name: main
+      image: 'circleci/openjdk:14.0.2-jdk-buster'
+blocks:
+  - name: Gradle
+    task:
+      jobs:
+        - name: Build
+          commands:
+            - sem-version java 14
+            - checkout
+            - ./gradlew check
