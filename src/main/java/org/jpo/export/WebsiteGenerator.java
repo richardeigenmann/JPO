@@ -253,7 +253,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
             final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(options.getPicsPerRow(), out);
 
-            LOGGER.log(Level.INFO, "Writing: {0}", groupFile.toString());
+            LOGGER.log(Level.INFO, "Writing: {0}", groupFile);
             out.write("<!DOCTYPE HTML>");
             out.newLine();
             out.write("<html xml:lang=\"en\" lang=\"en\">");

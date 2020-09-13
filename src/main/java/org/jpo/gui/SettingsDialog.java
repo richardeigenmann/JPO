@@ -369,7 +369,7 @@ public class SettingsDialog extends JDialog {
 
         emailServerJPanel.add( new JLabel( Settings.jpoResources.getString( "predefinedEmailJLabel" ) ) );
 
-        JComboBox<String> predefinedEmailJComboBox = new JComboBox<String>();
+        JComboBox<String> predefinedEmailJComboBox = new JComboBox<>();
         predefinedEmailJComboBox.addItem( "Localhost" );
         predefinedEmailJComboBox.addItem( "Gmail" );
         predefinedEmailJComboBox.addItem( "Compuserve" );
@@ -701,13 +701,13 @@ public class SettingsDialog extends JDialog {
         }
 
         if ( !testFile.exists() ) {
-            LOGGER.log( Level.WARNING, "SettingsDialog.checkAutoLoad: {0} doesn''t exist.", testFile.toString() );
-            autoLoadJTextField.setForeground( Color.red );
+            LOGGER.log(Level.WARNING, "SettingsDialog.checkAutoLoad: {0} doesn''t exist.", testFile);
+            autoLoadJTextField.setForeground(Color.red);
             return;
         } else {
             if ( !testFile.canRead() ) {
-                LOGGER.log( Level.WARNING, "SettingsDialog.checkAutoLoad: {0} can''t read.", testFile.toString() );
-                autoLoadJTextField.setForeground( Color.red );
+                LOGGER.log(Level.WARNING, "SettingsDialog.checkAutoLoad: {0} can''t read.", testFile);
+                autoLoadJTextField.setForeground(Color.red);
                 return;
             }
         }

@@ -1117,7 +1117,7 @@ public class ApplicationEventHandler {
             for (SortableDefaultMutableTreeNode node : request.getNodes()) {
                 if (node.getUserObject() instanceof PictureInfo pi) {
                     final File sourceFile = pi.getImageFile();
-                    LOGGER.info(String.format("Processing file %s", sourceFile));
+                    LOGGER.log(Level.INFO, "Processing file {0}", sourceFile);
 
                     final ZipArchiveEntry entry = new ZipArchiveEntry(sourceFile, sourceFile.getName());
                     zipArchiveOutputStream.putArchiveEntry(entry);
@@ -1603,7 +1603,7 @@ public class ApplicationEventHandler {
                 LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
                 return;
             }
-            LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thumbnail", this));
+            LOGGER.log(Level.FINE, "refreshing the thumbnail on the node {0}%nAbout to create the thumbnail", this);
             final ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             t.setNode(new SingleNodeNavigator(node), 0);
         }

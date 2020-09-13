@@ -135,7 +135,7 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setSendModelUpdates(true);
 
         // tell the collection that the structure changed
-        LOGGER.log(Level.FINE, "Sending node structure changed event on node {0} after sort", this.toString());
+        LOGGER.log(Level.FINE, "Sending node structure changed event on node {0} after sort", this);
         getPictureCollection().sendNodeStructureChanged(this);
     }
 
@@ -1056,7 +1056,7 @@ public class SortableDefaultMutableTreeNode
      * @return The crc of the copied picture.
      */
     public static long copyPicture(final File sourceFile, final File targetFile) {
-        LOGGER.log(Level.FINE, "Copying file {0} to file {0}", new Object[]{sourceFile, targetFile});
+        LOGGER.log(Level.FINE, "Copying file {0} to file {1}", new Object[]{sourceFile, targetFile});
         try (
                 final InputStream in = new FileInputStream(sourceFile);
                 final OutputStream out = new FileOutputStream(targetFile)) {

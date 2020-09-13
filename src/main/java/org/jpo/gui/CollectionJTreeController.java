@@ -178,7 +178,7 @@ public class CollectionJTreeController {
 
             final int actionType = support.getDropAction();
             if (!((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE))) {
-                LOGGER.log(Level.INFO, "The event has an odd Action Type: {0}. Drop rejected. Copy is {1}, Move is {@}", new Object[]{actionType, TransferHandler.COPY, TransferHandler.MOVE});
+                LOGGER.log(Level.INFO, "The event has an odd Action Type: {0}. Drop rejected. Copy is {1}, Move is {2}", new Object[]{actionType, TransferHandler.COPY, TransferHandler.MOVE});
                 return false;
             }
 
