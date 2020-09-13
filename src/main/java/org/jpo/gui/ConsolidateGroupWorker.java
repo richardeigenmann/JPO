@@ -113,7 +113,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     @Override
     protected void done() {
-        final String done = String.format(Settings.jpoResources.getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
+        final String done = String.format(Settings.getJpoResources().getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
         progGui.setDoneString(done);
         progGui.switchToDoneMode();
 
@@ -122,10 +122,10 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         }
 
         if ( errorCount > 0 ) {
-            JOptionPane.showMessageDialog( progGui,
-                    String.format( "Could not move %d pictures", errorCount ),
-                    Settings.jpoResources.getString( "genericError" ),
-                    JOptionPane.ERROR_MESSAGE );
+            JOptionPane.showMessageDialog(progGui,
+                    String.format("Could not move %d pictures", errorCount),
+                    Settings.getJpoResources().getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
         }
 
     }

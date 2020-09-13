@@ -45,7 +45,7 @@ public class TextQuery implements Serializable, Query {
      * This flag indicates whether dates that can't be parsed should be treaded
      * as matches or fails	;
      */
-    private final boolean includeNullDates = true;
+    private static final boolean includeNullDates = true;
 
     /**
      * Constructor to create a new Query object.
@@ -160,12 +160,12 @@ public class TextQuery implements Serializable, Query {
      * @param index The component index that is to be returned.
      */
     @Override
-    public SortableDefaultMutableTreeNode getIndex( int index ) {
-        if ( index >= getNumberOfResults() ) // forces execute of query if not yet executed
+    public SortableDefaultMutableTreeNode getIndex(final int index) {
+        if (index >= getNumberOfResults()) // forces execute of query if not yet executed
         {
             return null;
         } else {
-            return searchResults.get( index );
+            return searchResults.get(index);
         }
     }
 
@@ -247,7 +247,7 @@ public class TextQuery implements Serializable, Query {
     public String getTitle() {
         String nodeDescription = ( startNode == null ) ? "" : startNode.getUserObject().toString();
 
-        return Settings.jpoResources.getString( "ThumbnailSearchResults" ) + anyField + Settings.jpoResources.getString( "ThumbnailSearchResults2" ) + nodeDescription;
+        return Settings.getJpoResources().getString("ThumbnailSearchResults") + anyField + Settings.getJpoResources().getString("ThumbnailSearchResults2") + nodeDescription;
     }
 
     /**

@@ -805,30 +805,30 @@ public class GenerateWebsiteRequest implements Request {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder( Settings.jpoResources.getString( "HtmlDistThumbnails" ) + "\n" );
-        sb.append( Settings.jpoResources.getString( "picsPerRowText" ) ).append( " " ).append( getPicsPerRow() ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ).append( " " ).append(getThumbnailWidth()).append( " x " ).append(getThumbnailHeight()).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ).append( " " ).append(getLowresJpgQualityPercent()).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "scalingSteps" ) ).append( " " ).append(getScalingSteps()).append( "\n" );
+        StringBuilder sb = new StringBuilder(Settings.getJpoResources().getString("HtmlDistThumbnails") + "\n");
+        sb.append(Settings.getJpoResources().getString("picsPerRowText")).append(" ").append(getPicsPerRow()).append("\n");
+        sb.append(Settings.getJpoResources().getString("thumbnailSizeJLabel")).append(" ").append(getThumbnailWidth()).append(" x ").append(getThumbnailHeight()).append("\n");
+        sb.append(Settings.getJpoResources().getString("lowresJpgQualitySlider")).append(" ").append(getLowresJpgQualityPercent()).append("\n");
+        sb.append(Settings.getJpoResources().getString("scalingSteps")).append(" ").append(getScalingSteps()).append("\n");
 
-        sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistMidres" ) ).append( "\n" );
-        sb.append( isGenerateMidresHtml() ? Settings.jpoResources.getString( "HtmlDistMidresHtml" ) + "\n" : "No medium size navigation pages\n" );
-        sb.append( isGenerateMap() ? Settings.jpoResources.getString( "GenerateMap" ) + "\n" : "No map\n" );
-        sb.append( isGenerateMouseover() ? Settings.jpoResources.getString( "org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox" ) + "\n" : "No  DHTML mouseover effects\n" );
-        sb.append( Settings.jpoResources.getString( "midresSizeJLabel" ) ).append( " " ).append(getMidresWidth()).append( " x " ).append(getMidresHeight()).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ).append( " " ).append(getMidresJpgQualityPercent()).append( "\n" );
+        sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistMidres")).append("\n");
+        sb.append(isGenerateMidresHtml() ? Settings.getJpoResources().getString("HtmlDistMidresHtml") + "\n" : "No medium size navigation pages\n");
+        sb.append(isGenerateMap() ? Settings.getJpoResources().getString("GenerateMap") + "\n" : "No map\n");
+        sb.append(isGenerateMouseover() ? Settings.getJpoResources().getString("org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox") + "\n" : "No  DHTML mouseover effects\n");
+        sb.append(Settings.getJpoResources().getString("midresSizeJLabel")).append(" ").append(getMidresWidth()).append(" x ").append(getMidresHeight()).append("\n");
+        sb.append(Settings.getJpoResources().getString("midresJpgQualitySlider")).append(" ").append(getMidresJpgQualityPercent()).append("\n");
 
-        sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistHighres" ) ).append( "\n" );
-        sb.append( isExportHighres() ? "Export Highres Pictures\n" : "Do not export Highres Pictures\n" );
-        sb.append( isRotateHighres() ? "Rotate Highres Pictures\n" : "Do not rotate Highres Pictures\n" );
-        sb.append( isGenerateZipfile() ? Settings.jpoResources.getString( "generateZipfileJCheckBox" ) + "\n" : "No Zipfile for download of Highres Pictures\n" );
-        sb.append( "Filename for Download Zipfile: " ).append( getDownloadZipFileName() ).append( "\n" );
-        sb.append( isLinkToHighres() ? Settings.jpoResources.getString( "linkToHighresJCheckBox" ) + "\n" : "No Link to high resolution pictures at current location\n" );
+        sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistHighres")).append("\n");
+        sb.append(isExportHighres() ? "Export Highres Pictures\n" : "Do not export Highres Pictures\n");
+        sb.append(isRotateHighres() ? "Rotate Highres Pictures\n" : "Do not rotate Highres Pictures\n");
+        sb.append(isGenerateZipfile() ? Settings.getJpoResources().getString("generateZipfileJCheckBox") + "\n" : "No Zipfile for download of Highres Pictures\n");
+        sb.append("Filename for Download Zipfile: ").append(getDownloadZipFileName()).append("\n");
+        sb.append(isLinkToHighres() ? Settings.getJpoResources().getString("linkToHighresJCheckBox") + "\n" : "No Link to high resolution pictures at current location\n");
 
-        sb.append( "\n" ).append( "Output mode: " ).append( getOutputTarget().name() );
+        sb.append("\n").append("Output mode: ").append(getOutputTarget().name());
 
-        sb.append( "\n" ).append( Settings.jpoResources.getString( "genericTargetDirText" ) ).append( getTargetDirectory().getPath() );
-        sb.append( "\n" );
+        sb.append("\n").append(Settings.getJpoResources().getString("genericTargetDirText")).append(getTargetDirectory().getPath());
+        sb.append("\n");
 
         sb.append( "\n" ).append( "Ftp Server: " ).append( getFtpServer() );
         sb.append( "\n" ).append( "Ftp Port: " ).append( getFtpPort() );
@@ -837,35 +837,31 @@ public class GenerateWebsiteRequest implements Request {
         sb.append( "\n" ).append( "Ftp Target Dir: " ).append( getFtpTargetDir() );
         sb.append( "\n" );
 
-        sb.append( "\n" ).append( "SSH Server: " ).append( getSshServer() );
-        sb.append( "\n" ).append( "SSH Port: " ).append( getSshPort() );
-        sb.append( "\n" ).append( "SSH User: " ).append( getSshUser() );
-        sb.append( "\n" ).append( "SSH Authentication: " ).append( getSshAuthType().name() );
-        sb.append( "\n" ).append( "SSH Password: " ).append( getSshPassword() );
-        sb.append( "\n" ).append( "SSH Key File: " ).append( getSshKeyFile() );
-        sb.append( "\n" ).append( "SSH Target Dir: " ).append( getSshTargetDir() );
-        sb.append( "\n" );
+        sb.append("\n").append("SSH Server: ").append(getSshServer());
+        sb.append("\n").append("SSH Port: ").append(getSshPort());
+        sb.append("\n").append("SSH User: ").append(getSshUser());
+        sb.append("\n").append("SSH Authentication: ").append(getSshAuthType().name());
+        sb.append("\n").append("SSH Password: ").append(getSshPassword());
+        sb.append("\n").append("SSH Key File: ").append(getSshKeyFile());
+        sb.append("\n").append("SSH Target Dir: ").append(getSshTargetDir());
+        sb.append("\n");
 
 
-        sb.append( "\n" ).append( Settings.jpoResources.getString( "HtmlDistOptions" ) ).append( "\n" );
-        sb.append( Settings.jpoResources.getString( "HtmlDistillerNumbering" ) ).append( " " );
-        switch ( getPictureNaming() ) {
-            case PICTURE_NAMING_BY_HASH_CODE:
-                sb.append( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
-                break;
-            case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                sb.append( Settings.jpoResources.getString( "originalNameRadioButton" ) );
-                break;
-            default: // case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                sb.append( Settings.jpoResources.getString( "sequentialRadioButton" ) );
-                sb.append( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) ).append( " " ).append(getSequentialStartNumber());
-                break;
+        sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistOptions")).append("\n");
+        sb.append(Settings.getJpoResources().getString("HtmlDistillerNumbering")).append(" ");
+        switch (getPictureNaming()) {
+            case PICTURE_NAMING_BY_HASH_CODE -> sb.append(Settings.getJpoResources().getString("hashcodeRadioButton"));
+            case PICTURE_NAMING_BY_ORIGINAL_NAME -> sb.append(Settings.getJpoResources().getString("originalNameRadioButton"));
+            default -> {
+                sb.append(Settings.getJpoResources().getString("sequentialRadioButton"));
+                sb.append(Settings.getJpoResources().getString("sequentialRadioButtonStart")).append(" ").append(getSequentialStartNumber());
+            }
         }
 
-        sb.append( "\n" );
-        sb.append( "Webpage Font Color: " ).append( getFontColor().toString() ).append( "\n" );
-        sb.append( "Webpage Background Color: " ).append( getBackgroundColor().toString() ).append( "\n" );
-        sb.append( isWriteRobotsTxt() ? ( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) + "\n" ) : "Do not write robots.txt\n" );
+        sb.append("\n");
+        sb.append("Webpage Font Color: ").append(getFontColor().toString()).append("\n");
+        sb.append("Webpage Background Color: ").append(getBackgroundColor().toString()).append("\n");
+        sb.append(isWriteRobotsTxt() ? (Settings.getJpoResources().getString("generateRobotsJCheckBox") + "\n") : "Do not write robots.txt\n");
 
         return sb.toString();
     }

@@ -169,9 +169,9 @@ public class PictureInfo implements Serializable {
     public static String getFormattedCreationTime(final Calendar dateTime) {
         String formattedDate;
         if (dateTime == null) {
-            formattedDate = Settings.jpoResources.getString("failedToParse");
+            formattedDate = Settings.getJpoResources().getString("failedToParse");
         } else {
-            formattedDate = Settings.jpoResources.getString("parsedAs")
+            formattedDate = Settings.getJpoResources().getString("parsedAs")
                     + String.format("%tc", dateTime);
         }
         return formattedDate;
@@ -1068,7 +1068,7 @@ public class PictureInfo implements Serializable {
     public synchronized void setCategoryAssignment(@NotNull final Collection<Integer> ca) {
         Objects.requireNonNull(ca);
         clearCategoryAssignments();
-        ca.forEach(category -> addCategoryAssignment(category));
+        ca.forEach(this::addCategoryAssignment);
     }
 
     /**

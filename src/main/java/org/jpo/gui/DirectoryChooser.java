@@ -89,9 +89,8 @@ public class DirectoryChooser
 
     /**
      * Button that brings up a file chooser for the directory
-     *
      */
-    private final JButton directoryChooserJButton = new JButton( Settings.jpoResources.getString( "threeDotText" ) );
+    private final JButton directoryChooserJButton = new JButton(Settings.getJpoResources().getString("threeDotText"));
 
     /**
      * creates the GUI widgets
@@ -130,9 +129,9 @@ public class DirectoryChooser
 
         directoryChooserJButton.addActionListener(( ActionEvent e ) -> {
             final JFileChooser jFileChooser = new JFileChooser();
-            jFileChooser.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-            jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "genericSelectText" ) );
-            jFileChooser.setDialogTitle( chooserTitle );
+            jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("genericSelectText"));
+            jFileChooser.setDialogTitle(chooserTitle);
             jFileChooser.setCurrentDirectory( new File( getText() ) );
 
             final int returnVal = jFileChooser.showOpenDialog(DirectoryChooser.this);

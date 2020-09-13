@@ -152,13 +152,13 @@ public class Tools {
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("copyPictureError1")
+                    Settings.getJpoResources().getString("copyPictureError1")
                             + sourceFile.toString()
-                            + Settings.jpoResources.getString("copyPictureError2")
+                            + Settings.getJpoResources().getString("copyPictureError2")
                             + targetFile.toString()
-                            + Settings.jpoResources.getString("copyPictureError3")
+                            + Settings.getJpoResources().getString("copyPictureError3")
                             + e.getMessage(),
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -249,7 +249,7 @@ public class Tools {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         int maxMemory = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        return (Settings.jpoResources.getString("freeMemory") + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB");
+        return (Settings.getJpoResources().getString("freeMemory") + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB");
     }
 
     /**
@@ -260,8 +260,8 @@ public class Tools {
         Tools.freeMem();
         SwingUtilities.invokeLater(
                 () -> JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("outOfMemoryError"),
-                        Settings.jpoResources.getString("genericError"),
+                        Settings.getJpoResources().getString("outOfMemoryError"),
+                        Settings.getJpoResources().getString("genericError"),
                         JOptionPane.ERROR_MESSAGE)
         );
 

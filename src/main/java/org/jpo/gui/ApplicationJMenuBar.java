@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 /*
  ApplicationJMenuBar.java:  main menu for the application
 
- Copyright (C) 2002 -2019 Richard Eigenmann.
+ Copyright (C) 2002 -2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,9 +62,8 @@ public class ApplicationJMenuBar extends JMenuBar {
 
     /**
      * The extras menu which is part of the JMenuBar for the Jpo application.
-     *
      */
-    private final JMenu ExtrasJMenu = new JMenu();
+    private final JMenu extrasJMenu = new JMenu();
 
     /**
      * The help menu which is part of the JMenuBar for the Jpo application.
@@ -217,7 +216,7 @@ public class ApplicationJMenuBar extends JMenuBar {
          * @param event The event
          */
         @Subscribe
-        public void handleLocaleChangedEvent( LocaleChangedEvent event ) {
+        public void handleLocaleChangedEvent(final LocaleChangedEvent event) {
             setMenuTexts();
         }
     }
@@ -228,36 +227,36 @@ public class ApplicationJMenuBar extends JMenuBar {
      * the Locale in the Settings editor.
      */
     private void setMenuTexts() {
-        fileJMenu.setText(Settings.jpoResources.getString("FileMenuText"));
-        fileNewJMenuItem.setText(Settings.jpoResources.getString("FileNewJMenuItem"));
-        fileOpenRecentJMenu.setText(Settings.jpoResources.getString("FileOpenRecentItemText"));
-        fileLoadJMenuItem.setText(Settings.jpoResources.getString("FileLoadMenuItemText"));
-        fileAddJMenuItem.setText(Settings.jpoResources.getString("FileAddMenuItemText"));
-        fileSaveJMenuItem.setText(Settings.jpoResources.getString("FileSaveMenuItemText"));
-        fileSaveAsJMenuItem.setText(Settings.jpoResources.getString("FileSaveAsMenuItemText"));
-        fileExitJMenuItem.setText(Settings.jpoResources.getString("FileExitMenuItemText"));
+        fileJMenu.setText(Settings.getJpoResources().getString("FileMenuText"));
+        fileNewJMenuItem.setText(Settings.getJpoResources().getString("FileNewJMenuItem"));
+        fileOpenRecentJMenu.setText(Settings.getJpoResources().getString("FileOpenRecentItemText"));
+        fileLoadJMenuItem.setText(Settings.getJpoResources().getString("FileLoadMenuItemText"));
+        fileAddJMenuItem.setText(Settings.getJpoResources().getString("FileAddMenuItemText"));
+        fileSaveJMenuItem.setText(Settings.getJpoResources().getString("FileSaveMenuItemText"));
+        fileSaveAsJMenuItem.setText(Settings.getJpoResources().getString("FileSaveAsMenuItemText"));
+        fileExitJMenuItem.setText(Settings.getJpoResources().getString("FileExitMenuItemText"));
 
-        editJMenu.setText(Settings.jpoResources.getString("EditJMenuText"));
-        editFindJMenuItem.setText(Settings.jpoResources.getString("EditFindJMenuItemText"));
-        editCamerasJMenuItem.setText(Settings.jpoResources.getString("EditCamerasJMenuItem"));
-        editSettingsJMenuItem.setText(Settings.jpoResources.getString("EditSettingsMenuItemText"));
+        editJMenu.setText(Settings.getJpoResources().getString("EditJMenuText"));
+        editFindJMenuItem.setText(Settings.getJpoResources().getString("EditFindJMenuItemText"));
+        editCamerasJMenuItem.setText(Settings.getJpoResources().getString("EditCamerasJMenuItem"));
+        editSettingsJMenuItem.setText(Settings.getJpoResources().getString("EditSettingsMenuItemText"));
 
-        actionJMenu.setText(Settings.jpoResources.getString("actionJMenu"));
-        emailJMenuItem.setText(Settings.jpoResources.getString("emailJMenuItem"));
-        randomSlideshowJMenuItem.setText(Settings.jpoResources.getString("RandomSlideshowJMenuItem"));
+        actionJMenu.setText(Settings.getJpoResources().getString("actionJMenu"));
+        emailJMenuItem.setText(Settings.getJpoResources().getString("emailJMenuItem"));
+        randomSlideshowJMenuItem.setText(Settings.getJpoResources().getString("RandomSlideshowJMenuItem"));
 
-        ExtrasJMenu.setText(Settings.jpoResources.getString("ExtrasJMenu"));
-        editCheckDirectoriesJMenuItem.setText(Settings.jpoResources.getString("EditCheckDirectoriesJMenuItemText"));
-        editCheckIntegrityJMenuItem.setText(Settings.jpoResources.getString("EditCheckIntegrityJMenuItem"));
-        findDuplicatesJMenuItem.setText(Settings.jpoResources.getString("FindDuplicatesJMenuItem"));
-        editCategoriesJMenuItem.setText(Settings.jpoResources.getString("EditCategoriesJMenuItem"));
-        startThumbnailCreationThreadJMenuItem.setText(Settings.jpoResources.getString("StartThumbnailCreationThreadJMenuItem"));
+        extrasJMenu.setText(Settings.getJpoResources().getString("ExtrasJMenu"));
+        editCheckDirectoriesJMenuItem.setText(Settings.getJpoResources().getString("EditCheckDirectoriesJMenuItemText"));
+        editCheckIntegrityJMenuItem.setText(Settings.getJpoResources().getString("EditCheckIntegrityJMenuItem"));
+        findDuplicatesJMenuItem.setText(Settings.getJpoResources().getString("FindDuplicatesJMenuItem"));
+        editCategoriesJMenuItem.setText(Settings.getJpoResources().getString("EditCategoriesJMenuItem"));
+        startThumbnailCreationThreadJMenuItem.setText(Settings.getJpoResources().getString("StartThumbnailCreationThreadJMenuItem"));
 
-        helpJMenu.setText(Settings.jpoResources.getString("HelpJMenuText"));
-        helpAboutJMenuItem.setText(Settings.jpoResources.getString("HelpAboutMenuItemText"));
-        helpLicenseJMenuItem.setText(Settings.jpoResources.getString("HelpLicenseMenuItemText"));
-        helpPrivacyJMenuItem.setText(Settings.jpoResources.getString("HelpPrivacyMenuItemText"));
-        helpResetWindowsJMenuItem.setText(Settings.jpoResources.getString("HelpResetWindowsJMenuItem"));
+        helpJMenu.setText(Settings.getJpoResources().getString("HelpJMenuText"));
+        helpAboutJMenuItem.setText(Settings.getJpoResources().getString("HelpAboutMenuItemText"));
+        helpLicenseJMenuItem.setText(Settings.getJpoResources().getString("HelpLicenseMenuItemText"));
+        helpPrivacyJMenuItem.setText(Settings.getJpoResources().getString("HelpPrivacyMenuItemText"));
+        helpResetWindowsJMenuItem.setText(Settings.getJpoResources().getString("HelpResetWindowsJMenuItem"));
     }
 
     /**
@@ -282,13 +281,13 @@ public class ApplicationJMenuBar extends JMenuBar {
      * listener on the Settings object.
      */
     private void recentFilesChanged() {
-        Runnable runnable = () -> {
-            for (int i = 0; i < Settings.getRecentCollections().length; i++ ) {
-                if ( Settings.getRecentCollections()[i] != null ) {
-                    recentOpenedFileJMenuItem[i].setText((i + 1) + ": " + Settings.getRecentCollections()[i] );
-                    recentOpenedFileJMenuItem[i].setVisible( true );
+        final Runnable runnable = () -> {
+            for (int i = 0; i < Settings.getRecentCollections().length; i++) {
+                if (Settings.getRecentCollections()[i] != null) {
+                    recentOpenedFileJMenuItem[i].setText((i + 1) + ": " + Settings.getRecentCollections()[i]);
+                    recentOpenedFileJMenuItem[i].setVisible(true);
                 } else {
-                    recentOpenedFileJMenuItem[i].setVisible( false );
+                    recentOpenedFileJMenuItem[i].setVisible(false);
                 }
             }
         };
@@ -374,27 +373,27 @@ public class ApplicationJMenuBar extends JMenuBar {
         add(actionJMenu);
 
         // Build the Extras menu.
-        ExtrasJMenu.setMnemonic(KeyEvent.VK_X);
-        add(ExtrasJMenu);
+        extrasJMenu.setMnemonic(KeyEvent.VK_X);
+        add(extrasJMenu);
         editCheckDirectoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
         editCheckDirectoriesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckDirectoriesRequest()));
-        ExtrasJMenu.add(editCheckDirectoriesJMenuItem);
+        extrasJMenu.add(editCheckDirectoriesJMenuItem);
 
         editCheckIntegrityJMenuItem.setMnemonic(KeyEvent.VK_C);
         editCheckIntegrityJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckIntegrityRequest()));
-        ExtrasJMenu.add(editCheckIntegrityJMenuItem);
+        extrasJMenu.add(editCheckIntegrityJMenuItem);
 
         findDuplicatesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FindDuplicatesRequest()));
-        ExtrasJMenu.add(findDuplicatesJMenuItem);
+        extrasJMenu.add(findDuplicatesJMenuItem);
 
         editCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
         editCategoriesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
-        ExtrasJMenu.add(editCategoriesJMenuItem);
+        extrasJMenu.add(editCategoriesJMenuItem);
 
 
         startThumbnailCreationThreadJMenuItem.setMnemonic(KeyEvent.VK_T);
         startThumbnailCreationThreadJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest()));
-        ExtrasJMenu.add(startThumbnailCreationThreadJMenuItem);
+        extrasJMenu.add(startThumbnailCreationThreadJMenuItem);
 
 
         // Build the Help menu.

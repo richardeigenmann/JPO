@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2020, Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,7 +36,7 @@ public class AutoAdvanceDialog {
 
     private final ShowAutoAdvanceDialogRequest request;
 
-    public AutoAdvanceDialog( ShowAutoAdvanceDialogRequest request ) {
+    public AutoAdvanceDialog(final ShowAutoAdvanceDialogRequest request) {
         this.request = request;
         doAutoAdvanceDialog();
     }
@@ -51,34 +51,34 @@ public class AutoAdvanceDialog {
      * auto advance to work
      */
     private void doAutoAdvanceDialog() {
-        JRadioButton randomAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "randomAdvanceJRadioButtonLabel" ) );
-        JRadioButton sequentialAdvanceJRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialAdvanceJRadioButtonLabel" ) );
-        ButtonGroup advanceButtonGroup = new ButtonGroup();
-        advanceButtonGroup.add( randomAdvanceJRadioButton );
-        advanceButtonGroup.add( sequentialAdvanceJRadioButton );
-        randomAdvanceJRadioButton.setSelected( true );
+        final JRadioButton randomAdvanceJRadioButton = new JRadioButton(Settings.getJpoResources().getString("randomAdvanceJRadioButtonLabel"));
+        final JRadioButton sequentialAdvanceJRadioButton = new JRadioButton(Settings.getJpoResources().getString("sequentialAdvanceJRadioButtonLabel"));
+        final ButtonGroup advanceButtonGroup = new ButtonGroup();
+        advanceButtonGroup.add(randomAdvanceJRadioButton);
+        advanceButtonGroup.add(sequentialAdvanceJRadioButton);
+        randomAdvanceJRadioButton.setSelected(true);
 
-        JRadioButton restrictToGroupJRadioButton = new JRadioButton( Settings.jpoResources.getString( "restrictToGroupJRadioButtonLabel" ) );
-        JRadioButton useAllPicturesJRadioButton = new JRadioButton( Settings.jpoResources.getString( "useAllPicturesJRadioButtonLabel" ) );
-        ButtonGroup cycleButtonGroup = new ButtonGroup();
-        cycleButtonGroup.add( restrictToGroupJRadioButton );
-        cycleButtonGroup.add( useAllPicturesJRadioButton );
-        useAllPicturesJRadioButton.setSelected( true );
+        final JRadioButton restrictToGroupJRadioButton = new JRadioButton(Settings.getJpoResources().getString("restrictToGroupJRadioButtonLabel"));
+        final JRadioButton useAllPicturesJRadioButton = new JRadioButton(Settings.getJpoResources().getString("useAllPicturesJRadioButtonLabel"));
+        final ButtonGroup cycleButtonGroup = new ButtonGroup();
+        cycleButtonGroup.add(restrictToGroupJRadioButton);
+        cycleButtonGroup.add(useAllPicturesJRadioButton);
+        useAllPicturesJRadioButton.setSelected(true);
 
-        JLabel timerSecondsJLabel = new JLabel( Settings.jpoResources.getString( "timerSecondsJLabelLabel" ) );
-        WholeNumberField timerSecondsField = new WholeNumberField( 4, 3 );
-        timerSecondsField.setPreferredSize( new Dimension( 50, 20 ) );
-        timerSecondsField.setMaximumSize( new Dimension( 50, 20 ) );
-        Object[] objects = { randomAdvanceJRadioButton,
-            sequentialAdvanceJRadioButton,
-            restrictToGroupJRadioButton,
-            useAllPicturesJRadioButton,
-            timerSecondsJLabel,
-            timerSecondsField
+        final JLabel timerSecondsJLabel = new JLabel(Settings.getJpoResources().getString("timerSecondsJLabelLabel"));
+        final WholeNumberField timerSecondsField = new WholeNumberField(4, 3);
+        timerSecondsField.setPreferredSize(new Dimension(50, 20));
+        timerSecondsField.setMaximumSize(new Dimension(50, 20));
+        final Object[] objects = {randomAdvanceJRadioButton,
+                sequentialAdvanceJRadioButton,
+                restrictToGroupJRadioButton,
+                useAllPicturesJRadioButton,
+                timerSecondsJLabel,
+                timerSecondsField
         };
 
-        Component parentComponent = request.parentComponent;
-        int selectedValue = showDialog( parentComponent, objects );
+        final Component parentComponent = request.parentComponent;
+        int selectedValue = showDialog(parentComponent, objects);
 
         try {
             NodeNavigator mySetOfNodes;
@@ -126,12 +126,12 @@ public class AutoAdvanceDialog {
         return JOptionPane.showOptionDialog(
                 parentComponent,
                 message,
-                Settings.jpoResources.getString( "autoAdvanceDialogTitle" ),
+                Settings.getJpoResources().getString("autoAdvanceDialogTitle"),
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                null );
+                null);
     }
 
 }

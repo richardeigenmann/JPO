@@ -38,7 +38,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
      */
     public CameraDownloadWizardStep2( CameraDownloadWizardData dataModel ) {
         //pass step title and description
-        super( Settings.jpoResources.getString( "DownloadCameraWizardStep2Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep2Description" ) );
+        super(Settings.getJpoResources().getString("DownloadCameraWizardStep2Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep2Description"));
         this.dataModel = dataModel;
     }
 
@@ -56,19 +56,19 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
     @Override
     protected JComponent createComponent() {
         final JPanel stepComponent = new JPanel();
-        stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
-        stepComponent.add( new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text1" )
+        stepComponent.setLayout(new BoxLayout(stepComponent, BoxLayout.PAGE_AXIS));
+        stepComponent.add(new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep2Text1")
                 + dataModel.getNewPictures().size()
-                + Settings.jpoResources.getString( "DownloadCameraWizardStep2Text2" ) ) );
-        stepComponent.add( Box.createVerticalStrut( 8 ) );
+                + Settings.getJpoResources().getString("DownloadCameraWizardStep2Text2")));
+        stepComponent.add(Box.createVerticalStrut(8));
 
-        final JRadioButton moveButton = new JRadioButton(Settings.jpoResources.getString("DownloadCameraWizardStep2Text3"));
+        final JRadioButton moveButton = new JRadioButton(Settings.getJpoResources().getString("DownloadCameraWizardStep2Text3"));
         moveButton.addActionListener(( ActionEvent e ) -> {
             dataModel.setCopyMode(false);
             Settings.setLastCameraWizardCopyMode(false);
         });
         stepComponent.add( moveButton );
-        final JRadioButton copyButton = new JRadioButton(Settings.jpoResources.getString("DownloadCameraWizardStep2Text4"));
+        final JRadioButton copyButton = new JRadioButton(Settings.getJpoResources().getString("DownloadCameraWizardStep2Text4"));
         copyButton.addActionListener(( ActionEvent e ) -> {
             dataModel.setCopyMode(true);
             Settings.setLastCameraWizardCopyMode(true);

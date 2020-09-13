@@ -216,8 +216,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 }
                 if (!keyEvent.isConsumed()) {
                     JOptionPane.showMessageDialog(pictureFrame.getResizableJFrame(),
-                            Settings.jpoResources.getString("PictureViewerKeycodes"),
-                            Settings.jpoResources.getString("PictureViewerKeycodesTitle"),
+                            Settings.getJpoResources().getString("PictureViewerKeycodes"),
+                            Settings.getJpoResources().getString("PictureViewerKeycodesTitle"),
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             }
@@ -539,9 +539,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             return;
         }
         // Set the next and back icons
-        DefaultMutableTreeNode NextNode = currentNode.getNextSibling();
-        if (NextNode != null) {
-            Object nodeInfo = NextNode.getUserObject();
+        final DefaultMutableTreeNode nextNode = currentNode.getNextSibling();
+        if (nextNode != null) {
+            Object nodeInfo = nextNode.getUserObject();
             if (nodeInfo instanceof PictureInfo) {
                 // because there is a next sibling object of type
                 // PictureInfo we should set the next icon to the

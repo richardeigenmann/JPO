@@ -198,7 +198,7 @@ public class PictureCollection {
     public void clearCollection() {
         final Runnable runnable = () -> {
             getRootNode().removeAllChildren();
-            getRootNode().setUserObject(new GroupInfo(Settings.jpoResources.getString("DefaultRootNodeText")));
+            getRootNode().setUserObject(new GroupInfo(Settings.getJpoResources().getString("DefaultRootNodeText")));
             clearQueriesTreeModel();
             categories.clear();
             clearMailSelection();
@@ -420,7 +420,7 @@ public class PictureCollection {
      * Call this method when you need to create a new TreeModel for the queries.
      */
     public void createQueriesTreeModel() {
-        setQueriesTreeModel(new DefaultTreeModel(new DefaultMutableTreeNode(Settings.jpoResources.getString("queriesTreeModelRootNode"))));
+        setQueriesTreeModel(new DefaultTreeModel(new DefaultMutableTreeNode(Settings.getJpoResources().getString("queriesTreeModelRootNode"))));
 
         DefaultMutableTreeNode byYearsTreeNode = new DefaultMutableTreeNode("By Year");
         rememberYearsTreeNode(byYearsTreeNode);

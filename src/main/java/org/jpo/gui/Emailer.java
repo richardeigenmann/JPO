@@ -139,7 +139,7 @@ public class Emailer
 
         final JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener((ActionEvent e) -> {
-            progressLabel.setText(Settings.jpoResources.getString("htmlDistillerInterrupt"));
+            progressLabel.setText(Settings.getJpoResources().getString("htmlDistillerInterrupt"));
             interrupted = true;
         });
         cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
@@ -148,7 +148,7 @@ public class Emailer
 
         progPanel.add(cancelButton, "tag[cancel]");
 
-        progressFrame = new JFrame(Settings.jpoResources.getString("EmailerJFrame"));
+        progressFrame = new JFrame(Settings.getJpoResources().getString("EmailerJFrame"));
         progressFrame.getContentPane().add(progPanel);
         progressFrame.pack();
         progressFrame.setVisible(true);
@@ -180,13 +180,13 @@ public class Emailer
         progressFrame.dispose();
         if ( "".equals( error ) ) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("emailOK"),
-                    Settings.jpoResources.getString("genericOKText"),
+                    Settings.getJpoResources().getString("emailOK"),
+                    Settings.getJpoResources().getString("genericOKText"),
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("emailSendError") + error,
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("emailSendError") + error,
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -248,19 +248,19 @@ public class Emailer
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerLoading" ), pi.getImageFile().toString() } );
-                    scalablePicture.loadPictureImd( pi.getImageFile(), pi.getRotation() );
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerScaling" ), pi.getImageFile().toString() } );
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerLoading"), pi.getImageFile().toString()});
+                    scalablePicture.loadPictureImd(pi.getImageFile(), pi.getRotation());
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerScaling"), pi.getImageFile().toString()});
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerWriting" ), pi.getImageFile().toString() } );
-                    scalablePicture.writeScaledJpg( baos );
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerWriting"), pi.getImageFile().toString()});
+                    scalablePicture.writeScaledJpg(baos);
                     encds = new EncodedDataSource("image/jpeg", pi.getImageFile().getName(), baos);
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
-                    scaledPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFile().toString() } );
-                    mp.addBodyPart( scaledPictureMimeBodyPart );
+                    scaledPictureMimeBodyPart.setFileName(pi.getImageFile().getName());
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile().toString()});
+                    mp.addBodyPart(scaledPictureMimeBodyPart);
                 }
 
                 if ( sendOriginal ) {
@@ -272,8 +272,8 @@ public class Emailer
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
                     // create the Multipart and add its parts to it
-                    LOGGER.log( Level.INFO, "{0}{1}", new Object[]{ Settings.jpoResources.getString( "EmailerAdding" ), pi.getImageFile().toString() } );
-                    mp.addBodyPart( originalPictureMimeBodyPart );
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile().toString()});
+                    mp.addBodyPart(originalPictureMimeBodyPart);
                 }
 
             }
@@ -305,11 +305,11 @@ public class Emailer
             LOGGER.info("Message not sent due to user clicking cancel.");
         } else {
             try {
-                publish(Settings.jpoResources.getString("EmailerSending"));
+                publish(Settings.getJpoResources().getString("EmailerSending"));
                 final MimeMessage msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
-                publish(Settings.jpoResources.getString("EmailerSent"));
+                publish(Settings.getJpoResources().getString("EmailerSent"));
             } catch (final MessagingException x) {
                 LOGGER.severe(x.getMessage());
             }
@@ -334,7 +334,7 @@ public class Emailer
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(Settings.getEmailUser(), Settings.emailPassword);
+                return new PasswordAuthentication(Settings.getEmailUser(), Settings.getEmailPassword());
             }
         });
         //session.setDebug( true );
@@ -344,11 +344,11 @@ public class Emailer
             LOGGER.info("Message not sent due to user clicking cancel.");
         } else {
             try {
-                publish( Settings.jpoResources.getString( "EmailerSending" ) );
+                publish(Settings.getJpoResources().getString("EmailerSending"));
                 final MimeMessage msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
-                publish( Settings.jpoResources.getString( "EmailerSent" ) );
+                publish(Settings.getJpoResources().getString("EmailerSent"));
             } catch ( MessagingException x ) {
                 LOGGER.severe( x.getLocalizedMessage() );
                 error = x.getMessage();
@@ -374,7 +374,7 @@ public class Emailer
 
                     @Override
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(Settings.getEmailUser(), Settings.emailPassword);
+                        return new PasswordAuthentication(Settings.getEmailUser(), Settings.getEmailPassword());
                     }
                 });
         //session.setDebug( true );
@@ -382,11 +382,11 @@ public class Emailer
             LOGGER.info("Message not sent due to user clicking cancel.");
         } else {
             try {
-                publish( Settings.jpoResources.getString( "EmailerSending" ) );
+                publish(Settings.getJpoResources().getString("EmailerSending"));
                 final MimeMessage msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
-                publish( Settings.jpoResources.getString( "EmailerSent" ) );
+                publish(Settings.getJpoResources().getString("EmailerSent"));
             } catch ( MessagingException x ) {
                 LOGGER.severe( x.getLocalizedMessage() );
                 error = x.getMessage();

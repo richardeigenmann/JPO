@@ -42,7 +42,7 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
      * @param options Options
      */
     public GenerateWebsiteWizard7Summary( GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "summary" ), Settings.jpoResources.getString( "summary" ) );
+        super(Settings.getJpoResources().getString("summary"), Settings.getJpoResources().getString("summary"));
         this.options = options;
     }
     /**

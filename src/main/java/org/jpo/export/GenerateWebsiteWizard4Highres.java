@@ -43,40 +43,37 @@ public class GenerateWebsiteWizard4Highres extends AbstractStep {
      *
      * @param options The data object with all the settings
      */
-    public GenerateWebsiteWizard4Highres( GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "HtmlDistHighres" ), Settings.jpoResources.getString( "HtmlDistHighres" ) );
+    public GenerateWebsiteWizard4Highres(final GenerateWebsiteRequest options) {
+        super(Settings.getJpoResources().getString("HtmlDistHighres"), Settings.getJpoResources().getString("HtmlDistHighres"));
         this.options = options;
 
         // load the options into the GUI components
-        exportHighresJCheckBox.setSelected( options.isExportHighres() );
-        rotateHighresJCheckBox.setSelected( options.isRotateHighres() );
-        generateZipfileJCheckBox.setSelected( options.isGenerateZipfile() );
-        linkToHighresJCheckBox.setSelected( options.isLinkToHighres() );
+        exportHighresJCheckBox.setSelected(options.isExportHighres());
+        rotateHighresJCheckBox.setSelected(options.isRotateHighres());
+        generateZipfileJCheckBox.setSelected(options.isGenerateZipfile());
+        linkToHighresJCheckBox.setSelected(options.isLinkToHighres());
     }
+
     /**
      * Tickbox that indicates whether the highes pictures are to be copied to
      * the target directory structure.
-     *
      */
-    private final JCheckBox exportHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "exportHighresJCheckBox" ) );
+    private final JCheckBox exportHighresJCheckBox = new JCheckBox(Settings.getJpoResources().getString("exportHighresJCheckBox"));
     /**
      * Tickbox that indicates whether the highes pictures are to be copied to
      * the target directory structure.
-     *
      */
-    private final JCheckBox rotateHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "rotateHighresJCheckBox" ) );
+    private final JCheckBox rotateHighresJCheckBox = new JCheckBox(Settings.getJpoResources().getString("rotateHighresJCheckBox"));
     /**
      * Tickbox that indicates whether a Zipfile should be created to download
      * the highres pictures
-     *
      */
-    private final JCheckBox generateZipfileJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateZipfileJCheckBox" ) );
+    private final JCheckBox generateZipfileJCheckBox = new JCheckBox(Settings.getJpoResources().getString("generateZipfileJCheckBox"));
     /**
      * Tickbox that indicates whether the highes picture should be linked to at
      * the current location.
-     *
      */
-    private final JCheckBox linkToHighresJCheckBox = new JCheckBox( Settings.jpoResources.getString( "linkToHighresJCheckBox" ) );
+    private final JCheckBox linkToHighresJCheckBox = new JCheckBox(Settings.getJpoResources().getString("linkToHighresJCheckBox"));
 
     /**
      * Creates the GUI widgets

@@ -42,7 +42,7 @@ public class CameraEditor
      */
     public CameraEditor() {
         setLayout(new MigLayout("nogrid"));
-        final JLabel cameraNameJLabel = new JLabel(Settings.jpoResources.getString("cameraNameJLabel"));
+        final JLabel cameraNameJLabel = new JLabel(Settings.getJpoResources().getString("cameraNameJLabel"));
         add(cameraNameJLabel, "wrap");
         add(cameraNameJTextField, "grow, wrap unrel");
 
@@ -165,7 +165,7 @@ public class CameraEditor
     /**
      * "Root directory of camera on computer's file system:
      */
-    private final JLabel cameraDirJLabel = new JLabel( Settings.jpoResources.getString( "cameraDirJLabel" ) );
+    private final JLabel cameraDirJLabel = new JLabel(Settings.getJpoResources().getString("cameraDirJLabel"));
 
     /**
      * The new name of the camera
@@ -177,13 +177,13 @@ public class CameraEditor
      * file system
      */
     private final DirectoryChooser cameraDirJTextField
-            = new DirectoryChooser( Settings.jpoResources.getString( "cameraDirJLabel" ),
-                    DirectoryChooser.DIR_MUST_EXIST );
+            = new DirectoryChooser(Settings.getJpoResources().getString("cameraDirJLabel"),
+            DirectoryChooser.DIR_MUST_EXIST);
 
     /**
      * "Number of pictures remembered from last import:"
      */
-    private final JLabel memorisedPicsText = new JLabel( Settings.jpoResources.getString( "memorisedPicsJLabel" ) );
+    private final JLabel memorisedPicsText = new JLabel(Settings.getJpoResources().getString("memorisedPicsJLabel"));
 
     /**
      * label that informs how many pictures have been memorised for this camera
@@ -193,22 +193,22 @@ public class CameraEditor
     /**
      * Refresh Button to memorise the files on the camera
      */
-    private final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButton" ) );
+    private final JButton refreshJButton = new JButton(Settings.getJpoResources().getString("refreshJButton"));
 
     /**
      * Button to zero out the memorised pictures on the camera
      */
-    private final JButton zeroJButton = new JButton( Settings.jpoResources.getString( "zeroJButton" ) );
+    private final JButton zeroJButton = new JButton(Settings.getJpoResources().getString("zeroJButton"));
 
     /**
      * checkbox to indicate that filenames should be used
      */
-    private final JCheckBox filenameJCheckBox = new JCheckBox( Settings.jpoResources.getString( "filenameJCheckBox" ) );
+    private final JCheckBox filenameJCheckBox = new JCheckBox(Settings.getJpoResources().getString("filenameJCheckBox"));
 
     /**
      * checkbox to indicate whether to monitor for new pictures
      */
-    private final JCheckBox monitorJCheckBox = new JCheckBox( Settings.jpoResources.getString( "monitorJCheckBox" ) );
+    private final JCheckBox monitorJCheckBox = new JCheckBox(Settings.getJpoResources().getString("monitorJCheckBox"));
 
     /**
      * A collection that holds all the listeners that want to be notified about

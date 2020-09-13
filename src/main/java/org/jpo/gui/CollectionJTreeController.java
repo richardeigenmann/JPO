@@ -196,8 +196,8 @@ public class CollectionJTreeController {
             for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
                 if (targetNode.isNodeAncestor(sourceNode)) {
                     JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            Settings.jpoResources.getString("moveNodeError"),
-                            Settings.jpoResources.getString("genericError"),
+                            Settings.getJpoResources().getString("moveNodeError"),
+                            Settings.getJpoResources().getString("genericError"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
@@ -267,14 +267,12 @@ public class CollectionJTreeController {
             SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
             Object userObject = node.getUserObject();
             String toolTip = "";
-            if ( userObject instanceof GroupInfo ) {
-                GroupInfo groupInfo = (GroupInfo) userObject;
-                toolTip = String.format( "<html>Group: %s</html>", groupInfo.getGroupName() );
-            } else if ( userObject instanceof PictureInfo ) {
-                final PictureInfo pictureInfo = (PictureInfo) userObject;
+            if (userObject instanceof GroupInfo groupInfo) {
+                toolTip = String.format("<html>Group: %s</html>", groupInfo.getGroupName());
+            } else if (userObject instanceof PictureInfo pictureInfo) {
                 File highresFile = pictureInfo.getImageFile();
-                String fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize( highresFile.length() );
-                toolTip = String.format( "<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.jpoResources.getString( "CollectionSizeJLabel" ), fileSize );
+                String fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize(highresFile.length());
+                toolTip = String.format("<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.getJpoResources().getString("CollectionSizeJLabel"), fileSize);
             }
             return toolTip;
         }

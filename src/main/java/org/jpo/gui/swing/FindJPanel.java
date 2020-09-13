@@ -41,12 +41,12 @@ public class FindJPanel extends JPanel {
     /**
      * The Advanced Find button
      */
-    private final JButton advancedFindJButton = new JButton( Settings.jpoResources.getString( "advancedFindJButtonOpen" ) );
+    private final JButton advancedFindJButton = new JButton(Settings.getJpoResources().getString("advancedFindJButtonOpen"));
 
     /**
      * The label saying date range
      */
-    private final JLabel dateRangeJLabel = new JLabel( Settings.jpoResources.getString( "lowerDateJLabel" ) );
+    private final JLabel dateRangeJLabel = new JLabel(Settings.getJpoResources().getString("lowerDateJLabel"));
 
     /**
      * the lower date for a specified range
@@ -64,8 +64,8 @@ public class FindJPanel extends JPanel {
     public FindJPanel() {
         setLayout( new MigLayout() );
 
-        add( new JLabel( Settings.jpoResources.getString( "searchDialogLabel" ) ) );
-        add( searchStringJTextField, "wrap, pushx, growx" );
+        add(new JLabel(Settings.getJpoResources().getString("searchDialogLabel")));
+        add(searchStringJTextField, "wrap, pushx, growx");
 
         advancedFindJButton.addActionListener(( ActionEvent evt ) -> toggleAdvancedCriteria());
         add( advancedFindJButton, "wrap" );
@@ -95,15 +95,15 @@ public class FindJPanel extends JPanel {
 
         if ( dateRangeJLabel.isVisible() ) {
             lowerDateJTextField.setText( "" );
-            upperDateJTextField.setText( "" );
-            advancedFindJButton.setText( Settings.jpoResources.getString( "advancedFindJButtonOpen" ) );
+            upperDateJTextField.setText("");
+            advancedFindJButton.setText(Settings.getJpoResources().getString("advancedFindJButtonOpen"));
         } else {
             lowerDateJTextField.setText( savedLowerDateValue );
             lowerDateJTextField.setVisible( true );
 
             upperDateJTextField.setText( savedUpperDateValue );
-            upperDateJTextField.setVisible( true );
-            advancedFindJButton.setText( Settings.jpoResources.getString( "advancedFindJButtonClose" ) );
+            upperDateJTextField.setVisible(true);
+            advancedFindJButton.setText(Settings.getJpoResources().getString("advancedFindJButtonClose"));
         }
         setAdvancedOptionsVisible( !dateRangeJLabel.isVisible() );
     }

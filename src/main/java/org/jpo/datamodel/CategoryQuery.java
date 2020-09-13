@@ -104,7 +104,7 @@ public class CategoryQuery implements Query {
      */
     @Override
     public String toString() {
-        return Settings.jpoResources.getString( "CategoryQuery" ) + Settings.getPictureCollection().getCategory( key );
+        return Settings.getJpoResources().getString("CategoryQuery") + Settings.getPictureCollection().getCategory(key);
     }
 
     /**

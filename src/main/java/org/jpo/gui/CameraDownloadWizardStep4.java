@@ -38,7 +38,7 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
      */
     public CameraDownloadWizardStep4(final CameraDownloadWizardData dataModel) {
         //pass step title and description
-        super(Settings.jpoResources.getString("DownloadCameraWizardStep4Title"), Settings.jpoResources.getString("DownloadCameraWizardStep4Description"));
+        super(Settings.getJpoResources().getString("DownloadCameraWizardStep4Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep4Description"));
         this.dataModel = dataModel;
     }
     /**
@@ -54,11 +54,11 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
     protected JComponent createComponent() {
         final JPanel stepComponent = new JPanel();
         stepComponent.setLayout(new BoxLayout(stepComponent, BoxLayout.PAGE_AXIS));
-        final JLabel label1 = new JLabel(Settings.jpoResources.getString("DownloadCameraWizardStep4Text1"));
+        final JLabel label1 = new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep4Text1"));
         label1.setAlignmentX(Component.LEFT_ALIGNMENT);
         stepComponent.add(label1);
 
-        final DirectoryChooser dirChooser = new DirectoryChooser(Settings.jpoResources.getString("targetDirJLabel"),
+        final DirectoryChooser dirChooser = new DirectoryChooser(Settings.getJpoResources().getString("targetDirJLabel"),
                 DirectoryChooser.DIR_MUST_BE_WRITABLE);
         dirChooser.setAlignmentX(Component.LEFT_ALIGNMENT);
         stepComponent.add(dirChooser);

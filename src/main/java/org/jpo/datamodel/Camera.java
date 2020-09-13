@@ -42,9 +42,8 @@ public class Camera implements Serializable {
 
     /**
      * The description of the Camera
-     *
      */
-    private String description = Settings.jpoResources.getString( "newCamera" );
+    private String description = Settings.getJpoResources().getString("newCamera");
 
     /**
      * Sets a new description for the camera
@@ -172,8 +171,8 @@ public class Camera implements Serializable {
      * @param f The file
      * @param checksum The checksum
      */
-    public void storePictureNewImage( File f, long checksum ) {
-        storePicture( newImage, f, checksum );
+    public void storePictureNewImage(final File f, final long checksum) {
+        storePicture(newImage, f, checksum);
     }
 
     /**
@@ -184,8 +183,8 @@ public class Camera implements Serializable {
      * @param checksum The checksum
      * @return true if the image was known before based on the checksum
      */
-    public boolean inOldImage( long checksum ) {
-        return getOldImage().containsValue( checksum );
+    public boolean inOldImage(final long checksum) {
+        return getOldImage().containsValue(checksum);
     }
 
     /**
@@ -196,8 +195,8 @@ public class Camera implements Serializable {
      * @param f the file
      * @return true if file is found in old camera
      */
-    public boolean inOldImage( File f ) {
-        return getOldImage().containsKey( f );
+    public boolean inOldImage(final File f) {
+        return getOldImage().containsKey(f);
     }
 
     /**
@@ -206,10 +205,10 @@ public class Camera implements Serializable {
      *
      * @param f the file
      */
-    public void copyToNewImage( File f ) {
-        Long checksumLong = getOldImage().get( f );
-        if ( checksumLong != null ) {
-            storePictureNewImage( f, checksumLong );
+    public void copyToNewImage(final File f) {
+        final Long checksumLong = getOldImage().get(f);
+        if (checksumLong != null) {
+            storePictureNewImage(f, checksumLong);
         }
     }
 
@@ -258,19 +257,19 @@ public class Camera implements Serializable {
      */
     public void buildOldImage() {
         int count = countFiles();
-        if ( count < 1 ) {
-            LOGGER.info( "No files. Not building old image on camera as the camera is probably disconnected." );
+        if (count < 1) {
+            LOGGER.info("No files. Not building old image on camera as the camera is probably disconnected.");
             return;
         }
 
-        ProgressGui progGui = new ProgressGui( count,
-                Settings.jpoResources.getString( "countingChecksum" ),
-                Settings.jpoResources.getString( "countingChecksumComplete" ) );
+        final ProgressGui progressGui = new ProgressGui(count,
+                Settings.getJpoResources().getString("countingChecksum"),
+                Settings.getJpoResources().getString("countingChecksumComplete"));
 
         buildOldImage(
-                progGui, progGui.getInterruptSemaphore() );
+                progressGui, progressGui.getInterruptSemaphore());
 
-        progGui.switchToDoneMode();
+        progressGui.switchToDoneMode();
     }
 
     /**

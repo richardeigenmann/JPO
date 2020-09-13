@@ -41,18 +41,16 @@ public class ConsolidateGroupJFrame extends JFrame {
     private final ConsolidateGroupActionCallback consolidateGroupAction;
     /**
      * Chooser to pick the highres directory
-     *
      */
-    private final DirectoryChooser highresDirectoryChooser = new DirectoryChooser(Settings.jpoResources.getString("highresTargetDirJTextField"), DirectoryChooser.DIR_MUST_BE_WRITABLE);
+    private final DirectoryChooser highresDirectoryChooser = new DirectoryChooser(Settings.getJpoResources().getString("highresTargetDirJTextField"), DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      * Tickbox that indicates whether pictures or the current group only should
      * be consolidated or whether the subgroups (if any) should be included.
-     *
      */
-    private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.jpoResources.getString("RecurseSubgroupsLabel"));
+    private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("RecurseSubgroupsLabel"));
 
     public ConsolidateGroupJFrame(ConsolidateGroupActionCallback consolidateGroupAction) {
-        super(Settings.jpoResources.getString("ConsolidateGroupJFrameHeading"));
+        super(Settings.getJpoResources().getString("ConsolidateGroupJFrameHeading"));
         this.consolidateGroupAction = consolidateGroupAction;
         initComponents();
     }
@@ -73,9 +71,9 @@ public class ConsolidateGroupJFrame extends JFrame {
         });
         final JPanel contentJPanel = new JPanel();
         contentJPanel.setLayout(new MigLayout());
-        final JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.jpoResources.getString("ConsolidateGroupBlaBlaLabel"));
+        final JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.getJpoResources().getString("ConsolidateGroupBlaBlaLabel"));
         contentJPanel.add(consolidateGroupBlaBlaJLabel, "span 2, wrap");
-        final JLabel targetDirJLabel = new JLabel(Settings.jpoResources.getString("genericTargetDirText"));
+        final JLabel targetDirJLabel = new JLabel(Settings.getJpoResources().getString("genericTargetDirText"));
         contentJPanel.add(targetDirJLabel);
         contentJPanel.add(highresDirectoryChooser, "span 2, wrap");
         recurseSubgroupsJCheckBox.setSelected(true);
@@ -83,7 +81,7 @@ public class ConsolidateGroupJFrame extends JFrame {
 
         final JPanel buttonJPanel = new JPanel();
         // add the consolidate button
-        final JButton consolidateJButton = new JButton(Settings.jpoResources.getString("ConsolidateButton"));
+        final JButton consolidateJButton = new JButton(Settings.getJpoResources().getString("ConsolidateButton"));
         consolidateJButton.setPreferredSize(new Dimension(120, 25));
         consolidateJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         consolidateJButton.setMaximumSize(new Dimension(120, 25));
@@ -92,7 +90,7 @@ public class ConsolidateGroupJFrame extends JFrame {
         buttonJPanel.add(consolidateJButton);
 
         // add the cancel button
-        final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
         cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMaximumSize(new Dimension(120, 25));
         buttonJPanel.add(cancelJButton);

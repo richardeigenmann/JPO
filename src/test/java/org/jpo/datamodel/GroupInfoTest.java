@@ -93,7 +93,7 @@ public class GroupInfoTest {
      */
     @Test
     public void testGroupInfoChangeListener() {
-        final List<GroupInfoChangeEvent> receivedGroupInfoChangedEvents = new ArrayList<GroupInfoChangeEvent>();
+        final List<GroupInfoChangeEvent> receivedGroupInfoChangedEvents = new ArrayList<>();
         Settings.getPictureCollection().setSendModelUpdates(true);
         final GroupInfo gi = new GroupInfo("Create GroupInfo when no Change listener attached");
         assertEquals(0, receivedGroupInfoChangedEvents.size());

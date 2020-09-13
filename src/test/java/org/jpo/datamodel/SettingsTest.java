@@ -62,10 +62,10 @@ public class SettingsTest {
     public void testSetLocaleResourceBundleEffect() {
         Settings.setLocale(Locale.GERMAN);
         // Testing the ResourceBundle change to German
-        assertEquals(Locale.GERMAN, Settings.jpoResources.getLocale());
+        assertEquals(Locale.GERMAN, Settings.getJpoResources().getLocale());
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         // Testing the ResourceBundle change to Simplified Chinese
-        assertEquals( Locale.SIMPLIFIED_CHINESE, Settings.jpoResources.getLocale());
+        assertEquals(Locale.SIMPLIFIED_CHINESE, Settings.getJpoResources().getLocale());
     }
 
     /**
@@ -75,10 +75,10 @@ public class SettingsTest {
     public void testSetLocaleResourceBundleStrings() {
         Settings.setLocale(Locale.GERMAN);
         // Testing the German string
-        assertEquals( "Neue Sammlung", Settings.jpoResources.getString("FileNewJMenuItem"));
+        assertEquals("Neue Sammlung", Settings.getJpoResources().getString("FileNewJMenuItem"));
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         // Testing the Simplified Chinese string
-        assertEquals( "新建图片集", Settings.jpoResources.getString("FileNewJMenuItem"));
+        assertEquals("新建图片集", Settings.getJpoResources().getString("FileNewJMenuItem"));
     }
 
     /**

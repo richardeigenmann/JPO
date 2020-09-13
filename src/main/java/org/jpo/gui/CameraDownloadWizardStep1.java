@@ -47,7 +47,7 @@ public class CameraDownloadWizardStep1
      */
     public CameraDownloadWizardStep1( CameraDownloadWizardData dataModel ) {
         //pass step title and description
-        super( Settings.jpoResources.getString( "DownloadCameraWizardStep1Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep1Description" ) );
+        super(Settings.getJpoResources().getString("DownloadCameraWizardStep1Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep1Description"));
         this.dataModel = dataModel;
     }
 
@@ -69,10 +69,10 @@ public class CameraDownloadWizardStep1
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         // say Camera xxx detected
-        stepComponent.add( new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep1Text1" ) + dataModel.getCamera().getDescription() + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text2" ) ) );
-        stepComponent.add( Box.createVerticalStrut( 8 ) );
+        stepComponent.add(new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep1Text1") + dataModel.getCamera().getDescription() + Settings.getJpoResources().getString("DownloadCameraWizardStep1Text2")));
+        stepComponent.add(Box.createVerticalStrut(8));
 
-        JLabel analysisLabel = new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep1Text4" ) );
+        JLabel analysisLabel = new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep1Text4"));
         stepComponent.add( analysisLabel );
         Thread t = new Thread( new SearchForPicturesThread( analysisLabel ), "CameraDownloadWizard" );
         t.start();
@@ -106,22 +106,17 @@ public class CameraDownloadWizardStep1
 
         @Override
         public void run() {
-            LOGGER.log( Level.INFO, "{0}.run: searching for the new pictures on the camera {1}", new Object[]{ getClass().toString(), dataModel.getCamera().getDescription() });
-            dataModel.setNewPictures( dataModel.getCamera().getNewPictures() );
+            LOGGER.log(Level.INFO, "{0}.run: searching for the new pictures on the camera {1}", new Object[]{getClass().toString(), dataModel.getCamera().getDescription()});
+            dataModel.setNewPictures(dataModel.getCamera().getNewPictures());
 
-            // now update the GUI on the EDT
-            Runnable r = () -> {
-                if ( dataModel.getNewPictures().size() > 0 ) {
-                    setCanGoNext( true );
-                } else {
-                    setCanGoNext( false );
-                }
-                progressJLabel.setText(dataModel.getNewPictures().size() + Settings.jpoResources.getString( "DownloadCameraWizardStep1Text3" ) );
+            final Runnable r = () -> {
+                setCanGoNext(dataModel.getNewPictures().size() > 0);
+                progressJLabel.setText(dataModel.getNewPictures().size() + Settings.getJpoResources().getString("DownloadCameraWizardStep1Text3"));
             };
-            if ( SwingUtilities.isEventDispatchThread() ) {
+            if (SwingUtilities.isEventDispatchThread()) {
                 r.run();
             } else {
-                SwingUtilities.invokeLater( r );
+                SwingUtilities.invokeLater(r);
             }
         }
     }

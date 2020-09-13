@@ -11,7 +11,7 @@ import org.jpo.datamodel.Tools;
 CameraDownloadWizard.java:  A Wizard based on the JWizz framework by Michael Rudolf
  
  
-Copyright (C) 2007 - 2019  Richard Eigenmann.
+Copyright (C) 2007 - 2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -49,30 +49,31 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  * @see CameraDownloadWizardStep7
  */
 public class CameraDownloadWizard {
-        
+
     /**
-     *  Constructor for a new CameraDownloadWizard
-     *  @param dataModel The data model for the wizard. Pre-fill with the camera before calling.
+     * Constructor for a new CameraDownloadWizard
+     *
+     * @param dataModel The data model for the wizard. Pre-fill with the camera before calling.
      */
-    public CameraDownloadWizard( CameraDownloadWizardData dataModel ) {
+    public CameraDownloadWizard(final CameraDownloadWizardData dataModel) {
         Tools.checkEDT();
-        WizardModel model = new DefaultWizardModel( new Step[] {
-            //populate wizard model with the steps
-            new CameraDownloadWizardStep1( dataModel ),
-            new CameraDownloadWizardStep2( dataModel ),
-            new CameraDownloadWizardStep3( dataModel ),
-            new CameraDownloadWizardStep4( dataModel ),
-            new CameraDownloadWizardStep5( dataModel ),
-            new CameraDownloadWizardStep6( dataModel ),
-            new CameraDownloadWizardStep7( dataModel ),
+        final WizardModel model = new DefaultWizardModel(new Step[]{
+                //populate wizard model with the steps
+                new CameraDownloadWizardStep1(dataModel),
+                new CameraDownloadWizardStep2(dataModel),
+                new CameraDownloadWizardStep3(dataModel),
+                new CameraDownloadWizardStep4(dataModel),
+                new CameraDownloadWizardStep5(dataModel),
+                new CameraDownloadWizardStep6(dataModel),
+                new CameraDownloadWizardStep7(dataModel),
         });
-        //instaniate wizard
-        Wizard wizard = new Wizard( model, Settings.jpoResources.getString("CameraDownloadWizard") );
+        //instantiate wizard
+        final Wizard wizard = new Wizard(model, Settings.getJpoResources().getString("CameraDownloadWizard"));
         //show wizard
-        wizard.setAlwaysOnTop( true );
-        wizard.setModal( false );
+        wizard.setAlwaysOnTop(true);
+        wizard.setModal(false);
         wizard.pack();
-        wizard.setLocationRelativeTo( dataModel.getAnchorFrame() );
+        wizard.setLocationRelativeTo(dataModel.getAnchorFrame());
         wizard.setVisible(true);
     }
 }

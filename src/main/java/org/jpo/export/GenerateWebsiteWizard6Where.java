@@ -63,21 +63,15 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      *
      * @param options The data object with all the settings
      */
-    public GenerateWebsiteWizard6Where(GenerateWebsiteRequest options) {
-        super(Settings.jpoResources.getString("HtmlDistTarget"), Settings.jpoResources.getString("HtmlDistTarget"));
+    public GenerateWebsiteWizard6Where(final GenerateWebsiteRequest options) {
+        super(Settings.getJpoResources().getString("HtmlDistTarget"), Settings.getJpoResources().getString("HtmlDistTarget"));
         this.options = options;
 
         // load the options into the GUI components
         switch (options.getOutputTarget()) {
-            case OUTPUT_FTP_LOCATION:
-                finalTarget.setSelectedIndex(1);
-                break;
-            case OUTPUT_SSH_LOCATION:
-                finalTarget.setSelectedIndex(2);
-                break;
-            default: // case OUTPUT_LOCAL_DIRECTORY:
-                finalTarget.setSelectedIndex(0);
-                break;
+            case OUTPUT_FTP_LOCATION -> finalTarget.setSelectedIndex(1);
+            case OUTPUT_SSH_LOCATION -> finalTarget.setSelectedIndex(2);
+            default -> finalTarget.setSelectedIndex(0);
         }
 
     }
@@ -88,7 +82,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * Text field that holds the directory that the html is to be exported to.
      */
     private final DirectoryChooser targetDirJTextField
-            = new DirectoryChooser(Settings.jpoResources.getString("HtmlDistillerChooserTitle"),
+            = new DirectoryChooser(Settings.getJpoResources().getString("HtmlDistillerChooserTitle"),
             DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      * The ftp Server
@@ -164,31 +158,31 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         finalTarget.addActionListener((ActionEvent arg0) -> {
             switch (finalTarget.getSelectedIndex()) {
-                case 1:
+                case 1 -> {
                     ftpPanel.setVisible(true);
                     sshPanel.setVisible(false);
                     GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_FTP_LOCATION);
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     ftpPanel.setVisible(false);
                     sshPanel.setVisible(true);
                     GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_SSH_LOCATION);
-                    break;
-                default: // case 0:
+                }
+                default -> {
                     ftpPanel.setVisible(false);
                     sshPanel.setVisible(false);
                     GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_LOCAL_DIRECTORY);
-                    break;
+                }
             }
         });
 
         wizardPanel.add(finalTarget, "wrap");
         final String ALIGN_LABEL = "align label";
-        wizardPanel.add(new JLabel(Settings.jpoResources.getString("genericTargetDirText")), ALIGN_LABEL + ", wrap");
+        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("genericTargetDirText")), ALIGN_LABEL + ", wrap");
 
         wizardPanel.add(targetDirJTextField, "wrap");
 
-        JButton checkButton = new JButton(Settings.jpoResources.getString("check"));
+        JButton checkButton = new JButton(Settings.getJpoResources().getString("check"));
         checkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         checkButton.setMaximumSize(Settings.getDefaultButtonDimension());
         checkButton.addActionListener((ActionEvent arg0) -> {
@@ -372,7 +366,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPanel.add(sshMkdirJButton,
                 "align label, wrap");
 
-        final Font errorLabelFont = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
+        final Font errorLabelFont = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
 
         sshError.setFont(errorLabelFont);
 
@@ -397,17 +391,10 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * @param options options
      */
     private void setWidgets(GenerateWebsiteRequest options) {
-        // load the options into the GUI components
         switch (options.getOutputTarget()) {
-            case OUTPUT_FTP_LOCATION:
-                finalTarget.setSelectedIndex(1);
-                break;
-            case OUTPUT_SSH_LOCATION:
-                finalTarget.setSelectedIndex(2);
-                break;
-            default: //case OUTPUT_LOCAL_DIRECTORY:
-                finalTarget.setSelectedIndex(0);
-                break;
+            case OUTPUT_FTP_LOCATION -> finalTarget.setSelectedIndex(1);
+            case OUTPUT_SSH_LOCATION -> finalTarget.setSelectedIndex(2);
+            default -> finalTarget.setSelectedIndex(0);
         }
 
         ftpServer.setText(options.getFtpServer());
@@ -443,7 +430,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     JOptionPane.showMessageDialog(
                             Settings.getAnchorFrame(),
                             "Could not create directory",
-                            Settings.jpoResources.getString("genericSecurityException"),
+                            Settings.getJpoResources().getString("genericSecurityException"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
 
@@ -451,17 +438,17 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             } catch (SecurityException e) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
-                        Settings.jpoResources.getString("genericSecurityException"),
+                        Settings.getJpoResources().getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
+                        Settings.getJpoResources().getString("genericSecurityException"),
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } else {
-            final String GENERIC_ERROR = Settings.jpoResources.getString("genericError");
+            final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
             if (!targetDirectory.isDirectory()) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("htmlDistIsDirError"),
+                        Settings.getJpoResources().getString("htmlDistIsDirError"),
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -469,7 +456,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             if (!targetDirectory.canWrite()) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("htmlDistCanWriteError"),
+                        Settings.getJpoResources().getString("htmlDistCanWriteError"),
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -477,7 +464,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             if (Objects.requireNonNull(targetDirectory.listFiles()).length > 0) {
                 int option = JOptionPane.showConfirmDialog(
                         Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("htmlDistIsNotEmptyWarning"),
+                        Settings.getJpoResources().getString("htmlDistIsNotEmptyWarning"),
                         GENERIC_ERROR,
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.WARNING_MESSAGE);

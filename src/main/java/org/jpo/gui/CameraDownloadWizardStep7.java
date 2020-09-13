@@ -6,7 +6,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
-Copyright (C) 2007-2017  Richard Eigenmann.
+Copyright (C) 2007-2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,12 +28,10 @@ public class CameraDownloadWizardStep7
         extends AbstractStep {
 
     /**
-     *
      * @param dataModel Data Model
      */
-    public CameraDownloadWizardStep7( CameraDownloadWizardData dataModel ) {
-        //pass step title and description
-        super( Settings.jpoResources.getString( "DownloadCameraWizardStep6Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep6Description" ) );
+    public CameraDownloadWizardStep7(final CameraDownloadWizardData dataModel) {
+        super(Settings.getJpoResources().getString("DownloadCameraWizardStep6Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep6Description"));
         this.dataModel = dataModel;
     }
 
@@ -46,12 +44,12 @@ public class CameraDownloadWizardStep7
 
 
     /**
-     *  Returns the component that visualises the user interactionable stuff for this step of the wizard.
+     * Returns the component that visualises the user interactionable stuff for this step of the wizard.
      * @return the component
      */
     @Override
     protected JComponent createComponent() {
-        JPanel stepComponent = new JPanel();
+        final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         int filesOnCamera = dataModel.getCamera().countFiles();
         int newPictures = dataModel.getNewPictures().size();

@@ -114,7 +114,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * location of the info texts if shown
      */
-    private final Point INFO_COORDINATES = new Point( 15, 15 );
+    private final Point infoCoordinates = new Point(15, 15);
 
     /**
      * line spacing for the info text that can be superimposed on the picture
@@ -134,7 +134,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * Font for the info if shown.
      */
-    private static final Font INFO_FONT = Font.decode( Settings.jpoResources.getString( "PicturePaneInfoFont" ) );
+    private static final Font INFO_FONT = Font.decode(Settings.getJpoResources().getString("PicturePaneInfoFont"));
 
     /**
      * Color for the info overly
@@ -179,37 +179,37 @@ public class OverlayedPictureController extends PictureController implements Sca
         g2d.setColor(INFO_FONT_COLOR);
         switch (showInfo) {
             case PHOTOGRAPHIC_OVERLAY:
-                g2d.drawString(Settings.jpoResources.getString("ExifInfoCamera"), INFO_COORDINATES.x, INFO_COORDINATES.y);
-                g2d.drawString(exifInfo.getCamera(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y);
-                g2d.drawString(Settings.jpoResources.getString("ExifInfoLens"), INFO_COORDINATES.x, INFO_COORDINATES.y + (LINE_SPACING));
-                g2d.drawString(exifInfo.getLens(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + (LINE_SPACING));
-                g2d.drawString(Settings.jpoResources.getString("ExifInfoShutterSpeed"), INFO_COORDINATES.x, INFO_COORDINATES.y + (2 * LINE_SPACING ) );
-                g2d.drawString(exifInfo.getShutterSpeed(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoAperture" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
-                g2d.drawString(exifInfo.getAperture(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoFocalLength" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
-                g2d.drawString(exifInfo.getFocalLength(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoISO" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 5 * LINE_SPACING ) );
-                g2d.drawString(exifInfo.getIso(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 5 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "ExifInfoTimeStamp" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 6 * LINE_SPACING ) );
-                g2d.drawString( exifInfo.getCreateDateTime(), INFO_COORDINATES.x + TABSTOP, INFO_COORDINATES.y + ( 6 * LINE_SPACING ) );
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoCamera"), infoCoordinates.x, infoCoordinates.y);
+                g2d.drawString(exifInfo.getCamera(), infoCoordinates.x + TABSTOP, infoCoordinates.y);
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoLens"), infoCoordinates.x, infoCoordinates.y + (LINE_SPACING));
+                g2d.drawString(exifInfo.getLens(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoShutterSpeed"), infoCoordinates.x, infoCoordinates.y + (2 * LINE_SPACING));
+                g2d.drawString(exifInfo.getShutterSpeed(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (2 * LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoAperture"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
+                g2d.drawString(exifInfo.getAperture(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (3 * LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoFocalLength"), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
+                g2d.drawString(exifInfo.getFocalLength(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (4 * LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoISO"), infoCoordinates.x, infoCoordinates.y + (5 * LINE_SPACING));
+                g2d.drawString(exifInfo.getIso(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (5 * LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("ExifInfoTimeStamp"), infoCoordinates.x, infoCoordinates.y + (6 * LINE_SPACING));
+                g2d.drawString(exifInfo.getCreateDateTime(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (6 * LINE_SPACING));
                 break;
             case APPLICATION_OVERLAY:
-                g2d.drawString( legend, INFO_COORDINATES.x, INFO_COORDINATES.y);
-                g2d.drawString( Settings.jpoResources.getString( "PicturePaneSize" )
+                g2d.drawString(legend, infoCoordinates.x, infoCoordinates.y);
+                g2d.drawString(Settings.getJpoResources().getString("PicturePaneSize")
                         + scalablePicture.getOriginalWidth()
                         + " x "
                         + scalablePicture.getOriginalHeight()
-                        + Settings.jpoResources.getString( "PicturePaneMidpoint" )
+                        + Settings.getJpoResources().getString("PicturePaneMidpoint")
                         + focusPoint.x
                         + " x "
                         + focusPoint.y
                         + " Scale: "
-                        + TWO_DECIMAL_FORMATTER.format( scalablePicture.getScaleFactor() ), INFO_COORDINATES.x, INFO_COORDINATES.y
-                        + (LINE_SPACING) );
-                g2d.drawString( "File: " + scalablePicture.getFilename(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 2 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "PicturePaneLoadTime" ) + TWO_DECIMAL_FORMATTER.format( scalablePicture.getSourcePicture().loadTime / 1000F ) + Settings.jpoResources.getString( "PicturePaneSeconds" ), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 3 * LINE_SPACING ) );
-                g2d.drawString( Settings.jpoResources.getString( "PicturePaneFreeMemory" ) + Tools.freeMemory(), INFO_COORDINATES.x, INFO_COORDINATES.y + ( 4 * LINE_SPACING ) );
+                        + TWO_DECIMAL_FORMATTER.format(scalablePicture.getScaleFactor()), infoCoordinates.x, infoCoordinates.y
+                        + (LINE_SPACING));
+                g2d.drawString("File: " + scalablePicture.getFilename(), infoCoordinates.x, infoCoordinates.y + (2 * LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("PicturePaneLoadTime") + TWO_DECIMAL_FORMATTER.format(scalablePicture.getSourcePicture().getLoadTime() / 1000F) + Settings.getJpoResources().getString("PicturePaneSeconds"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
+                g2d.drawString(Settings.getJpoResources().getString("PicturePaneFreeMemory") + Tools.freeMemory(), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
                 break;
             default: // case NO_OVERLAY:
                 break;
@@ -237,7 +237,7 @@ public class OverlayedPictureController extends PictureController implements Sca
         if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
             LOGGER.fine( "READY status" );
             //pictureStatusMessage = legend;
-            pictureStatusMessage = Settings.jpoResources.getString( "PicturePaneReadyStatus" );
+            pictureStatusMessage = Settings.getJpoResources().getString("PicturePaneReadyStatus");
             if ( isCenterWhenScaled() ) {
                 LOGGER.fine( "centering image" );
                 centerImage();
@@ -286,7 +286,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     }
 
     /**
-     * deregister the listening object of the status events
+     * de-register the listening object of the status events
      *
      * @param listener the listener to remove
      */

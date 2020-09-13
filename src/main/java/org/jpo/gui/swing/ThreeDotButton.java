@@ -7,7 +7,7 @@ import javax.swing.*;
 /*
  ThreeDotButton.java:  This class ovewrrides a JButton and sets the size and text.
 
- Copyright (C) 2010-2014  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2020  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,7 +33,7 @@ public class ThreeDotButton extends JButton {
      */
     public ThreeDotButton() {
         super();
-        setText(Settings.jpoResources.getString("threeDotText"));
+        setText(Settings.getJpoResources().getString("threeDotText"));
         setPreferredSize(Settings.THREE_DOT_BUTTON_DIMENSION);
         setMinimumSize(Settings.THREE_DOT_BUTTON_DIMENSION);
         setMaximumSize(Settings.THREE_DOT_BUTTON_DIMENSION);

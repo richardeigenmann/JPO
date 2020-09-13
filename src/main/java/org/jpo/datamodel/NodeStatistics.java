@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2018  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -114,7 +114,7 @@ public class NodeStatistics {
      * of the number
      */
     public String getNumberOfNodesString() {
-        return Settings.jpoResources.getString( "CollectionNodeCountLabel" ) + getNumberOfNodes();
+        return Settings.getJpoResources().getString("CollectionNodeCountLabel") + getNumberOfNodes();
     }
 
     /**
@@ -160,7 +160,7 @@ public class NodeStatistics {
      * @return Returns a multilingual label with the number of Groups
      */
     public String getNumberOfGroupsString() {
-        return Settings.jpoResources.getString( "CollectionGroupCountLabel" ) + getNumberOfGroups();
+        return Settings.getJpoResources().getString("CollectionGroupCountLabel") + getNumberOfGroups();
     }
 
     /**
@@ -180,7 +180,7 @@ public class NodeStatistics {
      * prefixed with the multilingual label
      */
     public String getNumberOfPicturesString() {
-        return Settings.jpoResources.getString( "CollectionPictureCountLabel" ) + getNumberOfPictures();
+        return Settings.getJpoResources().getString("CollectionPictureCountLabel") + getNumberOfPictures();
     }
 
     /**
@@ -199,33 +199,31 @@ public class NodeStatistics {
      * monitors. If called with a null start node it returns 0. If called with a
      * node that is actually a Query object it asks the Query for the count.
      *
-     * @param startNode	the node from which to count
+     * @param startNode        the node from which to count
      * @param recurseSubgroups indicator to say whether the next levels of
-     * groups should be counted too or not.
+     *                         groups should be counted too or not.
      * @return the number of PictureInfo nodes
      */
-    public static synchronized int countPictures( DefaultMutableTreeNode startNode, boolean recurseSubgroups ) {
-        if ( startNode == null ) {
+    public static synchronized int countPictures(final DefaultMutableTreeNode startNode, boolean recurseSubgroups) {
+        if (startNode == null) {
             return 0;
         }
 
-        if ( startNode.getUserObject() instanceof Query ) {
-            return ( (Query) startNode.getUserObject() ).getNumberOfResults();
+        if (startNode.getUserObject() instanceof Query) {
+            return ((Query) startNode.getUserObject()).getNumberOfResults();
         }
 
         int count = 0;
         Object nextElement;
-        Enumeration<? extends TreeNode> nodes = startNode.children();
-        DefaultMutableTreeNode node;
+        final Enumeration<? extends TreeNode> nodes = startNode.children();
         while ( nodes.hasMoreElements() ) {
             nextElement = nodes.nextElement();
-            if ( nextElement instanceof DefaultMutableTreeNode ) {
-                node = ( (DefaultMutableTreeNode) nextElement );
-                if ( node.getUserObject() instanceof PictureInfo ) {
+            if (nextElement instanceof DefaultMutableTreeNode node) {
+                if (node.getUserObject() instanceof PictureInfo) {
                     count++;
                 }
-                if ( recurseSubgroups && ( node.getChildCount() > 0 ) ) {
-                    count += countPictures( node, true );
+                if (recurseSubgroups && (node.getChildCount() > 0)) {
+                    count += countPictures(node, true);
                 }
             }
         }
@@ -248,7 +246,7 @@ public class NodeStatistics {
      * @return Returns the bytes of the pictures underneath the supplied node
      */
     public String getSizeOfPicturesString() {
-        return Settings.jpoResources.getString( "CollectionSizeJLabel" ) + FileUtils.byteCountToDisplaySize( getSizeOfPictures() );
+        return Settings.getJpoResources().getString("CollectionSizeJLabel") + FileUtils.byteCountToDisplaySize( getSizeOfPictures());
     }
 
     /**
@@ -258,26 +256,25 @@ public class NodeStatistics {
      * @param startNode The node for which to add up the size of the pictures
      * @return The number of bytes
      */
-    private static long sizeOfPicturesLong( DefaultMutableTreeNode startNode ) {
+    private static long sizeOfPicturesLong(final DefaultMutableTreeNode startNode) {
         Tools.warnOnEDT(); // really?
 
         long size = 0;
         DefaultMutableTreeNode n;
 
-        if ( startNode.getUserObject() instanceof Query ) {
-            Query q = (Query) startNode.getUserObject();
-            for ( int i = 0; i < q.getNumberOfResults(); i++ ) {
-                n = q.getIndex( i );
-                if ( n.getUserObject() instanceof PictureInfo ) {
-                    size += sizeOfPictureInfo( (PictureInfo) n.getUserObject() );
+        if (startNode.getUserObject() instanceof Query q) {
+            for (int i = 0; i < q.getNumberOfResults(); i++) {
+                n = q.getIndex(i);
+                if (n.getUserObject() instanceof PictureInfo pi) {
+                    size += sizeOfPictureInfo(pi);
                 }
             }
-        } else if ( startNode.getUserObject() instanceof PictureInfo ) {
-            size = sizeOfPictureInfo( (PictureInfo) startNode.getUserObject() );
-        } else if ( startNode instanceof SortableDefaultMutableTreeNode && startNode.getUserObject() instanceof GroupInfo ) {
-            final List<SortableDefaultMutableTreeNode> pictureNodes = ((SortableDefaultMutableTreeNode) startNode).getChildPictureNodes(true);
-            for ( SortableDefaultMutableTreeNode node : pictureNodes ) {
-                size += sizeOfPictureInfo( (PictureInfo) node.getUserObject() );
+        } else if (startNode.getUserObject() instanceof PictureInfo pi) {
+            size = sizeOfPictureInfo(pi);
+        } else if (startNode instanceof SortableDefaultMutableTreeNode node && startNode.getUserObject() instanceof GroupInfo) {
+            final List<SortableDefaultMutableTreeNode> pictureNodes = node.getChildPictureNodes(true);
+            for (final SortableDefaultMutableTreeNode nde : pictureNodes) {
+                size += sizeOfPictureInfo((PictureInfo) nde.getUserObject() );
             }
         }
         return size;
@@ -289,9 +286,9 @@ public class NodeStatistics {
      * @param pictureInfo The PictureInfo to query
      * @return The number of bytes
      */
-    private static long sizeOfPictureInfo( PictureInfo pictureInfo ) {
-        final File testfile = ( pictureInfo.getImageFile() );
-        if ( testfile != null ) {
+    private static long sizeOfPictureInfo(final PictureInfo pictureInfo) {
+        final File testfile = (pictureInfo.getImageFile());
+        if (testfile != null) {
             return testfile.length();
         }
         return 0;

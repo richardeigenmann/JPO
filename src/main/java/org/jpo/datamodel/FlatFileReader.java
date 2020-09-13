@@ -81,8 +81,8 @@ public class FlatFileReader {
             LOGGER.severe( ex.getLocalizedMessage() );
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     ex.getLocalizedMessage(),
-                    Settings.jpoResources.getString("genericError"),
-                    JOptionPane.ERROR_MESSAGE );
+                    Settings.getJpoResources().getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

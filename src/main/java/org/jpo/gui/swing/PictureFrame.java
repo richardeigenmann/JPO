@@ -100,7 +100,7 @@ public class PictureFrame {
     public PictureFrame() {
         viewerPanel = new JPanel();
         inittializeGui();
-        myJFrame = new ResizableJFrame( Settings.jpoResources.getString( "PictureViewerTitle" ), viewerPanel );
+        myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"), viewerPanel);
     }
 
     /**
@@ -138,7 +138,7 @@ public class PictureFrame {
         lowerBar.add(loadJProgressBar, "hidemode 2");
 
         // The Description_Panel
-        descriptionJTextField.setFont(Font.decode(Settings.jpoResources.getString("PictureViewerDescriptionFont")));
+        descriptionJTextField.setFont(Font.decode(Settings.getJpoResources().getString("PictureViewerDescriptionFont")));
         descriptionJTextField.setWrapStyleWord(true);
         descriptionJTextField.setLineWrap(true);
         descriptionJTextField.setEditable(true);

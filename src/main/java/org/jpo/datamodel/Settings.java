@@ -1161,10 +1161,19 @@ public class Settings {
      * Email User
      */
     private static String emailUser = "";
+
+    public static String getEmailPassword() {
+        return emailPassword;
+    }
+
+    public static void setEmailPassword(String emailPassword) {
+        Settings.emailPassword = emailPassword;
+    }
+
     /**
      * Email Password
      */
-    public static String emailPassword = "";
+    private static String emailPassword = "";
 
     public static boolean isEmailScaleImages() {
         return emailScaleImages;
@@ -1296,14 +1305,32 @@ public class Settings {
      * Whether to remember the Google login credentials for the Picasa upload.
      */
     private static boolean rememberGoogleCredentials = false;
+
+    public static String getGoogleUsername() {
+        return googleUsername;
+    }
+
+    public static void setGoogleUsername(String googleUsername) {
+        Settings.googleUsername = googleUsername;
+    }
+
     /**
      * Google user name if rememberGoogleCredentials is true
      */
-    public static String googleUsername;
+    private static String googleUsername;
+
+    public static String getGooglePassword() {
+        return googlePassword;
+    }
+
+    public static void setGooglePassword(String googlePassword) {
+        Settings.googlePassword = googlePassword;
+    }
+
     /**
      * Google password if rememberGoogleCredentials is true;
      */
-    public static String googlePassword;
+    private static String googlePassword;
 
     /**
      * method that set the default parameters
@@ -1760,10 +1787,18 @@ public class Settings {
         return (!currentLocale.equals(oldLocale));
     }
 
+    public static ResourceBundle getJpoResources() {
+        return jpoResources;
+    }
+
+    public static void setJpoResources(ResourceBundle jpoResources) {
+        Settings.jpoResources = jpoResources;
+    }
+
     /**
      * the resourceBundle is a Java thing that sorts out language customisation
      */
-    public static ResourceBundle jpoResources;
+    private static ResourceBundle jpoResources;
 
     /*
      * I'm using a class block initializer here so that we don't ever end up

@@ -135,32 +135,32 @@ public class ThumbnailPanelTitle
         firstThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         firstThumbnailsPageButton.setOpaque( false );
         firstThumbnailsPageButton.setEnabled( false );
-        firstThumbnailsPageButton.setFocusPainted( false );
-        firstThumbnailsPageButton.setToolTipText( Settings.jpoResources.getString( "ThumbnailToolTipPrevious" ) );
+        firstThumbnailsPageButton.setFocusPainted(false);
+        firstThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
 
         previousThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         previousThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
         previousThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         previousThumbnailsPageButton.setOpaque( false );
         previousThumbnailsPageButton.setEnabled( false );
-        previousThumbnailsPageButton.setFocusPainted( false );
-        previousThumbnailsPageButton.setToolTipText( Settings.jpoResources.getString( "ThumbnailToolTipPrevious" ) );
+        previousThumbnailsPageButton.setFocusPainted(false);
+        previousThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
 
         nextThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         nextThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
         nextThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         nextThumbnailsPageButton.setOpaque( false );
         nextThumbnailsPageButton.setEnabled( false );
-        nextThumbnailsPageButton.setFocusPainted( false );
-        nextThumbnailsPageButton.setToolTipText( Settings.jpoResources.getString( "ThumbnailToolTipNext" ) );
+        nextThumbnailsPageButton.setFocusPainted(false);
+        nextThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
 
         lastThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
         lastThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
         lastThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
         lastThumbnailsPageButton.setOpaque( false );
         lastThumbnailsPageButton.setEnabled( false );
-        lastThumbnailsPageButton.setFocusPainted( false );
-        lastThumbnailsPageButton.setToolTipText( Settings.jpoResources.getString( "ThumbnailToolTipNext" ) );
+        lastThumbnailsPageButton.setFocusPainted(false);
+        lastThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
 
         BoxLayout bl = new BoxLayout( this, BoxLayout.X_AXIS );
         setBorder( BorderFactory.createBevelBorder( BevelBorder.RAISED ) );	// JA

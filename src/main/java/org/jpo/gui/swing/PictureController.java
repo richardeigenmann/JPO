@@ -80,21 +80,21 @@ public class PictureController extends JComponent {
         initComponents();
 
         // make graphics faster
-        this.setDoubleBuffered( false );
+        this.setDoubleBuffered(false);
 
         // register an interest in mouse events
-        final Listener MouseListener = new Listener();
-        addMouseListener( MouseListener );
-        addMouseMotionListener( MouseListener );
+        final Listener mouseListener = new Listener();
+        addMouseListener(mouseListener);
+        addMouseMotionListener(mouseListener);
 
-        addKeyListener( new KeyAdapter() {
+        addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed( KeyEvent keyEvent ) {
+            public void keyPressed(KeyEvent keyEvent) {
                 int k = keyEvent.getKeyCode();
-                if ( ( k == KeyEvent.VK_SPACE ) || ( k == KeyEvent.VK_HOME ) ) {
+                if ((k == KeyEvent.VK_SPACE) || (k == KeyEvent.VK_HOME)) {
                     resetPicture();
                     keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_PAGE_UP ) ) {
+                } else if ((k == KeyEvent.VK_PAGE_UP)) {
                     zoomIn();
                     keyEvent.consume();
                 } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
@@ -321,11 +321,11 @@ public class PictureController extends JComponent {
      * method to set the centre of the image to the true coordinates in the
      * picture but doesn't call <code>repaint()</code>
      *
-     * @param Xparameter the x coordinates
-     * @param Yparameter the y coordinates
+     * @param xParameter the x coordinates
+     * @param yParameter the y coordinates
      */
-    public void setCenterLocation( int Xparameter, int Yparameter ) {
-        focusPoint.setLocation( Xparameter, Yparameter );
+    public void setCenterLocation(int xParameter, int yParameter) {
+        focusPoint.setLocation(xParameter, yParameter);
     }
 
     /**
@@ -348,18 +348,18 @@ public class PictureController extends JComponent {
         if ( pictureControllerImage.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            int X_Offset = (int) (  ( windowWidth /  2.0 ) - ( focusPoint.x * pictureControllerImage.getScaleFactor() ) );
-            int Y_Offset = (int) (  ( windowHeight /  2.0 ) - ( focusPoint.y * pictureControllerImage.getScaleFactor() ) );
+            int xOffset = (int) ((windowWidth / 2.0) - (focusPoint.x * pictureControllerImage.getScaleFactor()));
+            int yOffset = (int) ((windowHeight / 2.0) - (focusPoint.y * pictureControllerImage.getScaleFactor()));
 
             // clear damaged component area
             Rectangle clipBounds = g2d.getClipBounds();
-            g2d.setColor( getBackground() );
-            g2d.fillRect( clipBounds.x,
+            g2d.setColor(getBackground());
+            g2d.fillRect(clipBounds.x,
                     clipBounds.y,
                     clipBounds.width,
-                    clipBounds.height );
+                    clipBounds.height);
 
-            g2d.drawRenderedImage( pictureControllerImage.getScaledPicture(), AffineTransform.getTranslateInstance( X_Offset, Y_Offset ) );
+            g2d.drawRenderedImage(pictureControllerImage.getScaledPicture(), AffineTransform.getTranslateInstance(xOffset, yOffset));
 
         } else {
             // paint a black square
@@ -381,15 +381,15 @@ public class PictureController extends JComponent {
          * used in dragging to find out how much the mouse has moved from the
          * last time
          */
-        private int last_x, last_y;
+        private int lastX, lastY;
 
         /**
          * This method traps the mouse events and changes the scale and position
          * of the displayed picture.
          */
         @Override
-        public void mouseClicked( final MouseEvent e ) {
-            if ( e.getButton() == 3 ) {
+        public void mouseClicked(final MouseEvent e) {
+            if (e.getButton() == 3) {
                 // Right Mousebutton zooms out
                 centerWhenScaled = false;
                 zoomOut();
@@ -402,15 +402,15 @@ public class PictureController extends JComponent {
                 // Convert screen coordinates of the mouse click into true
                 // coordinates on the picture:
 
-                int WindowWidth = getSize().width;
-                int WindowHeight = getSize().height;
+                int windowWidth = getSize().width;
+                int windowHeight = getSize().height;
 
-                int X_Offset = e.getX() - ( WindowWidth / 2 );
-                int Y_Offset = e.getY() - ( WindowHeight / 2 );
+                int xOffset = e.getX() - (windowWidth / 2);
+                int yOffset = e.getY() - (windowHeight / 2);
 
                 setCenterLocation(
-                        focusPoint.x + (int) ( X_Offset / pictureControllerImage.getScaleFactor() ),
-                        focusPoint.y + (int) ( Y_Offset / pictureControllerImage.getScaleFactor() ) );
+                        focusPoint.x + (int) (xOffset / pictureControllerImage.getScaleFactor()),
+                        focusPoint.y + (int) (yOffset / pictureControllerImage.getScaleFactor()));
                 centerWhenScaled = false;
                 zoomIn();
             }
@@ -424,23 +424,23 @@ public class PictureController extends JComponent {
         public void mouseDragged( final MouseEvent e ) {
             if ( !dragging ) {
                 // Switch into dragging mode and record current coordinates
-                LOGGER.fine( "PicturePane.mouseDragged: Switching to drag mode." );
-                last_x = e.getX();
-                last_y = e.getY();
+                LOGGER.fine("PicturePane.mouseDragged: Switching to drag mode.");
+                lastX = e.getX();
+                lastY = e.getY();
 
-                setDragging( true );
+                setDragging(true);
 
             } else {
                 // was already dragging
                 int x = e.getX();
                 int y = e.getY();
 
-                focusPoint.setLocation( (int) ( focusPoint.x + ( ( last_x - x ) / pictureControllerImage.getScaleFactor() ) ),
-                        (int) ( focusPoint.y + ( ( last_y - y ) / pictureControllerImage.getScaleFactor() ) ) );
-                last_x = x;
-                last_y = y;
+                focusPoint.setLocation((int) (focusPoint.x + ((lastX - x) / pictureControllerImage.getScaleFactor())),
+                        (int) (focusPoint.y + ((lastY - y) / pictureControllerImage.getScaleFactor())));
+                lastX = x;
+                lastY = y;
 
-                setDragging( true );
+                setDragging(true);
                 repaint();
             }
             centerWhenScaled = false;

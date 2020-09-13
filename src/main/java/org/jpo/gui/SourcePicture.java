@@ -102,10 +102,14 @@ public class SourcePicture {
         SOURCE_PICTURE_LOADING_COMPLETED
     }
 
+    public long getLoadTime() {
+        return loadTime;
+    }
+
     /**
      * the time it took to load the image
      */
-    public long loadTime;  //default is 0
+    private long loadTime;  //default is 0
 
     /**
      * reference to the inner class that listens to the image loading progress
@@ -181,7 +185,7 @@ public class SourcePicture {
      * failed.
      */
     private void loadPicture() {
-        setStatus(SOURCE_PICTURE_LOADING, Settings.jpoResources.getString("ScalablePictureLoadingStatus"));
+        setStatus(SOURCE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
         final long start = System.currentTimeMillis();
         loadTime = 0;
         ImageBytes imageBytes;
@@ -220,11 +224,10 @@ public class SourcePicture {
 
             } catch (final OutOfMemoryError e) {
                 LOGGER.severe("Caught an OutOfMemoryError while loading an image: " + e.getMessage());
-                iis.close();
                 reader.removeIIOReadProgressListener(myIIOReadProgressListener);
                 reader.dispose();
 
-                setStatus(SOURCE_PICTURE_ERROR, Settings.jpoResources.getString("ScalablePictureErrorStatus"));
+                setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
                 sourcePictureBufferedImage = null;
 
                 Tools.dealOutOfMemoryError();
@@ -488,7 +491,7 @@ public class SourcePicture {
         private void notifySourceLoadProgressListeners(final SourcePictureStatus statusCode,
                                                        final int percentage) {
             percentLoaded = percentage;
-            sourcePictureListeners.forEach((sourcePictureListener) -> sourcePictureListener.sourceLoadProgressNotification(statusCode, percentage));
+            sourcePictureListeners.forEach(sourcePictureListener -> sourcePictureListener.sourceLoadProgressNotification(statusCode, percentage));
         }
 
         @Override

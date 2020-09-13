@@ -73,7 +73,7 @@ public class XmlReader {
             return;
         }
 
-        final LabelFrame loadProgressGui = new LabelFrame(Settings.jpoResources.getString("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
+        final LabelFrame loadProgressGui = new LabelFrame(Settings.getJpoResources().getString("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
         try {
             saxParser.parse(bufferedInputStream, new SaxEventHandler(startNode, loadProgressGui, lowresUrls));
         } catch (final SAXParseException spe) {

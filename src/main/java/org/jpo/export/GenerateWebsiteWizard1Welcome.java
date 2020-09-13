@@ -50,7 +50,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      * @param options Options
      */
     public GenerateWebsiteWizard1Welcome( final GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
+        super(Settings.getJpoResources().getString("welcomeTitle"), Settings.getJpoResources().getString("HtmlDistillerJFrameHeading"));
 
         final SortableDefaultMutableTreeNode startNode = options.getStartNode();
         class GetCountWorker extends SwingWorker<Integer, Object> {
@@ -63,7 +63,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
             @Override
             protected void done() {
                 try {
-                    welcomeLabel.setText(String.format(Settings.jpoResources.getString("welcomeMsg"), get()));
+                    welcomeLabel.setText(String.format(Settings.getJpoResources().getString("welcomeMsg"), get()));
                 } catch ( InterruptedException | ExecutionException ignore ) {
                     // Restore interrupted state...
                     Thread.currentThread().interrupt();
@@ -72,8 +72,8 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
         }
         (new GetCountWorker()).execute();
 
-        final String labelText = Settings.jpoResources.getString( "generateFrom" )
-                + ( ( startNode != null ) ? startNode.toString() : "null" );
+        final String labelText = Settings.getJpoResources().getString("generateFrom")
+                + ((startNode != null) ? startNode.toString() : "null");
         fromLabel.setText( labelText );
     }
 

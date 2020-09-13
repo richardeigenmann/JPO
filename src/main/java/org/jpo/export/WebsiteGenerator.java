@@ -97,9 +97,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public WebsiteGenerator(final GenerateWebsiteRequest options) {
         this.options = options;
         Tools.checkEDT();
-        progGui = new ProgressGui(Integer.MAX_VALUE,
-                Settings.jpoResources.getString("HtmlDistillerThreadTitle"),
-                String.format(Settings.jpoResources.getString("HtmlDistDone"), 0));
+        progressGui = new ProgressGui(Integer.MAX_VALUE,
+                Settings.getJpoResources().getString("HtmlDistillerThreadTitle"),
+                String.format(Settings.getJpoResources().getString("HtmlDistDone"), 0));
 
         class GetCountWorker extends SwingWorker<Integer, Object> {
 
@@ -111,8 +111,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             @Override
             protected void done() {
                 try {
-                    progGui.setMaximum(get());
-                    progGui.setDoneString(String.format(Settings.jpoResources.getString("HtmlDistDone"), get()));
+                    progressGui.setMaximum(get());
+                    progressGui.setDoneString(String.format(Settings.getJpoResources().getString("HtmlDistDone"), get()));
                 } catch (InterruptedException | ExecutionException ignore) {
                     // Restore interrupted state...
                     Thread.currentThread().interrupt();
@@ -137,11 +137,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         if (options.isGenerateZipfile()) {
             try (
-                    final FileOutputStream dest = new FileOutputStream(new File(options.getTargetDirectory(), options.getDownloadZipFileName()));
-                    final BufferedOutputStream buf = new BufferedOutputStream(dest)) {
-                zipFile = new ZipOutputStream(buf);
-            } catch (FileNotFoundException x) {
-                LOGGER.log(Level.SEVERE, "Error creating Zipfile. Coninuing without Zip\n{0}", x.toString());
+                    final FileOutputStream destination = new FileOutputStream(new File(options.getTargetDirectory(), options.getDownloadZipFileName()));
+                    final BufferedOutputStream bout = new BufferedOutputStream(destination)) {
+                zipFile = new ZipOutputStream(bout);
+            } catch (final FileNotFoundException x) {
+                LOGGER.log(Level.SEVERE, "Error creating Zipfile. Continuing without Zip\n{0}", x.toString());
                 options.setGenerateZipfile(false);
             }
         }
@@ -161,7 +161,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 zipFile.close();
             }
         } catch (IOException x) {
-            LOGGER.log(Level.SEVERE, "Error closing Zipfile. Coninuing.\n{0}", x.toString());
+            LOGGER.log(Level.SEVERE, "Error closing Zipfile. Cotninuing.\n{0}", x.toString());
             options.setGenerateZipfile(false);
         }
 
@@ -199,7 +199,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     /**
      * This object holds a reference to the progress GUI for the user.
      */
-    private final ProgressGui progGui;
+    private final ProgressGui progressGui;
 
     /**
      * This method is called by SwingWorker when the background process sends a
@@ -210,7 +210,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     @Override
     protected void process(final List<String> messages) {
         messages.stream().peek(message -> LOGGER.info(String.format("messge: %s", message))).forEachOrdered(item
-                -> progGui.progressIncrement()
+                -> progressGui.progressIncrement()
         );
     }
 
@@ -219,7 +219,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     @Override
     protected void done() {
-        progGui.switchToDoneMode();
+        progressGui.switchToDoneMode();
         try {
             final URI uri = new URI("file://" + options.getTargetDirectory() + "/index.htm");
             Desktop.getDesktop().browse(uri);
@@ -302,7 +302,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             int childCount = groupNode.getChildCount();
             int childNumber = 1;
             final Enumeration<TreeNode> kids = groupNode.children();
-            while (kids.hasMoreElements() && (!progGui.getInterruptSemaphore().getShouldInterrupt())) {
+            while (kids.hasMoreElements() && (!progressGui.getInterruptSemaphore().getShouldInterrupt())) {
                 SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
                 if (node.getUserObject() instanceof GroupInfo gi) {
 
@@ -324,15 +324,15 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
                 childNumber++;
             }
-            if (progGui.getInterruptSemaphore().getShouldInterrupt()) {
-                progGui.setDoneString(Settings.jpoResources.getString("htmlDistillerInterrupt"));
+            if (progressGui.getInterruptSemaphore().getShouldInterrupt()) {
+                progressGui.setDoneString(Settings.getJpoResources().getString("htmlDistillerInterrupt"));
             }
 
             out.write("</tr>");
             descriptionsBuffer.flushDescriptions();
 
             out.write(String.format("%n<tr><td colspan=\"%d\">", options.getPicsPerRow()));
-            out.write(Settings.jpoResources.getString("LinkToJpo"));
+            out.write(Settings.getJpoResources().getString("LinkToJpo"));
             out.write("</td></tr></table>");
             out.newLine();
             out.write("</body></html>");
@@ -382,14 +382,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         LOGGER.info("Before Switch");
         switch (options.getPictureNaming()) {
-            case PICTURE_NAMING_BY_ORIGINAL_NAME:
+            case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
                 final String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
                 lowresFile = new File(options.getTargetDirectory(), rootName + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), rootName + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), rootName + "_h." + extension);
                 midresHtmlFileName = rootName + ".htm";
-                break;
-            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+            }
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
                 final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 1);
                 final String padding = "00000";
                 final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
@@ -398,14 +398,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresFile = new File(options.getTargetDirectory(), root + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), root + "_h." + extension);
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
-                break;
-            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+            }
+            default -> {
                 final String fn = "jpo_" + pictureNode.hashCode();
                 lowresFile = new File(options.getTargetDirectory(), fn + "_l." + extension);
                 midresFile = new File(options.getTargetDirectory(), fn + "_m." + extension);
                 highresFile = new File(options.getTargetDirectory(), fn + "_h." + extension);
                 midresHtmlFileName = fn + ".htm";
-                break;
+            }
         }
         files.add(lowresFile);
         files.add(midresFile);
@@ -729,7 +729,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
 
                 midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<p>" + Settings.jpoResources.getString("LinkToJpo") + "</p>");
+                midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
                 midresHtmlWriter.newLine();
 
                 if (options.isGenerateMouseover()) {
@@ -1212,8 +1212,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("CssCopyError") + e.getMessage(),
-                    Settings.jpoResources.getString("genericWarning"),
+                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1233,14 +1233,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             int c;
 
             while ((c = bin.read()) != -1) {
-                outStream.write(c);
+                bout.write(c);
             }
 
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("CssCopyError") + e.getMessage(),
-                    Settings.jpoResources.getString("genericWarning"),
+                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1260,14 +1260,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             int c;
 
             while ((c = bin.read()) != -1) {
-                outStream.write(c);
+                bout.write(c);
             }
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("CssCopyError") + e.getMessage(),
-                    Settings.jpoResources.getString("genericWarning"),
+                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }

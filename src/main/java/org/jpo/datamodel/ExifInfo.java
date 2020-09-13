@@ -22,7 +22,7 @@ import static com.drew.metadata.exif.ExifDirectoryBase.*;
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -168,18 +168,18 @@ public class ExifInfo {
             return;
         }
         try {
-            InputStream imageStream = new FileInputStream(pictureFile);
-            Metadata metadata = ImageMetadataReader.readMetadata( new BufferedInputStream( imageStream ) );
+            final InputStream imageStream = new FileInputStream(pictureFile);
+            final Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(imageStream));
 
-            JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType( JpegDirectory.class );
-            if ( jpegDirectory != null ) {
-                exifWidth = tryToGetTag( jpegDirectory, JpegDirectory.TAG_IMAGE_WIDTH, exifWidth );
-                exifHeight = tryToGetTag( jpegDirectory, JpegDirectory.TAG_IMAGE_HEIGHT, exifHeight );
+            final JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
+            if (jpegDirectory != null) {
+                exifWidth = tryToGetTag(jpegDirectory, JpegDirectory.TAG_IMAGE_WIDTH, exifWidth);
+                exifHeight = tryToGetTag(jpegDirectory, JpegDirectory.TAG_IMAGE_HEIGHT, exifHeight);
             }
 
-            ExifSubIFDDirectory exifSubIFDdirectory = metadata.getFirstDirectoryOfType( ExifSubIFDDirectory.class );
-            if ( exifSubIFDdirectory != null ) {
-                setCreateDateTime( tryToGetTag( exifSubIFDdirectory, TAG_DATETIME_ORIGINAL, getCreateDateTime() ) );
+            final ExifSubIFDDirectory exifSubIFDdirectory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+            if (exifSubIFDdirectory != null) {
+                setCreateDateTime(tryToGetTag(exifSubIFDdirectory, TAG_DATETIME_ORIGINAL, getCreateDateTime()));
                 aperture = tryToGetTag( exifSubIFDdirectory, TAG_FNUMBER, aperture );
                 aperture = tryToGetTag( exifSubIFDdirectory, TAG_APERTURE, aperture );
                 shutterSpeed = tryToGetTag( exifSubIFDdirectory, TAG_EXPOSURE_TIME, shutterSpeed );
@@ -214,7 +214,7 @@ public class ExifInfo {
 
             }
 
-            GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType( GpsDirectory.class );
+            final GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             if ( gpsDirectory != null ) {
                 GeoLocation location = gpsDirectory.getGeoLocation();
                 if ( location != null ) {
@@ -223,7 +223,7 @@ public class ExifInfo {
                 }
             }
 
-            NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getFirstDirectoryOfType( NikonType2MakernoteDirectory.class );
+            final NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getFirstDirectoryOfType(NikonType2MakernoteDirectory.class);
             if ( nikonType2MakernoteDirectory != null ) {
                 iso = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_ISO_1, iso );
                 lens = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_LENS, lens );
@@ -283,15 +283,15 @@ public class ExifInfo {
         String latitude = "";
         // Whether it's N or S
         String latitudeRef = "";
-        return Settings.jpoResources.getString( "ExifInfoCamera" ) + "\t" + camera + "\n"
-                + Settings.jpoResources.getString( "ExifInfoLens" ) + "\t" + lens + "\n"
-                + Settings.jpoResources.getString( "ExifInfoShutterSpeed" ) + "\t" + shutterSpeed + "\n"
-                + Settings.jpoResources.getString( "ExifInfoAperture" ) + "\t" + aperture + "\n"
-                + Settings.jpoResources.getString( "ExifInfoFocalLength" ) + "\t" + focalLength + "\n"
-                + Settings.jpoResources.getString( "ExifInfoISO" ) + "\t" + iso + "\n"
-                + Settings.jpoResources.getString( "ExifInfoTimeStamp" ) + "\t" + getCreateDateTime() + "\n"
-                + Settings.jpoResources.getString( "ExifInfoLatitude" ) + "\t" + latitude + " " + latitudeRef + "\n"
-                + Settings.jpoResources.getString( "ExifInfoLongitude" ) + "\t" + longitude + " " + longitudeRef + "\n";
+        return Settings.getJpoResources().getString("ExifInfoCamera") + "\t" + camera + "\n"
+                + Settings.getJpoResources().getString("ExifInfoLens") + "\t" + lens + "\n"
+                + Settings.getJpoResources().getString("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n"
+                + Settings.getJpoResources().getString("ExifInfoAperture") + "\t" + aperture + "\n"
+                + Settings.getJpoResources().getString("ExifInfoFocalLength") + "\t" + focalLength + "\n"
+                + Settings.getJpoResources().getString("ExifInfoISO") + "\t" + iso + "\n"
+                + Settings.getJpoResources().getString("ExifInfoTimeStamp") + "\t" + getCreateDateTime() + "\n"
+                + Settings.getJpoResources().getString("ExifInfoLatitude") + "\t" + latitude + " " + latitudeRef + "\n"
+                + Settings.getJpoResources().getString("ExifInfoLongitude") + "\t" + longitude + " " + longitudeRef + "\n";
     }
 
     /**

@@ -57,8 +57,8 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
             LOGGER.info(String.format("Node %s is not a group", request.getNode().toString()));
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("ConsolidateFailure"),
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("ConsolidateFailure"),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -80,15 +80,15 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
             try {
                 if (!targetDirectory.mkdirs()) {
                     JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), targetDirectory),
-                            Settings.jpoResources.getString("genericError"),
+                            String.format(Settings.getJpoResources().getString("ConsolidateCreateDirFailure"), targetDirectory),
+                            Settings.getJpoResources().getString("genericError"),
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             } catch (final SecurityException e) {
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        String.format(Settings.jpoResources.getString("ConsolidateCreateDirFailure"), targetDirectory),
-                        Settings.jpoResources.getString("genericError"),
+                        String.format(Settings.getJpoResources().getString("ConsolidateCreateDirFailure"), targetDirectory),
+                        Settings.getJpoResources().getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
                 LOGGER.severe(String.format("SecurityException when creating directory %s. Reason: %s", targetDirectory, e.getMessage()));
                 return;
@@ -97,8 +97,8 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
 
         if (!targetDirectory.canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    String.format(Settings.jpoResources.getString("ConsolidateCantWrite"), targetDirectory),
-                    Settings.jpoResources.getString("genericError"),
+                    String.format(Settings.getJpoResources().getString("ConsolidateCantWrite"), targetDirectory),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }

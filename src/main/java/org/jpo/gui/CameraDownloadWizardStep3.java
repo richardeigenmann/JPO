@@ -48,11 +48,10 @@ public class CameraDownloadWizardStep3
     private static final Logger LOGGER = Logger.getLogger( CameraDownloadWizardStep3.class.getName() );
 
     /**
-     *
      * @param dataModel The data model
      */
-    public CameraDownloadWizardStep3( CameraDownloadWizardData dataModel ) {
-        super( Settings.jpoResources.getString( "DownloadCameraWizardStep3Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep3Description" ) );
+    public CameraDownloadWizardStep3(final CameraDownloadWizardData dataModel) {
+        super(Settings.getJpoResources().getString("DownloadCameraWizardStep3Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep3Description"));
         this.dataModel = dataModel;
     }
 
@@ -71,9 +70,9 @@ public class CameraDownloadWizardStep3
     protected JComponent createComponent() {
         final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
-        final JCheckBox createSubGroupCheckBox = new JCheckBox( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text0" ) );
+        final JCheckBox createSubGroupCheckBox = new JCheckBox(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text0"));
         createSubGroupCheckBox.setAlignmentX( Component.LEFT_ALIGNMENT );
-        final JLabel titleLabel = new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text1" ) );
+        final JLabel titleLabel = new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text1"));
         titleLabel.setAlignmentX( Component.LEFT_ALIGNMENT );
         final JTextField newGroupName = new JTextField();
         newGroupName.setAlignmentX( Component.LEFT_ALIGNMENT );
@@ -87,9 +86,9 @@ public class CameraDownloadWizardStep3
         newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
         secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
         if ( createSubGroupCheckBox.isSelected() ) {
-            selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2a" ) );
+            selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2a"));
         } else {
-            selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2b" ) );
+            selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2b"));
         }
 
         createSubGroupCheckBox.addChangeListener(( ChangeEvent e ) -> {
@@ -98,9 +97,9 @@ public class CameraDownloadWizardStep3
             newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
             secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
             if ( createSubGroupCheckBox.isSelected() ) {
-                selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2a" ) );
+                selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2a"));
             } else {
-                selectNodeLabel.setText( Settings.jpoResources.getString( "DownloadCameraWizardStep3Text2b" ) );
+                selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2b"));
             }
         });
         stepComponent.add( createSubGroupCheckBox );

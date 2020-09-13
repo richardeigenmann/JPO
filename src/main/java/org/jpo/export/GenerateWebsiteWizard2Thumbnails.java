@@ -47,7 +47,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      * @param options Options
      */
     public GenerateWebsiteWizard2Thumbnails(final GenerateWebsiteRequest options) {
-        super(Settings.jpoResources.getString("HtmlDistThumbnails"), Settings.jpoResources.getString("HtmlDistThumbnails"));
+        super(Settings.getJpoResources().getString("HtmlDistThumbnails"), Settings.getJpoResources().getString("HtmlDistThumbnails"));
         this.options = options;
 
         // load the options into the GUI components
@@ -97,12 +97,12 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     protected JComponent createComponent() {
         final JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]" ) );
         final String ALIGN_LABEL= "align label";
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "picsPerRowText" ) ), ALIGN_LABEL);
-        picsPerRow.addChangeListener( ( ChangeEvent arg0 ) -> options.setPicsPerRow( ( (SpinnerNumberModel) ( picsPerRow.getModel() ) ).getNumber().intValue() ));
+        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("picsPerRowText")), ALIGN_LABEL);
+        picsPerRow.addChangeListener((ChangeEvent arg0) -> options.setPicsPerRow(((SpinnerNumberModel) (picsPerRow.getModel())).getNumber().intValue()));
         wizardPanel.add( picsPerRow, "wrap" );
 
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), ALIGN_LABEL);
-        thumbWidth.addChangeListener( ( ChangeEvent arg0 ) -> options.setThumbnailWidth( ( (SpinnerNumberModel) ( thumbWidth.getModel() ) ).getNumber().intValue() ));
+        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailSizeJLabel")), ALIGN_LABEL);
+        thumbWidth.addChangeListener((ChangeEvent arg0) -> options.setThumbnailWidth(((SpinnerNumberModel) (thumbWidth.getModel())).getNumber().intValue()));
         wizardPanel.add( thumbWidth, "split 3" );
         wizardPanel.add( new JLabel( " x " ) );
         thumbHeight.addChangeListener( ( ChangeEvent arg0 ) -> options.setThumbnailHeight( ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).getNumber().intValue() ));
@@ -111,15 +111,15 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         // Thumbnail Quality Slider
         wizardPanel.add(
                 new JLabel(
-                        Settings.jpoResources.getString( "lowresJpgQualitySlider" ) ), ALIGN_LABEL);
+                        Settings.getJpoResources().getString("lowresJpgQualitySlider")), ALIGN_LABEL);
         Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(
-                0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
+                0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
         labelTable.put(
-                80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
+                80, new JLabel(Settings.getJpoResources().getString("jpgQualityGood")));
         labelTable.put(
-                100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
-        lowresJpgQualityJSlider.setLabelTable( labelTable );
+                100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));
+        lowresJpgQualityJSlider.setLabelTable(labelTable);
         lowresJpgQualityJSlider.setMajorTickSpacing(
                 10 );
         lowresJpgQualityJSlider.setMinorTickSpacing(
@@ -132,8 +132,8 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
 
         final JPanel sliderOwningPanel = new JPanel();
         sliderOwningPanel.add(lowresJpgQualityJSlider);
-        wizardPanel.add( sliderOwningPanel, "growx, wrap" );
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "scalingSteps" ) ) );
+        wizardPanel.add(sliderOwningPanel, "growx, wrap");
+        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("scalingSteps")));
 
         scalingSteps.addChangeListener( ( ChangeEvent arg0 ) -> options.setScalingSteps( ( (SpinnerNumberModel) ( scalingSteps.getModel() ) ).getNumber().intValue() ));
         wizardPanel.add( scalingSteps, "wrap" );

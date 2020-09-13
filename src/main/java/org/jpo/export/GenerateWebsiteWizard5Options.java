@@ -45,7 +45,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
      * @param options options
      */
     public GenerateWebsiteWizard5Options( GenerateWebsiteRequest options ) {
-        super( Settings.jpoResources.getString( "HtmlDistOptions" ), Settings.jpoResources.getString( "HtmlDistOptions" ) );
+        super(Settings.getJpoResources().getString("HtmlDistOptions"), Settings.getJpoResources().getString("HtmlDistOptions"));
         this.options = options;
 
         // load the options into the GUI components
@@ -73,32 +73,32 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         generateRobotsJCheckBox.setSelected( options.isWriteRobotsTxt() );
 
     }
+
     /**
      * Radio Button to indicate that the java hash code should be used to get
      * the image name
      */
-    private final JRadioButton hashcodeRadioButton = new JRadioButton( Settings.jpoResources.getString( "hashcodeRadioButton" ) );
+    private final JRadioButton hashcodeRadioButton = new JRadioButton(Settings.getJpoResources().getString("hashcodeRadioButton"));
     /**
      * Radio Button to indicate that the original name should be used to get the
      * image name
      */
-    private final JRadioButton originalNameRadioButton = new JRadioButton( Settings.jpoResources.getString( "originalNameRadioButton" ) );
+    private final JRadioButton originalNameRadioButton = new JRadioButton(Settings.getJpoResources().getString("originalNameRadioButton"));
     /**
      * Radio Button to indicate that a sequential number should be used to get
      * the image name
      */
-    private final JRadioButton sequentialRadioButton = new JRadioButton( Settings.jpoResources.getString( "sequentialRadioButton" ) );
+    private final JRadioButton sequentialRadioButton = new JRadioButton(Settings.getJpoResources().getString("sequentialRadioButton"));
     /**
      * Allow the user to specify a start number for the sequential numbering,
      * 1..999999999, start 1, increment 1 Requested by Jay Christopherson, Nov
      * 2008
      */
-    private final JSpinner sequentialStartJSpinner = new JSpinner( new SpinnerNumberModel( 1, 1, 999_999_999, 1 ) );
+    private final JSpinner sequentialStartJSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 999_999_999, 1));
     /**
      * Tickbox that indicates whether to write a robots.txt
-     *
      */
-    private final JCheckBox generateRobotsJCheckBox = new JCheckBox( Settings.jpoResources.getString( "generateRobotsJCheckBox" ) );
+    private final JCheckBox generateRobotsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("generateRobotsJCheckBox"));
 
     /**
      * Creates the GUI widgets
@@ -116,7 +116,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         bg.add( originalNameRadioButton );
         wizardPanel.add( originalNameRadioButton, "wrap" );
 
-        final JLabel sequentialStartLabel = new JLabel( Settings.jpoResources.getString( "sequentialRadioButtonStart" ) );
+        final JLabel sequentialStartLabel = new JLabel(Settings.getJpoResources().getString("sequentialRadioButtonStart"));
         bg.add( sequentialRadioButton );
         wizardPanel.add( sequentialRadioButton, "wrap" );
         ChangeListener radioButtonChangeListener = ( ChangeEvent arg0 ) -> {

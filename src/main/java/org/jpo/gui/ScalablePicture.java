@@ -76,7 +76,7 @@ public class ScalablePicture
     /**
      * the File of the picture
      */
-    public File imageFile;
+    private File imageFile;
 
     /**
      * variable to compose the status message
@@ -160,8 +160,8 @@ public class ScalablePicture
      * Constructor
      */
     public ScalablePicture() {
-        setStatus( SCALABLE_PICTURE_UNINITIALISED, Settings.jpoResources.getString( "ScalablePictureUninitialisedStatus" ) );
-        setScaleFactor( 1 );
+        setStatus(SCALABLE_PICTURE_UNINITIALISED, Settings.getJpoResources().getString("ScalablePictureUninitialisedStatus"));
+        setScaleFactor(1);
     }
 
     /**
@@ -185,8 +185,8 @@ public class ScalablePicture
             sourcePicture.removeListener( this );
         }
         sourcePicture = new SourcePicture();
-        sourcePicture.addListener( this );
-        setStatus( SCALABLE_PICTURE_LOADING, Settings.jpoResources.getString( "ScalablePictureLoadingStatus" ) );
+        sourcePicture.addListener(this);
+        setStatus(SCALABLE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
         scaleAfterLoad = true;
         sourcePicture.loadPictureInThread( file, priority, rotation );
         // when the thread is done it sends a sourceStatusChange message to us
@@ -247,8 +247,6 @@ public class ScalablePicture
                 sourcePicture.removeListener( this );
                 break;
             case SOURCE_PICTURE_LOADING:
-                setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
-                break;
             case SOURCE_PICTURE_ROTATING:
                 setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
                 break;
@@ -683,7 +681,7 @@ public class ScalablePicture
         pictureStatusMessage = statusMessage;
 
         synchronized ( scalablePictureStatusListeners ) {
-            scalablePictureStatusListeners.forEach( (scalablePictureListener ) -> scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage ));
+            scalablePictureStatusListeners.forEach(scalablePictureListener -> scalablePictureListener.scalableStatusChange(pictureStatusCode, pictureStatusMessage));
         }
     }
 
@@ -695,7 +693,7 @@ public class ScalablePicture
      */
     @Override
     public void sourceLoadProgressNotification( final SourcePictureStatus statusCode, final int percentage ) {
-        scalablePictureStatusListeners.forEach( (scalablePictureListener ) -> scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage ));
+        scalablePictureStatusListeners.forEach(scalablePictureListener -> scalablePictureListener.sourceLoadProgressNotification(statusCode, percentage));
     }
 
     /**

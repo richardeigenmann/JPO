@@ -14,7 +14,7 @@ import java.awt.event.WindowEvent;
 /*
  ProgressGui.java:  a class that shows the progress in adding pictures
 
- Copyright (C) 2002-2019  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,14 +35,12 @@ public class ProgressGui extends JFrame implements ProgressListener {
 
     /**
      * button to start the export
-     *
      */
-    private final JButton okJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
+    private final JButton okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
     /**
      * button to cancel the dialog
-     *
      */
-    private final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
+    private final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
     /**
      * Progress Indicator
      */
@@ -94,16 +92,16 @@ public class ProgressGui extends JFrame implements ProgressListener {
 
     }
 
-    private void initComponents( String doneString, int max, String title ) {
-        setDoneString( doneString );
+    private void initComponents(final String doneString, final int max, String title) {
+        setDoneString(doneString);
 
-        setTitle( title );
-        setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        addWindowListener( new WindowAdapter() {
+        setTitle(title);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosing( WindowEvent e ) {
-                if ( okJButton.isVisible() ) {
+            public void windowClosing(WindowEvent e) {
+                if (okJButton.isVisible()) {
                     getRid();
                 } else {
                     interruptSemaphore.setShouldInterrupt( true );
@@ -111,7 +109,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
             }
         } );
 
-        JPanel contentJPanel = new JPanel();
+        final JPanel contentJPanel = new JPanel();
         contentJPanel.setLayout( new MigLayout( "insets 10", // Layout Constraints
                 "[center]", // Column constraints with default align
                 "[top]" ) ); // Row constraints with default align
@@ -157,11 +155,11 @@ public class ProgressGui extends JFrame implements ProgressListener {
      * method that closes the frame and gets rid of it
      */
     private void getRid() {
-        Runnable r = () -> {
-            setVisible( false );
+        final Runnable r = () -> {
+            setVisible(false);
             dispose();
         };
-        if ( SwingUtilities.isEventDispatchThread() ) {
+        if (SwingUtilities.isEventDispatchThread() ) {
             r.run();
         } else {
             SwingUtilities.invokeLater( r );

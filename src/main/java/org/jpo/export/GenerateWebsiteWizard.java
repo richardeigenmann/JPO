@@ -88,7 +88,7 @@ public class GenerateWebsiteWizard {
             }
         } );
 
-        final Wizard wizard = new Wizard( model, Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
+        final Wizard wizard = new Wizard(model, Settings.getJpoResources().getString("HtmlDistillerJFrameHeading"));
 
         wizard.pack();
         wizard.setLocationRelativeTo(Settings.getAnchorFrame());

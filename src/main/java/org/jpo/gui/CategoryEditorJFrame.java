@@ -73,13 +73,13 @@ public class CategoryEditorJFrame
             }
         } );
 
-        setTitle( Settings.jpoResources.getString( "CategoryEditorJFrameTitle" ) );
+        setTitle(Settings.getJpoResources().getString("CategoryEditorJFrameTitle"));
 
         final JPanel jPanel = new JPanel();
         jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
         jPanel.setLayout( new MigLayout("") );
 
-        final JLabel categoryJLabel = new JLabel( Settings.jpoResources.getString( "categoryJLabel" ) );
+        final JLabel categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
         categoryJLabel.setHorizontalAlignment( SwingConstants.LEFT );
         jPanel.add( categoryJLabel );
 
@@ -93,7 +93,7 @@ public class CategoryEditorJFrame
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
         final Dimension maxButtonSize = new Dimension( 150, 25 );
 
-        final JButton addCategoryJButton = new JButton( Settings.jpoResources.getString( "addCategoryJButton" ) );
+        final JButton addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
         addCategoryJButton.setPreferredSize( defaultButtonSize );
         addCategoryJButton.setMinimumSize( defaultButtonSize );
         addCategoryJButton.setMaximumSize( maxButtonSize );
@@ -106,7 +106,7 @@ public class CategoryEditorJFrame
         });
         jPanel.add( addCategoryJButton, "alignx center, wrap" );
 
-        final JLabel categoriesJLabel = new JLabel( Settings.jpoResources.getString( "categoriesJLabel" ) );
+        final JLabel categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel"));
         categoriesJLabel.setHorizontalAlignment( SwingConstants.LEFT );
         jPanel.add( categoriesJLabel );
 
@@ -135,7 +135,7 @@ public class CategoryEditorJFrame
         final JPanel buttonJPanel = new JPanel();
         buttonJPanel.setLayout( new MigLayout() );
 
-        final JButton deleteCategoryJButton = new JButton( Settings.jpoResources.getString( "deleteCategoryJButton" ) );
+        final JButton deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
         deleteCategoryJButton.setPreferredSize( defaultButtonSize );
         deleteCategoryJButton.setMinimumSize( defaultButtonSize );
         deleteCategoryJButton.setMaximumSize( maxButtonSize );
@@ -147,11 +147,11 @@ public class CategoryEditorJFrame
             final Category cat = categoriesJList.getModel().getElementAt( index );
             int count = PictureCollection.countCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
             if ( count > 0 ) {
-                int answer = JOptionPane.showConfirmDialog( CategoryEditorJFrame.this,
-                        Settings.jpoResources.getString( "countCategoryUsageWarning1" ) + count + Settings.jpoResources.getString( "countCategoryUsageWarning2" ),
-                        Settings.jpoResources.getString( "genericWarning" ),
+                int answer = JOptionPane.showConfirmDialog(CategoryEditorJFrame.this,
+                        Settings.getJpoResources().getString("countCategoryUsageWarning1") + count + Settings.getJpoResources().getString("countCategoryUsageWarning2"),
+                        Settings.getJpoResources().getString("genericWarning"),
                         JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE );
+                        JOptionPane.QUESTION_MESSAGE);
                 if ( answer == JOptionPane.CANCEL_OPTION ) {
                     return;
                 } else {
@@ -164,7 +164,7 @@ public class CategoryEditorJFrame
         });
         buttonJPanel.add( deleteCategoryJButton, "wrap" );
 
-        final JButton renameCategoryJButton = new JButton( Settings.jpoResources.getString( "renameCategoryJButton" ) );
+        final JButton renameCategoryJButton = new JButton(Settings.getJpoResources().getString("renameCategoryJButton"));
         renameCategoryJButton.setPreferredSize( defaultButtonSize );
         renameCategoryJButton.setMinimumSize( defaultButtonSize );
         renameCategoryJButton.setMaximumSize( maxButtonSize );
@@ -184,7 +184,7 @@ public class CategoryEditorJFrame
         });
         buttonJPanel.add( renameCategoryJButton, "wrap" );
 
-        final JButton doneJButton = new JButton( Settings.jpoResources.getString( "doneJButton" ) );
+        final JButton doneJButton = new JButton(Settings.getJpoResources().getString("doneJButton"));
         doneJButton.setPreferredSize( defaultButtonSize );
         doneJButton.setMinimumSize( defaultButtonSize );
         doneJButton.setMaximumSize( maxButtonSize );

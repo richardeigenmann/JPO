@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /*
 NodeStatisticsController.java: a controller that makes the NodeStatisticsPanel show interesting stats
 
-Copyright (C) 2002 - 2015  Richard Eigenmann.
+Copyright (C) 2002 - 2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -58,19 +58,20 @@ public class NodeStatisticsController {
         }
         return nodeStatisticsPanel;
     }
-        
+
     /**
-     *  This method will update the statistics based on the supplied input node.
-     *  @param  statisticsNode   The node that is being analysed.
+     * This method will update the statistics based on the supplied input node.
+     *
+     * @param statisticsNode The node that is being analysed.
      */
-    public void updateStats( DefaultMutableTreeNode statisticsNode ) {
-        if ( Settings.getPictureCollection().isFileLoading() ) {
-            LOGGER.info( "Still busy loading the file. Aborting" );
+    public void updateStats(final DefaultMutableTreeNode statisticsNode) {
+        if (Settings.getPictureCollection().isFileLoading()) {
+            LOGGER.info("Still busy loading the file. Aborting");
             return;
         }
 
-        if ( nodeStatistics.getNode() != statisticsNode ) {
-            nodeStatistics.setNode( statisticsNode );
+        if (nodeStatistics.getNode() != statisticsNode) {
+            nodeStatistics.setNode(statisticsNode);
         }
         updateStats();
 
@@ -82,20 +83,20 @@ public class NodeStatisticsController {
      *  then offload the updates into the EDT.
      */
     public void updateStats() {
-        class updateStatsWorker extends SwingWorker<Object, Object> {
+        class UpdateStatsWorker extends SwingWorker<Object, Object> {
             private final NodeStatisticsBean nodeStatisticsBean = new NodeStatisticsBean();
 
             @Override
             public String doInBackground() {
-                nodeStatisticsBean.setNumberOfNodes( nodeStatistics.getNumberOfNodesString() );
-                nodeStatisticsBean.setNumberOfGroups( nodeStatistics.getNumberOfGroupsString() );
-                nodeStatisticsBean.setNumberOfPictures( nodeStatistics.getNumberOfPicturesString() );
-                nodeStatisticsBean.setSizeOfPictures( nodeStatistics.getSizeOfPicturesString() );
+                nodeStatisticsBean.setNumberOfNodes(nodeStatistics.getNumberOfNodesString());
+                nodeStatisticsBean.setNumberOfGroups(nodeStatistics.getNumberOfGroupsString());
+                nodeStatisticsBean.setNumberOfPictures(nodeStatistics.getNumberOfPicturesString());
+                nodeStatisticsBean.setSizeOfPictures(nodeStatistics.getSizeOfPicturesString());
 
                 if (Settings.isWriteLog()) {
-                    nodeStatisticsBean.setFreeMemory( Tools.freeMemory() );
-                    nodeStatisticsBean.setQueueCount( Settings.jpoResources.getString( "queCountJLabel" ) + ThumbnailCreationQueue.size() );
-                    nodeStatisticsBean.setSelectedCount( String.format( "Selected: %d", Settings.getPictureCollection().getSelection().size() ) );
+                    nodeStatisticsBean.setFreeMemory(Tools.freeMemory());
+                    nodeStatisticsBean.setQueueCount(Settings.getJpoResources().getString("queCountJLabel") + ThumbnailCreationQueue.size());
+                    nodeStatisticsBean.setSelectedCount(String.format("Selected: %d", Settings.getPictureCollection().getSelection().size()));
                 }
                 return "done";
             }
@@ -109,6 +110,6 @@ public class NodeStatisticsController {
             }
         }
 
-        ( new updateStatsWorker() ).execute();
+        (new UpdateStatsWorker()).execute();
     }
 }

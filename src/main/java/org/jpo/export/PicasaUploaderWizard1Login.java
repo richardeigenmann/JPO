@@ -92,14 +92,14 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
                 if ( rememberCredentialsJCheckkBox.isSelected() ) {
                     LOGGER.info("saving");
                     Settings.setRememberGoogleCredentials(true);
-                    Settings.googleUsername = userNameJTextField.getText();
-                    Settings.googlePassword = new String( passwordJPasswordField.getPassword() );
+                    Settings.setGoogleUsername(userNameJTextField.getText());
+                    Settings.setGooglePassword(new String(passwordJPasswordField.getPassword()));
                     Settings.setUnsavedSettingChanges(true);
                 } else {
                     LOGGER.info("wiping");
                     Settings.setRememberGoogleCredentials(false);
-                    Settings.googleUsername = "";
-                    Settings.googlePassword = "";
+                    Settings.setGoogleUsername("");
+                    Settings.setGooglePassword("");
                 }
                 myRequest.setUsername(userNameJTextField.getText());
                 myRequest.setPassword(new String(passwordJPasswordField.getPassword()));
@@ -121,8 +121,8 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
         rememberCredentialsJCheckkBox.setSelected(Settings.isRememberGoogleCredentials());
         if (Settings.isRememberGoogleCredentials()) {
             LOGGER.info("remembering");
-            userNameJTextField.setText(Settings.googleUsername);
-            passwordJPasswordField.setText(Settings.googlePassword);
+            userNameJTextField.setText(Settings.getGoogleUsername());
+            passwordJPasswordField.setText(Settings.getGooglePassword());
         } else {
             LOGGER.info("not remembering");
         }

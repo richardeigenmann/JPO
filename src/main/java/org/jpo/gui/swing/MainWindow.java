@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /*
  MainWindow.java:  main window of the JPO application
 
- Copyright (C) 2002 - 2015  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -98,20 +98,20 @@ public class MainWindow extends JFrame {
         Settings.setAnchorFrame(this);
         try {
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-            UIManager.setLookAndFeel( Windows );
-        } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e ) {
-            LOGGER.fine( "Could not set Look and Feel" );
+            UIManager.setLookAndFeel(Windows);
+        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+            LOGGER.fine("Could not set Look and Feel");
         }
-        setTitle( Settings.jpoResources.getString( "ApplicationTitle" ) );
+        setTitle(Settings.getJpoResources().getString("ApplicationTitle"));
 
         setMinimumSize( Settings.jpoJFrameMinimumSize );
         setPreferredSize(Settings.getMainFrameDimensions());
 
-        ApplicationJMenuBar menuBar = new ApplicationJMenuBar();
+        final ApplicationJMenuBar menuBar = new ApplicationJMenuBar();
         setJMenuBar( menuBar );
 
         // Set Tooltipps to snappy mode
-        ToolTipManager ttm = ToolTipManager.sharedInstance();
+        final ToolTipManager ttm = ToolTipManager.sharedInstance();
         ttm.setDismissDelay( 1500 );
         ttm.setInitialDelay( 100 );
 
@@ -125,29 +125,29 @@ public class MainWindow extends JFrame {
             setExtendedState( MAXIMIZED_BOTH );
         }
 
-        Component thumbnailPanel = ( new ThumbnailsPanelController() ).getView();
+        final Component thumbnailPanel = (new ThumbnailsPanelController()).getView();
 
-        tree = new DefaultSingleCDockable( "TreeId",
-                Settings.jpoResources.getString( "jpoTabbedPaneCollection" ),
-                new CollectionJTreeController(Settings.getPictureCollection()).getJScrollPane() );
-        searches = new DefaultSingleCDockable( "SearchId",
-                Settings.jpoResources.getString( "jpoTabbedPaneSearches" ),
-                new QueriesJTreeController().getJComponent() );
+        tree = new DefaultSingleCDockable("TreeId",
+                Settings.getJpoResources().getString("jpoTabbedPaneCollection"),
+                new CollectionJTreeController(Settings.getPictureCollection()).getJScrollPane());
+        searches = new DefaultSingleCDockable("SearchId",
+                Settings.getJpoResources().getString("jpoTabbedPaneSearches"),
+                new QueriesJTreeController().getJComponent());
 
-        JButton loadJButton = new JButton( "Properties - Load" );
+        final JButton loadJButton = new JButton("Properties - Load");
         loadJButton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() ));
-        JButton saveJbutton = new JButton( "Save" );
+        final JButton saveJbutton = new JButton("Save");
         saveJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() ));
         JButton resetJbutton = new JButton( "Reset" );
         resetJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() ));
 
-        JPanel propertiesJPanel = new JPanel();
+        final JPanel propertiesJPanel = new JPanel();
         propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );
         propertiesJPanel.add( loadJButton );
         propertiesJPanel.add( saveJbutton );
         propertiesJPanel.add( resetJbutton );
 
-        SingleCDockable properties = new DefaultSingleCDockable( "PropertiesId", "Properties", propertiesJPanel );
+        final SingleCDockable properties = new DefaultSingleCDockable("PropertiesId", "Properties", propertiesJPanel);
 
         SingleCDockable map = new DefaultSingleCDockable( "MapId", "Map", new JLabel( "a map would go here" ) );
         SingleCDockable tagDockable = new DefaultSingleCDockable( "TagId", "TagCloud", new TagCloudController().getTagCloud() );
@@ -193,7 +193,7 @@ public class MainWindow extends JFrame {
      * @param request The ShowGroupRequest
      */
     @Subscribe
-    public void handleShowGroupRequest( ShowGroupRequest request ) {
+    public void handleShowGroupRequest(final ShowGroupRequest request) {
         tree.toFront();
     }
 
@@ -204,7 +204,7 @@ public class MainWindow extends JFrame {
      * @param request The query request
      */
     @Subscribe
-    public void handleShowQueryRequest( ShowQueryRequest request ) {
+    public void handleShowQueryRequest(final ShowQueryRequest request) {
         searches.toFront();
     }
 
@@ -234,11 +234,11 @@ public class MainWindow extends JFrame {
      * @param request The SaveDockablesPositionsRequest
      */
     @Subscribe
-    public void handleSaveDockablesPositionsRequest( SaveDockablesPositionsRequest request ) {
+    public void handleSaveDockablesPositionsRequest(final SaveDockablesPositionsRequest request) {
         try {
             control.getResources().writePreferences();
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
+        } catch (IOException ex) {
+            LOGGER.severe(ex.getMessage());
         }
     }
 
@@ -249,11 +249,11 @@ public class MainWindow extends JFrame {
      * @param request The LoadDockablesPositionsRequest
      */
     @Subscribe
-    public void handleLoadDockablesPositionsRequest( LoadDockablesPositionsRequest request ) {
+    public void handleLoadDockablesPositionsRequest(final LoadDockablesPositionsRequest request) {
         try {
             control.getResources().readPreferences();
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
+        } catch (IOException ex) {
+            LOGGER.severe(ex.getMessage());
         }
     }
 

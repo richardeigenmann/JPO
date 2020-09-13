@@ -53,17 +53,17 @@ public class LicenseWindow {
         licenseJTextArea.setText( license );
         licenseJTextArea.setCaretPosition( 0 );
 
-        final Object[] License = { jScrollPane };
+        final Object[] objects = {jScrollPane};
 
         final String OK = "OK";
         final Object[] options = { OK };
 
-        final JOptionPane pane = new JOptionPane( License,
+        final JOptionPane pane = new JOptionPane(objects,
                 JOptionPane.INFORMATION_MESSAGE,
                 JOptionPane.OK_OPTION,
                 null,
                 options,
-                options[0] );
+                options[0]);
 
         final JDialog dialog = pane.createDialog(Settings.getAnchorFrame(), "GNU General Public License");
         dialog.setVisible( true );

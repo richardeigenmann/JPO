@@ -63,8 +63,8 @@ public class PictureAdder
         LOGGER.log(Level.FINE, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{startNode, chosenFiles.length, newOnly, recurseDirectories, retainDirectories});
 
         progGui = new ProgressGui(Tools.countfiles(chosenFiles),
-                Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
-                Settings.jpoResources.getString("picturesAdded"));
+                Settings.getJpoResources().getString("PictureAdderProgressDialogTitle"),
+                Settings.getJpoResources().getString("picturesAdded"));
         Settings.getPictureCollection().setSendModelUpdates(false);
 
 
@@ -180,7 +180,7 @@ public class PictureAdder
      */
     @Override
     protected void process(final List<Integer> chunks) {
-        chunks.forEach((i) -> {
+        chunks.forEach(i -> {
             if (i > 0) {
                 progGui.progressIncrement();
             } else {
@@ -203,5 +203,5 @@ public class PictureAdder
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(PictureFileChooser.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PictureAdder.class.getName());
 }

@@ -235,8 +235,8 @@ public class JpoWriter {
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("DtdCopyError") + e.getMessage(),
-                    Settings.jpoResources.getString("genericWarning"),
+                    Settings.getJpoResources().getString("DtdCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }

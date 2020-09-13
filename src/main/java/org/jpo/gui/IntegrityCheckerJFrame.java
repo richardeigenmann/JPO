@@ -63,10 +63,10 @@ public class IntegrityCheckerJFrame
         this.startNode = startNode;
 
         // set up widgets
-        setTitle(Settings.jpoResources.getString("IntegrityCheckerTitle"));
+        setTitle(Settings.getJpoResources().getString("IntegrityCheckerTitle"));
         final JPanel jPanel = new JPanel(new MigLayout("insets 15"));
-        jPanel.add(new JLabel(Settings.jpoResources.getString("integrityCheckerLabel")), "wrap");
-        final JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
+        jPanel.add(new JLabel(Settings.getJpoResources().getString("integrityCheckerLabel")), "wrap");
+        final JButton okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
         okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());

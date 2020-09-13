@@ -55,8 +55,8 @@ public class PictureFileChooser
         if ( !( startNode.getUserObject() instanceof GroupInfo ) ) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("notGroupInfo"),
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("notGroupInfo"),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -110,7 +110,7 @@ public class PictureFileChooser
      * Checkbox that allows the user to specify that pictures already in the
      * collection should be ignored.
      */
-    private final JCheckBox showThumbnailJCheckBox = new JCheckBox( Settings.jpoResources.getString( "showThumbnailJCheckBox" ) );
+    private final JCheckBox showThumbnailJCheckBox = new JCheckBox(Settings.getJpoResources().getString("showThumbnailJCheckBox"));
 
     /**
      * preferred size of accessory panel
@@ -121,20 +121,19 @@ public class PictureFileChooser
      * Checkbox that allows the user to specify whether pictures in the
      * subdirectories should be added or not.
      */
-    private final JCheckBox recurseJCheckBox = new JCheckBox( Settings.jpoResources.getString( "recurseJCheckBox" ) );
+    private final JCheckBox recurseJCheckBox = new JCheckBox(Settings.getJpoResources().getString("recurseJCheckBox"));
 
     /**
-     *
      * Checkbox that allows the user to specify that pictures already in the
      * collection should be ignored.
      */
-    private final JCheckBox newOnlyJCheckBox = new JCheckBox( Settings.jpoResources.getString( "newOnlyJCheckBox" ) );
+    private final JCheckBox newOnlyJCheckBox = new JCheckBox(Settings.getJpoResources().getString("newOnlyJCheckBox"));
 
     /**
      * Checkbox that allows the user to specify whether directory structures
      * should be retained
      */
-    private final JCheckBox retainDirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "retainDirectoriesJCheckBox" ) );
+    private final JCheckBox retainDirectoriesJCheckBox = new JCheckBox(Settings.getJpoResources().getString("retainDirectoriesJCheckBox"));
 
     /**
      * This component shows the thumbnail. It is a JLabel as we can thus use the
@@ -159,26 +158,26 @@ public class PictureFileChooser
         JPanel optionsJPanel = new JPanel();
         optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );
         optionsJPanel.add( recurseJCheckBox, BorderLayout.WEST );
-        optionsJPanel.add( newOnlyJCheckBox, BorderLayout.WEST );
-        optionsJPanel.add( showThumbnailJCheckBox, BorderLayout.WEST );
-        optionsJPanel.add( retainDirectoriesJCheckBox, BorderLayout.WEST );
-        optionsJPanel.setPreferredSize( OPTIONS_PANEL_DIMENSION );
-        thumbnailJLabel.setPreferredSize( OPTIONS_PANEL_DIMENSION );
+        optionsJPanel.add(newOnlyJCheckBox, BorderLayout.WEST);
+        optionsJPanel.add(showThumbnailJCheckBox, BorderLayout.WEST);
+        optionsJPanel.add(retainDirectoriesJCheckBox, BorderLayout.WEST);
+        optionsJPanel.setPreferredSize(OPTIONS_PANEL_DIMENSION);
+        thumbnailJLabel.setPreferredSize(OPTIONS_PANEL_DIMENSION);
 
-        categoryJScrollPane.loadCategories( Settings.getPictureCollection().getCategoryIterator() );
+        categoryJScrollPane.loadCategories(Settings.getPictureCollection().getCategoryIterator());
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setBorder( BorderFactory.createEmptyBorder( 0, 5, 0, 0 ) );
-        tabbedPane.add( Settings.jpoResources.getString( "pictureAdderOptionsTab" ), optionsJPanel );
-        tabbedPane.add( Settings.jpoResources.getString( "pictureAdderThumbnailTab" ), thumbnailJLabel );
-        tabbedPane.add( Settings.jpoResources.getString( "pictureAdderCategoryTab" ), categoryJScrollPane );
+        tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+        tabbedPane.add(Settings.getJpoResources().getString("pictureAdderOptionsTab"), optionsJPanel);
+        tabbedPane.add(Settings.getJpoResources().getString("pictureAdderThumbnailTab"), thumbnailJLabel);
+        tabbedPane.add(Settings.getJpoResources().getString("pictureAdderCategoryTab"), categoryJScrollPane);
 
-        jFileChooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
-        jFileChooser.setMultiSelectionEnabled( true );
-        jFileChooser.setApproveButtonText( Settings.jpoResources.getString( "fileChooserAddButtonLabel" ) );
-        jFileChooser.setDialogTitle( Settings.jpoResources.getString( "PictureAdderDialogTitle" ) );
-        jFileChooser.setAccessory( tabbedPane );
-        jFileChooser.setCurrentDirectory( Settings.getMostRecentCopyLocation() );
-        jFileChooser.addPropertyChangeListener( this );
+        jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        jFileChooser.setMultiSelectionEnabled(true);
+        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileChooserAddButtonLabel"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("PictureAdderDialogTitle"));
+        jFileChooser.setAccessory(tabbedPane);
+        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+        jFileChooser.addPropertyChangeListener(this);
     }
 }

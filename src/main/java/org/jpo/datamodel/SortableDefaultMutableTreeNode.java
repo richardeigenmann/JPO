@@ -396,7 +396,7 @@ public class SortableDefaultMutableTreeNode
      */
     @NotNull
     public static List<SortableDefaultMutableTreeNode> extractTransferableNodes(final DropTargetDropEvent event)
-            throws UnsupportedFlavorException, IOException, ClassCastException {
+            throws UnsupportedFlavorException, IOException {
         final Transferable t = event.getTransferable();
         final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
         final List<?> l = (List) o;
@@ -461,8 +461,8 @@ public class SortableDefaultMutableTreeNode
                         + "Ancestor node: " + sourceNode.toString()
                         + "\nCurrent node: " + this.toString());
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("moveNodeError"),
-                        Settings.jpoResources.getString("genericError"),
+                        Settings.getJpoResources().getString("moveNodeError"),
+                        Settings.getJpoResources().getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
                 event.dropComplete(false);
                 return;
@@ -548,7 +548,7 @@ public class SortableDefaultMutableTreeNode
                                    final SortableDefaultMutableTreeNode targetNode) {
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropBefore = new JMenuItem(Settings.jpoResources.getString("GDPMdropBefore"));
+            final JMenuItem dropBefore = new JMenuItem(Settings.getJpoResources().getString("GDPMdropBefore"));
             dropBefore.addActionListener((ActionEvent e) -> {
                 SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -560,7 +560,7 @@ public class SortableDefaultMutableTreeNode
             add(dropBefore);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropAfter = new JMenuItem(Settings.jpoResources.getString("GDPMdropAfter"));
+            final JMenuItem dropAfter = new JMenuItem(Settings.getJpoResources().getString("GDPMdropAfter"));
             dropAfter.addActionListener((ActionEvent e) -> {
                 SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -572,7 +572,7 @@ public class SortableDefaultMutableTreeNode
             add(dropAfter);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropIntoFirst = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoFirst"));
+            final JMenuItem dropIntoFirst = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoFirst"));
             dropIntoFirst.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -584,7 +584,7 @@ public class SortableDefaultMutableTreeNode
             add(dropIntoFirst);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropIntoLast = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoLast"));
+            final JMenuItem dropIntoLast = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoLast"));
             dropIntoLast.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -597,7 +597,7 @@ public class SortableDefaultMutableTreeNode
             add(dropIntoLast);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropCancel = new JMenuItem(Settings.jpoResources.getString("GDPMdropCancel"));
+            final JMenuItem dropCancel = new JMenuItem(Settings.getJpoResources().getString("GDPMdropCancel"));
             dropCancel.addActionListener((ActionEvent e) -> {
                 LOGGER.info("cancel drop");
                 event.dropComplete(false);
@@ -615,8 +615,8 @@ public class SortableDefaultMutableTreeNode
         if (this.isRoot()) {
             LOGGER.info("Delete attempted on Root node. Can't do this! Aborted.");
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("deleteRootNodeError"),
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("deleteRootNodeError"),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -759,12 +759,11 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean validateAndCopyPicture(@NonNull File targetFile) {
         Objects.requireNonNull(targetFile, "targetFile must not be null");
-        if (!(this.getUserObject() instanceof PictureInfo)) {
+        if (!(this.getUserObject() instanceof PictureInfo pictureInfo)) {
             LOGGER.severe("Only PictureInfo nodes can be copied! Copy for this picture aborted.");
             return false;
         }
 
-        final PictureInfo pictureInfo = (PictureInfo) this.getUserObject();
         final File originalFile = pictureInfo.getImageFile();
 
         if (targetFile.exists()) {
@@ -774,8 +773,8 @@ public class SortableDefaultMutableTreeNode
         } else // it doesn't exist
             if (!targetFile.mkdirs()) {
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("CopyImageDirError") + targetFile.toString(),
-                        Settings.jpoResources.getString("genericError"),
+                        Settings.getJpoResources().getString("CopyImageDirError") + targetFile.toString(),
+                        Settings.getJpoResources().getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -783,8 +782,8 @@ public class SortableDefaultMutableTreeNode
         if (targetFile.isDirectory()) {
             if (!targetFile.canWrite()) {
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("htmlDistCanWriteError"),
-                        Settings.jpoResources.getString("genericError"),
+                        Settings.getJpoResources().getString("htmlDistCanWriteError"),
+                        Settings.getJpoResources().getString("genericError"),
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -802,7 +801,7 @@ public class SortableDefaultMutableTreeNode
         } catch (IOException e) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     "IOException: " + e.getMessage(),
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
@@ -915,7 +914,7 @@ public class SortableDefaultMutableTreeNode
             if (childBefore == null) {
                 final SortableDefaultMutableTreeNode newGroup
                         = new SortableDefaultMutableTreeNode(
-                        new GroupInfo(Settings.jpoResources.getString("newGroup")));
+                        new GroupInfo(Settings.getJpoResources().getString("newGroup")));
                 parentNode.insert(newGroup, 0);
                 this.removeFromParent();
                 newGroup.add(this);
@@ -1068,13 +1067,13 @@ public class SortableDefaultMutableTreeNode
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("copyPictureError1")
+                    Settings.getJpoResources().getString("copyPictureError1")
                             + sourceFile.toString()
-                            + Settings.jpoResources.getString("copyPictureError2")
+                            + Settings.getJpoResources().getString("copyPictureError2")
                             + targetFile.toString()
-                            + Settings.jpoResources.getString("copyPictureError3")
+                            + Settings.getJpoResources().getString("copyPictureError3")
                             + e.getMessage(),
-                    Settings.jpoResources.getString("genericError"),
+                    Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return Long.MIN_VALUE;
         }

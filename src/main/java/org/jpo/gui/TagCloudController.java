@@ -91,7 +91,7 @@ public class TagCloudController implements TagClickListener {
         JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
     }
 
-    private final static HashSet<String> strikeWordsSet = new HashSet<>( Arrays.asList(
+    private static final Set<String> strikeWordsSet = new HashSet<>(Arrays.asList(
             "als",
             "Am",
             "am",
@@ -275,7 +275,7 @@ public class TagCloudController implements TagClickListener {
                     splitAndAdd( description );
                 }
             }
-            wordCountMap.keySet().forEach( (key ) -> weightedWordList.add( new WeightedWord( key, wordCountMap.get( key ) ) ));
+            wordCountMap.keySet().forEach(key -> weightedWordList.add(new WeightedWord(key, wordCountMap.get(key))));
         }
 
         /**

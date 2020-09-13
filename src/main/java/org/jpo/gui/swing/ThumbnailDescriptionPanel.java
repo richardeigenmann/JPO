@@ -78,7 +78,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
     /**
      * Font to be used for Large Texts:
      */
-    private static final Font LARGE_FONT = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelLargeFont"));
+    private static final Font LARGE_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
 
     public static Font getSmallFont() {
         return SMALL_FONT;
@@ -87,7 +87,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
     /**
      * Font to be used for small texts:
      */
-    private static final Font SMALL_FONT = Font.decode(Settings.jpoResources.getString("ThumbnailDescriptionJPanelSmallFont"));
+    private static final Font SMALL_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelSmallFont"));
 
     public ThumbnailDescriptionPanel() {
         initComponents();

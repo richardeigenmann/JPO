@@ -83,7 +83,7 @@ public class CategoryUsageJFrame extends JFrame {
      * initialises the components
      */
     private void initComponents() {
-        setTitle( Settings.jpoResources.getString( "CategoryUsageJFrameTitle" ) );
+        setTitle(Settings.getJpoResources().getString("CategoryUsageJFrameTitle"));
 
         final JPanel jPanel = new JPanel();
         jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
@@ -100,21 +100,21 @@ public class CategoryUsageJFrame extends JFrame {
         numberOfPicturesJLabel.setHorizontalAlignment( SwingConstants.LEFT );
         buttonJPanel.add( numberOfPicturesJLabel, "wrap" );
 
-        final JButton modifyCategoryJButton = new JButton( Settings.jpoResources.getString( "modifyCategoryJButton" ) );
+        final JButton modifyCategoryJButton = new JButton(Settings.getJpoResources().getString("modifyCategoryJButton"));
         modifyCategoryJButton.setPreferredSize( defaultButtonSize );
         modifyCategoryJButton.setMinimumSize( defaultButtonSize );
         modifyCategoryJButton.setMaximumSize( maxButtonSize );
         modifyCategoryJButton.addActionListener( ( ActionEvent evt ) -> new CategoryEditorJFrame());
         buttonJPanel.add( modifyCategoryJButton, "wrap" );
 
-        final JButton refreshJButton = new JButton( Settings.jpoResources.getString( "refreshJButtonCUJF" ) );
+        final JButton refreshJButton = new JButton(Settings.getJpoResources().getString("refreshJButtonCUJF"));
         refreshJButton.setPreferredSize( defaultButtonSize );
         refreshJButton.setMinimumSize( defaultButtonSize );
         refreshJButton.setMaximumSize( maxButtonSize );
         refreshJButton.addActionListener( ( ActionEvent evt ) -> updateCategories());
         buttonJPanel.add( refreshJButton, "wrap" );
 
-        final JButton updateJButton = new JButton( Settings.jpoResources.getString( "updateJButton" ) );
+        final JButton updateJButton = new JButton(Settings.getJpoResources().getString("updateJButton"));
         updateJButton.setPreferredSize( defaultButtonSize );
         updateJButton.setMinimumSize( defaultButtonSize );
         updateJButton.setMaximumSize( maxButtonSize );
@@ -124,7 +124,7 @@ public class CategoryUsageJFrame extends JFrame {
         } );
         buttonJPanel.add( updateJButton, "wrap" );
 
-        final JButton cancelJButton = new JButton( Settings.jpoResources.getString( "cancelJButton" ) );
+        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("cancelJButton"));
         cancelJButton.setPreferredSize( defaultButtonSize );
         cancelJButton.setMinimumSize( defaultButtonSize );
         cancelJButton.setMaximumSize( maxButtonSize );
@@ -166,7 +166,7 @@ public class CategoryUsageJFrame extends JFrame {
             LOGGER.info( "selectedNodes is null!" );
             return;
         }
-        numberOfPicturesJLabel.setText( String.format( Settings.jpoResources.getString( "numberOfPicturesJLabel" ), selectedNodes.size() ) );
+        numberOfPicturesJLabel.setText(String.format(Settings.getJpoResources().getString("numberOfPicturesJLabel"), selectedNodes.size()));
 
         categoryJScrollPane.loadCategories( Settings.getPictureCollection().getCategoryIterator() );
 

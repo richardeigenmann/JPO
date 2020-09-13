@@ -286,6 +286,6 @@ public class SaxEventHandler extends DefaultHandler {
      * called every hundred pictures or so.
      */
     private void informProgressGui() {
-        loadProgressGui.update( String.format( Settings.jpoResources.getString( "org.jpo.dataModel.XmlReader.progressUpdate" ), groupCount, pictureCount ) );
+        loadProgressGui.update(String.format(Settings.getJpoResources().getString("org.jpo.dataModel.XmlReader.progressUpdate"), groupCount, pictureCount));
     }
 }

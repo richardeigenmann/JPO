@@ -461,12 +461,7 @@ public class ThumbnailController
      * image.
      */
     public void determineMailSelectionStatus() {
-        if ((myNode != null) && decorateThumbnails && Settings.getPictureCollection().isMailSelected(myNode)) {
-            myThumbnail.drawMailIcon(true);
-        } else {
-            myThumbnail.drawMailIcon(false);
-        }
-
+        myThumbnail.drawMailIcon((myNode != null) && decorateThumbnails && Settings.getPictureCollection().isMailSelected(myNode));
     }
 
     /**

@@ -262,9 +262,9 @@ public class PicturePopupMenuTest {
                 showPictureEventCount++;
             }
         });
-        assertEquals( 0, showPictureEventCount);
+        assertEquals(0, showPictureEventCount);
         GuiActionRunner.execute(() -> showPicture.doClick());
-        assertEquals( 1, showPictureEventCount);
+        assertEquals(1, showPictureEventCount);
     }
 
     private int showMapEventCount = 0;

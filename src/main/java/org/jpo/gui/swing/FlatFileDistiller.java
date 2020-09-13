@@ -67,8 +67,8 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         Tools.checkEDT();
         javax.swing.JFileChooser jFileChooser = new javax.swing.JFileChooser();
         jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("saveFlatFileTitle"));
-        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("saveFlatFileButtonLabel"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("saveFlatFileTitle"));
+        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("saveFlatFileButtonLabel"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
         int returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
         if (returnVal != JFileChooser.APPROVE_OPTION) {

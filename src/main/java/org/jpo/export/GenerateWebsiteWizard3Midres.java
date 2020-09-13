@@ -47,7 +47,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      * @param options The link to the options object with all the settings
      */
     public GenerateWebsiteWizard3Midres(final GenerateWebsiteRequest options) {
-        super(Settings.jpoResources.getString("HtmlDistMidres"), Settings.jpoResources.getString("HtmlDistMidres"));
+        super(Settings.getJpoResources().getString("HtmlDistMidres"), Settings.getJpoResources().getString("HtmlDistMidres"));
         this.options = options;
 
         // populate the widgets with the values from the options
@@ -81,19 +81,18 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
      * Checkbox that indicates whether to generate the midres html files or not.
      * Requested by Jay Christopherson, Nov 2008
      */
-    private final JCheckBox generateMidresHtmlJCheckBox = new JCheckBox( Settings.jpoResources.getString( "HtmlDistMidresHtml" ) );
+    private final JCheckBox generateMidresHtmlJCheckBox = new JCheckBox(Settings.getJpoResources().getString("HtmlDistMidresHtml"));
 
     /**
      * Checkbox that indicates whether to add a map ith the location or not.
      */
-    private final JCheckBox generateMapJCheckBox = new JCheckBox( Settings.jpoResources.getString( "GenerateMap" ) );
+    private final JCheckBox generateMapJCheckBox = new JCheckBox(Settings.getJpoResources().getString("GenerateMap"));
 
     /**
      * Tickbox that indicates whether DHTML tags and effects should be
      * generated.
-     *
      */
-    private final JCheckBox mouseoverJCheckBox = new JCheckBox( Settings.jpoResources.getString( "org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox" ) );
+    private final JCheckBox mouseoverJCheckBox = new JCheckBox(Settings.getJpoResources().getString("org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox"));
 
     /**
      * Slider that allows the quality of the midres jpg's to be specified.
@@ -127,27 +126,27 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         mouseoverJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMouseover( mouseoverJCheckBox.isSelected() ));
         wizardPanel.add( mouseoverJCheckBox, SPANX_WRAP);
 
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "thumbnailSizeJLabel" ) ), "align label" );
-        midresWidthJSpinner.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresWidth( ( (SpinnerNumberModel) ( midresWidthJSpinner.getModel() ) ).getNumber().intValue() ));
-        wizardPanel.add( midresWidthJSpinner, "split 3" );
-        wizardPanel.add( new JLabel( " x " ) );
-        midresHeightJSpinner.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresHeight( ( (SpinnerNumberModel) ( midresHeightJSpinner.getModel() ) ).getNumber().intValue() ));
-        wizardPanel.add( midresHeightJSpinner, "wrap" );
+        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailSizeJLabel")), "align label");
+        midresWidthJSpinner.addChangeListener((ChangeEvent arg0) -> options.setMidresWidth(((SpinnerNumberModel) (midresWidthJSpinner.getModel())).getNumber().intValue()));
+        wizardPanel.add(midresWidthJSpinner, "split 3");
+        wizardPanel.add(new JLabel(" x "));
+        midresHeightJSpinner.addChangeListener((ChangeEvent arg0) -> options.setMidresHeight(((SpinnerNumberModel) (midresHeightJSpinner.getModel())).getNumber().intValue()));
+        wizardPanel.add(midresHeightJSpinner, "wrap");
 
         // Midres Quality Slider
-        wizardPanel.add( new JLabel( Settings.jpoResources.getString( "midresJpgQualitySlider" ) ), "align label" );
+        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("midresJpgQualitySlider")), "align label");
         final Dictionary<Integer, JLabel> labelTable1 = new Hashtable<>();
-        labelTable1.put( 0, new JLabel( Settings.jpoResources.getString( "jpgQualityBad" ) ) );
-        labelTable1.put( 80, new JLabel( Settings.jpoResources.getString( "jpgQualityGood" ) ) );
-        labelTable1.put( 100, new JLabel( Settings.jpoResources.getString( "jpgQualityBest" ) ) );
-        midresJpgQualityJSlider.setLabelTable( labelTable1 );
+        labelTable1.put(0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
+        labelTable1.put(80, new JLabel(Settings.getJpoResources().getString("jpgQualityGood")));
+        labelTable1.put(100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));
+        midresJpgQualityJSlider.setLabelTable(labelTable1);
 
-        midresJpgQualityJSlider.setMajorTickSpacing( 10 );
-        midresJpgQualityJSlider.setMinorTickSpacing( 5 );
-        midresJpgQualityJSlider.setPaintTicks( true );
-        midresJpgQualityJSlider.setPaintLabels( true );
-        midresJpgQualityJSlider.addChangeListener(( ChangeEvent arg0 ) -> options.setMidresJpgQualityPercent( midresJpgQualityJSlider.getValue() ));
-        wizardPanel.add( midresJpgQualityJSlider, "growx, wrap" );
+        midresJpgQualityJSlider.setMajorTickSpacing(10);
+        midresJpgQualityJSlider.setMinorTickSpacing(5);
+        midresJpgQualityJSlider.setPaintTicks(true);
+        midresJpgQualityJSlider.setPaintLabels(true);
+        midresJpgQualityJSlider.addChangeListener((ChangeEvent arg0) -> options.setMidresJpgQualityPercent(midresJpgQualityJSlider.getValue()));
+        wizardPanel.add(midresJpgQualityJSlider, "growx, wrap");
         return wizardPanel;
     }
 

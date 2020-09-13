@@ -122,7 +122,7 @@ public class Thumbnail extends JComponent {
      *
      * @param thumbnailSizeFactor factor
      */
-    public void setFactor(float thumbnailSizeFactor) {
+    public void setFactor(final float thumbnailSizeFactor) {
         LOGGER.fine(String.format("Scaling factor is being set to %f", thumbnailSizeFactor));
         this.thumbnailScaleFactor = thumbnailSizeFactor;
         setVisible(isVisible());
@@ -211,7 +211,7 @@ public class Thumbnail extends JComponent {
 
     static {
         final String QUEUE_ICON_FILE = "queued_thumbnail.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource(QUEUE_ICON_FILE);
+        final URL resource = Thumbnail.class.getClassLoader().getResource(QUEUE_ICON_FILE);
         if (resource == null) {
             LOGGER.severe("Classloader failed to load file: " + QUEUE_ICON_FILE);
             QUEUE_ICON = null;
@@ -233,7 +233,7 @@ public class Thumbnail extends JComponent {
 
     static {
         final String LARGE_FOLDER_ICON_FILE = "icon_folder_large.jpg";
-        URL resource = Thumbnail.class.getClassLoader().getResource(LARGE_FOLDER_ICON_FILE);
+        final URL resource = Thumbnail.class.getClassLoader().getResource(LARGE_FOLDER_ICON_FILE);
         if (resource == null) {
             LOGGER.severe("Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE);
             LARGE_FOLDER_ICON = null;
@@ -257,7 +257,7 @@ public class Thumbnail extends JComponent {
 
     static {
         final String OFFLINE_ICON_FILE = "icon_offline.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource(OFFLINE_ICON_FILE);
+        final URL resource = Thumbnail.class.getClassLoader().getResource(OFFLINE_ICON_FILE);
         if (resource == null) {
             LOGGER.severe("Classloader failed to load file: " + OFFLINE_ICON_FILE);
             OFFLINE_ICON = null;
@@ -278,7 +278,7 @@ public class Thumbnail extends JComponent {
 
     static {
         final String MAIL_ICON_FILE = "icon_mail.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource(MAIL_ICON_FILE);
+        final URL resource = Thumbnail.class.getClassLoader().getResource(MAIL_ICON_FILE);
         if (resource == null) {
             LOGGER.severe("Classloader failed to load file: " + MAIL_ICON_FILE);
             MAIL_ICON = null;
@@ -340,7 +340,7 @@ public class Thumbnail extends JComponent {
      *
      * @param flag true if the little CD-rom icon should be drawn, false if not.
      */
-    public void drawOfflineIcon(boolean flag) {
+    public void drawOfflineIcon(final boolean flag) {
         if (drawOfflineIcon != flag) {
             drawOfflineIcon = flag;
             repaint();  // throw a repaint request on the EDT
@@ -358,7 +358,7 @@ public class Thumbnail extends JComponent {
      *
      * @param flag true if it should be drawn, false if not
      */
-    public void drawMailIcon(boolean flag) {
+    public void drawMailIcon(final boolean flag) {
         if (drawMailIcon != flag) {
             drawMailIcon = flag;
             repaint();  // throw a repaint request on the EDT
@@ -401,56 +401,53 @@ public class Thumbnail extends JComponent {
      * @param graphics Graphics
      */
     @Override
-    public void paintComponent(Graphics graphics) {
+    public void paintComponent(final Graphics graphics) {
         if (!SwingUtilities.isEventDispatchThread()) {
             LOGGER.severe("Not running on EDT!");
         }
 
-        int WindowWidth = getSize().width;
-        int WindowHeight = getSize().height;
+        final int windowWidth = getSize().width;
+        final int windowHeight = getSize().height;
 
         if (img != null) {
-            Graphics2D g2d = (Graphics2D) graphics;
+            final Graphics2D g2d = (Graphics2D) graphics;
 
-            int focusPointx = (int) (img.getWidth(imgOb) * thumbnailScaleFactor / 2);
-            int focusPointy = (int) (img.getHeight(imgOb) * thumbnailScaleFactor / 2);
+            final int focusPointX = (int) (img.getWidth(imgOb) * thumbnailScaleFactor / 2);
+            final int focusPointY = (int) (img.getHeight(imgOb) * thumbnailScaleFactor / 2);
 
-            int X_Offset = (int) ((WindowWidth / (double) 2) - (focusPointx));
-            int Y_Offset = (int) ((WindowHeight / (double) 2) - (focusPointy));
+            final int xOffset = (int) ((windowWidth / (double) 2) - (focusPointX));
+            final int yOffset = (int) ((windowHeight / (double) 2) - (focusPointY));
 
             // clear damaged component area
-            Rectangle clipBounds = g2d.getClipBounds();
+            final Rectangle clipBounds = g2d.getClipBounds();
             g2d.setColor(getBackground());
             g2d.fillRect(clipBounds.x,
                     clipBounds.y,
                     clipBounds.width,
                     clipBounds.height);
 
-            AffineTransform af1 = AffineTransform.getTranslateInstance(X_Offset, Y_Offset);
-            AffineTransform af2 = AffineTransform.getScaleInstance(thumbnailScaleFactor, thumbnailScaleFactor);
+            final AffineTransform af1 = AffineTransform.getTranslateInstance(xOffset, yOffset);
+            final AffineTransform af2 = AffineTransform.getScaleInstance(thumbnailScaleFactor, thumbnailScaleFactor);
             af2.concatenate(af1);
-            //op = new AffineTransformOp( af2, AffineTransformOp.TYPE_NEAREST_NEIGHBOR );
 
             g2d.drawImage(img, af2, imgOb);
             if (isSelected) {
-                //g2d.drawImage( selectedThumbnail, af2, imgOb );
-                //int additionalOffset = drawOfflineIcon ? 40 : 0;
-                int x = X_Offset + (int) (img.getWidth(imgOb) * thumbnailScaleFactor) - SELECTED_ICON.getIconWidth();
-                g2d.drawImage(SELECTED_ICON.getImage(), x, Y_Offset, SELECTED_ICON.getImageObserver());
+                int x = xOffset + (int) (img.getWidth(imgOb) * thumbnailScaleFactor) - SELECTED_ICON.getIconWidth();
+                g2d.drawImage(SELECTED_ICON.getImage(), x, yOffset, SELECTED_ICON.getImageObserver());
             }
 
             if (drawOfflineIcon) {
-                g2d.drawImage(OFFLINE_ICON.getImage(), X_Offset + 10, Y_Offset + 10, OFFLINE_ICON.getImageObserver());
+                g2d.drawImage(OFFLINE_ICON.getImage(), xOffset + 10, yOffset + 10, OFFLINE_ICON.getImageObserver());
             }
             if (drawMailIcon) {
                 int additionalOffset = drawOfflineIcon ? 40 : 0;
-                g2d.drawImage(MAIL_ICON.getImage(), X_Offset + 10 + additionalOffset, Y_Offset + 10, MAIL_ICON.getImageObserver());
+                g2d.drawImage(MAIL_ICON.getImage(), xOffset + 10 + additionalOffset, yOffset + 10, MAIL_ICON.getImageObserver());
             }
         } else {
             // paint a black square
-            graphics.setClip(0, 0, WindowWidth, WindowHeight);
+            graphics.setClip(0, 0, windowWidth, windowHeight);
             graphics.setColor(Color.black);
-            graphics.fillRect(0, 0, WindowWidth, WindowHeight);
+            graphics.fillRect(0, 0, windowWidth, windowHeight);
         }
     }
 }

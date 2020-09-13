@@ -605,7 +605,7 @@ public class PictureCollectionTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection pictureCollection = new PictureCollection();
         try {
-            SwingUtilities.invokeAndWait( () -> pictureCollection.clearCollection() );
+            SwingUtilities.invokeAndWait(pictureCollection::clearCollection);
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -629,7 +629,7 @@ public class PictureCollectionTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection pictureCollection = new PictureCollection();
         try {
-            SwingUtilities.invokeAndWait( () ->  pictureCollection.clearCollection() );
+            SwingUtilities.invokeAndWait(pictureCollection::clearCollection);
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();

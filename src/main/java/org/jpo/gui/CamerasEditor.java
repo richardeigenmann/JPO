@@ -96,7 +96,7 @@ public class CamerasEditor extends JFrame {
         this.cameraJTree = new JTree(treeModel);
         setSize(500, 400);
         setLocationRelativeTo(Settings.getAnchorFrame());
-        setTitle(Settings.jpoResources.getString("CameraEditor"));
+        setTitle(Settings.getJpoResources().getString("CameraEditor"));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
 
@@ -155,7 +155,7 @@ public class CamerasEditor extends JFrame {
         camerasJScrollPane.setPreferredSize(new Dimension(165, 200));
 
         final JPanel addDeleteButtonPanel = new JPanel();
-        final JButton addJButton = new JButton(Settings.jpoResources.getString("addJButton"));
+        final JButton addJButton = new JButton(Settings.getJpoResources().getString("addJButton"));
         addJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         addJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         addJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -163,7 +163,7 @@ public class CamerasEditor extends JFrame {
         addJButton.addActionListener((ActionEvent e) -> addCameraAction());
         addDeleteButtonPanel.add(addJButton);
 
-        final JButton deleteJButton = new JButton(Settings.jpoResources.getString("deleteJButton"));
+        final JButton deleteJButton = new JButton(Settings.getJpoResources().getString("deleteJButton"));
         deleteJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         deleteJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         deleteJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -183,7 +183,7 @@ public class CamerasEditor extends JFrame {
         final JPanel buttonJPanel = new JPanel();
 
 
-        final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
         cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -194,7 +194,7 @@ public class CamerasEditor extends JFrame {
         });
         buttonJPanel.add(cancelJButton);
 
-        final JButton closeJButton = new JButton(Settings.jpoResources.getString("closeJButton"));
+        final JButton closeJButton = new JButton(Settings.getJpoResources().getString("closeJButton"));
         closeJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         closeJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         closeJButton.setMaximumSize(Settings.getDefaultButtonDimension());

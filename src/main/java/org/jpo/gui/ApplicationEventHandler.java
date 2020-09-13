@@ -68,7 +68,7 @@ public class ApplicationEventHandler {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandler.class.getName());
-    private static final String GENERIC_ERROR = Settings.jpoResources.getString("genericError");
+    private static final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
 
     /**
      * This class handles most of the events flying around the JPO application
@@ -85,10 +85,10 @@ public class ApplicationEventHandler {
         final JFileChooser jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("MoveImageDialogTitle"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("MoveImageDialogTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
-        final int returnVal = jFileChooser.showDialog(Settings.getAnchorFrame(), Settings.jpoResources.getString("MoveImageDialogButton"));
+        final int returnVal = jFileChooser.showDialog(Settings.getAnchorFrame(), Settings.getJpoResources().getString("MoveImageDialogButton"));
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }
@@ -113,9 +113,9 @@ public class ApplicationEventHandler {
             return;
         }
 
-        final Object object = Settings.jpoResources.getString("FileRenameLabel1")
+        final Object object = Settings.getJpoResources().getString("FileRenameLabel1")
                 + imageFile.toString()
-                + Settings.jpoResources.getString("FileRenameLabel2");
+                + Settings.getJpoResources().getString("FileRenameLabel2");
         final String selectedValue = JOptionPane.showInputDialog(Settings.getAnchorFrame(),
                 object,
                 imageFile.toString());
@@ -125,8 +125,8 @@ public class ApplicationEventHandler {
             if (newName.exists()) {
                 File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
                 int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                        String.format(Settings.jpoResources.getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
-                        Settings.jpoResources.getString("FileRenameTargetExistsTitle"),
+                        String.format(Settings.getJpoResources().getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
+                        Settings.getJpoResources().getString("FileRenameTargetExistsTitle"),
                         JOptionPane.OK_CANCEL_OPTION);
                 if (alternativeAnswer == JOptionPane.OK_OPTION) {
                     newName = alternativeNewName;
@@ -171,8 +171,8 @@ public class ApplicationEventHandler {
     private static File chooseXmlFile() {
         final JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileOpenButtonText"));
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("fileOpenHeading"));
+        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileOpenButtonText"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("fileOpenHeading"));
         jFileChooser.setFileFilter(new XmlFilter());
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
@@ -193,7 +193,7 @@ public class ApplicationEventHandler {
     public static void handleCopyToDirRequest(final CopyToDirRequest request) {
         if (!request.getTargetLocation().canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("htmlDistCanWriteError"),
+                    Settings.getJpoResources().getString("htmlDistCanWriteError"),
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -210,8 +210,8 @@ public class ApplicationEventHandler {
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                String.format(Settings.jpoResources.getString("copyToNewLocationSuccess"), picsCopied, request.getNodes().size()),
-                Settings.jpoResources.getString("genericInfo"),
+                String.format(Settings.getJpoResources().getString("copyToNewLocationSuccess"), picsCopied, request.getNodes().size()),
+                Settings.getJpoResources().getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
 
     }
@@ -225,7 +225,7 @@ public class ApplicationEventHandler {
     public static void handleMoveToDirRequest(final MoveToDirRequest request) {
         if (!request.getTargetLocation().isDirectory()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("htmlDistIsDirError"),
+                    Settings.getJpoResources().getString("htmlDistIsDirError"),
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -233,7 +233,7 @@ public class ApplicationEventHandler {
 
         if (!request.getTargetLocation().canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("htmlDistCanWriteError"),
+                    Settings.getJpoResources().getString("htmlDistCanWriteError"),
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -251,8 +251,8 @@ public class ApplicationEventHandler {
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                String.format(Settings.jpoResources.getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().size()),
-                Settings.jpoResources.getString("genericInfo"),
+                String.format(Settings.getJpoResources().getString("moveToNewLocationSuccess"), picsMoved, request.getNodes().size()),
+                Settings.getJpoResources().getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -588,7 +588,7 @@ public class ApplicationEventHandler {
         int result = JOptionPane.showOptionDialog(
                 Settings.getAnchorFrame(),
                 findPanel,
-                Settings.jpoResources.getString("searchDialogTitle"),
+                Settings.getJpoResources().getString("searchDialogTitle"),
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
                 null,
@@ -607,7 +607,7 @@ public class ApplicationEventHandler {
                 if ((textQuery.getLowerDateRange() != null) && (textQuery.getUpperDateRange() != null) && (textQuery.getLowerDateRange().compareTo(textQuery.getUpperDateRange()) > 0)) {
                     JOptionPane.showMessageDialog(
                             Settings.getAnchorFrame(),
-                            Settings.jpoResources.getString("dateRangeError"),
+                            Settings.getJpoResources().getString("dateRangeError"),
                             GENERIC_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     return;
@@ -774,7 +774,7 @@ public class ApplicationEventHandler {
         final JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("fileSaveAsTitle"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("fileSaveAsTitle"));
         jFileChooser.setMultiSelectionEnabled(false);
         jFileChooser.setFileFilter(new XmlFilter());
         if (Settings.getPictureCollection().getXmlFile() != null) {
@@ -789,8 +789,8 @@ public class ApplicationEventHandler {
             chosenFile = Tools.correctFilenameExtension("xml", chosenFile);
             if (chosenFile.exists()) {
                 int answer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("confirmSaveAs"),
-                        Settings.jpoResources.getString("genericWarning"),
+                        Settings.getJpoResources().getString("confirmSaveAs"),
+                        Settings.getJpoResources().getString("genericWarning"),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
                 if (answer == JOptionPane.CANCEL_OPTION) {
@@ -822,15 +822,15 @@ public class ApplicationEventHandler {
     public void handleAfterFileSaveRequest(final AfterFileSaveRequest request) {
         final JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel(Settings.jpoResources.getString("collectionSaveBody") + Settings.getPictureCollection().getXmlFile().toString()));
-        final JCheckBox setAutoload = new JCheckBox(Settings.jpoResources.getString("setAutoload"));
+        panel.add(new JLabel(Settings.getJpoResources().getString("collectionSaveBody") + Settings.getPictureCollection().getXmlFile().toString()));
+        final JCheckBox setAutoload = new JCheckBox(Settings.getJpoResources().getString("setAutoload"));
         if (Settings.getAutoLoad() != null && ((new File(Settings.getAutoLoad())).compareTo(Settings.getPictureCollection().getXmlFile()) == 0)) {
             setAutoload.setSelected(true);
         }
         panel.add(setAutoload);
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 panel,
-                Settings.jpoResources.getString("collectionSaveTitle"),
+                Settings.getJpoResources().getString("collectionSaveTitle"),
                 JOptionPane.INFORMATION_MESSAGE);
 
         if (setAutoload.isSelected()) {
@@ -1043,7 +1043,7 @@ public class ApplicationEventHandler {
                 request.getNode(),
                 request.getRecurseSubgroups(),
                 new ProgressGui(NodeStatistics.countPictures(request.getNode(), request.getRecurseSubgroups()),
-                        Settings.jpoResources.getString("ConsolidateProgBarTitle"),
+                        Settings.getJpoResources().getString("ConsolidateProgBarTitle"),
                         ""));
     }
 
@@ -1058,8 +1058,8 @@ public class ApplicationEventHandler {
         final JFileChooser jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("CopyImageDialogButton"));
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("CopyImageDialogTitle"));
+        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("CopyImageDialogButton"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("CopyImageDialogTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
         final int returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
@@ -1174,7 +1174,7 @@ public class ApplicationEventHandler {
 
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 String.format("Copied %d files of %d to zipfile %s", picsCopied, request.getNodes().size(), request.getTargetZipfile().toString()),
-                Settings.jpoResources.getString("genericInfo"),
+                Settings.getJpoResources().getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
 
     }
@@ -1329,8 +1329,8 @@ public class ApplicationEventHandler {
         final File highresFile = ((PictureInfo) request.getNode().getUserObject()).getImageFile();
         final int option = JOptionPane.showConfirmDialog(
                 Settings.getAnchorFrame(),
-                Settings.jpoResources.getString("FileDeleteLabel") + highresFile.toString() + "\n" + Settings.jpoResources.getString("areYouSure"),
-                Settings.jpoResources.getString("FileDeleteTitle"),
+                Settings.getJpoResources().getString("FileDeleteLabel") + highresFile.toString() + "\n" + Settings.getJpoResources().getString("areYouSure"),
+                Settings.getJpoResources().getString("FileDeleteTitle"),
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
@@ -1347,7 +1347,7 @@ public class ApplicationEventHandler {
 
             if (!ok) {
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("fileDeleteError") + highresFile,
+                        Settings.getJpoResources().getString("fileDeleteError") + highresFile,
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -1369,12 +1369,12 @@ public class ApplicationEventHandler {
                 textArea.append(((PictureInfo) selectedNode.getUserObject()).getImageLocation() + "\n");
             }
         }
-        textArea.append(Settings.jpoResources.getString("areYouSure"));
+        textArea.append(Settings.getJpoResources().getString("areYouSure"));
 
         final int option = JOptionPane.showConfirmDialog(
                 Settings.getAnchorFrame(), //very annoying if the main window is used as it forces itself into focus.
                 textArea,
-                Settings.jpoResources.getString("FileDeleteLabel"),
+                Settings.getJpoResources().getString("FileDeleteLabel"),
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
@@ -1394,7 +1394,7 @@ public class ApplicationEventHandler {
 
                     if (!ok) {
                         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                                Settings.jpoResources.getString("fileDeleteError") + highresFile.toString(),
+                                Settings.getJpoResources().getString("fileDeleteError") + highresFile.toString(),
                                 GENERIC_ERROR,
                                 JOptionPane.ERROR_MESSAGE);
                     }
@@ -1460,8 +1460,8 @@ public class ApplicationEventHandler {
     public void handleChooseAndAddFlatfileRequest(final ChooseAndAddFlatfileRequest request) {
         final JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.jpoResources.getString("fileOpenButtonText"));
-        jFileChooser.setDialogTitle(Settings.jpoResources.getString("addFlatFileTitle"));
+        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileOpenButtonText"));
+        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("addFlatFileTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
         final int returnVal = jFileChooser.showOpenDialog(Settings.getAnchorFrame());
@@ -1553,14 +1553,14 @@ public class ApplicationEventHandler {
         Tools.checkEDT();
         if (Settings.getPictureCollection().getUnsavedUpdates()) {
             final Object[] options = {
-                    Settings.jpoResources.getString("discardChanges"),
-                    Settings.jpoResources.getString("genericSaveButtonLabel"),
-                    Settings.jpoResources.getString("FileSaveAsMenuItemText"),
-                    Settings.jpoResources.getString("genericCancelText")};
+                    Settings.getJpoResources().getString("discardChanges"),
+                    Settings.getJpoResources().getString("genericSaveButtonLabel"),
+                    Settings.getJpoResources().getString("FileSaveAsMenuItemText"),
+                    Settings.getJpoResources().getString("genericCancelText")};
             int option = JOptionPane.showOptionDialog(
                     Settings.getAnchorFrame(),
-                    Settings.jpoResources.getString("unsavedChanges"),
-                    Settings.jpoResources.getString("genericWarning"),
+                    Settings.getJpoResources().getString("unsavedChanges"),
+                    Settings.getJpoResources().getString("genericWarning"),
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,
@@ -1775,9 +1775,9 @@ public class ApplicationEventHandler {
         private void updateApplicationTitle() {
             final File xmlFile = Settings.getPictureCollection().getXmlFile();
             if (xmlFile != null) {
-                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.jpoResources.getString("ApplicationTitle") + ":  " + xmlFile.toString()));
+                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle") + ":  " + xmlFile.toString()));
             } else {
-                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.jpoResources.getString("ApplicationTitle")));
+                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle")));
             }
         }
     }

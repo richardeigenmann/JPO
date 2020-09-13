@@ -37,7 +37,7 @@ public class GroupInfoEditor {
     /**
      * JFrame that holds all the dialog components for editing the window.
      */
-    private final JFrame jFrame = new JFrame( Settings.jpoResources.getString( "GroupInfoEditorHeading" ) );
+    private final JFrame jFrame = new JFrame(Settings.getJpoResources().getString("GroupInfoEditorHeading"));
 
     /**
      * the node being edited
@@ -74,7 +74,7 @@ public class GroupInfoEditor {
         final JPanel jPanel = new JPanel();
         jPanel.setLayout( new MigLayout() );
 
-        final JLabel descriptionJLabel = new JLabel(Settings.jpoResources.getString("groupDescriptionLabel"));
+        final JLabel descriptionJLabel = new JLabel(Settings.getJpoResources().getString("groupDescriptionLabel"));
         jPanel.add(descriptionJLabel);
 
         descriptionJTextArea.setPreferredSize(new Dimension(400, 150));
@@ -83,7 +83,7 @@ public class GroupInfoEditor {
         descriptionJTextArea.setEditable(true);
         jPanel.add(descriptionJTextArea, "wrap");
 
-        final JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
+        final JButton okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -94,7 +94,7 @@ public class GroupInfoEditor {
         jFrame.getRootPane().setDefaultButton(okJButton);
         jPanel.add(okJButton, "tag ok, span, split 2");
 
-        final JButton cancelButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        final JButton cancelButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
         cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
         cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());

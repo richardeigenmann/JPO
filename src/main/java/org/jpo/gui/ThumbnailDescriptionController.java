@@ -62,7 +62,7 @@ public class ThumbnailDescriptionController
 
 
     /**
-     * Construct a new ThumbnailDescrciptionJPanel
+     * Construct a new ThumbnailDescriptionJPanel
      */
     public ThumbnailDescriptionController() {
         initComponents();
@@ -73,7 +73,7 @@ public class ThumbnailDescriptionController
         Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
         if (oSpace.isPresent() || oUnderstore.isPresent()) {
             JPopupMenu popupmenu = new JPopupMenu();
-            final String REPLACE_WITH = Settings.jpoResources.getString("ReplaceWith");
+            final String REPLACE_WITH = Settings.getJpoResources().getString("ReplaceWith");
             if (oSpace.isPresent()) {
                 JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
@@ -165,12 +165,11 @@ public class ThumbnailDescriptionController
     private void setDescription() {
         String legend;
         if (referringNode == null) {
-            legend = Settings.jpoResources.getString("ThumbnailDescriptionNoNodeError");
-        } else if (referringNode.getUserObject() instanceof PictureInfo) {
-            PictureInfo pi = (PictureInfo) referringNode.getUserObject();
+            legend = Settings.getJpoResources().getString("ThumbnailDescriptionNoNodeError");
+        } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
             legend = pi.getDescription();
-        } else if (referringNode.getUserObject() instanceof GroupInfo) {
-            legend = ((GroupInfo) referringNode.getUserObject()).getGroupName();
+        } else if (referringNode.getUserObject() instanceof GroupInfo gi) {
+            legend = gi.getGroupName();
         } else {
             legend = "Error";
         }
@@ -207,7 +206,7 @@ public class ThumbnailDescriptionController
             return "";
         }
         return categories.stream()
-                .map(category -> Settings.getPictureCollection().getCategory((Integer) category))
+                .map(category -> Settings.getPictureCollection().getCategory(category))
                 .collect(Collectors.joining(", "));
     }
 
@@ -363,7 +362,6 @@ public class ThumbnailDescriptionController
 
             if (pictureInfoChangeEvent.getCategoryAssignmentsChanged()) {
                 setLabels();
-                ;
             }
 
             if (pictureInfoChangeEvent.getWasSelected()) {
