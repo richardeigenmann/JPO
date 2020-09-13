@@ -6,7 +6,7 @@ agent:
     os_image: ubuntu1804
   containers:
     - name: main
-      image: 'semaphoreci/jdk:14'
+      image: 'openjdk:16-jdk'
 blocks:
   - name: Gradle
     task:
