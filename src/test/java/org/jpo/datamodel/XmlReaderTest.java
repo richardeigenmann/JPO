@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Tests for the XmlReader class
@@ -21,6 +23,7 @@ public class XmlReaderTest {
 
     @Test
     public void testReader() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
 
         URL image = XmlReaderTest.class.getClassLoader().getResource( "exif-test-canon-eos-350d.jpg" );

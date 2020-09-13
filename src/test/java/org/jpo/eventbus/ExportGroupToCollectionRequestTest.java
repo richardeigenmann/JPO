@@ -5,9 +5,11 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 public class ExportGroupToCollectionRequestTest {
 
@@ -30,6 +32,7 @@ public class ExportGroupToCollectionRequestTest {
      */
     @Test
     public void testReceivingEvent() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final ExportGroupToCollectionRequestTest.EventBusSubscriber myEventBusSubscriber = new ExportGroupToCollectionRequestTest.EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 

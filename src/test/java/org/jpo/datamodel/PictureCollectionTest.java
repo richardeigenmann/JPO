@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -16,6 +17,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -90,6 +92,7 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         // Test that something is returned when looking for parent groups
         assertNotNull( pictureCollection.findParentGroups( picture1 ) );
     }
@@ -99,6 +102,7 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups1() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         // Test that it returns an empty array if the node is not a PictureInfo node
         assertEquals( 0, pictureCollection.findParentGroups( group1 ).length );
     }
@@ -108,6 +112,7 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups2() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         //test that the parent group is one of the returned groups
         SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
         boolean found = false;
@@ -123,10 +128,12 @@ public class PictureCollectionTest {
      */
     @Test
     public void testFindParentGroups3() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        assumeFalse(GraphicsEnvironment.isHeadless());
         //test that the 4 groups which refer to the same picture are returned
-        SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
+        SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups(picture1);
         // Test that the 3 groups referring to the same picture are found
-        assertEquals( 4, sdmtns.length );
+        assertEquals(4, sdmtns.length);
     }
 
     /**
@@ -134,6 +141,7 @@ public class PictureCollectionTest {
      */
     @Test
     public void testSetXmlFile() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         File f = new File( "dir/test.xml" );
         pictureCollection.setXmlFile( f );
         File f2 = pictureCollection.getXmlFile();
@@ -152,7 +160,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testSelections() {
-        assertEquals( 0, pictureCollection.getSelection().size() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        assertEquals(0, pictureCollection.getSelection().size());
         pictureCollection.addToSelectedNodes( group1 );
         pictureCollection.addToSelectedNodes( picture1 );
         assertEquals( 2, pictureCollection.getSelection().size() );
@@ -190,7 +199,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testMailSelections() {
-        assertEquals( 0, pictureCollection.getMailSelectedNodes().size() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        assertEquals(0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection( group1 );
         pictureCollection.addToMailSelection( picture1 );
         assertEquals( 2, pictureCollection.getMailSelectedNodes().size() );
@@ -234,7 +244,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testAddToMailSelection() {
-        assertEquals(  0, pictureCollection.getMailSelectedNodes().size() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        assertEquals(0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection( picture1 );
         assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
         pictureCollection.addToMailSelection( picture1 ); //adding the same node again
@@ -268,7 +279,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testSelectNotification() {
-        pi1.addPictureInfoChangeListener( listener );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        pi1.addPictureInfoChangeListener(listener);
         selectedCount = 0;
         unselectedCount = 0;
         pictureCollection.addToSelectedNodes( picture1 );
@@ -312,7 +324,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testClearMailSelection() {
-        pi1.addPictureInfoChangeListener( listener );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        pi1.addPictureInfoChangeListener(listener);
         mailSelectedCount = 0;
         mailUnselectedCount = 0;
         pictureCollection.addToMailSelection( picture1 );
@@ -331,7 +344,8 @@ public class PictureCollectionTest {
      */
     @Test
     public void testMailSelectNotification() {
-        pi1.addPictureInfoChangeListener( listener );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        pi1.addPictureInfoChangeListener(listener);
         mailSelectedCount = 0;
         mailUnselectedCount = 0;
         pictureCollection.addToMailSelection( picture1 );
@@ -384,6 +398,7 @@ public class PictureCollectionTest {
      */
     @Test
     public void testChangeNotification() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
@@ -433,6 +448,7 @@ public class PictureCollectionTest {
 
     @Test
     public void testInsertNotification() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
@@ -478,6 +494,7 @@ public class PictureCollectionTest {
 
     @Test
     public void testRemoveNodesNotification() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
@@ -522,6 +539,7 @@ public class PictureCollectionTest {
 
     @Test
     public void testStructureChangedNotification() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
@@ -570,6 +588,7 @@ public class PictureCollectionTest {
      */
     @Test
     public void testSendModelUpdates() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection pc = new PictureCollection();
         // Default of sendModelUpdates should be true
         assertTrue( pc.getSendModelUpdates());
@@ -583,6 +602,7 @@ public class PictureCollectionTest {
 
     @Test
     public void fileSave() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection pictureCollection = new PictureCollection();
         try {
             SwingUtilities.invokeAndWait( () -> pictureCollection.clearCollection() );
@@ -606,6 +626,7 @@ public class PictureCollectionTest {
 
     @Test
     public void fileSaveNoPriorFile() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection pictureCollection = new PictureCollection();
         try {
             SwingUtilities.invokeAndWait( () ->  pictureCollection.clearCollection() );
@@ -633,6 +654,7 @@ public class PictureCollectionTest {
 
     @Test
     public void clearCollection() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(4, pictureCollection.getRootNode().getChildCount());
         pictureCollection.clearCollection();
         assertEquals(0, pictureCollection.getRootNode().getChildCount());

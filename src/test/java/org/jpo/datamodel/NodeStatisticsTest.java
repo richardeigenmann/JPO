@@ -3,12 +3,14 @@ package org.jpo.datamodel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  *
@@ -73,6 +75,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testSetGetNode() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         NodeStatistics ns1 = new NodeStatistics(rootNode);
         assertEquals( rootNode, ns1.getNode());
     }
@@ -82,6 +85,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testGetNumberOfNodes() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         NodeStatistics ns1 = new NodeStatistics(rootNode);
         assertEquals( 9, ns1.getNumberOfNodes());
     }
@@ -91,6 +95,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testGetNumberOfGroups() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         NodeStatistics ns = new NodeStatistics(rootNode);
         assertEquals( 3, ns.getNumberOfGroups());
     }
@@ -100,6 +105,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testGetNumberOfPictures() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         NodeStatistics ns = new NodeStatistics(rootNode);
         assertEquals( 5, ns.getNumberOfPictures());
     }
@@ -109,6 +115,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testCountPictures() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         // Recursive picture count
         assertEquals(3, NodeStatistics.countPictures(group1, true));
         // Non Recursive picture count
@@ -121,6 +128,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testCountPicturesNull() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(0, NodeStatistics.countPictures(null, true));
         assertEquals(0, NodeStatistics.countPictures(null, false));
     }
@@ -131,6 +139,7 @@ public class NodeStatisticsTest{
      */
     @Test
     public void testSizeOfPicturesPictureInfo() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         NodeStatistics ns = new NodeStatistics(picture1);
         assertEquals( 3148102, ns.getSizeOfPictures() );
     }
@@ -138,6 +147,7 @@ public class NodeStatisticsTest{
 
     @Test
     public void getSizeOfPicturesSinglePictureInfo() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         try {
             final File imageFile = new File(NodeStatisticsTest.class.getClassLoader().getResource(NIKON_D100_IMAGE).toURI());
@@ -153,6 +163,7 @@ public class NodeStatisticsTest{
 
     @Test
     public void getSizeOfPicturesSingleGroupInfo() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         final String SAMSUNG_S4_IMAGE = "exif-test-samsung-s4.jpg";
         try {

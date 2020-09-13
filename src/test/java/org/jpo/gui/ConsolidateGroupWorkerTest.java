@@ -5,6 +5,7 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.jpo.datamodel.PictureInfo;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  ConsolidateGroupWorkerTest.java: 
@@ -240,6 +242,7 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testMovePictureNewDirectory() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final File tempSourceDirectory = Files.createTempDir();
         final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
 

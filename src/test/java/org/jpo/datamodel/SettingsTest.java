@@ -2,10 +2,12 @@ package org.jpo.datamodel;
 
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.util.Locale;
 
 import static java.util.stream.IntStream.range;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017-2020  Richard Eigenmann.
@@ -181,6 +183,7 @@ public class SettingsTest {
 
     @Test
     public void testMemorizeGroupOfDropLocationOverfill() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         // First Element should not be our new node
         assertFalse(Settings.getRecentDropNodes().contains(n1));
@@ -199,6 +202,7 @@ public class SettingsTest {
 
     @Test
     public void testRemoveRecentDropNode() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         // First Element should not be our new node
@@ -213,6 +217,7 @@ public class SettingsTest {
 
     @Test
     public void testRemoveRecentDropNodeAndCompress() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         Settings.memorizeGroupOfDropLocation(n1);
@@ -225,6 +230,7 @@ public class SettingsTest {
 
     @Test
     public void testClearRecentDropNodes() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode(new GroupInfo("N1"));
         Settings.memorizeGroupOfDropLocation(n1);
         // First Element should be our new node

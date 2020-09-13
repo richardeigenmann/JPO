@@ -4,10 +4,12 @@ import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Tests for the GroupPopupMenu Class
@@ -22,6 +24,7 @@ public class GenerateWebsiteWizard1WelcomeTest {
      */
     @Test
     public void testGenerateWebsiteWizard1WelcomeTestConstructor() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait( () -> {
                 GenerateWebsiteRequest generateWebsiteRequest = new GenerateWebsiteRequest();

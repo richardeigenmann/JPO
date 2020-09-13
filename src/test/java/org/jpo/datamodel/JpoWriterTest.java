@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -9,6 +10,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 public class JpoWriterTest {
 
@@ -31,6 +33,7 @@ public class JpoWriterTest {
 
     @Test
     public void writeCategoriesBlock() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try  {
             final File tempFile = File.createTempFile("temp", null);
             try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {

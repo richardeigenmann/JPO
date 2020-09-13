@@ -4,11 +4,13 @@ import org.jpo.gui.swing.EdtViolationException;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017-2019  Richard Eigenmann.
@@ -64,6 +66,7 @@ public class ToolsTest {
      */
     @Test
     public void testCheckEDTOnEDT() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         // if on EDT must not throw Error
         try {
             SwingUtilities.invokeAndWait( () -> {

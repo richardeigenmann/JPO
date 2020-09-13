@@ -3,6 +3,7 @@ package org.jpo.datamodel;
 import com.google.common.hash.HashCode;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017 - 2020 Richard Eigenmann.
@@ -321,6 +323,7 @@ public class PictureInfoTest {
 
     @Test
     public void testCalculateChecksum() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final URL image = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
             final PictureInfo pi = new PictureInfo(new File(image.toURI()), "Sample Picture");

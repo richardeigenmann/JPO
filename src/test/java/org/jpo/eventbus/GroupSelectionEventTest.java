@@ -5,7 +5,10 @@ import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017-2020  Richard Eigenmann.
@@ -43,17 +46,18 @@ public class GroupSelectionEventTest {
      */
     @Test
     public void testReceivingEvent() {
-        EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
-        jpoEventBus.register( myEventBusSubscriber );
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        final EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
+        jpoEventBus.register(myEventBusSubscriber);
 
-        final GroupInfo groupInfo = new GroupInfo( "Empty Group" );
-        final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode( groupInfo );
+        final GroupInfo groupInfo = new GroupInfo("Empty Group");
+        final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
 
-        GroupSelectionEvent newEvent = new GroupSelectionEvent( node );
-        jpoEventBus.post( newEvent );
+        GroupSelectionEvent newEvent = new GroupSelectionEvent(node);
+        jpoEventBus.post(newEvent);
         // After firing a GroupSelectionEvent we expect it to be received by the listener
-        assertEquals(              newEvent, receivedEvent);
-        assertEquals( node, receivedEvent.getNode() );
+        assertEquals(newEvent, receivedEvent);
+        assertEquals(node, receivedEvent.getNode());
     }
 
     /**

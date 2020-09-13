@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 public class SourcePictureTest {
@@ -188,6 +189,7 @@ public class SourcePictureTest {
 
     @Test
     public void testBmpImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String BMP_IMAGE_FILE = "bmp.bmp";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE);
@@ -233,6 +235,7 @@ public class SourcePictureTest {
 
     @Test
     public void testTiffImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
@@ -277,6 +280,7 @@ public class SourcePictureTest {
 
     @Test
     public void testHdrImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
@@ -367,6 +371,7 @@ public class SourcePictureTest {
 
     @Test
     public void testSvgImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(SVG_IMAGE_FILE));
@@ -455,6 +460,7 @@ public class SourcePictureTest {
 
     @Test
     public void testSgiImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String SGI_IMAGE_FILE = "sgi.sgi";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE);
@@ -498,6 +504,7 @@ public class SourcePictureTest {
 
     @Test
     public void testTgaImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String TGA_IMAGE_FILE = "tga.tga";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
@@ -585,6 +592,7 @@ public class SourcePictureTest {
 
     @Test
     public void testIcoImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String ICO_IMAGE_FILE = "favicon.ico";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE);
@@ -628,6 +636,7 @@ public class SourcePictureTest {
 
     @Test
     public void testPngImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String PNG_IMAGE_FILE = "png.png";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
@@ -671,6 +680,7 @@ public class SourcePictureTest {
 
     @Test
     public void testGifImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String GIF_IMAGE_FILE = "gif.gif";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
@@ -757,6 +767,7 @@ public class SourcePictureTest {
 
     @Test
     public void testPcxImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String PCX_IMAGE_FILE = "pcx.pcx";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE);
@@ -800,6 +811,7 @@ public class SourcePictureTest {
 
     @Test
     public void testPctImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String PICT_IMAGE_FILE = "food.pct";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
@@ -886,6 +898,7 @@ public class SourcePictureTest {
 
     @Test
     public void testIcnsImage() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final SourcePicture s = new SourcePicture();
         final String ICNS_IMAGE_FILE = "7zIcon.icns";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE);

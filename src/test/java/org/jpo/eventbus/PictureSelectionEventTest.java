@@ -5,7 +5,10 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Picture Selection Event Tests
@@ -32,6 +35,7 @@ public class PictureSelectionEventTest {
      */
     @Test
     public void testReceivingEvent() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
