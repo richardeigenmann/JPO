@@ -13,8 +13,8 @@ blocks:
             - sem-version java 14
             - checkout
             - sudo apt update
-            - sudo apt install xvfb
+            - sudo apt install xvfb nsis
             - 'wget https://download.java.net/openjdk/jdk14/ri/openjdk-14+36_linux-x64_bin.tar.gz'
             - tar xzf openjdk-14+36_linux-x64_bin.tar.gz
             - export JAVA_HOME=/home/semaphore/JPO/jdk-14
-            - xvfb-run ./gradlew check
+            - xvfb-run --auto-servernum ./gradlew check buildWindowsExecutable buildWindowsInstaller
