@@ -94,7 +94,7 @@ class ClearThumbnailsJFrame extends JFrame {
         stopButton.addActionListener(this::stopButtonActionPerformed);
 
         ignoreButton.setText("Ignore");
-        ignoreButton.addActionListener(this::ignoreButtonActionPerformed);
+        ignoreButton.addActionListener(this::closeButtonActionPerformed);
 
         final GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -156,11 +156,6 @@ class ClearThumbnailsJFrame extends JFrame {
 
     private void stopButtonActionPerformed(ActionEvent evt) {
         thumbnailRemover.cancel(true);
-    }
-
-    private void ignoreButtonActionPerformed(ActionEvent evt) {
-        setVisible(false);
-        dispose();
     }
 
     private final ThumbnailRemover thumbnailRemover = new ThumbnailRemover();

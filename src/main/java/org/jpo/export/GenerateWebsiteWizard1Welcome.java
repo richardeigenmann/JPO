@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.util.concurrent.ExecutionException;
 
 /*
- Copyright (C) 2008-2017  Richard Eigenmann.
+ Copyright (C) 2008-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,6 +25,8 @@ import java.util.concurrent.ExecutionException;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * This Wizard Step welcomes the user to the wizard and states what is about to
  * happen
@@ -82,7 +84,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardPanel = new JPanel( new MigLayout() );
+        final JPanel wizardPanel = new JPanel(new MigLayout());
         wizardPanel.add( welcomeLabel, "wrap" );
         wizardPanel.add( fromLabel, "wrap" );
         return wizardPanel;
@@ -93,5 +95,6 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 }

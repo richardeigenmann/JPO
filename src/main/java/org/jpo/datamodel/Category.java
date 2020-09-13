@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 /*
- Copyright (C) 2002-2016  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -18,6 +18,8 @@ import java.io.Serializable;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * A class which represents a Category
  *

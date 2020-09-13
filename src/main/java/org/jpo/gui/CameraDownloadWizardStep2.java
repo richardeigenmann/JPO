@@ -24,6 +24,8 @@ import java.awt.event.ActionEvent;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * The second step in the download from camera dialog asks whether the user
  * wants to copy or move the pictures to his computer.
@@ -53,7 +55,6 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        //return component shown to the user
         final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         stepComponent.add( new JLabel( Settings.jpoResources.getString( "DownloadCameraWizardStep2Text1" )
@@ -88,5 +89,6 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
+        // noop
     }
 }

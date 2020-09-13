@@ -6,12 +6,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /*
  Copyright (C) 2017-2020  Richard Eigenmann.
@@ -79,42 +80,56 @@ public class GroupInfoTest {
 
     /**
      * A dumb PictureInfoChangeListener that only counts the events received
-     */
-    private final GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
+     *
+     private final GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
 
-        @Override
-        public void groupInfoChangeEvent( final GroupInfoChangeEvent event ) {
-            eventsReceived++;
-        }
-    };
-
-    private int eventsReceived;
+    @Override public void groupInfoChangeEvent( final GroupInfoChangeEvent event ) {
+    eventsReceived++;
+    }
+    };*/
 
     /**
      * Tests the change listener
      */
     @Test
     public void testGroupInfoChangeListener() {
-        eventsReceived = 0;
-        Settings.getPictureCollection().setSendModelUpdates( true );
-        final GroupInfo gi = new GroupInfo( "Step0" );
-        assertEquals( 0, eventsReceived );
-        gi.setGroupName( "Step 1" );
-        // There is no listener attached so there is no event
-        assertEquals(  0, eventsReceived );
-        gi.addGroupInfoChangeListener( groupInfoChangeListener );
-        gi.setGroupName( "Step 2" );
-        // The listener should have fired and we should have 1 event
-        assertEquals( 1, eventsReceived );
-        Settings.getPictureCollection().setSendModelUpdates( false );
-        gi.setGroupName( "Step 3" );
-        // We should remain at 1 event
-        assertEquals( 1, eventsReceived );
-        gi.removeGroupInfoChangeListener( groupInfoChangeListener );
-        gi.setGroupName( "Step 4" );
-        // The detached listener should not have fired
-        assertEquals(  1, eventsReceived );
-        Settings.getPictureCollection().setSendModelUpdates( true );
+        final List<GroupInfoChangeEvent> receivedGroupInfoChangedEvents = new ArrayList<GroupInfoChangeEvent>();
+        Settings.getPictureCollection().setSendModelUpdates(true);
+        final GroupInfo gi = new GroupInfo("Create GroupInfo when no Change listener attached");
+        assertEquals(0, receivedGroupInfoChangedEvents.size());
+
+        gi.setGroupName("Change the name without a change listener attached");
+        assertEquals(0, receivedGroupInfoChangedEvents.size());
+
+        final GroupInfoChangeListener listener = new GroupInfoChangeListener() {
+
+            @Override
+            public void groupInfoChangeEvent(final GroupInfoChangeEvent event) {
+                receivedGroupInfoChangedEvents.add(event);
+            }
+        };
+        gi.addGroupInfoChangeListener(listener);
+        gi.setGroupName("Change with Change Listener");
+        assertEquals(1, receivedGroupInfoChangedEvents.size());
+        assertEquals(gi, receivedGroupInfoChangedEvents.get(0).getGroupeInfo());
+        assertTrue(receivedGroupInfoChangedEvents.get(0).getGroupNameChanged());
+        assertFalse(receivedGroupInfoChangedEvents.get(0).getThumbnailChanged());
+        assertFalse(receivedGroupInfoChangedEvents.get(0).getWasSelected());
+        assertFalse(receivedGroupInfoChangedEvents.get(0).getWasUnselected());
+
+        Settings.getPictureCollection().setSendModelUpdates(false);
+        gi.setGroupName("Change with sendModelUpdates false");
+        assertEquals(1, receivedGroupInfoChangedEvents.size());
+
+        Settings.getPictureCollection().setSendModelUpdates(true);
+        gi.setGroupName("Change with sendModelUpdates true");
+        assertEquals(2, receivedGroupInfoChangedEvents.size());
+        assertEquals(gi, receivedGroupInfoChangedEvents.get(1).getGroupeInfo());
+        assertTrue(receivedGroupInfoChangedEvents.get(1).getGroupNameChanged());
+
+        gi.removeGroupInfoChangeListener(listener);
+        gi.setGroupName("Last change, without Listener");
+        assertEquals(2, receivedGroupInfoChangedEvents.size());
     }
 
     

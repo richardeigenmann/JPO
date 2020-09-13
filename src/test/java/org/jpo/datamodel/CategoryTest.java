@@ -24,7 +24,7 @@ public class CategoryTest {
      */
     @Test
     public void testGetKey() {
-        Category cat = new Category( 1, "Houses" );
+        final Category cat = new Category(1, "Houses");
         assertEquals( "1", cat.getKey().toString() );
     }
 
@@ -33,7 +33,7 @@ public class CategoryTest {
      */
     @Test
     public void testSetKey() {
-        Category cat = new Category( 1, "Houses" );
+        final Category cat = new Category(1, "Houses");
         cat.setKey( 2 );
         assertEquals( "2", cat.getKey().toString() );
     }
@@ -43,7 +43,7 @@ public class CategoryTest {
      */
     @Test
     public void testGetValue() {
-        Category cat = new Category( 1, "Houses" );
+        final Category cat = new Category(1, "Houses");
         assertEquals( "Houses", cat.getValue() );
     }
 
@@ -52,7 +52,7 @@ public class CategoryTest {
      */
     @Test
     public void testSetValue() {
-        Category cat = new Category( 1, "Houses" );
+        final Category cat = new Category(1, "Houses");
         cat.setValue( "Landscapes" );
         assertEquals( "Landscapes", cat.getValue() );
     }
@@ -66,8 +66,23 @@ public class CategoryTest {
      */
     @Test
     public void testToString() {
-        Category cat = new Category( 1, "Houses" );
-        assertEquals( "Houses", cat.toString() );
+        final Category cat = new Category(1, "Houses");
+        assertEquals("Houses", cat.toString());
     }
+
+    @Test
+    public void testStatus() {
+        final Category cat = new Category(1, "Houses");
+        assertEquals(Category.UNDEFINED, cat.getStatus());
+        cat.setStatus(Category.SELECTED);
+        assertEquals(Category.SELECTED, cat.getStatus());
+        cat.setStatus(Category.BOTH);
+        assertEquals(Category.BOTH, cat.getStatus());
+        cat.setStatus(Category.UN_SELECTED);
+        assertEquals(Category.UN_SELECTED, cat.getStatus());
+        cat.setStatus(Category.UNDEFINED);
+        assertEquals(Category.UNDEFINED, cat.getStatus());
+    }
+
 
 }

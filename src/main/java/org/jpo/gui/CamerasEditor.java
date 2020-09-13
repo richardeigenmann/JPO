@@ -66,7 +66,8 @@ public class CamerasEditor extends JFrame {
             LOGGER.info(String.format("valueForPathChanged on node %s, to value %s", path.toString(), newValue.toString()));
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             final Camera cam = (Camera) node.getUserObject();
-            cameraRenamed(cam, newValue.toString());
+            cam.setDescription(newValue.toString());
+            singleCameraEditor.setCamera(cam);
         }
     };
 
@@ -264,18 +265,6 @@ public class CamerasEditor extends JFrame {
      * @param cam The camera that the user picked
      */
     private void cameraPicked(final Camera cam) {
-        singleCameraEditor.setCamera(cam);
-    }
-
-
-    /**
-     * Gets called when a camera is renamed in the JTree
-     *
-     * @param cam     The camera that the user renamed
-     * @param newName The new name it got
-     */
-    private void cameraRenamed(final Camera cam, final String newName) {
-        cam.setDescription(newName);
         singleCameraEditor.setCamera(cam);
     }
 

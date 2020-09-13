@@ -6,8 +6,27 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.util.logging.Logger;
 
+
+/*
+Copyright (C) 2020  Richard Eigenmann.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version. This program is distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details. You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+The license is in gpl.txt.
+See http://www.gnu.org/copyleft/gpl.html for the details.
+*/
+
+
 /**
  * A drop target listener for the transferable
+ *
  * @author Richard Eigenmann
  */
 public class JpoTransferrableDropTargetListener implements DropTargetListener {
@@ -24,12 +43,13 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
 
     /**
      * Constructor
+     *
      * @param jpoDropTargetDropEventHandler Event handler
      */
-    public JpoTransferrableDropTargetListener( JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler ) {
+    public JpoTransferrableDropTargetListener(final JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler) {
         this.jpoDropTargetDropEventHandler = jpoDropTargetDropEventHandler;
     }
-    
+
 
     /**
      * this callback method is invoked every time something is dragged onto the
@@ -39,8 +59,8 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * @param event The event
      */
     @Override
-    public void dragEnter( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
+    public void dragEnter(final DropTargetDragEvent event) {
+        if (!event.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor)) {
             event.rejectDrag();
         }
 
@@ -50,11 +70,11 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * this callback method is invoked every time something is dragged over the
      * ThumbnailController. We could do some highlighting if we so desired.
      *
-     * @param event The event 
+     * @param event The event
      */
     @Override
-    public void dragOver( DropTargetDragEvent event ) {
-        if ( !event.isDataFlavorSupported( JpoTransferable.jpoNodeFlavor ) ) {
+    public void dragOver(final DropTargetDragEvent event) {
+        if (!event.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor)) {
             event.rejectDrag();
         }
 
@@ -69,7 +89,8 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * @param event The event
      */
     @Override
-    public void dropActionChanged( DropTargetDragEvent event ) {
+    public void dropActionChanged(final DropTargetDragEvent event) {
+        // noop
     }
 
     /**
@@ -79,8 +100,8 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * @param event The event
      */
     @Override
-    public void dragExit( DropTargetEvent event ) {
-        LOGGER.fine( "Thumbnail.dragExit( DropTargetEvent ): invoked" );
+    public void dragExit(final DropTargetEvent event) {
+        LOGGER.fine("Thumbnail.dragExit( DropTargetEvent ): invoked" );
     }
 
     /**
@@ -90,7 +111,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      * @param event The event
      */
     @Override
-    public void drop( DropTargetDropEvent event ) {
-        jpoDropTargetDropEventHandler.handleJpoDropTargetDropEvent( event );
+    public void drop(final DropTargetDropEvent event) {
+        jpoDropTargetDropEventHandler.handleJpoDropTargetDropEvent(event );
     }
 }

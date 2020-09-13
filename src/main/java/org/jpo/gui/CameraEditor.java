@@ -11,6 +11,23 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+/*
+ Copyright (C) 2020  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
+
 /**
  * This class creates a JPanel and allows attributes of a single camera to be
  * edited on it.
@@ -23,16 +40,16 @@ public class CameraEditor
     /**
      * Constructor for the editor gui
      */
-    CameraEditor() {
-        setLayout( new MigLayout( "nogrid" ) );
-        JLabel cameraNameJLabel = new JLabel( Settings.jpoResources.getString( "cameraNameJLabel" ) );
-        add( cameraNameJLabel, "wrap" );
-        add( cameraNameJTextField, "grow, wrap unrel" );
+    public CameraEditor() {
+        setLayout(new MigLayout("nogrid"));
+        final JLabel cameraNameJLabel = new JLabel(Settings.jpoResources.getString("cameraNameJLabel"));
+        add(cameraNameJLabel, "wrap");
+        add(cameraNameJTextField, "grow, wrap unrel");
 
-        add( cameraDirJLabel, "wrap" );
-        add( cameraDirJTextField, "wrap unrel" );
+        add(cameraDirJLabel, "wrap");
+        add(cameraDirJTextField, "wrap unrel");
 
-        add( monitorJCheckBox, "wrap unrel" );
+        add(monitorJCheckBox, "wrap unrel");
 
         add( memorisedPicsText );
 
@@ -58,7 +75,7 @@ public class CameraEditor
         });
         add( zeroJButton, "wrap unrel" );
 
-        JButton saveJButton = new JButton("Save");
+        final JButton saveJButton = new JButton("Save");
         saveJButton.setPreferredSize( Settings.defaultButtonDimension );
         saveJButton.setMinimumSize( Settings.defaultButtonDimension );
         saveJButton.setMaximumSize( Settings.defaultButtonDimension );
@@ -219,7 +236,7 @@ public class CameraEditor
      * Notifies the listeners
      */
     private void notifyActionListeners() {
-        ActionEvent event = new ActionEvent( this, 0, "save" );
+        final ActionEvent event = new ActionEvent(this, 0, "save");
         synchronized ( listeners ) {
             listeners.forEach( (actionListener) -> actionListener.actionPerformed( event ));
         }

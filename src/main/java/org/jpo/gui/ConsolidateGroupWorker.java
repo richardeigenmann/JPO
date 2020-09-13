@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -20,7 +21,7 @@ import static org.apache.commons.io.FileUtils.moveFile;
 import static org.jpo.datamodel.Tools.warnOnEDT;
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,6 +35,8 @@ import static org.jpo.datamodel.Tools.warnOnEDT;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * This class moves all pictures of a group node to a target directory.
  */
@@ -61,24 +64,24 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     /**
      * Creates a Thread which runs the consolidation.
      *
-     * @param targetDirectory	Where we want the files moved to
-     * @param startNode	The node from which this is all to be built.
-     * @param recurseGroups Flag indicating subgroups should be included
-     * @param progGui A Progress Gui
+     * @param targetDirectory Where we want the files moved to
+     * @param startNode       The node from which this is all to be built.
+     * @param recurseGroups   Flag indicating subgroups should be included
+     * @param progGui         A Progress Gui
      */
-    public ConsolidateGroupWorker( File targetDirectory,
-            SortableDefaultMutableTreeNode startNode, boolean recurseGroups,
-            ProgressGui progGui ) {
+    public ConsolidateGroupWorker(final File targetDirectory,
+                                  final SortableDefaultMutableTreeNode startNode, final boolean recurseGroups,
+                                  final ProgressGui progGui) {
         this.targetDirectory = targetDirectory;
         this.startNode = startNode;
         this.recurseGroups = recurseGroups;
         this.progGui = progGui;
 
-        if ( !targetDirectory.exists() ) {
-            LOGGER.log(Level.SEVERE, "Aborting because target directory {0} doesn''t exist", targetDirectory.getPath() );
+        if (!targetDirectory.exists()) {
+            LOGGER.log(Level.SEVERE, "Aborting because target directory {0} doesn''t exist", targetDirectory.getPath());
             return;
         }
-        if ( !targetDirectory.canWrite() ) {
+        if (!targetDirectory.canWrite()) {
             LOGGER.log(Level.SEVERE, "Aborting because directory {0} can''t be written to", targetDirectory.getPath() );
             return;
         }
@@ -104,13 +107,13 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     }
 
     @Override
-    protected void process( List<String> messages ) {
+    protected void process(final List<String> messages) {
         progGui.progressIncrement(messages.size());
     }
 
     @Override
     protected void done() {
-        String done = String.format(Settings.jpoResources.getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
+        final String done = String.format(Settings.jpoResources.getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
         progGui.setDoneString(done);
         progGui.switchToDoneMode();
 
@@ -136,18 +139,18 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      *
      * @param groupNode the Group whose nodes are to be consolidated.
      */
-    private void consolidateGroup( SortableDefaultMutableTreeNode groupNode ) {
-        List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes( recurseGroups );
-        LOGGER.log(Level.INFO, "List Size: {0}", nodes.size() );
-        nodes.forEach( node  -> {
-            PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+    private void consolidateGroup(final SortableDefaultMutableTreeNode groupNode) {
+        final List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes(recurseGroups);
+        LOGGER.log(Level.INFO, "List Size: {0}", nodes.size());
+        nodes.forEach(node -> {
+            final PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
             consolidatedCount++;
-            LOGGER.info( "node: " + pictureInfo.toString() );
-            if ( needToMovePicture( pictureInfo, targetDirectory ) ) {
-                if ( movePicture( pictureInfo, targetDirectory ) ) {
+            LOGGER.info("node: " + pictureInfo.toString());
+            if (needToMovePicture(pictureInfo, targetDirectory)) {
+                if (movePicture(pictureInfo, targetDirectory)) {
                     movedCount++;
-                    LOGGER.info( String.format( "Successfully Moved Highres file of node %s", pictureInfo.toString() ) );
-                    publish( String.format( "Consolidated node: %s", node.toString() ) );
+                    LOGGER.info(String.format("Successfully Moved Highres file of node %s", pictureInfo.toString()));
+                    publish(String.format("Consolidated node: %s", node.toString() ) );
                 } else {
                     LOGGER.severe( String.format( "Could not move highres picture of node %s. Aborting.", node.toString() ) );
                     errorCount++;
@@ -182,26 +185,28 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         Objects.requireNonNull(pictureInfo);
         Objects.requireNonNull(targetDirectory);
 
-        File pictureFile = pictureInfo.getImageFile();
+        final File pictureFile = pictureInfo.getImageFile();
 
-        // don't move if the file is already in the correct directory but report true to move
-        File parentDirectory = pictureFile.getParentFile();
-        if ( ( parentDirectory != null ) && ( parentDirectory.equals( targetDirectory ) ) ) {
-            return true;
-        }
+        if (!isInTargetDirectory(targetDirectory, pictureFile)) {
 
-        // make sure that we get a new filename. Some cameras might keep reusing the name DSC_01234.jpg 
-        // over and over again which would overwrite pictures in the worst case.
-        File newFile = Tools.inventPicFilename( targetDirectory, pictureInfo.getImageFile().getName() );
-        try {
-            moveFile( pictureFile, newFile );
-        } catch ( IOException ex ) {
-            LOGGER.log(Level.SEVERE, "Failed to move file {0} to {1}.\nException: {2}", new Object[]{pictureFile, newFile, ex.getLocalizedMessage()} );
-            return false;
+            // make sure that we get a new filename. Some cameras might keep reusing the name DSC_01234.jpg
+            // over and over again which would overwrite pictures in the worst case.
+            final File newFile = Tools.inventPicFilename(targetDirectory, pictureInfo.getImageFile().getName());
+            try {
+                moveFile(pictureFile, newFile);
+            } catch (final IOException ex) {
+                LOGGER.log(Level.SEVERE, "Failed to move file {0} to {1}.\nException: {2}", new Object[]{pictureFile, newFile, ex.getLocalizedMessage()});
+                return false;
+            }
+            pictureInfo.setImageLocation(newFile);
+            correctReferences(pictureFile, newFile);
         }
-        pictureInfo.setImageLocation( newFile );
-        correctReferences( pictureFile, newFile );
         return true;
+    }
+
+    private static boolean isInTargetDirectory(@NotNull File targetDirectory, File pictureFile) {
+        final File parentDirectory = pictureFile.getParentFile();
+        return ((parentDirectory != null) && (parentDirectory.equals(targetDirectory)));
     }
 
     /**
@@ -218,13 +223,13 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         Object nodeObject;
         int count = 0;
         final Enumeration<TreeNode> e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
-        while ( e.hasMoreElements() ) {
+        while ( e.hasMoreElements()) {
             node = (SortableDefaultMutableTreeNode) e.nextElement();
             nodeObject = node.getUserObject();
-            if ( nodeObject instanceof PictureInfo ) {
-                File imageFile = ( (PictureInfo) nodeObject ).getImageFile();
-                if ( imageFile != null && imageFile.equals( oldReference ) ) {
-                    ( (PictureInfo) nodeObject ).setImageLocation( newReference );
+            if (nodeObject instanceof PictureInfo pi) {
+                final File imageFile = pi.getImageFile();
+                if (imageFile != null && imageFile.equals(oldReference)) {
+                    pi.setImageLocation(newReference);
                     count++;
                 }
             }
