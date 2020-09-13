@@ -15,5 +15,6 @@ blocks:
           commands:
             - sem-version java 14
             - checkout
-            - apt-get install xvfb
+            - apt update
+            - apt install xvfb git openjdk-14-jdk
             - xvfb-run ./gradlew check
