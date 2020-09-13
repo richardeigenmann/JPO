@@ -16,9 +16,11 @@ blocks:
             - sudo apt install -y xvfb nsis
             - 'curl https://download.java.net/openjdk/jdk14/ri/openjdk-14+36_linux-x64_bin.tar.gz | tar xz -C ~/'
             - 'Xvfb :99 &'
+            - ps aux | grep Xvfb
             - 'export DISPLAY=:99'
             - export JAVA_HOME=/home/semaphore/jdk-14
             - cd ~/JPO
+            - sleep 3
             - ./gradlew check buildWindowsExecutable buildWindowsInstaller
             - ls -l build/libs/
             - ls -l build/executables
