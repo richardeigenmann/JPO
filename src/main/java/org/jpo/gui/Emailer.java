@@ -132,24 +132,24 @@ public class Emailer
         progBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
         progBar.setStringPainted( true );
         progBar.setPreferredSize( new Dimension( 140, 20 ) );
-        progBar.setMaximumSize( new Dimension( 240, 20 ) );
-        progBar.setMinimumSize( new Dimension( 140, 20 ) );
-        progBar.setValue( 0 );
-        progPanel.add( progBar );
+        progBar.setMaximumSize(new Dimension(240, 20));
+        progBar.setMinimumSize(new Dimension(140, 20));
+        progBar.setValue(0);
+        progPanel.add(progBar);
 
         final JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener( ( ActionEvent e ) -> {
-            progressLabel.setText( Settings.jpoResources.getString( "htmlDistillerInterrupt" ) );
+        cancelButton.addActionListener((ActionEvent e) -> {
+            progressLabel.setText(Settings.jpoResources.getString("htmlDistillerInterrupt"));
             interrupted = true;
-        } );
-        cancelButton.setPreferredSize( Settings.defaultButtonDimension );
-        cancelButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelButton.setMinimumSize( Settings.defaultButtonDimension );
+        });
+        cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
 
-        progPanel.add( cancelButton, "tag[cancel]" );
+        progPanel.add(cancelButton, "tag[cancel]");
 
-        progressFrame = new JFrame( Settings.jpoResources.getString( "EmailerJFrame" ) );
-        progressFrame.getContentPane().add( progPanel );
+        progressFrame = new JFrame(Settings.jpoResources.getString("EmailerJFrame"));
+        progressFrame.getContentPane().add(progPanel);
         progressFrame.pack();
         progressFrame.setVisible(true);
         progressFrame.setLocationRelativeTo(Settings.getAnchorFrame());

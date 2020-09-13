@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import com.drew.lang.annotations.NotNull;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
@@ -59,7 +60,84 @@ public class PictureInfo implements Serializable {
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PictureInfo.class.getName());
+    /**
+     * The listeners to be notified about changes to this PictureInfo object.
+     */
+    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet(new HashSet<>());
+    /**
+     * The description of the image.
+     */
+    private String description;
+    //----------------------------------------
+    private File imageFile;
+    private String myImageLocation = "";
 
+    //----------------------------------------
+    /**
+     * the value of the checksum of the image file
+     */
+    private long checksum = Long.MIN_VALUE;
+    /**
+     * the hasch code of the contents of the file. We use SHA-256 here in 2020.
+     */
+    private HashCode fileHash = null;
+    /**
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
+     */
+    private String checksumString = "";
+    /**
+     * The film reference of the image.
+     */
+    private String filmReference;
+    /**
+     * The time the image was created. This should be the original time when the
+     * shutter snapped closed and not the time of scanning etc.
+     */
+    private String creationTime = "";
+    /**
+     * The time the image was created. This should be the original time when the
+     * shutter snapped closed and not the time of scanning etc.
+     */
+    private String comment = "";
+    /**
+     * The time the image was created. This should be the original time when the
+     * shutter snapped closed and not the time of scanning etc.
+     */
+    private String photographer = "";
+    /**
+     * The copyright holder of the image.
+     */
+    private String copyrightHolder = "";
+    /**
+     * The rotation factor to apply after loading the image.
+     */
+    private double rotation;  // default is 0
+    /**
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
+     */
+    private String rotationString = "";
+    /**
+     * The copyright holder of the image.
+     */
+    private Point2D.Double latLng;
+    /**
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
+     */
+    private String latLngString = "";
+    /**
+     * The category assignments are held in the categoryAssignments HashSet.
+     */
+    private Set<Integer> categoryAssignments = new HashSet<>();
+    /**
+     * Temporary variable to allow appending of characters as the XML file is
+     * being read.
+     */
+    private String categoryAssignmentString = "";
+
+    //----------------------------------------
 
     /**
      * Constructor without options. All strings are set to blanks
@@ -68,7 +146,6 @@ public class PictureInfo implements Serializable {
         description = "";
         filmReference = "";
     }
-
 
     /**
      * Constructor with just filename as option.
@@ -83,6 +160,24 @@ public class PictureInfo implements Serializable {
     }
 
     /**
+     * Returns the creationTime as a formatted String. If the dateTime is null a
+     * polite "Failed to Parse" string is returned
+     *
+     * @param dateTime the Calendar to format
+     * @return the creation time as a formatted string
+     */
+    public static String getFormattedCreationTime(final Calendar dateTime) {
+        String formattedDate;
+        if (dateTime == null) {
+            formattedDate = Settings.jpoResources.getString("failedToParse");
+        } else {
+            formattedDate = Settings.jpoResources.getString("parsedAs")
+                    + String.format("%tc", dateTime);
+        }
+        return formattedDate;
+    }
+
+    /**
      * returns the description of the image in the default <code>toString</code>
      * method.
      *
@@ -92,7 +187,6 @@ public class PictureInfo implements Serializable {
     public String toString() {
         return description;
     }
-
 
     /**
      * this method writes all attributes of the picture in the JPO xml data
@@ -157,11 +251,9 @@ public class PictureInfo implements Serializable {
         }
 
         if (categoryAssignments != null) {
-            final Iterator<Object> i = categoryAssignments.iterator();
-            Integer assignment;
+            final Iterator<Integer> i = categoryAssignments.iterator();
             while (i.hasNext()) {
-                assignment = (Integer) i.next();
-                out.write("\t<categoryAssignment index=\"" + assignment.toString() + "\"/>");
+                out.write("\t<categoryAssignment index=\"" + i.next() + "\"/>");
                 out.newLine();
             }
         }
@@ -169,12 +261,6 @@ public class PictureInfo implements Serializable {
         out.write("</picture>");
         out.newLine();
     }
-
-    //----------------------------------------
-    /**
-     * The description of the image.
-     */
-    private String description;
 
     /**
      * Returns the description of the image.
@@ -238,9 +324,6 @@ public class PictureInfo implements Serializable {
         }
     }
 
-    //----------------------------------------
-    private File imageFile;
-
     /**
      * Returns the full path to the highres picture. If the PictureInto doesn't have an image location an empty
      * String is returned.
@@ -250,11 +333,22 @@ public class PictureInfo implements Serializable {
      */
     public synchronized String getImageLocation() {
         File file = getImageFile();
-        if ( file != null ) {
+        if (file != null) {
             return file.toURI().toString();
         } else {
             return "";
         }
+    }
+
+    /**
+     * Sets the image location and sends a sendImageLocationChangedEvent.
+     *
+     * @param file The new file of the picture.
+     */
+    public synchronized void setImageLocation(@NonNull final File file) {
+        Objects.requireNonNull(file);
+        imageFile = file;
+        sendImageLocationChangedEvent();
     }
 
     /**
@@ -265,7 +359,6 @@ public class PictureInfo implements Serializable {
     public synchronized File getImageFile() {
         return imageFile;
     }
-
 
     /**
      * returns the URI handle to the picture.
@@ -279,20 +372,6 @@ public class PictureInfo implements Serializable {
             return null;
         }
     }
-
-
-    /**
-     * Sets the image location and sends a sendImageLocationChangedEvent.
-     *
-     * @param file The new file of the picture.
-     */
-    public synchronized void setImageLocation(@NonNull final File file) {
-        Objects.requireNonNull(file);
-        imageFile = file;
-        sendImageLocationChangedEvent();
-    }
-
-    private String myImageLocation = "";
 
     /**
      * Appends the text to the field (used by XML parser).
@@ -311,6 +390,9 @@ public class PictureInfo implements Serializable {
         }
     }
 
+
+    //----------------------------------------
+
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the image location was updated.
@@ -324,17 +406,6 @@ public class PictureInfo implements Serializable {
         }
     }
 
-    //----------------------------------------
-    /**
-     * the value of the checksum of the image file
-     */
-    private long checksum = Long.MIN_VALUE;
-
-    /**
-     * the hasch code of the contents of the file. We use SHA-256 here in 2020.
-     */
-    private HashCode fileHash = null;
-
     /**
      * Returns the value of the checksum or Long.MIN_VALUE if it is not set.
      *
@@ -342,6 +413,16 @@ public class PictureInfo implements Serializable {
      */
     public synchronized long getChecksum() {
         return checksum;
+    }
+
+    /**
+     * allows the checksum to be set
+     *
+     * @param newValue the new value
+     */
+    public synchronized void setChecksum(final long newValue) {
+        checksum = newValue;
+        sendChecksumChangedEvent();
     }
 
     /**
@@ -359,13 +440,14 @@ public class PictureInfo implements Serializable {
      * @return the SHA-256 of the image file or "N/A" if not available
      */
     public synchronized String getFileHashAsString() {
-        if ( fileHash != null ) {
+        if (fileHash != null) {
             return fileHash.toString().toUpperCase();
         } else {
             return "N/A";
         }
     }
 
+    //----------------------------------------
 
     /**
      * returns the value of the checksum or the text "N/A" if not defined.
@@ -378,16 +460,6 @@ public class PictureInfo implements Serializable {
         } else {
             return "N/A";
         }
-    }
-
-    /**
-     * allows the checksum to be set
-     *
-     * @param newValue the new value
-     */
-    public synchronized void setChecksum(final long newValue) {
-        checksum = newValue;
-        sendChecksumChangedEvent();
     }
 
     /**
@@ -408,6 +480,7 @@ public class PictureInfo implements Serializable {
 
     /**
      * calculates the SHA-256 hash of the picture.
+     *
      * @return returns a HashCode object containing the SHA256 of the Image File
      * @throws IOException if the underlying library encounters and {@link IOException}
      */
@@ -421,10 +494,10 @@ public class PictureInfo implements Serializable {
      * calculates the SHA-256 hash of the picture and saves it to the fileHash member
      * variable. If the value changes it sends a PictureInfoChangedEvent
      */
-    public synchronized void setSha256()  {
+    public synchronized void setSha256() {
         try {
             final HashCode newHash = calculateSha256();
-            if ( fileHash != newHash ) {
+            if (fileHash != newHash) {
                 fileHash = newHash;
                 sendFileHashChangedEvent();
             }
@@ -436,7 +509,6 @@ public class PictureInfo implements Serializable {
             }
         }
     }
-
 
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
@@ -463,13 +535,6 @@ public class PictureInfo implements Serializable {
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
-
-
-    /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String checksumString = "";
 
     /**
      * Appends the text fragment to the checksum field.
@@ -498,12 +563,7 @@ public class PictureInfo implements Serializable {
         sendChecksumChangedEvent();
     }
 
-
     //----------------------------------------
-    /**
-     * The film reference of the image.
-     */
-    private String filmReference;
 
     /**
      * Appends the string to the filmReference field.
@@ -551,25 +611,6 @@ public class PictureInfo implements Serializable {
         }
     }
 
-    //----------------------------------------
-    /**
-     * The time the image was created. This should be the original time when the
-     * shutter snapped closed and not the time of scanning etc.
-     */
-    private String creationTime = "";
-
-    /**
-     * Sets the creationTime.
-     *
-     * @param s The new creation time.
-     */
-    public synchronized void setCreationTime(final String s) {
-        if ((s != null) && (!creationTime.equals(s))) {
-            creationTime = s;
-            sendCreationTimeChangedEvent();
-        }
-    }
-
     /**
      * appends the text fragment to the creation time.
      *
@@ -582,6 +623,8 @@ public class PictureInfo implements Serializable {
         }
     }
 
+    //----------------------------------------
+
     /**
      * Returns the creation Time.
      *
@@ -589,6 +632,18 @@ public class PictureInfo implements Serializable {
      */
     public synchronized String getCreationTime() {
         return creationTime;
+    }
+
+    /**
+     * Sets the creationTime.
+     *
+     * @param s The new creation time.
+     */
+    public synchronized void setCreationTime(final String s) {
+        if ((s != null) && (!creationTime.equals(s))) {
+            creationTime = s;
+            sendCreationTimeChangedEvent();
+        }
     }
 
     /**
@@ -613,24 +668,6 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * Returns the creationTime as a formatted String. If the dateTime is null a
-     * polite "Failed to Parse" string is returned
-     *
-     * @param dateTime the Calendar to format
-     * @return the creation time as a formatted string
-     */
-    public static String getFormattedCreationTime(final Calendar dateTime) {
-        String formattedDate;
-        if (dateTime == null) {
-            formattedDate = Settings.jpoResources.getString("failedToParse");
-        } else {
-            formattedDate = Settings.jpoResources.getString("parsedAs")
-                    + String.format("%tc", dateTime);
-        }
-        return formattedDate;
-    }
-
-    /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the film reference was updated.
      */
@@ -644,23 +681,6 @@ public class PictureInfo implements Serializable {
     }
 
     //----------------------------------------
-    /**
-     * The time the image was created. This should be the original time when the
-     * shutter snapped closed and not the time of scanning etc.
-     */
-    private String comment = "";
-
-    /**
-     * Sets the comment.
-     *
-     * @param s The new comment
-     */
-    public synchronized void setComment(final String s) {
-        if (!comment.equals(s)) {
-            comment = s;
-            sendCommentChangedEvent();
-        }
-    }
 
     /**
      * Appends the text fragment to the comment.
@@ -684,6 +704,18 @@ public class PictureInfo implements Serializable {
     }
 
     /**
+     * Sets the comment.
+     *
+     * @param s The new comment
+     */
+    public synchronized void setComment(final String s) {
+        if (!comment.equals(s)) {
+            comment = s;
+            sendCommentChangedEvent();
+        }
+    }
+
+    /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the comment was updated.
      */
@@ -693,25 +725,6 @@ public class PictureInfo implements Serializable {
             pce.setCommentChanged();
             sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
-        }
-    }
-
-    //----------------------------------------
-    /**
-     * The time the image was created. This should be the original time when the
-     * shutter snapped closed and not the time of scanning etc.
-     */
-    private String photographer = "";
-
-    /**
-     * Sets the Photographer.
-     *
-     * @param s The new Photographer
-     */
-    public synchronized void setPhotographer(final String s) {
-        if (!photographer.equals(s)) {
-            photographer = s;
-            sendPhotographerChangedEvent();
         }
     }
 
@@ -727,6 +740,8 @@ public class PictureInfo implements Serializable {
         }
     }
 
+    //----------------------------------------
+
     /**
      * Returns the photographer.
      *
@@ -734,6 +749,18 @@ public class PictureInfo implements Serializable {
      */
     public synchronized String getPhotographer() {
         return photographer;
+    }
+
+    /**
+     * Sets the Photographer.
+     *
+     * @param s The new Photographer
+     */
+    public synchronized void setPhotographer(final String s) {
+        if (!photographer.equals(s)) {
+            photographer = s;
+            sendPhotographerChangedEvent();
+        }
     }
 
     /**
@@ -746,24 +773,6 @@ public class PictureInfo implements Serializable {
             pce.setPhotographerChanged();
             sendPictureInfoChangedEvent(pce);
             Settings.getPictureCollection().setUnsavedUpdates();
-        }
-    }
-
-    //----------------------------------------
-    /**
-     * The copyright holder of the image.
-     */
-    private String copyrightHolder = "";
-
-    /**
-     * Sets the copyright holder.
-     *
-     * @param s The copyright holder
-     */
-    public synchronized void setCopyrightHolder(final String s) {
-        if (!copyrightHolder.equals(s)) {
-            copyrightHolder = s;
-            sendCopyrightHolderChangedEvent();
         }
     }
 
@@ -789,6 +798,18 @@ public class PictureInfo implements Serializable {
     }
 
     /**
+     * Sets the copyright holder.
+     *
+     * @param s The copyright holder
+     */
+    public synchronized void setCopyrightHolder(final String s) {
+        if (!copyrightHolder.equals(s)) {
+            copyrightHolder = s;
+            sendCopyrightHolderChangedEvent();
+        }
+    }
+
+    /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the copyright holder was updated.
      */
@@ -800,18 +821,6 @@ public class PictureInfo implements Serializable {
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
-
-    //----------------------------------------
-    /**
-     * The rotation factor to apply after loading the image.
-     */
-    private double rotation;  // default is 0
-
-    /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String rotationString = "";
 
     /**
      * Appends the text fragment to the rotation field.
@@ -840,6 +849,8 @@ public class PictureInfo implements Serializable {
 
     }
 
+    //----------------------------------------
+
     /**
      * Returns the rotation.
      *
@@ -862,21 +873,21 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * Changes the angle by the supplied angle the picture by an angle.
-     *
-     * @param angle the new angle
-     */
-    public synchronized void rotate(double angle) {
-        setRotation((getRotation() + angle) % 360);
-    }
-
-    /**
      * Sets the rotation.
      *
      * @param rotation The new rotation for the PictureInfo.
      */
     public synchronized void setRotation(final int rotation) {
         setRotation((double) rotation);
+    }
+
+    /**
+     * Changes the angle by the supplied angle the picture by an angle.
+     *
+     * @param angle the new angle
+     */
+    public synchronized void rotate(double angle) {
+        setRotation((getRotation() + angle) % 360);
     }
 
     /**
@@ -891,41 +902,6 @@ public class PictureInfo implements Serializable {
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
-
-    //----------------------------------------
-    /**
-     * The copyright holder of the image.
-     */
-    private Point2D.Double latLng;
-
-    /**
-     * Sets the Latitude and Longitude.
-     *
-     * @param newLatLng The latitude and longitude holder
-     */
-    public synchronized void setLatLng(final Point2D.Double newLatLng) {
-        if ((latLng == null) || (latLng.x != newLatLng.x) || (latLng.y != newLatLng.y)) {
-            latLng = newLatLng;
-            sendLatLngChangedEvent();
-        }
-    }
-
-    /**
-     * Sets the Latitude and Longitude.
-     *
-     * @param newLatLng The latitude and longitude in the format of 2 doubles
-     *                  with an x
-     */
-    public synchronized void setLatLng(final String newLatLng) {
-        this.latLngString = newLatLng;
-        parseLatLng();
-    }
-
-    /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String latLngString = "";
 
     /**
      * appends the text fragment to the latlng string.
@@ -966,6 +942,31 @@ public class PictureInfo implements Serializable {
     }
 
     /**
+     * Sets the Latitude and Longitude.
+     *
+     * @param newLatLng The latitude and longitude holder
+     */
+    public synchronized void setLatLng(final Point2D.Double newLatLng) {
+        if ((latLng == null) || (latLng.x != newLatLng.x) || (latLng.y != newLatLng.y)) {
+            latLng = newLatLng;
+            sendLatLngChangedEvent();
+        }
+    }
+
+    //----------------------------------------
+
+    /**
+     * Sets the Latitude and Longitude.
+     *
+     * @param newLatLng The latitude and longitude in the format of 2 doubles
+     *                  with an x
+     */
+    public synchronized void setLatLng(final String newLatLng) {
+        this.latLngString = newLatLng;
+        parseLatLng();
+    }
+
+    /**
      * returns the Latitude and Longitude as a String
      *
      * @return The latitude and longitude in the format of 2 doubles with an x
@@ -990,16 +991,25 @@ public class PictureInfo implements Serializable {
         }
     }
 
-    //----------------------------------------
-
-    public Set<Object> getCategoryAssignments() {
+    public Set<Integer> getCategoryAssignments() {
         return categoryAssignments;
     }
 
-    /**
-     * The category assignments are held in the categoryAssignments HashSet.
-     */
-    private HashSet<Object> categoryAssignments;
+
+    /* public String getCategoryAssignmentString() {
+        if (categoryAssignments == null ) {
+            return "no categories set";
+        }
+        final StringBuilder sb = new StringBuilder();
+        String comma = "";
+        for (final Integer i : categoryAssignments) {
+            sb.append(comma);
+            sb.append(i);
+            comma = ", ";
+        }
+        System.out.println(sb);
+        return sb.toString();
+    } */
 
     /**
      * removes all category Assignments
@@ -1010,13 +1020,6 @@ public class PictureInfo implements Serializable {
             categoryAssignments.clear();
         }
     }
-
-    /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String categoryAssignmentString = "";
-
 
     /**
      * Appends the text fragment to the categoryAssignmentString field.
@@ -1030,7 +1033,7 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * Adds to the categoryAssignmentString HashSet.
+     * Adds to the index number received as a string to the Set of categories
      *
      * @param string Text fragment
      */
@@ -1047,7 +1050,7 @@ public class PictureInfo implements Serializable {
      *
      * @param key the key to add
      */
-    public synchronized void addCategoryAssignment(final Object key) {
+    public synchronized void addCategoryAssignment(final Integer key) {
         if (categoryAssignments == null) {
             categoryAssignments = new HashSet<>();
         }
@@ -1057,19 +1060,19 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * sets the supplied HashSet as the valid HashSet for the Categories of the
-     * picture
+     * Sets the supplied Collection as the categories of the
+     * picture, clearing out any pre-existing ones.
      *
      * @param ca the supplied hash set
      */
-    public synchronized void setCategoryAssignment(final HashSet<Object> ca) {
-        if (ca != null) {
-            categoryAssignments = ca;
-        }
+    public synchronized void setCategoryAssignment(@NotNull final Collection<Integer> ca) {
+        Objects.requireNonNull(ca);
+        clearCategoryAssignments();
+        ca.forEach(category -> addCategoryAssignment(category));
     }
 
     /**
-     * Converts the temporary categoryAssignmentString to a categoryAssignment.
+     * Converts the temporary categoryAssignmentString to a categoryAssignment and calls addCategoryAssignment
      */
     public synchronized void parseCategoryAssignment() {
         try {
@@ -1079,7 +1082,6 @@ public class PictureInfo implements Serializable {
         } catch (final NumberFormatException x) {
             LOGGER.log(Level.INFO, "NumberFormatException: {0} on picture: {1} because: {2}", new Object[]{categoryAssignmentString, getImageFile(), x.getMessage()});
         }
-        sendCategoryAssignmentsChangedEvent();
     }
 
     /**
@@ -1088,7 +1090,7 @@ public class PictureInfo implements Serializable {
      * @param key the key
      * @return true if the key was in the categories
      */
-    public synchronized boolean containsCategory(final Object key) {
+    public synchronized boolean containsCategory(final Integer key) {
         if (categoryAssignments == null) {
             return false;
         }
@@ -1105,6 +1107,8 @@ public class PictureInfo implements Serializable {
             sendCategoryAssignmentsChangedEvent();
         }
     }
+
+    //-------------------------------------------
 
     /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
@@ -1179,8 +1183,6 @@ public class PictureInfo implements Serializable {
         sendPictureInfoChangedEvent(pce);
     }
 
-    //-------------------------------------------
-
     /**
      * Returns a new PictureInfo object which is identical to the current one.
      *
@@ -1198,11 +1200,6 @@ public class PictureInfo implements Serializable {
         clone.setRotation(this.getRotation());
         return clone;
     }
-
-    /**
-     * The listeners to be notified about changes to this PictureInfo object.
-     */
-    private final transient Set<PictureInfoChangeListener> pictureInfoListeners = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Registers a listener for picture info change events

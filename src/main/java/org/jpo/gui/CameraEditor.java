@@ -51,37 +51,37 @@ public class CameraEditor
 
         add(monitorJCheckBox, "wrap unrel");
 
-        add( memorisedPicsText );
+        add(memorisedPicsText);
 
-        add( memorisedPicturesJLabel );
+        add(memorisedPicturesJLabel);
 
-        refreshJButton.setPreferredSize( Settings.defaultButtonDimension );
-        refreshJButton.setMinimumSize( Settings.defaultButtonDimension );
-        refreshJButton.setMaximumSize( Settings.defaultButtonDimension );
-        refreshJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        refreshJButton.addActionListener(( ActionEvent e ) -> {
+        refreshJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        refreshJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        refreshJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        refreshJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        refreshJButton.addActionListener((ActionEvent e) -> {
             getCamera().buildOldImage();
             updateMemorisedPicturesJLabel();
         });
-        add( refreshJButton );
+        add(refreshJButton);
 
-        zeroJButton.setPreferredSize( Settings.defaultButtonDimension );
-        zeroJButton.setMinimumSize( Settings.defaultButtonDimension );
-        zeroJButton.setMaximumSize( Settings.defaultButtonDimension );
-        zeroJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        zeroJButton.addActionListener(( ActionEvent e ) -> {
+        zeroJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        zeroJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        zeroJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        zeroJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        zeroJButton.addActionListener((ActionEvent e) -> {
             getCamera().zapOldImage();
             updateMemorisedPicturesJLabel();
         });
-        add( zeroJButton, "wrap unrel" );
+        add(zeroJButton, "wrap unrel");
 
         final JButton saveJButton = new JButton("Save");
-        saveJButton.setPreferredSize( Settings.defaultButtonDimension );
-        saveJButton.setMinimumSize( Settings.defaultButtonDimension );
-        saveJButton.setMaximumSize( Settings.defaultButtonDimension );
-        saveJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveJButton.addActionListener((ActionEvent e ) -> saveCamera());
-        add(saveJButton, "align right" );
+        saveJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        saveJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        saveJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        saveJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveJButton.addActionListener((ActionEvent e) -> saveCamera());
+        add(saveJButton, "align right");
     }
 
     /**
@@ -238,7 +238,7 @@ public class CameraEditor
     private void notifyActionListeners() {
         final ActionEvent event = new ActionEvent(this, 0, "save");
         synchronized ( listeners ) {
-            listeners.forEach( (actionListener) -> actionListener.actionPerformed( event ));
+            listeners.forEach(actionListener -> actionListener.actionPerformed(event));
         }
     }
 }

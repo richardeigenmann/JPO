@@ -13,10 +13,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -238,9 +235,9 @@ public class CategoryUsageJFrame extends JFrame {
         Category c;
 
 
-        final HashSet<Object> selectedCategories = categoryJScrollPane.getSelectedCategories();
+        final Collection<Integer> selectedCategories = categoryJScrollPane.getSelectedCategories();
         synchronized (categoryGuiListeners) {
-            categoryGuiListeners.forEach((listener)
+            categoryGuiListeners.forEach(listener
                     -> listener.categoriesChosen(selectedCategories)
             );
         }
@@ -250,7 +247,6 @@ public class CategoryUsageJFrame extends JFrame {
             LOGGER.info("CategoryUsageJFrame.storeSelection: called with a null selection. Aborting.");
             return;
         }
-        Object userObject;
         for (final SortableDefaultMutableTreeNode selectedNode : selectedNodes) {
             if (selectedNode.getUserObject() instanceof PictureInfo pictureInfo) {
                 final Enumeration<Category> e = listModel.elements();

@@ -36,7 +36,7 @@ public class CollectionDistillerJFrame extends JFrame {
     /**
      * Size for this frame
      */
-    private final static Dimension FRAME_SIZE = new Dimension(460, 300);
+    private static final Dimension FRAME_SIZE = new Dimension(460, 300);
 
     /**
      * the request
@@ -121,9 +121,9 @@ public class CollectionDistillerJFrame extends JFrame {
         final JPanel buttonJPanel = new JPanel();
 
         final JButton exportJButton = new JButton(Settings.jpoResources.getString("genericExportButtonText"));
-        exportJButton.setPreferredSize(Settings.defaultButtonDimension);
-        exportJButton.setMinimumSize(Settings.defaultButtonDimension);
-        exportJButton.setMaximumSize(Settings.defaultButtonDimension);
+        exportJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        exportJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        exportJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         exportJButton.setDefaultCapable(true);
         this.getRootPane().setDefaultButton(exportJButton);
         exportJButton.addActionListener((ActionEvent e) -> {
@@ -133,9 +133,9 @@ public class CollectionDistillerJFrame extends JFrame {
         buttonJPanel.add(exportJButton);
 
         final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
-        cancelJButton.setPreferredSize(Settings.defaultButtonDimension);
-        cancelJButton.setMinimumSize(Settings.defaultButtonDimension);
-        cancelJButton.setMaximumSize(Settings.defaultButtonDimension);
+        cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         cancelJButton.addActionListener((ActionEvent e) -> getRid());
         buttonJPanel.add(cancelJButton);
 

@@ -274,9 +274,9 @@ public class PictureInfoEditor extends JFrame {
         buttonJPanel.setLayout(new FlowLayout());
 
         final JButton OkJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
-        OkJButton.setPreferredSize(Settings.defaultButtonDimension);
-        OkJButton.setMinimumSize(Settings.defaultButtonDimension);
-        OkJButton.setMaximumSize(Settings.defaultButtonDimension);
+        OkJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        OkJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        OkJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         OkJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         OkJButton.addActionListener((ActionEvent e) -> {
             saveFieldData();
@@ -287,17 +287,17 @@ public class PictureInfoEditor extends JFrame {
         buttonJPanel.add(OkJButton);
 
         final JButton CancelButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
-        CancelButton.setPreferredSize(Settings.defaultButtonDimension);
-        CancelButton.setMinimumSize(Settings.defaultButtonDimension);
-        CancelButton.setMaximumSize(Settings.defaultButtonDimension);
+        CancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        CancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        CancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
         CancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
         CancelButton.addActionListener((ActionEvent e) -> getRid());
         buttonJPanel.add(CancelButton);
 
         final JButton resetJButton = new JButton(Settings.jpoResources.getString("resetLabel"));
-        resetJButton.setPreferredSize(Settings.defaultButtonDimension);
-        resetJButton.setMinimumSize(Settings.defaultButtonDimension);
-        resetJButton.setMaximumSize(Settings.defaultButtonDimension);
+        resetJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        resetJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        resetJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         resetJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         resetJButton.addActionListener((ActionEvent e) -> loadData());
         buttonJPanel.add(resetJButton);
@@ -587,7 +587,7 @@ public class PictureInfoEditor extends JFrame {
         if (!theList.isSelectionEmpty()) {
             final List<Category> selectedCategories = theList.getSelectedValuesList();
             String comma = "";
-            for (Category c : selectedCategories) {
+            for (final Category c : selectedCategories) {
                 if (!((c.equals(setupCategories)) || (c.equals(noCategories)))) {
                     resultString.append(comma).append(c.toString());
                     comma = ", ";

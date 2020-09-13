@@ -53,24 +53,24 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
         super( Settings.jpoResources.getString( "welcomeTitle" ), Settings.jpoResources.getString( "HtmlDistillerJFrameHeading" ) );
 
         final SortableDefaultMutableTreeNode startNode = options.getStartNode();
-        class getCountWorker extends SwingWorker<Integer, Object> {
+        class GetCountWorker extends SwingWorker<Integer, Object> {
 
             @Override
             public Integer doInBackground() {
-                return NodeStatistics.countPictures( startNode, true );
+                return NodeStatistics.countPictures(startNode, true);
             }
 
             @Override
             protected void done() {
                 try {
-                    welcomeLabel.setText( String.format( Settings.jpoResources.getString( "welcomeMsg" ), get() ) );
+                    welcomeLabel.setText(String.format(Settings.jpoResources.getString("welcomeMsg"), get()));
                 } catch ( InterruptedException | ExecutionException ignore ) {
                     // Restore interrupted state...
                     Thread.currentThread().interrupt();
                 }
             }
         }
-        ( new getCountWorker() ).execute();
+        (new GetCountWorker()).execute();
 
         final String labelText = Settings.jpoResources.getString( "generateFrom" )
                 + ( ( startNode != null ) ? startNode.toString() : "null" );

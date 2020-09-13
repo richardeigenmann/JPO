@@ -26,12 +26,12 @@ public class GenerateWebsiteWizard1WelcomeTest {
     public void testGenerateWebsiteWizard1WelcomeTestConstructor() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                GenerateWebsiteRequest generateWebsiteRequest = new GenerateWebsiteRequest();
-                GenerateWebsiteWizard1Welcome generateWebsiteWizard1Welcome = new GenerateWebsiteWizard1Welcome(generateWebsiteRequest);
+            SwingUtilities.invokeAndWait(() -> {
+                final GenerateWebsiteRequest generateWebsiteRequest = new GenerateWebsiteRequest();
+                final GenerateWebsiteWizard1Welcome generateWebsiteWizard1Welcome = new GenerateWebsiteWizard1Welcome(generateWebsiteRequest);
                 assertNotNull(generateWebsiteWizard1Welcome);
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }

@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import java.util.HashSet;
+import java.util.Collection;
 
 
 
@@ -31,10 +31,10 @@ the user has selected.
 public interface CategoryGuiListenerInterface {
 
 	/**
-	 *  This method is invoked on the target object when the categories have been chosen.
-         *
-         * @param selectedCategories  The selected Categories
-         */
-	void categoriesChosen(HashSet<Object> selectedCategories);
+	 * This method is invoked on the target object when the categories have been chosen.
+	 *
+	 * @param selectedCategories The selected Categories
+	 */
+	void categoriesChosen(Collection<Integer> selectedCategories);
 
 }

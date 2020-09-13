@@ -7,7 +7,7 @@ import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +51,7 @@ public class PictureAdder
      */
     public PictureAdder(final SortableDefaultMutableTreeNode startNode,
                         final File[] chosenFiles, final boolean newOnly, final boolean recurseDirectories,
-                        final boolean retainDirectories, final HashSet<Object> selectedCategories) {
+                        final boolean retainDirectories, final Collection<Integer> selectedCategories) {
 
         this.startNode = startNode;
         this.chosenFiles = chosenFiles;
@@ -94,7 +94,7 @@ public class PictureAdder
 
     private final boolean retainDirectories;
 
-    private final HashSet<Object> selectedCategories;
+    private final Collection<Integer> selectedCategories;
 
 
     /**
@@ -108,7 +108,7 @@ public class PictureAdder
     public Integer doInBackground() {
         // add all the files from the array as nodes to the start node.
         for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-            File addFile = chosenFiles[i];
+            final File addFile = chosenFiles[i];
             LOGGER.log(Level.INFO, "File {0} of {1}: {2}", new Object[]{i + 1, chosenFiles.length, addFile});
             if (!addFile.isDirectory()) {
                 if (startNode.addSinglePicture(addFile, newOnly, selectedCategories)) {

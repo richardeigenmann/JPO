@@ -68,7 +68,7 @@ public class PictureFileChooser
             Settings.memorizeCopyLocation(jFileChooser.getCurrentDirectory().getPath());
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
 
-            Settings.showThumbOnFileChooser = showThumbnailJCheckBox.isSelected();
+            Settings.setShowThumbOnFileChooser(showThumbnailJCheckBox.isSelected());
 
             PictureAdder pictureAdder = new PictureAdder(startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories());
             pictureAdder.execute();
@@ -152,9 +152,9 @@ public class PictureFileChooser
      */
     private void initComponents() {
         recurseJCheckBox.setSelected( true );
-        newOnlyJCheckBox.setSelected( true );
-        showThumbnailJCheckBox.setSelected( Settings.showThumbOnFileChooser );
-        retainDirectoriesJCheckBox.setSelected( true );
+        newOnlyJCheckBox.setSelected(true);
+        showThumbnailJCheckBox.setSelected(Settings.isShowThumbOnFileChooser());
+        retainDirectoriesJCheckBox.setSelected(true);
 
         JPanel optionsJPanel = new JPanel();
         optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );

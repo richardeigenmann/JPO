@@ -101,7 +101,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 Settings.jpoResources.getString("HtmlDistillerThreadTitle"),
                 String.format(Settings.jpoResources.getString("HtmlDistDone"), 0));
 
-        class getCountWorker extends SwingWorker<Integer, Object> {
+        class GetCountWorker extends SwingWorker<Integer, Object> {
 
             @Override
             public Integer doInBackground() {
@@ -119,7 +119,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
             }
         }
-        (new getCountWorker()).execute();
+        (new GetCountWorker()).execute();
         execute();
     }
 
@@ -209,7 +209,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process(final List<String> messages) {
-        messages.stream().peek(message -> LOGGER.info(String.format("messge: %s", message))).forEachOrdered(_item
+        messages.stream().peek(message -> LOGGER.info(String.format("messge: %s", message))).forEachOrdered(item
                 -> progGui.progressIncrement()
         );
     }
@@ -557,7 +557,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     dhtmlArray.append("<strong>Photographer:</strong><br>").append(pictureInfo.getPhotographer().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
                 }
                 if (pictureInfo.getComment().length() > 0) {
-                    StringBuilder append = dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
+                    dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
                 }
                 if (pictureInfo.getFilmReference().length() > 0) {
                     dhtmlArray.append("<strong>Film Reference:</strong><br>").append(pictureInfo.getFilmReference().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
@@ -1138,7 +1138,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             LOGGER.info("Good connection:");
-            boolean error = false;
             __main:
             {
                 if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {

@@ -102,49 +102,49 @@ public class ReconcileJFrame extends JFrame {
 
         controlJPanel.add( new JLabel( Settings.jpoResources.getString( "ReconcileBlaBlaLabel" ) ), "spanx 3, wrap" );
 
-        controlJPanel.add( new JLabel( Settings.jpoResources.getString( "directoryJLabelLabel" ) ) );
+        controlJPanel.add(new JLabel(Settings.jpoResources.getString("directoryJLabelLabel")));
 
         final DirectoryChooser directoryChooser
-                = new DirectoryChooser( Settings.jpoResources.getString( "directoryCheckerChooserTitle" ),
-                        DirectoryChooser.DIR_MUST_EXIST );
+                = new DirectoryChooser(Settings.jpoResources.getString("directoryCheckerChooserTitle"),
+                DirectoryChooser.DIR_MUST_EXIST);
 
-        controlJPanel.add( directoryChooser );
+        controlJPanel.add(directoryChooser);
 
-        JButton okJButton = new JButton( Settings.jpoResources.getString( "ReconcileOkButtonLabel" ) );
-        okJButton.setPreferredSize( Settings.defaultButtonDimension );
-        okJButton.setMinimumSize( Settings.defaultButtonDimension );
-        okJButton.setMaximumSize( Settings.defaultButtonDimension );
-        okJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        okJButton.setDefaultCapable( true );
-        getRootPane().setDefaultButton( okJButton );
-        okJButton.addActionListener(( ActionEvent e ) -> {
+        JButton okJButton = new JButton(Settings.jpoResources.getString("ReconcileOkButtonLabel"));
+        okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        okJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        okJButton.setDefaultCapable(true);
+        getRootPane().setDefaultButton(okJButton);
+        okJButton.addActionListener((ActionEvent e) -> {
             File scanDir = directoryChooser.getDirectory();
-            runReconciliation( scanDir );
+            runReconciliation(scanDir);
         });
-        controlJPanel.add( okJButton, "wrap" );
+        controlJPanel.add(okJButton, "wrap");
 
-        controlJPanel.add( recurseSubdirectoriesJCheckBox, "spanx 2" );
+        controlJPanel.add(recurseSubdirectoriesJCheckBox, "spanx 2");
 
         final JButton cancelJButton = new JButton(Settings.jpoResources.getString("closeJButton"));
-        cancelJButton.addActionListener(( ActionEvent e ) -> {
-            if ( ( reconciler == null ) || ( reconciler.isDone() ) ) {
+        cancelJButton.addActionListener((ActionEvent e) -> {
+            if ((reconciler == null) || (reconciler.isDone())) {
                 getRid();
             } else {
-                reconciler.cancel( false );
+                reconciler.cancel(false);
             }
         });
-        cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
-        cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
-        cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        controlJPanel.add( cancelJButton, "wrap" );
+        cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        controlJPanel.add(cancelJButton, "wrap");
 
-        recurseSubdirectoriesJCheckBox.setSelected( true );
+        recurseSubdirectoriesJCheckBox.setSelected(true);
 
-        logJTextArea.setLineWrap( false );
+        logJTextArea.setLineWrap(false);
         final JScrollPane logJScrollPane = new JScrollPane(logJTextArea);
-        logJScrollPane.setMinimumSize( new Dimension( 400, 250 ) );
-        logJScrollPane.setMaximumSize( new Dimension( 2000, 1000 ) );
+        logJScrollPane.setMinimumSize(new Dimension(400, 250));
+        logJScrollPane.setMaximumSize(new Dimension(2000, 1000));
 
         controlJPanel.add( logJScrollPane, "spanx 3, wrap" );
 

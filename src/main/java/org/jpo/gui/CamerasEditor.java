@@ -109,8 +109,8 @@ public class CamerasEditor extends JFrame {
 
         // take a backup
         backupCameras = new ArrayList<>();
-        Settings.getCameras().stream().map((c) -> {
-            Camera b = new Camera();
+        Settings.getCameras().stream().map(c -> {
+            final Camera b = new Camera();
             b.setDescription(c.getDescription());
             b.setCameraMountPoint(c.getCameraMountPoint());
             b.setLastConnectionStatus(c.getLastConnectionStatus());
@@ -156,17 +156,17 @@ public class CamerasEditor extends JFrame {
 
         final JPanel addDeleteButtonPanel = new JPanel();
         final JButton addJButton = new JButton(Settings.jpoResources.getString("addJButton"));
-        addJButton.setPreferredSize(Settings.defaultButtonDimension);
-        addJButton.setMinimumSize(Settings.defaultButtonDimension);
-        addJButton.setMaximumSize(Settings.defaultButtonDimension);
+        addJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        addJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        addJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         addJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         addJButton.addActionListener((ActionEvent e) -> addCameraAction());
         addDeleteButtonPanel.add(addJButton);
 
         final JButton deleteJButton = new JButton(Settings.jpoResources.getString("deleteJButton"));
-        deleteJButton.setPreferredSize(Settings.defaultButtonDimension);
-        deleteJButton.setMinimumSize(Settings.defaultButtonDimension);
-        deleteJButton.setMaximumSize(Settings.defaultButtonDimension);
+        deleteJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        deleteJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        deleteJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         deleteJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         deleteJButton.addActionListener((ActionEvent e) -> deleteCameraAction());
         addDeleteButtonPanel.add(deleteJButton);
@@ -184,9 +184,9 @@ public class CamerasEditor extends JFrame {
 
 
         final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
-        cancelJButton.setPreferredSize(Settings.defaultButtonDimension);
-        cancelJButton.setMinimumSize(Settings.defaultButtonDimension);
-        cancelJButton.setMaximumSize(Settings.defaultButtonDimension);
+        cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         cancelJButton.addActionListener((ActionEvent e) -> {
             Settings.setCameras(backupCameras);
@@ -195,9 +195,9 @@ public class CamerasEditor extends JFrame {
         buttonJPanel.add(cancelJButton);
 
         final JButton closeJButton = new JButton(Settings.jpoResources.getString("closeJButton"));
-        closeJButton.setPreferredSize(Settings.defaultButtonDimension);
-        closeJButton.setMinimumSize(Settings.defaultButtonDimension);
-        closeJButton.setMaximumSize(Settings.defaultButtonDimension);
+        closeJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        closeJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        closeJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         closeJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         closeJButton.setDefaultCapable(true);
         getRootPane().setDefaultButton(closeJButton);
@@ -275,9 +275,9 @@ public class CamerasEditor extends JFrame {
      * to that the daemon can scan them afresh.
      */
     private void getRid() {
-        Settings.getCameras().forEach((c) -> {
-            c.setLastConnectionStatus(false); // so that the daemon gets a chance
-        });
+        Settings.getCameras().forEach(c ->
+                c.setLastConnectionStatus(false) // so that the daemon gets a chance
+        );
 
         setVisible(false);
         dispose();

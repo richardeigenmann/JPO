@@ -511,39 +511,39 @@ public class SettingsDialog extends JDialog {
         tabbedPanel.add( Settings.jpoResources.getString( "browserWindowSettingsJPanel" ), generalJPanel );
         tabbedPanel.add( Settings.jpoResources.getString( "pictureViewerJPanel" ), pictureViewerJPanel );
         tabbedPanel.add( Settings.jpoResources.getString( "thumbnailSettingsJPanel" ), thumbnailsJPanel );
-        tabbedPanel.add( Settings.jpoResources.getString( "userFunctionJPanel" ), userFunctionsJPanel );
-        tabbedPanel.add( Settings.jpoResources.getString( "emailJPanel" ), emailServerJPanel );
-        tabbedPanel.add( "Cache", cacheJPanel );
+        tabbedPanel.add(Settings.jpoResources.getString("userFunctionJPanel"), userFunctionsJPanel);
+        tabbedPanel.add(Settings.jpoResources.getString("emailJPanel"), emailServerJPanel);
+        tabbedPanel.add("Cache", cacheJPanel);
 
-        getContentPane().add( tabbedPanel, BorderLayout.NORTH );
+        getContentPane().add(tabbedPanel, BorderLayout.NORTH);
 
         Container buttonContainer = new Container();
-        buttonContainer.setLayout( new FlowLayout() );
+        buttonContainer.setLayout(new FlowLayout());
 
-        JButton saveButton = new JButton( Settings.jpoResources.getString( "genericSaveButtonLabel" ) );
-        saveButton.setPreferredSize( Settings.defaultButtonDimension );
-        saveButton.setMinimumSize( Settings.defaultButtonDimension );
-        saveButton.setMaximumSize( Settings.defaultButtonDimension );
-        saveButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        saveButton.addActionListener(( ActionEvent e ) -> {
+        JButton saveButton = new JButton(Settings.jpoResources.getString("genericSaveButtonLabel"));
+        saveButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        saveButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        saveButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveButton.addActionListener((ActionEvent e) -> {
             writeValues();
             Settings.writeSettings();
             getRid();
         });
-        buttonContainer.add( saveButton );
+        buttonContainer.add(saveButton);
 
-        JButton cancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-        cancelButton.setPreferredSize( Settings.defaultButtonDimension );
-        cancelButton.setMinimumSize( Settings.defaultButtonDimension );
-        cancelButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        cancelButton.addActionListener(( ActionEvent e ) -> getRid());
-        buttonContainer.add( cancelButton );
+        JButton cancelButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        cancelButton.addActionListener((ActionEvent e) -> getRid());
+        buttonContainer.add(cancelButton);
 
-        getContentPane().add( buttonContainer, BorderLayout.SOUTH );
+        getContentPane().add(buttonContainer, BorderLayout.SOUTH);
 
-        setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE );
-        addWindowListener( new WindowAdapter() {
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
 
             @Override
             public void windowClosing( WindowEvent evt ) {
@@ -660,7 +660,7 @@ public class SettingsDialog extends JDialog {
             Settings.setPictureViewerDefaultDimensions(new Dimension(Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()]));
         }
 
-        Settings.pictureViewerFastScale = pictureViewerFastScaleJCheckBox.isSelected();
+        Settings.setPictureViewerFastScale(pictureViewerFastScaleJCheckBox.isSelected());
 
         Settings.setMaxThumbnails(maxThumbnails.getValue());
         Settings.setThumbnailSize(thumbnailSize.getValue());

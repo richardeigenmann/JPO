@@ -119,35 +119,35 @@ public class ProgressGui extends JFrame implements ProgressListener {
         getContentPane().add( contentJPanel );
 
         progressBar = new JProgressBar( 0, max );
-        progressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
-        progressBar.setStringPainted( true );
-        progressBar.setValue( 0 );
-        contentJPanel.add(progressBar, "push, wrap" );
+        progressBar.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
+        progressBar.setStringPainted(true);
+        progressBar.setValue(0);
+        contentJPanel.add(progressBar, "push, wrap");
 
         progressLabel = new JLabel();
-        progressLabel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
-        progressLabel.setHorizontalAlignment( javax.swing.SwingConstants.CENTER );
-        contentJPanel.add(progressLabel, "wrap" );
+        progressLabel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        progressLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        contentJPanel.add(progressLabel, "wrap");
 
-        okJButton.setPreferredSize( Settings.defaultButtonDimension );
-        okJButton.setMinimumSize( Settings.defaultButtonDimension );
-        okJButton.setMaximumSize( Settings.defaultButtonDimension );
-        okJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        okJButton.setDefaultCapable( true );
-        okJButton.addActionListener(( ActionEvent e ) -> getRid());
-        contentJPanel.add( okJButton, "wrap" );
+        okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        okJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        okJButton.setDefaultCapable(true);
+        okJButton.addActionListener((ActionEvent e) -> getRid());
+        contentJPanel.add(okJButton, "wrap");
 
-        cancelJButton.setPreferredSize( Settings.defaultButtonDimension );
-        cancelJButton.setMinimumSize( Settings.defaultButtonDimension );
-        cancelJButton.setMaximumSize( Settings.defaultButtonDimension );
-        cancelJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        cancelJButton.setDefaultCapable( true );
-        cancelJButton.addActionListener(( ActionEvent e ) -> interruptSemaphore.setShouldInterrupt( true ));
-        contentJPanel.add( cancelJButton, "wrap" );
+        cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        cancelJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        cancelJButton.setDefaultCapable(true);
+        cancelJButton.addActionListener((ActionEvent e) -> interruptSemaphore.setShouldInterrupt(true));
+        contentJPanel.add(cancelJButton, "wrap");
 
-        okJButton.setVisible( false );
-        this.getRootPane().setDefaultButton( cancelJButton );
-        setMinimumSize( MINIMUM_FRAME_SIZE );
+        okJButton.setVisible(false);
+        this.getRootPane().setDefaultButton(cancelJButton);
+        setMinimumSize(MINIMUM_FRAME_SIZE);
         pack();
         setLocationRelativeTo(Settings.getAnchorFrame());
         setVisible(true);

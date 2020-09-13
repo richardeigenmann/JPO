@@ -11,7 +11,9 @@ import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_DESCRIPTION;
@@ -187,6 +189,28 @@ public class ThumbnailDescriptionController
         }
     }
 
+    private void setLabels() {
+        if (referringNode == null) {
+            panel.setLabels("");
+        } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
+            panel.setLabels(getCategoriesText(pi));
+        } else if (referringNode.getUserObject() instanceof GroupInfo) {
+            panel.setLabels("");
+        } else {
+            panel.setLabels("");
+        }
+    }
+
+    private String getCategoriesText(final PictureInfo pi) {
+        final Collection<Integer> categories = pi.getCategoryAssignments();
+        if (categories == null) {
+            return "";
+        }
+        return categories.stream()
+                .map(category -> Settings.getPictureCollection().getCategory((Integer) category))
+                .collect(Collectors.joining(", "));
+    }
+
     @TestOnly
     public String getFileLocation() {
         return panel.getHighresLocationJTextField().getText();
@@ -313,9 +337,10 @@ public class ThumbnailDescriptionController
         }
 
         // If the Controller is not showing a node then it should not be visible
-        setVisible( referringNode != null);
+        setVisible(referringNode != null);
         setDescription();
         setFileLocation();
+        setLabels();
 
         formatDescription();
         showSlectionStatus();
@@ -334,6 +359,11 @@ public class ThumbnailDescriptionController
 
             if (pictureInfoChangeEvent.getHighresLocationChanged()) {
                 setFileLocation();
+            }
+
+            if (pictureInfoChangeEvent.getCategoryAssignmentsChanged()) {
+                setLabels();
+                ;
             }
 
             if (pictureInfoChangeEvent.getWasSelected()) {
@@ -366,13 +396,14 @@ public class ThumbnailDescriptionController
 
     /**
      * Makes the filename visible or hidden depending on the supplied parameter.
+     *
      * @param showFilename send true to make it visible, false to hide it.
      */
     public void showFilename(final boolean showFilename) {
         if (showFilename
                 && (referringNode != null)
                 && (referringNode.getUserObject() != null)
-                && ! (referringNode.getUserObject() instanceof PictureInfo)) {
+                && !(referringNode.getUserObject() instanceof PictureInfo)) {
             // ignore the instruction and turn it off:
             panel.showFilename(false);
         }

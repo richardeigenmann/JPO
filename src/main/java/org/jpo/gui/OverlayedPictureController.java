@@ -53,7 +53,7 @@ public class OverlayedPictureController extends PictureController implements Sca
         setMinimumSize(Settings.getPictureviewerMinimumSize());
 
         scalablePicture.addStatusListener(this);
-        if (Settings.pictureViewerFastScale) {
+        if (Settings.isPictureViewerFastScale()) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();

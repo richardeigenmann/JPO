@@ -1135,7 +1135,7 @@ public class SortableDefaultMutableTreeNode
                                               final ProgressGui progGui,
                                               final Camera cam,
                                               final boolean retainDirectories,
-                                              final HashSet<Object> selectedCategories) {
+                                              final Collection<Integer> selectedCategories) {
 
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
@@ -1191,7 +1191,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if the node was added, false if not.
      */
     public boolean addSinglePicture(final File addFile, final boolean newOnly,
-                                    final HashSet<Object> selectedCategories) {
+                                    final Collection<Integer> selectedCategories) {
         LOGGER.fine(String.format("Adding File: %s, NewOnly: %b to node %s", addFile.toString(), newOnly, toString()));
         if (newOnly && getPictureCollection().isInCollection(addFile)) {
             return false; // only add pics not in the collection already
@@ -1208,7 +1208,7 @@ public class SortableDefaultMutableTreeNode
      * @param categoryAssignment Can be null
      * @return true if the picture was valid, false if not.
      */
-    public boolean addPicture(final File addFile, final HashSet<Object> categoryAssignment) {
+    public boolean addPicture(final File addFile, final Collection<Integer> categoryAssignment) {
         LOGGER.fine(String.format("Adding file %s to the node %s", addFile.toString(), toString()));
         final PictureInfo newPictureInfo = new PictureInfo();
 

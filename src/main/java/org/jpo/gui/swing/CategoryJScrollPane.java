@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -134,16 +135,16 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
      *
      * @return the hash set of the selected categories
      */
-    public HashSet<Object> getSelectedCategories() {
-        HashSet<Object> selectedCategories = new HashSet<>();
+    public Collection<Integer> getSelectedCategories() {
+        final HashSet<Integer> selectedCategories = new HashSet<>();
         Category c;
         int status;
-        Enumeration e = defaultListModel.elements();
-        while ( e.hasMoreElements() ) {
+        final Enumeration e = defaultListModel.elements();
+        while (e.hasMoreElements()) {
             c = (Category) e.nextElement();
             status = c.getStatus();
-            if ( status == Category.SELECTED ) {
-                selectedCategories.add( c.getKey() );
+            if (status == Category.SELECTED) {
+                selectedCategories.add(c.getKey());
             }
         }
         return selectedCategories;

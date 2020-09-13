@@ -64,10 +64,10 @@ public class CameraWatchDaemon implements Runnable {
 
         while ( !gracefullyInterrupt ) {
             synchronized (Settings.getCameras()) {
-                Settings.getCameras().forEach( (c ) -> {
+                Settings.getCameras().forEach(c -> {
                     boolean isConnected = c.isCameraConnected();
-                    if ( c.getMonitorForNewPictures() && isConnected && ( !c.getLastConnectionStatus() ) ) {
-                        LOGGER.log( Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{ getClass().toString(), c.toString() } );
+                    if (c.getMonitorForNewPictures() && isConnected && (!c.getLastConnectionStatus())) {
+                        LOGGER.log(Level.INFO, "{0}: Camera {1} has been connected ", new Object[]{getClass(), c});
                         final CameraDownloadWizardData dm = new CameraDownloadWizardData();
                         dm.setCamera(c);
                         dm.setAnchorFrame(Settings.getAnchorFrame());

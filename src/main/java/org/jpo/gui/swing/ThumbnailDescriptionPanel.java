@@ -20,6 +20,7 @@ package org.jpo.gui.swing;
 
 
 import net.miginfocom.swing.MigLayout;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
@@ -63,6 +64,13 @@ public class ThumbnailDescriptionPanel extends JPanel {
      */
     private final JTextField highresLocationJTextField = new JTextField();
 
+    private final JTextArea categoriesJTA = new JTextArea();
+
+    private final JScrollPane categoriesJSP = new JScrollPane(categoriesJTA,
+            ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+
     public static Font getLargeFont() {
         return LARGE_FONT;
     }
@@ -98,6 +106,25 @@ public class ThumbnailDescriptionPanel extends JPanel {
         pictureDescriptionJTA.setLineWrap(true);
         pictureDescriptionJTA.setEditable(true);
         pictureDescriptionJTA.setCaret(dumbCaret);
+
+        categoriesJTA.setWrapStyleWord(true);
+        categoriesJTA.setLineWrap(true);
+        categoriesJTA.setEditable(false);
+        categoriesJTA.setCaret(dumbCaret);
+
+        this.add(categoriesJSP, "hidemode 2, wrap");
+        categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 25));
+        categoriesJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
+
+        final JMenu categoriesMenu = new JMenu("Categories");
+        final JMenuItem addCategoryMenuItem = new JMenuItem("Add Category");
+        categoriesMenu.add(addCategoryMenuItem);
+        final PictureCollection pictureCollection = Settings.getPictureCollection();
+        pictureCollection.getCategoryKeySet().forEach(category -> {
+            categoriesMenu.add(new JMenuItem(pictureCollection.getCategory(category)));
+        });
+
+        this.add(categoriesMenu, "hidemode 2, wrap");
 
         // this is a bit of a cludge to get the JTextArea to grow in height as text is
         // being entered. Annoyingly the getPreferredSize of the JTextArea doesn't immediately
@@ -196,10 +223,24 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     /**
      * Gets the description of the ThumbnailDescriptionPanel
+     *
      * @return the description
      */
     public String getDescription() {
         return getPictureDescriptionJTA().getText();
+    }
+
+    public void setLabels(final String newLables) {
+        final Runnable runnable = () -> {
+            categoriesJTA.setText(newLables);
+            categoriesJSP.setVisible(!"".equals(newLables));
+            setTextAreaSize();
+        };
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeLater(runnable);
+        }
     }
 
     /**
@@ -228,26 +269,28 @@ public class ThumbnailDescriptionPanel extends JPanel {
      */
     public void setTextAreaSize() {
         final Runnable runnable = () -> {
-            final Dimension textAreaSize = getPictureDescriptionJTA().getPreferredSize();
-
-            int targetHeight;
-            if (textAreaSize.height < getPictureDescriptionJSP().getMinimumSize().height) {
-                targetHeight = getPictureDescriptionJSP().getMinimumSize().height;
-            } else if (textAreaSize.height > getPictureDescriptionJSP().getMaximumSize().height) {
-                targetHeight = getPictureDescriptionJSP().getMaximumSize().height;
-            } else {
-                targetHeight = (((textAreaSize.height / 30) + 1) * 30);
-            }
-
-            final Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
             int targetWidth = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
-            if ((targetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
-                highresLocationJTextField.setPreferredSize(new Dimension(targetWidth, 30));
-                highresLocationJTextField.setMaximumSize(new Dimension(targetWidth, 30));
-                getPictureDescriptionJSP().setPreferredSize(new Dimension(targetWidth, targetHeight));
+            int descriptionTargetHeight = getTargetHeight(getPictureDescriptionJSP());
+            final Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
+            if ((descriptionTargetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
+                getPictureDescriptionJSP().setPreferredSize(new Dimension(targetWidth, descriptionTargetHeight));
                 getPictureDescriptionJSP().setMaximumSize(new Dimension(targetWidth, 250));
                 this.revalidate();
             }
+
+            if (highresLocationJTextField.getWidth() != targetWidth) {
+                highresLocationJTextField.setPreferredSize(new Dimension(targetWidth, 30));
+                highresLocationJTextField.setMaximumSize(new Dimension(targetWidth, 30));
+            }
+
+            int labelsTargetHeight = getTargetHeight(categoriesJSP);
+            final Dimension labelsSize = categoriesJSP.getPreferredSize();
+            if ((labelsTargetHeight != labelsSize.height) || (targetWidth != labelsSize.width)) {
+                categoriesJSP.setPreferredSize(new Dimension(targetWidth, descriptionTargetHeight));
+                categoriesJSP.setMaximumSize(new Dimension(targetWidth, 250));
+                this.revalidate();
+            }
+
         };
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
@@ -256,8 +299,23 @@ public class ThumbnailDescriptionPanel extends JPanel {
         }
     }
 
+    private static int getTargetHeight(final JScrollPane jScrollPane) {
+        final Dimension textAreaSize = jScrollPane.getComponent(0).getPreferredSize();
+
+        int targetHeight;
+        if (textAreaSize.height < jScrollPane.getMinimumSize().height) {
+            targetHeight = jScrollPane.getMinimumSize().height;
+        } else if (textAreaSize.height > jScrollPane.getMaximumSize().height) {
+            targetHeight = jScrollPane.getMaximumSize().height;
+        } else {
+            targetHeight = (((textAreaSize.height / 30) + 1) * 30);
+        }
+        return targetHeight;
+    }
+
     /**
      * Turns on the filename display or turns it off
+     *
      * @param showFilename true to turn on, false to turn off
      */
     public void showFilename(boolean showFilename) {

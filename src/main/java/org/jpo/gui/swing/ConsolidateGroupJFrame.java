@@ -85,7 +85,7 @@ public class ConsolidateGroupJFrame extends JFrame {
         // add the consolidate button
         final JButton consolidateJButton = new JButton(Settings.jpoResources.getString("ConsolidateButton"));
         consolidateJButton.setPreferredSize(new Dimension(120, 25));
-        consolidateJButton.setMinimumSize(Settings.defaultButtonDimension);
+        consolidateJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         consolidateJButton.setMaximumSize(new Dimension(120, 25));
         consolidateJButton.setDefaultCapable(true);
         this.getRootPane().setDefaultButton(consolidateJButton);
@@ -93,7 +93,7 @@ public class ConsolidateGroupJFrame extends JFrame {
 
         // add the cancel button
         final JButton cancelJButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
-        cancelJButton.setMinimumSize(Settings.defaultButtonDimension);
+        cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMaximumSize(new Dimension(120, 25));
         buttonJPanel.add(cancelJButton);
         contentJPanel.add(buttonJPanel, "span 2, wrap");

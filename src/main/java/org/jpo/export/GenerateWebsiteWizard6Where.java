@@ -83,7 +83,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     }
 
     private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
-    private final JComboBox<String> finalTarget = new JComboBox<String>(TARGET_OPTIONS);
+    private final JComboBox<String> finalTarget = new JComboBox<>(TARGET_OPTIONS);
     /**
      * Text field that holds the directory that the html is to be exported to.
      */
@@ -133,7 +133,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private final JComboBox<String> sshAuthOoptionChooser = new JComboBox<String>(SSH_AUTH_OPTIONS);
+    private final JComboBox<String> sshAuthOoptionChooser = new JComboBox<>(SSH_AUTH_OPTIONS);
     /**
      * The ssh password
      */
@@ -190,7 +190,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         JButton checkButton = new JButton(Settings.jpoResources.getString("check"));
         checkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        checkButton.setMaximumSize(Settings.defaultButtonDimension);
+        checkButton.setMaximumSize(Settings.getDefaultButtonDimension());
         checkButton.addActionListener((ActionEvent arg0) -> {
             options.setTargetDirectory(targetDirJTextField.getDirectory());
             setCanGoNext(check(options.getTargetDirectory()));
@@ -585,7 +585,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
 
             LOGGER.info("Good connection:");
-            boolean error = false;
             __main:
             {
                 if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
@@ -630,7 +629,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
 
             LOGGER.info("Good connection:");
-            boolean error = false;
             __main:
             {
                 if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {

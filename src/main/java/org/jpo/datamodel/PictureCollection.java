@@ -122,15 +122,15 @@ public class PictureCollection {
      * @param startNode the node to start from
      * @return the number of nodes
      */
-    public static int countCategoryUsage(Object key,
-                                         SortableDefaultMutableTreeNode startNode) {
+    public static int countCategoryUsage(final Integer key,
+                                         final SortableDefaultMutableTreeNode startNode) {
         final Enumeration<TreeNode> nodes = startNode.children();
         int count = 0;
         SortableDefaultMutableTreeNode n;
         while (nodes.hasMoreElements()) {
             n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (n.getUserObject() instanceof PictureInfo
-                    && ((PictureInfo) n.getUserObject()).containsCategory(key)) {
+            if (n.getUserObject() instanceof PictureInfo pi
+                    && pi.containsCategory(key)) {
                 count++;
             }
             if (n.getChildCount() > 0) {
@@ -148,14 +148,14 @@ public class PictureCollection {
      * @return the list of nodes
      */
     public static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
-            Object key, SortableDefaultMutableTreeNode startNode) {
+            final Integer key, final SortableDefaultMutableTreeNode startNode) {
         final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
         final Enumeration<TreeNode> nodes = startNode.children();
         SortableDefaultMutableTreeNode n;
         while (nodes.hasMoreElements()) {
             n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (n.getUserObject() instanceof PictureInfo
-                    && ((PictureInfo) n.getUserObject()).containsCategory(key)) {
+            if (n.getUserObject() instanceof PictureInfo pi
+                    && pi.containsCategory(key)) {
                 resultList.add(n);
             }
             if (n.getChildCount() > 0) {

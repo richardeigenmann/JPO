@@ -57,18 +57,20 @@ public class DirectoryChooser
      */
     public DirectoryChooser( final String chooserTitle, int validationType ) {
         this.validationType = validationType;
+        this.chooserTitle = chooserTitle;
         initComponents();
         addBehaviour();
     }
+
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( DirectoryChooser.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(DirectoryChooser.class.getName());
     /**
      * The title that will be used in the JFileChooser if the user clicks the
      * button
      */
-    private final String chooserTitle = "";
+    private String chooserTitle = "";
     /**
      * Variable that records what type of validation this object must perform.
      * Valid Types are DIR_MUST_EXIST and DIR_MUST_BE_WRITABLE.

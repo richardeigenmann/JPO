@@ -74,44 +74,44 @@ public class GroupInfoEditor {
         final JPanel jPanel = new JPanel();
         jPanel.setLayout( new MigLayout() );
 
-        final JLabel descriptionJLabel = new JLabel( Settings.jpoResources.getString( "groupDescriptionLabel" ) );
-        jPanel.add( descriptionJLabel );
+        final JLabel descriptionJLabel = new JLabel(Settings.jpoResources.getString("groupDescriptionLabel"));
+        jPanel.add(descriptionJLabel);
 
-        descriptionJTextArea.setPreferredSize( new Dimension( 400, 150 ) );
-        descriptionJTextArea.setWrapStyleWord( true );
-        descriptionJTextArea.setLineWrap( true );
-        descriptionJTextArea.setEditable( true );
-        jPanel.add( descriptionJTextArea, "wrap" );
+        descriptionJTextArea.setPreferredSize(new Dimension(400, 150));
+        descriptionJTextArea.setWrapStyleWord(true);
+        descriptionJTextArea.setLineWrap(true);
+        descriptionJTextArea.setEditable(true);
+        jPanel.add(descriptionJTextArea, "wrap");
 
-        final JButton OkJButton = new JButton( Settings.jpoResources.getString( "genericOKText" ) );
-        OkJButton.setPreferredSize( Settings.defaultButtonDimension );
-        OkJButton.setMinimumSize( Settings.defaultButtonDimension );
-        OkJButton.setMaximumSize( Settings.defaultButtonDimension );
-        OkJButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        OkJButton.setAlignmentX( Component.LEFT_ALIGNMENT );
-        OkJButton.addActionListener(( ActionEvent e ) -> handleOkButtonClick());
-        OkJButton.setDefaultCapable( true );
-        jFrame.getRootPane().setDefaultButton( OkJButton );
-        jPanel.add( OkJButton, "tag ok, span, split 2" );
+        final JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
+        okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        okJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        okJButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        okJButton.addActionListener((ActionEvent e) -> handleOkButtonClick());
+        okJButton.setDefaultCapable(true);
+        jFrame.getRootPane().setDefaultButton(okJButton);
+        jPanel.add(okJButton, "tag ok, span, split 2");
 
-        final JButton CancelButton = new JButton( Settings.jpoResources.getString( "genericCancelText" ) );
-        CancelButton.setPreferredSize( Settings.defaultButtonDimension );
-        CancelButton.setMinimumSize( Settings.defaultButtonDimension );
-        CancelButton.setMaximumSize( Settings.defaultButtonDimension );
-        CancelButton.setBorder( BorderFactory.createRaisedBevelBorder() );
-        CancelButton.setAlignmentX( Component.RIGHT_ALIGNMENT );
-        CancelButton.addActionListener(( ActionEvent e ) -> getRid());
-        jPanel.add( CancelButton, "tag cancel" );
+        final JButton cancelButton = new JButton(Settings.jpoResources.getString("genericCancelText"));
+        cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        cancelButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        cancelButton.addActionListener((ActionEvent e) -> getRid());
+        jPanel.add(cancelButton, "tag cancel");
 
         final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab( "Properties", jPanel );
+        tabbedPane.addTab("Properties", jPanel);
 
         final NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
-        nodeStatisticsController.updateStats( editNode );
-        tabbedPane.addTab( "Statistics", nodeStatisticsController.getJComponent() );
+        nodeStatisticsController.updateStats(editNode);
+        tabbedPane.addTab("Statistics", nodeStatisticsController.getJComponent());
 
         final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
-        thumbnailController.setNode( new SingleNodeNavigator( editNode ), 0 );
+        thumbnailController.setNode(new SingleNodeNavigator(editNode), 0);
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 
         jFrame.getContentPane().add( tabbedPane );

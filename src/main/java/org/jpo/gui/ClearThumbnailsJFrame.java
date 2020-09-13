@@ -244,7 +244,7 @@ class ClearThumbnailsJFrame extends JFrame {
                 lowresUrls.setText("");
                 firsttime = false;
             }
-            chunks.forEach((chunk) -> lowresUrls.append(chunk));
+            chunks.forEach(chunk -> lowresUrls.append(chunk));
         }
 
     }

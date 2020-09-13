@@ -201,7 +201,7 @@ public class JpoTransferable
     public String toString() {
         final StringBuilder objectDescriptions = new StringBuilder(String.format("JpoTransferable for %d nodes: ", transferableNodes.size()));
 
-        transferableNodes.forEach((o) -> objectDescriptions.append(o.toString()).append(", "));
+        transferableNodes.forEach(o -> objectDescriptions.append(o.toString()).append(", "));
         return objectDescriptions.toString();
     }
 

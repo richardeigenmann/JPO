@@ -470,7 +470,24 @@ public class PictureInfoTest {
         pi.removePictureInfoChangeListener(listener);
     }
 
-    class TestPictureInfoChangeListener implements PictureInfoChangeListener {
+    @Test
+    public void setCategory() {
+        final PictureInfo pi = new PictureInfo();
+        final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        assertEquals(0, listener.events.size());
+        pi.addPictureInfoChangeListener(listener);
+        pi.addCategoryAssignment("0");
+        assertEquals(1, listener.events.size());
+        pi.addCategoryAssignment("1");
+        assertEquals(2, listener.events.size());
+
+        // add the same one and we don't actually add to the set
+        pi.addCategoryAssignment("1");
+        assertEquals(2, listener.events.size());
+    }
+
+
+    private class TestPictureInfoChangeListener implements PictureInfoChangeListener {
 
         final List<PictureInfoChangeEvent> events = new ArrayList<>();
 

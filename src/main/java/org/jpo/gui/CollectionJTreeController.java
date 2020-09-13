@@ -219,15 +219,15 @@ public class CollectionJTreeController {
                 LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
             }
 
-            transferableNodes.forEach( (sourceNode ) -> {
-                if ( actionType == TransferHandler.MOVE ) {
-                    if ( dropLocation.getChildIndex() == -1 ) {
-                        if ( targetNode.getUserObject() instanceof GroupInfo ) {
+            transferableNodes.forEach(sourceNode -> {
+                if (actionType == TransferHandler.MOVE) {
+                    if (dropLocation.getChildIndex() == -1) {
+                        if (targetNode.getUserObject() instanceof GroupInfo) {
                             // append to end of group if dropping on a group node
-                            sourceNode.moveToLastChild( targetNode );
+                            sourceNode.moveToLastChild(targetNode);
                         } else {
                             // dropping on a PictureInfo
-                            sourceNode.moveBefore( targetNode );
+                            sourceNode.moveBefore(targetNode);
                         }
                     } else {
                         //index was supplied by the JTree notification

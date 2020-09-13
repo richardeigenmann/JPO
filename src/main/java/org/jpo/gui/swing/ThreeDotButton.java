@@ -33,10 +33,10 @@ public class ThreeDotButton extends JButton {
      */
     public ThreeDotButton() {
         super();
-        setText( Settings.jpoResources.getString( "threeDotText" ) );
-        setPreferredSize( Settings.threeDotButtonDimension );
-        setMinimumSize( Settings.threeDotButtonDimension );
-        setMaximumSize( Settings.threeDotButtonDimension );
+        setText(Settings.jpoResources.getString("threeDotText"));
+        setPreferredSize(Settings.THREE_DOT_BUTTON_DIMENSION);
+        setMinimumSize(Settings.THREE_DOT_BUTTON_DIMENSION);
+        setMaximumSize(Settings.THREE_DOT_BUTTON_DIMENSION);
     }
 
 }

@@ -910,22 +910,45 @@ public class Settings {
      * true when thumbnails are supposed to scale fast
      */
     private static boolean thumbnailFastScale = true;
+
+    public static boolean isPictureViewerFastScale() {
+        return pictureViewerFastScale;
+    }
+
+    public static void setPictureViewerFastScale(boolean pictureViewerFastScale) {
+        Settings.pictureViewerFastScale = pictureViewerFastScale;
+    }
+
     /**
      * true when the pictureViewer is supposed to scale fast
      */
-    public static boolean pictureViewerFastScale = true;
+    private static boolean pictureViewerFastScale = true;
+
+    public static boolean isShowThumbOnFileChooser() {
+        return showThumbOnFileChooser;
+    }
+
+    public static void setShowThumbOnFileChooser(boolean showThumbOnFileChooser) {
+        Settings.showThumbOnFileChooser = showThumbOnFileChooser;
+    }
+
     /**
      * Informs the PictureAdder whether to show a thumbnail or not
      */
-    public static boolean showThumbOnFileChooser = true;
+    private static boolean showThumbOnFileChooser = true;
+
+    public static Dimension getDefaultButtonDimension() {
+        return defaultButtonDimension;
+    }
+
     /**
      * Default size for buttons such as OK, cancel etc.
      */
-    public static final Dimension defaultButtonDimension = new Dimension(80, 25);
+    private static final Dimension defaultButtonDimension = new Dimension(80, 25);
     /**
      * Default size for buttons such as OK, cancel etc.
      */
-    public static final Dimension threeDotButtonDimension = new Dimension(25, 25);
+    public static final Dimension THREE_DOT_BUTTON_DIMENSION = new Dimension(25, 25);
 
     /**
      * Codes to indicate the field

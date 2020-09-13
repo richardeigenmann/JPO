@@ -67,17 +67,17 @@ public class IntegrityCheckerJFrame
         final JPanel jPanel = new JPanel(new MigLayout("insets 15"));
         jPanel.add(new JLabel(Settings.jpoResources.getString("integrityCheckerLabel")), "wrap");
         final JButton okJButton = new JButton(Settings.jpoResources.getString("genericOKText"));
-        okJButton.setMaximumSize(Settings.defaultButtonDimension);
-        okJButton.setMinimumSize(Settings.defaultButtonDimension);
-        okJButton.setPreferredSize(Settings.defaultButtonDimension);
+        okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         final JButton correctChecksumsJButton = new JButton("Correct picture checksums");
-        jPanel.add(correctChecksumsJButton, "wrap" );
-        final JScrollPane resultScrollPane = new JScrollPane( resultJTextArea );
-        jPanel.add( resultScrollPane, "wrap" );
+        jPanel.add(correctChecksumsJButton, "wrap");
+        final JScrollPane resultScrollPane = new JScrollPane(resultJTextArea);
+        jPanel.add(resultScrollPane, "wrap");
         final JButton interruptJButton = new JButton("Interrupt");
-        jPanel.add(interruptJButton, "split 2" );
-        jPanel.add(okJButton, "wrap, tag ok" );
-        getContentPane().add( jPanel );
+        jPanel.add(interruptJButton, "split 2");
+        jPanel.add(okJButton, "wrap, tag ok");
+        getContentPane().add(jPanel);
 
         // connect behaviour to widgets
         addWindowListener( new WindowAdapter() {
