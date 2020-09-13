@@ -10,10 +10,11 @@ blocks:
       jobs:
         - name: Build
           commands:
+            - sem-version java 14
             - checkout
-            - 'sudo add-apt-repository ppa:linuxuprising/java'
             - sudo apt update
             - sudo apt install xvfb
-            - sudo apt -y install openjdk-14-jdk
-            - export JAVA_HOME=/usr/lib/jvm/java-14-oracle
+            - 'wget https://download.java.net/openjdk/jdk14/ri/openjdk-14+36_linux-x64_bin.tar.gz'
+            - tar xzf openjdk-14+36_linux-x64_bin.tar.gz
+            - export JAVA_HOME=/home/semaphore/JPO/jdk-14
             - xvfb-run ./gradlew check
