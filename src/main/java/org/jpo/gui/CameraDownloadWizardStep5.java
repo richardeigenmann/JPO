@@ -44,8 +44,6 @@ public class CameraDownloadWizardStep5
      * @param dataModel The data model where the settings are to be saved
      */
     public CameraDownloadWizardStep5( CameraDownloadWizardData dataModel ) {
-        //pass step title and description
-        //super( Settings.jpoResources.getString( "DownloadCameraWizardStep4Title" ), Settings.jpoResources.getString( "DownloadCameraWizardStep4Description" ) );
         super( "Sorting", "How to Sort" );
         this.dataModel = dataModel;
     }

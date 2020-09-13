@@ -3,7 +3,7 @@ package org.jpo.datamodel;
 /*
 SingleNodeBrower.java:  an implementation of the ThumbnailBrowserInterface for "browsing" a single picture.
 
-Copyright (C) 2006-2019  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2006-2020  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -25,11 +25,11 @@ public class SingleNodeNavigator
         extends NodeNavigator {
 
     /**
-     *  Constructor for a SingleNodeNavigator.
+     * Constructor for a SingleNodeNavigator.
      *
-     *  @param singleNode    The Node which is to be "browsed".
+     * @param singleNode The Node which is to be "browsed".
      */
-    public SingleNodeNavigator( SortableDefaultMutableTreeNode singleNode ) {
+    public SingleNodeNavigator(final SortableDefaultMutableTreeNode singleNode) {
         this.singleNode = singleNode;
     }
     /**
@@ -43,8 +43,8 @@ public class SingleNodeNavigator
      */
     @Override
     public String getTitle() {
-        if ( ( singleNode != null ) && ( singleNode.getUserObject() instanceof PictureInfo ) ) {
-            return ( (PictureInfo) singleNode.getUserObject() ).getDescription();
+        if ((singleNode != null) && (singleNode.getUserObject() instanceof PictureInfo pi)) {
+            return (pi.getDescription());
         } else {
             return "Single picture";
         }
@@ -69,9 +69,9 @@ public class SingleNodeNavigator
      * @return The single note
      */
     @Override
-    public SortableDefaultMutableTreeNode getNode( int index ) {
+    public SortableDefaultMutableTreeNode getNode(final int index) {
         return singleNode;
     }
 
-    
+
 }

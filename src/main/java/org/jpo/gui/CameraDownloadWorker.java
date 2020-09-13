@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2002-2019  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -48,8 +48,8 @@ public class CameraDownloadWorker
      * @param progressBar The progress bar
      * @param step7       step 7
      */
-    public CameraDownloadWorker(CameraDownloadWizardData dataModel,
-                                JProgressBar progressBar, CameraDownloadWizardStep7 step7) {
+    public CameraDownloadWorker(final CameraDownloadWizardData dataModel,
+                                final JProgressBar progressBar, final CameraDownloadWizardStep7 step7) {
         this.dataModel = dataModel;
         this.progressBar = progressBar;
         this.step7 = step7;
@@ -84,8 +84,8 @@ public class CameraDownloadWorker
         nodes.add(dataModel.getTargetNode());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.LOWEST_PRIORITY));
 
-        InterruptSemaphore interrupter = new InterruptSemaphore();
-        dataModel.getCamera().buildOldImage(this, interrupter);// this, interrupter );
+        final InterruptSemaphore interrupter = new InterruptSemaphore();
+        dataModel.getCamera().buildOldImage(this, interrupter);
         Settings.writeCameraSettings();
         return "Done";
     }

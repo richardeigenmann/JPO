@@ -94,8 +94,8 @@ public class XmlReader {
         loadProgressGui.getRid();
 
         if ( lowresUrls.length() > 1 ) {
-            LOGGER.info( String.format( "lowresUrls length is %d", lowresUrls.length() ) );
-            JpoEventBus.getInstance().post( new RemoveOldLowresThumbnailsRequest( lowresUrls ) );
+            LOGGER.log(Level.FINE, "lowresUrls length is {0}", lowresUrls.length());
+            JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls));
 
         }
     }

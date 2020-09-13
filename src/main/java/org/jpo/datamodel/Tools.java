@@ -226,7 +226,7 @@ public class Tools {
             }
         }
 
-        LOGGER.severe(String.format("Could not invent a picture filename for the directory %s and the name %s returning any long string", targetDir, startName));
+        LOGGER.log(Level.SEVERE, "Could not invent a picture filename for the directory {0} and the name {1} returning any long string", new Object[]{targetDir, startName});
 
         return new File(targetDir, RandomStringUtils.random(50, true, true));
     }

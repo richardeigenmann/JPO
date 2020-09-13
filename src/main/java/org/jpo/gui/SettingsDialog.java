@@ -157,7 +157,6 @@ public class SettingsDialog extends JDialog {
     /**
      * Text Field that holds the password for the email server
      */
-    //private JTextField emailPasswordJTextField = new JTextField();
     private final JPasswordField emailPasswordJTextField = new JPasswordField();
     /**
      * Defines the size of this dialog box
@@ -370,7 +369,7 @@ public class SettingsDialog extends JDialog {
 
         emailServerJPanel.add( new JLabel( Settings.jpoResources.getString( "predefinedEmailJLabel" ) ) );
 
-        JComboBox<Object> predefinedEmailJComboBox = new JComboBox<>();
+        JComboBox<String> predefinedEmailJComboBox = new JComboBox<String>();
         predefinedEmailJComboBox.addItem( "Localhost" );
         predefinedEmailJComboBox.addItem( "Gmail" );
         predefinedEmailJComboBox.addItem( "Compuserve" );
@@ -386,20 +385,14 @@ public class SettingsDialog extends JDialog {
             } else if ("Compuserve".equals(cbSelection)) {
                 emailServerJTextField.setText("smtp.compuserve.com");
                 emailPortJTextField.setText("25");
-                //emailUserJTextField.setText( "set your username" );
-                //emailPasswordJTextField.setText( "set your password" );
                 authenticationJComboBox.setSelectedIndex(1); //Password
             } else if ( "Gmail".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "smtp.gmail.com" );
                 emailPortJTextField.setText( "465" );
-                //emailUserJTextField.setText( "set your username" );
-                //emailPasswordJTextField.setText( "set your password" );
                 authenticationJComboBox.setSelectedIndex( 2 ); //SSL
             } else if ( "Hotmail".equals( cbSelection ) ) {
                 emailServerJTextField.setText( "smtp.live.com" );
                 emailPortJTextField.setText( "25" );
-                //emailUserJTextField.setText( "set your username" );
-                //emailPasswordJTextField.setText( "set your password" );
                 authenticationJComboBox.setSelectedIndex(1); //Password
             } else if ("Other".equals(cbSelection)) {
                 emailServerJTextField.setText("");
@@ -579,11 +572,9 @@ public class SettingsDialog extends JDialog {
         maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
         dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
 
-        //thumbnailPathChooser.setText( Settings.thumbnailPath.getPath() );
         thumbnailCacheDirPathChooser.setText(Settings.getThumbnailCacheDirectory());
         maxThumbnails.setValue(Settings.getMaxThumbnails());
         thumbnailSize.setValue(Settings.getThumbnailSize());
-        //keepThumbnailsJCheckBox.setSelected( Settings.keepThumbnails );
         jpgQualityJSlider.setValue((int) (Settings.getDefaultHtmlLowresQuality() * 100));
         thumbnailFastScaleJCheckBox.setSelected(Settings.isThumbnailFastScale());
 

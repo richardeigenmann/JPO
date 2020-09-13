@@ -10,6 +10,7 @@ import javax.swing.tree.TreeModel;
 import java.awt.*;
 import java.io.File;
 import java.util.Collection;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -111,7 +112,7 @@ public class CameraDownloadWizardData {
      *
      * @param newPictures A Collection of picture files
      */
-    public void setNewPictures( Collection<File> newPictures ) {
+    public void setNewPictures(final Collection<File> newPictures) {
         this.newPictures = newPictures;
     }
 
@@ -244,7 +245,7 @@ public class CameraDownloadWizardData {
      * @see #getTargetNode
      */
     public void setTargetNode(final SortableDefaultMutableTreeNode targetNode) {
-        LOGGER.fine(String.format("Setting target node to: %s", targetNode == null ? "null" : targetNode.toString()));
+        LOGGER.log(Level.FINE, "Setting target node to: {0}", targetNode == null ? "null" : targetNode);
         this.targetNode = targetNode;
     }
 

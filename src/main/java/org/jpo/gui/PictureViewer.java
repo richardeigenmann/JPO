@@ -54,14 +54,31 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE
 public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener, AutoAdvanceInterface {
 
     /**
-     * PictureFrame
-     */
-    private final PictureFrame pictureFrame = new PictureFrame();
-
-    /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PictureViewer.class.getName());
+    /**
+     * PictureFrame
+     */
+    private final PictureFrame pictureFrame = new PictureFrame();
+    /**
+     * popup menu for window mode changing
+     */
+    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu(pictureFrame.getResizableJFrame());
+    /**
+     * the context of the browsing
+     */
+    private NodeNavigatorInterface mySetOfNodes;
+    /**
+     * the position in the context being shown
+     */
+    private int myIndex;
+    /**
+     * the timer that can call back into the object with the instruction to load
+     * the next image
+     */
+    //private AdvanceTimer advanceTimer;
+    private Timer advanceTimer;
 
     /**
      * Brings up a window in which a picture node is displayed. This class
@@ -249,11 +266,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private void saveChangedDescription() {
         final SortableDefaultMutableTreeNode node = getCurrentNode();
-        if (node != null) {
-            if (node.getUserObject() instanceof PictureInfo pi) {
-                pi.setDescription(
-                        pictureFrame.getDescription());
-            }
+        if ((node != null) && (node.getUserObject() instanceof PictureInfo pi)) {
+            pi.setDescription(
+                    pictureFrame.getDescription());
         }
     }
 
@@ -267,16 +282,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         stopTimer();
         pictureFrame.getRid();
     }
-
-    /**
-     * the context of the browsing
-     */
-    private NodeNavigatorInterface mySetOfNodes;
-
-    /**
-     * the position in the context being shown
-     */
-    private int myIndex;
 
     /**
      * Returns the current Node.
@@ -295,11 +300,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
     }
-
-    /**
-     * popup menu for window mode changing
-     */
-    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu(pictureFrame.getResizableJFrame());
 
     /**
      * Shows a resize popup menu
@@ -455,13 +455,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
         pictureFrame.getPictureController().requestFocusInWindow();
     }
-
-    /**
-     * the timer that can call back into the object with the instruction to load
-     * the next image
-     */
-    //private AdvanceTimer advanceTimer;
-    private Timer advanceTimer;
 
     /**
      * This method sets up the Advance Timer

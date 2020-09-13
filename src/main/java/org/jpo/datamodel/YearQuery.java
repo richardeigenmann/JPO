@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import javax.swing.tree.TreeNode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +11,7 @@ import java.util.List;
 /*
  YearQuery.java:  The parameters for a search
 
- Copyright (C) 2014-2017  Richard Eigenmann.
+ Copyright (C) 2014-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -158,12 +159,12 @@ public class YearQuery implements Serializable, Query {
      * @param index The component index that is to be returned.
      */
     @Override
-    public SortableDefaultMutableTreeNode getIndex( int index ) {
-        if ( index >= getNumberOfResults() ) // forces execute of query if not yet executed
+    public SortableDefaultMutableTreeNode getIndex(final int index) {
+        if (index >= getNumberOfResults()) // forces execute of query if not yet executed
         {
             return null;
         } else {
-            return searchResults.get( index );
+            return searchResults.get(index);
         }
     }
 
@@ -177,10 +178,10 @@ public class YearQuery implements Serializable, Query {
         SortableDefaultMutableTreeNode testNode;
         searchResults = new ArrayList<>();
 
-        for ( Enumeration e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-            if ( isMatch( testNode ) ) {
-                searchResults.add( testNode );
+            if (isMatch(testNode)) {
+                searchResults.add(testNode);
             }
         }
         return searchResults;

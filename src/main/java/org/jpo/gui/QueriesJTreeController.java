@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 /*
  QueriesJTreeController.java:  Controller for the Searches JTree
 
- Copyright (C) 2006 - 2019  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2006 - 2020 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -61,10 +61,10 @@ public class QueriesJTreeController {
         queriesJTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                TreePath clickPath = queriesJTree.getPathForLocation(e.getX(), e.getY());
+                final TreePath clickPath = queriesJTree.getPathForLocation(e.getX(), e.getY());
                 if (clickPath != null && e.getClickCount() == 1 && (!e.isPopupTrigger())) {
-                    DefaultMutableTreeNode clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
-                    if ((clickNode != null) && (clickNode.getUserObject() != null) && ((clickNode.getUserObject() instanceof Query))) {
+                    final DefaultMutableTreeNode clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
+                    if ((clickNode != null) && (clickNode.getUserObject() != null) && (clickNode.getUserObject() instanceof Query)) {
                         JpoEventBus.getInstance().post(new ShowQueryRequest((Query) clickNode.getUserObject()));
                     }
                 }

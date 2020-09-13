@@ -9,13 +9,14 @@ import javax.swing.*;
 import java.io.File;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
 PictureAdder.java:  A Class which brings up a progress bar and adds pictures to the specified node.
 
 
-Copyright (C) 2009-2014  Richard Eigenmann.
+Copyright (C) 2009-2020  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -48,9 +49,9 @@ public class PictureAdder
      * @param retainDirectories  indicates whether to preserve the directory structure.
      * @param selectedCategories The categories to give the pictures
      */
-    public PictureAdder(SortableDefaultMutableTreeNode startNode,
-                        File[] chosenFiles, boolean newOnly, boolean recurseDirectories,
-                        boolean retainDirectories, HashSet<Object> selectedCategories) {
+    public PictureAdder(final SortableDefaultMutableTreeNode startNode,
+                        final File[] chosenFiles, final boolean newOnly, final boolean recurseDirectories,
+                        final boolean retainDirectories, final HashSet<Object> selectedCategories) {
 
         this.startNode = startNode;
         this.chosenFiles = chosenFiles;
@@ -59,7 +60,7 @@ public class PictureAdder
         this.retainDirectories = retainDirectories;
         this.selectedCategories = selectedCategories;
 
-        LOGGER.fine(String.format("Invoked for node: %s, with %d files, newOnly: %b, recurseDirectories: %b, retainDirectories: %b", startNode.toString(), chosenFiles.length, newOnly, recurseDirectories, retainDirectories));
+        LOGGER.log(Level.FINE, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{startNode, chosenFiles.length, newOnly, recurseDirectories, retainDirectories});
 
         progGui = new ProgressGui(Tools.countfiles(chosenFiles),
                 Settings.jpoResources.getString("PictureAdderProgressDialogTitle"),
@@ -108,7 +109,7 @@ public class PictureAdder
         // add all the files from the array as nodes to the start node.
         for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
             File addFile = chosenFiles[i];
-            LOGGER.fine(String.format("File %d of %d: %s", i + 1, chosenFiles.length, addFile.toString()));
+            LOGGER.log(Level.INFO, "File {0} of {1}: {2}", new Object[]{i + 1, chosenFiles.length, addFile});
             if (!addFile.isDirectory()) {
                 if (startNode.addSinglePicture(addFile, newOnly, selectedCategories)) {
                     publish(1);
@@ -120,7 +121,7 @@ public class PictureAdder
                 if (Tools.hasPictures(addFile)) {
                     addDirectory(startNode, addFile);
                 } else {
-                    LOGGER.fine(String.format("No pictures in directory: %s", addFile.toString()));
+                    LOGGER.log(Level.FINE, "No pictures in directory: {0}", addFile);
                 }
             }
 
@@ -139,8 +140,8 @@ public class PictureAdder
      * @param dir        the directory to add
      */
     private void addDirectory(
-            SortableDefaultMutableTreeNode parentNode, File dir) {
-        SortableDefaultMutableTreeNode directoryNode;
+            final SortableDefaultMutableTreeNode parentNode, File dir) {
+        final SortableDefaultMutableTreeNode directoryNode;
         if (retainDirectories) {
             directoryNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
             parentNode.add(directoryNode);
@@ -149,7 +150,7 @@ public class PictureAdder
             directoryNode = parentNode;
         }
 
-        File[] fileArray = dir.listFiles();
+        final File[] fileArray = dir.listFiles();
         if (fileArray != null) {
             for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
                 if (fileArray[i].isDirectory() && recurseDirectories) {
@@ -178,7 +179,7 @@ public class PictureAdder
      * @param chunks Send 1 to increment the count of pictures processed, -1 to decrement the total
      */
     @Override
-    protected void process(List<Integer> chunks) {
+    protected void process(final List<Integer> chunks) {
         chunks.forEach((i) -> {
             if (i > 0) {
                 progGui.progressIncrement();

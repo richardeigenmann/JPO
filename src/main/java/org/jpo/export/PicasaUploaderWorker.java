@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 /*
  * PicasaUploaderWorker.java: service using Google provided code. Copyright (C)
- * 2012-2017 Richard Eigenmann. This program is free software; you can
+ * 2012-2020 Richard Eigenmann. This program is free software; you can
  * redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free Software Foundation; either version 2 of the
  * License, or any later version. This program is distributed in the hope that
@@ -102,7 +102,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
      */
     public boolean createAlbum( GroupInfo groupInfo ) {
         LOGGER.info( "Creating Album" );
-        AlbumEntry myAlbum = new AlbumEntry();
+        final AlbumEntry myAlbum = new AlbumEntry();
         myAlbum.setTitle( new PlainTextConstruct( groupInfo.getGroupName() ) );
         myAlbum.setDescription( new PlainTextConstruct( groupInfo.getGroupName() ) );
         AlbumEntry insertedEntry;
@@ -125,8 +125,8 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
         String albumIdUrl = insertedEntry.getId();
         String albumId = albumIdUrl.substring( albumIdUrl.lastIndexOf( '/' ) + 1 );
         String albumPostUrl = myRequest.getFormattedPicasaUrl() + "/albumid/" + albumId;
-        myRequest.setAlbumPostUrl( albumPostUrl );
-        LOGGER.info( String.format( "raw: %s parsed: %s%nrecombined: %s", albumIdUrl, albumId, albumPostUrl ) );
+        myRequest.setAlbumPostUrl(albumPostUrl);
+        LOGGER.log(Level.INFO, "raw: {0} parsed: {1}%nrecombined: {2}", new Object[]{albumIdUrl, albumId, albumPostUrl});
 
         try {
             albumUrl = new URL( albumPostUrl );
@@ -134,27 +134,28 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
             LOGGER.severe( ex.getMessage() );
             return false;
         }
-        LOGGER.info( String.format( "AlbumId: %s", albumUrl.toString() ) );
+        LOGGER.log(Level.INFO, "AlbumId: {0}", albumUrl);
         return true;
     }
 
     /**
      * Uploads a picture to Picasa
+     *
      * @param pictureInfo the picture to upload
      */
-    public void postPicture(PictureInfo pictureInfo ) {
-        LOGGER.log( Level.INFO, "Posting Picture: {0}", pictureInfo.getDescription());
-        PhotoEntry myPhoto = new PhotoEntry();
-        myPhoto.setTitle( new PlainTextConstruct( pictureInfo.getDescription() ) );
-        myPhoto.setDescription( new PlainTextConstruct( pictureInfo.getDescription() ) );
-        myPhoto.setClient( "JPO" );
+    public void postPicture(final PictureInfo pictureInfo) {
+        LOGGER.log(Level.INFO, "Posting Picture: {0}", pictureInfo.getDescription());
+        final PhotoEntry myPhoto = new PhotoEntry();
+        myPhoto.setTitle(new PlainTextConstruct(pictureInfo.getDescription()));
+        myPhoto.setDescription(new PlainTextConstruct(pictureInfo.getDescription()));
+        myPhoto.setClient("JPO");
 
-        MediaFileSource myMedia = new MediaFileSource( pictureInfo.getImageFile(), "image/jpeg" );
-        myPhoto.setMediaSource( myMedia );
+        final MediaFileSource myMedia = new MediaFileSource(pictureInfo.getImageFile(), "image/jpeg");
+        myPhoto.setMediaSource(myMedia);
         try {
-            myRequest.picasaWebService.insert( albumUrl, myPhoto );
-        } catch ( IOException | ServiceException ex ) {
-            LOGGER.severe( ex.getMessage() );
+            myRequest.picasaWebService.insert(albumUrl, myPhoto);
+        } catch (final IOException | ServiceException ex) {
+            LOGGER.severe(ex.getMessage());
         }
     }
 }

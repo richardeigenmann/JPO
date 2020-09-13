@@ -154,11 +154,11 @@ public class ApplicationEventHandler {
         final String newName = request.getNewFileName();
         final File newFile = new File(imageFile.getParentFile(), newName);
         if (imageFile.renameTo(newFile)) {
-            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile.toString(), newName});
+            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile, newName});
             pi.setImageLocation(newFile);
             request.getNode().getPictureCollection().setUnsavedUpdates();
         } else {
-            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile.toString(), newName});
+            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile, newName});
         }
 
     }
@@ -351,7 +351,6 @@ public class ApplicationEventHandler {
 
         Settings.loadSettings();
 
-        // JpoEventBus.getInstance().register( new DebugEventListener() );
         JpoEventBus.getInstance().post(new OpenMainWindowRequest());
         JpoEventBus.getInstance().post(new StartCameraWatchDaemonRequest());
 
@@ -389,8 +388,6 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleOpenMainWindowRequest(final OpenMainWindowRequest request) {
         try {
-            // Activate OpenGL performance improvements
-            //System.setProperty( "sun.java2d.opengl", "true" );
             SwingUtilities.invokeAndWait(
                     () -> {
                         new MainWindow();
@@ -400,7 +397,6 @@ public class ApplicationEventHandler {
             );
         } catch (final InterruptedException | InvocationTargetException ex) {
             LOGGER.log(Level.SEVERE, null, ex);
-            // Restore interrupted state...
             Thread.currentThread().interrupt();
         }
     }
@@ -581,7 +577,7 @@ public class ApplicationEventHandler {
             LOGGER.log(Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString());
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this.toString(),
+                    "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this,
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -1121,7 +1117,7 @@ public class ApplicationEventHandler {
             for (SortableDefaultMutableTreeNode node : request.getNodes()) {
                 if (node.getUserObject() instanceof PictureInfo pi) {
                     final File sourceFile = pi.getImageFile();
-                    LOGGER.info(String.format("Processing file %s", sourceFile.toString()));
+                    LOGGER.info(String.format("Processing file %s", sourceFile));
 
                     final ZipArchiveEntry entry = new ZipArchiveEntry(sourceFile, sourceFile.getName());
                     zipArchiveOutputStream.putArchiveEntry(entry);
@@ -1281,8 +1277,6 @@ public class ApplicationEventHandler {
         for (SortableDefaultMutableTreeNode node : nodes) {
             node.indentNode();
         }
-        // ToDo: Figure out what to refresh. New Group node for instance
-        //JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1296,9 +1290,6 @@ public class ApplicationEventHandler {
         for (SortableDefaultMutableTreeNode node : nodes) {
             node.outdentNode();
         }
-        // ToDo: Figure out what to refresh. New Group node for instance
-        // ToDo: Could also delete the left over group node if it is empty
-        //JpoEventBus.getInstance().post( new RefreshThumbnailRequest( (SortableDefaultMutableTreeNode) popupNode.getParent(), ThumbnailQueueRequest.MEDIUM_PRIORITY ) );
     }
 
     /**
@@ -1348,7 +1339,7 @@ public class ApplicationEventHandler {
             if (highresFile.exists()) {
                 ok = highresFile.delete();
                 if (!ok) {
-                    LOGGER.log(Level.INFO, "File deleted failed on: {0}", highresFile.toString());
+                    LOGGER.log(Level.INFO, "File deleted failed on: {0}", highresFile);
                 }
             }
 
@@ -1356,7 +1347,7 @@ public class ApplicationEventHandler {
 
             if (!ok) {
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.jpoResources.getString("fileDeleteError") + highresFile.toString(),
+                        Settings.jpoResources.getString("fileDeleteError") + highresFile,
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -1612,7 +1603,7 @@ public class ApplicationEventHandler {
                 LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
                 return;
             }
-            LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thumbnail", this.toString()));
+            LOGGER.fine(String.format("refreshing the thumbnail on the node %s%nAbout to create the thumbnail", this));
             final ThumbnailController t = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             t.setNode(new SingleNodeNavigator(node), 0);
         }
@@ -1750,7 +1741,7 @@ public class ApplicationEventHandler {
         @Override
         public void treeNodesChanged(final TreeModelEvent e) {
             final TreePath tp = e.getTreePath();
-            LOGGER.fine(String.format("The main app model listener trapped a tree node change event on the tree path: %s", tp.toString()));
+            LOGGER.log(Level.FINE, "The main app model listener trapped a tree node change event on the tree path: {0}", tp);
             if (tp.getPathCount() == 1) { //if the root node sent the event
                 LOGGER.fine("Since this is the root node we will update the ApplicationTitle");
 

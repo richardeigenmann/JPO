@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,9 +41,8 @@ public class DebugEventListener {
      * @param o the event
      */
     @Subscribe
-    public void handleAllEvents( Object o ) {
-        LOGGER.log( Level.INFO, "Event propagating: {0}", o.getClass().toString() );
-        //System.out.println( String.format( "Event propagating: %s", o.getClass().toString() ) );
+    public void handleAllEvents(final Object o) {
+        LOGGER.log(Level.INFO, "Event propagating: {0}", o.getClass());
     }
 
 }

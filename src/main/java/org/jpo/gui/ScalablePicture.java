@@ -329,7 +329,7 @@ public class ScalablePicture
                     int x = (int) Math.rint( pStep.getX() );
                     int y = (int) Math.rint( pStep.getY() );
                     int imageType = sourcePicture.getSourceBufferedImage().getType();
-                    LOGGER.fine( String.format( "getType from source image returned %d", imageType ) );
+                    LOGGER.log(Level.FINE, "getType from source image returned {0}", imageType);
                     if ( x == 0 ) {
                         x = 100;
                     }
@@ -338,7 +338,7 @@ public class ScalablePicture
                     }
                     if ( ( imageType == 0 ) || ( imageType == 13 ) ) {
                         imageType = BufferedImage.TYPE_3BYTE_BGR;
-                        LOGGER.fine( String.format( "Because we don't like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: %d", BufferedImage.TYPE_3BYTE_BGR ) );
+                        LOGGER.log(Level.FINE, "Because we don''t like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: {0}", BufferedImage.TYPE_3BYTE_BGR);
                     }
                     BufferedImage biStep = new BufferedImage(x, y, imageType);
                     scaledPicture = opStep.filter( scaledPicture, biStep);

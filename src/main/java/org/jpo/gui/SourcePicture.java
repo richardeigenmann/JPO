@@ -539,6 +539,7 @@ public class SourcePicture {
         @Override
         public void thumbnailStarted(final ImageReader source, final int imageIndex,
                                      final int thumbnailIndex) {
+            // noop
         }
     }
 }

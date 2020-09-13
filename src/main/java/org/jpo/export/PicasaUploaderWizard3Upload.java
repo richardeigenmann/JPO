@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2012 -2017 Richard Eigenmann. Zürich
+ * Copyright (C) 2012 -2020 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -38,10 +38,6 @@ import java.util.logging.Logger;
 public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaUploaderDoneInterface {
 
     /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() );
-    /**
      * The link to the values that this panel should change
      */
     private final PicasaUploadRequest myRequest;
@@ -58,18 +54,19 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
 
     /**
      * Wizard model listener
+     *
      * @param model The Wizard Model
      */
-    public void attachWizardModelListener( WizardModel model ) {
-        model.addWizardModelListener( new WizardModelListener() {
+    public void attachWizardModelListener(final WizardModel model) {
+        model.addWizardModelListener(new WizardModelListener() {
 
             @Override
-            public void wizardCanceled( WizardModelEvent wme ) {
-                myRequest.setInterrupt( true );
+            public void wizardCanceled(WizardModelEvent wme) {
+                myRequest.setInterrupt(true);
             }
 
             @Override
-            public void wizardFinished( WizardModelEvent wme ) {
+            public void wizardFinished(WizardModelEvent wme) {
                 // noop
             }
 

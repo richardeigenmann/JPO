@@ -766,6 +766,7 @@ public class PictureInfoEditor extends JFrame {
          */
         @Override
         public void treeNodesChanged(final TreeModelEvent e) {
+            // noop
         }
 
         /**
@@ -776,6 +777,7 @@ public class PictureInfoEditor extends JFrame {
          */
         @Override
         public void treeNodesInserted(final TreeModelEvent e) {
+            // noop
         }
 
         /**
@@ -801,6 +803,7 @@ public class PictureInfoEditor extends JFrame {
          */
         @Override
         public void treeStructureChanged(final TreeModelEvent e) {
+            // noop
         }
     };
 

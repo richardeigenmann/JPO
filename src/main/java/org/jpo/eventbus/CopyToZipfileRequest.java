@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.List;
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +28,6 @@ import java.util.List;
  */
 public class CopyToZipfileRequest implements Request {
 
-    //private final SortableDefaultMutableTreeNode[] nodes;
     private final List<SortableDefaultMutableTreeNode> nodes;
     private final File targetZipfile;
 
@@ -39,7 +38,7 @@ public class CopyToZipfileRequest implements Request {
      * @param nodes         The nodes for which the user would like copy the pictures
      * @param targetZipfile the target zipfile
      */
-    public CopyToZipfileRequest(List<SortableDefaultMutableTreeNode> nodes, File targetZipfile) {
+    public CopyToZipfileRequest(final List<SortableDefaultMutableTreeNode> nodes, File targetZipfile) {
         this.nodes = nodes;
         this.targetZipfile = targetZipfile;
     }

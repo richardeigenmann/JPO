@@ -174,11 +174,11 @@ public class CollectionJTreeController {
         public boolean importData(final TransferSupport support) {
             final JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
             final SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            LOGGER.info(String.format("Choosing node %s as target for path %s, ChildIndex: %d", targetNode.toString(), dropLocation.getPath(), dropLocation.getChildIndex()));
+            LOGGER.log(Level.INFO, "Choosing node {0} as target for path {1}, ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
 
             final int actionType = support.getDropAction();
             if (!((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE))) {
-                LOGGER.info(String.format("The event has an odd Action Type: %d. Drop rejected. Copy is %d; Move is %d", actionType, TransferHandler.COPY, TransferHandler.MOVE));
+                LOGGER.log(Level.INFO, "The event has an odd Action Type: {0}. Drop rejected. Copy is {1}, Move is {@}", new Object[]{actionType, TransferHandler.COPY, TransferHandler.MOVE});
                 return false;
             }
 
@@ -187,7 +187,6 @@ public class CollectionJTreeController {
             try {
                 Transferable t = support.getTransferable();
                 Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
-                //arrayOfNodes = (Object[]) o;
                 transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
             } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
                 LOGGER.log(Level.INFO, x.getMessage());
@@ -221,7 +220,6 @@ public class CollectionJTreeController {
             }
 
             transferableNodes.forEach( (sourceNode ) -> {
-                //sourceNode = (SortableDefaultMutableTreeNode) arrayOfNode;
                 if ( actionType == TransferHandler.MOVE ) {
                     if ( dropLocation.getChildIndex() == -1 ) {
                         if ( targetNode.getUserObject() instanceof GroupInfo ) {
@@ -314,18 +312,18 @@ public class CollectionJTreeController {
          * If it was multi-click open the (first) picture.
          */
         @Override
-        public void mouseClicked( MouseEvent e ) {
-            TreePath clickPath = ( (JTree) e.getSource() ).getPathForLocation( e.getX(), e.getY() );
-            if ( clickPath == null ) { // this happens
+        public void mouseClicked(final MouseEvent e) {
+            final TreePath clickPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
+            if (clickPath == null) { // this happens
                 return;
             }
-            SortableDefaultMutableTreeNode clickNode = (SortableDefaultMutableTreeNode) clickPath.getLastPathComponent();
+            final SortableDefaultMutableTreeNode clickNode = (SortableDefaultMutableTreeNode) clickPath.getLastPathComponent();
 
-            if ( e.getClickCount() == 1 && ( !e.isPopupTrigger() ) ) {
-                if ( clickNode.getUserObject() instanceof GroupInfo ) {
-                    JpoEventBus.getInstance().post( new ShowGroupRequest( clickNode ) );
+            if (e.getClickCount() == 1 && (!e.isPopupTrigger())) {
+                if (clickNode.getUserObject() instanceof GroupInfo) {
+                    JpoEventBus.getInstance().post(new ShowGroupRequest(clickNode));
                 }
-            } else if ( e.getClickCount() > 1 && ( !e.isPopupTrigger() ) ) {
+            } else if (e.getClickCount() > 1 && (!e.isPopupTrigger())) {
                 JpoEventBus.getInstance().post( new ShowPictureRequest( clickNode ) );
             }
         }
@@ -350,17 +348,17 @@ public class CollectionJTreeController {
          * This method figures out whether a popup window should be displayed
          * and displays it.
          *
-         * @param e	The MouseEvent that was trapped.
+         * @param e The MouseEvent that was trapped.
          */
-        private void maybeShowPopup( MouseEvent e ) {
-            if ( e.isPopupTrigger() ) {
-                TreePath popupPath = ( (JTree) e.getSource() ).getPathForLocation( e.getX(), e.getY() );
-                if ( popupPath == null ) {
+        private void maybeShowPopup(final MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                TreePath popupPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
+                if (popupPath == null) {
                     return;
                 } // happens
 
                 final SortableDefaultMutableTreeNode popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
-                ( (JTree) e.getSource() ).setSelectionPath( popupPath );
+                ((JTree) e.getSource()).setSelectionPath(popupPath);
                 Object nodeInfo = popupNode.getUserObject();
 
                 if ( nodeInfo instanceof GroupInfo ) {

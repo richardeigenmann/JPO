@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -63,7 +64,7 @@ public class CamerasEditor extends JFrame {
 
         @Override
         public void valueForPathChanged(final TreePath path, final Object newValue) {
-            LOGGER.info(String.format("valueForPathChanged on node %s, to value %s", path.toString(), newValue.toString()));
+            LOGGER.log(Level.INFO, "valueForPathChanged on node {0}, to value {1}", new Object[]{path, newValue});
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
             final Camera cam = (Camera) node.getUserObject();
             cam.setDescription(newValue.toString());

@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Builds a TreeMap by year and month of the nodes under the input node. The
  * first TreeMap has keys by year and the value is a second TreeMap. The second
@@ -36,17 +37,22 @@ public class YearlyAnalysis implements Serializable {
      * Keep serialisation happy
      */
     private static final long serialVersionUID = 1;
-
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(YearlyAnalysis.class.getName());
     /**
      * The starting node in the model to analyse.
      */
     private final DefaultMutableTreeNode startNode;
-
-
     /**
-     * Defines a logger for this class
+     * The target data structure.
      */
-    private static final Logger LOGGER = Logger.getLogger( YearlyAnalysis.class.getName() );
+    private TreeMap<Integer, TreeMap<Integer, HashSet<DefaultMutableTreeNode>>> yearsMap;
+    /**
+     * Counter that keeps track of the highest number of nodes in the map
+     */
+    private int maxNodes;  // default is 0
 
     /**
      * Constructor for a YearlyAnalysis Object. Create it with a startNode and
@@ -60,9 +66,19 @@ public class YearlyAnalysis implements Serializable {
     }
 
     /**
-     * The target data structure.
+     * Returns a string representing the name of the month
+     *
+     * @param month Month
+     * @return The name of the month
      */
-    private TreeMap<Integer, TreeMap<Integer, HashSet<DefaultMutableTreeNode>>> yearsMap;
+    public static String getMonthName(final Integer month) {
+        final String[] monthName = {"January", "February",
+                "March", "April", "May", "June", "July",
+                "August", "September", "October", "November",
+                "December"};
+
+        return monthName[month];
+    }
 
     /**
      * Builds the TreeMaps.
@@ -75,34 +91,26 @@ public class YearlyAnalysis implements Serializable {
         for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (DefaultMutableTreeNode) e.nextElement();
             nodeObject = testNode.getUserObject();
-            if ((nodeObject instanceof PictureInfo pi)) {
-                if (pi.getCreationTimeAsDate() != null) {
-                    LOGGER.log(Level.FINE, "IntegrityChecker.checkDates:{0} from {1} from Node: {2}", new Object[]{pi.getFormattedCreationTime(), pi.getCreationTime(), pi.getDescription()});
-                    cal = pi.getCreationTimeAsDate();
-                    if (cal != null) {
-                        int year = cal.get(Calendar.YEAR);
-                        int month = cal.get(Calendar.MONTH);
-                        TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.computeIfAbsent(year, k -> new TreeMap<>());
-                        //monthMap.put( new Integer( month ), new HashSet<SortableDefaultMutableTreeNode>() );
-                        HashSet<DefaultMutableTreeNode> nodes = monthMap.get(month);
-                        if (nodes == null) {
-                            nodes = new HashSet<>();
-                        }
-                        nodes.add( testNode );
-                        if ( nodes.size() > maxNodes ) {
-                            maxNodes = nodes.size();
-                        }
-                        monthMap.put( month, nodes );
+            if ((nodeObject instanceof PictureInfo pi) && (pi.getCreationTimeAsDate() != null)) {
+                LOGGER.log(Level.FINE, "IntegrityChecker.checkDates:{0} from {1} from Node: {2}", new Object[]{pi.getFormattedCreationTime(), pi.getCreationTime(), pi.getDescription()});
+                cal = pi.getCreationTimeAsDate();
+                if (cal != null) {
+                    int year = cal.get(Calendar.YEAR);
+                    int month = cal.get(Calendar.MONTH);
+                    TreeMap<Integer, HashSet<DefaultMutableTreeNode>> monthMap = yearsMap.computeIfAbsent(year, k -> new TreeMap<>());
+                    HashSet<DefaultMutableTreeNode> nodes = monthMap.get(month);
+                    if (nodes == null) {
+                        nodes = new HashSet<>();
                     }
+                    nodes.add(testNode);
+                    if (nodes.size() > maxNodes) {
+                        maxNodes = nodes.size();
+                    }
+                    monthMap.put(month, nodes);
                 }
             }
         }
     }
-
-    /**
-     * Counter that keeps track of the highest number of nodes in the map
-     */
-    private int maxNodes;  // default is 0
 
     /**
      * Returns the maximum number of nodes in all years
@@ -183,21 +191,6 @@ public class YearlyAnalysis implements Serializable {
      */
     public Set<Integer> getMonths(final Integer year) {
         return getMonthMap(year).keySet();
-    }
-
-    /**
-     * Returns a string representing the name of the month
-     *
-     * @param month Month
-     * @return The name of the month
-     */
-    public static String getMonthName(final Integer month) {
-        final String[] monthName = {"January", "February",
-                "March", "April", "May", "June", "July",
-                "August", "September", "October", "November",
-                "December"};
-
-        return monthName[month];
     }
 
     /**

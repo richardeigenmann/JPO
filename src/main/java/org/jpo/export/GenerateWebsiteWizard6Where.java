@@ -83,7 +83,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     }
 
     private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
-    private final JComboBox finalTarget = new JComboBox<>(TARGET_OPTIONS);
+    private final JComboBox<String> finalTarget = new JComboBox<String>(TARGET_OPTIONS);
     /**
      * Text field that holds the directory that the html is to be exported to.
      */
@@ -133,7 +133,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private final JComboBox sshAuthOoptionChooser = new JComboBox<>(SSH_AUTH_OPTIONS);
+    private final JComboBox<String> sshAuthOoptionChooser = new JComboBox<String>(SSH_AUTH_OPTIONS);
     /**
      * The ssh password
      */
@@ -509,7 +509,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             } else {
                 jsch.addIdentity(options.getSshKeyFile());
             }
-            //jsch.setKnownHosts( "/home"+ options.getSshUser() + "/.ssh/known_hosts");
             final Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
             session.setConfig(config);

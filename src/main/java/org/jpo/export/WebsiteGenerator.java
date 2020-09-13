@@ -253,7 +253,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
             final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(options.getPicsPerRow(), out);
 
-            LOGGER.info(String.format("Writing: %s", groupFile.toString()));
+            LOGGER.log(Level.INFO, "Writing: {0}", groupFile.toString());
             out.write("<!DOCTYPE HTML>");
             out.newLine();
             out.write("<html xml:lang=\"en\" lang=\"en\">");
@@ -268,7 +268,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             out.write("<body>");
             out.newLine();
 
-            //out.write( "<table border=\"0\" cellpadding=\"0\" cellspacing=\"" + Integer.toString( options.getCellspacing() ) + "\" width=\"" + Integer.toString( options.getPicsPerRow() * options.getThumbnailWidth() + ( options.getPicsPerRow() - 1 ) * options.getCellspacing() ) + "\">" );
             out.write("<table  style=\"border-spacing: " + options.getCellspacing()
                     + "px; width: "
                     + (options.getPicsPerRow() * options.getThumbnailWidth() + (options.getPicsPerRow() - 1) * options.getCellspacing())
@@ -447,9 +446,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
 
         scp.setScaleSize(options.getThumbnailDimension());
-        LOGGER.info(String.format("Scaling: %s", pictureInfo.getImageLocation()));
+        LOGGER.log(Level.INFO, "Scaling: {0}", pictureInfo.getImageLocation());
         scp.scalePicture();
-        LOGGER.info(String.format("Writing: %s", lowresFile.toString()));
+        LOGGER.log(Level.INFO, "Writing: {0}", lowresFile);
         scp.setJpgQuality(options.getLowresJpgQuality());
         scp.writeScaledJpg(lowresFile);
         int w = scp.getScaledWidth();
@@ -546,7 +545,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 SortableDefaultMutableTreeNode nde;
                 midresHtmlWriter.write(String.format("Picture %d of %d", childNumber, childCount));
                 midresHtmlWriter.newLine();
-                //midresHtmlWriter.write( "<table cellpadding=\"3\" cellspacing=\"1\" border=\"1\">" );
                 midresHtmlWriter.write("<table class=\"numberPickTable\">");
                 midresHtmlWriter.newLine();
                 String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " "));
@@ -1049,7 +1047,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             // The access time should be sent here,
             // but it is not accessible with JavaAPI ;-<
             command += (" " + (file.lastModified() / 1000) + " 0\n");
-            LOGGER.info("Command: " + command);
+            LOGGER.log(Level.INFO, "Command: {0}", command);
             out.write(command.getBytes());
             out.flush();
             if (checkAck(in) != 0) {
@@ -1078,7 +1076,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     if (len <= 0) {
                         break;
                     }
-                    out.write(buf, 0, len); //out.flush();
+                    out.write(buf, 0, len);
                 }
 
                 LOGGER.info("Sending \0");
@@ -1117,10 +1115,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 sb.append((char) c);
             } while (c != '\n');
             if (b == 1) { // error
-                LOGGER.info(sb.toString());
+                LOGGER.log(Level.INFO, "{0}", sb);
             }
             if (b == 2) { // fatal error
-                LOGGER.info(sb.toString());
+                LOGGER.log(Level.INFO, "{0}", sb);
             }
         }
         return b;
@@ -1189,7 +1187,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 zipFile.write(data, 0, count);
             }
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile.toString(), e.toString()});
+            LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile, e});
         }
 
     }

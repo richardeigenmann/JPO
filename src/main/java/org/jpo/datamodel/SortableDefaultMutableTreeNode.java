@@ -32,7 +32,7 @@ import static org.jpo.datamodel.Tools.copyBufferedStream;
 
 
 /*
- Copyright (C) 2003 - 2019  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2020  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,7 +56,7 @@ import static org.jpo.datamodel.Tools.copyBufferedStream;
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
-        implements Comparable, PictureInfoChangeListener {
+        implements Comparable<SortableDefaultMutableTreeNode>, PictureInfoChangeListener {
 
     /**
      * Defines a logger for this class
@@ -115,7 +115,7 @@ public class SortableDefaultMutableTreeNode
         Tools.checkEDT();  // because of removeAllChildren
         synchronized (this.getRoot()) {
             int childCount = getChildCount();
-            SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
+            final SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
             for (int i = 0; i < childCount; i++) {
                 childNodes[i] = (SortableDefaultMutableTreeNode) getChildAt(i);
             }
@@ -135,7 +135,7 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setSendModelUpdates(true);
 
         // tell the collection that the structure changed
-        LOGGER.fine(String.format("Sending node structure changed event on node %s after sort", this.toString()));
+        LOGGER.log(Level.FINE, "Sending node structure changed event on node {0} after sort", this.toString());
         getPictureCollection().sendNodeStructureChanged(this);
     }
 
@@ -155,9 +155,9 @@ public class SortableDefaultMutableTreeNode
      * @return the usual compareTo value used for sorting.
      */
     @Override
-    public int compareTo(@NonNull Object o) {
+    public int compareTo(@NonNull SortableDefaultMutableTreeNode o) {
         Object myObject = getUserObject();
-        Object otherObject = ((DefaultMutableTreeNode) o).getUserObject();
+        Object otherObject = o.getUserObject();
 
         if ((myObject instanceof GroupInfo) && (otherObject instanceof GroupInfo) && (sortfield == FieldCodes.DESCRIPTION)) {
             return ((GroupInfo) myObject).getGroupName().compareTo(((GroupInfo) otherObject).getGroupName());
@@ -177,23 +177,15 @@ public class SortableDefaultMutableTreeNode
         }
 
         // at this point there can only two PictureInfo Objects
-        if ((myObject instanceof PictureInfo) && (otherObject instanceof PictureInfo)) {
-            PictureInfo myPi = (PictureInfo) myObject;
-            PictureInfo otherPi = (PictureInfo) otherObject;
-            switch (sortfield) {
-                case FILM_REFERENCE:
-                    return myPi.getFilmReference().compareTo(otherPi.getFilmReference());
-                case CREATION_TIME:
-                    return myPi.getCreationTime().compareTo(otherPi.getCreationTime());
-                case COMMENT:
-                    return myPi.getComment().compareTo(otherPi.getComment());
-                case PHOTOGRAPHER:
-                    return myPi.getPhotographer().compareTo(otherPi.getPhotographer());
-                case COPYRIGHT_HOLDER:
-                    return myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
-                default:  // case DESCRIPTION
-                    return myPi.getDescription().compareTo(otherPi.getDescription());
-            }
+        if ((myObject instanceof PictureInfo myPi) && (otherObject instanceof PictureInfo otherPi)) {
+            return switch (sortfield) {
+                case FILM_REFERENCE -> myPi.getFilmReference().compareTo(otherPi.getFilmReference());
+                case CREATION_TIME -> myPi.getCreationTime().compareTo(otherPi.getCreationTime());
+                case COMMENT -> myPi.getComment().compareTo(otherPi.getComment());
+                case PHOTOGRAPHER -> myPi.getPhotographer().compareTo(otherPi.getPhotographer());
+                case COPYRIGHT_HOLDER -> myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
+                default -> myPi.getDescription().compareTo(otherPi.getDescription());
+            };
         } else {
             LOGGER.severe("We are not supposed to hit this else branch!");
             Thread.dumpStack();
@@ -263,7 +255,7 @@ public class SortableDefaultMutableTreeNode
      */
     public SortableDefaultMutableTreeNode findFirstPicture() {
         SortableDefaultMutableTreeNode testNode;
-        Enumeration e = children();
+        final Enumeration<TreeNode> e = children();
         while (e.hasMoreElements()) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             if (testNode.getUserObject() instanceof PictureInfo) {
@@ -288,8 +280,8 @@ public class SortableDefaultMutableTreeNode
      */
     public List<SortableDefaultMutableTreeNode> getChildPictureNodes(
             boolean recursive) {
-        List<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
-        Enumeration kids = this.children();
+        final List<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
+        final Enumeration<TreeNode> kids = this.children();
         SortableDefaultMutableTreeNode node;
 
         while (kids.hasMoreElements()) {
@@ -310,8 +302,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if at least one picture is found, false if not
      */
     public boolean hasChildPictureNodes() {
-        //Enumeration kids = this.children();
-        Enumeration kids = this.breadthFirstEnumeration();
+        final Enumeration<TreeNode> kids = this.breadthFirstEnumeration();
         SortableDefaultMutableTreeNode node;
         while (kids.hasMoreElements()) {
             node = (SortableDefaultMutableTreeNode) kids.nextElement();
@@ -332,20 +323,18 @@ public class SortableDefaultMutableTreeNode
      * @param userObject The object to attach to the node
      */
     @Override
-    public void setUserObject(Object userObject) {
-        if (userObject instanceof String) {
+    public void setUserObject(final Object userObject) {
+        if (userObject instanceof String s) {
             LOGGER.severe("Why is ever being called?");
             Object obj = getUserObject();
-            if (obj instanceof GroupInfo) {
-                ((GroupInfo) obj).setGroupName((String) userObject);
-            } else if (obj instanceof PictureInfo) {
-                ((PictureInfo) obj).setDescription((String) userObject);
+            if (obj instanceof GroupInfo gi) {
+                gi.setGroupName(s);
+            } else if (obj instanceof PictureInfo pi) {
+                pi.setDescription(s);
             }
-        } else if (userObject instanceof PictureInfo) {
-            PictureInfo pictureInfo = (PictureInfo) userObject;
+        } else if (userObject instanceof PictureInfo pictureInfo) {
             Object oldUserObject = getUserObject();
-            if (oldUserObject instanceof PictureInfo) {
-                PictureInfo oldPi = (PictureInfo) oldUserObject;
+            if (oldUserObject instanceof PictureInfo oldPi) {
                 oldPi.removePictureInfoChangeListener(this);
             }
             pictureInfo.addPictureInfoChangeListener(this);
@@ -366,7 +355,7 @@ public class SortableDefaultMutableTreeNode
      * @param event The drop event
      * @return true if acceptable, false if not
      */
-    public static boolean isExecuteDropOk(DropTargetDropEvent event) {
+    public static boolean isExecuteDropOk(final DropTargetDropEvent event) {
         if (!event.isLocalTransfer()) {
             LOGGER.info("The drop is not a local Transfer. These are not supported. Aborting drop.");
             event.rejectDrop();
@@ -403,17 +392,17 @@ public class SortableDefaultMutableTreeNode
      * @param event the drop event
      * @return a list of the transferable nodes
      * @throws UnsupportedFlavorException when a bad transferable is received
-     * @throws IOException when an IO error occurs
+     * @throws IOException                when an IO error occurs
      */
     @NotNull
-    public static List<SortableDefaultMutableTreeNode> extractTransferableNodes(DropTargetDropEvent event)
+    public static List<SortableDefaultMutableTreeNode> extractTransferableNodes(final DropTargetDropEvent event)
             throws UnsupportedFlavorException, IOException, ClassCastException {
-        Transferable t = event.getTransferable();
-        Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
-        List<?> l = (List) o;
+        final Transferable t = event.getTransferable();
+        final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
+        final List<?> l = (List) o;
         return l.stream()
-                .filter(element->element instanceof SortableDefaultMutableTreeNode)
-                .map(element->(SortableDefaultMutableTreeNode)element)
+                .filter(element -> element instanceof SortableDefaultMutableTreeNode)
+                .map(element -> (SortableDefaultMutableTreeNode) element)
                 .collect(Collectors.toList());
     }
 
@@ -424,11 +413,11 @@ public class SortableDefaultMutableTreeNode
      *
      * @param node the node to memorize
      */
-    public static void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode node) {
+    public static void memorizeGroupOfDropLocation(final SortableDefaultMutableTreeNode node) {
         if (node.getUserObject() instanceof GroupInfo) {
             Settings.memorizeGroupOfDropLocation(node);
         } else {
-            SortableDefaultMutableTreeNode parent = node.getParent();
+            final SortableDefaultMutableTreeNode parent = node.getParent();
             if ((parent != null) && (parent.getUserObject() instanceof GroupInfo)) {
                 Settings.memorizeGroupOfDropLocation(parent);
             } else {
@@ -444,7 +433,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param event The event the listening object received.
      */
-    public void executeDrop(DropTargetDropEvent event) {
+    public void executeDrop(final DropTargetDropEvent event) {
         LOGGER.info("Data Flavours: [" + event.getCurrentDataFlavorsAsList()
                 .stream()
                 .map(n -> n.getClass().toString())
@@ -456,16 +445,16 @@ public class SortableDefaultMutableTreeNode
             return;
         }
 
-        List<SortableDefaultMutableTreeNode> transferableNodes;
+        final List<SortableDefaultMutableTreeNode> transferableNodes;
         try {
             transferableNodes = extractTransferableNodes(event);
-        } catch (UnsupportedFlavorException | IOException | ClassCastException ex) {
+        } catch (final UnsupportedFlavorException | IOException | ClassCastException ex) {
             LOGGER.info("Error while collecting the transferables. Exception: " + ex.getMessage());
             event.dropComplete(false);
             return;
         }
 
-        for (SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
+        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
             if (this.isNodeAncestor(sourceNode)) {
                 LOGGER.info("One of the transferring nodes is an ancestor of "
                         + "the current node which would orphan the tree.\n"
@@ -483,7 +472,7 @@ public class SortableDefaultMutableTreeNode
         memorizeGroupOfDropLocation(this);
 
         boolean dropcomplete = false;
-        for (SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
+        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
             if ((sourceNode.getUserObject() instanceof PictureInfo) && (this.getUserObject() instanceof GroupInfo)) {
                 // a picture is being dropped onto a group; add it at the end
                 if (event.getDropAction() == DnDConstants.ACTION_MOVE) {
@@ -534,7 +523,7 @@ public class SortableDefaultMutableTreeNode
      * @param e The event
      */
     @Override
-    public void pictureInfoChangeEvent(PictureInfoChangeEvent e) {
+    public void pictureInfoChangeEvent(final PictureInfoChangeEvent e) {
         LOGGER.fine(String.format("The SDMTN %s received a PictureInfoChangeEvent %s", this.toString(), e.toString()));
         getPictureCollection().sendNodeChanged(this);
     }
@@ -559,7 +548,7 @@ public class SortableDefaultMutableTreeNode
                                    final SortableDefaultMutableTreeNode targetNode) {
 
             // menu item that allows the user to edit the group description
-            JMenuItem dropBefore = new JMenuItem(Settings.jpoResources.getString("GDPMdropBefore"));
+            final JMenuItem dropBefore = new JMenuItem(Settings.jpoResources.getString("GDPMdropBefore"));
             dropBefore.addActionListener((ActionEvent e) -> {
                 SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -571,7 +560,7 @@ public class SortableDefaultMutableTreeNode
             add(dropBefore);
 
             // menu item that allows the user to edit the group description
-            JMenuItem dropAfter = new JMenuItem(Settings.jpoResources.getString("GDPMdropAfter"));
+            final JMenuItem dropAfter = new JMenuItem(Settings.jpoResources.getString("GDPMdropAfter"));
             dropAfter.addActionListener((ActionEvent e) -> {
                 SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -583,7 +572,7 @@ public class SortableDefaultMutableTreeNode
             add(dropAfter);
 
             // menu item that allows the user to edit the group description
-            JMenuItem dropIntoFirst = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoFirst"));
+            final JMenuItem dropIntoFirst = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoFirst"));
             dropIntoFirst.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -595,7 +584,7 @@ public class SortableDefaultMutableTreeNode
             add(dropIntoFirst);
 
             // menu item that allows the user to edit the group description
-            JMenuItem dropIntoLast = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoLast"));
+            final JMenuItem dropIntoLast = new JMenuItem(Settings.jpoResources.getString("GDPMdropIntoLast"));
             dropIntoLast.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -608,7 +597,7 @@ public class SortableDefaultMutableTreeNode
             add(dropIntoLast);
 
             // menu item that allows the user to edit the group description
-            JMenuItem dropCancel = new JMenuItem(Settings.jpoResources.getString("GDPMdropCancel"));
+            final JMenuItem dropCancel = new JMenuItem(Settings.jpoResources.getString("GDPMdropCancel"));
             dropCancel.addActionListener((ActionEvent e) -> {
                 LOGGER.info("cancel drop");
                 event.dropComplete(false);
@@ -634,10 +623,10 @@ public class SortableDefaultMutableTreeNode
         getPictureCollection().setUnsavedUpdates();
         synchronized (this.getRoot()) {
 
-            SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final SortableDefaultMutableTreeNode parentNode = this.getParent();
 
             int[] childIndices = {parentNode.getIndex(this)};
-            Object[] removedChildren = {this};
+            final Object[] removedChildren = {this};
 
             super.removeFromParent();
 
@@ -661,7 +650,7 @@ public class SortableDefaultMutableTreeNode
     public void removeFromParent() {
         synchronized (this.getRoot()) {
 
-            SortableDefaultMutableTreeNode oldParentNode = this.getParent();
+            final SortableDefaultMutableTreeNode oldParentNode = this.getParent();
             if (oldParentNode == null) {
                 LOGGER.info(String.format("Why would you try to remove node %s from it's parent when it has none?", toString()));
                 return;
@@ -726,7 +715,7 @@ public class SortableDefaultMutableTreeNode
      * @param description Description for the group
      * @return The new node is returned for convenience.
      */
-    public SortableDefaultMutableTreeNode addGroupNode(String description) {
+    public SortableDefaultMutableTreeNode addGroupNode(final String description) {
         synchronized (this.getRoot()) {
             final SortableDefaultMutableTreeNode newNode
                     = new SortableDefaultMutableTreeNode(
@@ -743,7 +732,7 @@ public class SortableDefaultMutableTreeNode
      * @param node  The node
      * @param index the index position
      */
-    public void insert(SortableDefaultMutableTreeNode node, int index) {
+    public void insert(final SortableDefaultMutableTreeNode node, final int index) {
         LOGGER.log(Level.FINE, "insert was called for node: {0}", node.toString());
         synchronized (this.getRoot()) {
             super.insert(node, index);
@@ -968,7 +957,7 @@ public class SortableDefaultMutableTreeNode
      * @param targetNode The target node you wish to attach the node to
      * @return true if the move was successful, false if not
      */
-    public boolean moveToLastChild(SortableDefaultMutableTreeNode targetNode) {
+    public boolean moveToLastChild(final SortableDefaultMutableTreeNode targetNode) {
         if (this.isRoot()) {
             LOGGER.fine("You can't move the root node to be a child of another node! Aborting move.");
             return false;
@@ -993,7 +982,7 @@ public class SortableDefaultMutableTreeNode
      * @param targetNode The before which you wish to insert the node to
      * @return true if the move was successful, false if not
      */
-    public boolean moveBefore(SortableDefaultMutableTreeNode targetNode) {
+    public boolean moveBefore(final SortableDefaultMutableTreeNode targetNode) {
         if (isNodeDescendant(targetNode)) {
             LOGGER.fine("Can't move to a descendant node. Aborting move.");
             return false;
@@ -1018,8 +1007,8 @@ public class SortableDefaultMutableTreeNode
      * @param index      the position at which to insert
      * @return true if the move was successful, false if not
      */
-    public boolean moveToIndex(SortableDefaultMutableTreeNode parentNode,
-                               int index) {
+    public boolean moveToIndex(final SortableDefaultMutableTreeNode parentNode,
+                               final int index) {
         if (isNodeDescendant(parentNode)) {
             LOGGER.fine("Can't move to a descendant node. Aborting move.");
             return false;
@@ -1059,60 +1048,6 @@ public class SortableDefaultMutableTreeNode
 
 
     /**
-     * Copies the pictures from the source tree to the target directory and adds
-     * them to the collection. This method does the actual loop.
-     *
-     * @param files              Files to add
-     * @param targetDir          Target Directory
-     * @param receivingNode      Receiving Node
-     * @param progGui            Progress GUI
-     * @param newOnly            whether to add only new pictures
-     * @param retainDirectories  Whether to retain the directory structure
-     * @param selectedCategories Categories to add
-     * @return true if pictures were added, false if not.
-     *
-    protected static boolean copyAddPictures1(File[] files,
-                                              File targetDir,
-                                              SortableDefaultMutableTreeNode receivingNode,
-                                              ProgressGui progGui,
-                                              boolean newOnly,
-                                              boolean retainDirectories,
-                                              HashSet<Object> selectedCategories) {
-
-        LOGGER.info(String.format("Copying %d files from directory %s to node %s", files.length + 1, targetDir.toString(), receivingNode.toString()));
-        boolean picturesAdded = false;
-        // add all the files from the array as nodes to the start node.
-        for (int i = 0;
-             (i < files.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-            File addFile = files[i];
-            if (!addFile.isDirectory()) {
-                File targetFile = Tools.inventPicFilename(targetDir, addFile.getName());
-                long crc = copyPicture(addFile, targetFile);
-                if (newOnly && Settings.getPictureCollection().isInCollection(crc)) {
-                    targetFile.delete();
-                    progGui.decrementTotal();
-                } else {
-                    receivingNode.addPicture(targetFile, selectedCategories);
-                    progGui.progressIncrement();
-                    picturesAdded = true;
-                }
-            } else if (Tools.hasPictures(addFile)) {
-                SortableDefaultMutableTreeNode subNode;
-                if (retainDirectories) {
-                    subNode = receivingNode.addGroupNode(addFile.getName());
-                } else {
-                    subNode = receivingNode;
-                }
-                boolean a = copyAddPictures1(Objects.requireNonNull(addFile.listFiles()), targetDir, subNode, progGui, newOnly, retainDirectories, selectedCategories);
-                picturesAdded = a || picturesAdded;
-            } else {
-                LOGGER.log(Level.INFO, "No pictures in directory {0}", addFile.toString());
-            }
-        }
-        return picturesAdded;
-    }*/
-
-    /**
      * Copy any file from sourceFile source File to sourceFile target File
      * location.
      *
@@ -1120,8 +1055,8 @@ public class SortableDefaultMutableTreeNode
      * @param targetFile the target file location
      * @return The crc of the copied picture.
      */
-    public static long copyPicture(File sourceFile, File targetFile) {
-        LOGGER.fine(String.format("Copying file %s to file %s", sourceFile.toString(), targetFile.toString()));
+    public static long copyPicture(final File sourceFile, final File targetFile) {
+        LOGGER.log(Level.FINE, "Copying file {0} to file {0}", new Object[]{sourceFile, targetFile});
         try (
                 final InputStream in = new FileInputStream(sourceFile);
                 final OutputStream out = new FileOutputStream(targetFile)) {
@@ -1149,12 +1084,12 @@ public class SortableDefaultMutableTreeNode
      * Copies the pictures from the source File collection into the target node
      *
      * @param fileCollection A Collection framework of the new picture Files
-     * @param targetDir   The target directory for the copy operation
-     * @param copyMode    Set to true if you want to copy, false if you want to
-     *                    move the pictures.
-     * @param progressBar The optional progressBar that should be incremented.
+     * @param targetDir      The target directory for the copy operation
+     * @param copyMode       Set to true if you want to copy, false if you want to
+     *                       move the pictures.
+     * @param progressBar    The optional progressBar that should be incremented.
      */
-    public void copyAddPictures(Collection<File> fileCollection, File targetDir,
+    public void copyAddPictures(final Collection<File> fileCollection, final File targetDir,
                                 boolean copyMode, final JProgressBar progressBar) {
         LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir});
         getPictureCollection().setSendModelUpdates(false);
@@ -1165,14 +1100,14 @@ public class SortableDefaultMutableTreeNode
                         () -> progressBar.setValue(progressBar.getValue() + 1)
                 );
             }
-            File targetFile = Tools.inventPicFilename(targetDir, file.getName());
+            final File targetFile = Tools.inventPicFilename(targetDir, file.getName());
             LOGGER.fine(String.format("Target file name chosen as: %s", targetFile.toString()));
             copyPicture(file, targetFile);
 
             if (!copyMode) {
                 try {
                     Files.delete(file.toPath());
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     LOGGER.log(Level.SEVERE, "File {} could not be deleted!", file);
                 }
             }
@@ -1194,32 +1129,32 @@ public class SortableDefaultMutableTreeNode
      * @param selectedCategories Selected categories
      * @return true if OK, false if not
      */
-    protected static boolean copyAddPictures1(File[] files,
-                                              File targetDir,
-                                              SortableDefaultMutableTreeNode receivingNode,
-                                              ProgressGui progGui,
-                                              Camera cam,
-                                              boolean retainDirectories,
-                                              HashSet<Object> selectedCategories) {
+    protected static boolean copyAddPictures1(final File[] files,
+                                              final File targetDir,
+                                              final SortableDefaultMutableTreeNode receivingNode,
+                                              final ProgressGui progGui,
+                                              final Camera cam,
+                                              final boolean retainDirectories,
+                                              final HashSet<Object> selectedCategories) {
 
         boolean picturesAdded = false;
         // add all the files from the array as nodes to the start node.
         for (int i = 0;
              (i < files.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-            File addFile = files[i];
+            final File addFile = files[i];
             if (!addFile.isDirectory()) {
                 if (cam.getUseFilename() && cam.inOldImage(addFile)) {
                     // ignore image if the filename is known
                     cam.copyToNewImage(addFile); // put it in the known pictures Hash
                     progGui.decrementTotal();
                 } else {
-                    File targetFile = Tools.inventPicFilename(targetDir, addFile.getName());
+                    final File targetFile = Tools.inventPicFilename(targetDir, addFile.getName());
                     long crc = copyPicture(addFile, targetFile);
                     cam.storePictureNewImage(addFile, crc); // remember it next time
                     if (cam.inOldImage(crc)) {
                         try {
                             Files.delete(targetFile.toPath());
-                        } catch (IOException e) {
+                        } catch (final IOException e) {
                             LOGGER.log(Level.SEVERE, "Could not delete {0}\nException: {1}", new Object[]{targetFile, e.getMessage()});
                         }
                         progGui.decrementTotal();
@@ -1236,7 +1171,7 @@ public class SortableDefaultMutableTreeNode
                 } else {
                     subNode = receivingNode;
                 }
-                boolean a = copyAddPictures1(Objects.requireNonNull(addFile.listFiles()), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories);
+                final boolean a = copyAddPictures1(Objects.requireNonNull(addFile.listFiles()), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories);
                 picturesAdded = a || picturesAdded;
             } else {
                 LOGGER.log(Level.INFO, "No pictures in directory {0}", addFile.toString());
@@ -1255,8 +1190,8 @@ public class SortableDefaultMutableTreeNode
      * @param selectedCategories selected categories
      * @return true if the node was added, false if not.
      */
-    public boolean addSinglePicture(File addFile, boolean newOnly,
-                                    HashSet<Object> selectedCategories) {
+    public boolean addSinglePicture(final File addFile, final boolean newOnly,
+                                    final HashSet<Object> selectedCategories) {
         LOGGER.fine(String.format("Adding File: %s, NewOnly: %b to node %s", addFile.toString(), newOnly, toString()));
         if (newOnly && getPictureCollection().isInCollection(addFile)) {
             return false; // only add pics not in the collection already
@@ -1273,9 +1208,9 @@ public class SortableDefaultMutableTreeNode
      * @param categoryAssignment Can be null
      * @return true if the picture was valid, false if not.
      */
-    public boolean addPicture(File addFile, HashSet<Object> categoryAssignment) {
+    public boolean addPicture(final File addFile, final HashSet<Object> categoryAssignment) {
         LOGGER.fine(String.format("Adding file %s to the node %s", addFile.toString(), toString()));
-        PictureInfo newPictureInfo = new PictureInfo();
+        final PictureInfo newPictureInfo = new PictureInfo();
 
         if (!SourcePicture.jvmHasReader(addFile)) {
             LOGGER.info(String.format("Not adding file %s because the Java Virtual Machine has not got a reader for the file.", addFile.toString()));
@@ -1287,7 +1222,7 @@ public class SortableDefaultMutableTreeNode
         if (categoryAssignment != null) {
             newPictureInfo.setCategoryAssignment(categoryAssignment);
         }
-        SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(newPictureInfo);
+        final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(newPictureInfo);
 
         this.add(newNode);
         getPictureCollection().setUnsavedUpdates();
@@ -1312,8 +1247,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if successful, false if not
      */
     public static boolean wasNodeDeleted(
-            SortableDefaultMutableTreeNode affectedNode, TreeModelEvent e) {
-        //logger.info( "SDMTN.wasNodeDeleted invoked for: " + affectedNode.toString() + " / " + e.toString() );
+            final SortableDefaultMutableTreeNode affectedNode, final TreeModelEvent e) {
         TreePath removedChild;
         TreePath currentNodeTreePath = new TreePath(affectedNode.getPath());
         Object[] children = e.getChildren();

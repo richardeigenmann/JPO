@@ -116,13 +116,13 @@ public class CategoryEditorJFrame
         categoriesJList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
         categoriesJList.addListSelectionListener( this );
 
-        final Iterator i = Settings.getPictureCollection().getCategoryIterator();
+        final Iterator<Integer> i = Settings.getPictureCollection().getCategoryIterator();
         Integer key;
         String category;
         Category categoryObject;
         while ( i.hasNext() ) {
-            key = (Integer) i.next();
-            category = Settings.getPictureCollection().getCategory( key );
+            key = i.next();
+            category = Settings.getPictureCollection().getCategory(key);
             categoryObject = new Category( key, category );
             listModel.addElement( categoryObject );
         }
@@ -214,15 +214,15 @@ public class CategoryEditorJFrame
      * @param e The event
      */
     @Override
-    public void valueChanged( ListSelectionEvent e ) {
-        if ( e.getValueIsAdjusting() ) {
+    public void valueChanged(final ListSelectionEvent e) {
+        if (e.getValueIsAdjusting()) {
             return;
         }
         JList theList = (JList) e.getSource();
-        if ( !theList.isSelectionEmpty() ) {
+        if (!theList.isSelectionEmpty()) {
             int index = theList.getSelectedIndex();
-            Category cat = (Category) theList.getModel().getElementAt( index );
-            categoryJTextField.setText( cat.getValue() );
+            Category cat = (Category) theList.getModel().getElementAt(index);
+            categoryJTextField.setText(cat.getValue());
         }
     }
 }

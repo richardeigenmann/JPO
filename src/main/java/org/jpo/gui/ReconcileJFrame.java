@@ -60,12 +60,6 @@ public class ReconcileJFrame extends JFrame {
     private final JCheckBox recurseSubdirectoriesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileSubdirectories" ) );
 
     /**
-     * tickbox that indicates whether subdirectories are to be reconciled too
-     *
-     */
-    private final JCheckBox listPositivesJCheckBox = new JCheckBox( Settings.jpoResources.getString( "ReconcileListPositives" ) );
-
-    /**
      * the log window with the results of the reconciliation
      */
     private final JTextArea logJTextArea = new JTextArea( 15, 60 );
@@ -147,9 +141,6 @@ public class ReconcileJFrame extends JFrame {
 
         recurseSubdirectoriesJCheckBox.setSelected( true );
 
-        controlJPanel.add( listPositivesJCheckBox, "spanx 3, wrap" );
-        listPositivesJCheckBox.setSelected( false );
-
         logJTextArea.setLineWrap( false );
         final JScrollPane logJScrollPane = new JScrollPane(logJTextArea);
         logJScrollPane.setMinimumSize( new Dimension( 400, 250 ) );
@@ -183,8 +174,8 @@ public class ReconcileJFrame extends JFrame {
      */
     private void runReconciliation( File reconcileDir ) {
         if ( validateDir( reconcileDir ) ) {
-            logJTextArea.setText( null );
-            reconciler = new Reconciler( startNode, reconcileDir, recurseSubdirectoriesJCheckBox.isSelected(), logJTextArea, listPositivesJCheckBox.isSelected() );
+            logJTextArea.setText(null);
+            reconciler = new Reconciler(startNode, reconcileDir, recurseSubdirectoriesJCheckBox.isSelected(), logJTextArea);
             reconciler.execute();
         }
     }
@@ -259,11 +250,6 @@ public class ReconcileJFrame extends JFrame {
         private final JTextArea outputTextArea;
 
         /**
-         * Flag to indicate whether to show only breaks or show positives too
-         */
-        private final boolean listPositives;
-
-        /**
          * Constructor for the Reconciler that checks the directories and
          * reports the missing pictures
          *
@@ -272,15 +258,13 @@ public class ReconcileJFrame extends JFrame {
          * @param recurseSubdirectories True if subdirectories should be
          * recursively checked, false if not
          * @param logJTextArea The TextArea to receive the output
-         * @param listPositives true to list the positives, false if only breaks
          * should be shown
          */
-        Reconciler( SortableDefaultMutableTreeNode startNode, File reconcileDir, boolean recurseSubdirectories, JTextArea logJTextArea, boolean listPositives ) {
+        Reconciler(final SortableDefaultMutableTreeNode startNode, final File reconcileDir, final boolean recurseSubdirectories, final JTextArea logJTextArea) {
             this.startNode = startNode;
             this.reconcileDir = reconcileDir;
             this.recurseSubdirectories = recurseSubdirectories;
             this.outputTextArea = logJTextArea;
-            this.listPositives = listPositives;
         }
 
         private final HashSet<URI> collectionUris = new HashSet<>();
@@ -310,9 +294,6 @@ public class ReconcileJFrame extends JFrame {
          * @param reconcileDir The directory to reconcile
          */
         private void reconcileDir(final File reconcileDir) {
-            if (listPositivesJCheckBox.isSelected()) {
-                publish(Settings.jpoResources.getString("ReconcileStart") + reconcileDir.getPath() + "\n");
-            }
             final File[] fileArray = reconcileDir.listFiles();
             if (fileArray == null) {
                 publish(Settings.jpoResources.getString("ReconcileNoFiles"));
@@ -325,13 +306,9 @@ public class ReconcileJFrame extends JFrame {
                         reconcileDir( fileArray[i] );
                     }
                 } else {
-                    URI testFile = fileArray[i].toURI();
-                    if ( collectionUris.contains( testFile ) ) {
-                        if ( listPositivesJCheckBox.isSelected() ) {
-                            publish( String.format( Settings.jpoResources.getString( "org.jpo.gui.ReconcileFound" ), fileArray[i].getPath() ) );
-                        }
-                    } else {
-                        publish( Settings.jpoResources.getString( "ReconcileNotFound" ) + fileArray[i].toString() + "\n" );
+                    final URI testFile = fileArray[i].toURI();
+                    if (!collectionUris.contains(testFile)) {
+                        publish(Settings.jpoResources.getString("ReconcileNotFound") + fileArray[i].toString() + "\n");
                     }
                 }
             }
