@@ -4,9 +4,6 @@ agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
-  #containers:
-  #  - name: main
-  #    image: 'openjdk:16-jdk'
 blocks:
   - name: Gradle
     task:
@@ -16,5 +13,9 @@ blocks:
             - sem-version java 14
             - checkout
             - sudo apt update
-            - sudo apt install xvfb openjdk-14-jdk
+            - sudo apt install xvfb
+            - 'sudo add-apt-repository ppa:linuxuprising/java'
+            - sudo apt -y install oracle-java14-installer
+            - sudo apt -y install oracle-java14-set-default
+            - export JAVA_HOME=/usr/lib/jvm/java-14-oracle
             - xvfb-run ./gradlew check
