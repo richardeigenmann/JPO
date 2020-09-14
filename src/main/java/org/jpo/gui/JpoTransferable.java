@@ -161,10 +161,9 @@ public class JpoTransferable
     private Object getJavaFileListTransferable() {
         final List<File> fileList = new ArrayList<>();
         for (final Object transferableNode : transferableNodes) {
-            if (transferableNode instanceof SortableDefaultMutableTreeNode n) {
-                if (n.getUserObject() instanceof PictureInfo pi) {
-                    fileList.add(pi.getImageFile());
-                }
+            if ((transferableNode instanceof SortableDefaultMutableTreeNode n)
+                    && (n.getUserObject() instanceof PictureInfo pi)) {
+                fileList.add(pi.getImageFile());
             }
         }
         LOGGER.log(Level.INFO, "Returning {0} files in a list", fileList.size());
@@ -211,6 +210,6 @@ public class JpoTransferable
      */
     @Override
     public void lostOwnership(final Clipboard clipboard, final Transferable contents) {
-        LOGGER.log(Level.INFO, "lostOwnership clipboard: [0}, Transferable: {1}", new Object[]{clipboard, contents});
+        LOGGER.log(Level.INFO, "lostOwnership clipboard: {0}, Transferable: {1}", new Object[]{clipboard, contents});
     }
 }

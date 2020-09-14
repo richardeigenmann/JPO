@@ -40,18 +40,18 @@ public class ToolsTest {
     @Test
     public void testCheckEDTnotOnEDT() {
         // if not on EDT must throw Error
-        final boolean notOnEDT_ErrorThrown[] = {false};
+        final boolean[] errorThrown = {false};
         final Thread t = new Thread(() -> {
             try {
                 Tools.checkEDT();
             } catch (final EdtViolationException ex) {
-                notOnEDT_ErrorThrown[0] = true;
+                errorThrown[0] = true;
             }
         });
         t.start();
         try {
             t.join();
-            assertTrue(notOnEDT_ErrorThrown[0]);
+            assertTrue(errorThrown[0]);
         } catch (final InterruptedException ex) {
             fail("EDT violation not thrown");
             Thread.currentThread().interrupt();

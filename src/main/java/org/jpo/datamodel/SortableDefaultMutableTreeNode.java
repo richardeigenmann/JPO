@@ -434,10 +434,10 @@ public class SortableDefaultMutableTreeNode
      * @param event The event the listening object received.
      */
     public void executeDrop(final DropTargetDropEvent event) {
-        LOGGER.log(Level.INFO, "Data Flavours: [" + event.getCurrentDataFlavorsAsList()
+        LOGGER.log(Level.INFO, "Data Flavours: [{0}]", event.getCurrentDataFlavorsAsList()
                 .stream()
                 .map(n -> n.getClass().toString())
-                .collect(Collectors.joining(", ")) + "]");
+                .collect(Collectors.joining(", ")));
         if (!isExecuteDropOk(event)) {
             LOGGER.info("Can't accept drop, rejecting drop event");
             event.rejectDrop();
@@ -449,7 +449,7 @@ public class SortableDefaultMutableTreeNode
         try {
             transferableNodes = extractTransferableNodes(event);
         } catch (final UnsupportedFlavorException | IOException | ClassCastException ex) {
-            LOGGER.info("Error while collecting the transferables. Exception: " + ex.getMessage());
+            LOGGER.log(Level.INFO, "Error while collecting the transferables. Exception: {0}", ex.getMessage());
             event.dropComplete(false);
             return;
         }

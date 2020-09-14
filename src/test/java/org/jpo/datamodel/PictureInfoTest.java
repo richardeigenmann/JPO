@@ -69,7 +69,7 @@ public class PictureInfoTest {
     @Test
     public void testSetDescription() {
         final PictureInfo pi = new PictureInfo();
-        final int changeEvents[] = {0};
+        final int[] changeEvents = {0};
         final PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> changeEvents[0] += 1;
         pi.addPictureInfoChangeListener(picl);
         pi.setDescription("A description");
@@ -86,7 +86,7 @@ public class PictureInfoTest {
     @Test
     public void testSetDescriptionSame() {
         final PictureInfo pi = new PictureInfo();
-        final int countEvents[] = {0};
+        final int[] countEvents = {0};
         final PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> countEvents[0] += 1;
         pi.addPictureInfoChangeListener(picl);
         pi.setDescription("A picture description");

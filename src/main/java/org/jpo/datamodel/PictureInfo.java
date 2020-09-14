@@ -995,22 +995,6 @@ public class PictureInfo implements Serializable {
         return categoryAssignments;
     }
 
-
-    /* public String getCategoryAssignmentString() {
-        if (categoryAssignments == null ) {
-            return "no categories set";
-        }
-        final StringBuilder sb = new StringBuilder();
-        String comma = "";
-        for (final Integer i : categoryAssignments) {
-            sb.append(comma);
-            sb.append(i);
-            comma = ", ";
-        }
-        System.out.println(sb);
-        return sb.toString();
-    } */
-
     /**
      * removes all category Assignments
      */
