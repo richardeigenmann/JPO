@@ -20,7 +20,7 @@ blocks:
             - curl https://download.java.net/openjdk/jdk14/ri/openjdk-14+36_linux-x64_bin.tar.gz | tar xz -C ~/
             - export JAVA_HOME=/home/semaphore/jdk-14
             - cd ~/JPO
-            - ./gradlew check compileTestJava
+            - ./gradlew compileTestJava
             #- ./gradlew check buildWindowsExecutable buildWindowsInstaller
             - ls -l build/libs/
             #- ls -l build/executables
