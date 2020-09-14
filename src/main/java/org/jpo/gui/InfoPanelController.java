@@ -9,12 +9,11 @@ import org.jpo.eventbus.ShowGroupRequest;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
-import java.util.logging.Logger;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel
 
- Copyright (C) 2009-2014  Richard Eigenmann.
+ Copyright (C) 2009-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -40,10 +39,6 @@ public class InfoPanelController {
         JpoEventBus.getInstance().register( this );
     }
 
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( InfoPanelController.class.getName() );
 
     private final NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
     /**
@@ -73,8 +68,8 @@ public class InfoPanelController {
      * @param event The Group Selection Event
      */
     @Subscribe
-    public void handleGroupSelectionEvent( GroupSelectionEvent event ) {
-        showInfo( event.getNode() );
+    public void handleGroupSelectionEvent(final GroupSelectionEvent event) {
+        showInfo(event.getNode());
     }
 
     /**
@@ -83,8 +78,8 @@ public class InfoPanelController {
      * @param event The Show Group Event
      */
     @Subscribe
-    public void handleShowGroupRequest( ShowGroupRequest event ) {
-        showInfo( event.getNode() );
+    public void handleShowGroupRequest(final ShowGroupRequest event) {
+        showInfo(event.getNode());
     }
 
     /**
@@ -92,13 +87,13 @@ public class InfoPanelController {
      *
      * @param defaultMutableTreeNode The Group or Picture node to be displayed.
      */
-    public void showInfo( DefaultMutableTreeNode defaultMutableTreeNode ) {
+    public void showInfo(final DefaultMutableTreeNode defaultMutableTreeNode) {
         SwingUtilities.invokeLater(
                 () -> {
-                    if ( defaultMutableTreeNode.getUserObject() instanceof PictureInfo ) {
+                    if (defaultMutableTreeNode.getUserObject() instanceof PictureInfo) {
                         statsUpdateTimer.stop();
                     } else {
-                        nodeStatisticsController.updateStats( defaultMutableTreeNode );
+                        nodeStatisticsController.updateStats(defaultMutableTreeNode);
                         statsUpdateTimer.start();
                     }
                 }

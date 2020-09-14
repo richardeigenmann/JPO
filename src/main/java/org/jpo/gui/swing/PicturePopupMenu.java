@@ -779,12 +779,7 @@ public class PicturePopupMenu extends JPopupMenu {
                 recentDropNodeJMenuItems[i].setVisible(false);
             }
         }
-        if (dropNodesVisible) {
-            movePictureNodeSeparator.setVisible(true);
-        } else {
-            movePictureNodeSeparator.setVisible(false);
-
-        }
+        movePictureNodeSeparator.setVisible(dropNodesVisible);
     }
 
     /**

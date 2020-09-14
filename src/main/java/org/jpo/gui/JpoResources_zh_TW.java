@@ -65,14 +65,20 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO 版本 0.14 是基于Java/Swing 開發的軟件\n"
                     + "作者Richard Eigenmann在瑞士蘇黎世, \n"
-                    + "版權 2000 - 2019\n"
+                    + "版權 2000 - 2020\n"
                     + "郵件地址：richard.eigenmann@gmail.com\n"
                     + "軟件主頁网址：http://j-po.sourceforge.net\n"
                     + "\nExif（可交換圖像文件）的抽取部分蒙Drew Noakes的幫助\n"
                     + "表的排序部分蒙Philip Milne的幫助\n"
                     + "Mikael Grev develops MiG Layout\n"
                     + "Michael Rudolf develops JWizz\n"
-                    + "Franklin He translated to Chinese\n\n"},
+                    + "Franklin He translated to Chinese\n\n"
+                    + "Jarno Elonen wrote NanoHTTPD\n\n"
+                    + "Lode Leroy helped with running the code\n\n"
+                    + "Joe Azure contributed the page count on the Thumbnails\n\n"
+                    + "Dean S. Jones created the icons\n\n"
+                    + "Rob Camick wrote the WrapLayout\n\n"
+            },
             {"HelpAboutUser", "使用者："},
             {"HelpAboutOs", "操作系統："},
             {"HelpAboutJvm", "Java虛擬机"},

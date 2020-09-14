@@ -1,13 +1,12 @@
 package org.jpo.gui;
 
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
-
-
 
 /*
 JpgFilter.java:  filter to choose only jpg images
 
-Copyright (C) 2002 - 2011 Richard Eigenmann.
+Copyright (C) 2002 - 2020 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -21,13 +20,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-/** 
- *   This class overrides the abstract javax.swing.filechoose.FileFilter class
- *   (not the java.io.FileFilter) to provide a true or false indicator to
- *   using JFileChoosers whether the file is a directory or image 
- *   ending in .jpg or .jpeg. 
+
+/**
+ * This class overrides the abstract javax.swing.filechoose.FileFilter class
+ * (not the java.io.FileFilter) to provide a true or false indicator to
+ * using JFileChoosers whether the file is a directory or image
+ * ending in .jpg or .jpeg.
  **/
-public class JpgFilter extends javax.swing.filechooser.FileFilter {
+public class JpgFilter extends FileFilter {
 
     /**
      *  accepts directories and files ending in .jpg, .jpeg
@@ -36,11 +36,11 @@ public class JpgFilter extends javax.swing.filechooser.FileFilter {
      * @return true if OK
      */
     @Override
-    public boolean accept( File file ) {
+    public boolean accept(final File file) {
         String lowercaseFilename = file.getAbsolutePath().toLowerCase();
         return file.isDirectory()
-                || lowercaseFilename.endsWith( ".jpg" )
-                || lowercaseFilename.endsWith( ".jpeg" );
+                || lowercaseFilename.endsWith(".jpg")
+                || lowercaseFilename.endsWith(".jpeg");
     }
 
     /**

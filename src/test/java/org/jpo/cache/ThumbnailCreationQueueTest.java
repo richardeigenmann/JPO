@@ -4,9 +4,10 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -145,11 +146,11 @@ public class ThumbnailCreationQueueTest {
 
     private static class MyThumbnailQueueRequestCallbackHandler implements ThumbnailQueueRequestCallbackHandler {
 
-        public int notificationsCount = 0;
+        private ArrayList<ThumbnailQueueRequest> receivedNotifiactions = new ArrayList<>();
 
         @Override
         public void callbackThumbnailCreated( ThumbnailQueueRequest thumbnailQueueRequest ) {
-            notificationsCount++;
+            receivedNotifiactions.add(thumbnailQueueRequest);
         }
 
     }

@@ -9,7 +9,6 @@ import java.awt.*;
  * Described https://tips4java.wordpress.com/2008/11/06/wrap-layout/
  */
 public class WrapLayout extends FlowLayout {
-    private Dimension preferredLayoutSize;
 
     /**
      * Constructs a new <code>WrapLayout</code> with a left
@@ -84,20 +83,19 @@ public class WrapLayout extends FlowLayout {
      * @param preferred should preferred size be calculated
      * @return the dimension to layout the target container
      */
-    private Dimension layoutSize(Container target, boolean preferred) {
+    private Dimension layoutSize(final Container target, final boolean preferred) {
         synchronized (target.getTreeLock()) {
             //  Each row must fit with the width allocated to the containter.
             //  When the container width = 0, the preferred width of the container
             //  has not yet been calculated so lets ask for the maximum.
 
-            int targetWidth = target.getSize().width;
             Container container = target;
 
             while (container.getSize().width == 0 && container.getParent() != null) {
                 container = container.getParent();
             }
 
-            targetWidth = container.getSize().width;
+            int targetWidth = container.getSize().width;
 
             if (targetWidth == 0)
                 targetWidth = Integer.MAX_VALUE;
@@ -169,7 +167,7 @@ public class WrapLayout extends FlowLayout {
      *  @param rowWidth the width of the row to add
      *  @param rowHeight the height of the row to add
      */
-    private void addRow(Dimension dim, int rowWidth, int rowHeight) {
+    private void addRow(final Dimension dim, final int rowWidth, final int rowHeight) {
         dim.width = Math.max(dim.width, rowWidth);
 
         if (dim.height > 0) {

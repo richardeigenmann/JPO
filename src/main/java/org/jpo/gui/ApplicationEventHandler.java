@@ -574,7 +574,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleOpenSearchDialogRequest(final OpenSearchDialogRequest request) {
         if (!(request.getStartNode().getUserObject() instanceof GroupInfo)) {
-            LOGGER.log(Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this.toString());
+            LOGGER.log(Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this);
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
                     "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this,
@@ -1378,7 +1378,7 @@ public class ApplicationEventHandler {
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
-            for (SortableDefaultMutableTreeNode selectedNode : nodes) {
+            for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
                 if (selectedNode.getUserObject() instanceof PictureInfo pi) {
                     boolean ok = false;
 
@@ -1386,7 +1386,7 @@ public class ApplicationEventHandler {
                     if (highresFile.exists()) {
                         ok = highresFile.delete();
                         if (!ok) {
-                            LOGGER.log(Level.INFO, "File deleted failed on: {0}", highresFile.toString());
+                            LOGGER.log(Level.INFO, "File deleted failed on: {0}", highresFile);
                         }
                     }
 
@@ -1424,7 +1424,7 @@ public class ApplicationEventHandler {
                 final File fileToLoad = new File(Settings.getRecentCollections()[i]);
                 try {
                     Settings.getPictureCollection().fileLoad(fileToLoad);
-                } catch (FileNotFoundException ex) {
+                } catch (final FileNotFoundException ex) {
                     Logger.getLogger(ApplicationEventHandler.class.getName()).log(Level.SEVERE, null, ex);
                     LOGGER.log(Level.INFO, "FileNotFoundException: {0}", ex.getMessage());
                     JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

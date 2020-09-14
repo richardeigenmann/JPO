@@ -484,7 +484,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         scp.setScaleSize(options.getMidresDimension());
         LOGGER.log(Level.FINE, "Scaling: {0}", pictureInfo.getImageLocation());
         scp.scalePicture();
-        LOGGER.log(Level.FINE, "Writing: {0}", midresFile.toString());
+        LOGGER.log(Level.FINE, "Writing: {0}", midresFile);
         scp.setJpgQuality(options.getMidresJpgQuality());
         scp.writeScaledJpg(midresFile);
         w = scp.getScaledWidth();
@@ -1154,7 +1154,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             for (final File file : files) {
                 final InputStream input = new BufferedInputStream(new FileInputStream(file));
                 final String remote = options.getFtpTargetDir() + file.getName();
-                LOGGER.info(String.format("Putting file %s to %s", file.getAbsolutePath(), remote));
+                LOGGER.log(Level.INFO, "Putting file {0} to {1}", new Object[]{file.getAbsolutePath(), remote});
                 ftp.storeFile(remote, input);
                 input.close();
             }
@@ -1172,7 +1172,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param highresFile The name of the file to add
      */
     public static void addToZipFile(final ZipOutputStream zipFile, final PictureInfo pictureInfo, File highresFile) {
-        LOGGER.fine(String.format("Adding to zipfile: %s", highresFile.toString()));
+        LOGGER.log(Level.FINE, "Adding to zipfile: {0}", highresFile);
         try (
                 final InputStream in = new FileInputStream(pictureInfo.getImageFile());
                 final BufferedInputStream bin = new BufferedInputStream(in)) {

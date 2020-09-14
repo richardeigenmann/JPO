@@ -91,22 +91,21 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
     @Override
     protected JComponent createComponent() {
         final JPanel wizardPanel = new JPanel();
-        final MigLayout layout = new MigLayout( "wrap 1" );
-        wizardPanel.setLayout( layout );
+        final MigLayout layout = new MigLayout("wrap 1");
+        wizardPanel.setLayout(layout);
 
-        progressBar.setStringPainted( true );
-        progressBar.setMinimumSize( new Dimension( 250, 30 ) );
-        progressBar.setMaximumSize( new Dimension( 850, 30 ) );
+        progressBar.setStringPainted(true);
+        progressBar.setMinimumSize(new Dimension(250, 30));
+        progressBar.setMaximumSize(new Dimension(850, 30));
 
-        wizardPanel.add( progressBar );
+        wizardPanel.add(progressBar);
 
-        SortableDefaultMutableTreeNode node = myRequest.getNode();
-        //String albumName = ( (GroupInfo) node.getUserObject() ).getGroupName();
-        int pics = NodeStatistics.countPictures( node, false );
-        progressBar.setMinimum( 0 );
-        progressBar.setMaximum( pics );
+        final SortableDefaultMutableTreeNode node = myRequest.getNode();
+        final int pics = NodeStatistics.countPictures(node, false);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(pics);
 
-        ( new PicasaUploaderWorker( myRequest, progressBar, this ) ).execute();
+        (new PicasaUploaderWorker(myRequest, progressBar, this)).execute();
 
         return wizardPanel;
     }

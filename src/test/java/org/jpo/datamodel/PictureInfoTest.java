@@ -59,49 +59,45 @@ public class PictureInfoTest {
      */
     @Test
     public void testGetDescription() {
-        PictureInfo pi = new PictureInfo(new File("c:\\picture.jpg"), "My Sample Picture");
+        final PictureInfo pi = new PictureInfo(new File("c:\\picture.jpg"), "My Sample Picture");
         assertEquals("My Sample Picture", pi.getDescription());
     }
-
-    private int changeEvents;
 
     /**
      * Test of setDescription method, of class PictureInfo.
      */
     @Test
     public void testSetDescription() {
-        PictureInfo pi = new PictureInfo();
-        changeEvents = 0;
-        PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> changeEvents += 1;
+        final PictureInfo pi = new PictureInfo();
+        final int changeEvents[] = {0};
+        final PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> changeEvents[0] += 1;
         pi.addPictureInfoChangeListener(picl);
         pi.setDescription("A description");
         assertEquals("A description", pi.getDescription());
-        assertEquals(1, changeEvents);
+        assertEquals(1, changeEvents[0]);
         pi.setDescription("A different description");
         assertEquals("A different description", pi.getDescription());
-        assertEquals(2, changeEvents);
+        assertEquals(2, changeEvents[0]);
     }
-
-    private int countEvents;
 
     /**
      * Test Description change event
      */
     @Test
     public void testSetDescriptionSame() {
-        PictureInfo pi = new PictureInfo();
-        countEvents = 0;
-        PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> countEvents += 1;
+        final PictureInfo pi = new PictureInfo();
+        final int countEvents[] = {0};
+        final PictureInfoChangeListener picl = (PictureInfoChangeEvent arg0) -> countEvents[0] += 1;
         pi.addPictureInfoChangeListener(picl);
         pi.setDescription("A picture description");
         // Expecting what went in to come out
         assertEquals("A picture description", pi.getDescription());
-        assertEquals(1, countEvents);
+        assertEquals(1, countEvents[0]);
         pi.setDescription("A picture description");
         // Expecting what went in to come out
-        assertEquals( "A picture description", pi.getDescription());
+        assertEquals("A picture description", pi.getDescription());
         // Expecting no new change event because it was the same that went in
-        assertEquals( 1, countEvents);
+        assertEquals(1, countEvents[0]);
     }
 
     /**

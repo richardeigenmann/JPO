@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,28 +34,26 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 public class ToolsTest {
 
-    private boolean notOnEDT_ErrorThrown;
-
     /**
      * Constructor for the Tools Test class
      */
     @Test
     public void testCheckEDTnotOnEDT() {
         // if not on EDT must throw Error
-        notOnEDT_ErrorThrown = false;
-        Thread t = new Thread( () -> {
+        final boolean notOnEDT_ErrorThrown[] = {false};
+        final Thread t = new Thread(() -> {
             try {
                 Tools.checkEDT();
-            } catch ( EdtViolationException ex ) {
-                notOnEDT_ErrorThrown = true;
+            } catch (final EdtViolationException ex) {
+                notOnEDT_ErrorThrown[0] = true;
             }
-        } );
+        });
         t.start();
         try {
             t.join();
-            assertTrue(  notOnEDT_ErrorThrown );
-        } catch ( InterruptedException ex ) {
-            fail( "EDT violation not thrown" );
+            assertTrue(notOnEDT_ErrorThrown[0]);
+        } catch (final InterruptedException ex) {
+            fail("EDT violation not thrown");
             Thread.currentThread().interrupt();
         }
     }
@@ -70,20 +68,17 @@ public class ToolsTest {
         // if on EDT must not throw Error
         try {
             SwingUtilities.invokeAndWait( () -> {
-                boolean onEDTErrorThrown;
-                onEDTErrorThrown = false;
                 try {
                     Tools.checkEDT();
-                } catch ( EdtViolationException ex ) {
-                    onEDTErrorThrown = true;
+                    return;
+                } catch (final EdtViolationException ex) {
+                    fail("An EDT violation should not have been thrown!");
                 }
-                assertFalse(onEDTErrorThrown);
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "Something went wrong with the EDT thread test" );
             Thread.currentThread().interrupt();
         }
-
     }
 
 
@@ -93,11 +88,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDateTime() {
-        String d = "2017:01:28 12:26:04";
-        String expected = "2017-01-28 12:26:04";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "2017:01:28 12:26:04";
+        final String expected = "2017-01-28 12:26:04";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
 
     /**
@@ -105,11 +100,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDate() {
-        String d = "2017:01:28";
-        String expected = "2017-01-28 00:00:00";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "2017:01:28";
+        final String expected = "2017-01-28 00:00:00";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
 
     /**
@@ -117,11 +112,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDateGerman() {
-        String d = "15.01.2017";
-        String expected = "2017-01-15 00:00:00";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "15.01.2017";
+        final String expected = "2017-01-15 00:00:00";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
 
     /**
@@ -129,11 +124,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDateGermanMinutes() {
-        String d = "15.01.2017 18:11";
-        String expected = "2017-01-15 18:11:00";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "15.01.2017 18:11";
+        final String expected = "2017-01-15 18:11:00";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
 
     /**
@@ -141,11 +136,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDateGermanSeconds() {
-        String d = "15.01.2017 18:11:33";
-        String expected = "2017-01-15 18:11:33";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "15.01.2017 18:11:33";
+        final String expected = "2017-01-15 18:11:33";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
 
     /**
@@ -153,11 +148,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDateAmerican() {
-        String d = "9/11/2001";
-        String expected = "2001-09-11 00:00:00";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "9/11/2001";
+        final String expected = "2001-09-11 00:00:00";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
 
     /**
@@ -165,14 +160,11 @@ public class ToolsTest {
      */
     @Test
     public void testParseDateAmericanTime() {
-        String d = "9/11/2001 08:46";
-        String expected = "2001-09-11 08:46:00";
-        SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
-        String result = format.format( Objects.requireNonNull(Tools.parseDate(d)).getTime() );
-        assertEquals( expected, result );
+        final String d = "9/11/2001 08:46";
+        final String expected = "2001-09-11 08:46:00";
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
     }
-
-
-
 
 }

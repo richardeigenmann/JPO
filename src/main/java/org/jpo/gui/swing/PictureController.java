@@ -348,11 +348,11 @@ public class PictureController extends JComponent {
         if ( pictureControllerImage.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            int xOffset = (int) ((windowWidth / 2.0) - (focusPoint.x * pictureControllerImage.getScaleFactor()));
-            int yOffset = (int) ((windowHeight / 2.0) - (focusPoint.y * pictureControllerImage.getScaleFactor()));
+            final int xOffset = (int) ((windowWidth / 2.0) - (focusPoint.x * pictureControllerImage.getScaleFactor()));
+            final int yOffset = (int) ((windowHeight / 2.0) - (focusPoint.y * pictureControllerImage.getScaleFactor()));
 
             // clear damaged component area
-            Rectangle clipBounds = g2d.getClipBounds();
+            final Rectangle clipBounds = g2d.getClipBounds();
             g2d.setColor(getBackground());
             g2d.fillRect(clipBounds.x,
                     clipBounds.y,
@@ -402,11 +402,11 @@ public class PictureController extends JComponent {
                 // Convert screen coordinates of the mouse click into true
                 // coordinates on the picture:
 
-                int windowWidth = getSize().width;
-                int windowHeight = getSize().height;
+                final int windowWidth = getSize().width;
+                final int windowHeight = getSize().height;
 
-                int xOffset = e.getX() - (windowWidth / 2);
-                int yOffset = e.getY() - (windowHeight / 2);
+                final int xOffset = e.getX() - (windowWidth / 2);
+                final int yOffset = e.getY() - (windowHeight / 2);
 
                 setCenterLocation(
                         focusPoint.x + (int) (xOffset / pictureControllerImage.getScaleFactor()),

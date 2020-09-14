@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 
 /*
-Copyright (C) 2002-2019  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2020  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -61,14 +61,20 @@ public class JpoResources_en extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO Version 0.14 is a Java/Swing program\n"
                     + "written by Richard Eigenmann, Zürich, Switzerland\n"
-                    + "Copyright 2000 - 2019\n"
+                    + "Copyright 2000 - 2020\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
                     + "\nThe Exif extraction is courtesy of Drew Noakes\n"
                     + "The Table sorter is courtesy of Philip Milne\n"
                     + "Mikael Grev develops MiG Layout\n"
                     + "Michael Rudolf develops JWizz\n"
-                    + "Franklin He translated to Chinese\n\n"},
+                    + "Franklin He translated to Chinese\n\n"
+                    + "Jarno Elonen wrote NanoHTTPD\n\n"
+                    + "Lode Leroy helped with running the code\n\n"
+                    + "Joe Azure contributed the page count on the Thumbnails\n\n"
+                    + "Dean S. Jones created the icons\n\n"
+                    + "Rob Camick wrote the WrapLayout\n\n"
+            },
             {"HelpAboutUser", "User: "},
             {"HelpAboutOs", "Operating System: "},
             {"HelpAboutJvm", "JVM: "},

@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -91,7 +92,7 @@ public class JpoTransferable
      */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        LOGGER.fine(flavorsToString());
+        LOGGER.log(Level.FINE, flavorsToString());
 
         return flavors;
 
@@ -105,7 +106,7 @@ public class JpoTransferable
      */
     @Override
     public boolean isDataFlavorSupported(final DataFlavor flavor) {
-        LOGGER.info(String.format("Requested flavor %s is supported: %b", flavor.toString(), Arrays.asList(flavors).contains(flavor)));
+        LOGGER.log(Level.INFO, "Requested flavor {0} is supported: {1}", new Object[]{flavor, Arrays.asList(flavors).contains(flavor)});
         return (Arrays.asList(flavors).contains(flavor));
     }
 
@@ -121,9 +122,9 @@ public class JpoTransferable
     @Override
     public Object getTransferData(final DataFlavor flavor)
             throws UnsupportedFlavorException {
-        LOGGER.fine(String.format("Transferable requested as DataFlavor: %s", flavor.toString()));
+        LOGGER.log(Level.FINE, "Transferable requested as DataFlavor: {0}", flavor);
         if (flavor.equals(jpoNodeFlavor)) {
-            LOGGER.fine("returning the Java array of nodes as a transferable");
+            LOGGER.log(Level.FINE, "returning the Java array of nodes as a transferable");
             return transferableNodes;
         } else if (flavor.equals(DataFlavor.stringFlavor)) {
             return getStringTransferData();
@@ -144,12 +145,11 @@ public class JpoTransferable
     private Object getStringTransferData() {
         final StringBuilder filenames = new StringBuilder();
         for (final SortableDefaultMutableTreeNode node : transferableNodes) {
-            Object userObject = node.getUserObject();
-            if (userObject instanceof PictureInfo pi) {
+            if (node.getUserObject() instanceof PictureInfo pi) {
                 filenames.append("\"").append(pi.getImageFile()).append("\", ");
             }
         }
-        LOGGER.info(String.format("Returning the following String as stringFlavor: %s", filenames.toString()));
+        LOGGER.log(Level.INFO, "Returning the following String as stringFlavor: {0}", filenames);
         return filenames.toString();
     }
 
@@ -162,13 +162,12 @@ public class JpoTransferable
         final List<File> fileList = new ArrayList<>();
         for (final Object transferableNode : transferableNodes) {
             if (transferableNode instanceof SortableDefaultMutableTreeNode n) {
-                Object userObject = n.getUserObject();
-                if (userObject instanceof PictureInfo pi) {
+                if (n.getUserObject() instanceof PictureInfo pi) {
                     fileList.add(pi.getImageFile());
                 }
             }
         }
-        LOGGER.info(String.format("Returning %d files in a list", fileList.size()));
+        LOGGER.log(Level.INFO, "Returning {0} files in a list", fileList.size());
         return fileList;
     }
 
@@ -180,12 +179,11 @@ public class JpoTransferable
     private Object getImageTransferable() {
         final List<Object> imageList = new ArrayList<>();
         for (final Object transferableNode : transferableNodes) {
-            if (transferableNode instanceof SortableDefaultMutableTreeNode node) {
-                if (node.getUserObject() instanceof PictureInfo pi) {
-                    final SourcePicture sourcePicture = new SourcePicture();
-                    sourcePicture.loadPicture(pi.getImageFile(), pi.getRotation());
-                    imageList.add(sourcePicture.getSourceBufferedImage());
-                }
+            if ((transferableNode instanceof SortableDefaultMutableTreeNode node)
+                    && (node.getUserObject() instanceof PictureInfo pi)) {
+                final SourcePicture sourcePicture = new SourcePicture();
+                sourcePicture.loadPicture(pi.getImageFile(), pi.getRotation());
+                imageList.add(sourcePicture.getSourceBufferedImage());
             }
         }
         LOGGER.info("Returning a BufferedImage in the Transferable");
@@ -213,7 +211,6 @@ public class JpoTransferable
      */
     @Override
     public void lostOwnership(final Clipboard clipboard, final Transferable contents) {
-        LOGGER.info(String.format("lostOwnership clipboard: %s, Transferable: %s", clipboard.toString(), contents.toString()));
-
+        LOGGER.log(Level.INFO, "lostOwnership clipboard: [0}, Transferable: {1}", new Object[]{clipboard, contents});
     }
 }

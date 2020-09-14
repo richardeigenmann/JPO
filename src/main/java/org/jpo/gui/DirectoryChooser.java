@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -232,7 +233,7 @@ public class DirectoryChooser
     private void sendChangeNotification() {
         final String newFieldContents = getText();
         if ( !oldFieldContents.equals( newFieldContents ) ) {
-            LOGGER.fine( String.format( "The field changed from %s to %s", oldFieldContents, newFieldContents ) );
+            LOGGER.log(Level.FINE, "The field changed from {0} to {1}", new Object[]{oldFieldContents, newFieldContents});
             setColor();
             oldFieldContents = newFieldContents;
             synchronized ( changeListeners ) {

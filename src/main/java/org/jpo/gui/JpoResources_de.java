@@ -62,14 +62,20 @@ public class JpoResources_de extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO Version 0.14 ist ein Java/Swing Programm\n"
                     + "geschrieben von Richard Eigenmann, Zürich, Schweiz\n"
-                    + "Copyright 2000 - 2019\n"
+                    + "Copyright 2000 - 2020\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
                     + "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"
                     + "Der Tabellen Sortierer stammt von Philip Milne\n"
                     + "Mikael Grev entwickelt MiG Layout\n"
                     + "Michael Rudolf entwickelt JWizz\n"
-                    + "Franklin He übersetzte ins Chinesische\n\n"},
+                    + "Franklin He übersetzte ins Chinesische\n\n"
+                    + "Jarno Elonen schrieb NanoHTTPD\n\n"
+                    + "Lode Leroy hilf mit dem starten vom jar\n\n"
+                    + "Joe Azure schrieb den Zähler bei den Thumbnails\n\n"
+                    + "Dean S. Jones entwickelte die icons\n\n"
+                    + "Rob Camick schrieb WrapLayout\n\n"
+            },
             {"HelpAboutUser", "Benutzer: "},
             {"HelpAboutOs", "Betriebssystem: "},
             {"HelpAboutJvm", "JVM: "},

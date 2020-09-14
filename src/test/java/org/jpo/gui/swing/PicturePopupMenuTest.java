@@ -60,16 +60,16 @@ public class PicturePopupMenuTest {
      * make sure the details of the class are working properly.
      *
      */
-    final private PictureInfo myPictureInfo = new PictureInfo();
-    final private GroupInfo myGroupInfo = new GroupInfo("Parent Group");
-    final private SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-    final private SortableDefaultMutableTreeNode myParentNode = new SortableDefaultMutableTreeNode(myGroupInfo);
+    private final PictureInfo myPictureInfo = new PictureInfo();
+    private final GroupInfo myGroupInfo = new GroupInfo("Parent Group");
+    private final SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
+    private final SortableDefaultMutableTreeNode myParentNode = new SortableDefaultMutableTreeNode(myGroupInfo);
 
-    final private SingleNodeNavigator myNavigator = new SingleNodeNavigator(myNode);
+    private final SingleNodeNavigator myNavigator = new SingleNodeNavigator(myNode);
     private PicturePopupMenu myPicturePopupMenu;
 
     private JMenuItem title;
-    private JMenuItem showPicture;
+    private JMenuItem showPictureJMenuItem;
     private JMenuItem showMap;
     private JMenuItem openFolder;
     private JMenu navigateTo;
@@ -132,7 +132,7 @@ public class PicturePopupMenuTest {
             SwingUtilities.invokeAndWait(() -> {
                 myPicturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 title = (JMenuItem) myPicturePopupMenu.getComponent(0);
-                showPicture = (JMenuItem) myPicturePopupMenu.getComponent(2);
+                showPictureJMenuItem = (JMenuItem) myPicturePopupMenu.getComponent(2);
                 showMap = (JMenuItem) myPicturePopupMenu.getComponent(3);
                 openFolder = (JMenuItem) myPicturePopupMenu.getComponent(4);
                 navigateTo = (JMenu) myPicturePopupMenu.getComponent(5);
@@ -216,7 +216,7 @@ public class PicturePopupMenuTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 assertEquals("My Picture", title.getText());
-                assertEquals("Show Picture", showPicture.getText());
+                assertEquals("Show Picture", showPictureJMenuItem.getText());
                 assertEquals("Show Map", showMap.getText());
                 assertEquals("Navigate to", navigateTo.getText());
                 assertEquals("Categories", categories.getText());
@@ -256,8 +256,8 @@ public class PicturePopupMenuTest {
      * Test clicking showPicture
      */
     @Test
-    public void testShowPicture() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    public void testShowPictureJMenuItemClick() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureRequest(ShowPictureRequest request) {
@@ -265,7 +265,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, showPictureEventCount);
-        GuiActionRunner.execute(() -> showPicture.doClick());
+        GuiActionRunner.execute(() -> showPictureJMenuItem.doClick());
         assertEquals(1, showPictureEventCount);
     }
 

@@ -106,7 +106,7 @@ public class CameraDownloadWizardStep1
 
         @Override
         public void run() {
-            LOGGER.log(Level.INFO, "{0}.run: searching for the new pictures on the camera {1}", new Object[]{getClass().toString(), dataModel.getCamera().getDescription()});
+            LOGGER.log(Level.INFO, "{0}.run: searching for the new pictures on the camera {1}", new Object[]{getClass(), dataModel.getCamera().getDescription()});
             dataModel.setNewPictures(dataModel.getCamera().getNewPictures());
 
             final Runnable r = () -> {

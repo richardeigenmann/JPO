@@ -30,7 +30,7 @@ public class NodeNavigatorTest {
 
     private static class MyNodeNavigatorListener implements NodeNavigatorListener {
 
-        public int nodeLayoutChangedCount;
+        private int nodeLayoutChangedCount;
 
         @Override
         public void nodeLayoutChanged() {

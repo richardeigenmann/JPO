@@ -18,7 +18,6 @@ import java.awt.event.WindowEvent;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /*
  Copyright (C) 2004-2020  Richard Eigenmann.
@@ -41,11 +40,6 @@ import java.util.logging.Logger;
  *
  */
 public class EmailerGui extends JFrame {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( EmailerGui.class.getName() );
 
     /**
      * Internal array that holds the nodes to be send by email.
@@ -187,7 +181,6 @@ public class EmailerGui extends JFrame {
 
         jPanel.add(new JLabel(Settings.getJpoResources().getString("messageJLabel")), "");
 
-        //messageJTextArea.setRows( 12 );
         JScrollPane messageJScrollPane = new JScrollPane(messageJTextArea);
         messageJScrollPane.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
         messageJScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -252,7 +245,6 @@ public class EmailerGui extends JFrame {
         scaleSizeJPanel.setPreferredSize(new Dimension(550, 25));
         scaleSizeJPanel.setMinimumSize(new Dimension(450, 25));
         scaleSizeJPanel.setMaximumSize(new Dimension(1000, 25));
-        //scaleSizeJPanel.setInsets( new Insets(0,0,0,0) );
 
         scalePicturesJCheckBox.addItemListener(( ItemEvent e ) -> {
             if ( e.getStateChange() == ItemEvent.DESELECTED ) {
@@ -263,7 +255,6 @@ public class EmailerGui extends JFrame {
                 imageHeightWholeNumberField.setEnabled(true);
             }
         });
-        //scalePicturesJCheckBox.setInsets( new Insets(0,0,0,0) );
         scaleSizeJPanel.add(scalePicturesJCheckBox);
 
         imageWidthWholeNumberField.setPreferredSize(Settings.getShortNumberPreferredSize());

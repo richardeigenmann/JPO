@@ -197,7 +197,7 @@ public class ThumbnailDescriptionController
         } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
             panel.setCategories(getCategoriesText(pi));
             final Collection<Integer> categories = pi.getCategoryAssignments();
-            if (!(categories == null)) {
+            if (categories != null) {
                 categories.forEach(category -> {
                     String categoryDescription = Settings.getPictureCollection().getCategory(category);
                     AbstractButton component = panel.addCategory(categoryDescription);
