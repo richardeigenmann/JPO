@@ -22,5 +22,5 @@ blocks:
             - cd ~/JPO
             - ./gradlew compileTestJava
             #- ./gradlew check buildWindowsExecutable buildWindowsInstaller
-            - ls -l build/libs/
+            #- ls -l build/libs/
             #- ls -l build/executables
