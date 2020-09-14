@@ -48,6 +48,7 @@ public class PicturePopupMenuTest {
 
     @BeforeAll
     public static void setUpOnce() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         FailOnThreadViolationRepaintManager.install();
     }
 
