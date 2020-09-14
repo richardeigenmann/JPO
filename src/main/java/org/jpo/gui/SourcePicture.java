@@ -199,7 +199,7 @@ public class SourcePicture {
         try (final ByteArrayInputStream bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
             reader = getImageIOReader(iis);
             if (reader == null) {
-                LOGGER.severe(String.format("No reader found for URL: %s", imageFile.toString()));
+                LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
                 setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));
                 sourcePictureBufferedImage = null;
                 return;
@@ -212,7 +212,7 @@ public class SourcePicture {
                 sourcePictureBufferedImage = reader.read(0);
 
                 if (sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
-                    LOGGER.fine(String.format("Got wrong image type: %d instead of %d. Trying to convert...", sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR));
+                    LOGGER.log(Level.FINE, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
 
                     final BufferedImage newImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
                             sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
@@ -223,7 +223,7 @@ public class SourcePicture {
                 }
 
             } catch (final OutOfMemoryError e) {
-                LOGGER.severe("Caught an OutOfMemoryError while loading an image: " + e.getMessage());
+                LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
                 reader.removeIIOReadProgressListener(myIIOReadProgressListener);
                 reader.dispose();
 
@@ -324,12 +324,12 @@ public class SourcePicture {
         }
 
         if (pictureStatusCode != SOURCE_PICTURE_LOADING) {
-            LOGGER.log(Level.FINE, "called but pointless since image is not LOADING: {0}", imageFile.toString());
+            LOGGER.log(Level.FINE, "called but pointless since image is not LOADING: {0}", imageFile);
             return false;
         }
 
         if (!exemptionFile.equals(imageFile)) {
-            LOGGER.log(Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{exemptionFile.toString(), imageFile.toString()});
+            LOGGER.log(Level.FINE, "called with Url {0} --> stopping loading of {1}", new Object[]{exemptionFile, imageFile});
             stopLoading();
             return true;
         } else {

@@ -14,8 +14,8 @@ import org.tagcloud.WeightedWord;
 import org.tagcloud.WeightedWordInterface;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.util.*;
-import java.util.logging.Logger;
 
 /*
  Copyright (C) 2009-2020  Richard Eigenmann.
@@ -36,10 +36,6 @@ import java.util.logging.Logger;
  * Manages the Tag Cloud
  */
 public class TagCloudController implements TagClickListener {
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(TagCloudController.class.getName());
 
     /**
      * Reference to the TagCloud widget
@@ -264,15 +260,10 @@ public class TagCloudController implements TagClickListener {
          * Zips through the nodes and builds the word to node set map.
          */
         private void buildList() {
-            SortableDefaultMutableTreeNode node;
-            Object userObject;
-            Enumeration nodes = rootNode.breadthFirstEnumeration();
+            Enumeration<TreeNode> nodes = rootNode.breadthFirstEnumeration();
             while ( nodes.hasMoreElements() ) {
-                node = (SortableDefaultMutableTreeNode) nodes.nextElement();
-                userObject = node.getUserObject();
-                if ( userObject instanceof PictureInfo ) {
-                    String description = ( (PictureInfo) userObject ).getDescription();
-                    splitAndAdd( description );
+                if (((SortableDefaultMutableTreeNode) nodes.nextElement()).getUserObject() instanceof PictureInfo pi) {
+                    splitAndAdd(pi.getDescription());
                 }
             }
             wordCountMap.keySet().forEach(key -> weightedWordList.add(new WeightedWord(key, wordCountMap.get(key))));
