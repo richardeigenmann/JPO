@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2017 - 2019 Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,33 +22,11 @@ import java.util.List;
  */
 
 /**
- * Request to copy the pictures of the supplied nodes to a directory to be 
+ * Request to copy the pictures of the supplied nodes to a directory to be
  * picked from a Filechooser
  *
+ * @param nodes The nodes for which the user would like copy the pictures
  * @author Richard Eigenmann
  */
-public class CopyToNewLocationRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * Request to indicate that the user would like to copy the pictures in the selected nodes to a target directory
-     *
-     * @param nodes The nodes for which the user would like copy the pictures
-     */
-    public CopyToNewLocationRequest( List<SortableDefaultMutableTreeNode> nodes ) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes for which the dialog should be executed
-     *
-     * @return the node
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-    
-    
+public record CopyToNewLocationRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
 }

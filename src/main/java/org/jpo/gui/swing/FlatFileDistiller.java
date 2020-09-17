@@ -100,7 +100,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
             return;
         }
 
-        startNode = request.getNode();
+        startNode = request.node();
         this.execute();
 
     }

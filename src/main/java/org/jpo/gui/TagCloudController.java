@@ -71,8 +71,8 @@ public class TagCloudController implements TagClickListener {
     @Subscribe
     public void handleGroupSelectionEvent( final ShowGroupRequest event ) {
         SwingUtilities.invokeLater( () -> {
-            nodeWordMapper = new NodeWordMapper(event.getNode());
-            tagCloud.setWordsList( nodeWordMapper.getWeightedWords() );
+            nodeWordMapper = new NodeWordMapper(event.node());
+            tagCloud.setWordsList(nodeWordMapper.getWeightedWords());
         } );
     }
 

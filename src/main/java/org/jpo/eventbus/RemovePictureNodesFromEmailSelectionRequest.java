@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,26 +27,5 @@ import java.util.List;
  *
  * @author Richard Eigenmann
  */
-public class RemovePictureNodesFromEmailSelectionRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodesList;
-
-    /**
-     * A request to remove the nodes from the email selection
-     *
-     * @param nodesList The nodes to remove
-     */
-    public RemovePictureNodesFromEmailSelectionRequest( List<SortableDefaultMutableTreeNode> nodesList ) {
-        this.nodesList = nodesList;
-    }
-
-    /**
-     * Returns the nodes whose pictures are to be removed
-     *
-     * @return the Nodes
-     */
-    public List<SortableDefaultMutableTreeNode> getNodesList() {
-        return nodesList;
-    }
-
+public record RemovePictureNodesFromEmailSelectionRequest(@NotNull List<SortableDefaultMutableTreeNode> nodesList) {
 }

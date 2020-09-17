@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,27 +21,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * The receiver of this request is supposed to spawn two panels and start a random slideshow
- * 
+ *
+ * @param node The root node
  * @author Richard Eigenmann
  */
-public class StartDoublePanelSlideshowRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to start a double panel slideshow
-     * @param node The root node
-     */
-    public StartDoublePanelSlideshowRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node for which the picture is to be shown.
-     * @return the Node with the picture
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record StartDoublePanelSlideshowRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

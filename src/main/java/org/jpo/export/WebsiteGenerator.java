@@ -161,7 +161,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 zipFile.close();
             }
         } catch (IOException x) {
-            LOGGER.log(Level.SEVERE, "Error closing Zipfile. Cotninuing.\n{0}", x.toString());
+            LOGGER.log(Level.SEVERE, "Error closing Zipfile. Continuing.\n{0}", x.getMessage());
             options.setGenerateZipfile(false);
         }
 
@@ -183,7 +183,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
                         "got an IOException copying icon_folder.gif\n" + x.getMessage(),
-                        "IOExeption",
+                        "IOException",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -209,7 +209,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process(final List<String> messages) {
-        messages.stream().peek(message -> LOGGER.info(String.format("messge: %s", message))).forEachOrdered(item
+        messages.stream().peek(message -> LOGGER.info(String.format("Message: %s", message))).forEachOrdered(item
                 -> progressGui.progressIncrement()
         );
     }
@@ -343,7 +343,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
                     "got an IOException??",
-                    "IOExeption",
+                    "IOException",
                     JOptionPane.ERROR_MESSAGE);
         }
 
@@ -492,11 +492,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         if (options.isGenerateMidresHtml()) {
 
-            File midresHtmlFile = new File(options.getTargetDirectory(), midresHtmlFileName);
+            final File midresHtmlFile = new File(options.getTargetDirectory(), midresHtmlFileName);
             files.add(midresHtmlFile);
             try (
-                    BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
-                String groupDescriptionHtml
+                    final BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
+                final String groupDescriptionHtml
                         = StringEscapeUtils.escapeHtml4(pictureNode.getParent().getUserObject().toString());
 
                 midresHtmlWriter.write("<!DOCTYPE HTML>");
@@ -510,9 +510,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write("<tr><td class=\"midresPictureCell\">");
-                String imgTag = "<img src=\"" + midresFile.getName() + "\" width= \"" + w + "\" height=\""
-                        + h + "\" alt=\""
-                        + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()) + "\" />";
+                final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFile.getName(), w, h, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
 
                 if (options.isLinkToHighres()) {
                     midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">" + imgTag + "</a>");
@@ -589,23 +587,22 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         String lowresFn;
 
                         nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i - 1);
-                        if (nde.getUserObject() instanceof PictureInfo) {
+                        if (nde.getUserObject() instanceof PictureInfo pi) {
                             switch (options.getPictureNaming()) {
                                 case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                                    PictureInfo pi = (PictureInfo) nde.getUserObject();
-                                    String rootName = cleanupFilename(getFilenameRoot(pi.getImageFile().getName()));
+                                    final String rootName = cleanupFilename(getFilenameRoot(pi.getImageFile().getName()));
                                     nodeUrl = rootName + ".htm";
                                     lowresFn = rootName + "_l." + extension;
                                     break;
                                 case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                    String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() + i - childNumber - 1);
-                                    String padding = "00000";
-                                    String root = padding.substring(convertedNumber.length()) + convertedNumber;
+                                    final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() + i - childNumber - 1);
+                                    final String padding = "00000";
+                                    final String root = padding.substring(convertedNumber.length()) + convertedNumber;
                                     nodeUrl = "jpo_" + root + ".htm";
                                     lowresFn = "jpo_" + root + "_l." + extension;
                                     break;
                                 default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                                    int hashCode = nde.hashCode();
+                                    final int hashCode = nde.hashCode();
                                     nodeUrl = "jpo_" + hashCode + ".htm";
                                     lowresFn = "jpo_" + nde.hashCode() + "_l." + extension;
                                     break;
@@ -665,16 +662,16 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
                                 Object userObject = priorNode.getUserObject();
-                                if (userObject instanceof PictureInfo) {
-                                    previousHtmlFilename = cleanupFilename(getFilenameRoot(((PictureInfo) userObject).getImageFile().getName())) + ".htm";
+                                if (userObject instanceof PictureInfo pi) {
+                                    previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
                                 } else {
                                     previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                                 }
                                 break;
                             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 2);
-                                String padding = "00000";
-                                String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                                final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 2);
+                                final String padding = "00000";
+                                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
                                 previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
                                 break;
                             default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
@@ -700,20 +697,20 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
                                 Object userObject = priorNode.getUserObject();
-                                if (userObject instanceof PictureInfo) {
-                                    nextHtmlFilename = cleanupFilename(getFilenameRoot(((PictureInfo) userObject).getImageFile().getName())) + ".htm";
+                                if (userObject instanceof PictureInfo pi) {
+                                    nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
                                 } else {
                                     nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
                                 }
                                 break;
                             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber());
-                                String padding = "00000";
-                                String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                                final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber());
+                                final String padding = "00000";
+                                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
                                 nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
                                 break;
                             default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                                int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
+                                final int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
                                 nextHtmlFilename = "jpo_" + hashCode + ".htm";
                                 break;
                         }
@@ -793,7 +790,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param s The string for which the root of the filename is being requested
      * @return the filename
      */
-    public static String getFilenameRoot(String s) {
+    public static String getFilenameRoot(final String s) {
         String fnroot = null;
         int i = s.lastIndexOf('.');
 

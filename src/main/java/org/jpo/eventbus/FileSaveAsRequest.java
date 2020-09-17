@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,32 +16,15 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import javax.annotation.Nullable;
+
 /**
  * This request indicates that the user wants to save the collection under a new
  * name
  *
+ * @param onSuccessNextRequest the next request or null if not desired
  * @author Richard Eigenmann
  */
-public class FileSaveAsRequest implements Request {
-
-
-    private Request onSucccessNextRequest;
-
-    /**
-     * Optional next request to call after successfully saving the file.
-     *
-     * @param onSuccessNextRequest the next request
-     */
-    public void setOnSuccessNextRequest( Request onSuccessNextRequest ) {
-        this.onSucccessNextRequest = onSuccessNextRequest;
-    }
-
-    /**
-     * Returns the next event to submit only if the file was successfully saved
-     * @return The next event to execute on a successful save
-     */
-    public Request getOnSuccessNextRequest() {
-        return onSucccessNextRequest;
-    }
-
+public record FileSaveAsRequest(@Nullable Object onSuccessNextRequest) {
 }
+

@@ -56,16 +56,16 @@ public class FlatFileReader {
      */
     public static void handleRequest(final AddFlatFileRequest request) {
         final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(
-                new GroupInfo(request.getFile().getName()));
+                new GroupInfo(request.flatfile().getName()));
 
-        try (final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(request.getFile()), StandardCharsets.UTF_8))) {
+        try (final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(request.flatfile()), StandardCharsets.UTF_8))) {
             while (in.ready()) {
                 final String line = in.readLine();
                 final File testFile = getFile(line);
 
                 if (!testFile.canRead()) {
                     LOGGER.log(Level.INFO, "Can''t read file: {0}", line);
-                } else if ( jvmHasReader(testFile)) {
+                } else if (jvmHasReader(testFile)) {
 
                     LOGGER.log(Level.INFO, "adding file to node: {0}", line);
                     final SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
@@ -73,10 +73,10 @@ public class FlatFileReader {
                     newNode.add(newPictureNode);
                 }
             }
-            request.getNode().add( newNode );
-            request.getNode().getPictureCollection().sendNodeStructureChanged( request.getNode() );
-            request.getNode().getPictureCollection().setUnsavedUpdates( false );
-            JpoEventBus.getInstance().post( new ShowGroupRequest( newNode ) );
+            request.node().add(newNode);
+            request.node().getPictureCollection().sendNodeStructureChanged(request.node());
+            request.node().getPictureCollection().setUnsavedUpdates(false);
+            JpoEventBus.getInstance().post(new ShowGroupRequest(newNode));
         } catch ( final IOException ex ) {
             LOGGER.severe( ex.getLocalizedMessage() );
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

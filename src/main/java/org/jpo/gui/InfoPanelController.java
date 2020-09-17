@@ -69,7 +69,7 @@ public class InfoPanelController {
      */
     @Subscribe
     public void handleGroupSelectionEvent(final GroupSelectionEvent event) {
-        showInfo(event.getNode());
+        showInfo(event.node());
     }
 
     /**
@@ -79,7 +79,7 @@ public class InfoPanelController {
      */
     @Subscribe
     public void handleShowGroupRequest(final ShowGroupRequest event) {
-        showInfo(event.getNode());
+        showInfo(event.node());
     }
 
     /**

@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,29 +20,11 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
  */
 
 /**
- * This request indicates that the user wants to bring up a GUI to pick a 
+ * This request indicates that the user wants to bring up a GUI to pick a
  * collection and it to the group
- * 
+ *
+ * @param node The node to which the collection should be added
  * @author Richard Eigenmann
  */
-public class ChooseAndAddCollectionRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to bring up a GUI to add a collection
-     * @param node The node to which the collection should be added
-     */
-    public ChooseAndAddCollectionRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node to which the collection should be added
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ChooseAndAddCollectionRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

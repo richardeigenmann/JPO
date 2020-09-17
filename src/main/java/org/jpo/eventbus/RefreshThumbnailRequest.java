@@ -1,5 +1,6 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
@@ -7,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,40 +27,10 @@ import java.util.Objects;
  * This request indicates that the thumbnails of the specified nodes are
  * supposed to be refreshed
  *
+ * @param nodes    The nodes to be refreshed
+ * @param priority The priority for the creation queue
  * @author Richard Eigenmann
  */
-public class RefreshThumbnailRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-    private final QUEUE_PRIORITY priority;
-
-    /**
-     * A request to indicate that the specified thumbnails are supposed to be
-     * refreshed
-     *
-     * @param nodes The nodes to be refreshed
-     * @param priority The priority for the creation queue
-     */
-    public RefreshThumbnailRequest( List<SortableDefaultMutableTreeNode> nodes, QUEUE_PRIORITY priority ) {
-        this.nodes = Objects.requireNonNull(nodes);
-        this.priority = Objects.requireNonNull(priority);
-    }
-
-    /**
-     * Returns the nodes to be refreshed
-     *
-     * @return the Nodes to refresh
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-    /**
-     * Return the queue priority
-     * @return The priority for the queue
-     */
-    public QUEUE_PRIORITY getPriority() {
-        return priority;
-    }
-
+public record RefreshThumbnailRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes,
+                                      @NotNull QUEUE_PRIORITY priority) {
 }

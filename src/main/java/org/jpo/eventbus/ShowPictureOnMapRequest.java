@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,27 +21,8 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * The receiver of this request is supposed to show a map with a teardrop for the location of the picture
- * 
+ *
  * @author Richard Eigenmann
  */
-public class ShowPictureOnMapRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to show the supplied node in a a map
-     * @param node The node with the picture to show on the map
-     */
-    public ShowPictureOnMapRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node for which the map is to be shown.
-     * @return the Node with the picture
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ShowPictureOnMapRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

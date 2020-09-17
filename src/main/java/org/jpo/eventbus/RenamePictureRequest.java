@@ -7,7 +7,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import java.util.Objects;
 
 /*
- Copyright (C) 2017-2018  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,31 +24,16 @@ import java.util.Objects;
 
 /**
  * The receiver of this request is supposed to bring up the file rename dialog for the selected node
- * 
+ *
  * @author Richard Eigenmann
  */
-public class RenamePictureRequest implements Request {
+public record RenamePictureRequest(@NonNull SortableDefaultMutableTreeNode node) {
 
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to rename the supplied node 
-     * @param node The node to rename
-     */
-    public RenamePictureRequest( @NonNull SortableDefaultMutableTreeNode node ) {
+    public RenamePictureRequest {
         Objects.requireNonNull(node);
-        if ( ! (node.getUserObject() instanceof PictureInfo )) {
+        if (!(node.getUserObject() instanceof PictureInfo)) {
             throw new RuntimeException("The node must be of type PictureInfo");
         }
-        this.node = node;
-    }
-
-    /**
-     * Returns the node to be renamed
-     * @return the Node with the picture
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
     }
 
 }

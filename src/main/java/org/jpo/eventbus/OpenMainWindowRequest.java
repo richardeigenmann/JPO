@@ -1,6 +1,6 @@
 package org.jpo.eventbus;
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,10 +19,9 @@ import org.jpo.gui.ApplicationEventHandler;
 
 /**
  * This request indicates that the app wants to open the MainWindow
- * 
+ *
  * @author Richard Eigenmann
  * @see ApplicationEventHandler#handleOpenMainWindowRequest(OpenMainWindowRequest)
  */
-public class OpenMainWindowRequest implements Request {
-
+public class OpenMainWindowRequest {
 }

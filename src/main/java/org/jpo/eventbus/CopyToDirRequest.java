@@ -5,10 +5,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,46 +23,12 @@ import java.util.Objects;
  */
 
 /**
- * Request to copy the pictures of the supplied nodes to the supplied directory
+ * Request to indicate that the user would like to copy the pictures in the
+ * selected nodes to a target directory
  *
+ * @param nodes          The nodes for which the user would like copy the pictures
+ * @param targetLocation The target directory
  * @author Richard Eigenmann
  */
-public class CopyToDirRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-    private final File targetLocation;
-
-    /**
-     * Request to indicate that the user would like to copy the pictures in the
-     * selected nodes to a target directory
-     *
-     * @param nodes The nodes for which the user would like copy the pictures
-     * @param targetLocation The target directory
-     */
-    public CopyToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation ) {
-        Objects.requireNonNull(nodes);
-        Objects.requireNonNull(targetLocation);
-        this.nodes = nodes;
-        this.targetLocation = targetLocation;
-    }
-
-    /**
-     * The nodes for which the dialog should be executed
-     *
-     * @return the node
-     */
-    @NonNull
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-    /**
-     * Returns the target directory
-     * @return the target directory
-     */
-    @NonNull
-    public File getTargetLocation() {
-        return targetLocation;
-    }
-
+public record CopyToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation) {
 }

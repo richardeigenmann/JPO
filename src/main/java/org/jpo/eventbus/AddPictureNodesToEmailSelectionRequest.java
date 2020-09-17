@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,28 +25,8 @@ import java.util.List;
  * This request indicates that the supplied picture nodes should be added
  * to the email selection
  *
+ * @param nodesList The nodes to add
  * @author Richard Eigenmann
  */
-public class AddPictureNodesToEmailSelectionRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodesList;
-
-    /**
-     * A request to add the nodes to the email selection
-     *
-     * @param nodesList The nodes to add
-     */
-    public AddPictureNodesToEmailSelectionRequest( List<SortableDefaultMutableTreeNode> nodesList ) {
-        this.nodesList = nodesList;
-    }
-
-    /**
-     * Returns the nodes whose pictures are to be added
-     *
-     * @return the Nodes
-     */
-    public List<SortableDefaultMutableTreeNode> getNodesList() {
-        return nodesList;
-    }
-
+public record AddPictureNodesToEmailSelectionRequest(@NotNull List<SortableDefaultMutableTreeNode> nodesList) {
 }

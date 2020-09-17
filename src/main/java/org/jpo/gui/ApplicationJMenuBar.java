@@ -331,12 +331,12 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         fileSaveJMenuItem.setMnemonic(KeyEvent.VK_S);
         fileSaveJMenuItem.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
-        fileSaveJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FileSaveRequest()));
+        fileSaveJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FileSaveRequest(null)));
         fileJMenu.add(fileSaveJMenuItem);
 
         fileSaveAsJMenuItem.setMnemonic(KeyEvent.VK_A);
         fileSaveAsJMenuItem.setAccelerator(KeyStroke.getKeyStroke('A', InputEvent.ALT_DOWN_MASK));
-        fileSaveAsJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FileSaveAsRequest()));
+        fileSaveAsJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FileSaveAsRequest(null)));
         fileJMenu.add(fileSaveAsJMenuItem);
 
         fileExitJMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));

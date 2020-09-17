@@ -79,7 +79,7 @@ public class CollectionJTreeController {
      */
     @Subscribe
     public void handleGroupSelectionEvent(final GroupSelectionEvent event) {
-        expandAndScroll(event.getNode());
+        expandAndScroll(event.node());
     }
 
     /**
@@ -90,7 +90,7 @@ public class CollectionJTreeController {
      */
     @Subscribe
     public void handleShowGroupRequest(final ShowGroupRequest request) {
-        expandAndScroll(request.getNode());
+        expandAndScroll(request.node());
     }
 
     /**

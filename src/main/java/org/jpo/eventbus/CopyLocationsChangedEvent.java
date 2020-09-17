@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -18,10 +18,8 @@ package org.jpo.eventbus;
 
 /**
  * This event indicates that the copy locations in the Settings object changed
- * 
+ *
  * @author Richard Eigenmann
  */
-public class CopyLocationsChangedEvent implements  NotificationEvent {
-
-   
+public class CopyLocationsChangedEvent {
 }

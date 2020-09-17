@@ -1,13 +1,14 @@
 package org.jpo.eventbus;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.Objects;
 
 /*
- Copyright (C) 2018 - 2019 Richard Eigenmann.
+ Copyright (C) 2018 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,45 +26,18 @@ import java.util.Objects;
 /**
  * The receiver of this request is supposed to bring up the file rename dialog for the selected node
  *
+ * @param node        The node to rename
+ * @param newFileName the new file name
  * @author Richard Eigenmann
  */
-public class RenameFileRequest implements Request {
+public record RenameFileRequest(@NonNull SortableDefaultMutableTreeNode node, @NotNull String newFileName) {
 
-    private final SortableDefaultMutableTreeNode node;
-    private final String newFileName;
-
-    /**
-     * A request to rename the supplied node
-     *
-     * @param node The node to rename
-     * @param newFileName the new file name
-     */
-    public RenameFileRequest(@NonNull SortableDefaultMutableTreeNode node, String newFileName) {
+    public RenameFileRequest {
         Objects.requireNonNull(node);
         Objects.requireNonNull(newFileName);
         if (!(node.getUserObject() instanceof PictureInfo)) {
             throw new RuntimeException("The node must be of type PictureInfo");
         }
-        this.node = node;
-        this.newFileName = newFileName;
-    }
-
-    /**
-     * Returns the node to be renamed
-     *
-     * @return the Node with the picture
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-
-    /**
-     * Returns the new file name
-     * @return the new file name
-     */
-    public String getNewFileName() {
-        return newFileName;
     }
 
 }

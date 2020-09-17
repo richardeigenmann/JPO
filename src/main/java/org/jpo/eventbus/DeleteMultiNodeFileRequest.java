@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,31 +22,11 @@ import java.util.List;
  */
 
 /**
- * This request indicates that the user wants to delete the files of a specific 
+ * This request indicates that the user wants to delete the files of a specific
  * nodes and remove the nodes
  *
+ * @param nodes The node for which the file and the nodes are to be deleted
  * @author Richard Eigenmann
  */
-public class DeleteMultiNodeFileRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * This request indicates that the user wants to delete the file of a specific node
-     *
-     * @param nodes The node for which the file and the nodes are to be deleted
-     */
-    public DeleteMultiNodeFileRequest( List<SortableDefaultMutableTreeNode> nodes ) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes to delete
-     *
-     * @return the nodes
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
+public record DeleteMultiNodeFileRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
 }

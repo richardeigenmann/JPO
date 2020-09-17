@@ -4,10 +4,9 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
-import java.util.Objects;
 
 /*
- Copyright (C) 2018-2019 Richard Eigenmann.
+ Copyright (C) 2018-2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,31 +24,8 @@ import java.util.Objects;
 /**
  * Request to move the pictures of the supplied nodes to the supplied directory
  *
+ * @param nodes The nodes for which the user would like move the pictures
  * @author Richard Eigenmann
  */
-public class MoveToNewLocationRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * Request to indicate that the user would like to move the pictures in the
-     * selected nodes to a target directory
-     *
-     * @param nodes The nodes for which the user would like move the pictures
-     */
-    public MoveToNewLocationRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes ) {
-        Objects.requireNonNull(nodes);
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes for which the dialog should be executed
-     *
-     * @return the node
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-
+public record MoveToNewLocationRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes) {
 }

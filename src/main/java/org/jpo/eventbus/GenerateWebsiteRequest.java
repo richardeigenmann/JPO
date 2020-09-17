@@ -7,7 +7,7 @@ import java.awt.*;
 import java.io.File;
 
 /*
- Copyright (C) 2008-2020,  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2020, Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,8 +26,10 @@ import java.io.File;
  * This object holds the details of how the WebsiteGenerator is supposed to
  * generate the output pages. It simplifies the interaction between the GUI and
  * the worker thread significantly.
+ * <p>
+ * This is not a record because of all the setters.
  */
-public class GenerateWebsiteRequest implements Request {
+public class GenerateWebsiteRequest {
 
     /**
      * The directory into which the web page will be generated.

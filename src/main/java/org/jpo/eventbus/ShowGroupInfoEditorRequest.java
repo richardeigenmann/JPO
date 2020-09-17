@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,27 +22,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 /**
  * The receiver of this request is supposed to spawn the Group Info Editor
  * for the supplied node.
- * 
+ *
+ * @param node The node with the group
  * @author Richard Eigenmann
  */
-public class ShowGroupInfoEditorRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to bring up the editor for the supplied node
-     * @param node The node with the group
-     */
-    public ShowGroupInfoEditorRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node for which the group info editor is to be shown.
-     * @return the Node with the picture
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ShowGroupInfoEditorRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

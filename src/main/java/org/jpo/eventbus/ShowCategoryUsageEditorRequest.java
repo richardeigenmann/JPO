@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.Set;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,27 +24,9 @@ import java.util.Set;
 /**
  * The receiver of this request is supposed to spawn the CategoryUsageEditor
  * for the supplied node.
- * 
+ *
+ * @param nodes The nodes
  * @author Richard Eigenmann
  */
-public class ShowCategoryUsageEditorRequest implements Request {
-
-    private final Set<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * A request to bring up the CategoryUsageEditor for the supplied nodes
-     * @param nodes The nodes
-     */
-    public ShowCategoryUsageEditorRequest( Set<SortableDefaultMutableTreeNode> nodes ) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * Returns the node for which the CategoryUsageEditor is to be shown.
-     * @return the Node with the picture
-     */
-    public Set<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
+public record ShowCategoryUsageEditorRequest(@NotNull Set<SortableDefaultMutableTreeNode> nodes) {
 }

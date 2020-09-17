@@ -5,7 +5,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import java.util.List;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,30 +23,8 @@ import java.util.List;
 /**
  * Request to copy the picture nodes to the system clipboard
  *
+ * @param nodes The nodes
  * @author Richard Eigenmann
  */
-public class CopyImageToClipboardRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode>nodes;
-
-    /**
-     * Request to copy the picture modes to the clipboard
-     *
-     * @param nodes The nodes
-     */
-    public CopyImageToClipboardRequest(List<SortableDefaultMutableTreeNode>nodes ) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes for which the operation should be done
-     *
-     * @return the nodes
-     */
-    public List<SortableDefaultMutableTreeNode>getNodes() {
-        return nodes;
-    }
-
-    
-    
+public record CopyImageToClipboardRequest(List<SortableDefaultMutableTreeNode> nodes) {
 }

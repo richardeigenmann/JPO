@@ -53,8 +53,8 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
     public ConsolidateGroupController(final ConsolidateGroupDialogRequest request) {
         this.request = request;
 
-        if (!(request.getNode().getUserObject() instanceof GroupInfo)) {
-            LOGGER.info(String.format("Node %s is not a group", request.getNode().toString()));
+        if (!(request.node().getUserObject() instanceof GroupInfo)) {
+            LOGGER.info(String.format("Node %s is not a group", request.node().toString()));
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("ConsolidateFailure"),
@@ -63,10 +63,10 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
             return;
         }
 
-        final ConsolidateGroupJFrame consolidateGroupJFrame = new ConsolidateGroupJFrame(this );
+        final ConsolidateGroupJFrame consolidateGroupJFrame = new ConsolidateGroupJFrame(this);
 
-        if (request.getTargetDir() != null) {
-            consolidateGroupJFrame.setTargetDir(request.getTargetDir());
+        if (request.targetDir() != null) {
+            consolidateGroupJFrame.setTargetDir(request.targetDir());
         }
     }
 
@@ -105,7 +105,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
 
         Settings.memorizeCopyLocation(targetDirectory.toString());
 
-        JpoEventBus.getInstance().post(new ConsolidateGroupRequest(request.getNode(), targetDirectory, recurseSubgroups));
+        JpoEventBus.getInstance().post(new ConsolidateGroupRequest(request.node(), targetDirectory, recurseSubgroups));
 
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
 

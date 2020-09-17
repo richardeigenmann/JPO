@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,29 +20,10 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
  */
 
 /**
- * This request indicates that the user wants to bring up a GUI to pick a flat 
- * file and it to the group
- * 
+ * This request indicates that the user wants to bring up a GUI to pick a flat
+ * file of picture filenames and it to the group
+ *
  * @author Richard Eigenmann
  */
-public class ChooseAndAddFlatfileRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to bring up a GUI to add a flat file of picture filenames to the group
-     * @param node The node to which the collection should be added
-     */
-    public ChooseAndAddFlatfileRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node to which the collection should be added
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ChooseAndAddFlatfileRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

@@ -1,10 +1,11 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,52 +25,11 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
  * The receiver of this request is supposed to rotate the picture to the 0
  * rotation angle
  *
+ * @param node     The node to rename
+ * @param angle    the angle
+ * @param priority The queue priority
  * @author Richard Eigenmann
  */
-public class SetPictureRotationRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final QUEUE_PRIORITY priority;
-    private final double angle;
-
-    /**
-     * A request to rotate the picture to 0 degrees rotation
-     *
-     * @param node The node to rename
-     * @param angle the angle
-     * @param priority The queue priority
-     */
-    public SetPictureRotationRequest( SortableDefaultMutableTreeNode node, double angle, QUEUE_PRIORITY priority ) {
-        this.node = node;
-        this.angle = angle;
-        this.priority = priority;
-    }
-
-    /**
-     * Returns the node to reset
-     *
-     * @return the Node to reset
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-    /**
-     * Returns the angle
-     * @return the new angle
-     */
-    public double getAngle() {
-        return angle;
-
-    }
-
-    /**
-     * Returns the queue priority
-     * @return the priority for the queue
-     */
-    public QUEUE_PRIORITY getPriority() {
-        return priority;
-
-    }
-
+public record SetPictureRotationRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull double angle,
+                                        @NotNull QUEUE_PRIORITY priority) {
 }

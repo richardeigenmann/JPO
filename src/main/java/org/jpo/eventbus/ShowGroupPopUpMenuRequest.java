@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.*;
 
 /*
- Copyright (C) 2019,  Richard Eigenmann, Zürich
+ Copyright (C) 2019 - 2020 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,54 +24,13 @@ import java.awt.*;
 
 /**
  * This request indicates that the group popup menu should be shown
- * 
+ *
+ * @param node    The node on which the request was invoked
+ * @param invoker The component on which the request was invoked
+ * @param x       the x coordinates for the popup window
+ * @param y       the y coordinates for the popup window
  * @author Richard Eigenmann
  */
-public class ShowGroupPopUpMenuRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final Component invoker;
-    private final int x;
-    private final int y;
-
-    /**
-     * A request to show the group popup menu
-     * @param node The node on which the request was invoked
-     * @param invoker The component on which the request was invoked
-     * @param x the x coordinates for the popup window
-     * @param y the y coordinates for the popup window
-     */
-    public ShowGroupPopUpMenuRequest(SortableDefaultMutableTreeNode node, Component invoker, int x, int y ) {
-        this.node = node;
-        this.invoker = invoker;
-        this.x = x;
-        this.y = y;
-    }
-
-    /**
-     * Returns the node
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-
-    /**
-     * The Swing component on which the menu was invoked
-     * @return the Swing component on which the menu was invoked
-     */
-    public Component getInvoker() { return invoker; }
-
-    /**
-     * The x coordinates for the menu
-     * @return the x coordinates for the menu
-     */
-    public int getX() {return x;}
-
-    /**
-     * The y coordinates for the menu
-     * @return the y coordinates for the menu
-     */
-    public int getY() {return y;}
+public record ShowGroupPopUpMenuRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull Component invoker,
+                                        @NotNull int x, @NotNull int y) {
 }

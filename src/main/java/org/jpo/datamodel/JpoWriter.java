@@ -67,7 +67,7 @@ public class JpoWriter {
      * @param request The request
      */
     public static void write(final ExportGroupToCollectionRequest request) {
-        write(request.getTargetFile(), request.getNode(), request.getExportPictures());
+        write(request.targetFile(), request.node(), request.exportPictures());
     }
 
 
@@ -139,7 +139,7 @@ public class JpoWriter {
         writeCategoriesBlock(pictureCollection, bufferedWriter);
     }
 
-    private static File getHighresTargetDir(boolean copyPics, File xmlOutputFile) {
+    private static File getHighresTargetDir(final boolean copyPics, final File xmlOutputFile) {
         File highresTargetDir = null;
 
         if (copyPics) {

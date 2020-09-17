@@ -18,10 +18,10 @@ package org.jpo.eventbus;
 
 /**
  * This event indicates that the recent drop nodes in the Settings object were changed
- * 
+ *
  * @author Richard Eigenmann
  */
-public class RecentDropNodesChangedEvent implements  NotificationEvent {
+public class RecentDropNodesChangedEvent {
 
-    
+
 }

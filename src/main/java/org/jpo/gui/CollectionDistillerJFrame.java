@@ -191,7 +191,7 @@ public class CollectionDistillerJFrame extends JFrame {
             }
         }
 
-        JpoEventBus.getInstance().post(new ExportGroupToCollectionRequest(request.getNode(), targetFile, exportPicsJCheckBox.isSelected()));
+        JpoEventBus.getInstance().post(new ExportGroupToCollectionRequest(request.node(), targetFile, exportPicsJCheckBox.isSelected()));
 
         Settings.memorizeCopyLocation(targetFile.getParent());
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());

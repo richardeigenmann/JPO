@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
 
 /*
- Copyright (C) 2019 Richard Eigenmann.
+ Copyright (C) 2019 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,49 +24,11 @@ import java.io.File;
 /**
  * Request to fulfill the ExportGroupToCollectionRequest
  *
+ * @param node           The node for which the user would like the dialog to be done
+ * @param targetFile     the target file
+ * @param exportPictures whether to export pictures
  * @author Richard Eigenmann
  */
-public class ExportGroupToCollectionRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final File targetFile;
-    private final boolean exportPictures;
-
-    /**
-     * Request to fulfill the ExportGroupToCollectionRequest
-     *
-     * @param node The node for which the user would like the dialog to be done
-     * @param targetFile the target file
-     * @param exportPictures whether to export pictures
-     */
-    public ExportGroupToCollectionRequest(final SortableDefaultMutableTreeNode node, final File targetFile, final boolean exportPictures) {
-        this.node = node;
-        this.targetFile = targetFile;
-        this.exportPictures = exportPictures;
-    }
-
-    /**
-     * The node to be exported
-     * @return the node
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-    /**
-     * Returns the target directory
-     * @return the target directory
-     */
-    public File getTargetFile() {
-        return targetFile;
-    }
-
-    /**
-     * Returns if pictures should be exported.
-     * @return True if pictures should be exported
-     */
-    public boolean getExportPictures() {
-        return exportPictures;
-    }
-
+public record ExportGroupToCollectionRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull File targetFile,
+                                             @NotNull boolean exportPictures) {
 }

@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -17,14 +17,12 @@ package org.jpo.eventbus;
  */
 
 /**
- * This request asks that the application restores the default positions of the 
+ * This request asks that the application restores the default positions of the
  * internal windows.
  *
+ * @author Richard Eigenmann
  * @see SaveDockablesPositionsRequest
  * @see LoadDockablesPositionsRequest
- *
- * @author Richard Eigenmann
  */
-public class RestoreDockablesPositionsRequest implements Request {
-
+public class RestoreDockablesPositionsRequest {
 }

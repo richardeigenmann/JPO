@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,28 +21,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * This request indicates that the group's child nodes should be added to the email selection
- * 
+ *
+ * @param node The node to which the empty group should be added
  * @author Richard Eigenmann
  */
-public class AddGroupToEmailSelectionRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to add the child nodes of the group to the email selection
-     * @param node The node to which the empty group should be added
-     */
-    public AddGroupToEmailSelectionRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the group node whose pictures are to be added
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-    
+public record AddGroupToEmailSelectionRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

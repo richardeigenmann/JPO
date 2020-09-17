@@ -77,7 +77,7 @@ public class AutoAdvanceDialog {
                 timerSecondsField
         };
 
-        final Component parentComponent = request.parentComponent;
+        final Component parentComponent = request.parentComponent();
         int selectedValue = showDialog(parentComponent, objects);
 
         try {
@@ -86,7 +86,7 @@ public class AutoAdvanceDialog {
             if ( selectedValue == 0 ) {
                 if ( randomAdvanceJRadioButton.isSelected() ) {
                     if ( useAllPicturesJRadioButton.isSelected() ) {
-                        SortableDefaultMutableTreeNode rootNode = Settings.getPictureCollection().getRootNode();
+                        final SortableDefaultMutableTreeNode rootNode = Settings.getPictureCollection().getRootNode();
                         mySetOfNodes
                                 = new RandomNavigator(
                                         rootNode.getChildPictureNodes( true ),
@@ -94,33 +94,33 @@ public class AutoAdvanceDialog {
                                                 Settings.getPictureCollection().getRootNode().toString() ) );
                     } else {
                         mySetOfNodes = new RandomNavigator(
-                                request.currentNode.getParent().getChildPictureNodes( true ),
-                                String.format( "Randomised pictures from %s",
-                                        ( request.currentNode.getParent() ).toString() ) );
+                                request.currentNode().getParent().getChildPictureNodes(true),
+                                String.format("Randomised pictures from %s",
+                                        (request.currentNode().getParent()).toString()));
                     }
                 } else {
                     if ( useAllPicturesJRadioButton.isSelected() ) {
-                        mySetOfNodes = new FlatGroupNavigator( request.currentNode.getRoot() );
+                        mySetOfNodes = new FlatGroupNavigator(request.currentNode().getRoot());
                     } else {
-                        mySetOfNodes = new FlatGroupNavigator( request.currentNode.getParent() );
+                        mySetOfNodes = new FlatGroupNavigator(request.currentNode().getParent());
                     }
 
                     myIndex = 0;
-                    request.autoAdvanceTarget.showNode( mySetOfNodes, myIndex );
+                    request.autoAdvanceTarget().showNode(mySetOfNodes, myIndex);
                 }
 
                 myIndex = 0;
-                request.autoAdvanceTarget.showNode( mySetOfNodes, myIndex );
-                request.autoAdvanceTarget.startAdvanceTimer( timerSecondsField.getValue() );
+                request.autoAdvanceTarget().showNode(mySetOfNodes, myIndex);
+                request.autoAdvanceTarget().startAdvanceTimer(timerSecondsField.getValue());
             }
-        } catch ( NullPointerException ex ) {
-            LOGGER.severe( "NPE!" );
+        } catch (final NullPointerException ex) {
+            LOGGER.severe("NPE!");
         }
     }
 
-    private int showDialog( Component parentComponent, Object message ) {
+    private int showDialog(final Component parentComponent, final Object message) {
         // hack to facilitate unit testing
-        if ( parentComponent instanceof ComponentMock ) {
+        if (parentComponent instanceof ComponentMock) {
             return 0;
         }
         return JOptionPane.showOptionDialog(

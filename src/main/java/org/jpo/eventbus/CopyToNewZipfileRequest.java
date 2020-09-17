@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2017-2019 Richard Eigenmann.
+ Copyright (C) 2017-2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,33 +22,11 @@ import java.util.List;
  */
 
 /**
- * Request to copy the pictures of the supplied nodes to a Zipfile to be picked 
+ * Request to copy the pictures of the supplied nodes to a Zipfile to be picked
  * from a Filechooser
  *
+ * @param nodes The nodes for which the user would like copy the pictures
  * @author Richard Eigenmann
  */
-public class CopyToNewZipfileRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * Request to indicate that the user would like to copy the pictures in the selected nodes to a target zipfile
-     *
-     * @param nodes The nodes for which the user would like copy the pictures
-     */
-    public CopyToNewZipfileRequest( List<SortableDefaultMutableTreeNode> nodes ) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes for which the operation should be done
-     *
-     * @return the node
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-    
-    
+public record CopyToNewZipfileRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
 }

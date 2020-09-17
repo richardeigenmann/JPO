@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,27 +21,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * This request indicates that the user wants to edit the group as a table
- * 
+ *
+ * @param node The node with the thumbnails to show
  * @author Richard Eigenmann
  */
-public class ShowGroupAsTableRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to show the group as a table
-     * @param node The node with the thumbnails to show
-     */
-    public ShowGroupAsTableRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node for which the group is to be shown
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ShowGroupAsTableRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

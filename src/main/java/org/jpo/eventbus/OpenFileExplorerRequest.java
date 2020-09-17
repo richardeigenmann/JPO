@@ -1,9 +1,11 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 /*
- Copyright (C) 2019  Richard Eigenmann.
+ Copyright (C) 2019 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,27 +22,9 @@ import java.io.File;
 
 /**
  * The receiver of this request is supposed to open the operating system file explorer
- * 
+ *
+ * @param directory The directory to open
  * @author Richard Eigenmann
  */
-public class OpenFileExplorerRequest implements Request {
-
-    private final File directory;
-
-    /**
-     * A request to show the supplied directory in a file explorer
-     * @param directory The directory to open
-     */
-    public OpenFileExplorerRequest(File directory ) {
-        this.directory = directory;
-    }
-
-    /**
-     * Returns the directory for which the explorer is to be shown.
-     * @return the File of the directory
-     */
-    public File getDirectory() {
-        return directory;
-    }
-
+public record OpenFileExplorerRequest(@NotNull File directory) {
 }

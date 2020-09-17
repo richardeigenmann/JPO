@@ -219,10 +219,10 @@ public class MainWindow extends JFrame {
     @Subscribe
     public void handleUpdateApplicationTitleRequest( final UpdateApplicationTitleRequest request ) {
         if ( SwingUtilities.isEventDispatchThread() ) {
-            setTitle( request.getTitle() );
+            setTitle(request.newTitle());
         } else {
-            SwingUtilities.invokeLater( ()
-                    -> setTitle( request.getTitle() )
+            SwingUtilities.invokeLater(()
+                    -> setTitle(request.newTitle())
             );
         }
     }

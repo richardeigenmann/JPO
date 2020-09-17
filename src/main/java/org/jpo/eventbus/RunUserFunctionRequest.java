@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,40 +22,9 @@ import org.jpo.datamodel.PictureInfo;
 /**
  * Requests a user function to be run
  *
+ * @param userFunctionIndex The user function to run
+ * @param pictureInfo       the picture against which we want to run the user function
  * @author Richard Eigenmann
  */
-public class RunUserFunctionRequest implements Request {
-
-    private final int userFunctionIndex;
-    private final PictureInfo pictureInfo;
-
-    /**
-     * A request to run a user function
-     *
-     * @param userFunctionIndex The user function to run
-     * @param pictureInfo the picture against which we want to run the user function
-     */
-    public RunUserFunctionRequest( int userFunctionIndex, PictureInfo pictureInfo ) {
-        this.userFunctionIndex = userFunctionIndex;
-        this.pictureInfo = pictureInfo;
-    }
-
-    /**
-     * Returns the number of the user function to run
-     *
-     * @return the user function
-     */
-    public int getUserFunctionIndex() {
-        return userFunctionIndex;
-    }
-
-    /**
-     * Returns the node against which to run the user function
-     *
-     * @return the user function node
-     */
-    public PictureInfo getPictureInfo() {
-        return pictureInfo;
-    }
-
+public record RunUserFunctionRequest(@NotNull int userFunctionIndex, @NotNull PictureInfo pictureInfo) {
 }

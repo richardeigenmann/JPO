@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -22,38 +23,10 @@ import java.io.File;
 
 /**
  * This request indicates that the user wants to add the supplied collection to the supplied group
- * 
+ *
+ * @param node           The node to which the collection should be added
+ * @param collectionFile The file with the collection
  * @author Richard Eigenmann
  */
-public class AddCollectionToGroupRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final File collectionFile;
-
-    /**
-     * A request to add the supplied collection file to the node
-     * @param node The node to which the collection should be added
-     * @param collectionFile The file with the collection
-     */
-    public AddCollectionToGroupRequest( SortableDefaultMutableTreeNode node, File collectionFile ) {
-        this.node = node;
-        this.collectionFile = collectionFile;
-    }
-
-    /**
-     * Returns the node to which the collection should be added
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-    /**
-     * Returns the collectionFile that should be added.
-     * @return the collection file
-     */
-    public File getCollectionFile() {
-        return collectionFile;
-    }
-    
+public record AddCollectionToGroupRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull File collectionFile) {
 }

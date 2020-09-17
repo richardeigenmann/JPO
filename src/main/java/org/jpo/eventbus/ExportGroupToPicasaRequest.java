@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,26 +21,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * Request to indicate that the user would like to export the pictures to Picasa
+ *
+ * @param node The node for which the user would like the dialog to be done
  * @author Richard Eigenmann
  */
-public class ExportGroupToPicasaRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * Request to indicate that the user would like to export the pictures to Picasa
-     * @param node The node for which the user would like the dialog to be done
-     */
-    public ExportGroupToPicasaRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * The node for which the dialog should be executed
-     * @return the node
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ExportGroupToPicasaRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

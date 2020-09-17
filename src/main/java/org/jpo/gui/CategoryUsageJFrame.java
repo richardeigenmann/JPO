@@ -75,7 +75,7 @@ public class CategoryUsageJFrame extends JFrame {
 
         initComponents();
 
-        Set<SortableDefaultMutableTreeNode> nodes = request.getNodes();
+        Set<SortableDefaultMutableTreeNode> nodes = request.nodes();
         setSelection( nodes );
     }
 

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,7 +52,7 @@ public class ShowAutoAdvanceDialogRequestTest {
     public void testReceivingEvent() {
         assumeFalse( GraphicsEnvironment.isHeadless() );
 
-        EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
+        final EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
         try {
@@ -61,16 +61,16 @@ public class ShowAutoAdvanceDialogRequestTest {
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 final PictureViewer pictureViewer = new PictureViewer();
 
-                ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest( componentMock, node, pictureViewer );
-                jpoEventBus.post( showAutoAdvanceDialogRequest );
+                final ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(componentMock, node, pictureViewer);
+                jpoEventBus.post(showAutoAdvanceDialogRequest);
 
-                assertEquals( showAutoAdvanceDialogRequest, responseEvent );
-                assertEquals( componentMock, responseEvent.parentComponent );
-                assertEquals( node, responseEvent.currentNode );
-                assertEquals( pictureViewer, responseEvent.autoAdvanceTarget );
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( ex.getMessage() );
+                assertEquals(showAutoAdvanceDialogRequest, responseEvent);
+                assertEquals(componentMock, responseEvent.parentComponent());
+                assertEquals(node, responseEvent.currentNode());
+                assertEquals(pictureViewer, responseEvent.autoAdvanceTarget());
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }
@@ -86,7 +86,7 @@ public class ShowAutoAdvanceDialogRequestTest {
     private class EventBusSubscriber {
 
         @Subscribe
-        public void handleGroupSelectionEvent( ShowAutoAdvanceDialogRequest event ) {
+        public void handleGroupSelectionEvent(final ShowAutoAdvanceDialogRequest event) {
             responseEvent = event;
         }
     }

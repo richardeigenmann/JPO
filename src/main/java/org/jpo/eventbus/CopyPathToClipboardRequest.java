@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2019  Richard Eigenmann.
+ Copyright (C) 2019 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,29 +24,8 @@ import java.util.List;
 /**
  * Request to copy the file path(s) of picture nodes to the system clipboard
  *
+ * @param nodes The nodes
  * @author Richard Eigenmann
  */
-public class CopyPathToClipboardRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * Request to copy the picture modes to the clipboard
-     *
-     * @param nodes The nodes
-     */
-    public CopyPathToClipboardRequest(List<SortableDefaultMutableTreeNode> nodes) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes for which the operation should be done
-     *
-     * @return the nodes
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-
+public record CopyPathToClipboardRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
 }

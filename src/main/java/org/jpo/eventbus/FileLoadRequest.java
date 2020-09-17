@@ -1,9 +1,11 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 -2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,31 +28,8 @@ import java.io.File;
  * <p>
  * {@code JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadRequest()) ); }
  *
+ * @param fileToLoad the file to load
  * @author Richard Eigenmann
  */
-public class FileLoadRequest implements Request {
-
-    
-    /**
-     * The file to load
-     */
-    private final File fileToLoad;
-
-    /**
-     * A request to load a file
-     * @param fileToLoad the file to load
-     */
-    public FileLoadRequest( File fileToLoad) {
-        this.fileToLoad = fileToLoad;
-    }
-
-    /**
-     * Returns the file to be loaded.
-     *
-     * @return The file to load
-     */
-    public File getFileToLoad() {
-        return fileToLoad;
-    }
-
+public record FileLoadRequest(@NotNull File fileToLoad) {
 }

@@ -1,12 +1,13 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.AutoAdvanceInterface;
 
 import java.awt.*;
 
 /*
- Copyright (C) 2017-2017,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2020,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,27 +21,16 @@ import java.awt.*;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This request indicates that the user wants to see the AutoAdvanceDialog
  *
+ * @param parentComponent   The component which anchors the dialog
+ * @param currentNode       The current node on which the dialog is opened
+ * @param autoAdvanceTarget The target widget that will do the auto advance
  * @author Richard Eigenmann
  */
-public class ShowAutoAdvanceDialogRequest implements Request {
-
-    public final Component parentComponent;
-    public final SortableDefaultMutableTreeNode currentNode;
-    public final AutoAdvanceInterface autoAdvanceTarget;
-
-    /**
-     * A request to open the AutoAdvanceDialog
-     * @param parentComponent The component which anchors the dialog
-     * @param currentNode The current node on which the dialog is opened
-     * @param autoAdvanceTarget The target widget that will do the auto advance
-     */
-    public ShowAutoAdvanceDialogRequest( Component parentComponent, SortableDefaultMutableTreeNode currentNode, AutoAdvanceInterface autoAdvanceTarget ) {
-        this.parentComponent = parentComponent;
-        this.currentNode = currentNode;
-        this.autoAdvanceTarget = autoAdvanceTarget;
-    }
-
+public record ShowAutoAdvanceDialogRequest(@NotNull Component parentComponent,
+                                           @NotNull SortableDefaultMutableTreeNode currentNode,
+                                           @NotNull AutoAdvanceInterface autoAdvanceTarget) {
 }

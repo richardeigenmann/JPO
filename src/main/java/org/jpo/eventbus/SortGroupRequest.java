@@ -1,10 +1,11 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,38 +22,10 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * This request indicates that the user wants to sort a group by the specified criteria
- * 
+ *
+ * @param node         The node to which should be sorted
+ * @param sortCriteria The sort criteria
  * @author Richard Eigenmann
  */
-public class SortGroupRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final FieldCodes sortCriteria;
-
-    /**
-     * A request to sort the group
-     * @param node The node to which should be sorted
-     * @param sortCriteria The sort criteria
-     */
-    public SortGroupRequest( SortableDefaultMutableTreeNode node, FieldCodes sortCriteria ) {
-        this.node = node;
-        this.sortCriteria = sortCriteria;
-    }
-
-    /**
-     * Returns the node to which the collection should be added
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-    /**
-     * Returns the sort criteria
-     * @return the sort criteria index
-     */
-    public FieldCodes getSortCriteria() {
-        return sortCriteria;
-    }
-    
+public record SortGroupRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull FieldCodes sortCriteria) {
 }

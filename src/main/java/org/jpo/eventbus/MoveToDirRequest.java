@@ -1,15 +1,13 @@
 package org.jpo.eventbus;
 
-import com.drew.lang.annotations.NotNull;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 /*
- Copyright (C) 2018-2019 Richard Eigenmann.
+ Copyright (C) 2018-2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -27,43 +25,9 @@ import java.util.Objects;
 /**
  * Request to move the pictures of the supplied nodes to the supplied directory
  *
+ * @param nodes          The nodes with the pictures to move
+ * @param targetLocation The target directory
  * @author Richard Eigenmann
  */
-public class MoveToDirRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-    private final File targetLocation;
-
-    /**
-     * Request to move the pictures in the selected nodes to a target directory
-     *
-     * @param nodes The nodes with the pictures to move
-     * @param targetLocation The target directory
-     */
-    public MoveToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes,@NonNull File targetLocation ) {
-        Objects.requireNonNull(nodes);
-        Objects.requireNonNull(targetLocation);
-        this.nodes = nodes;
-        this.targetLocation = targetLocation;
-    }
-
-    /**
-     * The nodes whose pictures move
-     *
-     * @return the node
-     */
-    @NotNull
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
-    /**
-     * Returns the target directory
-     * @return the target directory
-     */
-    @NotNull
-    public File getTargetLocation() {
-        return targetLocation;
-    }
-
+public record MoveToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation) {
 }

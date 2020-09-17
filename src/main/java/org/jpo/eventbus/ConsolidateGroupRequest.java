@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
 
 /*
- Copyright (C) 2017 - 2019  Richard Eigenmann.
+ Copyright (C) 2017 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,48 +24,11 @@ import java.io.File;
 /**
  * Request to consolidate a group
  *
+ * @param node             The node to consolidate
+ * @param targetDir        the target directory.
+ * @param recurseSubgroups whether to recurse into sub groups
  * @author Richard Eigenmann
  */
-public class ConsolidateGroupRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final File targetDir;
-    private final boolean recurseSubgroups;
-
-    /**
-     * Request to consolidate a group
-     *
-     * @param node The node to consolidate
-     * @param targetDir the target directory.
-     * @param  recurseSubgroups whether to recurse into sub groups
-     */
-    public ConsolidateGroupRequest(SortableDefaultMutableTreeNode node, File targetDir, boolean recurseSubgroups ) {
-        this.node = node;
-        this.targetDir = targetDir;
-        this.recurseSubgroups = recurseSubgroups;
-    }
-
-    /**
-     * The node to consolidate
-     *
-     * @return the node
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
-    /**
-     * The target dir for the operation
-     *
-     * @return the target directory
-     */
-    public File getTargetDir() {
-        return targetDir;
-    }
-
-    /**
-     * Whether to recurse into sub groups
-     * @return true if it should recurse, false if not
-     */
-    public boolean getRecurseSubgroups() { return recurseSubgroups; }
+public record ConsolidateGroupRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull File targetDir,
+                                      @NotNull boolean recurseSubgroups) {
 }

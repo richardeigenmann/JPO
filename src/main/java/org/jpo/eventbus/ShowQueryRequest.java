@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Query;
 
 /*
- Copyright (C) 2017 - 2019 Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,28 +22,8 @@ import org.jpo.datamodel.Query;
 /**
  * This request indicates that the user wants to see the results of a query
  *
+ * @param query The node with the thumbnails to show
  * @author Richard Eigenmann
  */
-public class ShowQueryRequest implements Request {
-
-    private final Query query;
-
-    /**
-     * A request to show the thumbnails of a query
-     *
-     * @param query The node with the thumbnails to show
-     */
-    public ShowQueryRequest( Query query  ) {
-        this.query = query;
-    }
-
-    /**
-     * Returns the query for which the thumbnails are to be shown.
-     *
-     * @return the query
-     */
-    public Query getQuery() {
-        return query;
-    }
-
+public record ShowQueryRequest(@NotNull Query query) {
 }

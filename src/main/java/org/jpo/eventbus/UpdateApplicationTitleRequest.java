@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,31 +16,12 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This request indicates that the application should change its title
- * 
+ *
  * @author Richard Eigenmann
  */
-public class UpdateApplicationTitleRequest implements Request {
-
-    private final String title;
-
-    /**
-     * This request indicates that the application should change its title
-     * @param newTitle The new title for the application
-     */
-    public UpdateApplicationTitleRequest( String newTitle ) {
-        this.title = newTitle;
-    }
-
-    /**
-     * Returns the new title that the application should have
-     * @return the new title
-     */
-    public String getTitle() {
-        return title;
-    }
-
-
-    
+public record UpdateApplicationTitleRequest(@NotNull String newTitle) {
 }

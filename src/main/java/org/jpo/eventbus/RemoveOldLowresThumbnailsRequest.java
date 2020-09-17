@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,34 +16,14 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * This request indicates that the GUI to remove the old lowres thumbnail files
- * should be shown
+ * that JPO up to version 0.11 used to create should be shown.
  *
+ * @param lowresUrls The list of lowresUrls to remove
  * @author Richard Eigenmann
  */
-public class RemoveOldLowresThumbnailsRequest implements Request {
-
-
-    /**
-     * A request to bring up the GUI that removes the old lowres thumbnail files
-     * that JPO up to version 0.11 used to create
-     *
-     * @param lowresUrls  The list of lowresUrls to remove
-     */
-    public RemoveOldLowresThumbnailsRequest( StringBuilder lowresUrls ) {
-        this.lowresUrls = lowresUrls;
-    }
-
-    
-    private final StringBuilder lowresUrls;
-    
-    /**
-     * Returns a StringBuilder of the lowres Urls
-     * @return Returns a StringBuilder of the lowres Urls
-     */
-    public StringBuilder getLowresUrls() {
-        return lowresUrls;
-    }
-
+public record RemoveOldLowresThumbnailsRequest(@NotNull StringBuilder lowresUrls) {
 }

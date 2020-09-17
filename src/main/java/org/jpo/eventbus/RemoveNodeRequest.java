@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.List;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,26 +26,5 @@ import java.util.List;
  *
  * @author Richard Eigenmann
  */
-public class RemoveNodeRequest implements Request {
-
-    private final List<SortableDefaultMutableTreeNode> nodes;
-
-    /**
-     * This request indicates that the user wants to remove specific nodes
-     *
-     * @param nodes The node to remove from it's parent
-     */
-    public RemoveNodeRequest( List<SortableDefaultMutableTreeNode> nodes ) {
-        this.nodes = nodes;
-    }
-
-    /**
-     * The nodes to remove from their parents
-     *
-     * @return the nodes
-     */
-    public List<SortableDefaultMutableTreeNode> getNodes() {
-        return nodes;
-    }
-
+public record RemoveNodeRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
 }

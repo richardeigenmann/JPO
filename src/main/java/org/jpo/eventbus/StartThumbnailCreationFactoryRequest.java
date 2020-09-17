@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017 - 2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -18,11 +18,9 @@ package org.jpo.eventbus;
 
 /**
  * This request indicates that the application should start up a new ThumbnailCreationFactory
- * 
+ *
  * @author Richard Eigenmann
  * @see org.jpo.gui.ApplicationEventHandler#handleStartThumbnailCreationFactoryRequest(StartThumbnailCreationFactoryRequest)
  */
-public class StartThumbnailCreationFactoryRequest implements Request {
-
-    
+public class StartThumbnailCreationFactoryRequest {
 }

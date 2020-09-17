@@ -1,9 +1,10 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2008-2019,  Richard Eigenmann, Zürich
+ Copyright (C) 2008-2020,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -22,27 +23,8 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 /**
  * This request indicates that the user wants to see a set of thumbnails. GUI components are
  * expected to listen to this and act accordingly.
- * 
+ *
  * @author Richard Eigenmann
  */
-public class ShowGroupRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-
-    /**
-     * A request to show the thumbnails of the group node
-     * @param node The node with the thumbnails to show
-     */
-    public ShowGroupRequest( SortableDefaultMutableTreeNode node ) {
-        this.node = node;
-    }
-
-    /**
-     * Returns the node for which the thumbnails are to be shown.
-     * @return the Node with the group
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-
+public record ShowGroupRequest(@NotNull SortableDefaultMutableTreeNode node) {
 }

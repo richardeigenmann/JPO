@@ -57,7 +57,7 @@ public class GroupSelectionEventTest {
         jpoEventBus.post(newEvent);
         // After firing a GroupSelectionEvent we expect it to be received by the listener
         assertEquals(newEvent, receivedEvent);
-        assertEquals(node, receivedEvent.getNode());
+        assertEquals(node, receivedEvent.node());
     }
 
     /**

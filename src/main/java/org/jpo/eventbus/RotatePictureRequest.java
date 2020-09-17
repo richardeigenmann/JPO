@@ -1,10 +1,11 @@
 package org.jpo.eventbus;
 
+import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- Copyright (C) 2015.2017 Richard Eigenmann.
+ Copyright (C) 2015 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,50 +22,12 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /**
  * The receiver of this request is supposed to rotate the picture of the node by the specified angle
- * 
+ *
+ * @param node     The node to rotate
+ * @param angle    The angle in degrees for the rotation
+ * @param priority The queue priority
  * @author Richard Eigenmann
  */
-public class RotatePictureRequest implements Request {
-
-    private final SortableDefaultMutableTreeNode node;
-    private final double angle;
-    private final QUEUE_PRIORITY priority;
-
-    /**
-     * A request to rotate the picture by the specified angle
-     * @param node The node to rename
-     * @param angle The angle in degrees for the rotation
-     * @param priority The queue priority
-     */
-    public RotatePictureRequest( SortableDefaultMutableTreeNode node, double angle, QUEUE_PRIORITY priority ) {
-        this.node = node;
-        this.angle = angle;
-        this.priority = priority;
-    }
-
-    /**
-     * Returns the node with the picture to be rotated
-     * @return the Node with the picture
-     */
-    public SortableDefaultMutableTreeNode getNode() {
-        return node;
-    }
-    
-    /**
-     * Returns the angle in degrees that the picture is to be rotated by
-     * @return  the angle
-     */
-    public double getAngle() {
-        return angle;
-    }
-    
-    
-    /**
-     * Returns the queue priority
-     * @return the queue priority
-     */
-    public QUEUE_PRIORITY getPriority() {
-        return priority;
-    }
-
+public record RotatePictureRequest(@NotNull SortableDefaultMutableTreeNode node, double angle,
+                                   @NotNull QUEUE_PRIORITY priority) {
 }

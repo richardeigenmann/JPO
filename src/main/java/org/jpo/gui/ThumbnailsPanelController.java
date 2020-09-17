@@ -368,7 +368,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     public void handleShowGroupRequest(final ShowGroupRequest event) {
         final Runnable runnable = () -> {
             GroupNavigator groupNavigator = new GroupNavigator();
-            groupNavigator.setNode(event.getNode());
+            groupNavigator.setNode(event.node());
             show(groupNavigator);
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -386,7 +386,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     @Subscribe
     public void handleShowQueryRequest(final ShowQueryRequest event) {
-        show(new QueryNavigator(event.getQuery()));
+        show(new QueryNavigator(event.query()));
     }
 
     /**

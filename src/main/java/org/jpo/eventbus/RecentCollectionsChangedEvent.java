@@ -19,11 +19,10 @@ package org.jpo.eventbus;
 
 /**
  * This event indicates that the recent files in the Settings object changed
- * 
+ *
  * @author Richard Eigenmann
  */
-public class RecentCollectionsChangedEvent implements  NotificationEvent {
+public class RecentCollectionsChangedEvent {
 
 
-    
 }

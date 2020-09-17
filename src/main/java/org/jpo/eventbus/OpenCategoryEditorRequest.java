@@ -22,6 +22,5 @@ package org.jpo.eventbus;
  *
  * @author Richard Eigenmann
  */
-public class OpenCategoryEditorRequest implements Request {
-
+public class OpenCategoryEditorRequest {
 }
