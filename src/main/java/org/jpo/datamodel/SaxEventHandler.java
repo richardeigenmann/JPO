@@ -220,24 +220,6 @@ public class SaxEventHandler extends DefaultHandler {
         return getCollectionDtdInputSource();
     }
 
-    /*public static InputSource getCollectionDtdInputSource() {
-        final String COLLECTION_DTD_FILE_NAME = "collection.dtd";
-        LOGGER.log(Level.INFO, "Trying to load the collection.dtd from the resource: {0}", COLLECTION_DTD_FILE_NAME );
-        final URL collectionDtd = XmlReader.class.getClassLoader().getResource( COLLECTION_DTD_FILE_NAME );
-        if ( collectionDtd == null ) {
-            LOGGER.log(Level.SEVERE, "Failed to find the file {0}. Did something go wrong in the packaging of the application?" , COLLECTION_DTD_FILE_NAME);
-            return null;
-        } else {
-            LOGGER.log(Level.INFO, "Loading collection.dtd from URL: {0}", collectionDtd );
-        }
-        try {
-            final InputStream collectionDtdInputStream = collectionDtd.openStream();
-            return new InputSource( collectionDtdInputStream );
-        } catch ( final IOException ex ) {
-            LOGGER.log( Level.SEVERE, "Could not open the collection.dtd XML Document Type Descriptor.\nException: {0}", ex.getMessage() );
-            return null;
-        }
-    }*/
     public static InputSource getCollectionDtdInputSource() throws IOException {
         return new InputSource(SaxEventHandler.class.getClassLoader().getResource("collection.dtd").openStream());
     }

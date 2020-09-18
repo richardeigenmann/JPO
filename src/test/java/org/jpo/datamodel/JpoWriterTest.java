@@ -24,7 +24,7 @@ public class JpoWriterTest {
             JpoWriter.writeCollectionDTDTestOnly(tempDirWithPrefix.toFile());
             assertTrue( expectedDtdFile.exists() );
             try (final Stream<String> s = Files.lines(expectedDtdFile.toPath())) {
-                assertEquals(80, s.count());
+                assertEquals(78, s.count());
             }
         } catch (final IOException e) {
             fail(e.getMessage());

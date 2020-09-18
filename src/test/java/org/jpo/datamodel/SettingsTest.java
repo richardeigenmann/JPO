@@ -156,19 +156,16 @@ public class SettingsTest {
     public void testMemorizeGroupOfDropLocation() {
         Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode();
-        // First Element should not be our new node
-        assertNotEquals( n, Settings.getRecentDropNodes().peek());
+        assertEquals(0, Settings.getRecentDropNodes().size());
         Settings.memorizeGroupOfDropLocation(n);
-        // First Element should now be our new node
-        assertEquals( n, Settings.getRecentDropNodes().element());
+        assertEquals(1, Settings.getRecentDropNodes().size());
     }
 
     @Test
     public void testMemorizeGroupOfDropLocationPushDown() {
         Settings.getRecentDropNodes().clear();
         final SortableDefaultMutableTreeNode n1 = new SortableDefaultMutableTreeNode();
-        // First Element should not be our new node
-        assertNotEquals( n1, Settings.getRecentDropNodes().peek());
+        assertEquals(0, Settings.getRecentDropNodes().size());
         Settings.memorizeGroupOfDropLocation(n1);
         // First Element should now be our new node
         assertEquals( n1, Settings.getRecentDropNodes().element());
