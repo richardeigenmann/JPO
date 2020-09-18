@@ -12,6 +12,7 @@
         <li><strong>Joe Azure</strong> for the Page Count display in the Thumbnail pane</li>
         <li><strong>Dean S. Jones</strong> for his icon collection on <a href="http://sourceforge.net/projects/icon-collection/">http://sourceforge.net/projects/icon-collection/</a> that I have modified to suit my needs.</li>
         <li><strong>Rob Camick</strong> for his Wrap Layout <a href="https://tips4java.wordpress.com/2008/11/06/wrap-layout">https://tips4java.wordpress.com/2008/11/06/wrap-layout/</a></li>
+        <li><strong>Font Awesome</strong> for the Free Icon Fonts <a href="https://fontawesome.com/">https://fontawesome.com/</a></li>
         <li><strong>Sandra Keller</strong> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
     </ul>
 

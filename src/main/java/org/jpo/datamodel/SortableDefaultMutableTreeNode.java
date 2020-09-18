@@ -156,19 +156,19 @@ public class SortableDefaultMutableTreeNode
      */
     @Override
     public int compareTo(@NonNull SortableDefaultMutableTreeNode o) {
-        Object myObject = getUserObject();
-        Object otherObject = o.getUserObject();
+        final Object myObject = getUserObject();
+        final Object otherObject = o.getUserObject();
 
-        if ((myObject instanceof GroupInfo) && (otherObject instanceof GroupInfo) && (sortfield == FieldCodes.DESCRIPTION)) {
-            return ((GroupInfo) myObject).getGroupName().compareTo(((GroupInfo) otherObject).getGroupName());
+        if ((myObject instanceof GroupInfo myGi) && (otherObject instanceof GroupInfo otherGi) && (sortfield == FieldCodes.DESCRIPTION)) {
+            return (myGi.getGroupName().compareTo(otherGi.getGroupName()));
         }
 
-        if ((myObject instanceof GroupInfo) && (otherObject instanceof PictureInfo) && (sortfield == FieldCodes.DESCRIPTION)) {
-            return ((GroupInfo) myObject).getGroupName().compareTo(((PictureInfo) otherObject).getDescription());
+        if ((myObject instanceof GroupInfo myGi) && (otherObject instanceof PictureInfo pi) && (sortfield == FieldCodes.DESCRIPTION)) {
+            return (myGi.getGroupName().compareTo(pi.getDescription()));
         }
 
-        if ((myObject instanceof PictureInfo) && (otherObject instanceof GroupInfo) && (sortfield == FieldCodes.DESCRIPTION)) {
-            return ((PictureInfo) myObject).getDescription().compareTo(((GroupInfo) otherObject).getGroupName());
+        if ((myObject instanceof PictureInfo pi) && (otherObject instanceof GroupInfo gi) && (sortfield == FieldCodes.DESCRIPTION)) {
+            return (pi.getDescription().compareTo(gi.getGroupName()));
         }
 
         if ((myObject instanceof GroupInfo) || (otherObject instanceof GroupInfo)) {
@@ -192,6 +192,12 @@ public class SortableDefaultMutableTreeNode
             return 0;
         }
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return hashCode() == obj.hashCode();
+    }
+
 
     /**
      * Returns the first node with a picture before the current one in the tree.
@@ -1172,7 +1178,7 @@ public class SortableDefaultMutableTreeNode
                 final boolean a = copyAddPictures1(Objects.requireNonNull(addFile.listFiles()), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories);
                 picturesAdded = a || picturesAdded;
             } else {
-                LOGGER.log(Level.INFO, "No pictures in directory {0}", addFile.toString());
+                LOGGER.log(Level.INFO, "No pictures in directory {0}", addFile);
             }
         }
         return picturesAdded;

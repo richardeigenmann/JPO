@@ -119,10 +119,6 @@ public class AutoAdvanceDialog {
     }
 
     private int showDialog(final Component parentComponent, final Object message) {
-        // hack to facilitate unit testing
-        if (parentComponent instanceof ComponentMock) {
-            return 0;
-        }
         return JOptionPane.showOptionDialog(
                 parentComponent,
                 message,

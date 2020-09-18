@@ -1,9 +1,14 @@
 package org.jpo.datamodel;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.xml.sax.InputSource;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -17,12 +22,19 @@ public class SaxEventHandlerTest {
      */
     @Test
     public void testGetCollectionDtdInputSource() {
-        // not sure how I want to create the object as it needs input streams and stuff so I'll just do the code that
-        // the method resolveEntity does.
-        //InputSource s = new InputSource( Settings.CLASS_LOADER.getResourceAsStream( "org.jpo/collection.dtd" ) );
-        InputSource s = SaxEventHandler.getCollectionDtdInputSource();
-        // No org.jpo/collection.dtd found
-        assertNotNull( s );
+        try {
+            InputSource inputSource = SaxEventHandler.getCollectionDtdInputSource();
+            assertNotNull(inputSource);
+
+            try (final InputStream is = inputSource.getByteStream()) {
+                final String dtdDocument = IOUtils.toString(is, "UTF-8");
+                assert (dtdDocument.contains("collection"));
+            }
+
+        } catch (IOException e) {
+            fail("Could not find collection.dtd file: " + e.getMessage());
+        }
+
     }
 
 }

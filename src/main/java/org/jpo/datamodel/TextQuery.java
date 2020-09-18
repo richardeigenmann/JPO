@@ -42,10 +42,10 @@ public class TextQuery implements Serializable, Query {
     public final String anyField;
 
     /**
-     * This flag indicates whether dates that can't be parsed should be treaded
-     * as matches or fails	;
+     * This flag indicates whether dates that can't be parsed should be treated
+     * as matches or fails;
      */
-    private static final boolean includeNullDates = true;
+    private static final boolean INCLUDE_NULL_DATES = true;
 
     /**
      * Constructor to create a new Query object.
@@ -221,7 +221,7 @@ public class TextQuery implements Serializable, Query {
         if ( match && ( lowerDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
-                match = includeNullDates;
+                match = INCLUDE_NULL_DATES;
             } else {
                 match =  testNodeDate.compareTo( lowerDateRange ) >= 0;
             }
@@ -230,7 +230,7 @@ public class TextQuery implements Serializable, Query {
         if ( match && ( upperDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
-                match = includeNullDates;
+                match = INCLUDE_NULL_DATES;
             } else {
                 match = testNodeDate.compareTo( upperDateRange ) <= 0 ;
             }

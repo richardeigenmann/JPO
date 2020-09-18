@@ -206,6 +206,7 @@ public class ThumbnailDescriptionController
                     );
                 });
             }
+            panel.addCategoryMenu();
 
         } else if (referringNode.getUserObject() instanceof GroupInfo) {
             panel.setCategories("");

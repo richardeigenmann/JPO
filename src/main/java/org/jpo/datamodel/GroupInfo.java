@@ -122,7 +122,7 @@ public class GroupInfo implements Serializable {
     private void sendGroupNameChangedEvent() {
         LOGGER.fine( "preparing to send GroupName changed event" );
         if ( ( Settings.getPictureCollection() != null ) && ( Settings.getPictureCollection().getSendModelUpdates() ) ) {
-            GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+            final GroupInfoChangeEvent gice = new GroupInfoChangeEvent(this);
             gice.setGroupNameChanged();
             sendGroupInfoChangedEvent( gice );
             LOGGER.fine( "sent description changed event" );
@@ -137,21 +137,21 @@ public class GroupInfo implements Serializable {
      * to a new location we don't want to write the URLs of the original
      * pictures whilst all other attributes are retained.
      *
-     * @param out	The Bufferer Writer receiving the xml data
-     * @param rootNode The starting node
+     * @param out        The BufferedWriter receiving the xml data. I use a BufferedWriter because it has a newLine method
+     * @param rootNode   The starting node
      * @param protection Whether the collection is protected or not
      * @throws IOException If there was an IO error
      */
-    public void dumpToXml( BufferedWriter out, boolean rootNode, boolean protection )
+    public void dumpToXml(final BufferedWriter out, final boolean rootNode, final boolean protection)
             throws IOException {
 
-        if ( rootNode ) {
-            out.write( "<collection collection_name=\""
-                    + StringEscapeUtils.escapeXml11( getGroupName() )
+        if (rootNode) {
+            out.write("<collection collection_name=\""
+                    + StringEscapeUtils.escapeXml11(getGroupName())
                     + "\" collection_created=\""
-                    + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
+                    + DateFormat.getDateInstance().format(Calendar.getInstance().getTime())
                     + "\""
-                    + ( protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"" ) );
+                    + (protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\""));
         } else {
             out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\"" );
         }
@@ -183,7 +183,7 @@ public class GroupInfo implements Serializable {
      * notification.
      */
     public void sendWasSelectedEvent() {
-        GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
+        final GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
         gice.setWasSelected();
         sendGroupInfoChangedEvent( gice );
     }

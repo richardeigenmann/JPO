@@ -15,7 +15,7 @@ import java.util.Iterator;
 /*
  CategoryJScrollPane.java:  creates a JPanel in a JScrollPane that lists categories
 
- Copyright (C) 2006-2015  Richard Eigenmann.
+ Copyright (C) 2006-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,6 +29,8 @@ import java.util.Iterator;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+
 /**
  * CategoryJScrollPane.java: Creates a JPanel in a JScrollPane that lists
  * categories
@@ -107,17 +109,17 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
      * @param e the list selection event
      */
     @Override
-    public void valueChanged( ListSelectionEvent e ) {
-        if ( e.getValueIsAdjusting() ) {
+    public void valueChanged(final ListSelectionEvent e) {
+        if (e.getValueIsAdjusting()) {
             return;
         }
-        JList theList = (JList) e.getSource();
-        if ( !theList.isSelectionEmpty() ) {
+        final JList theList = (JList) e.getSource();
+        if (!theList.isSelectionEmpty()) {
             int index = theList.getSelectedIndex();
-            Category cat = (Category) theList.getModel().getElementAt( index );
+            final Category cat = (Category) theList.getModel().getElementAt(index);
             int status = cat.getStatus();
-            if ( status == Category.UNDEFINED ) {
-                cat.setStatus( Category.SELECTED );
+            if (status == Category.UNDEFINED) {
+                cat.setStatus(Category.SELECTED);
             } else if ( status == Category.SELECTED ) {
                 cat.setStatus( Category.UN_SELECTED );
             } else if ( status == Category.UN_SELECTED ) {

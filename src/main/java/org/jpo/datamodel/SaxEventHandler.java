@@ -6,8 +6,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -78,20 +76,11 @@ public class SaxEventHandler extends DefaultHandler {
         GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
-            if ( attrs.getValue( "collection_icon" ).length() > 1 ) {
-                lowresUrls.append(LINE_SEPERATOR);
-                lowresUrls.append( attrs.getValue( "collection_icon" ) );
-                lowresUrls.append(LINE_SEPERATOR);
-            }
             currentGroup.setUserObject(groupInfo);
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
         } else if ( "group".equals( qName ) && attrs != null ) {
             incrementGroupCount();
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null ? attrs.getValue( "group_name" ) : "" );
-            if ( attrs.getValue( "group_icon" ).length() > 1 ) {
-                lowresUrls.append( attrs.getValue( "group_icon" ) );
-                lowresUrls.append(LINE_SEPERATOR);
-            }
             SortableDefaultMutableTreeNode nextCurrentGroup
                     = new SortableDefaultMutableTreeNode(groupInfo);
             currentGroup.add( nextCurrentGroup );
@@ -226,12 +215,12 @@ public class SaxEventHandler extends DefaultHandler {
      * @return the dtd as an input source
      */
     @Override
-    public InputSource resolveEntity( final String publicId, final String systemId ) {
-        LOGGER.log(Level.INFO, "resolveEntity called with params publicId: {0} systemId: {1}", new Object[]{ publicId, systemId });
+    public InputSource resolveEntity(final String publicId, final String systemId) throws IOException {
+        LOGGER.log(Level.INFO, "resolveEntity called with params publicId: {0} systemId: {1}", new Object[]{publicId, systemId});
         return getCollectionDtdInputSource();
     }
 
-    public static InputSource getCollectionDtdInputSource() {
+    /*public static InputSource getCollectionDtdInputSource() {
         final String COLLECTION_DTD_FILE_NAME = "collection.dtd";
         LOGGER.log(Level.INFO, "Trying to load the collection.dtd from the resource: {0}", COLLECTION_DTD_FILE_NAME );
         final URL collectionDtd = XmlReader.class.getClassLoader().getResource( COLLECTION_DTD_FILE_NAME );
@@ -248,6 +237,9 @@ public class SaxEventHandler extends DefaultHandler {
             LOGGER.log( Level.SEVERE, "Could not open the collection.dtd XML Document Type Descriptor.\nException: {0}", ex.getMessage() );
             return null;
         }
+    }*/
+    public static InputSource getCollectionDtdInputSource() throws IOException {
+        return new InputSource(SaxEventHandler.class.getClassLoader().getResource("collection.dtd").openStream());
     }
 
     /**

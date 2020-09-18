@@ -223,9 +223,8 @@ public class JpoWriter {
      * @param directory The directory to write to
      */
     private static void writeCollectionDTD(final File directory) {
-        final ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                final InputStream in = Objects.requireNonNull(cl.getResource("collection.dtd")).openStream();
+                final InputStream in = Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource("collection.dtd")).openStream();
                 final BufferedInputStream bin = new BufferedInputStream(in);) {
             final File targetFile = new File(directory, "collection.dtd");
             Files.copy(

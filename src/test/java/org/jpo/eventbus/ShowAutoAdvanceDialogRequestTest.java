@@ -2,12 +2,12 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.ComponentMock;
 import org.jpo.gui.PictureViewer;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,15 +57,28 @@ public class ShowAutoAdvanceDialogRequestTest {
 
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ComponentMock componentMock = new ComponentMock();
+                final JFrame jFrame = new JFrame();
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 final PictureViewer pictureViewer = new PictureViewer();
 
-                final ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(componentMock, node, pictureViewer);
+                final ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(jFrame, node, pictureViewer);
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        final Robot r = new Robot();
+                        r.delay(200);
+                        r.keyPress(KeyEvent.VK_ENTER);
+                        r.delay(20);
+                        r.keyRelease(KeyEvent.VK_ENTER);
+                    } catch (AWTException e) {
+                        fail(e.getMessage());
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
+                });
                 jpoEventBus.post(showAutoAdvanceDialogRequest);
 
                 assertEquals(showAutoAdvanceDialogRequest, responseEvent);
-                assertEquals(componentMock, responseEvent.parentComponent());
+                assertEquals(jFrame, responseEvent.parentComponent());
                 assertEquals(node, responseEvent.currentNode());
                 assertEquals(pictureViewer, responseEvent.autoAdvanceTarget());
             });

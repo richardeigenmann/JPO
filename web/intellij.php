@@ -23,6 +23,6 @@
 
     <hr>
     <p>Last update to this page: 8 Dec 2018<br>
-        Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

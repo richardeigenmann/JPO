@@ -159,42 +159,13 @@ dependencies {
 sourceSets {
     main {
         resources {
-            srcDir 'src/images'
-            include '**/*.gif'
-            include '**/*.jpg'
-            
-            srcDir 'src/dtd'
-            include '**/*.dtd'
-            include '**/*.txt'
-            include '**/*.css'
-            include '**/*.js'
-                
-            srcDir 'src/main/java/org/jpo/cache'
-            include '**/*.ccf'
+            srcDir 'src/main/resources'
         }
     }
     test {
         main
         resources  {
             srcDir 'src/test/images'
-            include '**/*.jpg'
-            include '**/*.tiff'
-            include '**/*.hdr'
-            include '**/*.pdf'
-            include '**/*.svg'
-            include '**/*.bmp'
-            include '**/*.pnm'
-            include '**/*.sgi'
-            include '**/*.tga'
-            include '**/*.psd'
-            include '**/*.ico'
-            include '**/*.png'
-            include '**/*.gif'
-            include '**/*.iff'
-            include '**/*.pcx'
-            include '**/*.pct'
-            include '**/*.icns'
-            include '**/*.db'
         }
     }
 }

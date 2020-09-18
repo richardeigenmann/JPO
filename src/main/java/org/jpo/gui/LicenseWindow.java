@@ -45,7 +45,7 @@ public class LicenseWindow {
 
         String license;
         try {
-            license = IOUtils.toString(LicenseWindow.class.getClassLoader().getResourceAsStream( "gpl.txt" ), "UTF-8");
+            license = IOUtils.toString(LicenseWindow.class.getClassLoader().getResourceAsStream("gpl.txt"), "UTF-8");
         } catch (final IOException e) {
             license = "Error loading the license text. The license is still GPL.";
         }

@@ -31,7 +31,7 @@ public class WebsiteGeneratorTest {
         try {
             final Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeCss( path.toFile() );
-            final File cssFile = new File( path.toFile(), "jpo.css" );
+            final File cssFile = new File(path.toFile(), "jpo.css");
             assertTrue( cssFile.exists() );
             Files.delete(cssFile.toPath() );
             Files.delete(path);
@@ -48,7 +48,7 @@ public class WebsiteGeneratorTest {
         try {
             final Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeRobotsTxt( path.toFile() );
-            final File robotsFile = new File( path.toFile(), "robots.txt" );
+            final File robotsFile = new File(path.toFile(), "robots.txt");
             assertTrue( robotsFile.exists() );
             Files.delete(robotsFile.toPath());
             Files.delete( path );
@@ -65,7 +65,7 @@ public class WebsiteGeneratorTest {
         try {
             final Path path = Files.createTempDirectory( "UnitTestsTempDir" );
             WebsiteGenerator.writeJpoJs( path.toFile() );
-            final File jsFile = new File( path.toFile(), "jpo.js" );
+            final File jsFile = new File(path.toFile(), "jpo.js");
             assertTrue( jsFile.exists() );
             Files.delete( jsFile.toPath() );
             Files.delete( path );

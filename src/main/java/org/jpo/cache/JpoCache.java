@@ -263,7 +263,7 @@ public class JpoCache {
     private Dimension getThumbnailDimensions() {
         if (groupThumbnailDimension == null) {
             BufferedImage groupThumbnail;
-            try (BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("org/jpo/images/icon_folder_large.jpg"))) {
+            try (BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg"))) {
                 groupThumbnail = ImageIO.read(bis);
                 groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
 

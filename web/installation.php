@@ -4,7 +4,7 @@
 
     <p>JPO is a pure Java application so it runs on any computer that runs Java.</p>
 
-    <p>You must have Java 1.8.0 or later. Use the command <code>java -version</code> to find out 
+    <p>You must have Java 1.14 or later. Use the command <code>java -version</code> to find out
     what version you are running if you aren't sure.</p>
 
     <p>You can download the Java Runtime Environment (JRE) or the Java Software Development Kit (SDK)

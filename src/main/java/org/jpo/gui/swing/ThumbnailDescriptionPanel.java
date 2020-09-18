@@ -26,9 +26,11 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.logging.Logger;
 
 public class ThumbnailDescriptionPanel extends JPanel {
 
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionPanel.class.getName());
 
     /**
      * This object holds the description
@@ -75,7 +77,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         return categoryMenuPopupButton;
     }
 
-    final JButton categoryMenuPopupButton = new JButton(">");
+    final JButton categoryMenuPopupButton = new JButton("\uf0fe");
 
     public static Font getLargeFont() {
         return LARGE_FONT;
@@ -120,11 +122,11 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoriesJTA.setCaret(dumbCaret);
 
         this.add(categoriesJSP, "hidemode 2, wrap");
-        categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 25));
+        categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 50));
         categoriesJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
 
         categoriesJPanel.setLayout(new WrapLayout());
-        this.add(categoryMenuPopupButton, "hidemode 2, wrap");
+        categoryMenuPopupButton.setFont(FontAwesomeFont.getFontAwesomeFont18());
 
         // this is a bit of a cludge to get the JTextArea to grow in height as text is
         // being entered. Annoyingly the getPreferredSize of the JTextArea doesn't immediately
@@ -250,10 +252,16 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     public AbstractButton addCategory(String categoryDescription) {
         categoriesJPanel.add(new JLabel(categoryDescription));
-        final JButton removeButton = new JButton("x");
+        final JButton removeButton = new JButton("\uf057");
+        removeButton.setFont(FontAwesomeFont.getFontAwesomeFont18());
         categoriesJPanel.add(removeButton);
-        categoriesJPanel.revalidate();
         return removeButton;
+    }
+
+    public void addCategoryMenu() {
+        categoriesJPanel.add(categoryMenuPopupButton);
+        categoriesJPanel.revalidate();
+
     }
 
     /**
@@ -296,9 +304,9 @@ public class ThumbnailDescriptionPanel extends JPanel {
                 highresLocationJTextField.setMaximumSize(new Dimension(targetWidth, 30));
             }
 
-            int labelsTargetHeight = getTargetHeight(categoriesJSP);
-            final Dimension labelsSize = categoriesJSP.getPreferredSize();
-            if ((labelsTargetHeight != labelsSize.height) || (targetWidth != labelsSize.width)) {
+            int categoriesPanelTargetHeight = getTargetHeight(categoriesJSP);
+            final Dimension categoriesSize = categoriesJSP.getPreferredSize();
+            if ((categoriesPanelTargetHeight != categoriesSize.height) || (targetWidth != categoriesSize.width)) {
                 categoriesJSP.setPreferredSize(new Dimension(targetWidth, descriptionTargetHeight));
                 categoriesJSP.setMaximumSize(new Dimension(targetWidth, 250));
                 this.revalidate();

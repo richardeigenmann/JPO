@@ -4,7 +4,7 @@
 
     <p>Ensure you have Netbeans set up:</p>
     <ul>
-        <li>Have you downloaded a JDK? <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SDK</a> for instance 13.0.1?</li>
+        <li>Have you downloaded a JDK? <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SDK</a> for instance 14.0.2?</li>
         <li>Have you installed Netbeans does it start up? <a href="https://netbeans.org/">https://netbeans.org/</a> Like Version 11.2?</li>
         <li>Have you got Gradle installed? <a href="https://gradle.org/install">https://gradle.org/install</a> Use SDKMan for Linux, follow the "Installing manually" for Windows</li>
     </ul>
