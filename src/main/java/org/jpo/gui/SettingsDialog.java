@@ -376,8 +376,7 @@ public class SettingsDialog extends JDialog {
         predefinedEmailJComboBox.addItem( "Hotmail" );
         predefinedEmailJComboBox.addItem( "Other" );
         predefinedEmailJComboBox.addActionListener(( ActionEvent e ) -> {
-            final JComboBox cb = (JComboBox) e.getSource();
-            final String cbSelection = (String) cb.getSelectedItem();
+            final String cbSelection = (String) predefinedEmailJComboBox.getSelectedItem();
             if ("Localhost".equals(cbSelection)) {
                 emailServerJTextField.setText("localhost");
                 emailPortJTextField.setText("25");
@@ -424,8 +423,7 @@ public class SettingsDialog extends JDialog {
         authenticationJComboBox.addItem("Password");
         authenticationJComboBox.addItem("SSL");
         authenticationJComboBox.addActionListener((ActionEvent e) -> {
-            final JComboBox cb = (JComboBox) e.getSource();
-            final String cbSelection = (String) cb.getSelectedItem();
+            final String cbSelection = (String) authenticationJComboBox.getSelectedItem();
             switch (Objects.requireNonNull(cbSelection)) {
                 case "Password" -> {
                     userNameJLabel.setVisible(true);

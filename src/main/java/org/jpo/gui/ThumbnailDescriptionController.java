@@ -272,8 +272,6 @@ public class ThumbnailDescriptionController
      */
     public void setVisible(boolean visibility) {
         panel.setVisible(visibility);
-        //panel.getPictureDescriptionJTA().setVisible(visibility);
-        //panel.getPictureDescriptionJSP().setVisible(visibility);
     }
 
     /**

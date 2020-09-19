@@ -274,25 +274,24 @@ public final class TableSorter extends TableMap {
      *
      * @param table Table
      */
-    public void addMouseListenerToHeaderInTable( JTable table ) {
+    public void addMouseListenerToHeaderInTable(final JTable table) {
         final TableSorter sorter = this;
         final JTable tableView = table;
-        //tableView.setColumnSelectionAllowed(false);
-        MouseAdapter listMouseListener = new MouseAdapter() {
+        final MouseAdapter listMouseListener = new MouseAdapter() {
 
             @Override
-            public void mouseClicked( MouseEvent e ) {
-                TableColumnModel columnModel = tableView.getColumnModel();
-                int viewColumn = columnModel.getColumnIndexAtX( e.getX() );
-                int column = tableView.convertColumnIndexToModel( viewColumn );
-                if ( e.getClickCount() == 1 && column != -1 ) {
-                    int shiftPressed = e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK;
-                    boolean ascending = ( shiftPressed == 0 );
-                    sorter.sortByColumn( column, ascending );
+            public void mouseClicked(MouseEvent e) {
+                final TableColumnModel columnModel = tableView.getColumnModel();
+                final int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+                final int column = tableView.convertColumnIndexToModel(viewColumn);
+                if (e.getClickCount() == 1 && column != -1) {
+                    final int shiftPressed = e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK;
+                    final boolean sortAscending = (shiftPressed == 0);
+                    sorter.sortByColumn(column, sortAscending);
                 }
             }
         };
-        JTableHeader th = tableView.getTableHeader();
+        final JTableHeader th = tableView.getTableHeader();
         th.addMouseListener( listMouseListener );
     }
 }

@@ -640,15 +640,15 @@ public class PicturePopupMenuTest {
     public void testReplaceNoEscapedSpacesSingeChars() {
         final String s1 = "filename2Extension.jpg";
         final Optional<String> o1 = PicturePopupMenu.replaceEscapedSpaces(s1);
-        o1.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s1, s)));
+        o1.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between%n%s and%n%s", s1, s)));
 
         final String s2 = "filename0Extension_.jpg";
         final Optional<String> o2 = PicturePopupMenu.replaceEscapedSpaces(s2);
-        o2.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s2, s)));
+        o2.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between%n%s and%n%s", s2, s)));
 
         final String s3 = "filename%Extension.jpg";
         final Optional<String> o3 = PicturePopupMenu.replaceEscapedSpaces(s3);
-        o3.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between\n%s and\n%s", s3, s)));
+        o3.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between%n%s and%n%s", s3, s)));
     }
 
     @Test

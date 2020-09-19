@@ -77,7 +77,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * the timer that can call back into the object with the instruction to load
      * the next image
      */
-    //private AdvanceTimer advanceTimer;
     private Timer advanceTimer;
 
     /**

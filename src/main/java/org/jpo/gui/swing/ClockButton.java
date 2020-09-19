@@ -4,10 +4,11 @@ import org.jetbrains.annotations.TestOnly;
 
 import javax.swing.*;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,7 +46,7 @@ public class ClockButton extends NavBarButton {
         final String ICON_CLOCK_ON_FILE = "icon_clock_on.gif";
         URL resource = CollectionJTree.class.getClassLoader().getResource(ICON_CLOCK_ON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader could not find the file: " + ICON_CLOCK_ON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", ICON_CLOCK_ON_FILE);
             ICON_CLOCK_ON = null;
         } else {
             ICON_CLOCK_ON = new ImageIcon(resource);
@@ -66,7 +67,7 @@ public class ClockButton extends NavBarButton {
         final String ICON_CLOCK_OFF_FILE = "icon_clock_off.gif";
         URL resource = CollectionJTree.class.getClassLoader().getResource(ICON_CLOCK_OFF_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader could not find the file: " + ICON_CLOCK_OFF_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", ICON_CLOCK_OFF_FILE);
             ICON_CLOCK_OFF = null;
         } else {
             ICON_CLOCK_OFF = new ImageIcon(resource);

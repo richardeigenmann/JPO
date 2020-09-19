@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellEditor;
 import java.awt.*;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -134,9 +135,9 @@ public class CollectionJTree
 
     static {
         final String CLOSED_FOLDER_ICON_FILE = "icon_folder_closed.gif";
-        URL resource = CollectionJTree.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
+        final URL resource = CollectionJTree.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader could not find the file: " + CLOSED_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", CLOSED_FOLDER_ICON_FILE);
             CLOSED_FOLDER_ICON = null;
         } else {
             CLOSED_FOLDER_ICON = new ImageIcon(resource);
@@ -155,9 +156,9 @@ public class CollectionJTree
 
     static {
         final String OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
-        URL resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
+        final URL resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader could not find the file: " + OPEN_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", OPEN_FOLDER_ICON_FILE);
             OPEN_FOLDER_ICON = null;
         } else {
             OPEN_FOLDER_ICON = new ImageIcon(resource);
@@ -175,9 +176,9 @@ public class CollectionJTree
     private static final ImageIcon PICTURE_ICON;
     static {
         final String PICTURE_ICON_FILE = "icon_picture.gif";
-        URL resource = CollectionJTree.class.getClassLoader().getResource(PICTURE_ICON_FILE);
+        final URL resource = CollectionJTree.class.getClassLoader().getResource(PICTURE_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader could not find the file: " + PICTURE_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", PICTURE_ICON_FILE);
             PICTURE_ICON = null;
         } else {
             PICTURE_ICON = new ImageIcon(resource);

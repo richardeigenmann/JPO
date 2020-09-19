@@ -4,8 +4,6 @@ import org.jpo.datamodel.Category;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -37,31 +35,50 @@ import java.util.Iterator;
  *
  * @author Richard Eigenmann
  */
-public class CategoryJScrollPane extends JScrollPane implements ListSelectionListener {
+public class CategoryJScrollPane extends JScrollPane {
 
     private final DefaultListModel<Category> defaultListModel = new DefaultListModel<>();
 
-    private final JList<Category> categoriesJList = new JList<>( defaultListModel );
+    private final JList<Category> categoriesJList = new JList<>(defaultListModel);
 
     /**
      * Creates a JPanel that lists the categories
-     *
-     *
      */
     public CategoryJScrollPane() {
         initComponents();
     }
 
     private void initComponents() {
-        categoriesJList.setPreferredSize( new Dimension( 180, 250 ) );
-        categoriesJList.setMinimumSize( new Dimension( 180, 50 ) );
-        categoriesJList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-        categoriesJList.setCellRenderer( new CategoryListCellRenderer() );
-        categoriesJList.addListSelectionListener( this );
+        categoriesJList.setPreferredSize(new Dimension(180, 250));
+        categoriesJList.setMinimumSize(new Dimension(180, 50));
+        categoriesJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        categoriesJList.setCellRenderer(new CategoryListCellRenderer());
+        categoriesJList.addListSelectionListener(e -> {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            if (!categoriesJList.isSelectionEmpty()) {
+                int index = categoriesJList.getSelectedIndex();
+                final Category cat = (Category) categoriesJList.getModel().getElementAt(index);
+                int status = cat.getStatus();
+                if (status == Category.UNDEFINED) {
+                    cat.setStatus(Category.SELECTED);
+                } else if (status == Category.SELECTED) {
+                    cat.setStatus(Category.UN_SELECTED);
+                } else if (status == Category.UN_SELECTED) {
+                    cat.setStatus(Category.SELECTED);
+                } else if (status == Category.BOTH) {
+                    cat.setStatus(Category.SELECTED);
+                }
+                categoriesJList.clearSelection();
+                categoriesJList.validate();
+            }
 
-        this.setViewportView( categoriesJList );
-        this.setPreferredSize( new Dimension( 200, 270 ) );
-        this.setMinimumSize( new Dimension( 200, 50 ) );
+        });
+
+        this.setViewportView(categoriesJList);
+        this.setPreferredSize(new Dimension(200, 270));
+        this.setMinimumSize(new Dimension(200, 50));
 
     }
 
@@ -85,52 +102,20 @@ public class CategoryJScrollPane extends JScrollPane implements ListSelectionLis
 
     /**
      * Load Categories
+     *
      * @param i the categories
      */
-    public void loadCategories(final Iterator i) {
+    public void loadCategories(final Iterator<Integer> i) {
         // load categories
         defaultListModel.clear();
-        //Iterator i = Settings.getPictureCollection().getCategoryIterator();
-        Integer key;
-        String category;
-        Category categoryObject;
-        while ( i.hasNext() ) {
-            key = (Integer) i.next();
-            category = Settings.getPictureCollection().getCategory( key );
-            categoryObject = new Category( key, category );
-            defaultListModel.addElement( categoryObject );
+        while (i.hasNext()) {
+            final Integer key = (Integer) i.next();
+            final String category = Settings.getPictureCollection().getCategory(key);
+            final Category categoryObject = new Category(key, category);
+            defaultListModel.addElement(categoryObject);
         }
     }
 
-    /**
-     * Method from the ListSelectionListener implementation that tracks when an
-     * element was selected.
-     *
-     * @param e the list selection event
-     */
-    @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-            return;
-        }
-        final JList theList = (JList) e.getSource();
-        if (!theList.isSelectionEmpty()) {
-            int index = theList.getSelectedIndex();
-            final Category cat = (Category) theList.getModel().getElementAt(index);
-            int status = cat.getStatus();
-            if (status == Category.UNDEFINED) {
-                cat.setStatus(Category.SELECTED);
-            } else if ( status == Category.SELECTED ) {
-                cat.setStatus( Category.UN_SELECTED );
-            } else if ( status == Category.UN_SELECTED ) {
-                cat.setStatus( Category.SELECTED );
-            } else if ( status == Category.BOTH ) {
-                cat.setStatus( Category.SELECTED );
-            }
-            theList.clearSelection();
-            categoriesJList.validate();
-        }
-    }
 
     /**
      * Returns a Collection of the selected Categories

@@ -1,7 +1,5 @@
 <?php include("page-start.php"); ?>
 
-<!--<img src="jpo_scr_3.png" width=700 height=580 alt="Screenshot of JPO"><br>-->
-
 <div class="container">
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
         <!-- Indicators -->
@@ -77,7 +75,6 @@
     <ul>
         <li> Quickly Organize digital images into collections and groups </li>
         <li> Creates web pages from your collection </li>
-        <!-- <li> Can upload to Google's Picasa (TM) </li> -->
         <li> Download pictures from Camera with the ability to load only the new ones</li>
         <li> Send rescaled images and originals via email</li>
         <li> View pictures as a slide show </li>

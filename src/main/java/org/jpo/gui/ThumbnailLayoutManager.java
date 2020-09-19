@@ -260,7 +260,6 @@ public class ThumbnailLayoutManager implements LayoutManager {
         if ( newCols < 1 ) {
             newCols = 1;
         }
-        //LOGGER.info( String.format( "Calculating columns for parent width: %d, returning %d columns", width, newCols ) );
         return newCols;
     }
 
@@ -273,11 +272,9 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @return the width of the parent component.
      */
     public static int getParentComponentWidth( final Container parent ) {
-        LOGGER.info( parent.toString() );
         Container queryComponent = parent;
         if ( parent.getParent() != null ) {
             queryComponent = parent.getParent();  // get the size of the JViewport
-            LOGGER.info( queryComponent.toString() );
         }
         return queryComponent.getBounds().width;
     }

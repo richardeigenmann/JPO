@@ -8,7 +8,7 @@ import java.awt.*;
 /*
  CategoryListCellRenderer.java:  A class which formats Category for use in a JList
 
- Copyright (C) 2002-2015  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -37,29 +37,25 @@ public class CategoryListCellRenderer extends JCheckBox implements ListCellRende
 
     @Override
     public Component getListCellRendererComponent(
-            JList<? extends Category> list,
-            Category category,
-            int index,
-            boolean isSelected,
-            boolean cellHasFocus ) {
+            final JList<? extends Category> list,
+            final Category category,
+            final int index,
+            final boolean isSelected,
+            final boolean cellHasFocus) {
 
         int status = category.getStatus();
-        if ( status == Category.UNDEFINED ) {
-            setSelected( false );
-            setEnabled( true );
-            //setBackground( Color.gray );
-        } else if ( status == Category.SELECTED ) {
-            setSelected( true );
-            setEnabled( true );
-            //setBackground( Color.white );
-        } else if ( status == Category.BOTH ) {
-            setSelected( false );
+        if (status == Category.UNDEFINED) {
+            setSelected(false);
+            setEnabled(true);
+        } else if (status == Category.SELECTED) {
+            setSelected(true);
+            setEnabled(true);
+        } else if (status == Category.BOTH) {
+            setSelected(false);
             setEnabled( false );
-            //setBackground( Color.gray );
         } else if ( status == Category.UN_SELECTED ) {
             setSelected( false );
             setEnabled( true );
-            //setBackground( Color.white );
         }
         setText( category.toString() );
 

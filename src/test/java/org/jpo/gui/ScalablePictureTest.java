@@ -98,7 +98,6 @@ public class ScalablePictureTest {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
-        //Settings.loadSettings();
         final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         File imageFile = null;
         try {

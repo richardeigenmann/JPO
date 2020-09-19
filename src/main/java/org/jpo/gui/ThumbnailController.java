@@ -437,7 +437,7 @@ public class ThumbnailController
      * @param thumbnailSizeFactor Factor
      */
     public void setFactor(final float thumbnailSizeFactor) {
-        LOGGER.fine(String.format("Scaling factor is being set to %f", thumbnailSizeFactor));
+        LOGGER.log(Level.FINE, "Scaling factor is being set to {0}", thumbnailSizeFactor);
         myThumbnail.setFactor(thumbnailSizeFactor);
     }
 
