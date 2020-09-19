@@ -1,7 +1,5 @@
 package org.jpo.gui.swing;
 
-//import jdk.internal.util.xml.impl.Input;
-
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
@@ -26,8 +24,6 @@ import java.util.StringTokenizer;
  *  @see <a href="http:////www.javaworld.com//javatips//jw-javatip77_p.html">http:////www.javaworld.com//javatips//jw-javatip77_p.html</a>
  */
 public class JTableCopyPasteClipboardAdapter implements ActionListener {
-    //private String rowstring,value;
-
     private final Clipboard systemClipboard;
 
     private JTable jTable;
@@ -159,16 +155,16 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
                     pasteCols = sourceColumnCount;
                 }
 
-                for ( int i = 0; i < pasteRows; i++ ) {
-                    for ( int j = 0; j < pasteCols; j++ ) {
-                        if ( ( pasteStartRow + i < jTable.getRowCount() ) && ( pasteStartCol + j < jTable.getColumnCount() ) ) {
-                            jTable.setValueAt( sourceValues[i % sourceRowCount][j % sourceColumnCount], pasteStartRow + i, pasteStartCol + j );
+                for (int i = 0; i < pasteRows; i++) {
+                    for (int j = 0; j < pasteCols; j++) {
+                        if ((pasteStartRow + i < jTable.getRowCount()) && (pasteStartCol + j < jTable.getColumnCount())) {
+                            jTable.setValueAt(sourceValues[i % sourceRowCount][j % sourceColumnCount], pasteStartRow + i, pasteStartCol + j);
                         }
-                        TableModelEvent tme = new TableModelEvent( jTable.getModel(), pasteStartRow + i, pasteStartRow + i, pasteStartCol + j, TableModelEvent.UPDATE );
-                        ( (AbstractTableModel) jTable.getModel() ).fireTableChanged( tme );
+                        TableModelEvent tme = new TableModelEvent(jTable.getModel(), pasteStartRow + i, pasteStartRow + i, pasteStartCol + j, TableModelEvent.UPDATE);
+                        ((AbstractTableModel) jTable.getModel()).fireTableChanged(tme);
                     }
                 }
-            } catch ( UnsupportedFlavorException | IOException ex ) {
+            } catch (final UnsupportedFlavorException | IOException ex) {
                 // Ignore it then
             }
         }

@@ -251,10 +251,13 @@ public class ThumbnailDescriptionPanel extends JPanel {
     }
 
     public AbstractButton addCategory(String categoryDescription) {
-        categoriesJPanel.add(new JLabel(categoryDescription));
+        final JPanel categoryLabel = new JPanel();
+        categoryLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
+        categoryLabel.add(new JLabel(categoryDescription));
         final JButton removeButton = new JButton("\uf057");
         removeButton.setFont(FontAwesomeFont.getFontAwesomeFont18());
-        categoriesJPanel.add(removeButton);
+        categoryLabel.add(removeButton);
+        categoriesJPanel.add(categoryLabel);
         return removeButton;
     }
 

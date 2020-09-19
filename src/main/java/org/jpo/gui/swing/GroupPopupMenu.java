@@ -104,7 +104,6 @@ public class GroupPopupMenu extends JPopupMenu {
                 final HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
                 hs.add(popupNode);
                 JpoEventBus.getInstance().post(new ShowCategoryUsageEditorRequest(hs));
-                //caller.showCategoryUsageGUI( popupNode );
             });
             add(categoryUsageJMenuItem);
 

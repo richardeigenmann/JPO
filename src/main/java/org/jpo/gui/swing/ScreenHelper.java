@@ -6,7 +6,7 @@ import java.awt.*;
 /*
 ScreenHelper.java:  class that helps with screen size logic
 
-Copyright (C) 2006-2010  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006-2020  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -20,20 +20,24 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- *  This class helps with screen size logic.
- *
+ * This class helps with screen size logic.
  **/
 public class ScreenHelper {
+
+    private ScreenHelper() {
+        throw new IllegalStateException("Utility class");
+    }
 
     /**
      *   This method returns the number of screen devices.
      *
-     *  @return   The number of screen devices
+     *  @return The number of screen devices
      */
     public static int getNumberOfScreenDevices() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
         return gs.length;
     }
 
@@ -44,19 +48,16 @@ public class ScreenHelper {
      *  @return   True if the environment is a Xinerama environment, False if not
      */
     public static boolean isXinerama() {
-        if ( getNumberOfScreenDevices() < 2 ) {
+        if (getNumberOfScreenDevices() < 2) {
             return false;
         }
-        Rectangle r;
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
-        GraphicsDevice gd;
-        GraphicsConfiguration gc;
-        for ( GraphicsDevice g : gs ) {
-            gd = g;
-            gc = gd.getDefaultConfiguration();
-            r = gc.getBounds();
-            if ( ( r.x != 0 ) || ( r.y != 0 ) ) {
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
+        for (final GraphicsDevice g : gs) {
+            final GraphicsDevice gd = g;
+            final GraphicsConfiguration gc = gd.getDefaultConfiguration();
+            final Rectangle r = gc.getBounds();
+            if ((r.x != 0) || (r.y != 0)) {
                 return true;
             }
         }
@@ -75,12 +76,12 @@ public class ScreenHelper {
      */
     public static Rectangle getXineramaScreenBounds() {
         Rectangle virtualBounds = new Rectangle();
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gs = ge.getScreenDevices();
-        for ( GraphicsDevice gd : gs ) {
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gs = ge.getScreenDevices();
+        for (GraphicsDevice gd : gs) {
             GraphicsConfiguration[] gc = gd.getConfigurations();
-            for ( GraphicsConfiguration gc1 : gc ) {
-                virtualBounds = virtualBounds.union( gc1.getBounds() );
+            for (GraphicsConfiguration gc1 : gc) {
+                virtualBounds = virtualBounds.union(gc1.getBounds());
             }
         }
         return virtualBounds;
@@ -92,8 +93,8 @@ public class ScreenHelper {
      * @return Graphics Configuration
      */
     public static GraphicsConfiguration getPrimaryScreen() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice gd = ge.getDefaultScreenDevice();
         return gd.getDefaultConfiguration();
     }
 
@@ -103,9 +104,9 @@ public class ScreenHelper {
      * @return the Graphics Configuration
      */
     public static GraphicsConfiguration getSecondaryScreenGraphicsConfiguration() {
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice[] gd = ge.getScreenDevices();
-        if ( gd.length > 1 ) {
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final GraphicsDevice[] gd = ge.getScreenDevices();
+        if (gd.length > 1) {
             return gd[1].getDefaultConfiguration();
         } else {
             return gd[0].getDefaultConfiguration();
@@ -149,7 +150,7 @@ public class ScreenHelper {
      */
     public static Rectangle getLeftScreenBounds() {
         if ( isXinerama() ) {
-            Rectangle xsb = getXineramaScreenBounds();
+            final Rectangle xsb = getXineramaScreenBounds();
             return new Rectangle( xsb.x, xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
         } else {
             if ( getNumberOfScreenDevices() > 1 ) {
@@ -171,7 +172,7 @@ public class ScreenHelper {
      */
     public static Rectangle getRightScreenBounds() {
         if ( isXinerama() ) {
-            Rectangle xsb = getXineramaScreenBounds();
+            final Rectangle xsb = getXineramaScreenBounds();
             return new Rectangle( xsb.x + ( xsb.width / getNumberOfScreenDevices() * ( getNumberOfScreenDevices() - 1 ) ),
                     xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
         } else {
@@ -190,7 +191,7 @@ public class ScreenHelper {
      * @return the bounds for the top left window
      */
     public static Rectangle getTopLeftScreenBounds() {
-        Rectangle bounds = getLeftScreenBounds();
+        final Rectangle bounds = getLeftScreenBounds();
         bounds.height = ( bounds.height / 2 );
         return bounds;
     }
@@ -201,7 +202,7 @@ public class ScreenHelper {
      * @return the bounds for the bottom left window
      */
     public static Rectangle getBottomLeftScreenBounds() {
-        Rectangle bounds = getLeftScreenBounds();
+        final Rectangle bounds = getLeftScreenBounds();
         bounds.height = ( bounds.height / 2 );
         bounds.y += bounds.height;
         return bounds;
@@ -213,7 +214,7 @@ public class ScreenHelper {
      * @return the bounds for the top right window
      */
     public static Rectangle getTopRightScreenBounds() {
-        Rectangle bounds = getRightScreenBounds();
+        final Rectangle bounds = getRightScreenBounds();
         bounds.height = ( bounds.height / 2 );
         return bounds;
     }
@@ -224,7 +225,7 @@ public class ScreenHelper {
      * @return the bounds for the bottom right window
      */
     public static Rectangle getBottomRightScreenBounds() {
-        Rectangle bounds = getRightScreenBounds();
+        final Rectangle bounds = getRightScreenBounds();
         bounds.height = ( bounds.height / 2 );
         bounds.y += bounds.height;
         return bounds;
@@ -233,14 +234,14 @@ public class ScreenHelper {
     /**
      * helper variable
      */
-    private static StringBuffer b;
+    private static StringBuilder b;
 
     /**
      * concatenates strings with a system dependent newline.
      * @param s String
      */
-    private static void sbadd( String s ) {
-        b.append( s ).append( System.getProperty( "line.separator" ));
+    private static void sbadd(final String s) {
+        b.append(s).append(System.getProperty("line.separator"));
     }
 
 
@@ -248,19 +249,18 @@ public class ScreenHelper {
      *  Explains the graphics configuration to the log file if debug is on:
      * @return A description of the graphics configuration
      */
-    public static StringBuffer explainGraphicsEnvironment() {
-        b = new StringBuffer();
-        boolean headless = GraphicsEnvironment.isHeadless();
-        if ( headless ) {
-            sbadd( "HEADLESS: The GraphicsEnvironment is reporting no Display, Keyboard and Mound can be supported in this environment" );
+    public static StringBuilder explainGraphicsEnvironment() {
+        b = new StringBuilder();
+        if (GraphicsEnvironment.isHeadless()) {
+            sbadd("HEADLESS: The GraphicsEnvironment is reporting no Display, Keyboard and Mound can be supported in this environment");
         } else {
-            sbadd( "HEADLESS: The GraphicsEnvironment is reporting it is not headless. How reassuring." );
+            sbadd("HEADLESS: The GraphicsEnvironment is reporting it is not headless. How reassuring.");
         }
 
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        sbadd( "                  The LocalGraphicsEnvironment is reporting " +
-                ( ( ge.isHeadlessInstance() ) ? "no Display, Keyboard and Mound can be supported in this environment"
-                : "it is not headless. How reassuring." ) );
+        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        sbadd("                  The LocalGraphicsEnvironment is reporting " +
+                ((ge.isHeadlessInstance()) ? "no Display, Keyboard and Mound can be supported in this environment"
+                        : "it is not headless. How reassuring."));
 
 
         if ( isXinerama() ) {
@@ -269,7 +269,7 @@ public class ScreenHelper {
             sbadd( "XINERAMA: The environment is not a Xinerama environment" );
         }
 
-        GraphicsDevice[] gd = ge.getScreenDevices();
+        final GraphicsDevice[] gd = ge.getScreenDevices();
         sbadd( "There are " + gd.length + " Screen Devices: " );
 
 
@@ -289,8 +289,8 @@ public class ScreenHelper {
         explainGraphicsDevice( defaultScreenDevice );
 
 
-        for ( GraphicsDevice device : gd ) {
-            explainGraphicsDevice( device );
+        for (final GraphicsDevice device : gd) {
+            explainGraphicsDevice(device);
         }
 
         return b;
@@ -302,7 +302,7 @@ public class ScreenHelper {
      * @param d GraphicsDevice
      */
     public static void explainGraphicsDevice( GraphicsDevice d ) {
-        String id = d.getIDstring();
+        final String id = d.getIDstring();
         sbadd( "================== Device: " + id );
         if ( d.isFullScreenSupported() ) {
             sbadd( "FullScreenexclusive mode is supported" );
@@ -338,8 +338,8 @@ public class ScreenHelper {
      * @param id Id
      * @param dm DisplayMode
      */
-    public static void explainDisplayMode( String id, DisplayMode dm ) {
-        sbadd( "DisplayMode for Device: " + id + " Bit Depth: " + dm.getBitDepth() + " RefreshRate: " + dm.getRefreshRate() + " Width: " + dm.getWidth() + " Height: " + dm.getHeight());
+    public static void explainDisplayMode(final String id, final DisplayMode dm) {
+        sbadd("DisplayMode for Device: " + id + " Bit Depth: " + dm.getBitDepth() + " RefreshRate: " + dm.getRefreshRate() + " Width: " + dm.getWidth() + " Height: " + dm.getHeight());
     }
 
 
@@ -348,9 +348,9 @@ public class ScreenHelper {
      * @param id Id
      * @param gc GraphicsConfiguration
      */
-    public static void explainGraphicsConfiguration( String id,
-            GraphicsConfiguration gc ) {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        sbadd( "Graphicsconfiguration for Device: " + id + " Bounds: " + gc.getBounds().toString() + " Insets: " + toolkit.getScreenInsets( gc ).toString() );
+    public static void explainGraphicsConfiguration(final String id,
+                                                    final GraphicsConfiguration gc) {
+        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        sbadd("Graphicsconfiguration for Device: " + id + " Bounds: " + gc.getBounds().toString() + " Insets: " + toolkit.getScreenInsets(gc).toString());
     }
 }

@@ -230,16 +230,15 @@ public class OverlayedPictureController extends PictureController implements Sca
      * @param pictureStatusMessage New Status Message
      */
     @Override
-    public void scalableStatusChange( ScalablePicture.ScalablePictureStatus pictureStatusCode,
-            String pictureStatusMessage ) {
-        LOGGER.log( Level.FINE, "Got a status change: {0}", pictureStatusMessage );
+    public void scalableStatusChange(final ScalablePicture.ScalablePictureStatus pictureStatusCode,
+                                     String pictureStatusMessage) {
+        LOGGER.log(Level.FINE, "Got a status change: {0}", pictureStatusMessage);
 
-        if ( pictureStatusCode == SCALABLE_PICTURE_READY ) {
-            LOGGER.fine( "READY status" );
-            //pictureStatusMessage = legend;
+        if (pictureStatusCode == SCALABLE_PICTURE_READY) {
+            LOGGER.fine("READY status");
             pictureStatusMessage = Settings.getJpoResources().getString("PicturePaneReadyStatus");
-            if ( isCenterWhenScaled() ) {
-                LOGGER.fine( "centering image" );
+            if (isCenterWhenScaled()) {
+                LOGGER.fine("centering image");
                 centerImage();
             }
             LOGGER.fine( "forcing Panel repaint" );
@@ -261,10 +260,10 @@ public class OverlayedPictureController extends PictureController implements Sca
      * @param percentage percentage
      */
     @Override
-    public void sourceLoadProgressNotification( SourcePicture.SourcePictureStatus statusCode, int percentage ) {
-        synchronized ( picturePaneListeners ) {
-            for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
-                scalablePictureListener.sourceLoadProgressNotification( statusCode, percentage );
+    public void sourceLoadProgressNotification(final SourcePicture.SourcePictureStatus statusCode, final int percentage) {
+        synchronized (picturePaneListeners) {
+            for (ScalablePictureListener scalablePictureListener : picturePaneListeners) {
+                scalablePictureListener.sourceLoadProgressNotification(statusCode, percentage);
             }
         }
     }
@@ -281,8 +280,8 @@ public class OverlayedPictureController extends PictureController implements Sca
      *
      * @param listener Listener
      */
-    public void addStatusListener( ScalablePictureListener listener ) {
-        picturePaneListeners.add( listener );
+    public void addStatusListener(final ScalablePictureListener listener) {
+        picturePaneListeners.add(listener);
     }
 
     /**
@@ -290,8 +289,8 @@ public class OverlayedPictureController extends PictureController implements Sca
      *
      * @param listener the listener to remove
      */
-    public void removeStatusListener( ScalablePictureListener listener ) {
-        picturePaneListeners.remove( listener );
+    public void removeStatusListener(final ScalablePictureListener listener) {
+        picturePaneListeners.remove(listener);
     }
 
     /**

@@ -14,6 +14,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -190,6 +191,9 @@ public class ThumbnailDescriptionController
         }
     }
 
+    /**
+     * makes the ThumbnailDescriptionPanel show all the categories of the PictureInfo
+     */
     private void setCategories() {
         panel.clearCategories();
         if (referringNode == null) {
@@ -368,7 +372,7 @@ public class ThumbnailDescriptionController
     }
 
     private void openCategoriesPopupMenu(final Component component, final int x, final int y) {
-        CategoryPopupMenu menu = new CategoryPopupMenu(referringNode);
+        CategoryPopupMenu menu = new CategoryPopupMenu(Collections.singletonList(referringNode));
         menu.show(component, x, y);
     }
 

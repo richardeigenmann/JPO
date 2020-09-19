@@ -69,9 +69,8 @@ public class ShowAutoAdvanceDialogRequestTest {
                         r.keyPress(KeyEvent.VK_ENTER);
                         r.delay(20);
                         r.keyRelease(KeyEvent.VK_ENTER);
-                    } catch (AWTException e) {
+                    } catch (final AWTException e) {
                         fail(e.getMessage());
-                        e.printStackTrace();
                         Thread.currentThread().interrupt();
                     }
                 });

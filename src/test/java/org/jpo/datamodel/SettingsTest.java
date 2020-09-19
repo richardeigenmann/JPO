@@ -93,12 +93,12 @@ public class SettingsTest {
         Locale saveLocale = Settings.getCurrentLocale();
 
         // make sure we change the locale to a defined starting point
-        //System.out.println("testReadWriteSettingsLocale: Setting Locale to English and writing settings");
+        // Setting Locale to English and writing settings");
         Settings.setLocale(Locale.ENGLISH);
         Settings.writeSettings();
         // Locale should not have changed after writing settings!
         assertEquals( Locale.ENGLISH, Settings.getCurrentLocale());
-        //System.out.println("testReadWriteSettingsLocale: now changing the Locale to German and loading the settings");
+        // now changing the Locale to German and loading the settings");
         Settings.setLocale(Locale.GERMAN);
         Settings.loadSettings();
         // Locale should be back to English after the load!

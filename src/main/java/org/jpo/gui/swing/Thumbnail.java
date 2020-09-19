@@ -10,6 +10,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -63,8 +64,8 @@ public class Thumbnail extends JComponent {
      * @param icon The ImageIcon that should be displayed
      */
     public void setImageIcon(final ImageIcon icon) {
-        LOGGER.fine(String.format("Setting image on thumbnail %d", hashCode()));
-        Runnable runnable = () -> {
+        LOGGER.log(Level.FINE, "Setting image on thumbnail {0}", hashCode());
+        final Runnable runnable = () -> {
             if (icon == null) {
                 return;
             }
@@ -75,10 +76,8 @@ public class Thumbnail extends JComponent {
             imgOb = icon.getImageObserver();
             thumbnailHeight = img.getHeight(imgOb);
 
-            //RescaleOp darkenOp = new RescaleOp( .6f, 0, null );
-            BufferedImage source = new BufferedImage(img.getWidth(imgOb), thumbnailHeight, BufferedImage.TYPE_INT_BGR);
+            final BufferedImage source = new BufferedImage(img.getWidth(imgOb), thumbnailHeight, BufferedImage.TYPE_INT_BGR);
             source.createGraphics().drawImage(img, 0, 0, null);
-            //selectedThumbnail = darkenOp.filter( source, null );
 
             // force update of layout
             setVisible(false);
@@ -123,7 +122,7 @@ public class Thumbnail extends JComponent {
      * @param thumbnailSizeFactor factor
      */
     public void setFactor(final float thumbnailSizeFactor) {
-        LOGGER.fine(String.format("Scaling factor is being set to %f", thumbnailSizeFactor));
+        LOGGER.log(Level.FINE, "Scaling factor is being set to {0}", thumbnailSizeFactor);
         this.thumbnailScaleFactor = thumbnailSizeFactor;
         setVisible(isVisible());
     }
@@ -213,7 +212,7 @@ public class Thumbnail extends JComponent {
         final String QUEUE_ICON_FILE = "queued_thumbnail.gif";
         final URL resource = Thumbnail.class.getClassLoader().getResource(QUEUE_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader failed to load file: " + QUEUE_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", QUEUE_ICON_FILE);
             QUEUE_ICON = null;
         } else {
             QUEUE_ICON = new ImageIcon(resource);
@@ -235,7 +234,7 @@ public class Thumbnail extends JComponent {
         final String LARGE_FOLDER_ICON_FILE = "icon_folder_large.jpg";
         final URL resource = Thumbnail.class.getClassLoader().getResource(LARGE_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader failed to load file: " + LARGE_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", LARGE_FOLDER_ICON_FILE);
             LARGE_FOLDER_ICON = null;
         } else {
             LARGE_FOLDER_ICON = new ImageIcon(resource);
@@ -259,7 +258,7 @@ public class Thumbnail extends JComponent {
         final String OFFLINE_ICON_FILE = "icon_offline.gif";
         final URL resource = Thumbnail.class.getClassLoader().getResource(OFFLINE_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader failed to load file: " + OFFLINE_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", OFFLINE_ICON_FILE);
             OFFLINE_ICON = null;
         } else {
             OFFLINE_ICON = new ImageIcon(resource);
@@ -280,7 +279,7 @@ public class Thumbnail extends JComponent {
         final String MAIL_ICON_FILE = "icon_mail.gif";
         final URL resource = Thumbnail.class.getClassLoader().getResource(MAIL_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader failed to load file: " + MAIL_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", MAIL_ICON_FILE);
             MAIL_ICON = null;
         } else {
             MAIL_ICON = new ImageIcon(resource);
@@ -300,9 +299,9 @@ public class Thumbnail extends JComponent {
 
     static {
         final String SELECTED_ICON_FILE = "icon_selected.gif";
-        URL resource = Thumbnail.class.getClassLoader().getResource(SELECTED_ICON_FILE);
+        final URL resource = Thumbnail.class.getClassLoader().getResource(SELECTED_ICON_FILE);
         if (resource == null) {
-            LOGGER.severe("Classloader failed to load file: " + SELECTED_ICON_FILE);
+            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", SELECTED_ICON_FILE);
             SELECTED_ICON = null;
         } else {
             SELECTED_ICON = new ImageIcon(resource);

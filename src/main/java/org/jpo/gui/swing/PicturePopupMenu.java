@@ -333,7 +333,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         pictureRefreshJMenuItem.addActionListener((ActionEvent e) -> {
             if (!Settings.getPictureCollection().isSelected(popupNode)) {
-                List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
                 nodes.add(popupNode);
                 JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.HIGH_PRIORITY));
             } else {
@@ -690,6 +690,8 @@ public class PicturePopupMenu extends JPopupMenu {
         fileRenameJMenuItem.setVisible(pictureCollection.getAllowEdits());
         fileDeleteJMenuItem.setVisible(pictureCollection.getAllowEdits());
 
+        add(getAssignCategoryMenu());
+
         final JMenuItem showPictureInfoEditorMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureEditJMenuItemLabel"));
         showPictureInfoEditorMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureInfoEditorRequest(popupNode)));
         add(showPictureInfoEditorMenuItem);
@@ -703,6 +705,23 @@ public class PicturePopupMenu extends JPopupMenu {
         ));
         add(consolidateHereMenuItem);
 
+    }
+
+    /**
+     * Creates a JMenu of categories that can be assigned
+     *
+     * @return a JMenu of categories that can be assigned
+     */
+    private JMenu getAssignCategoryMenu() {
+        final JMenu assignCategorisJMenu = new JMenu("Assign Category");
+        if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(popupNode))) {
+            // if many nodes selected and the user clicked on one of them
+            CategoryPopupMenu.addMenuItems(assignCategorisJMenu, Settings.getPictureCollection().getSelection());
+        } else {
+            // act only on the selected node
+            CategoryPopupMenu.addMenuItems(assignCategorisJMenu, Collections.singletonList(popupNode));
+        }
+        return assignCategorisJMenu;
     }
 
     /**

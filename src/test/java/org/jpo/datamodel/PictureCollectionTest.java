@@ -616,8 +616,8 @@ public class PictureCollectionTest {
             pictureCollection.setXmlFile(tempFile);
             pictureCollection.fileSave();
             assertTrue(tempFile.exists());
-            try (final Stream s = Files.lines(tempFile.toPath())) {
-                assertEquals(7,s.count());
+            try (final Stream<String> s = Files.lines(tempFile.toPath())) {
+                assertEquals(7, s.count());
             }
         } catch (final IOException e) {
             fail(e.getMessage());

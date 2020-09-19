@@ -6,6 +6,7 @@ import org.jpo.gui.ChangeWindowInterface;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
@@ -152,7 +153,7 @@ public class ResizableJFrame
      */
     @Override
     public void switchWindowMode( final WindowSize newMode ) {
-        LOGGER.info(String.format("old mode: %s new: %s", windowMode, newMode));
+        LOGGER.log(Level.INFO, "old mode: {0} new: {1}", new Object[]{windowMode, newMode});
         windowMode = newMode;
         boolean newDecoration = switch (newMode) {
             case WINDOW_FULLSCREEN, WINDOW_LEFT, WINDOW_RIGHT -> false;

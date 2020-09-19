@@ -7,6 +7,7 @@ import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import java.util.Dictionary;
 import java.util.Hashtable;
 
 /*
@@ -103,16 +104,17 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
 
         wizardPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailSizeJLabel")), ALIGN_LABEL);
         thumbWidth.addChangeListener((ChangeEvent arg0) -> options.setThumbnailWidth(((SpinnerNumberModel) (thumbWidth.getModel())).getNumber().intValue()));
-        wizardPanel.add( thumbWidth, "split 3" );
-        wizardPanel.add( new JLabel( " x " ) );
-        thumbHeight.addChangeListener( ( ChangeEvent arg0 ) -> options.setThumbnailHeight( ( (SpinnerNumberModel) ( thumbHeight.getModel() ) ).getNumber().intValue() ));
-        wizardPanel.add( thumbHeight, "wrap" );
+        wizardPanel.add(thumbWidth, "split 3");
+        wizardPanel.add(new JLabel(" x "));
+        thumbHeight.addChangeListener((ChangeEvent arg0) -> options.setThumbnailHeight(((SpinnerNumberModel) (thumbHeight.getModel())).getNumber().intValue()));
+        wizardPanel.add(thumbHeight, "wrap");
 
         // Thumbnail Quality Slider
         wizardPanel.add(
                 new JLabel(
                         Settings.getJpoResources().getString("lowresJpgQualitySlider")), ALIGN_LABEL);
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+        // The JSlider wants a Dictionary which can only be a Hashtable
+        Dictionary<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(
                 0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
         labelTable.put(
@@ -121,7 +123,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
                 100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));
         lowresJpgQualityJSlider.setLabelTable(labelTable);
         lowresJpgQualityJSlider.setMajorTickSpacing(
-                10 );
+                10);
         lowresJpgQualityJSlider.setMinorTickSpacing(
                 5 );
         lowresJpgQualityJSlider.setPaintTicks(

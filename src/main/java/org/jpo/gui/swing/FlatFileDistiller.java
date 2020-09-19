@@ -129,8 +129,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
      * @param groupNode group to work on
      * @throws IOException if there is a failure
      */
-    private static void enumerateGroup(SortableDefaultMutableTreeNode groupNode, BufferedWriter out) throws IOException {
-        //GroupInfo groupInfo = (GroupInfo) groupNode.getUserObject();
+    private static void enumerateGroup(final SortableDefaultMutableTreeNode groupNode, final BufferedWriter out) throws IOException {
         final Enumeration<TreeNode> kids = groupNode.children();
         while (kids.hasMoreElements()) {
             final SortableDefaultMutableTreeNode childNode = (SortableDefaultMutableTreeNode) kids.nextElement();
@@ -151,13 +150,13 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
 
         try {
             result = get();
-        } catch (InterruptedException ex) {
+        } catch (final InterruptedException ex) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Interrupted Exception:\n" + ex.getLocalizedMessage(),
                     "InterruptedException",
                     JOptionPane.ERROR_MESSAGE);
             Thread.currentThread().interrupt();
             return;
-        } catch (ExecutionException ex) {
+        } catch (final ExecutionException ex) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Execution Exception:\n" + ex.getLocalizedMessage(),
                     "ExecutionException",
                     JOptionPane.ERROR_MESSAGE);
@@ -191,7 +190,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
          * @param success   whether the distiller succeeded or not
          * @param exception Exception
          */
-        public DistillerResult(boolean success, Exception exception) {
+        public DistillerResult(final boolean success, final Exception exception) {
             this.success = success;
             this.exception = exception;
         }

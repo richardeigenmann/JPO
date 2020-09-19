@@ -32,6 +32,10 @@ import java.util.logging.Logger;
 
 public class FontAwesomeFont {
 
+    private FontAwesomeFont() {
+        throw new IllegalStateException("Utility class");
+    }
+
     private static final Logger LOGGER = Logger.getLogger(FontAwesomeFont.class.getName());
 
     private static Font fontAwesomeFont24;
@@ -46,6 +50,7 @@ public class FontAwesomeFont {
             LOGGER.log(Level.SEVERE, "Could not load FontAwesome font. Exception: {0}", e.getMessage());
         }
     }
+
 
     /**
      * Returns the static instance of the 24 size Font Awesome Font

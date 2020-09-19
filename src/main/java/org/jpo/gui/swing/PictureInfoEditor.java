@@ -451,7 +451,7 @@ public class PictureInfoEditor extends JFrame {
         exifTagsJTextArea.setCaret(dumbCaret);
 
         final JScrollPane exifJScrollPane = new JScrollPane();
-        exifJScrollPane.setViewportView(exifTagsJTextArea);//, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS );
+        exifJScrollPane.setViewportView(exifTagsJTextArea);
         exifJScrollPane.setWheelScrollingEnabled(true);
 
         tabs.add("Exif", exifJScrollPane);

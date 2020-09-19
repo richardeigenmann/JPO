@@ -80,12 +80,6 @@ public class PrivacyJFrame
         selected.addActionListener(( ActionEvent e ) -> privacyController.clearSelected( clearRecentFiles.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() ));
         privacyPanel.add( selected, "split 2" );
 
-        /*final JButton cancel = new JButton( Settings.getJpoResources().getString( "PrivacyClose" ) );
-        cancel.addActionListener(( ActionEvent e ) -> {
-            getRid();
-        });
-        privacyPanel.add( cancel );*/
-
         final JButton all = new JButton(Settings.getJpoResources().getString("PrivacyAll"));
         all.addActionListener(( ActionEvent e ) -> privacyController.clearAll());
         privacyPanel.add( all );

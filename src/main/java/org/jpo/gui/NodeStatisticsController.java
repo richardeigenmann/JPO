@@ -104,8 +104,9 @@ public class NodeStatisticsController {
             @Override
             protected void done() {
                 try {
-                    nodeStatisticsPanel.updateStats( nodeStatisticsBean );
-                } catch ( Exception ignore ) {
+                    nodeStatisticsPanel.updateStats(nodeStatisticsBean);
+                } catch (final Exception ignore) {
+                    // noop
                 }
             }
         }

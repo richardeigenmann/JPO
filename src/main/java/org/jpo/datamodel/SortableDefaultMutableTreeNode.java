@@ -195,7 +195,15 @@ public class SortableDefaultMutableTreeNode
 
     @Override
     public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        }
         return hashCode() == obj.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 
 

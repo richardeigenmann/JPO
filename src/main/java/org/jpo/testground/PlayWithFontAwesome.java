@@ -11,21 +11,18 @@ import java.awt.*;
 public class PlayWithFontAwesome {
 
     public PlayWithFontAwesome() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+        EventQueue.invokeLater(() -> {
 
-                JLabel label = new JLabel("\uf146\uf057\uf0fe");
-                label.setFont(FontAwesomeFont.getFontAwesomeFont24());
+            JLabel label = new JLabel("\uf146\uf057\uf0fe");
+            label.setFont(FontAwesomeFont.getFontAwesomeFont24());
 
-                JFrame frame = new JFrame("Testing Font Awesome");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setLayout(new GridBagLayout());
-                frame.add(label);
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setVisible(true);
-            }
+            JFrame frame = new JFrame("Testing Font Awesome");
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.setLayout(new GridBagLayout());
+            frame.add(label);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
         });
     }
 

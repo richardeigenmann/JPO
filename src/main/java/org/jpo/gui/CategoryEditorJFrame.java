@@ -7,8 +7,6 @@ import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -36,17 +34,14 @@ import java.util.logging.Logger;
 /**
  * CategoryEditorJFrame.java: Creates a GUI to edit the categories of the
  * collection
- *
- *
  */
 public class CategoryEditorJFrame
-        extends JFrame
-        implements ListSelectionListener {
+        extends JFrame {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( CategoryEditorJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(CategoryEditorJFrame.class.getName());
 
     /**
      * the entry field that allows a new category to be added
@@ -88,7 +83,7 @@ public class CategoryEditorJFrame
         categoryJTextField.setMaximumSize( new Dimension( 600, 25 ) );
         jPanel.add( categoryJTextField );
 
-        final DefaultListModel<Category> listModel = new DefaultListModel<>();
+        final DefaultListModel<Category> categoriesListModel = new DefaultListModel<>();
 
         final Dimension defaultButtonSize = new Dimension( 150, 25 );
         final Dimension maxButtonSize = new Dimension( 150, 25 );
@@ -98,39 +93,46 @@ public class CategoryEditorJFrame
         addCategoryJButton.setMinimumSize( defaultButtonSize );
         addCategoryJButton.setMaximumSize( maxButtonSize );
         addCategoryJButton.addActionListener(( ActionEvent evt ) -> {
-            String category = categoryJTextField.getText();
-            Integer key = Settings.getPictureCollection().addCategory( category );
-            Category categoryObject = new Category( key, category );
-            listModel.addElement( categoryObject );
-            categoryJTextField.setText( "" );
+            final String category = categoryJTextField.getText();
+            final Integer key = Settings.getPictureCollection().addCategory(category);
+            final Category categoryObject = new Category(key, category);
+            categoriesListModel.addElement(categoryObject);
+            categoryJTextField.setText("");
         });
-        jPanel.add( addCategoryJButton, "alignx center, wrap" );
+        jPanel.add(addCategoryJButton, "alignx center, wrap");
 
         final JLabel categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel"));
-        categoriesJLabel.setHorizontalAlignment( SwingConstants.LEFT );
-        jPanel.add( categoriesJLabel );
+        categoriesJLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        jPanel.add(categoriesJLabel);
 
-        final JList<Category> categoriesJList = new JList<>( listModel );
-        categoriesJList.setPreferredSize( new Dimension( 180, 250 ) );
-        categoriesJList.setMinimumSize( new Dimension( 180, 50 ) );
-        categoriesJList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-        categoriesJList.addListSelectionListener( this );
+        final JList<Category> categoriesJList = new JList<>(categoriesListModel);
+        categoriesJList.setPreferredSize(new Dimension(180, 250));
+        categoriesJList.setMinimumSize(new Dimension(180, 50));
+        categoriesJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        categoriesJList.addListSelectionListener(e -> {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            if (!categoriesJList.isSelectionEmpty()) {
+                final int index = categoriesJList.getSelectedIndex();
+                final Category cat = (Category) categoriesJList.getModel().getElementAt(index);
+                categoryJTextField.setText(cat.getValue());
+            }
+
+        });
 
         final Iterator<Integer> i = Settings.getPictureCollection().getCategoryIterator();
-        Integer key;
-        String category;
-        Category categoryObject;
-        while ( i.hasNext() ) {
-            key = i.next();
-            category = Settings.getPictureCollection().getCategory(key);
-            categoryObject = new Category( key, category );
-            listModel.addElement( categoryObject );
+        while (i.hasNext()) {
+            final Integer key = i.next();
+            final String category = Settings.getPictureCollection().getCategory(key);
+            final Category categoryObject = new Category(key, category);
+            categoriesListModel.addElement(categoryObject);
         }
 
-        final JScrollPane listJScrollPane = new JScrollPane( categoriesJList );
+        final JScrollPane listJScrollPane = new JScrollPane(categoriesJList);
         listJScrollPane.setPreferredSize( new Dimension( 200, 270 ) );
-        listJScrollPane.setMinimumSize( new Dimension( 200, 50 ) );
-        jPanel.add( listJScrollPane );
+        listJScrollPane.setMinimumSize(new Dimension(200, 50));
+        jPanel.add(listJScrollPane, "push, grow");
 
         final JPanel buttonJPanel = new JPanel();
         buttonJPanel.setLayout( new MigLayout() );
@@ -159,8 +161,8 @@ public class CategoryEditorJFrame
                 }
 
             }
-            listModel.remove( index );
-            Settings.getPictureCollection().removeCategory( cat.getKey() );
+            categoriesListModel.remove(index);
+            Settings.getPictureCollection().removeCategory(cat.getKey());
         });
         buttonJPanel.add( deleteCategoryJButton, "wrap" );
 
@@ -175,12 +177,12 @@ public class CategoryEditorJFrame
                 return; // nothing selected
             } // nothing selected
             Category cat = categoriesJList.getModel().getElementAt( index );
-            listModel.remove( index );
+            categoriesListModel.remove(index);
             String category1 = categoryJTextField.getText();
             Settings.getPictureCollection().renameCategory( cat.getKey(), category1 );
             Category categoryObject1 = new Category( cat.getKey(), category1 );
-            listModel.insertElementAt( categoryObject1, index );
-            categoryJTextField.setText( "" );
+            categoriesListModel.insertElementAt(categoryObject1, index);
+            categoryJTextField.setText("");
         });
         buttonJPanel.add( renameCategoryJButton, "wrap" );
 
@@ -207,22 +209,4 @@ public class CategoryEditorJFrame
         dispose();
     }
 
-    /**
-     * Method from the ListSelectionListener implementation that tracks when an
-     * element was selected.
-     *
-     * @param e The event
-     */
-    @Override
-    public void valueChanged(final ListSelectionEvent e) {
-        if (e.getValueIsAdjusting()) {
-            return;
-        }
-        JList theList = (JList) e.getSource();
-        if (!theList.isSelectionEmpty()) {
-            int index = theList.getSelectedIndex();
-            Category cat = (Category) theList.getModel().getElementAt(index);
-            categoryJTextField.setText(cat.getValue());
-        }
-    }
 }

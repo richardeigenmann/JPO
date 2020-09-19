@@ -107,6 +107,7 @@ public class PicturePopupMenuTest {
     private JMenuItem moveToNewLocation;
     private JMenuItem fileOperationsRename;
     private JMenuItem fileOperationsDelete;
+    private JMenu assignCategoryMenu;
     private JMenuItem properties;
     private JMenuItem consolidateHere;
 
@@ -170,8 +171,9 @@ public class PicturePopupMenuTest {
                 renameJMenu = (JMenu) fileOperations.getItem(3);
                 fileOperationsRename = renameJMenu.getItem(0);
                 fileOperationsDelete = fileOperations.getItem(4);
-                properties = (JMenuItem) myPicturePopupMenu.getComponent(17);
-                consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(18);
+                assignCategoryMenu = (JMenu) myPicturePopupMenu.getComponent(17);
+                properties = (JMenuItem) myPicturePopupMenu.getComponent(18);
+                consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(19);
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, e.getMessage());

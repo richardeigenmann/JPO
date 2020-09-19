@@ -32,7 +32,7 @@ public record RenamePictureRequest(@NonNull SortableDefaultMutableTreeNode node)
     public RenamePictureRequest {
         Objects.requireNonNull(node);
         if (!(node.getUserObject() instanceof PictureInfo)) {
-            throw new RuntimeException("The node must be of type PictureInfo");
+            throw new NotPictureInfoException("The node must be of type PictureInfo");
         }
     }
 

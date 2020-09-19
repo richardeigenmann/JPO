@@ -128,7 +128,8 @@ public class PicasaUploaderWizard3Upload extends AbstractStep implements PicasaU
         setCanGoBack( false );
         setCanCancel( false );
         try {
-            Desktop.getDesktop().browse( new URI( "https://picasaweb.google.com/home" ) );
+            final String PICASA_URL = "https://picasaweb.google.com/home";
+            Desktop.getDesktop().browse(new URI(PICASA_URL));
         } catch ( IOException | URISyntaxException ex ) {
             Logger.getLogger( PicasaUploaderWizard3Upload.class.getName() ).log( Level.SEVERE, null, ex );
         }

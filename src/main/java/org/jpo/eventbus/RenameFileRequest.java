@@ -36,8 +36,9 @@ public record RenameFileRequest(@NonNull SortableDefaultMutableTreeNode node, @N
         Objects.requireNonNull(node);
         Objects.requireNonNull(newFileName);
         if (!(node.getUserObject() instanceof PictureInfo)) {
-            throw new RuntimeException("The node must be of type PictureInfo");
+            throw new NotPictureInfoException("The node must be of type PictureInfo");
         }
     }
 
 }
+
