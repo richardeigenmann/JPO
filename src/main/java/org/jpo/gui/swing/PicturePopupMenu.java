@@ -442,12 +442,10 @@ public class PicturePopupMenu extends JPopupMenu {
             if ((Settings.getPictureCollection().countSelectedNodes() < 1)
                     || (!pictureCollection.isSelected(popupNode))) {
                 nodes.add(popupNode);
-                //popupNode.indentNode();
             } else {
                 for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
                     if (selectedNode.getUserObject() instanceof PictureInfo) {
                         nodes.add(selectedNode);
-                        //selectedNode.indentNode();
                     }
                 }
             }

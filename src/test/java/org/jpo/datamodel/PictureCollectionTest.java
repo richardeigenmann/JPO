@@ -603,9 +603,9 @@ public class PictureCollectionTest {
     @Test
     public void fileSave() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final PictureCollection pictureCollection = new PictureCollection();
+        final PictureCollection picCollection = new PictureCollection();
         try {
-            SwingUtilities.invokeAndWait(pictureCollection::clearCollection);
+            SwingUtilities.invokeAndWait(picCollection::clearCollection);
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -613,8 +613,8 @@ public class PictureCollectionTest {
 
         try {
             final File tempFile = File.createTempFile("testPictureCollection", ".xml");
-            pictureCollection.setXmlFile(tempFile);
-            pictureCollection.fileSave();
+            picCollection.setXmlFile(tempFile);
+            picCollection.fileSave();
             assertTrue(tempFile.exists());
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {
                 assertEquals(7, s.count());
@@ -627,9 +627,9 @@ public class PictureCollectionTest {
     @Test
     public void fileSaveNoPriorFile() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final PictureCollection pictureCollection = new PictureCollection();
+        final PictureCollection picCollection = new PictureCollection();
         try {
-            SwingUtilities.invokeAndWait(pictureCollection::clearCollection);
+            SwingUtilities.invokeAndWait(picCollection::clearCollection);
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -641,11 +641,11 @@ public class PictureCollectionTest {
             // So let's just go and delete it
             Files.delete(tempFile.toPath());
             assertFalse(tempFile.exists());
-            pictureCollection.setXmlFile(tempFile);
-            pictureCollection.fileSave();
+            picCollection.setXmlFile(tempFile);
+            picCollection.fileSave();
             assertTrue(tempFile.exists());
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {
-                assertEquals(7,s.count());
+                assertEquals(7, s.count());
             }
         } catch (final IOException e) {
             fail(e.getMessage());

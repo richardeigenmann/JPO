@@ -109,7 +109,7 @@ public class CategoryJScrollPane extends JScrollPane {
         // load categories
         defaultListModel.clear();
         while (i.hasNext()) {
-            final Integer key = (Integer) i.next();
+            final Integer key = i.next();
             final String category = Settings.getPictureCollection().getCategory(key);
             final Category categoryObject = new Category(key, category);
             defaultListModel.addElement(categoryObject);
