@@ -160,7 +160,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             if (options.isGenerateZipfile()) {
                 zipFile.close();
             }
-        } catch (IOException x) {
+        } catch (final IOException x) {
             LOGGER.log(Level.SEVERE, "Error closing Zipfile. Continuing.\n{0}", x.getMessage());
             options.setGenerateZipfile(false);
         }
@@ -189,7 +189,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
         if (options.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION) {
             sshCopyToServer(files);
-        } else {
+        } else if (options.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION) {
             ftpCopyToServer(files);
         }
 
@@ -209,7 +209,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process(final List<String> messages) {
-        messages.stream().peek(message -> LOGGER.info(String.format("Message: %s", message))).forEachOrdered(item
+        messages.stream().peek(message -> LOGGER.log(Level.INFO, "Message: {0}", message)).forEachOrdered(item
                 -> progressGui.progressIncrement()
         );
     }
@@ -415,10 +415,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             addToZipFile(zipFile, pictureInfo, highresFile);
         }
 
-        LOGGER.info(String.format("Loading: %s", pictureInfo.getImageLocation()));
+        LOGGER.log(Level.INFO, "Loading: {0}", pictureInfo.getImageLocation());
         scp.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
 
-        LOGGER.info(String.format("Done Loading: %s", pictureInfo.getImageLocation()));
+        LOGGER.log(Level.INFO, "Done Loading: {0}", pictureInfo.getImageLocation());
         if (scp.getStatusCode() == SCALABLE_PICTURE_ERROR) {
             LOGGER.log(Level.SEVERE, "Problem reading image {0} using ThumbnailPicture instead", pictureInfo.getImageLocation());
             File file;

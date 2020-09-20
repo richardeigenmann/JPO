@@ -139,8 +139,9 @@ public class SourcePicture {
     /**
      * method to invoke with a filename or URL of a picture that is to be loaded
      * in the main thread.
+     * TODO: Investigate the behaviour when the file doesn't exist. Seems to just die? See also the testGeberateWebsite test
      *
-     * @param file Image URL
+     * @param file     Image URL
      * @param rotation Image rotation
      */
     public void loadPicture(final File file, final double rotation) {

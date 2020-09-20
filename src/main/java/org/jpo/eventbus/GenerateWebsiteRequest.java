@@ -140,7 +140,7 @@ public class GenerateWebsiteRequest {
         return targetDirectory;
     }
 
-    public void setTargetDirectory(File htmlDirectory) {
+    public void setTargetDirectory(final File htmlDirectory) {
         this.targetDirectory = htmlDirectory;
     }
 
