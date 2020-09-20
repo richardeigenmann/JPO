@@ -104,8 +104,13 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public static void handleRenamePictureRequest(@NonNull RenamePictureRequest request) {
-        final SortableDefaultMutableTreeNode node = request.node();
+    public static void handleRenamePictureRequest(@NonNull final RenamePictureRequest request) {
+        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+            renameOnePictureRequest(node);
+        }
+    }
+
+    public static void renameOnePictureRequest(@NonNull final SortableDefaultMutableTreeNode node) {
         final PictureInfo pi = (PictureInfo) node.getUserObject();
 
         final File imageFile = pi.getImageFile();
@@ -135,9 +140,10 @@ public class ApplicationEventHandler {
                     return;
                 }
             }
-            JpoEventBus.getInstance().post(new RenameFileRequest(request.node(), newName.getName()));
+            JpoEventBus.getInstance().post(new RenameFileRequest(node, newName.getName()));
         }
     }
+
 
     /**
      * Bring up a Dialog where the user can input a new name for a file and

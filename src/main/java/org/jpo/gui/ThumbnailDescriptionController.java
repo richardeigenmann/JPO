@@ -5,6 +5,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.gui.swing.CategoryPopupMenu;
 import org.jpo.gui.swing.PicturePopupMenu;
+import org.jpo.gui.swing.RenameMenuItems;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 
 import javax.swing.*;
@@ -136,6 +137,20 @@ public class ThumbnailDescriptionController
 
         panel.getPictureDescriptionJSP().getVerticalScrollBar().addAdjustmentListener((AdjustmentEvent e) -> panel.setTextAreaSize());
 
+        panel.getHighresLocationJTextField().addMouseListener(new MouseAdapter() {
+                                                                  @Override
+                                                                  public void mouseReleased(MouseEvent e) {
+                                                                      if (e.getButton() == BUTTON3) {
+                                                                          JPopupMenu popupmenu = new JPopupMenu();
+                                                                          for (final JComponent c : RenameMenuItems.getRenameMenuItems(Collections.singleton(referringNode))) {
+                                                                              popupmenu.add(c);
+                                                                          }
+                                                                          popupmenu.show(panel.getHighresLocationJTextField(), e.getX(), e.getY());
+                                                                      }
+                                                                  }
+                                                              }
+        );
+
         setVisible(false);
 
     }
@@ -183,7 +198,9 @@ public class ThumbnailDescriptionController
         if (referringNode == null) {
             panel.getHighresLocationJTextField().setText("null");
         } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
-            panel.getHighresLocationJTextField().setText(pi.getImageLocation());
+            if (pi.getImageFile() != null) {
+                panel.getHighresLocationJTextField().setText(pi.getImageFile().toString());
+            }
         } else if (referringNode.getUserObject() instanceof GroupInfo) {
             panel.getHighresLocationJTextField().setText("");
         } else {

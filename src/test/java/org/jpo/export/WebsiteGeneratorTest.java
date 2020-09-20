@@ -120,7 +120,7 @@ public class WebsiteGeneratorTest {
         // run the widzard
         try {
             SwingUtilities.invokeAndWait(() -> {
-                WebsiteGenerator w = new WebsiteGenerator(request);
+                new WebsiteGenerator(request);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());

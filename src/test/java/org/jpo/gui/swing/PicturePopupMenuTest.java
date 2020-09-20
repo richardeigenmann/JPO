@@ -46,6 +46,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 public class PicturePopupMenuTest {
 
+    /**
+     * Defines a LOGGER for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(PicturePopupMenuTest.class.getName());
+
     @BeforeAll
     public static void setUpOnce() {
         assumeFalse(GraphicsEnvironment.isHeadless());
@@ -627,6 +632,17 @@ public class PicturePopupMenuTest {
         final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assert (o.isPresent());
         assertEquals("filename extension.jpg", o.get());
+    }
+
+
+    @Test
+    public void testReplace2520() {
+        final String s = "/dir1/dir2/filename%2520extension%2520more.jpg";
+        final Optional<String> o = PicturePopupMenu.replace2520(s);
+        assert (o.isPresent());
+        final String expected = "/dir1/dir2/filename extension more.jpg";
+        LOGGER.log(Level.FINE, "Expected: {0} Actual: {1}", new Object[]{expected, o.get()});
+        assertEquals(expected, o.get());
     }
 
     @Test

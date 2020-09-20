@@ -4,6 +4,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /*
@@ -27,12 +28,14 @@ import java.util.Objects;
  *
  * @author Richard Eigenmann
  */
-public record RenamePictureRequest(@NonNull SortableDefaultMutableTreeNode node) {
+public record RenamePictureRequest(@NonNull Collection<SortableDefaultMutableTreeNode> nodes) {
 
     public RenamePictureRequest {
-        Objects.requireNonNull(node);
-        if (!(node.getUserObject() instanceof PictureInfo)) {
-            throw new NotPictureInfoException("The node must be of type PictureInfo");
+        Objects.requireNonNull(nodes);
+        for (final SortableDefaultMutableTreeNode n : nodes) {
+            if (!(n.getUserObject() instanceof PictureInfo)) {
+                throw new NotPictureInfoException("The node must be of type PictureInfo");
+            }
         }
     }
 

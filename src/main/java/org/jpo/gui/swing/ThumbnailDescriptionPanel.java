@@ -235,7 +235,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
     public void setCategories(final String newCategories) {
         final Runnable runnable = () -> {
             categoriesJTA.setText(newCategories);
-            //categoriesJSP.setVisible(!"".equals(newCategories));
             categoriesJSP.setVisible(true);
             setTextAreaSize();
         };

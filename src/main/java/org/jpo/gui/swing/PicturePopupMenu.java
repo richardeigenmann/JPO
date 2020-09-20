@@ -64,6 +64,20 @@ public class PicturePopupMenu extends JPopupMenu {
      * next drop.
      */
     private final JMenuItem[] recentDropNodeJMenuItems = new JMenuItem[Settings.getMaxDropnodes()];
+    /**
+     * The node the popup menu was created for
+     */
+    private final SortableDefaultMutableTreeNode popupNode;
+    /**
+     * Reference to the {@link NodeNavigatorInterface} which indicates the nodes
+     * being displayed.
+     */
+    private final NodeNavigatorInterface mySetOfNodes;
+    /**
+     * Index of the {@link #mySetOfNodes} being popped up.
+     */
+    private final int index;  // default is 0
+
 
     /**
      * Creates a popup menu for a node holding a picture
@@ -84,6 +98,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
     /**
      * Method to replace the %20 that some filenames may have instead of a space char
+     *
      * @param s The source string
      * @return an Optional with the replaced string. The Optional isPresent() and can be
      * retrieved with get() if the name was different. If there was nothing to translate the
@@ -93,7 +108,26 @@ public class PicturePopupMenu extends JPopupMenu {
     public static Optional<String> replaceEscapedSpaces(@NonNull final String s) {
         Objects.requireNonNull(s);
         final String newString = s.replaceAll("(%20)+", " ");
-        if ( newString.equals(s)) {
+        if (newString.equals(s)) {
+            return Optional.empty();
+        } else {
+            return Optional.of(newString);
+        }
+    }
+
+    /**
+     * Method to replace the %2520 that some filenames may have instead of a space char
+     *
+     * @param s The source string
+     * @return an Optional with the replaced string. The Optional isPresent() and can be
+     * retrieved with get() if the name was different. If there was nothing to translate the
+     * isPresent() method returns false. This allows the caller to easily tell if there is any
+     * point in proposing a rename.
+     */
+    public static Optional<String> replace2520(@NonNull final String s) {
+        Objects.requireNonNull(s);
+        final String newString = s.replaceAll("(%2520)+", " ");
+        if (newString.equals(s)) {
             return Optional.empty();
         } else {
             return Optional.of(newString);
@@ -102,6 +136,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
     /**
      * Method to replace the underscores that some filenames may have instead of a space char
+     *
      * @param s The source string
      * @return an Optional with the replaced string. The Optional isPresent() and can be
      * retrieved with get() if the name was different. If there was nothing to translate the
@@ -111,13 +146,12 @@ public class PicturePopupMenu extends JPopupMenu {
     public static Optional<String> replaceUnderscore(@NonNull String s) {
         Objects.requireNonNull(s);
         final String newString = s.replaceAll("_+", " ");
-        if ( newString.equals(s)) {
+        if (newString.equals(s)) {
             return Optional.empty();
         } else {
             return Optional.of(newString);
         }
     }
-
 
     /**
      * initialises the GUI components
@@ -141,7 +175,7 @@ public class PicturePopupMenu extends JPopupMenu {
         add(showMapMenuItem);
 
         final JMenuItem openFolderJMenuItem = new JMenuItem(Settings.getJpoResources().getString("openFolderJMenuItem"));
-        openFolderJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenFileExplorerRequest(((PictureInfo)popupNode.getUserObject()).getImageFile().getParentFile())));
+        openFolderJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenFileExplorerRequest(((PictureInfo) popupNode.getUserObject()).getImageFile().getParentFile())));
         add(openFolderJMenuItem);
 
 
@@ -592,9 +626,9 @@ public class PicturePopupMenu extends JPopupMenu {
         final JMenuItem filenameJMenuItem = new JMenuItem();
         filenameJMenuItem.setEnabled(false);
         if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            filenameJMenuItem.setText( ((PictureInfo) popupNode.getUserObject()).getImageFile().getPath() );
+            filenameJMenuItem.setText(((PictureInfo) popupNode.getUserObject()).getImageFile().getPath());
         } else {
-            filenameJMenuItem.setText( Settings.getPictureCollection().countSelectedNodes() + " pictures");
+            filenameJMenuItem.setText(Settings.getPictureCollection().countSelectedNodes() + " pictures");
         }
         fileOperationsJMenu.add(filenameJMenuItem);
         fileOperationsJMenu.addSeparator();
@@ -633,43 +667,17 @@ public class PicturePopupMenu extends JPopupMenu {
         }
         labelMoveLocations();
 
-        final JMenu renameJMenu = new JMenu(Settings.getJpoResources().getString("renameJMenu"));
-        fileOperationsJMenu.add(renameJMenu);
+        final JMenu fileRenameJMenu = new JMenu(Settings.getJpoResources().getString("renameJMenu"));
+        fileOperationsJMenu.add(fileRenameJMenu);
 
-        final JMenuItem fileRenameJMenuItem = new JMenuItem(Settings.getJpoResources().getString("fileRenameJMenuItem"));
-        fileRenameJMenuItem.addActionListener((ActionEvent e) -> {
-            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                JpoEventBus.getInstance().post(new RenamePictureRequest(popupNode));
-            } else {
-                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        JpoEventBus.getInstance().post(new RenamePictureRequest(selectedNode));
-                    }
-                }
-            }
-        });
-        renameJMenu.add(fileRenameJMenuItem);
-
-        if  (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            final PictureInfo pi = (PictureInfo) popupNode.getUserObject();
-            final Optional<String> potentialNewFilename  = replaceEscapedSpaces(pi.getImageFile().getName());
-            if ( potentialNewFilename.isPresent() ) {
-                final File suggestedFileName = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilename.get());
-                final JMenuItem renameSpaceJMenuItem = new JMenuItem( "To: " + suggestedFileName.getName());
-                renameSpaceJMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new RenameFileRequest(popupNode,suggestedFileName.getName())));
-                renameJMenu.add(renameSpaceJMenuItem);
-            }
+        final Collection<SortableDefaultMutableTreeNode> renameNodes = new ArrayList<>();
+        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            renameNodes.add(popupNode);
+        } else {
+            renameNodes.addAll(Settings.getPictureCollection().getSelection());
         }
-
-        if  (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            final PictureInfo pi = (PictureInfo) popupNode.getUserObject();
-            final Optional<String> potentialNewFilename  = replaceUnderscore(pi.getImageFile().getName());
-            if ( potentialNewFilename.isPresent() ) {
-                final File suggestedFileName = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilename.get());
-                final JMenuItem renameUnderscoreJMenuItem = new JMenuItem( "To: " + suggestedFileName.getName());
-                renameUnderscoreJMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new RenameFileRequest(popupNode,suggestedFileName.getName())));
-                renameJMenu.add(renameUnderscoreJMenuItem);
-            }
+        for (final JComponent c : RenameMenuItems.getRenameMenuItems(renameNodes)) {
+            fileRenameJMenu.add(c);
         }
 
         final JMenuItem fileDeleteJMenuItem = new JMenuItem(Settings.getJpoResources().getString("fileDeleteJMenuItem"));
@@ -685,7 +693,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         pictureNodeRemove.setVisible(pictureCollection.getAllowEdits());
         fileOperationsJMenu.setVisible(pictureCollection.getAllowEdits());
-        fileRenameJMenuItem.setVisible(pictureCollection.getAllowEdits());
+        fileRenameJMenu.setVisible(pictureCollection.getAllowEdits());
         fileDeleteJMenuItem.setVisible(pictureCollection.getAllowEdits());
 
         add(getAssignCategoryMenu());
@@ -746,39 +754,6 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
-     * The node the popup menu was created for
-     */
-    private final SortableDefaultMutableTreeNode popupNode;
-
-    /**
-     * Reference to the {@link NodeNavigatorInterface} which indicates the nodes
-     * being displayed.
-     */
-    private final NodeNavigatorInterface mySetOfNodes;
-
-    /**
-     * Index of the {@link #mySetOfNodes} being popped up.
-     */
-    private final int index;  // default is 0
-
-    /**
-     * Handler for the RecentDropNodeChangedEvent
-     */
-    private class RecentDropNodeChangedEventHandler {
-
-        /**
-         * Handle the event by updating the submenu items
-         *
-         * @param event event
-         */
-        @Subscribe
-        public void handleRecentDropNodeChangedEventHandler(final RecentDropNodesChangedEvent event) {
-            SwingUtilities.invokeLater(PicturePopupMenu.this::labelRecentDropNodes);
-
-        }
-    }
-
-    /**
      * Here we update the labels on the recent drop nodes. Those that are null
      * are not shown. If no drop targets are shown at all the separator in the
      * submenu is not shown either.
@@ -797,23 +772,6 @@ public class PicturePopupMenu extends JPopupMenu {
             }
         }
         movePictureNodeSeparator.setVisible(dropNodesVisible);
-    }
-
-    /**
-     * Handler for the CopyLocationsChangedEvent
-     */
-    private class CopyLocationsChangedEventHandler {
-
-        /**
-         * Handle the event by updating the submenu items
-         *
-         * @param event event
-         */
-        @Subscribe
-        public void handleCopyLocationsChangedEvent(CopyLocationsChangedEvent event) {
-            SwingUtilities.invokeLater(PicturePopupMenu.this::labelCopyLocations);
-            SwingUtilities.invokeLater(PicturePopupMenu.this::labelMoveLocations);
-        }
     }
 
     /**
@@ -849,6 +807,54 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
+     * This method populates the user functions sub entries on the menu.
+     */
+    private void labelUserFunctions() {
+        for (int i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
+            if ((Settings.getUserFunctionNames()[i] != null) && (Settings.getUserFunctionNames()[i].length() > 0) && (Settings.getUserFunctionCmd()[i] != null) && (Settings.getUserFunctionCmd()[i].length() > 0)) {
+                userFunctionJMenuItems[i].setText(Settings.getUserFunctionNames()[i]);
+                userFunctionJMenuItems[i].setVisible(true);
+            } else {
+                userFunctionJMenuItems[i].setVisible(false);
+            }
+        }
+    }
+
+    /**
+     * Handler for the RecentDropNodeChangedEvent
+     */
+    private class RecentDropNodeChangedEventHandler {
+
+        /**
+         * Handle the event by updating the submenu items
+         *
+         * @param event event
+         */
+        @Subscribe
+        public void handleRecentDropNodeChangedEventHandler(final RecentDropNodesChangedEvent event) {
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelRecentDropNodes);
+
+        }
+    }
+
+    /**
+     * Handler for the CopyLocationsChangedEvent
+     */
+    private class CopyLocationsChangedEventHandler {
+
+        /**
+         * Handle the event by updating the submenu items
+         *
+         * @param event event
+         */
+        @Subscribe
+        public void handleCopyLocationsChangedEvent(CopyLocationsChangedEvent event) {
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelCopyLocations);
+            SwingUtilities.invokeLater(PicturePopupMenu.this::labelMoveLocations);
+        }
+    }
+
+    /**
      * Handler for the UserFunctionsChangedEvent
      */
     private class UserFunctionsChangedEventHandler {
@@ -862,20 +868,6 @@ public class PicturePopupMenu extends JPopupMenu {
         public void handleUserFunctionsChangedEvent(UserFunctionsChangedEvent event) {
             SwingUtilities.invokeLater(PicturePopupMenu.this::labelUserFunctions
             );
-        }
-    }
-
-    /**
-     * This method populates the user functions sub entries on the menu.
-     */
-    private void labelUserFunctions() {
-        for (int i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
-            if ((Settings.getUserFunctionNames()[i] != null) && (Settings.getUserFunctionNames()[i].length() > 0) && (Settings.getUserFunctionCmd()[i] != null) && (Settings.getUserFunctionCmd()[i].length() > 0)) {
-                userFunctionJMenuItems[i].setText(Settings.getUserFunctionNames()[i]);
-                userFunctionJMenuItems[i].setVisible(true);
-            } else {
-                userFunctionJMenuItems[i].setVisible(false);
-            }
         }
     }
 
