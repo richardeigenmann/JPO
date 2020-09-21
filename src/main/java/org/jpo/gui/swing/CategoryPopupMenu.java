@@ -1,9 +1,9 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.PictureCollection;
-import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.AddCategoriesToPictureNodesRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.OpenCategoryEditorRequest;
 
@@ -33,13 +33,7 @@ public class CategoryPopupMenu extends JPopupMenu {
         pictureCollection.getCategoryKeySet().forEach(category -> {
             final String categoryDescription = pictureCollection.getCategory(category);
             final JMenuItem categoryMenuItem = new JMenuItem();
-            categoryMenuItem.addActionListener(e -> {
-                for (final SortableDefaultMutableTreeNode node : referringNodes) {
-                    if (node.getUserObject() instanceof PictureInfo pi) {
-                        pi.addCategoryAssignment(category);
-                    }
-                }
-            });
+            categoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new AddCategoriesToPictureNodesRequest(category, referringNodes)));
             categoryMenuItem.setText(categoryDescription);
             parentMenu.add(categoryMenuItem);
         });

@@ -3,6 +3,8 @@ package org.jpo.gui;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.RemoveCategoryFromPictureInfoRequest;
 import org.jpo.gui.swing.CategoryPopupMenu;
 import org.jpo.gui.swing.PicturePopupMenu;
 import org.jpo.gui.swing.RenameMenuItems;
@@ -74,8 +76,8 @@ public class ThumbnailDescriptionController
 
     public static Optional<JPopupMenu> correctTextPopupMenu(@NonNull String text, @NonNull JTextArea textArea) {
         Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
-        Optional<String> oUnderstore = PicturePopupMenu.replaceUnderscore(text);
-        if (oSpace.isPresent() || oUnderstore.isPresent()) {
+        Optional<String> oUnderscore = PicturePopupMenu.replaceUnderscore(text);
+        if (oSpace.isPresent() || oUnderscore.isPresent()) {
             JPopupMenu popupmenu = new JPopupMenu();
             final String REPLACE_WITH = Settings.getJpoResources().getString("ReplaceWith");
             if (oSpace.isPresent()) {
@@ -83,12 +85,12 @@ public class ThumbnailDescriptionController
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
                 popupmenu.add(replaceSpace);
             }
-            if (oUnderstore.isPresent()) {
-                JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderstore.get());
-                replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderstore.get()));
+            if (oUnderscore.isPresent()) {
+                JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderscore.get());
+                replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderscore.get()));
                 popupmenu.add(replaceUnderscore);
             }
-            if (oUnderstore.isPresent() && oSpace.isPresent()) {
+            if (oUnderscore.isPresent() && oSpace.isPresent()) {
                 Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
                 if (spaceUnderscore.isPresent()) {
                     // to be expected...
@@ -223,7 +225,12 @@ public class ThumbnailDescriptionController
                     String categoryDescription = Settings.getPictureCollection().getCategory(category);
                     AbstractButton component = panel.addCategory(categoryDescription);
                     component.addActionListener(e ->
-                            ((PictureInfo) referringNode.getUserObject()).removeCategory(category)
+                            JpoEventBus.getInstance().post(
+                                    new RemoveCategoryFromPictureInfoRequest(
+                                            category,
+                                            ((PictureInfo) referringNode.getUserObject())
+                                    )
+                            )
                     );
                 });
             }
@@ -267,10 +274,10 @@ public class ThumbnailDescriptionController
      */
     public void formatDescription() {
         if (displayMode == LARGE_DESCRIPTION) {
-            panel.getPictureDescriptionJTA().setFont(panel.getLargeFont());
+            panel.getPictureDescriptionJTA().setFont(ThumbnailDescriptionPanel.getLargeFont());
         } else {
             // i.e.  MINI_INFO
-            panel.getPictureDescriptionJTA().setFont(panel.getSmallFont());
+            panel.getPictureDescriptionJTA().setFont(ThumbnailDescriptionPanel.getSmallFont());
         }
         panel.setTextAreaSize();
 
@@ -295,7 +302,7 @@ public class ThumbnailDescriptionController
      * changes the colour so that the user sees whether the thumbnail is part of
      * the selection
      */
-    public void showSlectionStatus() {
+    public void showSelectionStatus() {
         panel.showAsSelected(Settings.getPictureCollection().isSelected(referringNode));
     }
 
@@ -383,11 +390,11 @@ public class ThumbnailDescriptionController
         setCategories();
 
         formatDescription();
-        showSlectionStatus();
+        showSelectionStatus();
     }
 
     private void openCategoriesPopupMenu(final Component component, final int x, final int y) {
-        CategoryPopupMenu menu = new CategoryPopupMenu(Collections.singletonList(referringNode));
+        final CategoryPopupMenu menu = new CategoryPopupMenu(Collections.singletonList(referringNode));
         menu.show(component, x, y);
     }
 

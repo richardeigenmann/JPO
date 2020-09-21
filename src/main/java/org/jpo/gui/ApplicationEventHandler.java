@@ -1734,6 +1734,32 @@ public class ApplicationEventHandler {
 
 
     /**
+     * Handles the RemoveCategoryFromPictureInfoRequest request
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleRemoveCategoryFromPictureInfoRequest(final RemoveCategoryFromPictureInfoRequest request) {
+        request.pictureInfo().removeCategory(request.category());
+    }
+
+
+    /**
+     * Handles the AddCategoriesToPictureNodesRequest request
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleAddCategoriesToPictureNodesRequest(final AddCategoriesToPictureNodesRequest request) {
+        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+            if (node.getUserObject() instanceof PictureInfo pi) {
+                pi.addCategoryAssignment(request.category());
+            }
+        }
+    }
+
+
+    /**
      * Inner class that monitors the collection for changes and figures out
      * whether the root node changed and asks the application to change the
      * title of the Window accordingly
