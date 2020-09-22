@@ -1,11 +1,5 @@
 package org.jpo.eventbus;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-
-import java.io.File;
-import java.util.List;
-
 /*
  Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -22,13 +16,27 @@ import java.util.List;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+
+import java.io.File;
+import java.util.List;
+
 /**
  * Request to indicate that the user would like to copy the pictures in the
  * selected nodes to a target directory
  *
- * @param nodes          The nodes for which the user would like copy the pictures
- * @param targetLocation The target directory
+ * @param nodes           The nodes for which the user would like copy the pictures
+ * @param targetDirectory The target directory. It must exist and it must be writable.
  * @author Richard Eigenmann
  */
-public record CopyToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation) {
+public record CopyToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetDirectory) {
+    public CopyToDirRequest {
+        if (!targetDirectory.canWrite()) {
+            throw new IllegalArgumentException(String.format("Target location {%s} must be writable!", targetDirectory));
+        }
+        if (!targetDirectory.isDirectory()) {
+            throw new IllegalArgumentException(String.format("Target location {%s} must be a directory!", targetDirectory));
+        }
+    }
 }

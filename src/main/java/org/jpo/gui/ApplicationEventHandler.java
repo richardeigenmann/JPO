@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
+import org.apache.commons.io.FileUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.cache.JpoCache;
 import org.jpo.cache.QUEUE_PRIORITY;
@@ -33,6 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -190,37 +192,6 @@ public class ApplicationEventHandler {
         }
     }
 
-    /**
-     * Copies the pictures of the supplied nodes to the target directory
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public static void handleCopyToDirRequest(final CopyToDirRequest request) {
-        if (!request.targetLocation().canWrite()) {
-            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("htmlDistCanWriteError"),
-                    GENERIC_ERROR,
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        int picsCopied = 0;
-        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
-            if (node.getUserObject() instanceof PictureInfo) {
-                if (node.validateAndCopyPicture(request.targetLocation())) {
-                    picsCopied++;
-                }
-            } else {
-                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
-            }
-        }
-        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                String.format(Settings.getJpoResources().getString("copyToNewLocationSuccess"), picsCopied, request.nodes().size()),
-                Settings.getJpoResources().getString("genericInfo"),
-                JOptionPane.INFORMATION_MESSAGE);
-
-    }
 
     /**
      * Moves the pictures of the supplied nodes to the target directory
@@ -1072,8 +1043,77 @@ public class ApplicationEventHandler {
             return;
         }
 
-        JpoEventBus.getInstance().post(new CopyToDirRequest(request.nodes(), jFileChooser.getSelectedFile()));
+        final File targetDirectory = jFileChooser.getSelectedFile();
+        Settings.memorizeCopyLocation(targetDirectory.toString());
+        JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
+
+        if (!targetDirectory.canWrite()) {
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    Settings.getJpoResources().getString("htmlDistCanWriteError"),
+                    GENERIC_ERROR,
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        JpoEventBus.getInstance().post(new CopyToDirRequest(request.nodes(), targetDirectory));
     }
+
+    /**
+     * Copies the pictures of the supplied nodes to the target directory
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public static void handleCopyToDirRequest(final CopyToDirRequest request) {
+
+        int picsCopied = 0;
+        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+            if (node.getUserObject() instanceof PictureInfo pictureInfo) {
+                if (copyPicture(pictureInfo, request.targetDirectory())) {
+                    picsCopied++;
+                }
+            } else {
+                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+            }
+        }
+        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                String.format(Settings.getJpoResources().getString("copyToNewLocationSuccess"), picsCopied, request.nodes().size()),
+                Settings.getJpoResources().getString("genericInfo"),
+                JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    /**
+     * Validates the target of the picture copy instruction and tries to find
+     * the appropriate thing to do. It does the following steps:<br>
+     * 1: If the target is an existing file then it invents a new filename<br>
+     * 2: If the target is a directory the filename of the original is used.<br>
+     * 3: If the target directory doesn't exist then the directories are
+     * created.<br>
+     * 4: The file extension is made to be that of the original if it isn't
+     * already that.<br>
+     * When all preconditions are met the image is copied
+     *
+     * @param targetDirectory The target location for the new Picture.
+     * @return true if successful, false if not
+     */
+    private static boolean copyPicture(@NonNull final PictureInfo pictureInfo, @NonNull File targetDirectory) {
+        Objects.requireNonNull(targetDirectory, "targetDirectory must not be null");
+
+        final File originalFile = pictureInfo.getImageFile();
+        final File targetFile = Tools.inventPicFilename(targetDirectory, originalFile.getName());
+        try {
+            FileUtils.copyFile(originalFile, targetFile);
+        } catch (final IOException e) {
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    "IOException: " + e.getMessage(),
+                    Settings.getJpoResources().getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Brings up a JFileChooser to select the target zip file and then copies
@@ -1798,7 +1838,7 @@ public class ApplicationEventHandler {
 
         /**
          * Sets the application title to the default title based on the
-         * Resourcebundle string ApplicationTitle and the file name of the
+         * resource bundle string ApplicationTitle and the file name of the
          * loaded xml file if any.
          */
         private void updateApplicationTitle() {

@@ -32,4 +32,15 @@ import java.io.File;
  * @author Richard Eigenmann
  */
 public record FileLoadRequest(@NotNull File fileToLoad) {
+    public FileLoadRequest {
+        if (!fileToLoad.exists()) {
+            throw new IllegalArgumentException(String.format("File %s must exist before we can load it!"));
+        }
+        if (!fileToLoad.canRead()) {
+            throw new IllegalArgumentException(String.format("File %s must be readable if we are to load it!"));
+        }
+        if (fileToLoad.isDirectory()) {
+            throw new IllegalArgumentException(String.format("%s is a directory. What should we do here?"));
+        }
+    }
 }
