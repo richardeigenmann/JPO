@@ -45,13 +45,13 @@ public class RenameMenuItems {
      * @param popupNodes The list of nodes to rename
      * @return a list of items to add to a JMenu or JPopUpMenu
      */
-    public static Iterable<? extends JComponent> getRenameMenuItems(final Collection<SortableDefaultMutableTreeNode> popupNodes) {
+    public static Iterable<JComponent> getRenameMenuItems(final Collection<SortableDefaultMutableTreeNode> popupNodes) {
         final Collection<JComponent> menuItems = new ArrayList<>();
 
         final JMenuItem fileRenameJMenuItem = new JMenuItem(Settings.getJpoResources().getString("fileRenameJMenuItem"));
-        fileRenameJMenuItem.addActionListener((ActionEvent e) -> {
-            JpoEventBus.getInstance().post(new RenamePictureRequest(popupNodes));
-        });
+        fileRenameJMenuItem.addActionListener((ActionEvent e) ->
+                JpoEventBus.getInstance().post(new RenamePictureRequest(popupNodes))
+        );
         menuItems.add(fileRenameJMenuItem);
 
         if (popupNodes.size() == 1) {
