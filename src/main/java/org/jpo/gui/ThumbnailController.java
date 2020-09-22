@@ -535,6 +535,7 @@ public class ThumbnailController
          */
         @Override
         public void dragExit(final DragSourceEvent event) {
+            //noop
         }
 
         /**
