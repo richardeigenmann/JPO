@@ -811,10 +811,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static String cleanupFilename(final String string) {
         String returnString = string;
         if (returnString.contains(" ")) {
-            returnString = returnString.replaceAll(" ", "_");  // replace blank with underscore
+            returnString = returnString.replace(" ", "_");  // replace blank with underscore
         }
         if (returnString.contains("%20")) {
-            returnString = returnString.replaceAll("%20", "_");  // replace blank with underscore
+            returnString = returnString.replace("%20", "_");  // replace blank with underscore
         }
         if (returnString.contains("&")) {
             returnString = returnString.replace("&", "_and_");  // replace ampersand with _and_
@@ -886,7 +886,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             returnString = returnString.replace("/", "_");
         }
         if (returnString.contains("\\")) {
-            returnString = returnString.replaceAll("\\\\", "_");
+            returnString = returnString.replace("\\", "_");
         }
         if (returnString.contains("%")) {
             returnString = returnString.replace("%", "_");  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values

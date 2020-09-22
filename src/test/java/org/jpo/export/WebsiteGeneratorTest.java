@@ -30,11 +30,10 @@ public class WebsiteGeneratorTest {
      */
     @Test
     public void testCleanupFilename() {
-        String filename = "directory\\file.xml";  // actually contains directory\file.xml
-        String wanted = "directory_file.xml";  // actually contains directory\file.xml
-        String got = WebsiteGenerator.cleanupFilename(filename);
+        final String filename = "directory\\file.xml";  // actually contains directory\file.xml
+        final String wanted = "directory_file.xml";
         // A backslash could be made into an underscore
-        assertEquals(wanted, got);
+        assertEquals(wanted, WebsiteGenerator.cleanupFilename(filename));
     }
 
     /**

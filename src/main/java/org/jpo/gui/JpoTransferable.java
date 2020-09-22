@@ -92,7 +92,7 @@ public class JpoTransferable
      */
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        LOGGER.log(Level.FINE, flavorsToString());
+        LOGGER.fine(flavorsToString());
 
         return flavors;
 

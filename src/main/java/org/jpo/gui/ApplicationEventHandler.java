@@ -270,14 +270,14 @@ public class ApplicationEventHandler {
         }
 
         final String filename = (myObject).getImageFile().toString();
-        command = command.replaceAll("%f", filename);
+        command = command.replace("%f", filename);
 
         final String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
-        command = command.replaceAll("%e", escapedFilename);
+        command = command.replace("%e", escapedFilename);
 
         try {
             final URL pictureURL = myObject.getImageFile().toURI().toURL();
-            command = command.replaceAll("%u", pictureURL.toString());
+            command = command.replace("%u", pictureURL.toString());
         } catch (final MalformedURLException x) {
             LOGGER.log(Level.SEVERE, "Could not substitute %u with the URL: {0}", x.getMessage());
             return;

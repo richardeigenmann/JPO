@@ -55,19 +55,19 @@ public final class TableSorter extends TableMap {
     }
 
     public int compareRowsByColumn( int row1, int row2, int column ) {
-        Class type = model.getColumnClass( column );
-        TableModel data = model;
+        final Class<?> type = model.getColumnClass(column);
+        final TableModel data = model;
 
         // Check for nulls.
-        Object o1 = data.getValueAt( row1, column );
-        Object o2 = data.getValueAt( row2, column );
+        final Object o1 = data.getValueAt(row1, column);
+        final Object o2 = data.getValueAt(row2, column);
 
         // If both values are null, return 0.
-        if ( o1 == null && o2 == null ) {
+        if (o1 == null && o2 == null) {
             return 0;
-        } else if ( o1 == null ) { // Define null less than everything.
+        } else if (o1 == null) { // Define null less than everything.
             return -1;
-        } else if ( o2 == null ) {
+        } else if (o2 == null) {
             return 1;
         }
 
@@ -79,52 +79,52 @@ public final class TableSorter extends TableMap {
          * Number might want to do this to save space and avoid
          * unnecessary heap allocation.
          */
-        if ( type.getSuperclass() == java.lang.Number.class ) {
-            Number n1 = (Number) data.getValueAt( row1, column );
-            double d1 = n1.doubleValue();
-            Number n2 = (Number) data.getValueAt( row2, column );
-            double d2 = n2.doubleValue();
+        if (type.getSuperclass() == Number.class) {
+            final Number n1 = (Number) data.getValueAt(row1, column);
+            final double d1 = n1.doubleValue();
+            final Number n2 = (Number) data.getValueAt(row2, column);
+            final double d2 = n2.doubleValue();
 
             return Double.compare(d1, d2);
-        } else if ( type == java.util.Date.class ) {
-            Date d1 = (Date) data.getValueAt( row1, column );
-            long n1 = d1.getTime();
-            Date d2 = (Date) data.getValueAt( row2, column );
-            long n2 = d2.getTime();
+        } else if (type == Date.class) {
+            final Date d1 = (Date) data.getValueAt(row1, column);
+            final long n1 = d1.getTime();
+            final Date d2 = (Date) data.getValueAt(row2, column);
+            final long n2 = d2.getTime();
 
             return Long.compare(n1, n2);
-        } else if ( type == String.class ) {
-            String s1 = (String) data.getValueAt( row1, column );
-            String s2 = (String) data.getValueAt( row2, column );
-            int result = s1.compareTo( s2 );
+        } else if (type == String.class) {
+            final String s1 = (String) data.getValueAt(row1, column);
+            final String s2 = (String) data.getValueAt(row2, column);
+            final int result = s1.compareTo(s2);
 
             return Integer.compare(result, 0);
-        } else if ( type == Boolean.class ) {
-            boolean b1 = (Boolean) data.getValueAt( row1, column );
-            boolean b2 = (Boolean) data.getValueAt( row2, column );
+        } else if (type == Boolean.class) {
+            final boolean b1 = (Boolean) data.getValueAt(row1, column);
+            final boolean b2 = (Boolean) data.getValueAt(row2, column);
 
-            if ( b1 == b2 ) {
+            if (b1 == b2) {
                 return 0;
-            } else if ( b1 ) { // Define false < true
+            } else if (b1) { // Define false < true
                 return 1;
             } else {
                 return -1;
             }
         } else {
-            Object v1 = data.getValueAt( row1, column );
-            String s1 = v1.toString();
-            Object v2 = data.getValueAt( row2, column );
-            String s2 = v2.toString();
-            int result = s1.compareTo( s2 );
+            final Object v1 = data.getValueAt(row1, column);
+            final String s1 = v1.toString();
+            final Object v2 = data.getValueAt(row2, column);
+            final String s2 = v2.toString();
+            final int result = s1.compareTo(s2);
 
             return Integer.compare(result, 0);
         }
     }
 
-    public int compare( int row1, int row2 ) {
+    public int compare(final int row1, final int row2) {
         compares++;
-        for (Integer column : sortingColumns) {
-            int result = compareRowsByColumn(row1, row2, column);
+        for (final Integer column : sortingColumns) {
+            final int result = compareRowsByColumn(row1, row2, column);
             if (result != 0) {
                 return ascending ? result : -result;
             }
@@ -133,7 +133,7 @@ public final class TableSorter extends TableMap {
     }
 
     public void reallocateIndexes() {
-        int rowCount = model.getRowCount();
+        final int rowCount = model.getRowCount();
 
         //Set up a new array of indexes with the right number of elements
         // for the new data model.
@@ -158,11 +158,11 @@ public final class TableSorter extends TableMap {
         }
     }
 
-    public void sort( Object sender ) {
+    public void sort() {
         checkModel();
 
         compares = 0;
-        shuttlesort( indexes.clone(), indexes, 0, indexes.length );
+        shuttlesort(indexes.clone(), indexes, 0, indexes.length);
     }
 
     /**
@@ -263,9 +263,9 @@ public final class TableSorter extends TableMap {
     public void sortByColumn( int column, boolean ascending ) {
         this.ascending = ascending;
         sortingColumns.clear();
-        sortingColumns.add( column );
-        sort( this );
-        super.tableChanged( new TableModelEvent( this ) );
+        sortingColumns.add(column);
+        sort();
+        super.tableChanged(new TableModelEvent(this));
     }
 
     /**

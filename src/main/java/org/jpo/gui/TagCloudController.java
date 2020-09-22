@@ -260,10 +260,10 @@ public class TagCloudController implements TagClickListener {
          * Zips through the nodes and builds the word to node set map.
          */
         private void buildList() {
-            Enumeration<TreeNode> nodes = rootNode.breadthFirstEnumeration();
+            final Enumeration<TreeNode> nodes = rootNode.breadthFirstEnumeration();
             while ( nodes.hasMoreElements() ) {
                 if (((SortableDefaultMutableTreeNode) nodes.nextElement()).getUserObject() instanceof PictureInfo pi) {
-                    splitAndAdd(pi.getDescription());
+                    splitAndAdd(wordCountMap, pi.getDescription());
                 }
             }
             wordCountMap.keySet().forEach(key -> weightedWordList.add(new WeightedWord(key, wordCountMap.get(key))));
@@ -274,28 +274,28 @@ public class TagCloudController implements TagClickListener {
          *
          * @param description The description of split
          */
-        private void splitAndAdd(final String description) {
-            final String fixAprostropheS = description.replaceAll("\\'s", "");
+        private static void splitAndAdd(final Map<String, Integer> wordCountMap, final String description) {
+            final String fixAprostropheS = description.replace("\'s", "");
             final String noPunctuation = fixAprostropheS.replaceAll("[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "");
             String noNumbers = noPunctuation.replaceAll("\\d", "");
 
             for (final String multiWordTerm : multiWordTerms) {
                 if (noNumbers.contains(multiWordTerm)) {
                     noNumbers = noNumbers.replace(multiWordTerm, "");
-                    addWord(multiWordTerm);
+                    addWord(wordCountMap, multiWordTerm);
                 }
             }
 
             for (final String s : noNumbers.split("[\\s_\\-]+")) {
                 if (!strikeWordsSet.contains(s)) {
-                    addWord(s);
+                    addWord(wordCountMap, s);
                 }
             }
         }
 
         private final Map<String, Integer> wordCountMap = new HashMap<>();
 
-        private void addWord(final String word) {
+        private static void addWord(final Map<String, Integer> wordCountMap, final String word) {
             if (wordCountMap.containsKey(word)) {
                 wordCountMap.put(word, wordCountMap.get(word) + 1);
             } else {
