@@ -131,23 +131,21 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * We must override equals if we provide a compareTpo
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ThumbnailQueueRequest) {
-            return priority == ((ThumbnailQueueRequest) obj).priority;
-        }
-        return false;
-    }
+     * We must override equals if we provide a compareTo
+     *
+     @Override public boolean equals(Object obj) {
+     if (obj instanceof ThumbnailQueueRequest) {
+     return hashCode() == ((ThumbnailQueueRequest) obj).hashCode();
+     }
+     return false;
+     }
 
-    /**
-     * We must override hashCode if we override equals
-     */
-    @Override
-    public int hashCode() {
-        return priority.hashCode();
-    }
+     /**
+      * We must override hashCode if we override equals
+     *
+     @Override public int hashCode() {
+     return super.hashCode();
+     }*/
 
 
     /**

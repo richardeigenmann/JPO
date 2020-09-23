@@ -13,13 +13,20 @@ public class PlayWithFontAwesome {
     public PlayWithFontAwesome() {
         EventQueue.invokeLater(() -> {
 
-            JLabel label = new JLabel("\uf146\uf057\uf0fe");
-            label.setFont(FontAwesomeFont.getFontAwesomeFont24());
+            JLabel labelRegular = new JLabel("\uf146\uf057\uf0fe\uf1c9");
+            labelRegular.setFont(FontAwesomeFont.getFontAwesomeRegular24());
+
+            JLabel labelSolid = new JLabel("\uf146\uf057\uf0fe\uf002\uf1c9");
+            labelSolid.setFont(FontAwesomeFont.getFontAwesomeSolid24());
+
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+            panel.add(labelRegular);
+            panel.add(labelSolid);
 
             JFrame frame = new JFrame("Testing Font Awesome");
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.setLayout(new GridBagLayout());
-            frame.add(label);
+            frame.add(panel);
             frame.pack();
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);

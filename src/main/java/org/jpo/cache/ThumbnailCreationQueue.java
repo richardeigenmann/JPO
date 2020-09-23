@@ -117,10 +117,10 @@ public class ThumbnailCreationQueue {
      *
      * @param requestToRemove The request to remove
      */
-    public static void remove( ThumbnailQueueRequest requestToRemove ) {
-       if ( ! QUEUE.remove( requestToRemove ) ) {
-           LOGGER.log(Level.INFO, "Failed to remove request: {0} from QUEUE", requestToRemove);
-       }
+    public static void remove(final ThumbnailQueueRequest requestToRemove) {
+        if (!QUEUE.remove(requestToRemove)) {
+            LOGGER.log(Level.INFO, "Failed to remove request: {0} from QUEUE", requestToRemove);
+        }
     }
 
     /**

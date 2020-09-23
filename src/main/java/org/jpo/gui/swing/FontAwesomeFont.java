@@ -38,14 +38,18 @@ public class FontAwesomeFont {
 
     private static final Logger LOGGER = Logger.getLogger(FontAwesomeFont.class.getName());
 
-    private static Font fontAwesomeFont24;
-    private static Font fontAwesomeFont18;
+    private static Font fontAwesomeRegular24;
+    private static Font fontAwesomeRegular18;
+    private static Font fontAwesomeSolid24;
 
     static {
-        try (final InputStream is = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf")) {
-            final Font baseFont = Font.createFont(Font.TRUETYPE_FONT, is);
-            fontAwesomeFont24 = baseFont.deriveFont(Font.PLAIN, 24f);
-            fontAwesomeFont18 = baseFont.deriveFont(Font.PLAIN, 18f);
+        try (final InputStream regular = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf");
+             final InputStream solid = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
+            final Font baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, regular);
+            fontAwesomeRegular24 = baseFontRegular.deriveFont(Font.PLAIN, 24f);
+            fontAwesomeRegular18 = baseFontRegular.deriveFont(Font.PLAIN, 18f);
+            final Font baseFontSolid = Font.createFont(Font.TRUETYPE_FONT, solid);
+            fontAwesomeSolid24 = baseFontSolid.deriveFont(Font.PLAIN, 24f);
         } catch (final IOException | FontFormatException e) {
             LOGGER.log(Level.SEVERE, "Could not load FontAwesome font. Exception: {0}", e.getMessage());
         }
@@ -53,21 +57,31 @@ public class FontAwesomeFont {
 
 
     /**
-     * Returns the static instance of the 24 size Font Awesome Font
+     * Returns the static instance of the 24 size Font Awesome Font Regular-400
      *
      * @return The Java Font object
      */
-    public static Font getFontAwesomeFont24() {
-        return fontAwesomeFont24;
+    public static Font getFontAwesomeRegular24() {
+        return fontAwesomeRegular24;
     }
+
+    /**
+     * Returns the static instance of the 24 size Font Awesome Font Solid-900
+     *
+     * @return The Java Font object
+     */
+    public static Font getFontAwesomeSolid24() {
+        return fontAwesomeSolid24;
+    }
+
 
     /**
      * Returns the static instance of the 18 size Font Awesome Font
      *
      * @return The Java Font object
      */
-    public static Font getFontAwesomeFont18() {
-        return fontAwesomeFont18;
+    public static Font getFontAwesomeRegular18() {
+        return fontAwesomeRegular18;
     }
 
 }

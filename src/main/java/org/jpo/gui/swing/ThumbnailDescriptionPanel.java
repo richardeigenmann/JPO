@@ -26,6 +26,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ThumbnailDescriptionPanel extends JPanel {
@@ -63,7 +64,13 @@ public class ThumbnailDescriptionPanel extends JPanel {
     /**
      * The location of the image file
      */
-    private final JTextField highresLocationJTextField = new JTextField();
+    private final JTextField highresLocationJTextField = new JTextField() {
+        @Override
+        public boolean isVisible() {
+            LOGGER.log(Level.INFO, "highreslocation text field is querying isVisible");
+            return super.isVisible();
+        }
+    };
 
     private final JTextArea categoriesJTA = new JTextArea();
 
@@ -126,7 +133,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoriesJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
 
         categoriesJPanel.setLayout(new WrapLayout());
-        categoryMenuPopupButton.setFont(FontAwesomeFont.getFontAwesomeFont18());
+        categoryMenuPopupButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
 
         // this is a bit of a cludge to get the JTextArea to grow in height as text is
         // being entered. Annoyingly the getPreferredSize of the JTextArea doesn't immediately
@@ -254,7 +261,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoryLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
         categoryLabel.add(new JLabel(categoryDescription));
         final JButton removeButton = new JButton("\uf057");
-        removeButton.setFont(FontAwesomeFont.getFontAwesomeFont18());
+        removeButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
         categoryLabel.add(removeButton);
         categoriesJPanel.add(categoryLabel);
         return removeButton;
@@ -354,4 +361,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
         }
 
     }
+
+
 }

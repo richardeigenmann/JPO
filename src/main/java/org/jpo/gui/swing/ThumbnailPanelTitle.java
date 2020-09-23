@@ -60,15 +60,23 @@ public class ThumbnailPanelTitle
         return showFienamesButton;
     }
 
-    private final JButton showFienamesButton = new JButton("Filenames");
+    private final JButton showFienamesButton = new JButton("\uf1c9");
+
+    public JTextField getSearchField() {
+        return searchField;
+    }
+
+    private final JTextField searchField = new JTextField("", 20);
+
+    private final JButton searchButton = new JButton("\uf002");
 
     /**
-     *  a button to navigate back to the first page
+     * a button to navigate back to the first page
      **/
     private final JButton firstThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_first.gif"))) );
+            new JButton(new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_first.gif"))));
     /**
-     *  a button to navigate to the next page
+     * a button to navigate to the next page
      **/
     private final JButton nextThumbnailsPageButton =
             new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Forward24.gif"))) );
@@ -154,38 +162,60 @@ public class ThumbnailPanelTitle
         nextThumbnailsPageButton.setFocusPainted(false);
         nextThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
 
-        lastThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
-        lastThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        lastThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
-        lastThumbnailsPageButton.setOpaque( false );
-        lastThumbnailsPageButton.setEnabled( false );
+        lastThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        lastThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
+        lastThumbnailsPageButton.setVerticalAlignment(SwingConstants.CENTER);
+        lastThumbnailsPageButton.setOpaque(false);
+        lastThumbnailsPageButton.setEnabled(false);
         lastThumbnailsPageButton.setFocusPainted(false);
         lastThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
 
-        BoxLayout bl = new BoxLayout( this, BoxLayout.X_AXIS );
-        setBorder( BorderFactory.createBevelBorder( BevelBorder.RAISED ) );	// JA
-        setLayout( bl );
-        setBackground( Color.LIGHT_GRAY );
-        add( Box.createRigidArea( new Dimension( 5, 0 ) ) );
-        add( firstThumbnailsPageButton );
-        add( previousThumbnailsPageButton );
-        add( nextThumbnailsPageButton );
-        add( lastThumbnailsPageButton );
-        lblPage.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );					// JA
-        add( lblPage );
-        add( title );
+        resizeJSlider.setSnapToTicks(false);
+        resizeJSlider.setMaximumSize(new Dimension(150, 40));
+        resizeJSlider.setMajorTickSpacing(4);
+        resizeJSlider.setMinorTickSpacing(2);
+        resizeJSlider.setPaintTicks(true);
+        resizeJSlider.setPaintLabels(false);
 
-        resizeJSlider.setSnapToTicks( false );
-        resizeJSlider.setMaximumSize( new Dimension( 150, 40 ) );
-        resizeJSlider.setMajorTickSpacing( 4 );
-        resizeJSlider.setMinorTickSpacing( 2 );
-        resizeJSlider.setPaintTicks( true );
-        resizeJSlider.setPaintLabels( false );
-        add( resizeJSlider );
+        showFienamesButton.setFont(FontAwesomeFont.getFontAwesomeRegular24());
 
+        searchField.setMinimumSize(new Dimension(100, 25));
+        searchField.setMaximumSize(new Dimension(250, 25));
+        hideSearchField();
+
+        searchButton.setFont(FontAwesomeFont.getFontAwesomeSolid24());
+        searchButton.addActionListener(e -> {
+            searchField.setVisible(!searchField.isVisible());
+            Tools.checkEDT();
+            searchField.revalidate();
+            searchField.requestFocus();
+        });
+
+        final BoxLayout bl = new BoxLayout(this, BoxLayout.X_AXIS);
+        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));    // JA
+        setLayout(bl);
+        setBackground(Color.LIGHT_GRAY);
+        add(Box.createRigidArea(new Dimension(5, 0)));
+        add(firstThumbnailsPageButton);
+        add(previousThumbnailsPageButton);
+        add(nextThumbnailsPageButton);
+        add(lastThumbnailsPageButton);
+        lblPage.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));                    // JA
+        add(lblPage);
+        add(title);
+        add(resizeJSlider);
+        add(Box.createHorizontalGlue());
+        add(searchField);
+        add(searchButton);
         add(showFienamesButton);
 
         title.setFont(Settings.getTitleFont());
+    }
+
+    public void hideSearchField() {
+        searchField.setVisible(false);
+        Tools.checkEDT();
+        searchField.revalidate();
     }
 
 
@@ -194,7 +224,7 @@ public class ThumbnailPanelTitle
      *   This method is EDT safe; it can be called from outside the EDT
      *   and it will detect this and submit itself on the EDT.
      *
-     * @param	titleString	The text to be printed across the top
+     * @param    titleString    The text to be printed across the top
      *				of all columns. Usually this will be
      *				the name of the group
      */

@@ -179,6 +179,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         titleJPanel.getNextThumbnailsPageButton().addActionListener((ActionEvent e) -> goToNextPage());
         titleJPanel.getLastThumbnailsPageButton().addActionListener((ActionEvent e) -> goToLastPage());
         titleJPanel.getShowFienamesButton().addActionListener((ActionEvent e) -> showFilenamesButtonClicked());
+        titleJPanel.getSearchField().addActionListener((ActionEvent e) -> doSearch(titleJPanel.getSearchField().getText()));
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
             JSlider source = (JSlider) e.getSource();
@@ -283,13 +284,22 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                 });
     }
 
-    private boolean showFilenamesState = false;
+    // defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the ThumbnailDescriptionPanels
+    private Boolean showFilenamesState = false;
+
+    private void doSearch(final String searchString) {
+        TextQuery textQuery = new TextQuery(searchString);
+        textQuery.setStartNode(Settings.getPictureCollection().getRootNode());
+        Settings.getPictureCollection().addQueryToTreeModel(textQuery);
+        titleJPanel.hideSearchField();
+        JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
+    }
 
     /**
      * If the button was clicked, flip the state and show or hide the filenames.
      */
     private void showFilenamesButtonClicked() {
-        showFilenamesState = ! showFilenamesState;
+        showFilenamesState = !showFilenamesState;
         for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
         }
@@ -494,6 +504,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
+            thumbnailDescriptionControllers[i].setShowFilenamesState(showFilenamesState);
             thumbnailsPane.add(thumbnailControllers[i].getThumbnail());
             thumbnailsPane.add(thumbnailDescriptionControllers[i].getPanel());
         }
