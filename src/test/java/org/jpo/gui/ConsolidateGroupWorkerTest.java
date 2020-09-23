@@ -1,6 +1,5 @@
 package org.jpo.gui;
 
-import com.google.common.io.Files;
 import org.apache.commons.compress.utils.IOUtils;
 import org.jpo.datamodel.PictureInfo;
 import org.junit.jupiter.api.Test;
@@ -10,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -52,15 +52,20 @@ public class ConsolidateGroupWorkerTest {
     @Test
     public void testNeedToMovePictureNull() {
         final PictureInfo pictureInfo = new PictureInfo();
-        final File tempTargetDirectory = Files.createTempDir();
+        final File tempTargetDirectory = com.google.common.io.Files.createTempDir();
 
         try {
-            ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory );
+            ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory);
             fail("the needToMovePicture should not handle null inputs; the are invalid");
-        } catch ( final NullPointerException ex ) {
+        } catch (final NullPointerException ex) {
             // this is good
         }
-        assertTrue(tempTargetDirectory.delete());
+
+        try {
+            Files.delete(tempTargetDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Failed to clean up after test. Exception: " + e.getMessage());
+        }
     }
 
     /**
@@ -68,19 +73,23 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testNeedToMoveNonexistentPicture() {
-        final File tempSourceDirectory = Files.createTempDir();
-        final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
         // Java File object exists but not on the disk
 
         final PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( sourceImageFile );
+        pi.setImageLocation(sourceImageFile);
 
-        final File tempTargetDirectory = Files.createTempDir();
+        final File tempTargetDirectory = com.google.common.io.Files.createTempDir();
         final boolean returnCode = ConsolidateGroupWorker.needToMovePicture(pi, tempTargetDirectory);
         // Based on the info in the filenames the picture would need to be moved
         assertTrue(returnCode);
-        assertTrue(tempSourceDirectory.delete());
-        assertTrue(tempTargetDirectory.delete());
+        try {
+            Files.delete(tempSourceDirectory.toPath());
+            Files.delete(tempTargetDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Could not clean up after test. Exception: " + e.getMessage());
+        }
     }
 
     /**
@@ -88,8 +97,8 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testNeedToMovePictureSameDirectory() {
-        final File tempSourceDirectory = Files.createTempDir();
-        final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
 
         try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
@@ -100,16 +109,20 @@ public class ConsolidateGroupWorkerTest {
             fail( "Failed to create test image file" );
         }
         // test that is really exists
-        assertTrue( sourceImageFile.canRead() );
+        assertTrue(sourceImageFile.canRead());
 
         final PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( sourceImageFile );
+        pi.setImageLocation(sourceImageFile);
 
-        boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempSourceDirectory );
+        boolean returnCode = ConsolidateGroupWorker.needToMovePicture(pi, tempSourceDirectory);
         // Consolidation of a PictureInfo to the same directory should return false as nothing was moved
-        assertFalse( returnCode );
-        assertTrue(sourceImageFile.delete());
-        assertTrue(tempSourceDirectory.delete());
+        assertFalse(returnCode);
+        try {
+            Files.delete(sourceImageFile.toPath());
+            Files.delete(tempSourceDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Could not clean up after test. Exception: " + e.getMessage());
+        }
     }
 
     /**
@@ -117,8 +130,8 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testNeedToMovePictureNewDirectory() {
-        final File tempSourceDirectory = Files.createTempDir();
-        final File imageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File imageFile = new File(tempSourceDirectory, "Image1.jpg");
 
         try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
              final FileOutputStream fout = new FileOutputStream( imageFile ) ) {
@@ -134,7 +147,7 @@ public class ConsolidateGroupWorkerTest {
         final PictureInfo pi = new PictureInfo();
         pi.setImageLocation( imageFile );
 
-        File tempTargetDirectory = Files.createTempDir();
+        File tempTargetDirectory = com.google.common.io.Files.createTempDir();
 
         final boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
         // Consolidation of a PictureInfo to a new directory should succeed
@@ -154,35 +167,37 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testNeedToMoveReadonlyPicture() {
-        final File tempSourceDirectory = Files.createTempDir();
-        final File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
+        // This test doesn't work on CI platforms where the user is roos as root can always write to a file
+        assumeFalse(System.getProperty("user.name").equals("root"));
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");
 
         try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-             final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
+             final FileOutputStream fout = new FileOutputStream(sourceImageFile)) {
             Objects.requireNonNull(in, "The input stream of the image must not be null!");
-            IOUtils.copy(Objects.requireNonNull(in), fout );
-        } catch ( final IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            fail( "Failed to create test image file" );
+            IOUtils.copy(Objects.requireNonNull(in), fout);
+        } catch (final IOException ex) {
+            LOGGER.severe(ex.getMessage());
+            fail("Failed to create test image file");
         }
         assertTrue(sourceImageFile.setReadOnly());
-        assertTrue( sourceImageFile.canRead() );
-        if ( !System.getProperty( "user.name" ).equals( "root" ) ) {
-            // TOTO: This test doesn't work when running on Linux as root because root can always write to a file.
-            assertFalse( sourceImageFile.canWrite() );
-        }
+        assertTrue(sourceImageFile.canRead());
 
         final PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( sourceImageFile );
+        pi.setImageLocation(sourceImageFile);
 
-        final File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
+        final File tempTargetDirectory = new File(tempSourceDirectory, "subdir");
 
-        final boolean returnCode = ConsolidateGroupWorker.needToMovePicture( pi, tempTargetDirectory );
+        final boolean returnCode = ConsolidateGroupWorker.needToMovePicture(pi, tempTargetDirectory);
         // Consolidation of a readonly PictureInfo to a new directory should return true
-        assertTrue( returnCode );
-        assertTrue(sourceImageFile.delete());
-        assertFalse(tempTargetDirectory.exists());
-        assertTrue(tempSourceDirectory.delete());
+        assertTrue(returnCode);
+        try {
+            assertTrue(sourceImageFile.setWritable(true));
+            Files.delete(sourceImageFile.toPath());
+            Files.delete(tempSourceDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Could not clean up after test. Exception: " + e.getMessage());
+        }
     }
 
     /**
@@ -191,7 +206,7 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testMovePictureNull() {
-        final File tempTargetDirectory = Files.createTempDir();
+        final File tempTargetDirectory = com.google.common.io.Files.createTempDir();
 
         try {
             final boolean returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory );
@@ -210,8 +225,8 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testMovePictureSameDirectory() {
-        final File tempSourceDirectory = Files.createTempDir();
-        final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
 
         try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
              FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
@@ -225,16 +240,20 @@ public class ConsolidateGroupWorkerTest {
         assertTrue( sourceImageFile.canRead() );
 
         final PictureInfo pi = new PictureInfo();
-        pi.setImageLocation( sourceImageFile );
+        pi.setImageLocation(sourceImageFile);
 
-        final boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempSourceDirectory );
+        final boolean returnCode = ConsolidateGroupWorker.movePicture(pi, tempSourceDirectory);
         // Consolidation of a PictureInfo to the same directory should return true
-        assertTrue( returnCode );
+        assertTrue(returnCode);
 
         // The image File must be in the same place
-        assertTrue( sourceImageFile.exists() );
-        assertTrue(sourceImageFile.delete());
-        assertTrue(tempSourceDirectory.delete());
+        assertTrue(sourceImageFile.exists());
+        try {
+            Files.delete(sourceImageFile.toPath());
+            Files.delete(tempSourceDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Could not clean up after test. Exception: " + e.getMessage());
+        }
     }
 
     /**
@@ -243,8 +262,8 @@ public class ConsolidateGroupWorkerTest {
     @Test
     public void testMovePictureNewDirectory() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final File tempSourceDirectory = Files.createTempDir();
-        final File sourceImageFile = new File( tempSourceDirectory, "Image1.jpg" );
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
 
         try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
@@ -263,18 +282,22 @@ public class ConsolidateGroupWorkerTest {
         final File tempTargetDirectory = new File( tempSourceDirectory, "subdir" );
         assertTrue(tempTargetDirectory.mkdir());
 
-        final boolean returnCode = ConsolidateGroupWorker.movePicture( pi, tempTargetDirectory );
+        final boolean returnCode = ConsolidateGroupWorker.movePicture(pi, tempTargetDirectory);
         // Consolidation of a PictureInfo to a new directory should succeed
-        assertTrue( returnCode );
+        assertTrue(returnCode);
 
         // The old image File must be gone
-        assertFalse( sourceImageFile.canRead() );
+        assertFalse(sourceImageFile.canRead());
         final File newFile = pi.getImageFile();
         // Consolidation of a PictureInfo to a new directory should succeed
-        assertTrue( newFile.canRead() );
-        assertTrue(newFile.delete());
-        assertTrue(tempTargetDirectory.delete());
-        assertTrue(tempSourceDirectory.delete());
+        assertTrue(newFile.canRead());
+        try {
+            Files.delete(newFile.toPath());
+            Files.delete(tempTargetDirectory.toPath());
+            Files.delete(tempSourceDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Could not clean up after test. Exception: " + e.getMessage());
+        }
     }
 
     /**
@@ -283,8 +306,8 @@ public class ConsolidateGroupWorkerTest {
      */
     @Test
     public void testMoveReadonlyPictureNewDirectory() {
-        final File tempSourceDirectory = Files.createTempDir();
-        final File sourceImageFile = new File( tempSourceDirectory, "ReadOnlyImage.jpg" );
+        final File tempSourceDirectory = com.google.common.io.Files.createTempDir();
+        final File sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");
 
         try (final InputStream in = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
              final FileOutputStream fout = new FileOutputStream( sourceImageFile ) ) {
@@ -304,22 +327,26 @@ public class ConsolidateGroupWorkerTest {
         final PictureInfo pictureInfo = new PictureInfo();
         pictureInfo.setImageLocation( sourceImageFile );
 
-        final File tempTargetDirectory = Files.createTempDir();
-        final boolean returnCode = ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory );
+        final File tempTargetDirectory = com.google.common.io.Files.createTempDir();
+        final boolean returnCode = ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory);
         // Consolidation of a readonly PictureInfo to a new directory should succeed but the move from " + sourceImageFile + " to " + tempTargetDirectory + " seems to have failed!"
-        assertTrue(  returnCode );
-
-        assertFalse( sourceImageFile.exists() );
-        // The PictureInfo points to the readable location
-        assertTrue( pictureInfo.getImageFile().canRead() );
-
-        // File is in the new Location
-        assertEquals( tempTargetDirectory, pictureInfo.getImageFile().getParentFile() );
+        assertTrue(returnCode);
 
         assertFalse(sourceImageFile.exists());
-        assertTrue(tempSourceDirectory.delete());
-        assertTrue(pictureInfo.getImageFile().delete());
-        assertTrue(tempTargetDirectory.delete());
+        // The PictureInfo points to the readable location
+        assertTrue(pictureInfo.getImageFile().canRead());
+
+        // File is in the new Location
+        assertEquals(tempTargetDirectory, pictureInfo.getImageFile().getParentFile());
+
+        assertFalse(sourceImageFile.exists());
+        try {
+            Files.delete(pictureInfo.getImageFile().toPath());
+            Files.delete(tempTargetDirectory.toPath());
+            Files.delete(tempSourceDirectory.toPath());
+        } catch (final IOException e) {
+            fail("Could not clean up after test. Exception: " + e.getMessage());
+        }
     }
 
 }

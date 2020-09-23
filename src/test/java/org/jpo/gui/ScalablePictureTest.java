@@ -117,7 +117,7 @@ public class ScalablePictureTest {
         try {
             Path tempFile = Files.createTempFile(null, null);
             File outputFile = tempFile.toFile();
-            assertTrue(outputFile.delete());
+            Files.delete(outputFile.toPath());
             assertFalse(outputFile.exists());
             scalablePicture.writeScaledJpg(outputFile);
 
@@ -128,7 +128,7 @@ public class ScalablePictureTest {
             assertEquals(700, sourcePicture.getWidth());
             assertEquals(466, sourcePicture.getHeight());
 
-            assertTrue(outputFile.delete());
+            Files.delete(outputFile.toPath());
             assertFalse(outputFile.exists());
         } catch (final IOException x) {
             fail(x.getMessage());

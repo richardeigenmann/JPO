@@ -147,20 +147,17 @@ public class MainWindow extends JFrame {
         propertiesJPanel.add( saveJbutton );
         propertiesJPanel.add( resetJbutton );
 
-        final SingleCDockable properties = new DefaultSingleCDockable("PropertiesId", "Properties", propertiesJPanel);
-
-        SingleCDockable map = new DefaultSingleCDockable( "MapId", "Map", new JLabel( "a map would go here" ) );
-        SingleCDockable tagDockable = new DefaultSingleCDockable( "TagId", "TagCloud", new TagCloudController().getTagCloud() );
+        SingleCDockable properties = new DefaultSingleCDockable("PropertiesId", "Properties", propertiesJPanel);
+        SingleCDockable tagDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
         SingleCDockable statsDockable = new DefaultSingleCDockable( "StatsId", "Stats", statsScroller );
         SingleCDockable thumbnailsDockable = new DefaultSingleCDockable( "ThumbnailsId", "Thumbnails", thumbnailPanel );
 
         grid.add( 0, 0, 0.2, 0.8, tree );
         grid.add( 0, 0, 0.2, 0.8, searches );
-        grid.add( 0, 1, 0.2, 0.2, tagDockable );
-        grid.add( 0, 1, 0.2, 0.2, statsDockable );
+        grid.add(0, 1, 0.2, 0.2, tagDockable);
+        grid.add(0, 1, 0.2, 0.2, properties);
+        grid.add(0, 1, 0.2, 0.2, statsDockable);
         grid.add( 1, 0, .5, 2, thumbnailsDockable );
-        //grid.add( 2, 0, 0.3, .5, properties );
-        //grid.add( 2, 1, 0.3, .5, map );
 
         final CContentArea content = control.getContentArea();
         content.deploy( grid );
