@@ -147,7 +147,7 @@ public class ThumbnailController
         this.myNodeNavigator = Objects.requireNonNull(mySetOfNodes);
         this.myIndex = index;
 
-        SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(index);
+        final SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(index);
         this.myNode = node;
 
         // remove and silence the old request if it is still alive
@@ -295,7 +295,6 @@ public class ThumbnailController
     @Override
     public void callbackThumbnailCreated(final ThumbnailQueueRequest thumbnailQueueRequest) {
         getThumbnail().setImageIcon(thumbnailQueueRequest.getIcon());
-        myThumbnailQueueRequest = null;
     }
 
     /**
