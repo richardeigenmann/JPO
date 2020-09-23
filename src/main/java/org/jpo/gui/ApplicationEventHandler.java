@@ -31,6 +31,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -1197,18 +1198,19 @@ public class ApplicationEventHandler {
             }
             zipArchiveOutputStream.finish();
         } catch (final IOException ex) {
-            LOGGER.severe(ex.getMessage());
-            boolean ok = tempFile.delete();
-            if (!ok) {
-                LOGGER.log(Level.SEVERE, "could not delete tempFile: {0}", tempFile);
+            try {
+                Files.delete(tempFile.toPath());
+            } catch (final IOException e) {
+                LOGGER.log(Level.SEVERE, "Could not delete tempFile: {0} Exception: {1}", new Object[]{tempFile, e.getMessage()});
             }
         }
 
         if (request.targetZipfile().exists()) {
             LOGGER.log(Level.INFO, "Deleting old file {0}", request.targetZipfile().getAbsolutePath());
-            final boolean ok = request.targetZipfile().delete();
-            if (!ok) {
-                LOGGER.log(Level.SEVERE, "Failed to delete file {0}", request.targetZipfile().getAbsolutePath());
+            try {
+                Files.delete(request.targetZipfile().toPath());
+            } catch (IOException e) {
+                LOGGER.log(Level.SEVERE, "Failed to delete file {0}, Exception: {1}", new Object[]{request.targetZipfile().getAbsolutePath(), e.getMessage()});
             }
         }
         LOGGER.log(Level.INFO, "Renaming temp file {0} to {1}", new Object[]{tempFile.getAbsolutePath(), request.targetZipfile().getAbsolutePath()});
@@ -1425,23 +1427,18 @@ public class ApplicationEventHandler {
         if (option == 0) {
             for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
                 if (selectedNode.getUserObject() instanceof PictureInfo pi) {
-                    boolean ok = false;
-
                     final File highresFile = pi.getImageFile();
                     if (highresFile.exists()) {
-                        ok = highresFile.delete();
-                        if (!ok) {
-                            LOGGER.log(Level.INFO, "File deleted failed on: {0}", highresFile);
+                        try {
+                            Files.delete(highresFile.toPath());
+                            selectedNode.deleteNode();
+                        } catch (final IOException e) {
+                            LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: ", new Object[]{highresFile, e.getMessage()});
+                            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                                    Settings.getJpoResources().getString("fileDeleteError") + highresFile.toString(),
+                                    GENERIC_ERROR,
+                                    JOptionPane.ERROR_MESSAGE);
                         }
-                    }
-
-                    selectedNode.deleteNode();
-
-                    if (!ok) {
-                        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                                Settings.getJpoResources().getString("fileDeleteError") + highresFile.toString(),
-                                GENERIC_ERROR,
-                                JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
