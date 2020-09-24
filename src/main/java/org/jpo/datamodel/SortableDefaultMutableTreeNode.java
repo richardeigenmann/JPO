@@ -5,7 +5,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.gui.JpoTransferable;
-import org.jpo.gui.ProgressGui;
 import org.jpo.gui.SourcePicture;
 
 import javax.swing.*;
@@ -1036,7 +1035,7 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Copies the pictures from the source File collection into the target node
+     * Copies the pictures from the source File collection into the target node while updating a supplied progress bar
      *
      * @param fileCollection A Collection framework of the new picture Files
      * @param targetDir      The target directory for the copy operation
@@ -1069,70 +1068,6 @@ public class SortableDefaultMutableTreeNode
             addPicture(targetFile, null);
         }
         getPictureCollection().setSendModelUpdates(true);
-    }
-
-    /**
-     * Copies the pictures from the source tree to the target directory and adds
-     * them to the collection. This method does the actual loop.
-     *
-     * @param files              The files to copy
-     * @param targetDir          The target directory
-     * @param receivingNode      The node to which to add them
-     * @param progGui            A Progress GUI
-     * @param cam                A camera
-     * @param retainDirectories  Whether to retain directories
-     * @param selectedCategories Selected categories
-     * @return true if OK, false if not
-     */
-    protected static boolean copyAddPictures1(final File[] files,
-                                              final File targetDir,
-                                              final SortableDefaultMutableTreeNode receivingNode,
-                                              final ProgressGui progGui,
-                                              final Camera cam,
-                                              final boolean retainDirectories,
-                                              final Collection<Integer> selectedCategories) {
-
-        boolean picturesAdded = false;
-        // add all the files from the array as nodes to the start node.
-        for (int i = 0;
-             (i < files.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-            final File addFile = files[i];
-            if (!addFile.isDirectory()) {
-                if (cam.getUseFilename() && cam.inOldImage(addFile)) {
-                    // ignore image if the filename is known
-                    cam.copyToNewImage(addFile); // put it in the known pictures Hash
-                    progGui.decrementTotal();
-                } else {
-                    final File targetFile = Tools.inventPicFilename(targetDir, addFile.getName());
-                    long crc = copyPicture(addFile, targetFile);
-                    cam.storePictureNewImage(addFile, crc); // remember it next time
-                    if (cam.inOldImage(crc)) {
-                        try {
-                            Files.delete(targetFile.toPath());
-                        } catch (final IOException e) {
-                            LOGGER.log(Level.SEVERE, "Could not delete {0}\nException: {1}", new Object[]{targetFile, e.getMessage()});
-                        }
-                        progGui.decrementTotal();
-                    } else {
-                        receivingNode.addPicture(targetFile, selectedCategories);
-                        progGui.progressIncrement();
-                        picturesAdded = true;
-                    }
-                }
-            } else if (Tools.hasPictures(addFile)) {
-                SortableDefaultMutableTreeNode subNode;
-                if (retainDirectories) {
-                    subNode = receivingNode.addGroupNode(addFile.getName());
-                } else {
-                    subNode = receivingNode;
-                }
-                final boolean a = copyAddPictures1(Objects.requireNonNull(addFile.listFiles()), targetDir, subNode, progGui, cam, retainDirectories, selectedCategories);
-                picturesAdded = a || picturesAdded;
-            } else {
-                LOGGER.log(Level.INFO, "No pictures in directory {0}", addFile);
-            }
-        }
-        return picturesAdded;
     }
 
     /**

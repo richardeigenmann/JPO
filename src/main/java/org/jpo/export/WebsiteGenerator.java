@@ -209,9 +209,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     @Override
     protected void process(final List<String> messages) {
-        messages.stream().peek(message -> LOGGER.log(Level.INFO, "Message: {0}", message)).forEachOrdered(item
-                -> progressGui.progressIncrement()
-        );
+        progressGui.progressIncrement(messages.size());
+        messages.stream().forEach(message -> LOGGER.log(Level.INFO, "Message: {0}", message));
     }
 
     /**

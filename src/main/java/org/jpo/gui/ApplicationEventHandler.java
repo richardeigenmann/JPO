@@ -506,7 +506,7 @@ public class ApplicationEventHandler {
             for (int i = 0; i < navigator.getNumberOfNodes(); i++) {
                 if (navigator.getNode(i).equals(node)) {
                     index = i;
-                    i = navigator.getNumberOfNodes();
+                    break;
                 }
             }
         } else if (userObject instanceof GroupInfo && node.hasChildPictureNodes()) {
@@ -516,7 +516,7 @@ public class ApplicationEventHandler {
         }
         final int myIndex = index;
         SwingUtilities.invokeLater(() -> {
-            PictureViewer pictureViewer = new PictureViewer();
+            final PictureViewer pictureViewer = new PictureViewer();
             pictureViewer.showNode(navigator, myIndex);
         });
 

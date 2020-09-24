@@ -53,30 +53,15 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(GenerateWebsiteWizard6Where.class.getName());
+    private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
+    /**
+     * SSH Authentication Options
+     */
+    private static final String[] SSH_AUTH_OPTIONS = {"Password", "SSH KEY File"};
     /**
      * The link to the values that this panel should change
      */
     private final GenerateWebsiteRequest options;
-
-    /**
-     * This Wizard prompts for the options regarding Highres
-     *
-     * @param options The data object with all the settings
-     */
-    public GenerateWebsiteWizard6Where(final GenerateWebsiteRequest options) {
-        super(Settings.getJpoResources().getString("HtmlDistTarget"), Settings.getJpoResources().getString("HtmlDistTarget"));
-        this.options = options;
-
-        // load the options into the GUI components
-        switch (options.getOutputTarget()) {
-            case OUTPUT_FTP_LOCATION -> finalTarget.setSelectedIndex(1);
-            case OUTPUT_SSH_LOCATION -> finalTarget.setSelectedIndex(2);
-            default -> finalTarget.setSelectedIndex(0);
-        }
-
-    }
-
-    private static final String[] TARGET_OPTIONS = {"Local Directory", "FTP Location", "SSH Location"};
     private final JComboBox<String> finalTarget = new JComboBox<>(TARGET_OPTIONS);
     /**
      * Text field that holds the directory that the html is to be exported to.
@@ -123,10 +108,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private static final String[] SSH_AUTH_OPTIONS = {"Password", "SSH KEY File"};
-    /**
-     * SSH Authentication Options
-     */
     private final JComboBox<String> sshAuthOoptionChooser = new JComboBox<>(SSH_AUTH_OPTIONS);
     /**
      * The ssh password
@@ -144,6 +125,82 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * The ssh error message
      */
     private final JMultilineLabel sshError = new JMultilineLabel();
+
+    /**
+     * This Wizard prompts for the options regarding Highres
+     *
+     * @param options The data object with all the settings
+     */
+    public GenerateWebsiteWizard6Where(final GenerateWebsiteRequest options) {
+        super(Settings.getJpoResources().getString("HtmlDistTarget"), Settings.getJpoResources().getString("HtmlDistTarget"));
+        this.options = options;
+
+        // load the options into the GUI components
+        switch (options.getOutputTarget()) {
+            case OUTPUT_FTP_LOCATION -> finalTarget.setSelectedIndex(1);
+            case OUTPUT_SSH_LOCATION -> finalTarget.setSelectedIndex(2);
+            default -> finalTarget.setSelectedIndex(0);
+        }
+
+    }
+
+    /**
+     * Checks whether the supplied file is good for webpage generation and spams
+     * popups if not
+     *
+     * @param targetDirectory Target directory
+     * @return true if ok, false if not
+     */
+    public static boolean check(final File targetDirectory) {
+        if (!targetDirectory.exists()) {
+            try {
+                if (!targetDirectory.mkdirs()) {
+                    JOptionPane.showMessageDialog(
+                            Settings.getAnchorFrame(),
+                            "Could not create directory",
+                            Settings.getJpoResources().getString("genericSecurityException"),
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+
+                }
+            } catch (SecurityException e) {
+                JOptionPane.showMessageDialog(
+                        Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
+                        Settings.getJpoResources().getString("genericSecurityException"),
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        } else {
+            final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
+            if (!targetDirectory.isDirectory()) {
+                JOptionPane.showMessageDialog(
+                        Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("htmlDistIsDirError"),
+                        GENERIC_ERROR,
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (!targetDirectory.canWrite()) {
+                JOptionPane.showMessageDialog(
+                        Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("htmlDistCanWriteError"),
+                        GENERIC_ERROR,
+                        JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            if (Objects.requireNonNull(targetDirectory.listFiles()).length > 0) {
+                int option = JOptionPane.showConfirmDialog(
+                        Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("htmlDistIsNotEmptyWarning"),
+                        GENERIC_ERROR,
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                return option != JOptionPane.CANCEL_OPTION;
+            }
+        }
+        return true;
+    }
 
     /**
      * Creates the GUI widgets
@@ -416,64 +473,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshKeyFile.setText(options.getSshKeyFile());
     }
 
-    /**
-     * Checks whether the supplied file is good for webpage generation and spams
-     * popups if not
-     *
-     * @param targetDirectory Target directory
-     * @return true if ok, false if not
-     */
-    public static boolean check(final File targetDirectory) {
-        if (!targetDirectory.exists()) {
-            try {
-                if( ! targetDirectory.mkdirs() ) {
-                    JOptionPane.showMessageDialog(
-                            Settings.getAnchorFrame(),
-                            "Could not create directory",
-                            Settings.getJpoResources().getString("genericSecurityException"),
-                            JOptionPane.ERROR_MESSAGE);
-                    return false;
-
-                }
-            } catch (SecurityException e) {
-                JOptionPane.showMessageDialog(
-                        Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
-                        Settings.getJpoResources().getString("genericSecurityException"),
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-        } else {
-            final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
-            if (!targetDirectory.isDirectory()) {
-                JOptionPane.showMessageDialog(
-                        Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistIsDirError"),
-                        GENERIC_ERROR,
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            if (!targetDirectory.canWrite()) {
-                JOptionPane.showMessageDialog(
-                        Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistCanWriteError"),
-                        GENERIC_ERROR,
-                        JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-            if (Objects.requireNonNull(targetDirectory.listFiles()).length > 0) {
-                int option = JOptionPane.showConfirmDialog(
-                        Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistIsNotEmptyWarning"),
-                        GENERIC_ERROR,
-                        JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
-                return option != JOptionPane.CANCEL_OPTION;
-            }
-        }
-        return true;
-    }
-
     private void testSshConnection() {
         final String command = "if [ -d " + options.getSshTargetDir() + " ]; then  echo \"Directory exists\"; else echo \"No such directory\"; fi;\n";
         sshError.setText(executeSshCommand(command));
@@ -538,25 +537,6 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     }
 
-    /**
-     * From
-     * http://stackoverflow.com/questions/2152742/java-swing-multiline-labels
-     */
-    private static class JMultilineLabel extends JTextArea {
-
-        private static final long serialVersionUID = 1L;
-
-        JMultilineLabel() {
-            super();
-            setEditable(false);
-            setCursor(null);
-            setOpaque(false);
-            setFocusable(false);
-            setWrapStyleWord(true);
-            setLineWrap(true);
-        }
-    }
-
     private String testFtpConnection() {
         LOGGER.info("Setting up ftp connection:");
         String returnString = "Connection OK.";
@@ -572,15 +552,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
 
             LOGGER.info("Good connection:");
-            __main:
-            {
-                if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
-                    ftp.logout();
-                    LOGGER.info("Could not log in.");
-                    returnString += " But could not log in.";
-                    break __main;
-                }
-
+            if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
+                ftp.logout();
+                LOGGER.info("Could not log in.");
+                returnString += " But could not log in.";
+            } else {
                 LOGGER.log(Level.INFO, "Remote system is {0}", ftp.getSystemType());
                 ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
@@ -616,15 +592,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
 
             LOGGER.info("Good connection:");
-            __main:
-            {
-                if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
-                    ftp.logout();
-                    LOGGER.info("Could not log in.");
-                    returnString += " But could not log in.";
-                    break __main;
-                }
-
+            if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
+                ftp.logout();
+                LOGGER.info("Could not log in.");
+                returnString += " But could not log in.";
+            } else {
                 LOGGER.log(Level.INFO, "Remote system is {0}", ftp.getSystemType());
                 ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
@@ -643,5 +615,24 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             return ex.getMessage();
         }
         return returnString;
+    }
+
+    /**
+     * From
+     * http://stackoverflow.com/questions/2152742/java-swing-multiline-labels
+     */
+    private static class JMultilineLabel extends JTextArea {
+
+        private static final long serialVersionUID = 1L;
+
+        JMultilineLabel() {
+            super();
+            setEditable(false);
+            setCursor(null);
+            setOpaque(false);
+            setFocusable(false);
+            setWrapStyleWord(true);
+            setLineWrap(true);
+        }
     }
 }
