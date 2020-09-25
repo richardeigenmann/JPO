@@ -1433,7 +1433,7 @@ public class ApplicationEventHandler {
                             Files.delete(highresFile.toPath());
                             selectedNode.deleteNode();
                         } catch (final IOException e) {
-                            LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: ", new Object[]{highresFile, e.getMessage()});
+                            LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{highresFile, e.getMessage()});
                             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                                     Settings.getJpoResources().getString("fileDeleteError") + highresFile.toString(),
                                     GENERIC_ERROR,
