@@ -239,6 +239,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         return getPictureDescriptionJTA().getText();
     }
 
+    @Deprecated
     public void setCategories(final String newCategories) {
         final Runnable runnable = () -> {
             categoriesJTA.setText(newCategories);
