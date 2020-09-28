@@ -1119,8 +1119,6 @@ public class ApplicationEventHandler {
     /**
      * Brings up a JFileChooser to select the target zip file and then copies
      * the images there
-     * <p>
-     * TODO: Refactor to use a list
      *
      * @param request The request
      */
@@ -1129,8 +1127,7 @@ public class ApplicationEventHandler {
         final JFileChooser jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        // TODO: internationalise this Settings.jpoResources.getString( "CopyImageDialogButton" )
-        jFileChooser.setApproveButtonText("Select");
+        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("genericSelectText"));
         jFileChooser.setDialogTitle("Pick the zipfile to which the pictures should be added");
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
@@ -1381,22 +1378,17 @@ public class ApplicationEventHandler {
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
-            boolean ok = false;
-
             if (highresFile.exists()) {
-                ok = highresFile.delete();
-                if (!ok) {
-                    LOGGER.log(Level.INFO, "File deleted failed on: {0}", highresFile);
+                try {
+                    Files.delete(highresFile.toPath());
+                    request.node().deleteNode();
+                } catch (IOException e) {
+                    LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});
+                    JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                            Settings.getJpoResources().getString("fileDeleteError") + highresFile + e.getMessage(),
+                            GENERIC_ERROR,
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            }
-
-            request.node().deleteNode();
-
-            if (!ok) {
-                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("fileDeleteError") + highresFile,
-                        GENERIC_ERROR,
-                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
