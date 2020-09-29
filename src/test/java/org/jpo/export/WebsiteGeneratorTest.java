@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -109,14 +110,17 @@ public class WebsiteGeneratorTest {
             request.setStartNode(rootNode);
 
             final SortableDefaultMutableTreeNode pi1 = new SortableDefaultMutableTreeNode();
-            pi1.setUserObject(new PictureInfo(new File("Image1.jpg"), "Image 1"));
+            final File imageFile = new File(WebsiteGeneratorTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg").toURI());
+            pi1.setUserObject(new PictureInfo(imageFile, "Image 1"));
             rootNode.add(pi1);
+            request.setThumbnailWidth(350);
+            request.setThumbnailHeight(250);
 
-        } catch (final IOException e) {
+        } catch (final IOException | URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        // run the widzard
+        // run the wizard
         try {
             SwingUtilities.invokeAndWait(() -> new WebsiteGenerator(request));
         } catch (final InterruptedException | InvocationTargetException ex) {

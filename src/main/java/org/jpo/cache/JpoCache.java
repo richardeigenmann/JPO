@@ -74,15 +74,15 @@ public class JpoCache {
     private Dimension groupThumbnailDimension;
 
     private JpoCache() {
-        LOGGER.fine("Creating JpoCache");
-        CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
-        Properties props = loadProperties();
+        LOGGER.info("Creating JpoCache");
+        final CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
+        final Properties props = loadProperties();
         ccm.configure(props);
 
         try {
             highresMemoryCache = JCS.getInstance(HIGHRES_CACHE_REGION_NAME);
             thumbnailMemoryAndDiskCache = JCS.getInstance(THUMBNAIL_CACHE_REGION_NAME);
-        } catch (CacheException ex) {
+        } catch (final CacheException ex) {
             LOGGER.severe(ex.getLocalizedMessage());
         }
     }
@@ -139,7 +139,7 @@ public class JpoCache {
         if (imageBytes != null) {
             try {
                 FileTime lastModification = (Files.getLastModifiedTime(file.toPath()));
-                if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
+                if (lastModification.compareTo(imageBytes.getLastModification()) < 0) {
                     imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
                 }
             } catch (IOException ex) {

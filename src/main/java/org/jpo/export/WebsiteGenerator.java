@@ -113,7 +113,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 try {
                     progressGui.setMaximum(get());
                     progressGui.setDoneString(String.format(Settings.getJpoResources().getString("HtmlDistDone"), get()));
-                } catch (InterruptedException | ExecutionException ignore) {
+                } catch (final InterruptedException | ExecutionException ignore) {
                     // Restore interrupted state...
                     Thread.currentThread().interrupt();
                 }
