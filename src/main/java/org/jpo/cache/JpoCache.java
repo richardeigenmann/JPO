@@ -5,6 +5,7 @@ import org.apache.commons.jcs.JCS;
 import org.apache.commons.jcs.access.CacheAccess;
 import org.apache.commons.jcs.access.exception.CacheException;
 import org.apache.commons.jcs.engine.control.CompositeCacheManager;
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -68,10 +69,30 @@ public class JpoCache {
 
     private CacheAccess<File, ImageBytes> highresMemoryCache;
     private CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
+
     /**
-     * The dimension for the group thumbnail
+     * The dimension for the group thumbnail i.e. the dimension of the icon_folder_large.jpg image. If there is
+     * an ioerror the maximum size of the thumbnails.
      */
-    private Dimension groupThumbnailDimension;
+    private static Dimension groupThumbnailDimension;
+
+    static {
+        try (BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg"))) {
+            final BufferedImage groupThumbnail = ImageIO.read(bis);
+            groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
+
+        } catch (final IOException | NullPointerException ex) {
+            Logger.getLogger(JpoCache.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            groupThumbnailDimension = new Dimension(Settings.getThumbnailSize(), Settings.getThumbnailSize());
+        }
+    }
+
+    @TestOnly
+    public static Dimension getGroupThumbnailDimension() {
+        return groupThumbnailDimension;
+    }
+
 
     private JpoCache() {
         LOGGER.info("Creating JpoCache");
@@ -94,7 +115,7 @@ public class JpoCache {
      */
     public static Properties loadProperties() {
         final String CACHE_DEFINITION_FILE = "cache.ccf";
-        URL ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
+        final URL ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
         if (ccfUrl == null) {
             LOGGER.log(Level.SEVERE,"Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
             return null;
@@ -102,10 +123,10 @@ public class JpoCache {
             LOGGER.log(Level.FINE,"Cache definition file found at: {0}", ccfUrl);
         }
 
-        Properties props = new Properties();
+        final Properties props = new Properties();
         try (final InputStream inStream = ccfUrl.openStream();) {
             props.load(inStream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage());
             return null;
         }
@@ -134,15 +155,15 @@ public class JpoCache {
      * @return and ImageBytes object
      * @throws IOException if something went wrong
      */
-    public ImageBytes getHighresImageBytes(File file) throws IOException {
+    public ImageBytes getHighresImageBytes(final File file) throws IOException {
         ImageBytes imageBytes = highresMemoryCache.get(file);
         if (imageBytes != null) {
             try {
-                FileTime lastModification = (Files.getLastModifiedTime(file.toPath()));
+                final FileTime lastModification = (Files.getLastModifiedTime(file.toPath()));
                 if (lastModification.compareTo(imageBytes.getLastModification()) < 0) {
                     imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
                 }
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }
         } else {
@@ -165,20 +186,20 @@ public class JpoCache {
      * @param size     The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnail
      */
-    public ImageBytes getThumbnailImageBytes(File file, double rotation, Dimension size) {
-        int maxWidth = size.width;
-        int maxHeight = size.height;
-        String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight);
+    public ImageBytes getThumbnailImageBytes(final File file, final double rotation, final Dimension size) {
+        final int maxWidth = size.width;
+        final int maxHeight = size.height;
+        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight);
         ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
         if (imageBytes != null) {
             try {
-                Path imagePath = Paths.get(file.toURI());
-                FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+                final Path imagePath = Paths.get(file.toURI());
+                final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
                 if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
                     imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxWidth, maxHeight);
 
                 }
-            } catch (IOException ex) {
+            } catch (final IOException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }
 
@@ -198,8 +219,8 @@ public class JpoCache {
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnailAndStoreInCache(String key, File imageFile, double rotation, int maxWidth, int maxHeight) {
-        ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxWidth, maxHeight);
+    private ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final int maxWidth, final int maxHeight) {
+        final ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxWidth, maxHeight);
         try {
             thumbnailMemoryAndDiskCache.put(key, imageBytes);
         } catch (CacheException ex) {
@@ -254,27 +275,6 @@ public class JpoCache {
         return imageBytes;
     }
 
-    /**
-     * Returns the Dimension of the icon_folder_large.jpg image and if there is
-     * an ioerror the maximum size of the thumbnails.
-     *
-     * @return the dimension for the icon folder image
-     */
-    private Dimension getThumbnailDimensions() {
-        if (groupThumbnailDimension == null) {
-            BufferedImage groupThumbnail;
-            try (BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg"))) {
-                groupThumbnail = ImageIO.read(bis);
-                groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
-
-            } catch (IOException ex) {
-                Logger.getLogger(JpoCache.class
-                        .getName()).log(Level.SEVERE, null, ex);
-                groupThumbnailDimension = new Dimension(Settings.getThumbnailSize(), Settings.getThumbnailSize());
-            }
-        }
-        return groupThumbnailDimension;
-    }
 
     /**
      * Returns a thumbnail for a group of pictures
@@ -287,8 +287,8 @@ public class JpoCache {
         final int leftMargin = 15;
         final int margin = 10;
         final int topMargin = 65;
-        final int horizontalPics = (getThumbnailDimensions().width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
-        final int verticalPics = (getThumbnailDimensions().height - topMargin) / (Settings.miniThumbnailSize.height + margin);
+        final int horizontalPics = (groupThumbnailDimension.width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+        final int verticalPics = (groupThumbnailDimension.height - topMargin) / (Settings.miniThumbnailSize.height + margin);
         final int numberOfPics = horizontalPics * verticalPics;
 
         final StringBuilder sb = new StringBuilder("Group-");
