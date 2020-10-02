@@ -26,20 +26,31 @@ import java.nio.file.attribute.FileTime;
 
 /**
  * Serializable array of bytes representing an Image
+ *
  * @author Richard Eigenmann
  */
 public class ImageBytes implements Serializable {
 
-    private static final long serialVersionUID = 3;
-    private long lastModification;
+    private static final long serialVersionUID = 4;
+    private FileTime lastModification;
     private final byte[] bytes;
 
-    
+    public boolean isRetrievedFromCache() {
+        return retrievedFromCache;
+    }
+
+    public void setRetrievedFromCache(boolean retrievedFromCache) {
+        this.retrievedFromCache = retrievedFromCache;
+    }
+
+    private boolean retrievedFromCache = false;
+
+
     /**
      * Constructs a new ImageBytes object with the key and the bytes as read from disk
      * @param bytes the bytes
      */
-    public ImageBytes(  byte[] bytes ) {
+    public ImageBytes(final byte[] bytes) {
         this.bytes = bytes;
     }
 
@@ -63,10 +74,11 @@ public class ImageBytes implements Serializable {
 
     /**
      * Remembers the last modification time of the source file
+     *
      * @param lastModification the last modification time
      */
-    public void setLastModification( FileTime lastModification ) {
-        this.lastModification = lastModification.toMillis();
+    public void setLastModification(final FileTime lastModification) {
+        this.lastModification = lastModification;
     }
 
     /**
@@ -74,7 +86,9 @@ public class ImageBytes implements Serializable {
      * @return the last modification time
      */
     public FileTime getLastModification() {
-        return FileTime.fromMillis( lastModification );
+        return lastModification;
     }
+
+
 
 }

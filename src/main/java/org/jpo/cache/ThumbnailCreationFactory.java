@@ -117,39 +117,37 @@ public class ThumbnailCreationFactory implements Runnable {
      * ThumbnailController
      */
     private static void processQueueRequest( ThumbnailQueueRequest request ) {
-        Object userObject = request.getNode().getUserObject();
+        final Object userObject = request.getNode().getUserObject();
         if ( userObject == null ) {
             LOGGER.severe( "Queue request for a null Could not find PictureInfo. Aborting." );
             return;
         }
 
         try {
-            if ( userObject instanceof PictureInfo ) {
-                PictureInfo pictureinfo = (PictureInfo) userObject;
-
-                ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes( pictureinfo.getImageFile(),
-                        pictureinfo.getRotation(),
-                        request.getSize() );
-                if ( imageBytes == null ) {
-                    request.setIcon( BROKEN_THUMBNAIL_PICTURE );
+            if (userObject instanceof PictureInfo pictureInfo) {
+                final ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes(pictureInfo.getImageFile(),
+                        pictureInfo.getRotation(),
+                        request.getSize());
+                if (imageBytes == null) {
+                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 } else {
-                    request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
+                    request.setIcon(new ImageIcon(imageBytes.getBytes()));
                 }
-            } else if ( userObject instanceof GroupInfo ) {
-                List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes( false );
+            } else if (userObject instanceof GroupInfo) {
+                final List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes(false);
 
-                ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes( childPictureNodes );
-                if ( imageBytes == null ) {
-                    request.setIcon( BROKEN_THUMBNAIL_PICTURE );
+                final ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes(childPictureNodes);
+                if (imageBytes == null) {
+                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 } else {
-                    request.setIcon( new ImageIcon( imageBytes.getBytes() ) );
+                    request.setIcon(new ImageIcon(imageBytes.getBytes()));
                 }
             } else {
-                request.setIcon( BROKEN_THUMBNAIL_PICTURE );
+                request.setIcon(BROKEN_THUMBNAIL_PICTURE);
             }
-        } catch ( IOException ex ) {
-            LOGGER.severe( ex.getMessage() );
-            request.setIcon( BROKEN_THUMBNAIL_PICTURE );
+        } catch (final IOException ex) {
+            LOGGER.severe(ex.getMessage());
+            request.setIcon(BROKEN_THUMBNAIL_PICTURE);
         }
         request.notifyCallbackHandler();
     }
