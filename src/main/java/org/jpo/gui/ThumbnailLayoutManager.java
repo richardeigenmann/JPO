@@ -17,6 +17,8 @@ package org.jpo.gui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jpo.datamodel.Settings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
@@ -110,10 +112,9 @@ public class ThumbnailLayoutManager implements LayoutManager {
     }
 
     /**
-     * The width of the thumbnails in pixels //TODO: Why is this constant here
-     * and not in Settings?
+     * The width of the thumbnails in pixels
      */
-    private int thumbnailWidth = 350;
+    private int thumbnailWidth = Settings.getThumbnailSize();
 
     /**
      * Sets the width of the thumbnails
@@ -195,9 +196,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
             int column = 0;
             int rowBaseline = -getVerticalGutter();
             int previousDescriptionRowHeight = 0;
-            int logicalThumbnail;
             for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
-                logicalThumbnail = i / 2;
+                int logicalThumbnail = i / 2;
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowBaseline = rowBaseline + getHeightOfRow( parent, i, columns ) + previousDescriptionRowHeight + ( 2 * getVerticalGutter() );
                     previousDescriptionRowHeight = 0;

@@ -137,11 +137,10 @@ public class SourcePicture {
     private static final Logger LOGGER = Logger.getLogger(SourcePicture.class.getName());
 
     /**
-     * method to invoke with a filename or URL of a picture that is to be loaded
-     * in the main thread.
-     * TODO: Investigate the behaviour when the file doesn't exist. Seems to just die? See also the testGeberateWebsite test
+     * Loads the picture indicated by the file to this SourcePicture on the current thread.
+     * If the file doesn't exist the getSourceBufferedImage method will return a null.
      *
-     * @param file     Image URL
+     * @param file     The file with the image
      * @param rotation Image rotation
      */
     public void loadPicture(final File file, final double rotation) {
@@ -154,13 +153,13 @@ public class SourcePicture {
     }
 
     /**
-     * method to invoke with a filename or URL of a picture that is to be loaded
+     * method to invoke with a file of a picture that is to be loaded in
      * a new thread. This is handy to update the screen while the loading chugs
      * along in the background.
      *
-     * @param imageFile The URL of the image to be loaded
-     * @param priority The Thread priority for this thread.
-     * @param rotation The rotation 0-360 to be used on this picture
+     * @param imageFile The file with the the image to be loaded
+     * @param priority  The Thread priority for this thread.
+     * @param rotation  The rotation 0-360 to be used on this picture
      */
     public void loadPictureInThread(final File imageFile, final int priority, final double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
@@ -181,7 +180,7 @@ public class SourcePicture {
     }
 
     /**
-     * loads a picture from the URL in the imageUrl object into the
+     * loads a picture from the file  imageFile object into the
      * sourcePictureBufferedImage object and updates the status when done or
      * failed.
      */

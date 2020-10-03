@@ -246,7 +246,7 @@ public class DirectoryChooser
     /**
      * The ChangeListeners that want to be notified when the directory changes.
      */
-    private final Set<ChangeListener> changeListeners = Collections.synchronizedSet(new HashSet<>() );
+    private final transient Set<ChangeListener> changeListeners = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Adds a change listener that will be notified whenever the text in the

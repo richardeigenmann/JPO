@@ -287,14 +287,13 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      *
      * @return The current node as defined by the mySetOfNodes
      * NodeNavigatorInterface and the myIndex. If the set of nodes has not been
-     * initialised or there is some other error null shall be returned. TODO:
-     * Shouldn't this be more context aware?
+     * initialised or there is some other error null shall be returned.
      */
     private SortableDefaultMutableTreeNode getCurrentNode() {
         try {
             return mySetOfNodes.getNode(myIndex);
         } catch (final NullPointerException npe) {
-            LOGGER.warning(String.format("Got a npe on node %d. Message: %s", myIndex, npe.getMessage()));
+            LOGGER.log(Level.WARNING, "Got a npe on node {0}. Message: {1}", new Object[]{myIndex, npe.getMessage()});
             return null;
         }
 

@@ -320,7 +320,7 @@ public class ConsolidateGroupWorkerTest {
         assertTrue(sourceImageFile.setReadOnly());
         assertTrue( sourceImageFile.canRead() );
         if ( !System.getProperty( "user.name" ).equals( "root" ) ) {
-            // TODO: on Linux as root a file is always writable therefore bypassing this non-essential check
+            // on Linux as root a file is always writable therefore bypassing this non-essential check
             assertFalse( sourceImageFile.canWrite() );
         }
 

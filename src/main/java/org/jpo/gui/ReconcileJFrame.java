@@ -96,7 +96,7 @@ public class ReconcileJFrame extends JFrame {
             }
         } );
 
-        JPanel controlJPanel = new JPanel();
+        final JPanel controlJPanel = new JPanel();
         controlJPanel.setLayout( new MigLayout() );
 
         controlJPanel.add(new JLabel(Settings.getJpoResources().getString("ReconcileBlaBlaLabel")), "spanx 3, wrap");
@@ -109,7 +109,7 @@ public class ReconcileJFrame extends JFrame {
 
         controlJPanel.add(directoryChooser);
 
-        JButton okJButton = new JButton(Settings.getJpoResources().getString("ReconcileOkButtonLabel"));
+        final JButton okJButton = new JButton(Settings.getJpoResources().getString("ReconcileOkButtonLabel"));
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -165,14 +165,15 @@ public class ReconcileJFrame extends JFrame {
     /**
      * Reference to the reconciler
      */
-    private Reconciler reconciler = null;
+    private transient Reconciler reconciler = null;
 
     /**
      * This method does some validation and then fires the Reconciler
+     *
      * @param reconcileDir the directory to reconcile
      */
-    private void runReconciliation( File reconcileDir ) {
-        if ( validateDir( reconcileDir ) ) {
+    private void runReconciliation(final File reconcileDir) {
+        if (validateDir(reconcileDir)) {
             logJTextArea.setText(null);
             reconciler = new Reconciler(startNode, reconcileDir, recurseSubdirectoriesJCheckBox.isSelected(), logJTextArea);
             reconciler.execute();
@@ -271,13 +272,10 @@ public class ReconcileJFrame extends JFrame {
         @Override
         protected String doInBackground() {
             //Build HashSet of all of the URIs know to the collection
-            SortableDefaultMutableTreeNode node;
-            Object nodeObject;
             final Enumeration<TreeNode> e = startNode.preorderEnumeration();
-            while ( e.hasMoreElements() ) {
-                node = (SortableDefaultMutableTreeNode) e.nextElement();
-                nodeObject = node.getUserObject();
-                if (nodeObject instanceof PictureInfo pictureInfo) {
+            while ( e.hasMoreElements()) {
+                final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) e.nextElement();
+                if (node.getUserObject() instanceof PictureInfo pictureInfo) {
                     collectionUris.add(pictureInfo.getImageURIOrNull());
                 }
             }

@@ -48,7 +48,7 @@ public class PrivacyJFrame
     /**
      * Handler for the clicks
      */
-    private final PrivacyController privacyController = new PrivacyController();
+    private final transient PrivacyController privacyController = new PrivacyController();
 
 
     /**

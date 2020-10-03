@@ -177,17 +177,12 @@ public class JpoCache {
      * @param file
      * @return
      */
-    private ImageBytes getHighresImageBytesFromFile(final File file) {
-        try {
-            final ImageBytes imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
-            imageBytes.setRetrievedFromCache(false);
-            imageBytes.setLastModification(Files.getLastModifiedTime(file.toPath()));
-            storeInHighresCache(file, imageBytes);
-            return imageBytes;
-        } catch (final IOException e) {
-            LOGGER.severe(e.getLocalizedMessage());
-            return null;
-        }
+    private ImageBytes getHighresImageBytesFromFile(final File file) throws IOException {
+        final ImageBytes imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
+        imageBytes.setRetrievedFromCache(false);
+        imageBytes.setLastModification(Files.getLastModifiedTime(file.toPath()));
+        storeInHighresCache(file, imageBytes);
+        return imageBytes;
     }
 
     /**

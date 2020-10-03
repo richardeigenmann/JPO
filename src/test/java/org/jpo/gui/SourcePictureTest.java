@@ -35,14 +35,13 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertEquals(233, s.getHeight());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
-        s.loadPicture(imageFile, 0.0);
-        assertEquals(233, s.getHeight());
     }
 
     @Test
@@ -50,21 +49,27 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(NIKON_D100_IMAGE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 90.0);
+            assertEquals(350, s.getHeight());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 90.0);
-        assertEquals(350, s.getHeight());
     }
 
     @Test
     public void getHeightNullPicture() {
         final SourcePicture s = new SourcePicture();
         assertEquals(0, s.getHeight());
+    }
+
+    @Test
+    public void loadInexistentFile() {
+        final SourcePicture s = new SourcePicture();
+        s.loadPicture(new File("no such file.jpg"), 0.0);
+        assertNull(s.getSourceBufferedImage());
     }
 
 
@@ -166,12 +171,12 @@ public class SourcePictureTest {
     public void testGetJpgImageIOReader() {
         final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
-        try (InputStream input = imageUrl.openStream();
-             ImageInputStream iis = ImageIO.createImageInputStream(input)) {
-            ImageReader reader = SourcePicture.getImageIOReader(iis);
+        try (final InputStream input = imageUrl.openStream();
+             final ImageInputStream iis = ImageIO.createImageInputStream(input)) {
+            final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -193,18 +198,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String BMP_IMAGE_FILE = "bmp.bmp";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(BMP_IMAGE_FILE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        // We were trying to load a bmp image but it was null!
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -239,17 +242,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String TIFF_IMAGE_FILE = "tiff_image.tiff";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TIFF_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(200, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(200, s.getWidth());
     }
 
     @Test
@@ -261,7 +263,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -284,17 +286,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String HDR_IMAGE_FILE = "memorial_o876.hdr";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(HDR_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(768, s.getHeight());
+            assertEquals(512, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(768, s.getHeight());
-        assertEquals(512, s.getWidth());
     }
 
     @Test
@@ -306,7 +307,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -328,17 +329,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String PDF_IMAGE_FILE = "pdf-document.pdf";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PDF_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(768, s.getHeight());
+            assertEquals(512, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(768, s.getHeight());
-        assertEquals(512, s.getWidth());
     }
 
     @Test
@@ -351,7 +351,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pdf.PDFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -380,7 +380,7 @@ public class SourcePictureTest {
             assertNotNull(s.getSourceBufferedImage());
             // Size is not stable. Sometimes we get 400, Sometimes 900
             Logger.getLogger(SourcePictureTest.class.getName()).log(Level.INFO, "Height of {0} is {1}", new Object[]{SVG_IMAGE_FILE, s.getHeight()});
-            assertTrue( s.getHeight() == 400 || s.getHeight() == 900 );
+            assertTrue(s.getHeight() == 400 || s.getHeight() == 900);
             Logger.getLogger(SourcePictureTest.class.getName()).log(Level.INFO, "Width of {0} is {1}", new Object[]{SVG_IMAGE_FILE, s.getWidth()});
             assertTrue(s.getWidth() == 900 || s.getWidth() == 800);
         } catch (final URISyntaxException e) {
@@ -419,17 +419,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String PNM_IMAGE_FILE = "pnm.pnm";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNM_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -441,7 +440,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -464,17 +463,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String SGI_IMAGE_FILE = "sgi.sgi";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(SGI_IMAGE_FILE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -486,7 +484,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -508,17 +506,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String TGA_IMAGE_FILE = "tga.tga";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(TGA_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -552,17 +549,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String PSD_IMAGE_FILE = "psd.psd";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PSD_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -596,17 +592,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String ICO_IMAGE_FILE = "favicon.ico";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICO_IMAGE_FILE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(64, s.getHeight());
+            assertEquals(64, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(64, s.getHeight());
-        assertEquals(64, s.getWidth());
     }
 
     @Test
@@ -640,17 +635,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String PNG_IMAGE_FILE = "png.png";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PNG_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -662,7 +656,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.png.PNGImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -684,17 +678,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String GIF_IMAGE_FILE = "gif.gif";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(GIF_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -706,7 +699,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.gif.GIFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -727,17 +720,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String IFF_IMAGE_FILE = "AmigaAmiga.iff";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(IFF_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(150, s.getHeight());
+            assertEquals(200, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(150, s.getHeight());
-        assertEquals(200, s.getWidth());
     }
 
     @Test
@@ -749,7 +741,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.iff.IFFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -771,17 +763,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String PCX_IMAGE_FILE = "pcx.pcx";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(PCX_IMAGE_FILE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(100, s.getHeight());
+            assertEquals(150, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(100, s.getHeight());
-        assertEquals(150, s.getWidth());
     }
 
     @Test
@@ -793,7 +784,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pcx.PCXImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -815,17 +806,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String PICT_IMAGE_FILE = "food.pct";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(PICT_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(194, s.getHeight());
+            assertEquals(146, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(194, s.getHeight());
-        assertEquals(146, s.getWidth());
     }
 
     @Test
@@ -837,7 +827,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pict.PICTImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -858,17 +848,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String CLIP_PATH_IMAGE_FILE = "grape_with_path.jpg";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(1800, s.getHeight());
+            assertEquals(857, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(1800, s.getHeight());
-        assertEquals(857, s.getWidth());
     }
 
     @Test
@@ -902,17 +891,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String ICNS_IMAGE_FILE = "7zIcon.icns";
         final URL imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(16, s.getHeight());
+            assertEquals(16, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(16, s.getHeight());
-        assertEquals(16, s.getWidth());
     }
 
     @Test
@@ -924,7 +912,7 @@ public class SourcePictureTest {
             final ImageReader reader = SourcePicture.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail( e.getMessage());
+            fail(e.getMessage());
         }
     }
 
@@ -945,17 +933,16 @@ public class SourcePictureTest {
         final SourcePicture s = new SourcePicture();
         final String THUMBS_DB_IMAGE_FILE = "Thumbs.db";
         final URL imageUrl = Objects.requireNonNull(SourcePictureTest.class.getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
-        File imageFile = null;
         try {
-            imageFile = new File(imageUrl.toURI());
+            final File imageFile = new File(imageUrl.toURI());
+            s.loadPicture(imageFile, 0.0);
+            assertNotNull(s.getSourceBufferedImage());
+            assertEquals(96, s.getHeight());
+            assertEquals(96, s.getWidth());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        s.loadPicture(imageFile, 0.0);
-        assertNotNull(s.getSourceBufferedImage());
-        assertEquals(96, s.getHeight());
-        assertEquals(96, s.getWidth());
     }
 
     @Test

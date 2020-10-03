@@ -196,12 +196,12 @@ public class Thumbnail extends JComponent {
     /**
      * The image that should be displayed
      */
-    private Image img;
+    private transient Image img;
 
     /**
      * The Image Observer of the image that should be displayed
      */
-    private ImageObserver imgOb;
+    private transient ImageObserver imgOb;
 
     /**
      * This icon indicates that the thumbnail creation is sitting on the queue.

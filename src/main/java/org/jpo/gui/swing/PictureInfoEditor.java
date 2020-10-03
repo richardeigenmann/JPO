@@ -576,8 +576,6 @@ public class PictureInfoEditor extends JFrame {
     /**
      * This utility method builds a string from the selected categories in a
      * supplied JList
-     * <p>
-     * TODO: Make it a Java 8 stream?
      *
      * @param theList the List
      * @return a string for the selected categories
@@ -756,7 +754,7 @@ public class PictureInfoEditor extends JFrame {
      * Here we are not that interested in TreeModel change events other than to find out if our
      * current node was removed in which case we close the Window.
      */
-    private final TreeModelListener myTreeModelListener = new TreeModelListener() {
+    private final transient TreeModelListener myTreeModelListener = new TreeModelListener() {
 
         /**
          * implemented here to satisfy the TreeModelListener interface; not

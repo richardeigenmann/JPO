@@ -23,7 +23,7 @@ import javax.swing.table.TableModel;
 public class TableMap extends AbstractTableModel
         implements TableModelListener {
 
-    protected TableModel model;
+    protected transient TableModel model;
 
     public TableModel getModel() {
         return model;

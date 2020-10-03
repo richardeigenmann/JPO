@@ -214,7 +214,7 @@ public class CameraEditor
      * A collection that holds all the listeners that want to be notified about
      * changes to this Camera
      */
-    private final Set<ActionListener> listeners = Collections.synchronizedSet(new HashSet<>() );
+    private final transient Set<ActionListener> listeners = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * Adds a listener

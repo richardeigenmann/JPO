@@ -122,7 +122,7 @@ public class IntegrityCheckerJFrame
         checksumWorker.execute();
     }
     
-    private CorrectChecksumSwingWorker checksumWorker;
+    private transient CorrectChecksumSwingWorker checksumWorker;
 
     private class CorrectChecksumSwingWorker extends SwingWorker<Integer, String> {
 
@@ -130,22 +130,17 @@ public class IntegrityCheckerJFrame
         protected Integer doInBackground() {
             int nodesProcessed = 0;
             int corrections = 0;
-            SortableDefaultMutableTreeNode testNode;
-            Object nodeObject;
-            long oldChecksum;
-            long newChecksum;
             for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && (!isCancelled()); ) {
                 nodesProcessed++;
                 if (nodesProcessed % 1000 == 0) {
                     publish(String.format("%d nodes processed%n", nodesProcessed));
                 }
-                testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-                nodeObject = testNode.getUserObject();
-                if ((nodeObject instanceof PictureInfo pi)) {
+                final SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
+                if ((testNode.getUserObject() instanceof PictureInfo pi)) {
                     final File imageFile = pi.getImageFile();
                     if (imageFile != null) {
-                        newChecksum = Tools.calculateChecksum(imageFile);
-                        oldChecksum = pi.getChecksum();
+                        long newChecksum = Tools.calculateChecksum(imageFile);
+                        long oldChecksum = pi.getChecksum();
                         if (oldChecksum != newChecksum) {
                             corrections++;
                             pi.setChecksum(newChecksum);
