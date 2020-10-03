@@ -3,6 +3,7 @@ package org.jpo.cache;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 
 
 /*
@@ -32,7 +33,7 @@ import java.nio.file.attribute.FileTime;
 public class ImageBytes implements Serializable {
 
     private static final long serialVersionUID = 4;
-    private FileTime lastModification;
+    private Instant lastModification;
     private final byte[] bytes;
 
     public boolean isRetrievedFromCache() {
@@ -78,7 +79,7 @@ public class ImageBytes implements Serializable {
      * @param lastModification the last modification time
      */
     public void setLastModification(final FileTime lastModification) {
-        this.lastModification = lastModification;
+        this.lastModification = lastModification.toInstant();
     }
 
     /**
@@ -86,7 +87,7 @@ public class ImageBytes implements Serializable {
      * @return the last modification time
      */
     public FileTime getLastModification() {
-        return lastModification;
+        return FileTime.from(lastModification);
     }
 
 

@@ -42,7 +42,7 @@ public class JpoCacheTest {
         Settings.loadSettings();
         Properties props = JpoCache.loadProperties();
         // Expecting more than 30 properties to be defined
-        assertTrue(Objects.requireNonNull(props).entrySet().size() > 30);
+        assertTrue(Objects.requireNonNull(props).entrySet().size() > 15);
     }
 
     @Test
