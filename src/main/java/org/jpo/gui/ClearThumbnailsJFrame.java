@@ -184,56 +184,59 @@ class ClearThumbnailsJFrame extends JFrame {
             publish( "Log:\n" );
             final String[] lines = lowresUrls.getText().split(System.getProperty("line.separator"));
             for ( String line : lines ) {
-                if ( isCancelled() ) {
-                    publish( "Removal cancelled." );
+                if (isCancelled()) {
+                    publish("Removal cancelled.");
                     break;
                 }
 
-                line = StringUtils.chomp( line );
-                if ( "".equals( line ) ) {
-                    continue;
-                }
-
-                try {
-                    URI uri = new URI(line);
-                    final File thumbnail = new File(uri);
-                    if (!thumbnail.exists()) {
-                        publish(line + "   doesn't exist. --> nothing to delete --> OK\n");
-                    } else if (!thumbnail.canWrite()) {
-                        publish(line + "   isn't modifiable --> Can't delete --> you have to delete this file yourself\n");
-                    } else {
-                        try {
-                            Files.delete(thumbnail.toPath());
-                            publish(line + "   successfully deleted.\n");
-                        } catch (final IOException e) {
-                            publish(line + "   failed to delete --> you have to delete this file yourself" + e.getMessage() + "\n");
-                        }
-                        // check if the parent directory is empty and writable and then delete it
-                        final File parentDirectory = thumbnail.getParentFile();
-                        if (parentDirectory != null && parentDirectory.canWrite() && Objects.requireNonNull(parentDirectory.list()).length == 0) {
-                            try {
-                                Files.delete(parentDirectory.toPath());
-                                publish(String.format("Parent directory %s successfully deleted%n", parentDirectory.toString()));
-                            } catch (final IOException e) {
-                                publish(String.format("Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory.toString()));
-                            }
-                        }
+                line = StringUtils.chomp(line);
+                if (!"".equals(line)) {
+                    try {
+                        deleteThumbnail(new File(new URI(line)));
+                    } catch (final URISyntaxException ex) {
+                        LOGGER.severe(ex.getLocalizedMessage());
+                        publish(line + "   doesn't parse to a file --> nothing to delete --> OK\n");
                     }
-                } catch (final URISyntaxException ex) {
-                    LOGGER.severe(ex.getLocalizedMessage());
-                    publish(line + "   doesn't parse to a file --> nothing to delete --> OK\n");
-                    continue;
                 }
             }
             return null;
         }
 
+        private void deleteThumbnail(final File thumbnail) {
+            if (!thumbnail.exists()) {
+                publish(thumbnail + "   doesn't exist. --> nothing to delete --> OK\n");
+            } else if (!thumbnail.canWrite()) {
+                publish(thumbnail + "   isn't modifiable --> Can't delete --> you have to delete this file yourself\n");
+            } else {
+                try {
+                    Files.delete(thumbnail.toPath());
+                    publish(thumbnail + "   successfully deleted.\n");
+                } catch (final IOException e) {
+                    publish(thumbnail + "   failed to delete --> you have to delete this file yourself" + e.getMessage() + "\n");
+                }
+                deleteParentDirectoryIfEmpty(thumbnail);
+            }
+        }
+
+        private void deleteParentDirectoryIfEmpty(final File thumbnail) {
+            // check if the parent directory is empty and writable and then delete it
+            final File parentDirectory = thumbnail.getParentFile();
+            if (parentDirectory != null && parentDirectory.canWrite() && Objects.requireNonNull(parentDirectory.list()).length == 0) {
+                try {
+                    Files.delete(parentDirectory.toPath());
+                    publish(String.format("Parent directory %s successfully deleted%n", parentDirectory.toString()));
+                } catch (final IOException e) {
+                    publish(String.format("Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory.toString()));
+                }
+            }
+        }
+
         @Override
         protected void done() {
-            stopButton.setVisible( false );
-            closeButton.setVisible( true );
-            if ( !isCancelled() ) {
-                publish( "\nRemoval complete.\n" );
+            stopButton.setVisible(false);
+            closeButton.setVisible(true);
+            if (!isCancelled()) {
+                publish("\nRemoval complete.\n");
             }
         }
 
