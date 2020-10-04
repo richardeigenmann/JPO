@@ -7,6 +7,7 @@ import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 public class WebsiteGeneratorTest {
 
@@ -96,6 +98,7 @@ public class WebsiteGeneratorTest {
 
     @Test
     public void testGenerateWebsite() {
+        assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
         // set up the request
         final GenerateWebsiteRequest request = new GenerateWebsiteRequest();
         request.setOutputTarget(GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY);
