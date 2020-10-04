@@ -24,7 +24,7 @@ cache:
     - '$HOME/.sonar/cache'
 
 script:
-  #- gradle check
+  - gradle compileTestJava
   - sonar-scanner
 git:
   depth: false
