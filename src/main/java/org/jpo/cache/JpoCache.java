@@ -49,6 +49,11 @@ import java.util.logging.Logger;
  */
 public class JpoCache {
 
+    private JpoCache() {
+        throw new IllegalStateException("Utility class");
+    }
+
+
     /**
      * Defines a logger for this class
      */
