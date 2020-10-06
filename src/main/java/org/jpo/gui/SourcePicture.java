@@ -257,17 +257,7 @@ public class SourcePicture {
             BufferedImage bufferedImage = null;
             try {
                 bufferedImage = reader.read(0);
-
-                if (bufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
-                    LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
-
-                    final BufferedImage bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
-                            bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-                    final Graphics2D g = bgr3ByteImage.createGraphics();
-                    g.drawImage(bufferedImage, 0, 0, null);
-                    g.dispose();
-                    bufferedImage = bgr3ByteImage;
-                }
+                correctTypeOfImage(bufferedImage);
             } catch (final OutOfMemoryError e) {
                 LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
                 setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
@@ -284,6 +274,26 @@ public class SourcePicture {
             return null;
         }
     }
+
+    /**
+     * checks that the supplied BufferedImage is of TYPE_3BYTE_BGR. Modifies the input parameter to a
+     * BufferedImage of the desired type.
+     *
+     * @param bufferedImage The BufferedImage to potentially modify.
+     */
+    private static void correctTypeOfImage(BufferedImage bufferedImage) {
+        if (bufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+            LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
+
+            final BufferedImage bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
+                    bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+            final Graphics2D g = bgr3ByteImage.createGraphics();
+            g.drawImage(bufferedImage, 0, 0, null);
+            g.dispose();
+            bufferedImage = bgr3ByteImage;
+        }
+    }
+
 
     /**
      * This method checks whether the JVM has an image reader for the supplied
