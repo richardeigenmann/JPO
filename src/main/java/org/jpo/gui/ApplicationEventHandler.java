@@ -1361,18 +1361,16 @@ public class ApplicationEventHandler {
                 Settings.getJpoResources().getString("FileDeleteTitle"),
                 JOptionPane.OK_CANCEL_OPTION);
 
-        if (option == 0) {
-            if (highresFile.exists()) {
-                try {
-                    Files.delete(highresFile.toPath());
-                    request.node().deleteNode();
-                } catch (IOException e) {
-                    LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});
-                    JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            Settings.getJpoResources().getString("fileDeleteError") + highresFile + e.getMessage(),
-                            GENERIC_ERROR,
-                            JOptionPane.ERROR_MESSAGE);
-                }
+        if (option == 0 && highresFile.exists()) {
+            try {
+                Files.delete(highresFile.toPath());
+                request.node().deleteNode();
+            } catch (IOException e) {
+                LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});
+                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("fileDeleteError") + highresFile + e.getMessage(),
+                        GENERIC_ERROR,
+                        JOptionPane.ERROR_MESSAGE);
             }
         }
     }
