@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -109,6 +110,8 @@ public class JpoCacheTest {
             assertFalse(imageBytes.isRetrievedFromCache());
 
             com.google.common.io.Files.copy(imageFile2, tempFile);
+            // some test runs fail. The overwrite may not have happened. Trying to force a sync. Maybe that helps?
+            new FileOutputStream("gaga").getFD().sync();
             final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that the overwritten tempFile {0} was not retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
