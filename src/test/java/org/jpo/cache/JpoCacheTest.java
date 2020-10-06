@@ -44,16 +44,16 @@ public class JpoCacheTest {
      */
     private static final Logger LOGGER = Logger.getLogger(JpoCacheTest.class.getName());
 
-    private static final File imageFile1 = getFileFromResouces("exif-test-nikon-d100-1.jpg");
-    private static final long lenghtFile1 = imageFile1.length();
-    private static final File imageFile2 = getFileFromResouces("exif-test-samsung-s4.jpg");
-    private static final long lenghtFile2 = imageFile2.length();
+    private static final File IMAGE_FILE_1 = getFileFromResouces("exif-test-nikon-d100-1.jpg");
+    private static final long LENGHT_FILE_1 = IMAGE_FILE_1.length();
+    private static final File IMAGE_FILE_2 = getFileFromResouces("exif-test-samsung-s4.jpg");
+    private static final long LENGHT_FILE_2 = IMAGE_FILE_2.length();
 
     static {
-        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number ob bytes, 21599 (actual: {1})", new Object[]{imageFile1, lenghtFile1});
-        assertEquals(21599, lenghtFile1);
-        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number ob bytes, 2354328 (actual: {1})", new Object[]{imageFile2, lenghtFile2});
-        assertEquals(2354328, lenghtFile2);
+        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number ob bytes, 21599 (actual: {1})", new Object[]{IMAGE_FILE_1, LENGHT_FILE_1});
+        assertEquals(21599, LENGHT_FILE_1);
+        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number ob bytes, 2354328 (actual: {1})", new Object[]{IMAGE_FILE_2, LENGHT_FILE_2});
+        assertEquals(2354328, LENGHT_FILE_2);
     }
 
     private static File getFileFromResouces(final String filename) {
@@ -81,12 +81,12 @@ public class JpoCacheTest {
     @Test
     public void testGetHighresImageBytes() {
         try {
-            JpoCache.removeFromHighresCache(imageFile1);
-            final ImageBytes imageBytes = JpoCache.getHighresImageBytes(imageFile1);
-            assertEquals(lenghtFile1, imageBytes.getBytes().length);
+            JpoCache.removeFromHighresCache(IMAGE_FILE_1);
+            final ImageBytes imageBytes = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
+            assertEquals(LENGHT_FILE_1, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
-            final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(imageFile1);
-            assertEquals(lenghtFile1, imageBytes2.getBytes().length);
+            final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
+            assertEquals(LENGHT_FILE_1, imageBytes2.getBytes().length);
             assertTrue(imageBytes2.isRetrievedFromCache());
         } catch (final IOException e) {
             fail(e.getMessage());
@@ -98,7 +98,7 @@ public class JpoCacheTest {
         try {
             final File tempFile = File.createTempFile("testImage", ".jpg");
             LOGGER.log(Level.INFO, "Creating temporary file {0}", tempFile);
-            com.google.common.io.Files.copy(imageFile1, tempFile);
+            com.google.common.io.Files.copy(IMAGE_FILE_1, tempFile);
 
             // make sure the temp file is not in the cache
             JpoCache.removeFromHighresCache(tempFile);
@@ -106,24 +106,24 @@ public class JpoCacheTest {
             LOGGER.log(Level.INFO,
                     "asserting that the tempFile {0} was not retrieved from cache (actual: {1}) and has 21599 bytes ({2})",
                     new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
-            assertEquals(lenghtFile1, imageBytes.getBytes().length);
+            assertEquals(LENGHT_FILE_1, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
 
-            com.google.common.io.Files.copy(imageFile2, tempFile);
+            com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
             // some test runs fail. The overwrite may not have happened. Trying to force a sync. Maybe that helps?
             new FileOutputStream("gaga").getFD().sync();
             final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that the overwritten tempFile {0} was not retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
                     new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
-            assertEquals(lenghtFile2, imageBytes2.getBytes().length);
+            assertEquals(LENGHT_FILE_2, imageBytes2.getBytes().length);
             assertFalse(imageBytes2.isRetrievedFromCache());
 
             final ImageBytes imageBytes3 = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that a new request for unchanged tempFile {0} was retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
                     new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
-            assertEquals(lenghtFile2, imageBytes3.getBytes().length);
+            assertEquals(LENGHT_FILE_2, imageBytes3.getBytes().length);
             assertTrue(imageBytes3.isRetrievedFromCache());
 
             Files.delete(tempFile.toPath());
@@ -134,12 +134,12 @@ public class JpoCacheTest {
 
     @Test
     public void testGetThumbnailImageBytes() {
-        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", imageFile1, 0.0, 350, 350);
+        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", IMAGE_FILE_1, 0.0, 350, 350);
         JpoCache.removeFromThumbnailCache(key);
-        final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(imageFile1, 0.0f, new Dimension(350, 350));
+        final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
         assertEquals(13094, imageBytes.getBytes().length);
         assertFalse(imageBytes.isRetrievedFromCache());
-        final ImageBytes imageBytes2 = JpoCache.getThumbnailImageBytes(imageFile1, 0.0f, new Dimension(350, 350));
+        final ImageBytes imageBytes2 = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
         assertEquals(13094, imageBytes2.getBytes().length);
         assertTrue(imageBytes2.isRetrievedFromCache());
     }
@@ -148,7 +148,7 @@ public class JpoCacheTest {
     public void testGetThumbnailImageBytesFileChanged() {
         try {
             final File tempFile = File.createTempFile("testImage", ".jpg");
-            com.google.common.io.Files.copy(imageFile1, tempFile);
+            com.google.common.io.Files.copy(IMAGE_FILE_1, tempFile);
 
             final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", tempFile, 0.0, 350, 350);
             JpoCache.removeFromThumbnailCache(key);
@@ -156,7 +156,7 @@ public class JpoCacheTest {
             assertEquals(13094, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
 
-            com.google.common.io.Files.copy(imageFile2, tempFile);
+            com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
             final ImageBytes imageBytes2 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
             assertEquals(16076, imageBytes2.getBytes().length);
             assertFalse(imageBytes2.isRetrievedFromCache());
