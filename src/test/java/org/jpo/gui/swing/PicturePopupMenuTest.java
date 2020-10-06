@@ -50,14 +50,6 @@ public class PicturePopupMenuTest {
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PicturePopupMenuTest.class.getName());
-
-    @BeforeAll
-    public static void setUpOnce() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        FailOnThreadViolationRepaintManager.install();
-    }
-
-
     /*
      * Note these tests are burdened with reflection to get at the inner
      * workings of the popup menu. Should I open up the fields in the popup menu
@@ -70,10 +62,8 @@ public class PicturePopupMenuTest {
     private final GroupInfo myGroupInfo = new GroupInfo("Parent Group");
     private final SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
     private final SortableDefaultMutableTreeNode myParentNode = new SortableDefaultMutableTreeNode(myGroupInfo);
-
     private final SingleNodeNavigator myNavigator = new SingleNodeNavigator(myNode);
     private PicturePopupMenu myPicturePopupMenu;
-
     private JMenuItem title;
     private JMenuItem showPictureJMenuItem;
     private JMenuItem showMap;
@@ -115,21 +105,45 @@ public class PicturePopupMenuTest {
     private JMenu assignCategoryMenu;
     private JMenuItem properties;
     private JMenuItem consolidateHere;
+    private int showPictureEventCount = 0;
+    private int showMapEventCount = 0;
+    private int openFolderEventCount = 0;
+    private int navigateToEventCount = 0;
+    private int categoriesEventCount = 0;
+    private int addToMailSelectEventCount = 0;
+    private int removeFromMailSelectEventCount = 0;
+    private int clearEmailSelectionEventCount = 0;
+    private int userFunctionEventCount = 0;
+    private int rotationEventCount = 0;
+    private int refreshEventCount = 0;
+    private int moveEventCount = 0;
+    private int clipboardEventCount = 0;
+    private int removeEventCount = 0;
+    private int moveToNewLocationEventCount = 0;
+    private int renameEventCount = 0;
+    private int deleteEventCount = 0;
+    private int propertiesEventCount = 0;
+    private int consolidateHereEventCount = 0;
+
+    @BeforeAll
+    public static void setUpOnce() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        FailOnThreadViolationRepaintManager.install();
+    }
 
     /**
      * Creates the objects for testing. Runs on the EDT.
-     *
      */
     @BeforeEach
-    public void setUp()  {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    public void setUp() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         myPictureInfo.setDescription("My Picture");
         try {
             final File temp = File.createTempFile("JPO-Unit-Test", ".jpg");
             temp.deleteOnExit();
             myPictureInfo.setImageLocation(temp);
         } catch (final IOException ex) {
-            Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+            LOGGER.log(Level.SEVERE, null, ex);
         }
 
         myParentNode.add(myNode);
@@ -180,8 +194,13 @@ public class PicturePopupMenuTest {
                 properties = (JMenuItem) myPicturePopupMenu.getComponent(18);
                 consolidateHere = (JMenuItem) myPicturePopupMenu.getComponent(19);
             });
-        } catch (final InterruptedException | InvocationTargetException e) {
-            Logger.getLogger(PicturePopupMenuTest.class.getName()).log(Level.SEVERE, e.getMessage());
+        } catch (final InterruptedException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
+            e.printStackTrace();
+            fail(e.getMessage());
+            Thread.currentThread().interrupt();
+        } catch (final InvocationTargetException e) {
+            LOGGER.log(Level.SEVERE, e.getMessage());
             e.printStackTrace();
             fail(e.getMessage());
             Thread.currentThread().interrupt();
@@ -194,7 +213,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testRememberingPopupNode() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
                 try {
@@ -220,7 +239,7 @@ public class PicturePopupMenuTest {
      */
     @Test
     public void testGetChildren() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
                 assertEquals("My Picture", title.getText());
@@ -258,8 +277,6 @@ public class PicturePopupMenuTest {
         }
     }
 
-    private int showPictureEventCount = 0;
-
     /**
      * Test clicking showPicture
      */
@@ -277,14 +294,12 @@ public class PicturePopupMenuTest {
         assertEquals(1, showPictureEventCount);
     }
 
-    private int showMapEventCount = 0;
-
     /**
      * Test clicking showMap
      */
     @Test
     public void testShowMap() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureOnMapRequest(ShowPictureOnMapRequest request) {
@@ -298,13 +313,12 @@ public class PicturePopupMenuTest {
         assertEquals(1, showMapEventCount);
     }
 
-    private int openFolderEventCount = 0;
     /**
      * Test clicking showMap
      */
     @Test
     public void testOpenFolder() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleOpenFileExplorerRequest(OpenFileExplorerRequest request) {
@@ -318,11 +332,9 @@ public class PicturePopupMenuTest {
         assertEquals(1, openFolderEventCount);
     }
 
-    private int navigateToEventCount = 0;
-
     @Test
     public void testNavigateTo() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowGroupRequest(ShowGroupRequest request) {
@@ -334,11 +346,9 @@ public class PicturePopupMenuTest {
         assertEquals(1, navigateToEventCount);
     }
 
-    private int categoriesEventCount = 0;
-
     @Test
     public void testCategories() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowCategoryUsageEditorRequest(ShowCategoryUsageEditorRequest request) {
@@ -350,11 +360,9 @@ public class PicturePopupMenuTest {
         assertEquals(1, categoriesEventCount);
     }
 
-    private int addToMailSelectEventCount = 0;
-
     @Test
     public void testSelectForEmail() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleAddPictureModesToEmailSelectionRequest(AddPictureNodesToEmailSelectionRequest request) {
@@ -366,11 +374,9 @@ public class PicturePopupMenuTest {
         assertEquals(1, addToMailSelectEventCount);
     }
 
-    private int removeFromMailSelectEventCount = 0;
-
     @Test
     public void testUnselectForEmail() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRemovePictureModesFromEmailSelectionRequest(RemovePictureNodesFromEmailSelectionRequest request) {
@@ -382,11 +388,9 @@ public class PicturePopupMenuTest {
         assertEquals(1, removeFromMailSelectEventCount);
     }
 
-    private int clearEmailSelectionEventCount = 0;
-
     @Test
     public void testClearEmailSelection() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleClearEmailSelectionRequest(ClearEmailSelectionRequest request) {
@@ -395,34 +399,30 @@ public class PicturePopupMenuTest {
         });
         assertEquals(0, clearEmailSelectionEventCount);
         GuiActionRunner.execute(() -> clearEmailSelection.doClick());
-        assertEquals( 1, clearEmailSelectionEventCount);
+        assertEquals(1, clearEmailSelectionEventCount);
     }
-
-    private int userFunctionEventCount = 0;
 
     @Test
     public void testUserFunctions() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRunUserFunctionRequest(RunUserFunctionRequest request) {
                 userFunctionEventCount++;
             }
         });
-        assertEquals( 0, userFunctionEventCount);
+        assertEquals(0, userFunctionEventCount);
         GuiActionRunner.execute(() -> {
-                    userFunction_0.doClick();
-                    userFunction_1.doClick();
-                    userFunction_2.doClick();
-                });
-        assertEquals( 3, userFunctionEventCount);
+            userFunction_0.doClick();
+            userFunction_1.doClick();
+            userFunction_2.doClick();
+        });
+        assertEquals(3, userFunctionEventCount);
     }
-
-    private int rotationEventCount = 0;
 
     @Test
     public void testRotation() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRotatePictureRequestRequest(RotatePictureRequest request) {
@@ -435,35 +435,31 @@ public class PicturePopupMenuTest {
             }
 
         });
-        assertEquals( 0, rotationEventCount);
+        assertEquals(0, rotationEventCount);
         GuiActionRunner.execute(() -> rotate90.doClick());
         GuiActionRunner.execute(() -> rotate180.doClick());
         GuiActionRunner.execute(() -> rotate270.doClick());
         GuiActionRunner.execute(() -> rotate0.doClick());
-        assertEquals( 4, rotationEventCount);
+        assertEquals(4, rotationEventCount);
     }
-
-    private int refreshEventCount = 0;
 
     @Test
     public void testRefresh() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRefreshThumbnailRequest(RefreshThumbnailRequest request) {
                 refreshEventCount++;
             }
         });
-        assertEquals( 0, refreshEventCount);
+        assertEquals(0, refreshEventCount);
         GuiActionRunner.execute(() -> refreshThumbnail.doClick());
-        assertEquals( 1, refreshEventCount);
+        assertEquals(1, refreshEventCount);
     }
-
-    private int moveEventCount = 0;
 
     @Test
     public void testMove() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleMoveNodeToTopRequest(MoveNodeToTopRequest request) {
@@ -495,127 +491,112 @@ public class PicturePopupMenuTest {
                 moveEventCount++;
             }
         });
-        assertEquals( 0, moveEventCount);
+        assertEquals(0, moveEventCount);
         GuiActionRunner.execute(() -> moveToTop.doClick());
         GuiActionRunner.execute(() -> moveDown.doClick());
         GuiActionRunner.execute(() -> moveUp.doClick());
         GuiActionRunner.execute(() -> moveToBottom.doClick());
         GuiActionRunner.execute(() -> moveIndent.doClick());
         GuiActionRunner.execute(() -> moveOutdent.doClick());
-        assertEquals( 6, moveEventCount);
+        assertEquals(6, moveEventCount);
     }
-
-    private int clipboardEventCount = 0;
 
     @Test
     public void testCopyToClipboard() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleCopyToClipboardRequest(CopyImageToClipboardRequest request) {
                 clipboardEventCount++;
             }
         });
-        assertEquals( 0, clipboardEventCount);
+        assertEquals(0, clipboardEventCount);
         GuiActionRunner.execute(() -> copyToClipboard.doClick());
-        assertEquals( 1, clipboardEventCount);
+        assertEquals(1, clipboardEventCount);
     }
-
-    private int removeEventCount = 0;
 
     @Test
     public void testRemoveNode() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRemoveNodeRequest(RemoveNodeRequest request) {
                 removeEventCount++;
             }
         });
-        assertEquals( 0, removeEventCount);
+        assertEquals(0, removeEventCount);
         GuiActionRunner.execute(() -> removeNode.doClick());
-        assertEquals( 1, removeEventCount);
+        assertEquals(1, removeEventCount);
     }
-
-    private int moveToNewLocationEventCount = 0;
 
     @Test
     public void testMoveToNewLocation() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleMoveToNewLocation(MoveToNewLocationRequest request) {
                 moveToNewLocationEventCount++;
             }
         });
-        assertEquals( 0, moveToNewLocationEventCount);
+        assertEquals(0, moveToNewLocationEventCount);
         GuiActionRunner.execute(() -> moveToNewLocation.doClick());
-        assertEquals( 1, moveToNewLocationEventCount);
+        assertEquals(1, moveToNewLocationEventCount);
     }
-
-
-    private int renameEventCount = 0;
 
     @Test
     public void testFileRename() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleRenamePictureRequest(RenamePictureRequest request) {
                 renameEventCount++;
             }
         });
-        assertEquals( 0, renameEventCount);
+        assertEquals(0, renameEventCount);
         GuiActionRunner.execute(() -> fileOperationsRename.doClick());
-        assertEquals( 1, renameEventCount);
+        assertEquals(1, renameEventCount);
     }
-
-    private int deleteEventCount = 0;
 
     @Test
     public void testFileDelete() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleDeleteNodeFileRequest(DeleteNodeFileRequest request) {
                 deleteEventCount++;
             }
         });
-        assertEquals( 0, deleteEventCount);
+        assertEquals(0, deleteEventCount);
         GuiActionRunner.execute(() -> fileOperationsDelete.doClick());
-        assertEquals( 1, deleteEventCount);
+        assertEquals(1, deleteEventCount);
     }
-
-    private int propertiesEventCount = 0;
 
     @Test
     public void testProperties() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleShowPictureInfoEditorRequest(ShowPictureInfoEditorRequest request) {
                 propertiesEventCount++;
             }
         });
-        assertEquals( 0, propertiesEventCount);
+        assertEquals(0, propertiesEventCount);
         GuiActionRunner.execute(() -> properties.doClick());
-        assertEquals( 1, propertiesEventCount);
+        assertEquals(1, propertiesEventCount);
     }
-
-    private int consolidateHereEventCount = 0;
 
     @Test
     public void testConsolidateHere() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         JpoEventBus.getInstance().register(new Object() {
             @Subscribe
             public void handleConsolidateGroupRequest(ConsolidateGroupDialogRequest request) {
                 consolidateHereEventCount++;
             }
         });
-        assertEquals( 0, consolidateHereEventCount);
-        GuiActionRunner.execute(() -> consolidateHere.doClick() );
-        assertEquals( 1, consolidateHereEventCount);
+        assertEquals(0, consolidateHereEventCount);
+        GuiActionRunner.execute(() -> consolidateHere.doClick());
+        assertEquals(1, consolidateHereEventCount);
     }
 
     @Test

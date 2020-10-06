@@ -26,6 +26,14 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 public class GroupPopupMenuTest {
 
+
+    @BeforeAll
+    public static void setUpOnce() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        FailOnThreadViolationRepaintManager.install();
+    }
+
+
     private final GroupInfo myGroupInfo = new GroupInfo("My Group");
     private final SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode(myGroupInfo);
     private GroupPopupMenu myGroupPopupMenu;
@@ -46,11 +54,6 @@ public class GroupPopupMenuTest {
     private JMenuItem exportToFlatFile;
     private JMenuItem exportToPicasa;
     private JMenuItem properties;
-
-    @BeforeAll
-    public static void setUpOnce() {
-        FailOnThreadViolationRepaintManager.install();
-    }
 
     @BeforeEach
     public void setUp() {
