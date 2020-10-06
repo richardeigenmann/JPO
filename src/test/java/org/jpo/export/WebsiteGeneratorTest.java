@@ -1,5 +1,6 @@
 package org.jpo.export;
 
+import org.apache.commons.io.FileUtils;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -26,7 +27,6 @@ public class WebsiteGeneratorTest {
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger(WebsiteGeneratorTest.class.getName());
-
 
     /**
      * Test of cleanupFilename method, of class WebsiteGenerator.
@@ -99,10 +99,12 @@ public class WebsiteGeneratorTest {
     @Test
     public void testGenerateWebsite() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
+
         // set up the request
-        final GenerateWebsiteRequest request = new GenerateWebsiteRequest();
+        final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
         request.setOutputTarget(GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY);
         request.setWriteRobotsTxt(true);
+        request.setOpenWebsiteAfterRendering(false);
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("Website");
             request.setTargetDirectory(tempDirWithPrefix.toFile());
@@ -110,12 +112,17 @@ public class WebsiteGeneratorTest {
 
             final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
-            request.setStartNode(rootNode);
+
+            final SortableDefaultMutableTreeNode groupNode = new SortableDefaultMutableTreeNode();
+            groupNode.setUserObject(new GroupInfo("Group Node"));
+            request.setStartNode(groupNode);
+
 
             final SortableDefaultMutableTreeNode pi1 = new SortableDefaultMutableTreeNode();
             final File imageFile = new File(WebsiteGeneratorTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg").toURI());
-            pi1.setUserObject(new PictureInfo(imageFile, "Image 1"));
-            rootNode.add(pi1);
+            PictureInfo pi = new PictureInfo(imageFile, "Image 1");
+            pi1.setUserObject(pi);
+            groupNode.add(pi1);
             request.setThumbnailWidth(350);
             request.setThumbnailHeight(250);
 
@@ -125,7 +132,9 @@ public class WebsiteGeneratorTest {
 
         // run the wizard
         try {
-            SwingUtilities.invokeAndWait(() -> new WebsiteGenerator(request));
+            SwingUtilities.invokeAndWait(() -> {
+                WebsiteGenerator.generateWebsite(request);
+            });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -143,17 +152,17 @@ public class WebsiteGeneratorTest {
                 final File indexFile = new File(request.getTargetDirectory(), "index.htm");
                 LOGGER.log(Level.INFO, "Asserting that file {0} exists", indexFile);
                 assert (indexFile.exists());
-        /*try {
-            Files.delete(request.getTargetDirectory().toPath());
-        } catch (final IOException e) {
-            fail (e.getMessage());
-        }*/
+                try {
+                    FileUtils.deleteDirectory(request.getTargetDirectory());
+                } catch (IOException e) {
+                    LOGGER.log(Level.SEVERE, "Could not delete directory {0}  Exception: {1}", new Object[]{request.getTargetDirectory().toPath(), e.getMessage()});
+                    fail(e.getMessage());
+                }
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
-
     }
 
 }

@@ -63,13 +63,13 @@ public class JpoCache {
     private static Dimension groupThumbnailDimension;
 
     static {
-        try (BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg"))) {
+        try (final BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg"))) {
             final BufferedImage groupThumbnail = ImageIO.read(bis);
             groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
 
         } catch (final IOException | NullPointerException ex) {
             Logger.getLogger(JpoCache.class
-                    .getName()).log(Level.SEVERE, null, ex);
+                    .getName()).log(Level.SEVERE, "Exception while statically loading it icon_folder_large.jpg: {0}", ex);
             groupThumbnailDimension = new Dimension(Settings.getThumbnailSize(), Settings.getThumbnailSize());
         }
     }
@@ -97,8 +97,8 @@ public class JpoCache {
      * @return the instance of the cache object
      */
     public static JpoCache getInstance() {
+        LOGGER.log(Level.INFO, "Returning an instance of the cache");
         return JpoCacheHolder.INSTANCE;
-
     }
 
     @TestOnly
@@ -154,6 +154,7 @@ public class JpoCache {
      * @throws IOException if something went wrong
      */
     public ImageBytes getHighresImageBytes(final File file) throws IOException {
+        LOGGER.log(Level.INFO, "Hitting cache for file {0}", file);
         ImageBytes imageBytes = highresMemoryCache.get(file);
         if (imageBytes != null) {
             imageBytes.setRetrievedFromCache(true);
@@ -168,6 +169,7 @@ public class JpoCache {
         } else {
             imageBytes = getHighresImageBytesFromFile(file);
         }
+        LOGGER.log(Level.INFO, "Returning {0} bytes from file {1} loaded from cache: {2}", new Object[]{imageBytes.getBytes().length, file, imageBytes.isRetrievedFromCache()});
         return imageBytes;
     }
 
@@ -178,6 +180,7 @@ public class JpoCache {
      * @return
      */
     private ImageBytes getHighresImageBytesFromFile(final File file) throws IOException {
+        LOGGER.log(Level.FINE, "Loading file from disk file {0}", file);
         final ImageBytes imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
         imageBytes.setRetrievedFromCache(false);
         imageBytes.setLastModification(Files.getLastModifiedTime(file.toPath()));

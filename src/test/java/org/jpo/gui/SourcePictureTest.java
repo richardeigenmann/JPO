@@ -56,7 +56,6 @@ public class SourcePictureTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
-
     }
 
     @Test

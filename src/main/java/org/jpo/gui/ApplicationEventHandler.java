@@ -337,7 +337,7 @@ public class ApplicationEventHandler {
         }
 
         if ((Settings.getAutoLoad() != null) && (Settings.getAutoLoad().length() > 0)) {
-            File xmlFile = new File(Settings.getAutoLoad());
+            final File xmlFile = new File(Settings.getAutoLoad());
             JpoEventBus.getInstance().post(new FileLoadRequest(xmlFile));
         } else {
             JpoEventBus.getInstance().post(new StartNewCollectionRequest());
@@ -893,8 +893,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleGenerateWebsiteRequest(final GenerateWebsiteRequest request) {
-        final WebsiteGenerator h = new WebsiteGenerator(request);
-        SwingUtilities.invokeLater(h);
+        WebsiteGenerator.generateWebsite(request);
     }
 
     /**

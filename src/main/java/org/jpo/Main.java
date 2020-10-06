@@ -41,7 +41,7 @@ public class Main {
      * @return true is good, false if bad
      */
     private static boolean verifyJavaVersion() {
-        String jvmVersion = System.getProperty( "java.version" );
+        final String jvmVersion = System.getProperty("java.version");
         String jvmMainVersion;
         if ( jvmVersion.lastIndexOf('.') > 0 ) {
             jvmMainVersion = jvmVersion.substring( 0, jvmVersion.lastIndexOf('.') );
@@ -49,7 +49,7 @@ public class Main {
             // From Java 9 upward
             jvmMainVersion = jvmVersion;
         }
-        float jvmVersionFloat = Float.parseFloat( jvmMainVersion );
+        final float jvmVersionFloat = Float.parseFloat(jvmMainVersion);
         return ( jvmVersionFloat >= 1.8f );
     }
 
@@ -64,7 +64,7 @@ public class Main {
      */
     public static void main( String[] args ) {
         if (! verifyJavaVersion() ) {
-            String message = "The JPO application uses new features\nthat were added to the Java language in version 1.8.\nYour Java installation reports version " + System.getProperty( "java.version" ) + "\n";
+            final String message = "The JPO application uses new features\nthat were added to the Java language in version 1.8.\nYour Java installation reports version " + System.getProperty("java.version") + "\n";
             System.out.println(message);
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(), message, "Old Version Error", JOptionPane.ERROR_MESSAGE);
             System.exit(1);
@@ -124,17 +124,17 @@ public class Main {
     /**
      * Uses the Class.forName method to try to locate the class
      *
-     * @param className The class to test for
-     * @param libraryName The library where this is normally found
-     * @param foundClasses the StringBuilder to append the good message
+     * @param className      The class to test for
+     * @param libraryName    The library where this is normally found
+     * @param foundClasses   the StringBuilder to append the good message
      * @param missingClasses the StringBuilder to append the missing message
      */
-    private static void isClassLoadable( String className, String libraryName, StringBuilder foundClasses, StringBuilder missingClasses ) {
+    private static void isClassLoadable(final String className, final String libraryName, final StringBuilder foundClasses, final StringBuilder missingClasses) {
         try {
-            Class.forName( className );
-            foundClasses.append( className ).append( " (from " ).append( libraryName ).append( ")\n" );
-        } catch ( ClassNotFoundException e ) {
-            missingClasses.append( className ).append( " (from " ).append( libraryName ).append( ")\n" );
+            Class.forName(className);
+            foundClasses.append(className).append(" (from ").append(libraryName).append(")\n");
+        } catch (ClassNotFoundException e) {
+            missingClasses.append(className).append(" (from ").append(libraryName).append(")\n");
         }
     }
 }

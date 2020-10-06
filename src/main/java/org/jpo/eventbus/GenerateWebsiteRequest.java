@@ -360,7 +360,7 @@ public class GenerateWebsiteRequest {
     /**
      * How many pictures should be placed next to each other in the html table.
      */
-    private int picsPerRow;
+    private int picsPerRow = 3;
     /**
      * The width the thumbnail must not exceed.
      */
@@ -799,6 +799,17 @@ public class GenerateWebsiteRequest {
      * The ssh key file
      */
     private String sshKeyFile = "";
+
+    public boolean isOpenWebsiteAfterRendering() {
+        return openWebsiteAfterRendering;
+    }
+
+    public void setOpenWebsiteAfterRendering(boolean openWebsiteAfterRendering) {
+        this.openWebsiteAfterRendering = openWebsiteAfterRendering;
+    }
+
+    private boolean openWebsiteAfterRendering = true;
+
 
     /**
      * Formats a neat summary of the options

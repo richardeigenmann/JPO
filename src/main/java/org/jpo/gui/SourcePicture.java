@@ -116,10 +116,6 @@ public class SourcePicture {
      */
     private final MyIIOReadProgressListener myIIOReadProgressListener = new MyIIOReadProgressListener();
 
-    /**
-     * the reader object that will read the image
-     */
-    private ImageReader reader;
 
     /**
      * Indicator to tell us if the loading was aborted.
@@ -190,83 +186,21 @@ public class SourcePicture {
         loadTime = 0;
         ImageBytes imageBytes;
         try {
+            LOGGER.log(Level.INFO, "Asking highres cache for image {0}", imageFile);
             imageBytes = JpoCache.getInstance().getHighresImageBytes(imageFile);
+            LOGGER.log(Level.INFO, "Image loaded from cache: {0} Bytes: {1}", new Object[]{imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
         } catch (final IOException e) {
+            LOGGER.log(Level.SEVERE, "IOException loading {0}: {1}", new Object[]{imageFile, e.getMessage()});
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             sourcePictureBufferedImage = null;
             return;
         }
-        try (final ByteArrayInputStream bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
-            reader = getImageIOReader(iis);
-            if (reader == null) {
-                LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
-                setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));
-                sourcePictureBufferedImage = null;
-                return;
-            }
 
-            reader.addIIOReadProgressListener(myIIOReadProgressListener);
-            reader.setInput(iis);
-            sourcePictureBufferedImage = null;
-            try {
-                sourcePictureBufferedImage = reader.read(0);
-
-                if (sourcePictureBufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
-                    LOGGER.log(Level.FINE, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
-
-                    final BufferedImage newImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
-                            sourcePictureBufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-                    final Graphics2D g = newImage.createGraphics();
-                    g.drawImage(sourcePictureBufferedImage, 0, 0, null);
-                    g.dispose();
-                    sourcePictureBufferedImage = newImage;
-                }
-
-            } catch (final OutOfMemoryError e) {
-                LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
-                reader.removeIIOReadProgressListener(myIIOReadProgressListener);
-                reader.dispose();
-
-                setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
-                sourcePictureBufferedImage = null;
-
-                Tools.dealOutOfMemoryError();
-                return;
-            }
-            reader.removeIIOReadProgressListener(myIIOReadProgressListener);
-            reader.dispose();
-        } catch (final IOException e) {
-            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
-            sourcePictureBufferedImage = null;
-        }
+        sourcePictureBufferedImage = convertImageBytesToBufferedImage(imageBytes);
 
         if (!abortFlag) {
             if (rotation != 0) {
-                setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageFile.toString());
-                final int xRot = sourcePictureBufferedImage.getWidth() / 2;
-                final int yRot = sourcePictureBufferedImage.getHeight() / 2;
-                final AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
-                AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
-                Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
-                // a simple AffineTransform would give negative top left coordinates -->
-                // do another transform to get 0,0 as top coordinates again.
-                final double minX = newBounds.getMinX();
-                final double minY = newBounds.getMinY();
-
-                final AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
-                rotateAf.preConcatenate(translateAf);
-                op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
-                newBounds = op.getBounds2D(sourcePictureBufferedImage);
-
-                // this piece of code is so essential!!! Otherwise the internal image format
-                // is totally altered and either the AffineTransformOp decides it doesn't
-                // want to rotate the image or web browsers can't read the resulting image.
-                final BufferedImage targetImage = new BufferedImage(
-                        (int) newBounds.getWidth(),
-                        (int) newBounds.getHeight(),
-                        BufferedImage.TYPE_3BYTE_BGR);
-
-                sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
+                rotateImage();
             }
 
             setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageFile.toString());
@@ -276,6 +210,80 @@ public class SourcePicture {
             loadTime = 0;
             setStatus(SOURCE_PICTURE_ERROR, "Aborted!");
             sourcePictureBufferedImage = null;
+        }
+    }
+
+    private void rotateImage() {
+        setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageFile.toString());
+        final int xRot = sourcePictureBufferedImage.getWidth() / 2;
+        final int yRot = sourcePictureBufferedImage.getHeight() / 2;
+        final AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
+        AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+        Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
+        // a simple AffineTransform would give negative top left coordinates -->
+        // do another transform to get 0,0 as top coordinates again.
+        final double minX = newBounds.getMinX();
+        final double minY = newBounds.getMinY();
+
+        final AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
+        rotateAf.preConcatenate(translateAf);
+        op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+        newBounds = op.getBounds2D(sourcePictureBufferedImage);
+
+        // this piece of code is so essential!!! Otherwise the internal image format
+        // is totally altered and either the AffineTransformOp decides it doesn't
+        // want to rotate the image or web browsers can't read the resulting image.
+        final BufferedImage targetImage = new BufferedImage(
+                (int) newBounds.getWidth(),
+                (int) newBounds.getHeight(),
+                BufferedImage.TYPE_3BYTE_BGR);
+
+        sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
+    }
+
+    private BufferedImage convertImageBytesToBufferedImage(final ImageBytes imageBytes) {
+        // We have the bytes from the image that came from the cache or the disk
+        // now create a BufferedImage from that
+        try (final ByteArrayInputStream bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
+            final ImageReader reader = getImageIOReader(iis);
+            if (reader == null) {
+                LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
+                setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));
+                return null;
+            }
+
+            reader.addIIOReadProgressListener(myIIOReadProgressListener);
+            reader.setInput(iis);
+            BufferedImage bufferedImage = null;
+            try {
+                bufferedImage = reader.read(0);
+
+                if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
+                    return bufferedImage;
+                } else {
+                    LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
+
+                    final BufferedImage bgr3ByteImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
+                            bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+                    final Graphics2D g = bgr3ByteImage.createGraphics();
+                    g.drawImage(bufferedImage, 0, 0, null);
+                    g.dispose();
+                    bufferedImage = bgr3ByteImage;
+                }
+            } catch (final OutOfMemoryError e) {
+                LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
+                setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
+                Tools.dealOutOfMemoryError();
+                bufferedImage = null;
+            } finally {
+                reader.removeIIOReadProgressListener(myIIOReadProgressListener);
+                reader.dispose();
+                return bufferedImage;
+            }
+        } catch (final IOException e) {
+            LOGGER.log(Level.SEVERE, "IOException while converting {0} bytes to a BufferedImage", imageBytes.getBytes().length);
+            setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
+            return null;
         }
     }
 
@@ -502,7 +510,7 @@ public class SourcePicture {
         @Override
         public void imageProgress(final ImageReader source, final float percentageDone) {
             if (abortFlag) {
-                reader.abort();
+                source.abort();
             }
             notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_PROGRESS, (Float.valueOf(percentageDone)).intValue());
         }
@@ -535,7 +543,7 @@ public class SourcePicture {
         @Override
         public void thumbnailProgress(final ImageReader source, final float percentageDone) {
             if (abortFlag) {
-                reader.abort();
+                source.abort();
             }
         }
 

@@ -134,6 +134,7 @@ dependencies {
     implementation 'org.apache.xmlgraphics:batik-transcoder:1.13'
     implementation 'org.apache.xmlgraphics:batik-anim:1.13'
     implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.13'
+    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.13'
     implementation 'org.apache.xmlgraphics:batik-extension:1.13'
     implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.4'
     implementation 'org.apache.xmlgraphics:batik-svggen:1.13'

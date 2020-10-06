@@ -6,6 +6,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
+import org.jpo.cache.JpoCache;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.ProgressGui;
@@ -86,16 +87,25 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     /**
      * The preferences that define how to render the Html page.
      */
-    private final GenerateWebsiteRequest options;
+    private final GenerateWebsiteRequest request;
+
+    public static void generateWebsite(final GenerateWebsiteRequest request) {
+        new WebsiteGenerator(request);
+    }
 
     /**
      * Creates and starts a Swing Worker that renders the web page files to the
      * target directory.
      *
-     * @param options The parameters the user chose on how to render the pages
+     * @param request The parameters the user chose on how to render the pages
      */
-    public WebsiteGenerator(final GenerateWebsiteRequest options) {
-        this.options = options;
+    private WebsiteGenerator(final GenerateWebsiteRequest request) {
+        // Interesting. If the cache is accessed first time from a Swing Worker in the background task it dies
+        LOGGER.info("Creating cache");
+        JpoCache jc = JpoCache.getInstance();
+        LOGGER.info("Done creating cache");
+
+        this.request = request;
         Tools.checkEDT();
         progressGui = new ProgressGui(Integer.MAX_VALUE,
                 Settings.getJpoResources().getString("HtmlDistillerThreadTitle"),
@@ -105,7 +115,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             @Override
             public Integer doInBackground() {
-                return NodeStatistics.countPicturesRecursively(options.getStartNode());
+                return NodeStatistics.countPicturesRecursively(request.getStartNode());
             }
 
             @Override
@@ -119,7 +129,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 }
             }
         }
-        (new GetCountWorker()).execute();
+        new GetCountWorker().execute();
         execute();
     }
 
@@ -132,41 +142,42 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     @Override
     protected Integer doInBackground() throws Exception {
         LOGGER.info("Hitting doInBackground");
-        scp.setQualityScale();
-        scp.setScaleSteps(options.getScalingSteps());
 
-        if (options.isGenerateZipfile()) {
+        scp.setQualityScale();
+        scp.setScaleSteps(request.getScalingSteps());
+
+        if (request.isGenerateZipfile()) {
             try (
-                    final FileOutputStream destination = new FileOutputStream(new File(options.getTargetDirectory(), options.getDownloadZipFileName()));
+                    final FileOutputStream destination = new FileOutputStream(new File(request.getTargetDirectory(), request.getDownloadZipFileName()));
                     final BufferedOutputStream bout = new BufferedOutputStream(destination)) {
                 zipFile = new ZipOutputStream(bout);
             } catch (final FileNotFoundException x) {
                 LOGGER.log(Level.SEVERE, "Error creating Zipfile. Continuing without Zip\n{0}", x.toString());
-                options.setGenerateZipfile(false);
+                request.setGenerateZipfile(false);
             }
         }
 
-        writeCss(options.getTargetDirectory());
-        files.add(new File(options.getTargetDirectory(), JPO_CSS));
-        if (options.isWriteRobotsTxt()) {
-            writeRobotsTxt(options.getTargetDirectory());
-            files.add(new File(options.getTargetDirectory(), ROBOTS_TXT));
+        writeCss(request.getTargetDirectory());
+        files.add(new File(request.getTargetDirectory(), JPO_CSS));
+        if (request.isWriteRobotsTxt()) {
+            writeRobotsTxt(request.getTargetDirectory());
+            files.add(new File(request.getTargetDirectory(), ROBOTS_TXT));
         }
         LOGGER.info("Done static files");
 
-        writeGroup(options.getStartNode());
+        writeGroup(request.getStartNode());
 
         try {
-            if (options.isGenerateZipfile()) {
+            if (request.isGenerateZipfile()) {
                 zipFile.close();
             }
         } catch (final IOException x) {
             LOGGER.log(Level.SEVERE, "Error closing Zipfile. Continuing.\n{0}", x.getMessage());
-            options.setGenerateZipfile(false);
+            request.setGenerateZipfile(false);
         }
 
         if (folderIconRequired) {
-            final File folderIconFile = new File(options.getTargetDirectory(), "jpo_folder_icon.gif");
+            final File folderIconFile = new File(request.getTargetDirectory(), "jpo_folder_icon.gif");
             try (
                     final InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/icon_folder.gif")).openStream();
                     final FileOutputStream outStream = new FileOutputStream(folderIconFile);
@@ -187,9 +198,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         JOptionPane.ERROR_MESSAGE);
             }
         }
-        if (options.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION) {
+        if (request.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION) {
             sshCopyToServer(files);
-        } else if (options.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION) {
+        } else if (request.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION) {
             ftpCopyToServer(files);
         }
 
@@ -219,11 +230,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     @Override
     protected void done() {
         progressGui.switchToDoneMode();
-        try {
-            final URI uri = new URI("file://" + options.getTargetDirectory() + "/index.htm");
-            Desktop.getDesktop().browse(uri);
-        } catch (final IOException | URISyntaxException ex) {
-            LOGGER.severe(ex.getLocalizedMessage());
+        if (request.isOpenWebsiteAfterRendering()) {
+            try {
+                final URI uri = new URI("file://" + request.getTargetDirectory() + "/index.htm");
+                Desktop.getDesktop().browse(uri);
+            } catch (final IOException | URISyntaxException ex) {
+                LOGGER.severe(ex.getLocalizedMessage());
+            }
         }
     }
 
@@ -242,15 +255,15 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             publish(String.format("Processing Group: %s", groupNode.toString()));
 
             File groupFile;
-            if (groupNode.equals(options.getStartNode())) {
-                groupFile = new File(options.getTargetDirectory(), "index.htm");
+            if (groupNode.equals(request.getStartNode())) {
+                groupFile = new File(request.getTargetDirectory(), "index.htm");
             } else {
                 int hashCode = groupNode.hashCode();
-                groupFile = new File(options.getTargetDirectory(), "jpo_" + hashCode + ".htm");
+                groupFile = new File(request.getTargetDirectory(), "jpo_" + hashCode + ".htm");
             }
             files.add(groupFile);
             final BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
-            final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(options.getPicsPerRow(), out);
+            final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(request.getPicsPerRow(), out);
 
             LOGGER.log(Level.INFO, "Writing: {0}", groupFile);
             out.write("<!DOCTYPE HTML>");
@@ -267,27 +280,27 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             out.write("<body>");
             out.newLine();
 
-            out.write("<table  style=\"border-spacing: " + options.getCellspacing()
+            out.write("<table  style=\"border-spacing: " + request.getCellspacing()
                     + "px; width: "
-                    + (options.getPicsPerRow() * options.getThumbnailWidth() + (options.getPicsPerRow() - 1) * options.getCellspacing())
+                    + (request.getPicsPerRow() * request.getThumbnailWidth() + (request.getPicsPerRow() - 1) * request.getCellspacing())
                     + "px\">");
             out.newLine();
 
-            out.write(String.format("<tr><td colspan=\"%d\">", options.getPicsPerRow()));
+            out.write(String.format("<tr><td colspan=\"%d\">", request.getPicsPerRow()));
 
             out.write(String.format("<h2>%s</h2>", ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml()));
 
-            if (groupNode.equals(options.getStartNode())) {
-                if (options.isGenerateZipfile()) {
+            if (groupNode.equals(request.getStartNode())) {
+                if (request.isGenerateZipfile()) {
                     out.newLine();
-                    out.write(String.format("<a href=\"%s\">Download High Resolution Pictures as a Zipfile</a>", options.getDownloadZipFileName()));
+                    out.write(String.format("<a href=\"%s\">Download High Resolution Pictures as a Zipfile</a>", request.getDownloadZipFileName()));
                     out.newLine();
                 }
             } else {
                 //link to parent
                 final SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
                 String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
-                if (parentNode.equals(options.getStartNode())) {
+                if (parentNode.equals(request.getStartNode())) {
                     parentLink = "index.htm";
                 }
 
@@ -302,7 +315,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             int childNumber = 1;
             final Enumeration<TreeNode> kids = groupNode.children();
             while (kids.hasMoreElements() && (!progressGui.getInterruptSemaphore().getShouldInterrupt())) {
-                SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
+                final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
                 if (node.getUserObject() instanceof GroupInfo gi) {
 
                     out.write("<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">");
@@ -330,7 +343,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             out.write("</tr>");
             descriptionsBuffer.flushDescriptions();
 
-            out.write(String.format("%n<tr><td colspan=\"%d\">", options.getPicsPerRow()));
+            out.write(String.format("%n<tr><td colspan=\"%d\">", request.getPicsPerRow()));
             out.write(Settings.getJpoResources().getString("LinkToJpo"));
             out.write("</td></tr></table>");
             out.newLine();
@@ -379,38 +392,37 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         File highresFile;
         String midresHtmlFileName;
 
-        LOGGER.info("Before Switch");
-        switch (options.getPictureNaming()) {
+        switch (request.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
                 final String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
-                lowresFile = new File(options.getTargetDirectory(), rootName + "_l." + extension);
-                midresFile = new File(options.getTargetDirectory(), rootName + "_m." + extension);
-                highresFile = new File(options.getTargetDirectory(), rootName + "_h." + extension);
+                lowresFile = new File(request.getTargetDirectory(), rootName + "_l." + extension);
+                midresFile = new File(request.getTargetDirectory(), rootName + "_m." + extension);
+                highresFile = new File(request.getTargetDirectory(), rootName + "_h." + extension);
                 midresHtmlFileName = rootName + ".htm";
             }
             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
-                final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 1);
+                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 1);
                 final String padding = "00000";
                 final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
                 final String root = "jpo_" + formattedNumber;
-                lowresFile = new File(options.getTargetDirectory(), root + "_l." + extension);
-                midresFile = new File(options.getTargetDirectory(), root + "_m." + extension);
-                highresFile = new File(options.getTargetDirectory(), root + "_h." + extension);
+                lowresFile = new File(request.getTargetDirectory(), root + "_l." + extension);
+                midresFile = new File(request.getTargetDirectory(), root + "_m." + extension);
+                highresFile = new File(request.getTargetDirectory(), root + "_h." + extension);
                 midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
             }
             default -> {
                 final String fn = "jpo_" + pictureNode.hashCode();
-                lowresFile = new File(options.getTargetDirectory(), fn + "_l." + extension);
-                midresFile = new File(options.getTargetDirectory(), fn + "_m." + extension);
-                highresFile = new File(options.getTargetDirectory(), fn + "_h." + extension);
+                lowresFile = new File(request.getTargetDirectory(), fn + "_l." + extension);
+                midresFile = new File(request.getTargetDirectory(), fn + "_m." + extension);
+                highresFile = new File(request.getTargetDirectory(), fn + "_h." + extension);
                 midresHtmlFileName = fn + ".htm";
             }
         }
         files.add(lowresFile);
         files.add(midresFile);
-        LOGGER.info("After Switch");
+        LOGGER.log(Level.INFO, "Filenames: Lowres: {0}, Midres: {1}, Highres {2}, MidresHtml: {3}", new Object[]{lowresFile, midresFile, highresFile, midresHtmlFileName});
 
-        if (options.isGenerateZipfile()) {
+        if (request.isGenerateZipfile()) {
             addToZipFile(zipFile, pictureInfo, highresFile);
         }
 
@@ -423,20 +435,20 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             File file;
             try {
                 file = new File(Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/broken_thumbnail.gif")).toURI());
-            } catch (URISyntaxException e) {
-                throw new IOException ("Could not load the broken_thumbnail.gif resource: " + e.getMessage());
+            } catch (final URISyntaxException e) {
+                throw new IOException("Could not load the broken_thumbnail.gif resource: " + e.getMessage());
             }
             scp.loadPictureImd(file, 0f);
         }
 
         // copy the picture to the target directory
-        if (options.isExportHighres()) {
+        if (request.isExportHighres()) {
             files.add(highresFile);
-            if (options.isRotateHighres() && (pictureInfo.getRotation() != 0)) {
+            if (request.isRotateHighres() && (pictureInfo.getRotation() != 0)) {
                 LOGGER.fine(String.format("Copying and rotating picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString()));
                 scp.setScaleFactor(1);
                 scp.scalePicture();
-                scp.setJpgQuality(options.getMidresJpgQuality());
+                scp.setJpgQuality(request.getMidresJpgQuality());
                 scp.writeScaledJpg(highresFile);
             } else {
                 LOGGER.fine(String.format("Copying picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString()));
@@ -444,11 +456,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
         }
 
-        scp.setScaleSize(options.getThumbnailDimension());
+        scp.setScaleSize(request.getThumbnailDimension());
         LOGGER.log(Level.INFO, "Scaling: {0}", pictureInfo.getImageLocation());
         scp.scalePicture();
         LOGGER.log(Level.INFO, "Writing: {0}", lowresFile);
-        scp.setJpgQuality(options.getLowresJpgQuality());
+        scp.setJpgQuality(request.getLowresJpgQuality());
         scp.writeScaledJpg(lowresFile);
         int w = scp.getScaledWidth();
         int h = scp.getScaledHeight();
@@ -458,7 +470,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         // write an anchor so the up come back
         // but only if we are generating MidresHTML pages
         out.write("<a href=\"");
-        if (options.isGenerateMidresHtml()) {
+        if (request.isGenerateMidresHtml()) {
             out.write(midresHtmlFileName);
         } else {
             out.write(midresFile.getName());
@@ -480,18 +492,18 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         descriptionsBuffer.putDescription(pictureInfo.getDescription());
 
-        scp.setScaleSize(options.getMidresDimension());
+        scp.setScaleSize(request.getMidresDimension());
         LOGGER.log(Level.FINE, "Scaling: {0}", pictureInfo.getImageLocation());
         scp.scalePicture();
         LOGGER.log(Level.FINE, "Writing: {0}", midresFile);
-        scp.setJpgQuality(options.getMidresJpgQuality());
+        scp.setJpgQuality(request.getMidresJpgQuality());
         scp.writeScaledJpg(midresFile);
         w = scp.getScaledWidth();
         h = scp.getScaledHeight();
 
-        if (options.isGenerateMidresHtml()) {
+        if (request.isGenerateMidresHtml()) {
 
-            final File midresHtmlFile = new File(options.getTargetDirectory(), midresHtmlFileName);
+            final File midresHtmlFile = new File(request.getTargetDirectory(), midresHtmlFileName);
             files.add(midresHtmlFile);
             try (
                     final BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
@@ -511,9 +523,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.write("<tr><td class=\"midresPictureCell\">");
                 final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFile.getName(), w, h, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
 
-                if (options.isLinkToHighres()) {
+                if (request.isLinkToHighres()) {
                     midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">" + imgTag + "</a>");
-                } else if (options.isExportHighres()) {
+                } else if (request.isExportHighres()) {
                     midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">" + imgTag + "</a>");
                 } else {
                     midresHtmlWriter.write(imgTag);
@@ -528,7 +540,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 // now do the right column
                 midresHtmlWriter.write("<td class=\"midresSidebarCell\">");
 
-                if (options.isGenerateMap()) {
+                if (request.isGenerateMap()) {
                     midresHtmlWriter.write("<div id=\"map\"></div>");
                     midresHtmlWriter.write("<br />");
                     midresHtmlWriter.newLine();
@@ -539,7 +551,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final int indexPerRow = 5;
                 final int indexToShow = 35;
                 final int matrixWidth = 130;
-                SortableDefaultMutableTreeNode nde;
                 midresHtmlWriter.write(String.format("Picture %d of %d", childNumber, childCount));
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write("<table class=\"numberPickTable\">");
@@ -585,16 +596,16 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         String nodeUrl;
                         String lowresFn;
 
-                        nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i - 1);
+                        final SortableDefaultMutableTreeNode nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i - 1);
                         if (nde.getUserObject() instanceof PictureInfo pi) {
-                            switch (options.getPictureNaming()) {
+                            switch (request.getPictureNaming()) {
                                 case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                     final String rootName = cleanupFilename(getFilenameRoot(pi.getImageFile().getName()));
                                     nodeUrl = rootName + ".htm";
                                     lowresFn = rootName + "_l." + extension;
                                     break;
                                 case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                    final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() + i - childNumber - 1);
+                                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() + i - childNumber - 1);
                                     final String padding = "00000";
                                     final String root = padding.substring(convertedNumber.length()) + convertedNumber;
                                     nodeUrl = "jpo_" + root + ".htm";
@@ -609,7 +620,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
                             midresHtmlWriter.write("<a href=\"" + nodeUrl + "\"");
                             String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4(((PictureInfo) nde.getUserObject()).getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " "));
-                            if (options.isGenerateMouseover()) {
+                            if (request.isGenerateMouseover()) {
                                 midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i));
                                 dhtmlArray.append(String.format("content[%d]='", i));
 
@@ -657,7 +668,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     // Link to Previous
                     if (childNumber != 1) {
                         String previousHtmlFilename;
-                        switch (options.getPictureNaming()) {
+                        switch (request.getPictureNaming()) {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
                                 Object userObject = priorNode.getUserObject();
@@ -668,7 +679,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 }
                                 break;
                             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber() - 2);
+                                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 2);
                                 final String padding = "00000";
                                 final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
                                 previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
@@ -681,10 +692,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", previousHtmlFilename));
                         midresHtmlWriter.write("&nbsp;");
                     }
-                    if (options.isLinkToHighres()) {
+                    if (request.isLinkToHighres()) {
                         midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">Highres</a>");
                         midresHtmlWriter.write("&nbsp;");
-                    } else if (options.isExportHighres()) {
+                    } else if (request.isExportHighres()) {
                         // Link to Highres in target directory
                         midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">Highres</a>");
                         midresHtmlWriter.write("&nbsp;");
@@ -692,7 +703,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     // Linkt to Next
                     if (childNumber != childCount) {
                         String nextHtmlFilename;
-                        switch (options.getPictureNaming()) {
+                        switch (request.getPictureNaming()) {
                             case PICTURE_NAMING_BY_ORIGINAL_NAME:
                                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
                                 Object userObject = priorNode.getUserObject();
@@ -703,7 +714,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 }
                                 break;
                             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                final String convertedNumber = Integer.toString(picsWroteCounter + options.getSequentialStartNumber());
+                                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber());
                                 final String padding = "00000";
                                 final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
                                 nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
@@ -717,8 +728,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         midresHtmlWriter.write("<a href=\"" + nextHtmlFilename + "\">Next</a>");
                         midresHtmlWriter.newLine();
                     }
-                    if (options.isGenerateZipfile()) {
-                        midresHtmlWriter.write("<br><a href=\"" + options.getDownloadZipFileName() + "\">Download Zip</a>");
+                    if (request.isGenerateZipfile()) {
+                        midresHtmlWriter.write("<br><a href=\"" + request.getDownloadZipFileName() + "\">Download Zip</a>");
                         midresHtmlWriter.newLine();
                     }
                     midresHtmlWriter.write("</p>");
@@ -728,7 +739,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
                 midresHtmlWriter.newLine();
 
-                if (options.isGenerateMouseover()) {
+                if (request.isGenerateMouseover()) {
                     midresHtmlWriter.write("<ilayer id=\"d1\" width=\"" + matrixWidth + "\" height=\"200\" visibility=\"hide\">");
                     midresHtmlWriter.newLine();
                     midresHtmlWriter.write("<layer id=\"d2\" width=\"" + matrixWidth + "\" height=\"200\">");
@@ -744,9 +755,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.write("</table>");
                 midresHtmlWriter.newLine();
 
-                if (options.isGenerateMouseover()) {
-                    writeJpoJs(options.getTargetDirectory());
-                    files.add(new File(options.getTargetDirectory(), "jpo.js"));
+                if (request.isGenerateMouseover()) {
+                    writeJpoJs(request.getTargetDirectory());
+                    files.add(new File(request.getTargetDirectory(), "jpo.js"));
                     midresHtmlWriter.write("<script type=\"text/javascript\" src=\"org.jpo.js\" ></script>");
                     midresHtmlWriter.newLine();
                     midresHtmlWriter.write("<script type=\"text/javascript\">");
@@ -765,7 +776,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     midresHtmlWriter.newLine();
                 }
 
-                if (options.isGenerateMap()) {
+                if (request.isGenerateMap()) {
                     midresHtmlWriter.write("<script type=\"text/javascript\"> <!--");
                     midresHtmlWriter.newLine();
                     midresHtmlWriter.write(String.format("var lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y));
@@ -928,7 +939,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         DescriptionsBuffer(final int columns, final BufferedWriter out) {
             this.columns = columns;
             this.out = out;
-            descriptions = new String[options.getPicsPerRow()];
+            descriptions = new String[request.getPicsPerRow()];
         }
 
         /**
@@ -996,12 +1007,12 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.info("Setting up ssh connection:");
         final JSch jsch = new JSch();
         try {
-            LOGGER.info(String.format("Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort()));
-            final Session session = jsch.getSession(options.getSshUser(), options.getSshServer(), options.getSshPort());
-            if (options.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
-                session.setPassword(options.getSshPassword());
+            LOGGER.info(String.format("Setting up session for user: %s server: %s port: %d and connecting...", request.getSshUser(), request.getSshServer(), request.getSshPort()));
+            final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
+            if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
+                session.setPassword(request.getSshPassword());
             } else {
-                jsch.addIdentity(options.getSshKeyFile());
+                jsch.addIdentity(request.getSshKeyFile());
             }
             final Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
@@ -1021,7 +1032,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     private void scp(final Session session, final File file) throws JSchException, IOException {
         // exec 'scp -t rfile' remotely
-        String command = "cd " + options.getSshTargetDir() + "; scp -p -t " + file.getName();
+        String command = "cd " + request.getSshTargetDir() + "; scp -p -t " + file.getName();
 
         LOGGER.info("Opening Channel \"exec\"...");
         Channel channel = session.openChannel("exec");
@@ -1125,7 +1136,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         final FTPClient ftp = new FTPClient();
         int reply;
         try {
-            ftp.connect(options.getFtpServer(), options.getFtpPort());
+            ftp.connect(request.getFtpServer(), request.getFtpPort());
             reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
@@ -1136,7 +1147,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             LOGGER.info("Good connection:");
             __main:
             {
-                if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
+                if (!ftp.login(request.getFtpUser(), request.getFtpPassword())) {
                     ftp.logout();
                     LOGGER.info("Could not log in.");
                     break __main;
@@ -1149,7 +1160,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             for (final File file : files) {
                 final InputStream input = new BufferedInputStream(new FileInputStream(file));
-                final String remote = options.getFtpTargetDir() + file.getName();
+                final String remote = request.getFtpTargetDir() + file.getName();
                 LOGGER.log(Level.INFO, "Putting file {0} to {1}", new Object[]{file.getAbsolutePath(), remote});
                 ftp.storeFile(remote, input);
                 input.close();

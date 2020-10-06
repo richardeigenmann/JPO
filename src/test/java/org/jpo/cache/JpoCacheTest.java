@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,10 +32,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
- *
  * @author Richard Eigenmann
  */
 public class JpoCacheTest {
+
+    /**
+     * Defines a LOGGER for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(JpoCacheTest.class.getName());
 
 
     @Test
@@ -47,9 +52,10 @@ public class JpoCacheTest {
 
     @Test
     public void testCreateCacheInstance() {
-        JpoCache jpoCache = JpoCache.getInstance();
+        final JpoCache jpoCache = JpoCache.getInstance();
         jpoCache.shutdown();
     }
+
 
     @Test
     public void testGetFolderIconDimensions() {
