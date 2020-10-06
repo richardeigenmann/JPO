@@ -200,8 +200,10 @@ public class PicturePopupMenuTest {
             fail(e.getMessage());
             Thread.currentThread().interrupt();
         } catch (final InvocationTargetException e) {
-            LOGGER.log(Level.SEVERE, e.getMessage());
+            LOGGER.log(Level.SEVERE, "Hit a InvocationTargetException. Message is: {0}", e.getMessage());
             e.printStackTrace();
+            Throwable cause = e.getCause();
+            LOGGER.log(Level.SEVERE, "Cause object: {0}, message: {1}", new Object[]{cause, cause.getMessage()});
             fail(e.getMessage());
             Thread.currentThread().interrupt();
         }
