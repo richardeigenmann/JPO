@@ -49,7 +49,7 @@ public class ThumbnailCreationFactory implements Runnable {
 
     static {
         final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
-        URL resource = ThumbnailCreationFactory.class.getClassLoader().getResource( BROKEN_THUMBNAIL_PICTURE_FILE );
+        final URL resource = ThumbnailCreationFactory.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
         if ( resource == null ) {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", BROKEN_THUMBNAIL_PICTURE_FILE );
             BROKEN_THUMBNAIL_PICTURE = null;
@@ -70,14 +70,14 @@ public class ThumbnailCreationFactory implements Runnable {
 
     /**
      * Constructor that creates the thread. It creates the thread with a
-     * Thread.MIN_PRIOTITY priority to ensure good overall response.
+     * Thread.MIN_PRIORITY priority to ensure good overall response.
      *
      * @param pollingInterval The polling interval in milliseconds
      */
-    public ThumbnailCreationFactory( int pollingInterval ) {
+    public ThumbnailCreationFactory(final int pollingInterval) {
         this.pollingInterval = pollingInterval;
-        Thread thread = new Thread( this, "ThumbnailCreationFactory" );
-        thread.setPriority( Thread.MIN_PRIORITY );
+        final Thread thread = new Thread(this, "ThumbnailCreationFactory");
+        thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
 
@@ -88,11 +88,11 @@ public class ThumbnailCreationFactory implements Runnable {
     @Override
     public void run() {
         while ( !endThread ) {
-            ThumbnailQueueRequest request = ThumbnailCreationQueue.poll();
+            final ThumbnailQueueRequest request = ThumbnailCreationQueue.poll();
             if ( request == null ) {
                 try {
-                    Thread.sleep( pollingInterval );
-                } catch ( InterruptedException x ) {
+                    Thread.sleep(pollingInterval);
+                } catch (final InterruptedException x) {
                     // Restore interrupted state
                     Thread.currentThread().interrupt();
                 }
@@ -103,29 +103,29 @@ public class ThumbnailCreationFactory implements Runnable {
     }
 
     /**
-     * A requestor can ask for the thread to be shut down.
+     * A requester can ask for the thread to be shut down.
      */
     public void endThread() {
         endThread = true;
     }
-    
+
     /**
      * Handles the queue request by placing a synchronized lock on the Thumbnail
      * Controller and passes the request to the Factory.
      *
-     * @param request	the {@link ThumbnailQueueRequest} for which to create the
-     * ThumbnailController
+     * @param request the {@link ThumbnailQueueRequest} for which to create the
+     *                ThumbnailController
      */
-    private static void processQueueRequest( ThumbnailQueueRequest request ) {
+    private static void processQueueRequest(final ThumbnailQueueRequest request) {
         final Object userObject = request.getNode().getUserObject();
-        if ( userObject == null ) {
-            LOGGER.severe( "Queue request for a null Could not find PictureInfo. Aborting." );
+        if (userObject == null) {
+            LOGGER.severe("Queue request for a null Could not find PictureInfo. Aborting.");
             return;
         }
 
         try {
             if (userObject instanceof PictureInfo pictureInfo) {
-                final ImageBytes imageBytes = JpoCache.getInstance().getThumbnailImageBytes(pictureInfo.getImageFile(),
+                final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
                         pictureInfo.getRotation(),
                         request.getSize());
                 if (imageBytes == null) {
@@ -136,7 +136,7 @@ public class ThumbnailCreationFactory implements Runnable {
             } else if (userObject instanceof GroupInfo) {
                 final List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes(false);
 
-                final ImageBytes imageBytes = JpoCache.getInstance().getGroupThumbnailImageBytes(childPictureNodes);
+                final ImageBytes imageBytes = JpoCache.getGroupThumbnailImageBytes(childPictureNodes);
                 if (imageBytes == null) {
                     request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 } else {

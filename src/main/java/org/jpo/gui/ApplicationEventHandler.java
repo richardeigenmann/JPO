@@ -131,7 +131,7 @@ public class ApplicationEventHandler {
             File newName = new File(selectedValue);
 
             if (newName.exists()) {
-                File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
+                final File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
                 int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
                         String.format(Settings.getJpoResources().getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
                         Settings.getJpoResources().getString("FileRenameTargetExistsTitle"),
@@ -234,21 +234,6 @@ public class ApplicationEventHandler {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-    /**
-     * Copies an input stream to an output stream
-     *
-     * @param input  the input stream
-     * @param output the output stream
-     * @throws IOException The exception it can throw
-     */
-    private static void streamCopy(final InputStream input, final OutputStream output) throws IOException {
-        // 4MB buffer
-        final byte[] buffer = new byte[4096 * 1024];
-        int bytesRead;
-        while ((bytesRead = input.read(buffer)) != -1) {
-            output.write(buffer, 0, bytesRead);
-        }
-    }
 
     /**
      * This method fires up a user function if it can. User functions are only
@@ -445,7 +430,7 @@ public class ApplicationEventHandler {
             Settings.writeSettings();
         }
 
-        JpoCache.getInstance().shutdown();
+        JpoCache.shutdown();
 
         LOGGER.info("Exiting JPO\n------------------------------------------------------------");
 
@@ -1165,7 +1150,7 @@ public class ApplicationEventHandler {
                     zipArchiveOutputStream.putArchiveEntry(entry);
 
                     try (final FileInputStream fis = new FileInputStream(sourceFile)) {
-                        streamCopy(fis, zipArchiveOutputStream);
+                        fis.transferTo(zipArchiveOutputStream);
                     }
                     zipArchiveOutputStream.closeArchiveEntry();
 
@@ -1186,7 +1171,7 @@ public class ApplicationEventHandler {
                         LOGGER.log(Level.INFO, "streamCopy: {0}", e.getName());
                         zipArchiveOutputStream.putArchiveEntry(e);
                         if (!e.isDirectory()) {
-                            streamCopy(oldZipFile.getInputStream(e), zipArchiveOutputStream);
+                            oldZipFile.getInputStream(e).transferTo(zipArchiveOutputStream);
                         }
                         zipArchiveOutputStream.closeArchiveEntry();
                     }

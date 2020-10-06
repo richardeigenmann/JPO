@@ -68,16 +68,15 @@ public class JpoCache {
             groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
 
         } catch (final IOException | NullPointerException ex) {
-            Logger.getLogger(JpoCache.class
-                    .getName()).log(Level.SEVERE, "Exception while statically loading it icon_folder_large.jpg: {0}", ex);
+            LOGGER.log(Level.SEVERE, "Exception while statically loading it icon_folder_large.jpg: {0}", ex.getMessage());
             groupThumbnailDimension = new Dimension(Settings.getThumbnailSize(), Settings.getThumbnailSize());
         }
     }
 
-    private CacheAccess<File, ImageBytes> highresMemoryCache;
-    private CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
+    private static CacheAccess<File, ImageBytes> highresMemoryCache;
+    private static CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
 
-    private JpoCache() {
+    static {
         LOGGER.info("Creating JpoCache");
         final CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
         final Properties props = loadProperties();
@@ -95,11 +94,13 @@ public class JpoCache {
      * Returns the instance of the JpoCache singleton
      *
      * @return the instance of the cache object
+     * <p>
+     * public static JpoCache getInstance() {
+     * LOGGER.log(Level.INFO, "Returning an instance of the cache");
+     * //return JpoCacheHolder.INSTANCE;
+     * return this;
+     * }
      */
-    public static JpoCache getInstance() {
-        LOGGER.log(Level.INFO, "Returning an instance of the cache");
-        return JpoCacheHolder.INSTANCE;
-    }
 
     @TestOnly
     public static Dimension getGroupThumbnailDimension() {
@@ -138,7 +139,7 @@ public class JpoCache {
     /**
      * Method to properly shut down the cache
      */
-    public void shutdown() {
+    public static void shutdown() {
         try {
             CompositeCacheManager.getInstance().shutDown();
         } catch (CacheException ex) {
@@ -153,7 +154,7 @@ public class JpoCache {
      * @return and ImageBytes object
      * @throws IOException if something went wrong
      */
-    public ImageBytes getHighresImageBytes(final File file) throws IOException {
+    public static ImageBytes getHighresImageBytes(final File file) throws IOException {
         LOGGER.log(Level.INFO, "Hitting cache for file {0}", file);
         ImageBytes imageBytes = highresMemoryCache.get(file);
         if (imageBytes != null) {
@@ -179,7 +180,7 @@ public class JpoCache {
      * @param file
      * @return
      */
-    private ImageBytes getHighresImageBytesFromFile(final File file) throws IOException {
+    private static ImageBytes getHighresImageBytesFromFile(final File file) throws IOException {
         LOGGER.log(Level.FINE, "Loading file from disk file {0}", file);
         final ImageBytes imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
         imageBytes.setRetrievedFromCache(false);
@@ -194,7 +195,7 @@ public class JpoCache {
      * @param file       The file that was loaded
      * @param imageBytes the ImageBytes object to store
      */
-    private void storeInHighresCache(final File file, final ImageBytes imageBytes) {
+    private static void storeInHighresCache(final File file, final ImageBytes imageBytes) {
         try {
             highresMemoryCache.put(file, imageBytes);
         } catch (final NullPointerException | CacheException ex) {
@@ -211,7 +212,7 @@ public class JpoCache {
      * @param size     The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnail
      */
-    public ImageBytes getThumbnailImageBytes(final File file, final double rotation, final Dimension size) {
+    public static ImageBytes getThumbnailImageBytes(final File file, final double rotation, final Dimension size) {
         final int maxWidth = size.width;
         final int maxHeight = size.height;
         final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight);
@@ -244,7 +245,7 @@ public class JpoCache {
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final int maxWidth, final int maxHeight) {
+    private static ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final int maxWidth, final int maxHeight) {
         final ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxWidth, maxHeight);
         try {
             thumbnailMemoryAndDiskCache.put(key, imageBytes);
@@ -263,7 +264,7 @@ public class JpoCache {
      * @param maxHeight the maximum height
      * @return the thumbnail
      */
-    private ImageBytes createThumbnail(final File file, final double rotation, final int maxWidth, final int maxHeight) {
+    private static ImageBytes createThumbnail(final File file, final double rotation, final int maxWidth, final int maxHeight) {
         final Dimension maxDimension = new Dimension(maxWidth, maxHeight);
 
         // create a new thumbnail from the highres
@@ -309,7 +310,7 @@ public class JpoCache {
      * @return The thumbnail
      * @throws IOException if something went wrong
      */
-    public ImageBytes getGroupThumbnailImageBytes(final List<SortableDefaultMutableTreeNode> childPictureNodes) throws IOException {
+    public static ImageBytes getGroupThumbnailImageBytes(final List<SortableDefaultMutableTreeNode> childPictureNodes) throws IOException {
         final int leftMargin = 15;
         final int margin = 10;
         final int topMargin = 65;
@@ -319,7 +320,7 @@ public class JpoCache {
 
         final StringBuilder sb = new StringBuilder("Group-");
         for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
-            PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+            final PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
             sb.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
         }
 
@@ -328,7 +329,7 @@ public class JpoCache {
 
         if (imageBytes != null) {
             try {
-                FileTime thumbnailLastModification = imageBytes.getLastModification();
+                final FileTime thumbnailLastModification = imageBytes.getLastModification();
 
                 boolean thumbnailNeedsRefresh = false;
                 for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
@@ -364,7 +365,7 @@ public class JpoCache {
      * @return the image
      * @throws IOException when things go wrong
      */
-    private ImageBytes createGroupThumbnailAndStoreInCache(
+    private static ImageBytes createGroupThumbnailAndStoreInCache(
             final String key,
             final int numberOfPics,
             final List<SortableDefaultMutableTreeNode> childPictureNodes)
@@ -423,7 +424,7 @@ public class JpoCache {
      *
      * @return a test with statistics from the cache
      */
-    public String getHighresCacheStats() {
+    public static String getHighresCacheStats() {
         return highresMemoryCache.getStats();
     }
 
@@ -432,14 +433,14 @@ public class JpoCache {
      *
      * @return a test with statistics from the cache
      */
-    public String getThumbnailCacheStats() {
+    public static String getThumbnailCacheStats() {
         return thumbnailMemoryAndDiskCache.getStats();
     }
 
     /**
      * Clears the highres image cache
      */
-    public void clearHighresCache() {
+    public static void clearHighresCache() {
         try {
             highresMemoryCache.clear();
         } catch (CacheException ex) {
@@ -450,7 +451,7 @@ public class JpoCache {
     /**
      * Clears the thumbnail image cache
      */
-    public void clearThumbnailCache() {
+    public static void clearThumbnailCache() {
         try {
             thumbnailMemoryAndDiskCache.clear();
         } catch (CacheException ex) {
@@ -459,23 +460,14 @@ public class JpoCache {
         }
     }
 
-
     @TestOnly
-    public void removeFromThumbnailCache(final String key) {
+    public static void removeFromThumbnailCache(final String key) {
         thumbnailMemoryAndDiskCache.remove(key);
     }
 
     @TestOnly
-    public void removeFromHighresCache(final File key) {
+    public static void removeFromHighresCache(final File key) {
         highresMemoryCache.remove(key);
-    }
-
-    /**
-     * Singleton
-     */
-    private static class JpoCacheHolder {
-
-        private static final JpoCache INSTANCE = new JpoCache();
     }
 
 }

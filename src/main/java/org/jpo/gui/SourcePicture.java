@@ -187,7 +187,7 @@ public class SourcePicture {
         ImageBytes imageBytes;
         try {
             LOGGER.log(Level.INFO, "Asking highres cache for image {0}", imageFile);
-            imageBytes = JpoCache.getInstance().getHighresImageBytes(imageFile);
+            imageBytes = JpoCache.getHighresImageBytes(imageFile);
             LOGGER.log(Level.INFO, "Image loaded from cache: {0} Bytes: {1}", new Object[]{imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "IOException loading {0}: {1}", new Object[]{imageFile, e.getMessage()});
@@ -258,12 +258,10 @@ public class SourcePicture {
             try {
                 bufferedImage = reader.read(0);
 
-                if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
-                    return bufferedImage;
-                } else {
-                    LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{sourcePictureBufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
+                if (bufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+                    LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
 
-                    final BufferedImage bgr3ByteImage = new BufferedImage(sourcePictureBufferedImage.getWidth(),
+                    final BufferedImage bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
                             bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
                     final Graphics2D g = bgr3ByteImage.createGraphics();
                     g.drawImage(bufferedImage, 0, 0, null);
@@ -278,8 +276,8 @@ public class SourcePicture {
             } finally {
                 reader.removeIIOReadProgressListener(myIIOReadProgressListener);
                 reader.dispose();
-                return bufferedImage;
             }
+            return bufferedImage;
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "IOException while converting {0} bytes to a BufferedImage", imageBytes.getBytes().length);
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());

@@ -6,7 +6,6 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
-import org.jpo.cache.JpoCache;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.ProgressGui;
@@ -57,6 +56,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static final Logger LOGGER = Logger.getLogger(WebsiteGenerator.class.getName());
     private static final String JPO_CSS = "jpo.css";
     private static final String ROBOTS_TXT = "robots.txt";
+    private static final String INDEX_PAGE = "index.htm";
 
     /**
      * Temporary object to scale the image for the html output.
@@ -89,22 +89,17 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     private final GenerateWebsiteRequest request;
 
-    public static void generateWebsite(final GenerateWebsiteRequest request) {
-        new WebsiteGenerator(request);
+    public static WebsiteGenerator generateWebsite(final GenerateWebsiteRequest request) {
+        return new WebsiteGenerator(request);
     }
 
     /**
      * Creates and starts a Swing Worker that renders the web page files to the
-     * target directory.
+     * target directory. Must be called on the EDT
      *
      * @param request The parameters the user chose on how to render the pages
      */
     private WebsiteGenerator(final GenerateWebsiteRequest request) {
-        // Interesting. If the cache is accessed first time from a Swing Worker in the background task it dies
-        LOGGER.info("Creating cache");
-        JpoCache jc = JpoCache.getInstance();
-        LOGGER.info("Done creating cache");
-
         this.request = request;
         Tools.checkEDT();
         progressGui = new ProgressGui(Integer.MAX_VALUE,
@@ -232,7 +227,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         progressGui.switchToDoneMode();
         if (request.isOpenWebsiteAfterRendering()) {
             try {
-                final URI uri = new URI("file://" + request.getTargetDirectory() + "/index.htm");
+                final URI uri = new URI("file://" + request.getTargetDirectory() + "/" + INDEX_PAGE);
                 Desktop.getDesktop().browse(uri);
             } catch (final IOException | URISyntaxException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
@@ -256,7 +251,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             File groupFile;
             if (groupNode.equals(request.getStartNode())) {
-                groupFile = new File(request.getTargetDirectory(), "index.htm");
+                groupFile = new File(request.getTargetDirectory(), INDEX_PAGE);
             } else {
                 int hashCode = groupNode.hashCode();
                 groupFile = new File(request.getTargetDirectory(), "jpo_" + hashCode + ".htm");
@@ -301,7 +296,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
                 String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
                 if (parentNode.equals(request.getStartNode())) {
-                    parentLink = "index.htm";
+                    parentLink = INDEX_PAGE;
                 }
 
                 out.write(String.format("<p>Up to: <a href=\"%s\">%s</a>", parentLink, parentNode.toString()));
@@ -387,40 +382,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         publish(String.format("Writing picture node %d: %s", picsWroteCounter, pictureInfo.toString()));
 
         final String extension = FilenameUtils.getExtension(pictureInfo.getImageFile().getName());
-        File lowresFile;
-        File midresFile;
-        File highresFile;
-        String midresHtmlFileName;
+        final File lowresFile = getOutputImageFilename(pictureInfo, "_l." + extension);
+        final File midresFile = getOutputImageFilename(pictureInfo, "_m." + extension);
+        final File highresFile = getOutputImageFilename(pictureInfo, "_h." + extension);
+        final File midresHtmlFile = getOutputImageFilename(pictureInfo, ".htm");
 
-        switch (request.getPictureNaming()) {
-            case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
-                final String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
-                lowresFile = new File(request.getTargetDirectory(), rootName + "_l." + extension);
-                midresFile = new File(request.getTargetDirectory(), rootName + "_m." + extension);
-                highresFile = new File(request.getTargetDirectory(), rootName + "_h." + extension);
-                midresHtmlFileName = rootName + ".htm";
-            }
-            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
-                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 1);
-                final String padding = "00000";
-                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                final String root = "jpo_" + formattedNumber;
-                lowresFile = new File(request.getTargetDirectory(), root + "_l." + extension);
-                midresFile = new File(request.getTargetDirectory(), root + "_m." + extension);
-                highresFile = new File(request.getTargetDirectory(), root + "_h." + extension);
-                midresHtmlFileName = "jpo_" + formattedNumber + ".htm";
-            }
-            default -> {
-                final String fn = "jpo_" + pictureNode.hashCode();
-                lowresFile = new File(request.getTargetDirectory(), fn + "_l." + extension);
-                midresFile = new File(request.getTargetDirectory(), fn + "_m." + extension);
-                highresFile = new File(request.getTargetDirectory(), fn + "_h." + extension);
-                midresHtmlFileName = fn + ".htm";
-            }
-        }
         files.add(lowresFile);
         files.add(midresFile);
-        LOGGER.log(Level.INFO, "Filenames: Lowres: {0}, Midres: {1}, Highres {2}, MidresHtml: {3}", new Object[]{lowresFile, midresFile, highresFile, midresHtmlFileName});
+        LOGGER.log(Level.INFO, "Filenames: Lowres: {0}, Midres: {1}, Highres {2}, MidresHtml: {3}", new Object[]{lowresFile, midresFile, highresFile, midresHtmlFile});
 
         if (request.isGenerateZipfile()) {
             addToZipFile(zipFile, pictureInfo, highresFile);
@@ -471,7 +440,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         // but only if we are generating MidresHTML pages
         out.write("<a href=\"");
         if (request.isGenerateMidresHtml()) {
-            out.write(midresHtmlFileName);
+            out.write(midresHtmlFile.toPath().getFileName().toString());
         } else {
             out.write(midresFile.getName());
         }
@@ -502,8 +471,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         h = scp.getScaledHeight();
 
         if (request.isGenerateMidresHtml()) {
-
-            final File midresHtmlFile = new File(request.getTargetDirectory(), midresHtmlFileName);
             files.add(midresHtmlFile);
             try (
                     final BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
@@ -675,7 +642,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 if (userObject instanceof PictureInfo pi) {
                                     previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
                                 } else {
-                                    previousHtmlFilename = "index.htm"; // actually something has gone horribly wrong
+                                    previousHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
                                 }
                                 break;
                             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
@@ -710,7 +677,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                                 if (userObject instanceof PictureInfo pi) {
                                     nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
                                 } else {
-                                    nextHtmlFilename = "index.htm"; // actually something has gone horribly wrong
+                                    nextHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
                                 }
                                 break;
                             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
@@ -793,6 +760,28 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
         picsWroteCounter++;
     }
+
+
+    private File getOutputImageFilename(final PictureInfo pictureInfo, final String extension) {
+        switch (request.getPictureNaming()) {
+            case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
+                final String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
+                return new File(request.getTargetDirectory(), rootName + extension);
+            }
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
+                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 1);
+                final String padding = "00000";
+                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                final String root = "jpo_" + formattedNumber;
+                return new File(request.getTargetDirectory(), root + extension);
+            }
+            default -> {
+                final String fn = "jpo_" + pictureInfo.hashCode();
+                return new File(request.getTargetDirectory(), fn + extension);
+            }
+        }
+    }
+
 
     /**
      * return everything of the filename up to the extension.

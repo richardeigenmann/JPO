@@ -771,15 +771,15 @@ public class SettingsDialog extends JDialog {
      * Updates the text areas with the JCS cache statistics
      */
     private void updateCacheStats() {
-        highresStatsJTA.setText( JpoCache.getInstance().getHighresCacheStats() );
-        lowresStatsJTA.setText( JpoCache.getInstance().getThumbnailCacheStats() );
+        highresStatsJTA.setText(JpoCache.getHighresCacheStats());
+        lowresStatsJTA.setText(JpoCache.getThumbnailCacheStats());
     }
 
     /**
      * Clears the JCS highres picture cache
      */
     private void clearHighresCache() {
-        JpoCache.getInstance().clearHighresCache();
+        JpoCache.clearHighresCache();
         updateCacheStats();
     }
 
@@ -787,7 +787,7 @@ public class SettingsDialog extends JDialog {
      * Clears the JCS thumbnail cache.
      */
     private void clearThumbnailCache() {
-        JpoCache.getInstance().clearThumbnailCache();
+        JpoCache.clearThumbnailCache();
         updateCacheStats();
     }
 
