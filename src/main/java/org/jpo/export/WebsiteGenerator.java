@@ -15,7 +15,6 @@ import javax.swing.*;
 import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.io.*;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.*;
@@ -227,9 +226,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         progressGui.switchToDoneMode();
         if (request.isOpenWebsiteAfterRendering()) {
             try {
-                final URI uri = new URI("file://" + request.getTargetDirectory() + "/" + INDEX_PAGE);
-                Desktop.getDesktop().browse(uri);
-            } catch (final IOException | URISyntaxException ex) {
+                final File indexPage = new File(request.getTargetDirectory(), INDEX_PAGE);
+                Desktop.getDesktop().browse(indexPage.toURI());
+            } catch (final IOException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
             }
         }
