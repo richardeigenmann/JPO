@@ -1,6 +1,7 @@
 package org.jpo.export;
 
 import org.apache.commons.io.FileUtils;
+import org.jpo.cache.JpoCache;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -105,6 +106,7 @@ public class WebsiteGeneratorTest {
         request.setOutputTarget(GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY);
         request.setWriteRobotsTxt(true);
         request.setOpenWebsiteAfterRendering(false);
+        request.setPictureNaming(GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER);
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("Website");
             request.setTargetDirectory(tempDirWithPrefix.toFile());
@@ -120,48 +122,69 @@ public class WebsiteGeneratorTest {
 
             final SortableDefaultMutableTreeNode pi1 = new SortableDefaultMutableTreeNode();
             final File imageFile = new File(WebsiteGeneratorTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg").toURI());
-            PictureInfo pi = new PictureInfo(imageFile, "Image 1");
+            final PictureInfo pi = new PictureInfo(imageFile, "Image 1");
             pi1.setUserObject(pi);
             groupNode.add(pi1);
             request.setThumbnailWidth(350);
             request.setThumbnailHeight(250);
 
+            // There is something very strange going on with the cache access
+            JpoCache.removeFromHighresCache(imageFile);
+
         } catch (final IOException | URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        // run the wizard
         try {
             SwingUtilities.invokeAndWait(() -> {
-                WebsiteGenerator.generateWebsite(request);
+                WebsiteGenerator myWebsiteGenerator = WebsiteGenerator.generateWebsite(request);
+                while (!myWebsiteGenerator.isDone()) {
+                    LOGGER.info("Waiting for website to finish rendering...");
+                    try {
+                        Thread.sleep(400);
+                    } catch (final InterruptedException e) {
+                        fail("Why did the loop to wait for the website to render get interrupted?");
+                        Thread.currentThread().interrupt();
+                    }
+                }
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
+            LOGGER.severe("Why was the website generation interrupted?");
+            LOGGER.severe(ex.getMessage());
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
 
-        // Since the EDT is single threaded, this should wait for the WebsiteGenerator to finish before we do the assertions
+        final File jpoCssFile = new File(request.getTargetDirectory(), "jpo.css");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", jpoCssFile);
+        assert (jpoCssFile.exists());
+        final File jpoJsFile = new File(request.getTargetDirectory(), "jpo.js");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", jpoJsFile);
+        assert (jpoJsFile.exists());
+        final File robotsFile = new File(request.getTargetDirectory(), "robots.txt");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", robotsFile);
+        assert (robotsFile.exists());
+        final File indexFile = new File(request.getTargetDirectory(), "index.htm");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", indexFile);
+        assert (indexFile.exists());
+        final File lowresPicture = new File(request.getTargetDirectory(), "jpo_00001_l.jpg");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", lowresPicture);
+        assert (lowresPicture.exists());
+        final File midresPicture = new File(request.getTargetDirectory(), "jpo_00001_m.jpg");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresPicture);
+        assert (midresPicture.exists());
+        final File midresHtml = new File(request.getTargetDirectory(), "jpo_00001.htm");
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresHtml);
+        assert (midresHtml.exists());
+
+        // cleanup
         try {
-            SwingUtilities.invokeAndWait(() -> {
-                final File jpoCssFile = new File(request.getTargetDirectory(), "jpo.css");
-                LOGGER.log(Level.INFO, "Asserting that file {0} exists", jpoCssFile);
-                assert (jpoCssFile.exists());
-                final File robotsFile = new File(request.getTargetDirectory(), "robots.txt");
-                LOGGER.log(Level.INFO, "Asserting that file {0} exists", robotsFile);
-                assert (robotsFile.exists());
-                final File indexFile = new File(request.getTargetDirectory(), "index.htm");
-                LOGGER.log(Level.INFO, "Asserting that file {0} exists", indexFile);
-                assert (indexFile.exists());
-                try {
-                    FileUtils.deleteDirectory(request.getTargetDirectory());
-                } catch (IOException e) {
-                    LOGGER.log(Level.SEVERE, "Could not delete directory {0}  Exception: {1}", new Object[]{request.getTargetDirectory().toPath(), e.getMessage()});
-                    fail(e.getMessage());
-                }
-            });
-        } catch (final InterruptedException | InvocationTargetException ex) {
-            fail(ex.getMessage());
-            Thread.currentThread().interrupt();
+            if (false) {
+                FileUtils.deleteDirectory(request.getTargetDirectory());
+            }
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not delete directory {0}  Exception: {1}", new Object[]{request.getTargetDirectory().toPath(), e.getMessage()});
+            fail(e.getMessage());
         }
     }
 
