@@ -261,7 +261,6 @@ public class SourcePicture {
                 LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
                 setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
                 Tools.dealOutOfMemoryError();
-                bufferedImage = null;
             } finally {
                 reader.removeIIOReadProgressListener(myIIOReadProgressListener);
                 reader.dispose();
