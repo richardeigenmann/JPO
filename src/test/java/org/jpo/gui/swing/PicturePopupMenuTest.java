@@ -2,6 +2,7 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.assertj.swing.edt.GuiActionRunnable;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
@@ -276,7 +277,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> showPictureJMenuItem.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) showPictureJMenuItem::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -293,10 +294,8 @@ public class PicturePopupMenuTest {
                 eventsReceived[0]++;
             }
         });
-        // Before clicking on the node the event count should be 0
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> showMap.doClick());
-        // After clicking on the node the event count should be 1
+        GuiActionRunner.execute((GuiActionRunnable) showMap::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -315,7 +314,7 @@ public class PicturePopupMenuTest {
         });
         // Before clicking on the node the event count should be 0
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> openFolder.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) openFolder::doClick);
         // After clicking on the node the event count should be 1
         assertEquals(1, eventsReceived[0]);
     }
@@ -331,7 +330,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> navigateTo_0.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) navigateTo_0::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -346,7 +345,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> categories.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) categories::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -361,7 +360,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> selectForEmail.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) selectForEmail::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -376,7 +375,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> unselectForEmail.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) unselectForEmail::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -391,7 +390,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> clearEmailSelection.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) clearEmailSelection::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -431,10 +430,10 @@ public class PicturePopupMenuTest {
 
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> rotate90.doClick());
-        GuiActionRunner.execute(() -> rotate180.doClick());
-        GuiActionRunner.execute(() -> rotate270.doClick());
-        GuiActionRunner.execute(() -> rotate0.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) rotate90::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) rotate180::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) rotate270::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) rotate0::doClick);
         assertEquals(4, eventsReceived[0]);
     }
 
@@ -449,7 +448,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> refreshThumbnail.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) refreshThumbnail::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -489,12 +488,12 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> moveToTop.doClick());
-        GuiActionRunner.execute(() -> moveDown.doClick());
-        GuiActionRunner.execute(() -> moveUp.doClick());
-        GuiActionRunner.execute(() -> moveToBottom.doClick());
-        GuiActionRunner.execute(() -> moveIndent.doClick());
-        GuiActionRunner.execute(() -> moveOutdent.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) moveToTop::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) moveDown::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) moveUp::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) moveToBottom::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) moveIndent::doClick);
+        GuiActionRunner.execute((GuiActionRunnable) moveOutdent::doClick);
         assertEquals(6, eventsReceived[0]);
     }
 
@@ -509,7 +508,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> copyToClipboard.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) copyToClipboard::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -539,7 +538,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> moveToNewLocation.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) moveToNewLocation::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -554,7 +553,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> fileOperationsRename.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) fileOperationsRename::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -569,7 +568,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> fileOperationsDelete.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) fileOperationsDelete::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -584,7 +583,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> editCategoriesMenuItem.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) editCategoriesMenuItem::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -599,7 +598,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> properties.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) properties::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 
@@ -614,7 +613,7 @@ public class PicturePopupMenuTest {
             }
         });
         assertEquals(0, eventsReceived[0]);
-        GuiActionRunner.execute(() -> consolidateHere.doClick());
+        GuiActionRunner.execute((GuiActionRunnable) consolidateHere::doClick);
         assertEquals(1, eventsReceived[0]);
     }
 

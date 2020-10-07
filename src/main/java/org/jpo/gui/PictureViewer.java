@@ -532,15 +532,14 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * of the current node.
      */
     private void setIconDecorations() {
-        SortableDefaultMutableTreeNode currentNode = getCurrentNode();
+        final SortableDefaultMutableTreeNode currentNode = getCurrentNode();
         if (currentNode == null) {
             return;
         }
         // Set the next and back icons
         final DefaultMutableTreeNode nextNode = currentNode.getNextSibling();
         if (nextNode != null) {
-            Object nodeInfo = nextNode.getUserObject();
-            if (nodeInfo instanceof PictureInfo) {
+            if (nextNode.getUserObject() instanceof PictureInfo) {
                 // because there is a next sibling object of type
                 // PictureInfo we should set the next icon to the
                 // icon that indicates a next picture in the group
@@ -566,8 +565,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
         } else {
             // determine if there are any previous nodes that are not groups.
-            DefaultMutableTreeNode testNode;
-            testNode = currentNode.getPreviousNode();
+            DefaultMutableTreeNode testNode = currentNode.getPreviousNode();
             while ((testNode != null) && (!(testNode.getUserObject() instanceof PictureInfo))) {
                 testNode = testNode.getPreviousNode();
             }

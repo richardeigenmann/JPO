@@ -2,7 +2,7 @@ package org.jpo.gui;
 /*
  ThumbnailLayoutManger.java:  a Layout Manager for the Thumbnail pane
 
- Copyright (C) 2006 - 2014 Richard Eigenmann (for the modifications over the original I copied)
+ Copyright (C) 2006 - 2020 Richard Eigenmann (for the modifications over the original I copied)
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,17 +21,11 @@ import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.logging.Logger;
 
 /**
  * a Layout Manager for the Thumbnail pane
  */
 public class ThumbnailLayoutManager implements LayoutManager {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( ThumbnailLayoutManager.class.getName() );
 
     /**
      * Constructs the LayoutManager. We need a reference to the JComponent to
@@ -84,13 +78,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
             final int width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
             int height = 0;
 
-            int rowComponentHeight;
-            int logicalThumbnail;
             for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
-                logicalThumbnail = i / 2;
+                final int logicalThumbnail = i / 2;
                 if ( ( logicalThumbnail % columns ) == 0 ) {
-                    rowComponentHeight = getHeightOfRow( parent, i, columns ) // Thumbnails
-                            + getHeightOfRow( parent, i + 1, columns ); // Descriptions
+                    final int rowComponentHeight = getHeightOfRow(parent, i, columns) // Thumbnails
+                            + getHeightOfRow(parent, i + 1, columns); // Descriptions
                     if ( rowComponentHeight > 0 ) {
                         height += rowComponentHeight + ( 2 * getVerticalGutter() );
                     }
@@ -197,7 +189,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
             int rowBaseline = -getVerticalGutter();
             int previousDescriptionRowHeight = 0;
             for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
-                int logicalThumbnail = i / 2;
+                final int logicalThumbnail = i / 2;
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     rowBaseline = rowBaseline + getHeightOfRow( parent, i, columns ) + previousDescriptionRowHeight + ( 2 * getVerticalGutter() );
                     previousDescriptionRowHeight = 0;
@@ -206,8 +198,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
 
                 // coordinates for a Thumbnail
                 final int width = getThumbnailWidth();
-                int height = parent.getComponent( i ).getPreferredSize().height;
-                int x = ( column * width ) + ( ( 1 + column ) * getHorizontalGutter() );
+                int height = parent.getComponent(i).getPreferredSize().height;
+                final int x = (column * width) + ((1 + column) * getHorizontalGutter());
                 int y = rowBaseline - height;
                 parent.getComponent( i ).setBounds( x, y, width, height );
 

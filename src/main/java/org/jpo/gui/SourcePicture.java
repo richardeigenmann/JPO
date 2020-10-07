@@ -256,8 +256,7 @@ public class SourcePicture {
             reader.setInput(iis);
             BufferedImage bufferedImage = null;
             try {
-                bufferedImage = reader.read(0);
-                correctTypeOfImage(bufferedImage);
+                bufferedImage = correctTypeOfImage(reader.read(0));
             } catch (final OutOfMemoryError e) {
                 LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
                 setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
@@ -281,8 +280,10 @@ public class SourcePicture {
      *
      * @param bufferedImage The BufferedImage to potentially modify.
      */
-    private static void correctTypeOfImage(BufferedImage bufferedImage) {
-        if (bufferedImage.getType() != BufferedImage.TYPE_3BYTE_BGR) {
+    private BufferedImage correctTypeOfImage(BufferedImage bufferedImage) {
+        if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
+            return bufferedImage;
+        } else {
             LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
 
             final BufferedImage bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
@@ -290,7 +291,7 @@ public class SourcePicture {
             final Graphics2D g = bgr3ByteImage.createGraphics();
             g.drawImage(bufferedImage, 0, 0, null);
             g.dispose();
-            bufferedImage = bgr3ByteImage;
+            return bgr3ByteImage;
         }
     }
 
