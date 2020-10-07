@@ -180,11 +180,10 @@ public class PicturePopupMenu extends JPopupMenu {
 
 
         final JMenu navigateMenuItem = new JMenu(Settings.getJpoResources().getString("navigationJMenu"));
-        final SortableDefaultMutableTreeNode[] parentNodes = Settings.getPictureCollection().findParentGroups(popupNode);
-        for (SortableDefaultMutableTreeNode parentNode : parentNodes) {
-            final JMenuItem navigateTargetRoute = new JMenuItem(parentNode.getUserObject().toString());
-            final SortableDefaultMutableTreeNode targetNode = parentNode;
-            navigateTargetRoute.addActionListener(e -> JpoEventBus.getInstance().post(new ShowGroupRequest(targetNode)));
+        final Set<SortableDefaultMutableTreeNode> linkingNodes = Settings.getPictureCollection().findLinkingGroups(popupNode);
+        for (final SortableDefaultMutableTreeNode linkingNode : linkingNodes) {
+            final JMenuItem navigateTargetRoute = new JMenuItem(linkingNode.getUserObject().toString());
+            navigateTargetRoute.addActionListener(e -> JpoEventBus.getInstance().post(new ShowGroupRequest(linkingNode)));
             navigateMenuItem.add(navigateTargetRoute);
         }
 

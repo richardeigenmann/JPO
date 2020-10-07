@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -202,10 +203,9 @@ public class PicturePopupMenuTest {
         } catch (final InvocationTargetException e) {
             LOGGER.log(Level.SEVERE, "Hit a InvocationTargetException. Message is: {0}", e.getMessage());
             e.printStackTrace();
-            Throwable cause = e.getCause();
+            final Throwable cause = e.getCause();
             LOGGER.log(Level.SEVERE, "Cause object: {0}, message: {1}", new Object[]{cause, cause.getMessage()});
             fail(e.getMessage());
-            Thread.currentThread().interrupt();
         }
 
     }
@@ -672,6 +672,12 @@ public class PicturePopupMenuTest {
         final String s = "filenameExtension%20.jpg";
         final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assertFalse(o.isPresent());
+    }
+
+    @Test
+    public void testFindLinkingGroups() {
+        final Set<SortableDefaultMutableTreeNode> linkingGroups = Settings.getPictureCollection().findLinkingGroups(myNode);
+        assertEquals(1, ((Set<?>) linkingGroups).size());
     }
 
 }

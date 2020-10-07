@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -94,46 +95,34 @@ public class PictureCollectionTest {
     public void testFindParentGroups() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         // Test that something is returned when looking for parent groups
-        assertNotNull( pictureCollection.findParentGroups( picture1 ) );
+        assertNotNull(pictureCollection.findLinkingGroups(picture1));
     }
 
     /**
      * Test the find parents group method
      */
     @Test
-    public void testFindParentGroups1() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        // Test that it returns an empty array if the node is not a PictureInfo node
-        assertEquals( 0, pictureCollection.findParentGroups( group1 ).length );
+    public void testFindLinkingGroups1() {
+        // Test that it returns an empty Set if the node is not a PictureInfo node
+        assertEquals(0, pictureCollection.findLinkingGroups(group1).size());
     }
 
     /**
      * Test the find parents group method
      */
     @Test
-    public void testFindParentGroups2() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
+    public void testFindLinkingGroups2() {
         //test that the parent group is one of the returned groups
-        SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups( picture1 );
-        boolean found = false;
-        for ( SortableDefaultMutableTreeNode sdmtn : sdmtns ) {
-            found = found || ( sdmtn.equals( group1 ) );
-        }
-        // Test that the parent group is amongst the found groups
-        assertTrue( found );
+        final Set<SortableDefaultMutableTreeNode> linkingGroups = pictureCollection.findLinkingGroups(picture1);
+        assertTrue(linkingGroups.contains(group1));
+        assertFalse(linkingGroups.contains(group6));
     }
 
-    /**
-     * Test the find parents group method
-     */
     @Test
-    public void testFindParentGroups3() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        assumeFalse(GraphicsEnvironment.isHeadless());
+    public void testFindLinkingGroups3() {
         //test that the 4 groups which refer to the same picture are returned
-        SortableDefaultMutableTreeNode[] sdmtns = pictureCollection.findParentGroups(picture1);
-        // Test that the 3 groups referring to the same picture are found
-        assertEquals(4, sdmtns.length);
+        final Set<SortableDefaultMutableTreeNode> findLinkingGroups = pictureCollection.findLinkingGroups(picture1);
+        assertEquals(4, findLinkingGroups.size());
     }
 
     /**
@@ -142,9 +131,9 @@ public class PictureCollectionTest {
     @Test
     public void testSetXmlFile() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        File f = new File( "dir/test.xml" );
+        final File f = new File("dir/test.xml");
         pictureCollection.setXmlFile( f );
-        File f2 = pictureCollection.getXmlFile();
+        final File f2 = pictureCollection.getXmlFile();
         // Checking that we get the same file back that we put in
         assertEquals( f, f2 );
 

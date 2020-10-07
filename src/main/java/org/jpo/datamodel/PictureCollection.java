@@ -151,9 +151,8 @@ public class PictureCollection {
             final Integer key, final SortableDefaultMutableTreeNode startNode) {
         final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
         final Enumeration<TreeNode> nodes = startNode.children();
-        SortableDefaultMutableTreeNode n;
         while (nodes.hasMoreElements()) {
-            n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
             if (n.getUserObject() instanceof PictureInfo pi
                     && pi.containsCategory(key)) {
                 resultList.add(n);
@@ -848,7 +847,7 @@ public class PictureCollection {
     }
 
     /**
-     * This method returns an array of the groups that hold a reference to the
+     * This method returns a Set of the group nodes that hold a reference to the
      * picture filename of the supplied node. This is used in the Navigate-to
      * function of the pop-up menu
      *
@@ -856,31 +855,23 @@ public class PictureCollection {
      *                     nodes need to be found
      * @return group nodes that have a child with the same picture
      */
-    public SortableDefaultMutableTreeNode[] findParentGroups(
+    public Set<SortableDefaultMutableTreeNode> findLinkingGroups(
             final SortableDefaultMutableTreeNode suppliedNode) {
+
+        final Set<SortableDefaultMutableTreeNode> linkingGroups = new HashSet<>();
+
         final Object userObject = suppliedNode.getUserObject();
-        if (!(userObject instanceof PictureInfo)) {
-            return new SortableDefaultMutableTreeNode[0];
-        }
-
-        final List<SortableDefaultMutableTreeNode> parentGroups = new ArrayList<>();
-
-        final File comparingFile = ((PictureInfo) userObject).getImageFile();
-        SortableDefaultMutableTreeNode testNode;
-        SortableDefaultMutableTreeNode testNodeParent;
-        Object nodeObject;
-        for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
-            testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-            nodeObject = testNode.getUserObject();
-            if (nodeObject instanceof PictureInfo pi && pi.getImageFile().equals(comparingFile)) {
-                testNodeParent = testNode.getParent();
-                if (!parentGroups.contains(testNodeParent)) {
-                    LOGGER.log(Level.FINE, "adding node: {0}", testNodeParent.toString());
-                    parentGroups.add(testNodeParent);
+        if (userObject instanceof PictureInfo pictureInfo) {
+            final File comparingFile = pictureInfo.getImageFile();
+            for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
+                final SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
+                final Object nodeObject = testNode.getUserObject();
+                if (nodeObject instanceof PictureInfo pi && pi.getImageFile().equals(comparingFile)) {
+                    linkingGroups.add(testNode.getParent());
                 }
             }
         }
-        return parentGroups.toArray(new SortableDefaultMutableTreeNode[0]);
+        return linkingGroups;
     }
 
     /**
