@@ -16,6 +16,8 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.Objects.isNull;
+
 
 /*
  * Copyright (C) 2006 - 2020 Richard Eigenmann, Zurich, Switzerland This program
@@ -863,10 +865,13 @@ public class PictureCollection {
         final Object userObject = suppliedNode.getUserObject();
         if (userObject instanceof PictureInfo pictureInfo) {
             final File comparingFile = pictureInfo.getImageFile();
+            if (isNull(comparingFile)) {
+                return linkingGroups;
+            }
             for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
                 final SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
                 final Object nodeObject = testNode.getUserObject();
-                if (nodeObject instanceof PictureInfo pi && pi.getImageFile().equals(comparingFile)) {
+                if (nodeObject instanceof PictureInfo pi && !isNull(pi.getImageFile()) && pi.getImageFile().equals(comparingFile)) {
                     linkingGroups.add(testNode.getParent());
                 }
             }

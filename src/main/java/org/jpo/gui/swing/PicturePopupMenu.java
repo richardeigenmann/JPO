@@ -10,6 +10,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static java.util.Objects.isNull;
 
 /*
  PicturePopupMenu.java:  a popup menu for pictures
@@ -33,6 +37,11 @@ import java.util.*;
  * This class generates a popup menu on a picture node.
  */
 public class PicturePopupMenu extends JPopupMenu {
+
+    /**
+     * Defines a LOGGER for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(PicturePopupMenu.class.getName());
 
 
     /**
@@ -618,14 +627,42 @@ public class PicturePopupMenu extends JPopupMenu {
             JpoEventBus.getInstance().post(new RemoveNodeRequest(nodesToRemove));
         });
         add(pictureNodeRemove);
+        pictureNodeRemove.setVisible(pictureCollection.getAllowEdits());
 
+        add(getFileOperationsMenu());
+        add(getAssignCategoryMenu());
+
+        final JMenuItem showPictureInfoEditorMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureEditJMenuItemLabel"));
+        showPictureInfoEditorMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureInfoEditorRequest(popupNode)));
+        add(showPictureInfoEditorMenuItem);
+
+        final JMenuItem consolidateHereMenuItem = new JMenuItem("Consolidate Here");
+
+        final File imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
+        if (!isNull(imageFile)) {
+            consolidateHereMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(
+                    new ConsolidateGroupDialogRequest(
+                            popupNode.getParent(),
+                            imageFile.getParentFile())
+            ));
+        }
+        add(consolidateHereMenuItem);
+
+    }
+
+    private JMenu getFileOperationsMenu() {
         final JMenu fileOperationsJMenu = new JMenu(Settings.getJpoResources().getString("FileOperations"));
-        add(fileOperationsJMenu);
 
         final JMenuItem filenameJMenuItem = new JMenuItem();
         filenameJMenuItem.setEnabled(false);
         if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            filenameJMenuItem.setText(((PictureInfo) popupNode.getUserObject()).getImageFile().getPath());
+            final File imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
+            if (isNull(imageFile)) {
+                LOGGER.log(Level.SEVERE, "Node {0} doesn''t have an imageFile!", popupNode);
+                filenameJMenuItem.setText("Missing Filename");
+            } else {
+                filenameJMenuItem.setText(imageFile.getPath());
+            }
         } else {
             filenameJMenuItem.setText(Settings.getPictureCollection().countSelectedNodes() + " pictures");
         }
@@ -690,27 +727,12 @@ public class PicturePopupMenu extends JPopupMenu {
         });
         fileOperationsJMenu.add(fileDeleteJMenuItem);
 
-        pictureNodeRemove.setVisible(pictureCollection.getAllowEdits());
-        fileOperationsJMenu.setVisible(pictureCollection.getAllowEdits());
-        fileRenameJMenu.setVisible(pictureCollection.getAllowEdits());
-        fileDeleteJMenuItem.setVisible(pictureCollection.getAllowEdits());
-
-        add(getAssignCategoryMenu());
-
-        final JMenuItem showPictureInfoEditorMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureEditJMenuItemLabel"));
-        showPictureInfoEditorMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureInfoEditorRequest(popupNode)));
-        add(showPictureInfoEditorMenuItem);
-
-        final JMenuItem consolidateHereMenuItem = new JMenuItem("Consolidate Here");
-
-        consolidateHereMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(
-                new ConsolidateGroupDialogRequest(
-                        popupNode.getParent(),
-                        ((PictureInfo) popupNode.getUserObject()).getImageFile().getParentFile())
-        ));
-        add(consolidateHereMenuItem);
-
+        fileOperationsJMenu.setVisible(Settings.getPictureCollection().getAllowEdits());
+        fileRenameJMenu.setVisible(Settings.getPictureCollection().getAllowEdits());
+        fileDeleteJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+        return fileOperationsJMenu;
     }
+
 
     /**
      * Creates a JMenu of categories that can be assigned
