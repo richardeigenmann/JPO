@@ -2,8 +2,6 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
-import org.assertj.swing.edt.GuiActionRunnable;
-import org.assertj.swing.edt.GuiActionRunner;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -227,13 +224,11 @@ public class PicturePopupMenuTest {
                     parentNode.add(pictureNode);
                     Settings.getPictureCollection().getRootNode().add(parentNode);
 
-                    final Set<SortableDefaultMutableTreeNode> linkingNodes = Settings.getPictureCollection().findLinkingGroups(pictureNode);
-
                     final SingleNodeNavigator navigator = new SingleNodeNavigator(pictureNode);
                     final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(navigator, 0);
                     final JMenu navigateTo = (JMenu) picturePopupMenu.getComponent(5);
-                    final JMenuItem navigateTo_0 = navigateTo.getItem(0);
-                    assertNotNull(navigateTo_0);
+                    final JMenuItem navigateTo0 = navigateTo.getItem(0);
+                    assertNotNull(navigateTo0);
                     assertEquals("Navigate to", navigateTo.getText());
 
                     final int[] eventsReceived = {0};
@@ -244,7 +239,7 @@ public class PicturePopupMenuTest {
                         }
                     });
                     assertEquals(0, eventsReceived[0]);
-                    navigateTo_0.doClick();
+                    navigateTo0.doClick();
                     assertEquals(1, eventsReceived[0]);
                 } catch (IOException e) {
                     fail(e.getMessage());
@@ -272,7 +267,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) categories::doClick);
+                categories.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -297,7 +292,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) selectForEmail::doClick);
+                selectForEmail.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -323,7 +318,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) unselectForEmail::doClick);
+                unselectForEmail.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -348,7 +343,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) clearEmailSelection::doClick);
+                clearEmailSelection.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -364,9 +359,9 @@ public class PicturePopupMenuTest {
             SwingUtilities.invokeAndWait(() -> {
                 final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final JMenu userFunction = (JMenu) picturePopupMenu.getComponent(10);
-                final JMenuItem userFunction_0 = userFunction.getItem(0);
-                final JMenuItem userFunction_1 = userFunction.getItem(1);
-                final JMenuItem userFunction_2 = userFunction.getItem(2);
+                final JMenuItem userFunction0 = userFunction.getItem(0);
+                final JMenuItem userFunction1 = userFunction.getItem(1);
+                final JMenuItem userFunction2 = userFunction.getItem(2);
                 assertEquals("User Function", userFunction.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
@@ -376,11 +371,9 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute(() -> {
-                    userFunction_0.doClick();
-                    userFunction_1.doClick();
-                    userFunction_2.doClick();
-                });
+                userFunction0.doClick();
+                userFunction1.doClick();
+                userFunction2.doClick();
                 assertEquals(3, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -419,10 +412,10 @@ public class PicturePopupMenuTest {
 
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) rotate90::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) rotate180::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) rotate270::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) rotate0::doClick);
+                rotate90.doClick();
+                rotate180.doClick();
+                rotate270.doClick();
+                rotate0.doClick();
                 assertEquals(4, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -447,7 +440,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) refreshThumbnail::doClick);
+                refreshThumbnail.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -509,12 +502,12 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) moveToTop::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) moveDown::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) moveUp::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) moveToBottom::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) moveIndent::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) moveOutdent::doClick);
+                moveToTop.doClick();
+                moveDown.doClick();
+                moveUp.doClick();
+                moveToBottom.doClick();
+                moveIndent.doClick();
+                moveOutdent.doClick();
                 assertEquals(6, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -548,8 +541,8 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) copyImageChooseTargetDir::doClick);
-                GuiActionRunner.execute((GuiActionRunnable) copyImageToZipFile::doClick);
+                copyImageChooseTargetDir.doClick();
+                copyImageToZipFile.doClick();
                 assertEquals(2, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -576,7 +569,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) copyToClipboard::doClick);
+                copyToClipboard.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -601,7 +594,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute(() -> removeNode.doClick());
+                removeNode.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -630,9 +623,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) () -> {
-                    moveToNewLocation.doClick();
-                });
+                moveToNewLocation.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -661,7 +652,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) fileOperationsRename::doClick);
+                fileOperationsRename.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -689,7 +680,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) fileOperationsDelete::doClick);
+                fileOperationsDelete.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -716,7 +707,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) editCategoriesMenuItem::doClick);
+                editCategoriesMenuItem.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -741,7 +732,7 @@ public class PicturePopupMenuTest {
                     }
                 });
                 assertEquals(0, eventsReceived[0]);
-                GuiActionRunner.execute((GuiActionRunnable) properties::doClick);
+                properties.doClick();
                 assertEquals(1, eventsReceived[0]);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
