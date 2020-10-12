@@ -26,7 +26,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ThumbnailDescriptionPanel extends JPanel {
@@ -64,21 +63,24 @@ public class ThumbnailDescriptionPanel extends JPanel {
     /**
      * The location of the image file
      */
-    private final JTextField highresLocationJTextField = new JTextField() {
-        @Override
-        public boolean isVisible() {
-            LOGGER.log(Level.INFO, "highreslocation text field is querying isVisible");
-            return super.isVisible();
-        }
-    };
+    private final JTextField highresLocationJTextField = new JTextField();
 
-    private final JTextArea categoriesJTA = new JTextArea();
 
-    private JPanel categoriesJPanel = new JPanel();
+    private final JPanel categoriesJPanel = new JPanel();
+
 
     private final JScrollPane categoriesJSP = new JScrollPane(categoriesJPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
+
+        @Override
+        public Dimension getMaximumSize() {
+            // clamp the maximum width to the scaled tumbnail width
+            final Dimension superMaximumSize = super.getMaximumSize();
+            superMaximumSize.width = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
+            return superMaximumSize;
+        }
+    };
 
     public JButton getCategoryMenuPopupButton() {
         return categoryMenuPopupButton;
@@ -123,10 +125,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
         pictureDescriptionJTA.setEditable(true);
         pictureDescriptionJTA.setCaret(dumbCaret);
 
-        categoriesJTA.setWrapStyleWord(true);
-        categoriesJTA.setLineWrap(true);
-        categoriesJTA.setEditable(false);
-        categoriesJTA.setCaret(dumbCaret);
 
         this.add(categoriesJSP, "hidemode 2, wrap");
         categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 50));
@@ -239,24 +237,17 @@ public class ThumbnailDescriptionPanel extends JPanel {
         return getPictureDescriptionJTA().getText();
     }
 
-    @Deprecated
-    public void setCategories(final String newCategories) {
-        final Runnable runnable = () -> {
-            categoriesJTA.setText(newCategories);
-            categoriesJSP.setVisible(true);
-            setTextAreaSize();
-        };
-        if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeLater(runnable);
-        }
-    }
-
     public void clearCategories() {
         categoriesJPanel.removeAll();
     }
 
+    /**
+     * Adds a Category visual to the the categoriesJPanel and returns the removeButton JButton to the called who
+     * should then wire up the click event with the removal action
+     *
+     * @param categoryDescription The category to show
+     * @return the remove Button
+     */
     public AbstractButton addCategory(String categoryDescription) {
         final JPanel categoryLabel = new JPanel();
         categoryLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
@@ -265,6 +256,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         removeButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
         categoryLabel.add(removeButton);
         categoriesJPanel.add(categoryLabel);
+        categoriesJSP.revalidate();
         return removeButton;
     }
 
@@ -285,6 +277,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
     public void setThumbnailSizeFactor(final float thumbnailSizeFactor) {
         this.thumbnailSizeFactor = thumbnailSizeFactor;
         setTextAreaSize();
+        categoriesJPanel.revalidate();
     }
 
     /**
@@ -313,16 +306,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
                 highresLocationJTextField.setPreferredSize(new Dimension(targetWidth, 30));
                 highresLocationJTextField.setMaximumSize(new Dimension(targetWidth, 30));
             }
-
-            int categoriesPanelTargetHeight = getTargetHeight(categoriesJSP);
-            final Dimension categoriesSize = categoriesJSP.getPreferredSize();
-            if ((categoriesPanelTargetHeight != categoriesSize.height) || (targetWidth != categoriesSize.width)) {
-                categoriesJSP.setPreferredSize(new Dimension(targetWidth, descriptionTargetHeight));
-                categoriesJSP.setMaximumSize(new Dimension(targetWidth, 250));
-                this.revalidate();
-            }
-
-            //categoriesJpanel.setSize(new Dimension(300, 1));
         };
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
@@ -330,6 +313,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
             SwingUtilities.invokeLater(runnable);
         }
     }
+
 
     private static int getTargetHeight(final JScrollPane jScrollPane) {
         final Dimension textAreaSize = jScrollPane.getComponent(0).getPreferredSize();

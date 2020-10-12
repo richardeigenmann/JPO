@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_DESCRIPTION;
@@ -215,10 +214,7 @@ public class ThumbnailDescriptionController
      */
     private void setCategories() {
         panel.clearCategories();
-        if (referringNode == null) {
-            panel.setCategories("");
-        } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
-            panel.setCategories(getCategoriesText(pi));
+        if (referringNode != null && referringNode.getUserObject() instanceof PictureInfo pi) {
             final Collection<Integer> categories = pi.getCategoryAssignments();
             if (categories != null) {
                 categories.forEach(category -> {
@@ -235,22 +231,7 @@ public class ThumbnailDescriptionController
                 });
             }
             panel.addCategoryMenu();
-
-        } else if (referringNode.getUserObject() instanceof GroupInfo) {
-            panel.setCategories("");
-        } else {
-            panel.setCategories("");
         }
-    }
-
-    private String getCategoriesText(final PictureInfo pi) {
-        final Collection<Integer> categories = pi.getCategoryAssignments();
-        if (categories == null) {
-            return "";
-        }
-        return categories.stream()
-                .map(category -> Settings.getPictureCollection().getCategory(category))
-                .collect(Collectors.joining(", "));
     }
 
     @TestOnly
