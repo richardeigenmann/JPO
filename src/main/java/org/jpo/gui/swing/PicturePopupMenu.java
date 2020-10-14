@@ -655,17 +655,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         final JMenuItem filenameJMenuItem = new JMenuItem();
         filenameJMenuItem.setEnabled(false);
-        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            final File imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
-            if (isNull(imageFile)) {
-                LOGGER.log(Level.SEVERE, "Node {0} doesn''t have an imageFile!", popupNode);
-                filenameJMenuItem.setText("Missing Filename");
-            } else {
-                filenameJMenuItem.setText(imageFile.getPath());
-            }
-        } else {
-            filenameJMenuItem.setText(Settings.getPictureCollection().countSelectedNodes() + " pictures");
-        }
+        filenameJMenuItem.setText(getFilenameMenuText());
         fileOperationsJMenu.add(filenameJMenuItem);
         fileOperationsJMenu.addSeparator();
 
@@ -733,6 +723,19 @@ public class PicturePopupMenu extends JPopupMenu {
         return fileOperationsJMenu;
     }
 
+    private String getFilenameMenuText() {
+        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            final File imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
+            if (isNull(imageFile)) {
+                LOGGER.log(Level.SEVERE, "Node {0} doesn''t have an imageFile!", popupNode);
+                return "Missing Filename";
+            } else {
+                return imageFile.getPath();
+            }
+        } else {
+            return Settings.getPictureCollection().countSelectedNodes() + " pictures";
+        }
+    }
 
     /**
      * Creates a JMenu of categories that can be assigned
