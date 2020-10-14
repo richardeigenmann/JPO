@@ -256,7 +256,7 @@ public class ExifInfoTest {
     public void testExifInfoEos350d() {
         final String CANON_EOS350D_IMAGE = "exif-test-canon-eos-350d.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS350D_IMAGE).toURI()));
+            final ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS350D_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/20.0", exifInfo.getAperture());
             assertEquals("1/200 sec", exifInfo.getShutterSpeed());
@@ -268,9 +268,7 @@ public class ExifInfoTest {
             assertEquals("200", exifInfo.getIso());
             assertEquals(ZERO, exifInfo.getLatLng().getX());
             assertEquals(ZERO, exifInfo.getLatLng().getY());
-            //TODO exiftool finds the lens but ExifInfo doesn't
-            //assertEquals("18.0 - 55.0 mm (35 mm equivalent: 29.2 - 89.2 mm)", exifInfo.lens);
-            assertEquals("", exifInfo.getLens());
+            assertEquals("18 - 55mm", exifInfo.getLens());
         } catch (URISyntaxException e) {
             fail(e.getMessage());
         }

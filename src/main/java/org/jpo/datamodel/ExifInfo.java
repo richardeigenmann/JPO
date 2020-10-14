@@ -189,10 +189,10 @@ public class ExifInfo {
                 lens = tryToGetTag( exifSubIFDdirectory, TAG_LENS, lens );
             }
 
-            ExifIFD0Directory exifSubIFD0directory = metadata.getFirstDirectoryOfType( ExifIFD0Directory.class );
+            final ExifIFD0Directory exifSubIFD0directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
             if ( exifSubIFD0directory != null ) {
                 camera = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, TAG_MODEL, camera ), " " );
-                String rotationString = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, TAG_ORIENTATION, "" ), " " );
+                final String rotationString = StringUtils.stripEnd(tryToGetTag(exifSubIFD0directory, TAG_ORIENTATION, ""), " ");
 
                 switch ( rotationString ) {
                     case "Top, left side (Horizontal / normal)":
@@ -229,31 +229,40 @@ public class ExifInfo {
                 lens = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_LENS, lens );
             }
 
-            CanonMakernoteDirectory canonMakernoteDirectory = metadata.getFirstDirectoryOfType( CanonMakernoteDirectory.class );
+            final CanonMakernoteDirectory canonMakernoteDirectory = metadata.getFirstDirectoryOfType(CanonMakernoteDirectory.class);
             if ( canonMakernoteDirectory != null ) {
-                lens = tryToGetTag( canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens );
+                lens = tryToGetTag(canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens);
+                if ("".equals(lens)) {
+                    lens = removeLastChars(tryToGetTag(canonMakernoteDirectory, CanonMakernoteDirectory.CameraSettings.TAG_SHORT_FOCAL_LENGTH, ""), 2)
+                            + " - " + removeLastChars(tryToGetTag(canonMakernoteDirectory, CanonMakernoteDirectory.CameraSettings.TAG_LONG_FOCAL_LENGTH, ""), 2)
+                            + "mm";
+                }
             }
 
-            for ( Directory directory : metadata.getDirectories() ) {
+            for (final Directory directory : metadata.getDirectories()) {
                 directory.getTags().forEach(tag
-                        -> exifDump.append( tag.getTagTypeHex() ).append( " - " ).append( tag.getTagName() ).append( ":\t" ).append( tag.getDirectoryName() ).append( ":\t" ).append( tag.getDescription() ).append( "\n" )
+                        -> exifDump.append(tag.getTagTypeHex()).append(" - ").append(tag.getTagName()).append(":\t").append(tag.getDirectoryName()).append(":\t").append(tag.getDescription()).append("\n")
                 );
             }
-        } catch ( ImageProcessingException | NullPointerException | IOException x ) {
-            LOGGER.severe( x.getMessage() );
+        } catch (final ImageProcessingException | NullPointerException | IOException x) {
+            LOGGER.severe(x.getMessage());
         }
 
+    }
+
+    private static String removeLastChars(String str, int chars) {
+        return str.substring(0, str.length() - chars);
     }
 
     /**
      * This method tries to get a tag out of the Exif data
      *
-     * @param directory The EXIF Directory
-     * @param tag the tag to search for
+     * @param directory    The EXIF Directory
+     * @param tag          the tag to search for
      * @param defaultValue the String to return if the tag was not found.
      * @return the tag
      */
-    private String tryToGetTag( Directory directory, int tag, String defaultValue ) {
+    private String tryToGetTag(Directory directory, int tag, String defaultValue) {
         String searchString;
         searchString = directory.getDescription( tag );
         if ( searchString == null ) {
