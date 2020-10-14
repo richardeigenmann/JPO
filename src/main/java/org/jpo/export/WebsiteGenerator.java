@@ -56,6 +56,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static final String JPO_CSS = "jpo.css";
     private static final String ROBOTS_TXT = "robots.txt";
     private static final String INDEX_PAGE = "index.htm";
+    public static final String JPO_JS = "jpo.js";
 
     /**
      * Temporary object to scale the image for the html output.
@@ -723,7 +724,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
                 if (request.isGenerateMouseover()) {
                     writeJpoJs(request.getTargetDirectory());
-                    files.add(new File(request.getTargetDirectory(), "jpo.js"));
+                    files.add(new File(request.getTargetDirectory(), JPO_JS));
                     midresHtmlWriter.write("<script type=\"text/javascript\" src=\"org.jpo.js\" ></script>");
                     midresHtmlWriter.newLine();
                     midresHtmlWriter.write("<script type=\"text/javascript\">");
@@ -1248,8 +1249,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static void writeJpoJs(final File directory) {
         final ClassLoader cl = JpoWriter.class.getClassLoader();
         try (
-                final InputStream in = Objects.requireNonNull(cl.getResource("jpo.js")).openStream();
-                final FileOutputStream outStream = new FileOutputStream(new File(directory, "jpo.js"));
+                final InputStream in = Objects.requireNonNull(cl.getResource(JPO_JS)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_JS));
                 final BufferedInputStream bin = new BufferedInputStream(in);
                 final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
             int c;
