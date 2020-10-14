@@ -266,7 +266,7 @@ public class Tools {
         );
 
         System.runFinalization();
-        LOGGER.info("ScalablePicture.scalePicture: JPO has now run a garbage collection and finalization.");
+        LOGGER.info("JPO has now run a garbage collection and finalization.");
         Tools.freeMem();
     }
 
