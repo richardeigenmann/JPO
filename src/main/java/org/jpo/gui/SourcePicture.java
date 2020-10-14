@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
@@ -241,6 +242,7 @@ public class SourcePicture {
         sourcePictureBufferedImage = op.filter(sourcePictureBufferedImage, targetImage);
     }
 
+    @Nullable
     private BufferedImage convertImageBytesToBufferedImage(final ImageBytes imageBytes) {
         // We have the bytes from the image that came from the cache or the disk
         // now create a BufferedImage from that
@@ -251,26 +253,30 @@ public class SourcePicture {
                 setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));
                 return null;
             }
-
-            reader.addIIOReadProgressListener(myIIOReadProgressListener);
-            reader.setInput(iis);
-            BufferedImage bufferedImage = null;
-            try {
-                bufferedImage = correctTypeOfImage(reader.read(0));
-            } catch (final OutOfMemoryError e) {
-                LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
-                setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
-                Tools.dealOutOfMemoryError();
-            } finally {
-                reader.removeIIOReadProgressListener(myIIOReadProgressListener);
-                reader.dispose();
-            }
-            return bufferedImage;
+            return readFromReaderWithProgressListener(iis, reader);
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "IOException while converting {0} bytes to a BufferedImage", imageBytes.getBytes().length);
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             return null;
         }
+    }
+
+    @Nullable
+    private BufferedImage readFromReaderWithProgressListener(final ImageInputStream iis, final ImageReader reader) throws IOException {
+        reader.addIIOReadProgressListener(myIIOReadProgressListener);
+        reader.setInput(iis);
+        BufferedImage bufferedImage = null;
+        try {
+            bufferedImage = correctTypeOfImage(reader.read(0));
+        } catch (final OutOfMemoryError e) {
+            LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
+            setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
+            Tools.dealOutOfMemoryError();
+        } finally {
+            reader.removeIIOReadProgressListener(myIIOReadProgressListener);
+            reader.dispose();
+        }
+        return bufferedImage;
     }
 
     /**
@@ -279,7 +285,7 @@ public class SourcePicture {
      *
      * @param bufferedImage The BufferedImage to potentially modify.
      */
-    private BufferedImage correctTypeOfImage(BufferedImage bufferedImage) {
+    private BufferedImage correctTypeOfImage(final BufferedImage bufferedImage) {
         if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
             return bufferedImage;
         } else {
