@@ -45,34 +45,35 @@ import java.util.logging.Logger;
 public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDropTargetDropEventHandler {
 
     private static final Logger LOGGER = Logger.getLogger(ThumbnailsPanelController.class.getName());
-
-    private boolean paintOverlay;  // default is false
-    private Rectangle overlayRectangle;
-
+    private static final Color DIMMED_COLOR = new Color(45, 45, 45, 180);
     /**
      * The Panel that shows the Thumbnails
      */
     private final JPanel thumbnailsPane;
-
     /**
      * The Scroll Pane that holds the Thumbnail Panel
      */
     private final JScrollPane thumbnailJScrollPane = new JScrollPane();
-
-    {
-        thumbnailJScrollPane.setWheelScrollingEnabled(true);
-        thumbnailJScrollPane.setFocusable(true);
-        //  set the amount by which the panel scrolls down when the user clicks the
-        //  little down or up arrow in the scrollbar
-        thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement(80);
-    }
-
+    /**
+     * The title above the ThumbnailPanel
+     */
+    private final ThumbnailPanelTitle titleJPanel;
+    private final ThumbnailLayoutManager thumbnailLayoutManager;
+    private boolean paintOverlay;  // default is false
+    private Rectangle overlayRectangle;
     /**
      * This object refers to the set of Nodes that is being browsed in the
      * ThumbnailPanelController
      */
     private NodeNavigatorInterface mySetOfNodes;
-
+    /**
+     * Listens for changes in the Group and updates the title if anything
+     * changed
+     */
+    private final GroupInfoChangeListener myGroupInfoChangeListener = (GroupInfoChangeEvent groupInfoChangeEvent) -> {
+        LOGGER.info("change event received.");
+        updateTitle();
+    };
     /**
      * a variable to hold the current starting position of thumbnailControllers
      * being displayed out of a group or search. Range 0..count()-1
@@ -83,24 +84,16 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * of pictures.
      */
     private int startIndex;
-
-    /**
-     * The title above the ThumbnailPanel
-     */
-    private final ThumbnailPanelTitle titleJPanel;
-
     /**
      * An array that holds the 50 or so ThumbnailComponents that are being
      * displayed
      */
     private ThumbnailController[] thumbnailControllers;
-
     /**
      * An array that holds the 50 or so ThumbnailDescriptionJPanels that are
      * being displayed
      */
     private ThumbnailDescriptionController[] thumbnailDescriptionControllers;
-
     /**
      * This variable keeps track of how many thumbnailControllers per page the
      * component was initialised with. If the number changes because the user
@@ -108,11 +101,22 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * arrays are recreated.
      */
     private int initialisedMaxThumbnails = Integer.MIN_VALUE;
-
     /**
      * Factor for the Thumbnails
      */
     private float thumbnailSizeFactor = 1;
+    // defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the ThumbnailDescriptionPanels
+    private Boolean showFilenamesState = false;
+    /**
+     * Point where the mouse was pressed so that we can figure out the rectangle
+     * that is being selected.
+     */
+    private Point mousePressedPoint;
+    /**
+     * Remembers the last GroupInfo we picked so that we can attach a listener
+     * to update the title if it changes
+     */
+    private SortableDefaultMutableTreeNode myLastGroupNode;
 
     /**
      * Creates a new ThumbnailPanelController which in turn creates the view
@@ -126,10 +130,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         init();
         registerListeners();
     }
-
-    private static final Color DIMMED_COLOR = new Color(45, 45, 45, 180);
-
-    private final ThumbnailLayoutManager thumbnailLayoutManager;
 
     /**
      * Initialises the components for the ThumbnailController Pane
@@ -168,6 +168,11 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.setBackground(Settings.getJpoBackgroundColor());
         thumbnailJScrollPane.setMinimumSize(Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE);
         thumbnailJScrollPane.setPreferredSize(Settings.thumbnailJScrollPanePreferredSize);
+        thumbnailJScrollPane.setWheelScrollingEnabled(true);
+        thumbnailJScrollPane.setFocusable(true);
+        //  set the amount by which the panel scrolls down when the user clicks the
+        //  little down or up arrow in the scrollbar
+        thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement(80);
 
 
         thumbnailJScrollPane.setColumnHeaderView(titleJPanel);
@@ -292,9 +297,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         }
     }
 
-    // defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the ThumbnailDescriptionPanels
-    private Boolean showFilenamesState = false;
-
     private void doSearch(final String searchString) {
         TextQuery textQuery = new TextQuery(searchString);
         textQuery.setStartNode(Settings.getPictureCollection().getRootNode());
@@ -321,12 +323,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         }
         thumbnailLayoutManager.layoutContainer(thumbnailsPane);
     }
-
-    /**
-     * Point where the mouse was pressed so that we can figure out the rectangle
-     * that is being selected.
-     */
-    private Point mousePressedPoint;
 
     /**
      * Returns the rectangle marked by the area which the mouse marked by
@@ -408,12 +404,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     }
 
     /**
-     * Remembers the last GroupInfo we picked so that we can attach a listener
-     * to update the title if it changes
-     */
-    private SortableDefaultMutableTreeNode myLastGroupNode;
-
-    /**
      * Instructs the ThumbnailPanelController to display the specified set of
      * nodes
      *
@@ -444,15 +434,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         startIndex = 0;
         nodeLayoutChanged();
     }
-
-    /**
-     * Listens for changes in the Group and updates the title if anything
-     * changed
-     */
-    private final GroupInfoChangeListener myGroupInfoChangeListener = (GroupInfoChangeEvent groupInfoChangeEvent) -> {
-        LOGGER.info("change event received.");
-        updateTitle();
-    };
 
     /**
      * Request that the ThumbnailPanel show the first page of Thumbnails
