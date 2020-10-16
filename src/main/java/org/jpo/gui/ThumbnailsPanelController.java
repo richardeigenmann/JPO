@@ -57,7 +57,15 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     /**
      * The Scroll Pane that holds the Thumbnail Panel
      */
-    private final JScrollPane thumbnailJScrollPane;
+    private final JScrollPane thumbnailJScrollPane = new JScrollPane();
+
+    {
+        thumbnailJScrollPane.setWheelScrollingEnabled(true);
+        thumbnailJScrollPane.setFocusable(true);
+        //  set the amount by which the panel scrolls down when the user clicks the
+        //  little down or up arrow in the scrollbar
+        thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement(80);
+    }
 
     /**
      * This object refers to the set of Nodes that is being browsed in the
@@ -113,7 +121,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     public ThumbnailsPanelController() {
         titleJPanel = new ThumbnailPanelTitle();
         thumbnailsPane = new JPanel();
-        thumbnailJScrollPane = new JScrollPane();
         thumbnailLayoutManager = new ThumbnailLayoutManager(thumbnailJScrollPane.getViewport());
 
         init();
@@ -161,13 +168,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.setBackground(Settings.getJpoBackgroundColor());
         thumbnailJScrollPane.setMinimumSize(Settings.THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE);
         thumbnailJScrollPane.setPreferredSize(Settings.thumbnailJScrollPanePreferredSize);
-        thumbnailJScrollPane.setWheelScrollingEnabled(true);
-        thumbnailJScrollPane.setFocusable(true);
-
-
-        //  set the amount by which the panel scrolls down when the user clicks the
-        //  little down or up arrow in the scrollbar
-        thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement(80);
 
 
         thumbnailJScrollPane.setColumnHeaderView(titleJPanel);
@@ -204,40 +204,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
             @Override
             public void mouseReleased(final MouseEvent e) {
-                if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator gn) {
-                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(gn.getGroupNode(), e.getComponent(), e.getX(), e.getY()));
-                    return;
-                }
-
-                thumbnailJScrollPane.requestFocusInWindow();
-
-                // undo the overlay painting
-                paintOverlay = false;
-                thumbnailsPane.repaint();
-
-                final Rectangle mouseRectangle = getMouseRectangle(e.getPoint());
-
-                // I wonder why they don't put the following two lines into the SWING library but
-                // let you work out this binary math on your own from the unhelpful description?
-                final boolean ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
-                final boolean shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
-
-                if (!(ctrlpressed || shiftpressed)) {
-                    Settings.getPictureCollection().clearSelection();
-                }
-
-                final Rectangle thumbnailRectangle = new Rectangle();
-                SortableDefaultMutableTreeNode node;
-                for (final ThumbnailController thumbnailController : thumbnailControllers) {
-                    node = thumbnailController.getNode();
-                    if (node == null) {
-                        continue;
-                    }
-                    thumbnailController.getThumbnail().getBounds(thumbnailRectangle);
-                    if (mouseRectangle.intersects(thumbnailRectangle)) {
-                        Settings.getPictureCollection().addToSelectedNodes(node);
-                    }
-                }
+                handleMouseReleased(e);
 
             }
         });
@@ -246,28 +213,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
             @Override
             public void mouseDragged(final MouseEvent e) {
-                // do the overlay painting
-                paintOverlay = true;
-                final Point mouseMovedToPoint = e.getPoint();
-                overlayRectangle = getMouseRectangle(mouseMovedToPoint);
-                thumbnailsPane.repaint();
-
-                final Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
-                final JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
-                final int scrolltrigger = 40;
-                if (mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger) {
-                    int increment = verticalScrollBar.getUnitIncrement(1);
-                    int position = verticalScrollBar.getValue();
-                    if (position < verticalScrollBar.getMaximum()) {
-                        verticalScrollBar.setValue(position + increment);
-                    }
-                } else if (mouseMovedToPoint.y - viewRect.y < scrolltrigger) {
-                    int increment = verticalScrollBar.getUnitIncrement(1);
-                    int position = verticalScrollBar.getValue();
-                    if (position > verticalScrollBar.getMinimum()) {
-                        verticalScrollBar.setValue(position - increment);
-                    }
-                }
+                handleMouseDragged(e);
             }
 
         });
@@ -282,6 +228,68 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                         }
                     }
                 });
+    }
+
+    private void handleMouseDragged(final MouseEvent e) {
+        // do the overlay painting
+        paintOverlay = true;
+        final Point mouseMovedToPoint = e.getPoint();
+        overlayRectangle = getMouseRectangle(mouseMovedToPoint);
+        thumbnailsPane.repaint();
+
+        final Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
+        final JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
+        final int scrolltrigger = 40;
+        if (mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger) {
+            int increment = verticalScrollBar.getUnitIncrement(1);
+            int position = verticalScrollBar.getValue();
+            if (position < verticalScrollBar.getMaximum()) {
+                verticalScrollBar.setValue(position + increment);
+            }
+        } else if (mouseMovedToPoint.y - viewRect.y < scrolltrigger) {
+            int increment = verticalScrollBar.getUnitIncrement(1);
+            int position = verticalScrollBar.getValue();
+            if (position > verticalScrollBar.getMinimum()) {
+                verticalScrollBar.setValue(position - increment);
+            }
+        }
+    }
+
+    private void handleMouseReleased(final MouseEvent e) {
+        if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator gn) {
+            JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(gn.getGroupNode(), e.getComponent(), e.getX(), e.getY()));
+            return;
+        }
+
+        thumbnailJScrollPane.requestFocusInWindow();
+
+        // undo the overlay painting
+        paintOverlay = false;
+        thumbnailsPane.repaint();
+
+        final Rectangle mouseRectangle = getMouseRectangle(e.getPoint());
+
+        // I wonder why they don't put the following two lines into the SWING library but
+        // let you work out this binary math on your own from the unhelpful description?
+        final boolean ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
+        final boolean shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
+
+        if (!(ctrlpressed || shiftpressed)) {
+            Settings.getPictureCollection().clearSelection();
+        }
+
+        final Rectangle thumbnailRectangle = new Rectangle();
+        SortableDefaultMutableTreeNode node;
+        for (final ThumbnailController thumbnailController : thumbnailControllers) {
+            node = thumbnailController.getNode();
+            if (node == null) {
+                continue;
+            }
+            thumbnailController.getThumbnail().getBounds(thumbnailRectangle);
+            if (mouseRectangle.intersects(thumbnailRectangle)) {
+                Settings.getPictureCollection().addToSelectedNodes(node);
+            }
+        }
     }
 
     // defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the ThumbnailDescriptionPanels

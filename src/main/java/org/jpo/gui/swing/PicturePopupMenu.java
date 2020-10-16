@@ -2,6 +2,7 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
@@ -662,49 +663,17 @@ public class PicturePopupMenu extends JPopupMenu {
         final JMenu fileMoveJMenu = new JMenu(Settings.getJpoResources().getString("fileMoveJMenu"));
         fileOperationsJMenu.add(fileMoveJMenu);
 
-        final JMenuItem moveToNewLocationJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveToNewLocationJMenuItem"));
-        moveToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
-            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-                nodes.add(popupNode);
-                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(nodes));
-            } else {
-                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(Settings.getPictureCollection().getSelection()));
-            }
-        });
+        final JMenuItem moveToNewLocationJMenuItem = getMoveToNewLocationJMenuItem();
         fileMoveJMenu.add(moveToNewLocationJMenuItem);
-
         fileMoveJMenu.addSeparator();
 
-        final String[] moveLocationsArray = Settings.getCopyLocations().toArray(new String[0]);
-        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
-            final File loc = i < moveLocationsArray.length ? new File(moveLocationsArray[i]) : new File(".");
-            moveLocationJMenuItems[i] = new JMenuItem();
-            moveLocationJMenuItems[i].addActionListener((ActionEvent ae) -> {
-                if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                    List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-                    nodes.add(popupNode);
-                    JpoEventBus.getInstance().post(new MoveToDirRequest(nodes, loc));
-                } else {
-                    JpoEventBus.getInstance().post(new MoveToDirRequest(Settings.getPictureCollection().getSelection(), loc));
-                }
-            });
-            fileMoveJMenu.add(moveLocationJMenuItems[i]);
-        }
+        addMoveLocationTargets(fileMoveJMenu);
         labelMoveLocations();
 
         final JMenu fileRenameJMenu = new JMenu(Settings.getJpoResources().getString("renameJMenu"));
         fileOperationsJMenu.add(fileRenameJMenu);
 
-        final Collection<SortableDefaultMutableTreeNode> renameNodes = new ArrayList<>();
-        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            renameNodes.add(popupNode);
-        } else {
-            renameNodes.addAll(Settings.getPictureCollection().getSelection());
-        }
-        for (final JComponent c : RenameMenuItems.getRenameMenuItems(renameNodes)) {
-            fileRenameJMenu.add(c);
-        }
+        addRenameMenuItems(fileRenameJMenu);
 
         final JMenuItem fileDeleteJMenuItem = new JMenuItem(Settings.getJpoResources().getString("fileDeleteJMenuItem"));
         fileDeleteJMenuItem.addActionListener((ActionEvent e) -> {
@@ -721,6 +690,51 @@ public class PicturePopupMenu extends JPopupMenu {
         fileRenameJMenu.setVisible(Settings.getPictureCollection().getAllowEdits());
         fileDeleteJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
         return fileOperationsJMenu;
+    }
+
+    private void addRenameMenuItems(final JMenu fileRenameJMenu) {
+        final Collection<SortableDefaultMutableTreeNode> renameNodes = new ArrayList<>();
+        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            renameNodes.add(popupNode);
+        } else {
+            renameNodes.addAll(Settings.getPictureCollection().getSelection());
+        }
+        for (final JComponent c : RenameMenuItems.getRenameMenuItems(renameNodes)) {
+            fileRenameJMenu.add(c);
+        }
+    }
+
+    private void addMoveLocationTargets(final JMenu fileMoveJMenu) {
+        final String[] moveLocationsArray = Settings.getCopyLocations().toArray(new String[0]);
+        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+            final File loc = i < moveLocationsArray.length ? new File(moveLocationsArray[i]) : new File(".");
+            moveLocationJMenuItems[i] = new JMenuItem();
+            moveLocationJMenuItems[i].addActionListener((ActionEvent ae) -> {
+                if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+                    List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                    nodes.add(popupNode);
+                    JpoEventBus.getInstance().post(new MoveToDirRequest(nodes, loc));
+                } else {
+                    JpoEventBus.getInstance().post(new MoveToDirRequest(Settings.getPictureCollection().getSelection(), loc));
+                }
+            });
+            fileMoveJMenu.add(moveLocationJMenuItems[i]);
+        }
+    }
+
+    @NotNull
+    private JMenuItem getMoveToNewLocationJMenuItem() {
+        final JMenuItem moveToNewLocationJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveToNewLocationJMenuItem"));
+        moveToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
+            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+                List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+                nodes.add(popupNode);
+                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(nodes));
+            } else {
+                JpoEventBus.getInstance().post(new MoveToNewLocationRequest(Settings.getPictureCollection().getSelection()));
+            }
+        });
+        return moveToNewLocationJMenuItem;
     }
 
     private String getFilenameMenuText() {
@@ -825,7 +839,6 @@ public class PicturePopupMenu extends JPopupMenu {
                 moveLocationJMenuItems[i].setVisible(true);
             } else {
                 moveLocationJMenuItems[i].setVisible(false);
-
             }
         }
     }
