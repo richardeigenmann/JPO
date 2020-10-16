@@ -33,14 +33,18 @@ import java.awt.*;
 public class ThumbnailDescriptionPanel extends JPanel {
 
     /**
+     * Font to be used for Large Texts:
+     */
+    private static final Font LARGE_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
+    /**
+     * Font to be used for small texts:
+     */
+    private static final Font SMALL_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelSmallFont"));
+    final JButton categoryMenuPopupButton = new JButton("\uf0fe");
+    /**
      * This object holds the description
      */
     private final JTextArea pictureDescriptionJTA = new JTextArea();
-
-    public JScrollPane getPictureDescriptionJSP() {
-        return pictureDescriptionJSP;
-    }
-
     /**
      * This JScrollPane holds the JTextArea pictureDescriptionJTA so that it can
      * have multiple lines of text if this is required.
@@ -48,27 +52,22 @@ public class ThumbnailDescriptionPanel extends JPanel {
     private final JScrollPane pictureDescriptionJSP = new JScrollPane(pictureDescriptionJTA,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-    public JTextField getHighresLocationJTextField() {
-        return highresLocationJTextField;
-    }
-
     /**
      * create a dumbCaret object which prevents undesirable scrolling behaviour
      *
      * @see NonFocussedCaret
      */
     private final NonFocussedCaret dumbCaret = new NonFocussedCaret();
-
     /**
      * The location of the image file
      */
     private final JTextField highresLocationJTextField = new JTextField();
-
-
     private final JPanel categoriesJPanel = new JPanel();
-
-
+    /**
+     * The factor which is multiplied with the ThumbnailDescription to determine
+     * how large it is shown.
+     */
+    private float thumbnailSizeFactor = 1;
     private final JScrollPane categoriesJSP = new JScrollPane(categoriesJPanel,
             ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
@@ -82,41 +81,43 @@ public class ThumbnailDescriptionPanel extends JPanel {
         }
     };
 
-    public JButton getCategoryMenuPopupButton() {
-        return categoryMenuPopupButton;
-    }
-
-    final JButton categoryMenuPopupButton = new JButton("\uf0fe");
-
-    {
-        categoryMenuPopupButton.setBorder(new EmptyBorder(0, 5, 0, 0));
-        categoryMenuPopupButton.setContentAreaFilled(false);
-        categoryMenuPopupButton.setFocusPainted(false);
-        categoryMenuPopupButton.setOpaque(false);
+    public ThumbnailDescriptionPanel() {
+        initComponents();
     }
 
     public static Font getLargeFont() {
         return LARGE_FONT;
     }
 
-    /**
-     * Font to be used for Large Texts:
-     */
-    private static final Font LARGE_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
-
     public static Font getSmallFont() {
         return SMALL_FONT;
     }
 
-    /**
-     * Font to be used for small texts:
-     */
-    private static final Font SMALL_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelSmallFont"));
+    private static int getTargetHeight(final JScrollPane jScrollPane) {
+        final Dimension textAreaSize = jScrollPane.getComponent(0).getPreferredSize();
 
-    public ThumbnailDescriptionPanel() {
-        initComponents();
+        int targetHeight;
+        if (textAreaSize.height < jScrollPane.getMinimumSize().height) {
+            targetHeight = jScrollPane.getMinimumSize().height;
+        } else if (textAreaSize.height > jScrollPane.getMaximumSize().height) {
+            targetHeight = jScrollPane.getMaximumSize().height;
+        } else {
+            targetHeight = (((textAreaSize.height / 30) + 1) * 30);
+        }
+        return targetHeight;
     }
 
+    public JScrollPane getPictureDescriptionJSP() {
+        return pictureDescriptionJSP;
+    }
+
+    public JTextField getHighresLocationJTextField() {
+        return highresLocationJTextField;
+    }
+
+    public JButton getCategoryMenuPopupButton() {
+        return categoryMenuPopupButton;
+    }
 
     private void initComponents() {
         this.setBackground(Color.WHITE);
@@ -139,6 +140,10 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
         categoriesJPanel.setLayout(new WrapLayout());
         categoryMenuPopupButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
+        categoryMenuPopupButton.setBorder(new EmptyBorder(0, 5, 0, 0));
+        categoryMenuPopupButton.setContentAreaFilled(false);
+        categoryMenuPopupButton.setFocusPainted(false);
+        categoryMenuPopupButton.setOpaque(false);
 
         // this is a bit of a cludge to get the JTextArea to grow in height as text is
         // being entered. Annoyingly the getPreferredSize of the JTextArea doesn't immediately
@@ -172,7 +177,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
     public JTextArea getPictureDescriptionJTA() {
         return pictureDescriptionJTA;
     }
-
 
     /**
      * Alters the display to show the node is "selected" or not.
@@ -216,11 +220,20 @@ public class ThumbnailDescriptionPanel extends JPanel {
         }
     }
 
+    /**
+     * Gets the description of the ThumbnailDescriptionPanel
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return getPictureDescriptionJTA().getText();
+    }
 
     /**
      * Sets the description of the ThumbnailDescriptionPanel.
      * It calls setTextAreaSize to resize the box according to the amount of text.
      * This method is EDT safe
+     *
      * @param newDescription the new Descriptions
      */
     public void setDescription(final String newDescription) {
@@ -233,15 +246,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
         } else {
             SwingUtilities.invokeLater(runnable);
         }
-    }
-
-    /**
-     * Gets the description of the ThumbnailDescriptionPanel
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return getPictureDescriptionJTA().getText();
     }
 
     public void clearCategories() {
@@ -257,7 +261,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
      */
     public AbstractButton addCategory(final String categoryDescription) {
         final JPanel categoryPanel = new JPanel();
-        //categoryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
         final JLabel categoryLabel = new JLabel(categoryDescription) {
 
             @Override
@@ -315,13 +318,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
     }
 
     /**
-     * The factor which is multiplied with the ThumbnailDescription to determine
-     * how large it is shown.
-     */
-    private float thumbnailSizeFactor = 1;
-
-
-    /**
      * sets the size of the TextArea.
      * This method is EDT safe.
      */
@@ -346,21 +342,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
         } else {
             SwingUtilities.invokeLater(runnable);
         }
-    }
-
-
-    private static int getTargetHeight(final JScrollPane jScrollPane) {
-        final Dimension textAreaSize = jScrollPane.getComponent(0).getPreferredSize();
-
-        int targetHeight;
-        if (textAreaSize.height < jScrollPane.getMinimumSize().height) {
-            targetHeight = jScrollPane.getMinimumSize().height;
-        } else if (textAreaSize.height > jScrollPane.getMaximumSize().height) {
-            targetHeight = jScrollPane.getMaximumSize().height;
-        } else {
-            targetHeight = (((textAreaSize.height / 30) + 1) * 30);
-        }
-        return targetHeight;
     }
 
     /**
