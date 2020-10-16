@@ -89,6 +89,9 @@ public class ThumbnailDescriptionTester {
         addCategoryButton.addActionListener((ActionEvent e) -> panel.addCategory("Category1"));
         buttonPanel.add(addCategoryButton);
 
+        final JButton addCategoryMenuButton = new JButton("add Category Menu");
+        addCategoryMenuButton.addActionListener((ActionEvent e) -> panel.addCategoryMenu());
+        buttonPanel.add(addCategoryMenuButton);
 
         final JButton setDescription1Button = new JButton("Set description 1");
         setDescription1Button.addActionListener(e -> panel.setDescription("This is a description text"));

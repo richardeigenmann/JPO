@@ -23,6 +23,9 @@ import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -84,6 +87,13 @@ public class ThumbnailDescriptionPanel extends JPanel {
     }
 
     final JButton categoryMenuPopupButton = new JButton("\uf0fe");
+
+    {
+        categoryMenuPopupButton.setBorder(new EmptyBorder(0, 5, 0, 0));
+        categoryMenuPopupButton.setContentAreaFilled(false);
+        categoryMenuPopupButton.setFocusPainted(false);
+        categoryMenuPopupButton.setOpaque(false);
+    }
 
     public static Font getLargeFont() {
         return LARGE_FONT;
@@ -245,14 +255,41 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * @param categoryDescription The category to show
      * @return the remove Button
      */
-    public AbstractButton addCategory(String categoryDescription) {
-        final JPanel categoryLabel = new JPanel();
-        categoryLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
-        categoryLabel.add(new JLabel(categoryDescription));
+    public AbstractButton addCategory(final String categoryDescription) {
+        final JPanel categoryPanel = new JPanel();
+        //categoryPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1, true));
+        final JLabel categoryLabel = new JLabel(categoryDescription) {
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                Dimension arcs = new Dimension(15, 15);
+                int width = getWidth();
+                int height = getHeight();
+                Graphics2D graphics = (Graphics2D) g;
+                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+
+                //Draws the rounded opaque panel with borders.
+                graphics.setColor(getBackground());
+                graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);//paint background
+                graphics.setColor(getForeground());
+                graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);//paint border
+                super.paintComponent(g);
+            }
+        };
+        final Border border = categoryLabel.getBorder();
+        final Border margin = new EmptyBorder(6, 6, 6, 6);
+        categoryLabel.setBorder(new CompoundBorder(border, margin));
+
+        categoryPanel.add(categoryLabel);
         final JButton removeButton = new JButton("\uf057");
+        removeButton.setBorder(new EmptyBorder(0, 0, 0, 0));
+        removeButton.setContentAreaFilled(false);
+        removeButton.setFocusPainted(false);
+        removeButton.setOpaque(false);
         removeButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
-        categoryLabel.add(removeButton);
-        categoriesJPanel.add(categoryLabel);
+        categoryPanel.add(removeButton);
+        categoriesJPanel.add(categoryPanel);
         categoriesJSP.revalidate();
         return removeButton;
     }
