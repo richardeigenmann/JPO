@@ -165,7 +165,7 @@ public class ThumbnailDescriptionController
         if (referringNode == null) {
             return;
         }
-        Object userObject = referringNode.getUserObject();
+        final Object userObject = referringNode.getUserObject();
         if (userObject != null && !panel.getDescription().equals(userObject.toString())) {
             // the description was changed
             if (userObject instanceof PictureInfo pi) {
@@ -218,14 +218,11 @@ public class ThumbnailDescriptionController
             final Collection<Integer> categories = pi.getCategoryAssignments();
             if (categories != null) {
                 categories.forEach(category -> {
-                    String categoryDescription = Settings.getPictureCollection().getCategory(category);
-                    AbstractButton component = panel.addCategory(categoryDescription);
+                    final String categoryDescription = Settings.getPictureCollection().getCategory(category);
+                    final AbstractButton component = panel.addCategory(categoryDescription);
                     component.addActionListener(e ->
                             JpoEventBus.getInstance().post(
-                                    new RemoveCategoryFromPictureInfoRequest(
-                                            category,
-                                            ((PictureInfo) referringNode.getUserObject())
-                                    )
+                                    new RemoveCategoryFromPictureInfoRequest(category, pi)
                             )
                     );
                 });

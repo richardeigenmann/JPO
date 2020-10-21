@@ -27,6 +27,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,7 +87,15 @@ public class ThumbnailDescriptionTester {
         buttonPanel.add(hideFilenameButton, "wrap");
 
         final JButton addCategoryButton = new JButton("add Category");
-        addCategoryButton.addActionListener((ActionEvent e) -> panel.addCategory("Category1"));
+        addCategoryButton.addActionListener((ActionEvent e) -> {
+            final AbstractButton button = panel.addCategory("Category1");
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    panel.removeFirstCategory();
+                }
+            });
+        });
         buttonPanel.add(addCategoryButton);
 
         final JButton addCategoryMenuButton = new JButton("add Category Menu");

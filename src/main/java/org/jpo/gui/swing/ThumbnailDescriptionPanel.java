@@ -20,7 +20,9 @@ package org.jpo.gui.swing;
 
 
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -63,6 +65,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      */
     private final JTextField highresLocationJTextField = new JTextField();
     private final JPanel categoriesJPanel = new JPanel();
+
     /**
      * The factor which is multiplied with the ThumbnailDescription to determine
      * how large it is shown.
@@ -132,7 +135,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
         pictureDescriptionJTA.setLineWrap(true);
         pictureDescriptionJTA.setEditable(true);
         pictureDescriptionJTA.setCaret(dumbCaret);
-
 
         this.add(categoriesJSP, "hidemode 2, wrap");
         categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 50));
@@ -250,6 +252,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     public void clearCategories() {
         categoriesJPanel.removeAll();
+        categoriesJSP.revalidate();
+        categoriesJSP.repaint();
     }
 
     /**
@@ -260,6 +264,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      * @return the remove Button
      */
     public AbstractButton addCategory(final String categoryDescription) {
+        Tools.checkEDT();
         final JPanel categoryPanel = new JPanel();
         final JLabel categoryLabel = new JLabel(categoryDescription) {
 
@@ -293,14 +298,22 @@ public class ThumbnailDescriptionPanel extends JPanel {
         removeButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
         categoryPanel.add(removeButton);
         categoriesJPanel.add(categoryPanel);
-        categoriesJSP.revalidate();
+        this.revalidate(); // makes the JScrollPanel reevaluate it's size so it grows
         return removeButton;
     }
 
+    @TestOnly
+    public void removeFirstCategory() {
+        categoriesJPanel.remove(0);
+        this.revalidate();
+        categoriesJSP.repaint();
+    }
+
+
     public void addCategoryMenu() {
+        Tools.checkEDT();
         categoriesJPanel.add(categoryMenuPopupButton);
         categoriesJPanel.revalidate();
-
     }
 
     /**
