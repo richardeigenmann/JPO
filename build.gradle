@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "3.0"
-    id "com.github.ben-manes.versions" version "0.33.0"
+    id "com.github.ben-manes.versions" version "0.34.0"
     id 'signing'
     id 'java'
     id 'jacoco'
@@ -97,7 +97,7 @@ dependencies {
     //implementation 'org.apache.commons:commons-jcs-jcache:2.2.1'
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'commons-logging:commons-logging:1.2'
-    implementation 'commons-net:commons-net:3.7.1'
+    implementation 'commons-net:commons-net:3.7.2'
     implementation 'commons-io:commons-io:2.8.0'
     implementation 'com.google.gdata:core:1.47.1'
 
@@ -156,7 +156,7 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
-    testImplementation('org.assertj:assertj-core:3.17.2')
+    testImplementation('org.assertj:assertj-core:3.18.0')
     testImplementation('org.assertj:assertj-swing:3.17.1')
 
 }
