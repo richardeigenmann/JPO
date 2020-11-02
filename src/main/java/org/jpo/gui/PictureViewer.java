@@ -93,14 +93,12 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         pictureJPanel.addStatusListener(new ScalablePictureListener() {
 
             /**
-             * this method gets invoked from the PicturePane object to notify of
-             * status changes. It updates the description panel at the bottom of
-             * the screen with the status. If the status was a notification of
-             * the image starting to load the progress bar is made visible. Any
-             * other status hides the progress bar.
+             * This method gets invoked from the ScalablePicture to notify of
+             * status changes. We use the notification to update the progress bar
+             * at the bottom of the screen.
              *
-             * @param pictureStatusCode the status code
-             * @param pictureStatusMessage the status message
+             * @param pictureStatusCode    the status code
+             * @param pictureStatusMessage the status message (not used)
              */
             @Override
             public void scalableStatusChange(final ScalablePictureStatus pictureStatusCode,
@@ -142,8 +140,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             }
 
             /**
-             * method that gets invoked from the PicturePane object to notify of
-             * status changes
+             * method that gets invoked from the ScalablePicture to notify of
+             * status changes in loading the image.
              *
              * @param statusCode the status code
              * @param percentage the percentage

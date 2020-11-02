@@ -335,8 +335,8 @@ public class SortableDefaultMutableTreeNode
     @Override
     public void setUserObject(final Object userObject) {
         if (userObject instanceof String s) {
-            LOGGER.severe("Why is ever being called?");
-            Object obj = getUserObject();
+            // this gets called when the JTree is being edited with F2
+            final Object obj = getUserObject();
             if (obj instanceof GroupInfo gi) {
                 gi.setGroupName(s);
             } else if (obj instanceof PictureInfo pi) {

@@ -32,10 +32,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -1136,30 +1134,11 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleCopyToZipfileRequest(final CopyToZipfileRequest request) {
-
         final File tempFile = new File(request.targetZipfile().getAbsolutePath() + ".org.jpo.temp");
         int picsCopied = 0;
         try (final ZipArchiveOutputStream zipArchiveOutputStream = new ZipArchiveOutputStream(tempFile)) {
             zipArchiveOutputStream.setLevel(9);
-            for (SortableDefaultMutableTreeNode node : request.nodes()) {
-                if (node.getUserObject() instanceof PictureInfo pi) {
-                    final File sourceFile = pi.getImageFile();
-                    LOGGER.log(Level.INFO, "Processing file {0}", sourceFile);
-
-                    final ZipArchiveEntry entry = new ZipArchiveEntry(sourceFile, sourceFile.getName());
-                    zipArchiveOutputStream.putArchiveEntry(entry);
-
-                    try (final FileInputStream fis = new FileInputStream(sourceFile)) {
-                        fis.transferTo(zipArchiveOutputStream);
-                    }
-                    zipArchiveOutputStream.closeArchiveEntry();
-
-                    picsCopied++;
-
-                } else {
-                    LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
-                }
-            }
+            picsCopied += addPicturesToZip(zipArchiveOutputStream, request.nodes());
 
             if (request.targetZipfile().exists()) {
                 // copy the old entries over
@@ -1205,6 +1184,34 @@ public class ApplicationEventHandler {
                 Settings.getJpoResources().getString("genericInfo"),
                 JOptionPane.INFORMATION_MESSAGE);
 
+    }
+
+
+    private int addPicturesToZip(
+            final ZipArchiveOutputStream zipArchiveOutputStream,
+            final Collection<SortableDefaultMutableTreeNode> nodes)
+            throws IOException {
+        int picsCopied = 0;
+        for (final SortableDefaultMutableTreeNode node : nodes) {
+            if (node.getUserObject() instanceof PictureInfo pi) {
+                final File sourceFile = pi.getImageFile();
+                LOGGER.log(Level.INFO, "Processing file {0}", sourceFile);
+
+                final ZipArchiveEntry entry = new ZipArchiveEntry(sourceFile, sourceFile.getName());
+                zipArchiveOutputStream.putArchiveEntry(entry);
+
+                try (final FileInputStream fis = new FileInputStream(sourceFile)) {
+                    fis.transferTo(zipArchiveOutputStream);
+                }
+                zipArchiveOutputStream.closeArchiveEntry();
+
+                picsCopied++;
+
+            } else {
+                LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
+            }
+        }
+        return picsCopied;
     }
 
     /**
@@ -1382,14 +1389,8 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleDeleteMultiNodeFileRequest(final DeleteMultiNodeFileRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodes = request.nodes();
         final JTextArea textArea = new JTextArea();
-        textArea.setText("");
-        for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
-            if (selectedNode.getUserObject() instanceof PictureInfo) {
-                textArea.append(((PictureInfo) selectedNode.getUserObject()).getImageLocation() + "\n");
-            }
-        }
+        textArea.setText(getFilenames(request.nodes()));
         textArea.append(Settings.getJpoResources().getString("areYouSure"));
 
         final int option = JOptionPane.showConfirmDialog(
@@ -1399,7 +1400,7 @@ public class ApplicationEventHandler {
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
-            for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
+            for (final SortableDefaultMutableTreeNode selectedNode : request.nodes()) {
                 if (selectedNode.getUserObject() instanceof PictureInfo pi) {
                     final File highresFile = pi.getImageFile();
                     if (highresFile.exists()) {
@@ -1418,6 +1419,16 @@ public class ApplicationEventHandler {
             }
             Settings.getPictureCollection().clearSelection();
         }
+    }
+
+    private String getFilenames(final Collection<SortableDefaultMutableTreeNode> nodes) {
+        final StringBuilder sb = new StringBuilder();
+        for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
+            if (selectedNode.getUserObject() instanceof PictureInfo) {
+                sb.append(((PictureInfo) selectedNode.getUserObject()).getImageLocation() + "\n");
+            }
+        }
+        return sb.toString();
     }
 
     /**

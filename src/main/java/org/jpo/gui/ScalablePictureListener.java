@@ -5,9 +5,7 @@ import org.jpo.gui.SourcePicture.SourcePictureStatus;
 
 
 /*
- statusListener.java:  interface for notification
-
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,26 +19,27 @@ import org.jpo.gui.SourcePicture.SourcePictureStatus;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- * This interface allows an object to inform another object that the status it
- * is listening on has changed.
+ * This interface allows the image loaders to update the view about
+ * changes in the image loading status.
  */
 public interface ScalablePictureListener {
 
     /**
      * inform the listener that the status has changed
      *
-     * @param statusCode statis code
+     * @param statusCode    status code
      * @param statusMessage status message
      */
-    void scalableStatusChange(ScalablePictureStatus statusCode, String statusMessage);
+    void scalableStatusChange(final ScalablePictureStatus statusCode, final String statusMessage);
 
     /**
      * inform the listener of progress on the loading of the image
      *
      * @param statusCode status code
-     * @param percentage status message
+     * @param percentage the percentage done
      */
-    void sourceLoadProgressNotification(SourcePictureStatus statusCode, int percentage);
+    void sourceLoadProgressNotification(final SourcePictureStatus statusCode, final int percentage);
 
 }

@@ -191,8 +191,7 @@ public class CategoryUsageJFrame extends JFrame {
             LOGGER.log(Level.INFO, "Checking Category: {0} {1}", new Object[]{c.getKey().toString(), c.toString()});
 
             for (final SortableDefaultMutableTreeNode pictureNode : selectedNodes) {
-                myObject = pictureNode.getUserObject();
-                if (myObject instanceof PictureInfo pi) {
+                if (pictureNode.getUserObject() instanceof PictureInfo pi) {
                     if (pi.containsCategory(c.getKey())) {
                         currentStatus = c.getStatus();
                         LOGGER.log(Level.INFO, "Status of category is: {0}", Integer.toString(currentStatus));
