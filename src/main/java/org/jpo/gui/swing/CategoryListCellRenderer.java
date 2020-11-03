@@ -44,7 +44,7 @@ public class CategoryListCellRenderer extends JCheckBox implements ListCellRende
             final boolean cellHasFocus) {
 
         int status = category.getStatus();
-        if (status == Category.UNDEFINED) {
+        if (status == Category.UNDEFINED || status == Category.UN_SELECTED) {
             setSelected(false);
             setEnabled(true);
         } else if (status == Category.SELECTED) {
@@ -52,10 +52,7 @@ public class CategoryListCellRenderer extends JCheckBox implements ListCellRende
             setEnabled(true);
         } else if (status == Category.BOTH) {
             setSelected(false);
-            setEnabled( false );
-        } else if ( status == Category.UN_SELECTED ) {
-            setSelected( false );
-            setEnabled( true );
+            setEnabled(false);
         }
         setText( category.toString() );
 

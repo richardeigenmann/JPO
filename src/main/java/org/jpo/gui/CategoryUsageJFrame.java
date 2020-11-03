@@ -182,7 +182,6 @@ public class CategoryUsageJFrame extends JFrame {
         }
 
         int currentStatus;
-        Object myObject;
 
         // loop through each category on the list and check we have a node that
         final Enumeration<Category> categoryEnumeration2 = listModel.elements();
