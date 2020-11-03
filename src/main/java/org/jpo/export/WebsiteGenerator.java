@@ -2,6 +2,7 @@ package org.jpo.export;
 
 import com.jcraft.jsch.*;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -624,83 +625,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
                 midresHtmlWriter.newLine();
 
-                { //Up Link
-                    midresHtmlWriter.write("<p><a href=\""
-                            + groupFile.getName()
-                            + "#"
-                            + StringEscapeUtils.escapeHtml4(lowresFile.getName())
-                            + "\">Up</a>");
-                    midresHtmlWriter.write("&nbsp;");
-                    midresHtmlWriter.newLine();
-                    // Link to Previous
-                    if (childNumber != 1) {
-                        String previousHtmlFilename;
-                        switch (request.getPictureNaming()) {
-                            case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                                SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
-                                Object userObject = priorNode.getUserObject();
-                                if (userObject instanceof PictureInfo pi) {
-                                    previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
-                                } else {
-                                    previousHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
-                                }
-                                break;
-                            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 2);
-                                final String padding = "00000";
-                                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                                previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
-                                break;
-                            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                                int hashCode = (pictureNode.getParent()).getChildAt(childNumber - 2).hashCode();
-                                previousHtmlFilename = "jpo_" + hashCode + ".htm";
-                                break;
-                        }
-                        midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", previousHtmlFilename));
-                        midresHtmlWriter.write("&nbsp;");
-                    }
-                    if (request.isLinkToHighres()) {
-                        midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">Highres</a>");
-                        midresHtmlWriter.write("&nbsp;");
-                    } else if (request.isExportHighres()) {
-                        // Link to Highres in target directory
-                        midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">Highres</a>");
-                        midresHtmlWriter.write("&nbsp;");
-                    }
-                    // Linkt to Next
-                    if (childNumber != childCount) {
-                        String nextHtmlFilename;
-                        switch (request.getPictureNaming()) {
-                            case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                                SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
-                                Object userObject = priorNode.getUserObject();
-                                if (userObject instanceof PictureInfo pi) {
-                                    nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
-                                } else {
-                                    nextHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
-                                }
-                                break;
-                            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber());
-                                final String padding = "00000";
-                                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                                nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
-                                break;
-                            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                                final int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
-                                nextHtmlFilename = "jpo_" + hashCode + ".htm";
-                                break;
-                        }
-
-                        midresHtmlWriter.write("<a href=\"" + nextHtmlFilename + "\">Next</a>");
-                        midresHtmlWriter.newLine();
-                    }
-                    if (request.isGenerateZipfile()) {
-                        midresHtmlWriter.write("<br><a href=\"" + request.getDownloadZipFileName() + "\">Download Zip</a>");
-                        midresHtmlWriter.newLine();
-                    }
-                    midresHtmlWriter.write("</p>");
-                }
+                writUpLink(pictureNode, groupFile, childNumber, childCount, pictureInfo, lowresFile, highresFile, midresHtmlWriter);
 
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
@@ -759,6 +684,85 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         }
         picsWroteCounter++;
+    }
+
+    private void writUpLink(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final PictureInfo pictureInfo, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
+        //Up Link
+        midresHtmlWriter.write("<p><a href=\""
+                + groupFile.getName()
+                + "#"
+                + StringEscapeUtils.escapeHtml4(lowresFile.getName())
+                + "\">Up</a>");
+        midresHtmlWriter.write("&nbsp;");
+        midresHtmlWriter.newLine();
+        // Link to Previous
+        if (childNumber != 1) {
+            String previousHtmlFilename;
+            switch (request.getPictureNaming()) {
+                case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                    SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
+                    Object userObject = priorNode.getUserObject();
+                    if (userObject instanceof PictureInfo pi) {
+                        previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
+                    } else {
+                        previousHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
+                    }
+                    break;
+                case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 2);
+                    final String padding = "00000";
+                    final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                    previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
+                    break;
+                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+                    int hashCode = (pictureNode.getParent()).getChildAt(childNumber - 2).hashCode();
+                    previousHtmlFilename = "jpo_" + hashCode + ".htm";
+                    break;
+            }
+            midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", previousHtmlFilename));
+            midresHtmlWriter.write("&nbsp;");
+        }
+        if (request.isLinkToHighres()) {
+            midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">Highres</a>");
+            midresHtmlWriter.write("&nbsp;");
+        } else if (request.isExportHighres()) {
+            // Link to Highres in target directory
+            midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">Highres</a>");
+            midresHtmlWriter.write("&nbsp;");
+        }
+        // Linkt to Next
+        if (childNumber != childCount) {
+            String nextHtmlFilename;
+            switch (request.getPictureNaming()) {
+                case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                    SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
+                    Object userObject = priorNode.getUserObject();
+                    if (userObject instanceof PictureInfo pi) {
+                        nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
+                    } else {
+                        nextHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
+                    }
+                    break;
+                case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber());
+                    final String padding = "00000";
+                    final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                    nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
+                    break;
+                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+                    final int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
+                    nextHtmlFilename = "jpo_" + hashCode + ".htm";
+                    break;
+            }
+
+            midresHtmlWriter.write("<a href=\"" + nextHtmlFilename + "\">Next</a>");
+            midresHtmlWriter.newLine();
+        }
+        if (request.isGenerateZipfile()) {
+            midresHtmlWriter.write("<br><a href=\"" + request.getDownloadZipFileName() + "\">Download Zip</a>");
+            midresHtmlWriter.newLine();
+        }
+        midresHtmlWriter.write("</p>");
     }
 
 
@@ -1120,48 +1124,57 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return b;
     }
 
-    private void ftpCopyToServer(final List<File> files) {
+    /*
+     * to test you can start up a simple ftp server with docker:
+     * ocker run -d -v <directory on your host>:/home/vsftpd  -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=richi -e FTP_PASS=password -e PASV_ADDRESS=<ip addres, yes ip, not hostname!> --name ftp --restart=always bogem/ftp
+     */
+    private void ftpCopyToServer(final Collection<File> files) {
         LOGGER.info("Setting up ftp connection:");
         final FTPClient ftp = new FTPClient();
-        int reply;
         try {
             ftp.connect(request.getFtpServer(), request.getFtpPort());
-            reply = ftp.getReplyCode();
+            int reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
                 LOGGER.severe("FTP server refused connection.");
-                return;
+                throw new IOException("FTP server refused connection.");
             }
 
             LOGGER.info("Good connection:");
-            __main:
-            {
-                if (!ftp.login(request.getFtpUser(), request.getFtpPassword())) {
-                    ftp.logout();
-                    LOGGER.info("Could not log in.");
-                    break __main;
-                }
-
-                LOGGER.info("Remote system is " + ftp.getSystemType());
-                ftp.setFileType(FTP.BINARY_FILE_TYPE);
-                ftp.enterLocalPassiveMode();
+            if (!ftp.login(request.getFtpUser(), request.getFtpPassword())) {
+                LOGGER.severe("Could not log on.");
+                throw new IOException("Could not log on");
             }
 
+            LOGGER.info("Remote system is " + ftp.getSystemType());
+            ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+            boolean binarymode = ftp.setFileType(FTP.BINARY_FILE_TYPE);
+            LOGGER.log(Level.INFO, "Binarymode: {0}", binarymode);
+            ftp.enterLocalPassiveMode();
             for (final File file : files) {
                 final InputStream input = new BufferedInputStream(new FileInputStream(file));
                 final String remote = request.getFtpTargetDir() + file.getName();
-                LOGGER.log(Level.INFO, "Putting file {0} to {1}", new Object[]{file.getAbsolutePath(), remote});
-                ftp.storeFile(remote, input);
+                LOGGER.log(Level.INFO, "Putting file {0} to {1}:{2}", new Object[]{file, request.getFtpServer(), remote});
+                boolean done = ftp.storeFile(remote, input);
+                LOGGER.log(Level.INFO, "stored file successfully: {0}", done);
                 input.close();
             }
-
         } catch (final IOException ex) {
             Logger.getLogger(WebsiteGenerator.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (ftp.isConnected()) {
+                    ftp.logout();
+                    ftp.disconnect();
+                }
+            } catch (final IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
     /**
-     * Adds a image to the ZipFile
+     * Adds an image to the ZipFile
      *
      * @param zipFile     The zip to which to add
      * @param pictureInfo The image to add
