@@ -7,6 +7,7 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.ProgressGui;
@@ -50,6 +51,7 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE
  */
 public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
+    public static final String JPO_JS = "jpo.js";
     /**
      * Defines a logger for this class
      */
@@ -57,12 +59,26 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static final String JPO_CSS = "jpo.css";
     private static final String ROBOTS_TXT = "robots.txt";
     private static final String INDEX_PAGE = "index.htm";
-    public static final String JPO_JS = "jpo.js";
-
+    /**
+     * static size of the buffer to be used in copy operations
+     */
+    private static final int BUFFER_SIZE = 2048;
     /**
      * Temporary object to scale the image for the html output.
      */
     private final ScalablePicture scp = new ScalablePicture();
+    /**
+     * Array of the files created
+     */
+    private final List<File> files = new ArrayList<>();
+    /**
+     * The preferences that define how to render the Html page.
+     */
+    private final GenerateWebsiteRequest request;
+    /**
+     * This object holds a reference to the progress GUI for the user.
+     */
+    private final ProgressGui progressGui;
     /**
      * counter that is incremented with every new picture and is used to
      * determine the number for the next one.
@@ -77,22 +93,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * Handle for the zipfile
      */
     private ZipOutputStream zipFile;
-    /**
-     * Array of the files created
-     */
-    private final List<File> files = new ArrayList<>();
-    /**
-     * static size of the buffer to be used in copy operations
-     */
-    private static final int BUFFER_SIZE = 2048;
-    /**
-     * The preferences that define how to render the Html page.
-     */
-    private final GenerateWebsiteRequest request;
-
-    public static WebsiteGenerator generateWebsite(final GenerateWebsiteRequest request) {
-        return new WebsiteGenerator(request);
-    }
 
     /**
      * Creates and starts a Swing Worker that renders the web page files to the
@@ -127,6 +127,212 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
         new GetCountWorker().execute();
         execute();
+    }
+
+    public static WebsiteGenerator generateWebsite(final GenerateWebsiteRequest request) {
+        return new WebsiteGenerator(request);
+    }
+
+    /**
+     * return everything of the filename up to the extension.
+     *
+     * @param s The string for which the root of the filename is being requested
+     * @return the filename
+     */
+    public static String getFilenameRoot(final String s) {
+        String fnroot = null;
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 && i < s.length() - 1) {
+            fnroot = s.substring(0, i);
+        }
+        return fnroot;
+    }
+
+
+    static final Map<String, String> characterTranslation = new HashMap<>() {{
+        put(" ", "_");
+        put("%20", "_");
+        put("&", "_and_");
+        put("|", "l");
+        put("<", "_");
+        put(">", "_");
+        put("@", "_");
+        put(":", "_");
+        put("$", "_");
+        put("£", "_");
+        put("^", "_");
+        put("~", "_");
+        put("\"", "_");
+        put("'", "_");
+        put("`", "_");
+        put("?", "_");
+        put("[", "_");
+        put("]", "_");
+        put("{", "_");
+        put("}", "_");
+        put("(", "_");
+        put(")", "_");
+        put("*", "_");
+        put("+", "_");
+        put("/", "_");
+        put("\\", "_");
+        put("%", "_");
+    }};
+
+    /**
+     * Translates characters which are problematic in a filename into
+     * unproblematic characters
+     *
+     * @param string The filename to clean up
+     * @return The cleaned up filename
+     */
+    public static String cleanupFilename(final String string) {
+        String returnString = string;
+        for (final String key : characterTranslation.keySet()) {
+            if (returnString.contains(key)) {
+                returnString = returnString.replace(key, characterTranslation.get(key));
+            }
+        }
+        return returnString;
+    }
+
+    private static int checkAck(final InputStream in) throws IOException {
+        int b = in.read();
+        // b may be 0 for success,
+        //          1 for error,
+        //          2 for fatal error,
+        //          -1
+        if (b == 0) {
+            return b;
+        }
+        if (b == -1) {
+            return b;
+        }
+
+        if (b == 1 || b == 2) {
+            final StringBuilder sb = new StringBuilder();
+            int c;
+            do {
+                c = in.read();
+                sb.append((char) c);
+            } while (c != '\n');
+            if (b == 1) { // error
+                LOGGER.log(Level.INFO, "{0}", sb);
+            }
+            if (b == 2) { // fatal error
+                LOGGER.log(Level.INFO, "{0}", sb);
+            }
+        }
+        return b;
+    }
+
+    /**
+     * Adds an image to the ZipFile
+     *
+     * @param zipFile     The zip to which to add
+     * @param pictureInfo The image to add
+     * @param highresFile The name of the file to add
+     */
+    public static void addToZipFile(final ZipOutputStream zipFile, final PictureInfo pictureInfo, File highresFile) {
+        LOGGER.log(Level.FINE, "Adding to zipfile: {0}", highresFile);
+        try (
+                final InputStream in = new FileInputStream(pictureInfo.getImageFile());
+                final BufferedInputStream bin = new BufferedInputStream(in)) {
+
+            final ZipEntry entry = new ZipEntry(highresFile.getName());
+            zipFile.putNextEntry(entry);
+
+            int count;
+            final byte[] data = new byte[BUFFER_SIZE];
+            while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
+                zipFile.write(data, 0, count);
+            }
+        } catch (final IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile, e});
+        }
+
+    }
+
+    /**
+     * Write the org.jpo.css file to the target directory.
+     *
+     * @param directory The directory to write to
+     */
+    public static void writeCss(final File directory) {
+        ClassLoader cl = JpoWriter.class.getClassLoader();
+        try (
+                final InputStream in = Objects.requireNonNull(cl.getResource(JPO_CSS)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_CSS));
+                final BufferedInputStream bin = new BufferedInputStream(in);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+            int c;
+
+            while ((c = bin.read()) != -1) {
+                outStream.write(c);
+            }
+
+        } catch (final IOException e) {
+            JOptionPane.showMessageDialog(
+                    Settings.getAnchorFrame(),
+                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Write the robots.txt file to the target directory.
+     *
+     * @param directory The directory to write to
+     */
+    public static void writeRobotsTxt(final File directory) {
+        final ClassLoader cl = JpoWriter.class.getClassLoader();
+        try (
+                final InputStream in = Objects.requireNonNull(cl.getResource(ROBOTS_TXT)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, ROBOTS_TXT));
+                final BufferedInputStream bin = new BufferedInputStream(in);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+            int c;
+
+            while ((c = bin.read()) != -1) {
+                bout.write(c);
+            }
+
+        } catch (final IOException e) {
+            JOptionPane.showMessageDialog(
+                    Settings.getAnchorFrame(),
+                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Write the org.jpo.js file to the target directory.
+     *
+     * @param directory The directory to write to
+     */
+    public static void writeJpoJs(final File directory) {
+        final ClassLoader cl = JpoWriter.class.getClassLoader();
+        try (
+                final InputStream in = Objects.requireNonNull(cl.getResource(JPO_JS)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_JS));
+                final BufferedInputStream bin = new BufferedInputStream(in);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
+            int c;
+
+            while ((c = bin.read()) != -1) {
+                bout.write(c);
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    Settings.getAnchorFrame(),
+                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
+                    Settings.getJpoResources().getString("genericWarning"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**
@@ -202,11 +408,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         return Integer.MAX_VALUE;
     }
-
-    /**
-     * This object holds a reference to the progress GUI for the user.
-     */
-    private final ProgressGui progressGui;
 
     /**
      * This method is called by SwingWorker when the background process sends a
@@ -360,15 +561,15 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     /**
      * Write html for a picture in the set of webpages.
      *
+     * @param pictureNode        The node for which the HTML is to be written
+     * @param out                The opened output stream of the overview page to which the
+     *                           thumbnail tags should be written
+     * @param groupFile          The name of the html file that holds the small
+     *                           thumbnails of the parent group
+     * @param childNumber        The current position of the picture in the group
+     * @param childCount         The total number of pictures in the group
+     * @param descriptionsBuffer A buffer for the thumbnails page
      * @throws IOException If there was some sort of IO Error.
-     * @param    pictureNode    The node for which the HTML is to be written
-     * @param    out    The opened output stream of the overview page to which the
-     * thumbnail tags should be written
-     * @param    groupFile    The name of the html file that holds the small
-     * thumbnails of the parent group
-     * @param    childNumber    The current position of the picture in the group
-     * @param    childCount    The total number of pictures in the group
-     * @param    descriptionsBuffer    A buffer for the thumbnails page
      */
     private void writePicture(
             final SortableDefaultMutableTreeNode pictureNode,
@@ -625,7 +826,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
                 midresHtmlWriter.newLine();
 
-                writUpLink(pictureNode, groupFile, childNumber, childCount, pictureInfo, lowresFile, highresFile, midresHtmlWriter);
+                writeLinks(pictureNode, groupFile, childNumber, childCount, pictureInfo, lowresFile, highresFile, midresHtmlWriter);
 
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
@@ -686,8 +887,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         picsWroteCounter++;
     }
 
-    private void writUpLink(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final PictureInfo pictureInfo, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
-        //Up Link
+    private void writeLinks(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final PictureInfo pictureInfo, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
         midresHtmlWriter.write("<p><a href=\""
                 + groupFile.getName()
                 + "#"
@@ -695,31 +895,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 + "\">Up</a>");
         midresHtmlWriter.write("&nbsp;");
         midresHtmlWriter.newLine();
-        // Link to Previous
         if (childNumber != 1) {
-            String previousHtmlFilename;
-            switch (request.getPictureNaming()) {
-                case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                    SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
-                    Object userObject = priorNode.getUserObject();
-                    if (userObject instanceof PictureInfo pi) {
-                        previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
-                    } else {
-                        previousHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
-                    }
-                    break;
-                case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 2);
-                    final String padding = "00000";
-                    final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                    previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
-                    break;
-                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                    int hashCode = (pictureNode.getParent()).getChildAt(childNumber - 2).hashCode();
-                    previousHtmlFilename = "jpo_" + hashCode + ".htm";
-                    break;
-            }
-            midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", previousHtmlFilename));
+            midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", getPreviousHtmlFilename(pictureNode, childNumber)));
             midresHtmlWriter.write("&nbsp;");
         }
         if (request.isLinkToHighres()) {
@@ -730,32 +907,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">Highres</a>");
             midresHtmlWriter.write("&nbsp;");
         }
-        // Linkt to Next
         if (childNumber != childCount) {
-            String nextHtmlFilename;
-            switch (request.getPictureNaming()) {
-                case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                    SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
-                    Object userObject = priorNode.getUserObject();
-                    if (userObject instanceof PictureInfo pi) {
-                        nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
-                    } else {
-                        nextHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
-                    }
-                    break;
-                case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber());
-                    final String padding = "00000";
-                    final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                    nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
-                    break;
-                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                    final int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
-                    nextHtmlFilename = "jpo_" + hashCode + ".htm";
-                    break;
-            }
-
-            midresHtmlWriter.write("<a href=\"" + nextHtmlFilename + "\">Next</a>");
+            midresHtmlWriter.write("<a href=\"" + getNextHtmlFilename(pictureNode, childNumber, childCount) + "\">Next</a>");
             midresHtmlWriter.newLine();
         }
         if (request.isGenerateZipfile()) {
@@ -765,6 +918,58 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         midresHtmlWriter.write("</p>");
     }
 
+    @NotNull
+    private String getPreviousHtmlFilename(SortableDefaultMutableTreeNode pictureNode, int childNumber) {
+        String previousHtmlFilename;
+        switch (request.getPictureNaming()) {
+            case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
+                Object userObject = priorNode.getUserObject();
+                if (userObject instanceof PictureInfo pi) {
+                    previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
+                } else {
+                    previousHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
+                }
+                break;
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 2);
+                final String padding = "00000";
+                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                previousHtmlFilename = "jpo_" + formattedNumber + ".htm";
+                break;
+            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+                int hashCode = (pictureNode.getParent()).getChildAt(childNumber - 2).hashCode();
+                previousHtmlFilename = "jpo_" + hashCode + ".htm";
+                break;
+        }
+        return previousHtmlFilename;
+    }
+
+    private String getNextHtmlFilename(final SortableDefaultMutableTreeNode pictureNode, final int childNumber, final int childCount) throws IOException {
+        String nextHtmlFilename;
+        switch (request.getPictureNaming()) {
+            case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
+                Object userObject = priorNode.getUserObject();
+                if (userObject instanceof PictureInfo pi) {
+                    nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
+                } else {
+                    nextHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
+                }
+                break;
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber());
+                final String padding = "00000";
+                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                nextHtmlFilename = "jpo_" + formattedNumber + ".htm";
+                break;
+            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+                final int hashCode = (pictureNode.getParent()).getChildAt(childNumber).hashCode();
+                nextHtmlFilename = "jpo_" + hashCode + ".htm";
+                break;
+        }
+        return nextHtmlFilename;
+    }
 
     private File getOutputImageFilename(final PictureInfo pictureInfo, final String extension) {
         switch (request.getPictureNaming()) {
@@ -783,216 +988,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final String fn = "jpo_" + pictureInfo.hashCode();
                 return new File(request.getTargetDirectory(), fn + extension);
             }
-        }
-    }
-
-
-    /**
-     * return everything of the filename up to the extension.
-     *
-     * @param s The string for which the root of the filename is being requested
-     * @return the filename
-     */
-    public static String getFilenameRoot(final String s) {
-        String fnroot = null;
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 && i < s.length() - 1) {
-            fnroot = s.substring(0, i);
-        }
-        return fnroot;
-    }
-
-
-    /**
-     * Translates characters which are problematic in a filename into
-     * unproblematic characters
-     *
-     * @param string The filename to clean up
-     * @return The cleaned up filename
-     */
-    public static String cleanupFilename(final String string) {
-        String returnString = string;
-        if (returnString.contains(" ")) {
-            returnString = returnString.replace(" ", "_");  // replace blank with underscore
-        }
-        if (returnString.contains("%20")) {
-            returnString = returnString.replace("%20", "_");  // replace blank with underscore
-        }
-        if (returnString.contains("&")) {
-            returnString = returnString.replace("&", "_and_");  // replace ampersand with _and_
-        }
-        if (returnString.contains("|")) {
-            returnString = returnString.replace("|", "l");  // replace pipe with lowercase L
-        }
-        if (returnString.contains("<")) {
-            returnString = returnString.replace("<", "_");
-        }
-        if (returnString.contains(">")) {
-            returnString = returnString.replace(">", "_");
-        }
-        if (returnString.contains("@")) {
-            returnString = returnString.replace("@", "_");
-        }
-        if (returnString.contains(":")) {
-            returnString = returnString.replace(":", "_");
-        }
-        if (returnString.contains("$")) {
-            returnString = returnString.replace("$", "_");
-        }
-        if (returnString.contains("£")) {
-            returnString = returnString.replace("£", "_");
-        }
-        if (returnString.contains("^")) {
-            returnString = returnString.replace("^", "_");
-        }
-        if (returnString.contains("~")) {
-            returnString = returnString.replace("~", "_");
-        }
-        if (returnString.contains("\"")) {
-            returnString = returnString.replace("\"", "_");
-        }
-        if (returnString.contains("'")) {
-            returnString = returnString.replace("'", "_");
-        }
-        if (returnString.contains("`")) {
-            returnString = returnString.replace("`", "_");
-        }
-        if (returnString.contains("?")) {
-            returnString = returnString.replace("?", "_");
-        }
-        if (returnString.contains("[")) {
-            returnString = returnString.replace("[", "_");
-        }
-        if (returnString.contains("]")) {
-            returnString = returnString.replace("]", "_");
-        }
-        if (returnString.contains("{")) {
-            returnString = returnString.replace("{", "_");
-        }
-        if (returnString.contains("}")) {
-            returnString = returnString.replace("}", "_");
-        }
-        if (returnString.contains("(")) {
-            returnString = returnString.replace("(", "_");
-        }
-        if (returnString.contains(")")) {
-            returnString = returnString.replace(")", "_");
-        }
-        if (returnString.contains("*")) {
-            returnString = returnString.replace("*", "_");
-        }
-        if (returnString.contains("+")) {
-            returnString = returnString.replace("+", "_");
-        }
-        if (returnString.contains("/")) {
-            returnString = returnString.replace("/", "_");
-        }
-        if (returnString.contains("\\")) {
-            returnString = returnString.replace("\\", "_");
-        }
-        if (returnString.contains("%")) {
-            returnString = returnString.replace("%", "_");  //Important for this one to be at the end as the loading into JPO converts funny chars to %xx values
-        }
-
-        return returnString;
-    }
-
-
-    /**
-     * Inner class that keeps a buffer of the picture descriptions and will
-     * output a table row with the buffered descriptions when the buffer has
-     * reached it's limit.
-     */
-    private class DescriptionsBuffer {
-
-        /**
-         * The number of columns on the Thumbnail page.
-         */
-        private final int columns;
-        /**
-         * The HTML page for the Thumbnails.
-         */
-        private final BufferedWriter out;
-        /**
-         * A counter variable.
-         */
-        private int picCounter;
-        /**
-         * An array holding the strings of the pictures.
-         */
-        private final String[] descriptions;
-
-        /**
-         * Creates a Description buffer with the indicated number of columns.
-         *
-         * @param columns The number of columns being generated
-         * @param out     The Thumbnail page
-         */
-        DescriptionsBuffer(final int columns, final BufferedWriter out) {
-            this.columns = columns;
-            this.out = out;
-            descriptions = new String[request.getPicsPerRow()];
-        }
-
-        /**
-         * Adds the supplied string to the buffer and performs a check whether
-         * the buffer is full If the buffer is full it flushes it.
-         *
-         * @param description The String to be added.
-         * @throws IOException if anything went wrong with the writing.
-         */
-        public void putDescription(final String description) throws IOException {
-            descriptions[picCounter] = description;
-            picCounter++;
-            flushIfNescessary();
-        }
-
-        /**
-         * Checks whether the buffer is full and if so will terminate the
-         * current line, flush the buffer and start a new line.
-         *
-         * @throws IOException if something went wrong with writing.
-         */
-        public void flushIfNescessary() throws IOException {
-            if (picCounter == columns) {
-                out.write("</tr>");
-                flushDescriptions();
-                out.write("<tr>");
-
-            }
-        }
-
-        /**
-         * method that writes the descriptions[] array to the html file. As each
-         * picture's img tag was written to the file the description was kept in
-         * an array. This method is called each time the row of img is full. The
-         * method is also called when the last picture has been written. The
-         * array elements are set to null after writing so that the last row can
-         * determine when to stop writing the pictures (the row can of course be
-         * incomplete).
-         *
-         * @throws IOException If writing didn't work.
-         */
-        public void flushDescriptions() throws IOException {
-            out.newLine();
-            out.write("<tr>");
-            out.newLine();
-
-            for (int i = 0; i < columns; i++) {
-                if (descriptions[i] != null) {
-                    out.write("<td class=\"descriptionCell\">");
-
-                    out.write(StringEscapeUtils.escapeHtml4(descriptions[i]));
-
-                    out.write("</td>");
-                    out.newLine();
-                    descriptions[i] = null;
-                }
-            }
-            picCounter = 0;
-            out.write("</tr>");
-            out.newLine();
         }
     }
 
@@ -1094,36 +1089,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
-    private static int checkAck(final InputStream in) throws IOException {
-        int b = in.read();
-        // b may be 0 for success,
-        //          1 for error,
-        //          2 for fatal error,
-        //          -1
-        if (b == 0) {
-            return b;
-        }
-        if (b == -1) {
-            return b;
-        }
-
-        if (b == 1 || b == 2) {
-            final StringBuilder sb = new StringBuilder();
-            int c;
-            do {
-                c = in.read();
-                sb.append((char) c);
-            } while (c != '\n');
-            if (b == 1) { // error
-                LOGGER.log(Level.INFO, "{0}", sb);
-            }
-            if (b == 2) { // fatal error
-                LOGGER.log(Level.INFO, "{0}", sb);
-            }
-        }
-        return b;
-    }
-
     /*
      * to test you can start up a simple ftp server with docker:
      * ocker run -d -v <directory on your host>:/home/vsftpd  -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=richi -e FTP_PASS=password -e PASV_ADDRESS=<ip addres, yes ip, not hostname!> --name ftp --restart=always bogem/ftp
@@ -1174,110 +1139,99 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     /**
-     * Adds an image to the ZipFile
-     *
-     * @param zipFile     The zip to which to add
-     * @param pictureInfo The image to add
-     * @param highresFile The name of the file to add
+     * Inner class that keeps a buffer of the picture descriptions and will
+     * output a table row with the buffered descriptions when the buffer has
+     * reached it's limit.
      */
-    public static void addToZipFile(final ZipOutputStream zipFile, final PictureInfo pictureInfo, File highresFile) {
-        LOGGER.log(Level.FINE, "Adding to zipfile: {0}", highresFile);
-        try (
-                final InputStream in = new FileInputStream(pictureInfo.getImageFile());
-                final BufferedInputStream bin = new BufferedInputStream(in)) {
+    private class DescriptionsBuffer {
 
-            final ZipEntry entry = new ZipEntry(highresFile.getName());
-            zipFile.putNextEntry(entry);
+        /**
+         * The number of columns on the Thumbnail page.
+         */
+        private final int columns;
+        /**
+         * The HTML page for the Thumbnails.
+         */
+        private final BufferedWriter out;
+        /**
+         * An array holding the strings of the pictures.
+         */
+        private final String[] descriptions;
+        /**
+         * A counter variable.
+         */
+        private int picCounter;
 
-            int count;
-            final byte[] data = new byte[BUFFER_SIZE];
-            while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
-                zipFile.write(data, 0, count);
-            }
-        } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{highresFile, e});
+        /**
+         * Creates a Description buffer with the indicated number of columns.
+         *
+         * @param columns The number of columns being generated
+         * @param out     The Thumbnail page
+         */
+        DescriptionsBuffer(final int columns, final BufferedWriter out) {
+            this.columns = columns;
+            this.out = out;
+            descriptions = new String[request.getPicsPerRow()];
         }
 
-    }
-
-    /**
-     * Write the org.jpo.css file to the target directory.
-     *
-     * @param directory The directory to write to
-     */
-    public static void writeCss(final File directory) {
-        ClassLoader cl = JpoWriter.class.getClassLoader();
-        try (
-                final InputStream in = Objects.requireNonNull(cl.getResource(JPO_CSS)).openStream();
-                final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_CSS));
-                final BufferedInputStream bin = new BufferedInputStream(in);
-                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
-
-            while ((c = bin.read()) != -1) {
-                outStream.write(c);
-            }
-
-        } catch (final IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
-                    Settings.getJpoResources().getString("genericWarning"),
-                    JOptionPane.ERROR_MESSAGE);
+        /**
+         * Adds the supplied string to the buffer and performs a check whether
+         * the buffer is full If the buffer is full it flushes it.
+         *
+         * @param description The String to be added.
+         * @throws IOException if anything went wrong with the writing.
+         */
+        public void putDescription(final String description) throws IOException {
+            descriptions[picCounter] = description;
+            picCounter++;
+            flushIfNescessary();
         }
-    }
 
-    /**
-     * Write the robots.txt file to the target directory.
-     *
-     * @param directory The directory to write to
-     */
-    public static void writeRobotsTxt(final File directory) {
-        final ClassLoader cl = JpoWriter.class.getClassLoader();
-        try (
-                final InputStream in = Objects.requireNonNull(cl.getResource(ROBOTS_TXT)).openStream();
-                final FileOutputStream outStream = new FileOutputStream(new File(directory, ROBOTS_TXT));
-                final BufferedInputStream bin = new BufferedInputStream(in);
-                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
+        /**
+         * Checks whether the buffer is full and if so will terminate the
+         * current line, flush the buffer and start a new line.
+         *
+         * @throws IOException if something went wrong with writing.
+         */
+        public void flushIfNescessary() throws IOException {
+            if (picCounter == columns) {
+                out.write("</tr>");
+                flushDescriptions();
+                out.write("<tr>");
 
-            while ((c = bin.read()) != -1) {
-                bout.write(c);
             }
-
-        } catch (final IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
-                    Settings.getJpoResources().getString("genericWarning"),
-                    JOptionPane.ERROR_MESSAGE);
         }
-    }
 
-    /**
-     * Write the org.jpo.js file to the target directory.
-     *
-     * @param directory The directory to write to
-     */
-    public static void writeJpoJs(final File directory) {
-        final ClassLoader cl = JpoWriter.class.getClassLoader();
-        try (
-                final InputStream in = Objects.requireNonNull(cl.getResource(JPO_JS)).openStream();
-                final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_JS));
-                final BufferedInputStream bin = new BufferedInputStream(in);
-                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
+        /**
+         * method that writes the descriptions[] array to the html file. As each
+         * picture's img tag was written to the file the description was kept in
+         * an array. This method is called each time the row of img is full. The
+         * method is also called when the last picture has been written. The
+         * array elements are set to null after writing so that the last row can
+         * determine when to stop writing the pictures (the row can of course be
+         * incomplete).
+         *
+         * @throws IOException If writing didn't work.
+         */
+        public void flushDescriptions() throws IOException {
+            out.newLine();
+            out.write("<tr>");
+            out.newLine();
 
-            while ((c = bin.read()) != -1) {
-                bout.write(c);
+            for (int i = 0; i < columns; i++) {
+                if (descriptions[i] != null) {
+                    out.write("<td class=\"descriptionCell\">");
+
+                    out.write(StringEscapeUtils.escapeHtml4(descriptions[i]));
+
+                    out.write("</td>");
+                    out.newLine();
+                    descriptions[i] = null;
+                }
             }
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
-                    Settings.getJpoResources().getString("genericWarning"),
-                    JOptionPane.ERROR_MESSAGE);
+            picCounter = 0;
+            out.write("</tr>");
+            out.newLine();
         }
     }
 

@@ -34,10 +34,31 @@ public class WebsiteGeneratorTest {
      */
     @Test
     public void testCleanupFilename() {
-        final String filename = "directory\\file.xml";  // actually contains directory\file.xml
-        final String wanted = "directory_file.xml";
-        // A backslash could be made into an underscore
-        assertEquals(wanted, WebsiteGenerator.cleanupFilename(filename));
+        assertEquals("file_space.jpg", WebsiteGenerator.cleanupFilename("file space.jpg"));
+        assertEquals("file_space.jpg", WebsiteGenerator.cleanupFilename("file%20space.jpg"));
+        assertEquals("file_and_ampersand.jpg", WebsiteGenerator.cleanupFilename("file&ampersand.jpg"));
+        assertEquals("filelpipe.jpg", WebsiteGenerator.cleanupFilename("file|pipe.jpg"));
+        assertEquals("file_less.jpg", WebsiteGenerator.cleanupFilename("file<less.jpg"));
+        assertEquals("file_greater.jpg", WebsiteGenerator.cleanupFilename("file>greater.jpg"));
+        assertEquals("file_at.jpg", WebsiteGenerator.cleanupFilename("file@at.jpg"));
+        assertEquals("file_colon.jpg", WebsiteGenerator.cleanupFilename("file:colon.jpg"));
+        assertEquals("file_dollar.jpg", WebsiteGenerator.cleanupFilename("file$dollar.jpg"));
+        assertEquals("file_pound.jpg", WebsiteGenerator.cleanupFilename("file£pound.jpg"));
+        assertEquals("file_caret.jpg", WebsiteGenerator.cleanupFilename("file^caret.jpg"));
+        assertEquals("file_tilde.jpg", WebsiteGenerator.cleanupFilename("file~tilde.jpg"));
+        assertEquals("file_doublequote.jpg", WebsiteGenerator.cleanupFilename("file\"doublequote.jpg"));
+        assertEquals("file_singlequote.jpg", WebsiteGenerator.cleanupFilename("file'singlequote.jpg"));
+        assertEquals("file_backtick.jpg", WebsiteGenerator.cleanupFilename("file`backtick.jpg"));
+        assertEquals("file_questionmark.jpg", WebsiteGenerator.cleanupFilename("file?questionmark.jpg"));
+        assertEquals("file_squarebracket.jpg", WebsiteGenerator.cleanupFilename("file[squarebracket.jpg"));
+        assertEquals("file_closesquarebracket.jpg", WebsiteGenerator.cleanupFilename("file]closesquarebracket.jpg"));
+        assertEquals("file_opencurlybrace.jpg", WebsiteGenerator.cleanupFilename("file{opencurlybrace.jpg"));
+        assertEquals("file_closecurlybrace.jpg", WebsiteGenerator.cleanupFilename("file}closecurlybrace.jpg"));
+        assertEquals("file_star.jpg", WebsiteGenerator.cleanupFilename("file*star.jpg"));
+        assertEquals("file_plus.jpg", WebsiteGenerator.cleanupFilename("file+plus.jpg"));
+        assertEquals("file_forwardslash.jpg", WebsiteGenerator.cleanupFilename("file/forwardslash.jpg"));
+        assertEquals("file_backslash.jpg", WebsiteGenerator.cleanupFilename("file\\backslash.jpg"));
+        assertEquals("file_percentage.jpg", WebsiteGenerator.cleanupFilename("file%percentage.jpg"));
     }
 
     /**
