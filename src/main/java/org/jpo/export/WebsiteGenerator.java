@@ -150,35 +150,37 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
 
-    static final Map<String, String> characterTranslation = new HashMap<>() {{
-        put(" ", "_");
-        put("%20", "_");
-        put("&", "_and_");
-        put("|", "l");
-        put("<", "_");
-        put(">", "_");
-        put("@", "_");
-        put(":", "_");
-        put("$", "_");
-        put("£", "_");
-        put("^", "_");
-        put("~", "_");
-        put("\"", "_");
-        put("'", "_");
-        put("`", "_");
-        put("?", "_");
-        put("[", "_");
-        put("]", "_");
-        put("{", "_");
-        put("}", "_");
-        put("(", "_");
-        put(")", "_");
-        put("*", "_");
-        put("+", "_");
-        put("/", "_");
-        put("\\", "_");
-        put("%", "_");
-    }};
+    static final Map<String, String> CHARACTER_TRANSLATION = new HashMap<>();
+
+    static {
+        CHARACTER_TRANSLATION.put(" ", "_");
+        CHARACTER_TRANSLATION.put("%20", "_");
+        CHARACTER_TRANSLATION.put("&", "_and_");
+        CHARACTER_TRANSLATION.put("|", "l");
+        CHARACTER_TRANSLATION.put("<", "_");
+        CHARACTER_TRANSLATION.put(">", "_");
+        CHARACTER_TRANSLATION.put("@", "_");
+        CHARACTER_TRANSLATION.put(":", "_");
+        CHARACTER_TRANSLATION.put("$", "_");
+        CHARACTER_TRANSLATION.put("£", "_");
+        CHARACTER_TRANSLATION.put("^", "_");
+        CHARACTER_TRANSLATION.put("~", "_");
+        CHARACTER_TRANSLATION.put("\"", "_");
+        CHARACTER_TRANSLATION.put("'", "_");
+        CHARACTER_TRANSLATION.put("`", "_");
+        CHARACTER_TRANSLATION.put("?", "_");
+        CHARACTER_TRANSLATION.put("[", "_");
+        CHARACTER_TRANSLATION.put("]", "_");
+        CHARACTER_TRANSLATION.put("{", "_");
+        CHARACTER_TRANSLATION.put("}", "_");
+        CHARACTER_TRANSLATION.put("(", "_");
+        CHARACTER_TRANSLATION.put(")", "_");
+        CHARACTER_TRANSLATION.put("*", "_");
+        CHARACTER_TRANSLATION.put("+", "_");
+        CHARACTER_TRANSLATION.put("/", "_");
+        CHARACTER_TRANSLATION.put("\\", "_");
+        CHARACTER_TRANSLATION.put("%", "_");
+    }
 
     /**
      * Translates characters which are problematic in a filename into
@@ -189,9 +191,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     public static String cleanupFilename(final String string) {
         String returnString = string;
-        for (final String key : characterTranslation.keySet()) {
-            if (returnString.contains(key)) {
-                returnString = returnString.replace(key, characterTranslation.get(key));
+        for (final Map.Entry<String, String> entry : CHARACTER_TRANSLATION.entrySet()) {
+            if (returnString.contains(entry.getKey())) {
+                returnString = returnString.replace(entry.getKey(), entry.getValue());
             }
         }
         return returnString;
@@ -908,7 +910,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("&nbsp;");
         }
         if (childNumber != childCount) {
-            midresHtmlWriter.write("<a href=\"" + getNextHtmlFilename(pictureNode, childNumber, childCount) + "\">Next</a>");
+            midresHtmlWriter.write("<a href=\"" + getNextHtmlFilename(pictureNode, childNumber) + "\">Next</a>");
             midresHtmlWriter.newLine();
         }
         if (request.isGenerateZipfile()) {
@@ -945,7 +947,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return previousHtmlFilename;
     }
 
-    private String getNextHtmlFilename(final SortableDefaultMutableTreeNode pictureNode, final int childNumber, final int childCount) throws IOException {
+    private String getNextHtmlFilename(final SortableDefaultMutableTreeNode pictureNode, final int childNumber) throws IOException {
         String nextHtmlFilename;
         switch (request.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME:
@@ -1133,7 +1135,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     ftp.disconnect();
                 }
             } catch (final IOException ex) {
-                ex.printStackTrace();
+                LOGGER.severe(ex.getMessage());
             }
         }
     }
