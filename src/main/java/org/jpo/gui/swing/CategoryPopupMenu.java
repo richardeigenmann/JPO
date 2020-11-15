@@ -10,6 +10,9 @@ import org.jpo.eventbus.OpenCategoryEditorRequest;
 import javax.swing.*;
 import java.util.List;
 
+/**
+ * Creates a JPopupMenu with entries for all the categories
+ */
 public class CategoryPopupMenu extends JPopupMenu {
     public CategoryPopupMenu(final List<SortableDefaultMutableTreeNode> referringNodes) {
         super("Add a Category to the Picture");
@@ -18,7 +21,7 @@ public class CategoryPopupMenu extends JPopupMenu {
 
     /**
      * This method adds a bunch of JMenuItems to the supplied parent menu.
-     * I'm using the C-Style modify input parameter because I need to call add several times.
+     * The input parameter parentMenu is modified because I need to call add several times.
      * I can't send back a collection of JMenuItems that wil then be added to the parent
      * JPopupMenu or JMenu.
      *

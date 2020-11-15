@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "3.0"
-    id "com.github.ben-manes.versions" version "0.34.0"
+    id "com.github.ben-manes.versions" version "0.36.0"
     id 'signing'
     id 'java'
     id 'jacoco'
@@ -22,8 +22,8 @@ plugins {
 apply plugin: "com.github.johnrengelman.shadow"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_14
-    targetCompatibility = JavaVersion.VERSION_14
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
     withJavadocJar()
 }
 
@@ -70,13 +70,6 @@ task openJavadocInBrowser {
         java.awt.Desktop.desktop.open(new File(buildDir, "/docs/javadoc/index.html"))
     }
 }
-
-/*task generateJavadocs(type: Javadoc) {
-    options {
-        addBooleanOption('-enable-preview', true)
-        addStringOption('-release', '14')
-    }
-}*/
 
 repositories {
     mavenCentral()
@@ -156,7 +149,7 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
-    testImplementation('org.assertj:assertj-core:3.18.0')
+    testImplementation('org.assertj:assertj-core:3.18.1')
     testImplementation('org.assertj:assertj-swing:3.17.1')
 
 }
@@ -268,9 +261,12 @@ jacocoTestReport {
 }
 
 plugins.withType(JacocoPlugin) {
-    tasks["test"].finalizedBy 'jacocoTestReport'
+    // jacoco doesn't like Java 15 in Nov 2020
+    //tasks["test"].finalizedBy 'jacocoTestReport'
 }
-check.dependsOn jacocoTestReport
+
+// jacoco doesn't like JAVA 15
+//check.dependsOn jacocoTestReport
 
 task uploadWebsitePages(type:Exec) {
     group 'website'
