@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - openjdk14
+  - openjdk15
 node_js:
   - "10"
 services:
@@ -9,9 +9,9 @@ before_install:
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest
     | jq -r .assets[0].browser_download_url)
-  - wget https://services.gradle.org/distributions/gradle-6.7-rc-3-bin.zip
-  - unzip -qq gradle-6.7-rc-3-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-6.7-rc-3
+  - wget https://services.gradle.org/distributions/gradle-6.7-bin.zip
+  - unzip -qq gradle-6.7-bin.zip
+  - export GRADLE_HOME=$PWD/gradle-6.7
   - export PATH=$GRADLE_HOME/bin:$PATH
   - gradle -v
 install:
