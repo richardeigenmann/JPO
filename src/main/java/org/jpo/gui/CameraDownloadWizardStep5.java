@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -109,7 +110,7 @@ public class CameraDownloadWizardStep5
      * @param sortOption the SortOption that was picked
      */
     private void sortOptionPicked( final SortOption sortOption ) {
-        LOGGER.fine( String.format( "Option %s with sortCode %s picked", sortOption.getDescription(), sortOption.getSortCode() ) );
+        LOGGER.log(Level.FINE, "Option {0} with sortCode {1} picked", new Object[]{sortOption.getDescription(), sortOption.getSortCode()});
         dataModel.setSortCode(sortOption.getSortCode());
         Settings.setLastSortChoice(sortOption.getSortCode());
     }

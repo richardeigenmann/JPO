@@ -16,6 +16,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.*;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -314,7 +315,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     public void showNode(final NodeNavigatorInterface mySetOfNodes,
                          final int myIndex) {
-        LOGGER.fine(String.format("Navigator: %s Nodes: %d Index: %d", mySetOfNodes.toString(), mySetOfNodes.getNumberOfNodes(), myIndex));
+        LOGGER.log(Level.FINE, "Navigator: {0} Nodes: {1} Index: {2}", new Object[]{mySetOfNodes, mySetOfNodes.getNumberOfNodes(), myIndex});
         Tools.checkEDT();
 
         // Validate the inputs
@@ -326,7 +327,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
         if (!(node.getUserObject() instanceof PictureInfo)) {
-            LOGGER.severe(String.format("The new node is not for a PictureInfo object. Aborting. userObject class: %s, mySetOfNodes: %s, index: %d", node.getUserObject().getClass().toString(), mySetOfNodes.toString(), myIndex));
+            LOGGER.log(Level.SEVERE,
+                    "The new node is not for a PictureInfo object. Aborting. userObject class: {0}, mySetOfNodes: {1}, index: {2}",
+                    new Object[]{node.getUserObject().getClass(), mySetOfNodes, myIndex});
             closeViewer();
             return;
         }
@@ -446,7 +449,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             stopTimer();
             pictureFrame.getPictureViewerNavBar().clockJButton.setClockIdle();
         } else {
-            JpoEventBus.getInstance().post(new ShowAutoAdvanceDialogRequest(pictureFrame.getResizableJFrame(), getCurrentNode(), this));
+            JpoEventBus.getInstance().post(
+                    new ShowAutoAdvanceDialogRequest(pictureFrame.getResizableJFrame(), Objects.requireNonNull(getCurrentNode()), this));
         }
 
         pictureFrame.getPictureController().requestFocusInWindow();

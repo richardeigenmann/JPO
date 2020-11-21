@@ -178,7 +178,7 @@ public class JpoWriter {
             } else if (childNode.getUserObject() instanceof PictureInfo pi) {
                 writePicture(pi, bufferedWriter, highresTargetDir, copyPics);
             } else {
-                LOGGER.log(Level.SEVERE, "Can't write node {0}", childNode);
+                LOGGER.log(Level.SEVERE, "Can not write node {0}", childNode);
             }
         }
 

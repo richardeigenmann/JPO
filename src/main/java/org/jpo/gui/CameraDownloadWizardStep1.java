@@ -110,7 +110,7 @@ public class CameraDownloadWizardStep1
             dataModel.setNewPictures(dataModel.getCamera().getNewPictures());
 
             final Runnable r = () -> {
-                setCanGoNext(dataModel.getNewPictures().size() > 0);
+                setCanGoNext(!dataModel.getNewPictures().isEmpty());
                 progressJLabel.setText(dataModel.getNewPictures().size() + Settings.getJpoResources().getString("DownloadCameraWizardStep1Text3"));
             };
             if (SwingUtilities.isEventDispatchThread()) {

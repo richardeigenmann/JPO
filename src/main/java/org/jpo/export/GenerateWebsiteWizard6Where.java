@@ -488,7 +488,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         String response = "";
         final JSch jsch = new JSch();
         try {
-            LOGGER.info(String.format("Setting up session for user: %s server: %s port: %d and connecting...", options.getSshUser(), options.getSshServer(), options.getSshPort()));
+            LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{options.getSshUser(), options.getSshServer(), options.getSshPort()});
             final Session session = jsch.getSession(options.getSshUser(), options.getSshServer(), options.getSshPort());
             if (options.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
                 session.setPassword(options.getSshPassword());

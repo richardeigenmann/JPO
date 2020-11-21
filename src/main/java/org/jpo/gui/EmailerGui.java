@@ -55,7 +55,7 @@ public class EmailerGui extends JFrame {
         emailSelected = Settings.getPictureCollection().getMailSelectedNodes();
 
         // if no pictures have been selected pop up an error message
-        if ( emailSelected.size() < 1 ) {
+        if (emailSelected.isEmpty()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("emailNoNodes"),
                     Settings.getJpoResources().getString("genericError"),
@@ -364,7 +364,7 @@ public class EmailerGui extends JFrame {
      * method that analyses the GUI fields and prepares stuff for sending
      */
     private void prepareSend() {
-        if ( emailSelected.size() < 1 ) {
+        if (emailSelected.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     Settings.getJpoResources().getString("noNodesSelected"),
                     Settings.getJpoResources().getString("genericError"),

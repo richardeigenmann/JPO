@@ -10,6 +10,7 @@ import org.jpo.gui.swing.ConsolidateGroupJFrame;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -54,7 +55,7 @@ public class ConsolidateGroupController implements ConsolidateGroupActionCallbac
         this.request = request;
 
         if (!(request.node().getUserObject() instanceof GroupInfo)) {
-            LOGGER.info(String.format("Node %s is not a group", request.node().toString()));
+            LOGGER.log(Level.INFO, "Node {0} is not a group", request.node());
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("ConsolidateFailure"),

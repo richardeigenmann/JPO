@@ -8,6 +8,7 @@ import org.jpo.eventbus.*;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
@@ -66,21 +67,21 @@ public class CameraDownloadWorker
         Settings.memorizeCopyLocation(dataModel.getTargetDir().toString());
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
         if (dataModel.getShouldCreateNewGroup()) {
-            LOGGER.fine(String.format("Adding a new group %s to node %s", dataModel.getNewGroupDescription(), dataModel.getTargetNode().toString()));
+            LOGGER.log(Level.FINE, "Adding a new group {0} to node {1}", new Object[]{dataModel.getNewGroupDescription(), dataModel.getTargetNode()});
             SortableDefaultMutableTreeNode newGroupNode = dataModel.getTargetNode().addGroupNode(dataModel.getNewGroupDescription());
             dataModel.setTargetNode(newGroupNode);
         }
         Settings.memorizeGroupOfDropLocation(dataModel.getTargetNode());
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
 
-        LOGGER.fine(String.format("About to copyAddPictures to node %s", dataModel.getTargetNode().toString()));
+        LOGGER.log(Level.FINE, "About to copyAddPictures to node {0}", dataModel.getTargetNode());
         dataModel.getTargetNode().copyAddPictures(dataModel.getNewPictures(),
                 dataModel.getTargetDir(),
                 dataModel.getCopyMode(),
                 progressBar);
-        LOGGER.fine(String.format("Sorting node %s by code %s", dataModel.getTargetNode().toString(), dataModel.getSortCode()));
+        LOGGER.log(Level.FINE, "Sorting node {0} by code {1}", new Object[]{dataModel.getTargetNode(), dataModel.getSortCode()});
         dataModel.getTargetNode().sortChildren(dataModel.getSortCode());
-        List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
         nodes.add(dataModel.getTargetNode());
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.LOWEST_PRIORITY));
 

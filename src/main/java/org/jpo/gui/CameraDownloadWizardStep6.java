@@ -108,7 +108,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         // Storing in xxx
         label4.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text7") + dataModel.getTargetDir());
         if (!dataModel.getTargetDir().exists() && (!dataModel.getTargetDir().mkdirs())) {
-            label4.setText(String.format("Could not create directory", dataModel.getTargetDir()));
+            label4.setText(String.format("Could not create directory %s", dataModel.getTargetDir()));
             setCanGoNext(false);
         }
         if (!dataModel.getTargetDir().exists()) {

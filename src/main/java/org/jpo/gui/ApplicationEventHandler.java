@@ -156,7 +156,7 @@ public class ApplicationEventHandler {
     @Subscribe
     public static void handleRenameFileRequest(@NonNull final RenameFileRequest request) {
         final PictureInfo pi = (PictureInfo) request.node().getUserObject();
-        LOGGER.info(String.format("Renaming node %s (%s) to new filename: %s", request.node().toString(), pi.getImageFile().getPath(), request.newFileName()));
+        LOGGER.log(Level.INFO, "Renaming node {0} ({1} to new filename: {2}", new Object[]{request.node(), pi.getImageFile().getPath(), request.newFileName()});
         final File imageFile = pi.getImageFile();
         final String newName = request.newFileName();
         final File newFile = new File(imageFile.getParentFile(), newName);
@@ -223,7 +223,7 @@ public class ApplicationEventHandler {
                     picsMoved++;
                 }
             } else {
-                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+                LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
@@ -642,7 +642,9 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleFileLoadDialogRequest(final FileLoadDialogRequest request) {
         final File fileToLoad = chooseXmlFile();
-        JpoEventBus.getInstance().post(new FileLoadRequest(fileToLoad));
+        if (fileToLoad != null) {
+            JpoEventBus.getInstance().post(new FileLoadRequest(fileToLoad));
+        }
     }
 
     /**
@@ -1056,7 +1058,7 @@ public class ApplicationEventHandler {
                     picsCopied++;
                 }
             } else {
-                LOGGER.info(String.format("Skipping non PictureInfo node %s", node.toString()));
+                LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

@@ -85,10 +85,6 @@ public class ThumbnailQueueRequestTest {
                 assertFalse(highPriorityRequest.equals(mediumPriorityRequest));
                 assertFalse(mediumPriorityRequest.equals(lowPriorityRequest));
                 assertFalse(lowPriorityRequest.equals(lowestPriorityRequest));
-                assertTrue(lowestPriorityRequest.equals(lowestPriorityRequest));
-                assertTrue(lowPriorityRequest.equals(lowPriorityRequest));
-                assertTrue(mediumPriorityRequest.equals(mediumPriorityRequest));
-                assertTrue(highPriorityRequest.equals(highPriorityRequest));
                 assertFalse(lowestPriorityRequest.equals(lowPriorityRequest));
                 assertFalse(lowPriorityRequest.equals(mediumPriorityRequest));
                 assertFalse(mediumPriorityRequest.equals(highPriorityRequest));

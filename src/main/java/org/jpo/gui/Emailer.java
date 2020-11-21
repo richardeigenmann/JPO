@@ -248,18 +248,18 @@ public class Emailer
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerLoading"), pi.getImageFile().toString()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerLoading"), pi.getImageFile()});
                     scalablePicture.loadPictureImd(pi.getImageFile(), pi.getRotation());
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerScaling"), pi.getImageFile().toString()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerScaling"), pi.getImageFile()});
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerWriting"), pi.getImageFile().toString()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerWriting"), pi.getImageFile()});
                     scalablePicture.writeScaledJpg(baos);
                     encds = new EncodedDataSource("image/jpeg", pi.getImageFile().getName(), baos);
                     scaledPictureMimeBodyPart = new MimeBodyPart();
                     scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
                     scaledPictureMimeBodyPart.setFileName(pi.getImageFile().getName());
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile().toString()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile()});
                     mp.addBodyPart(scaledPictureMimeBodyPart);
                 }
 
@@ -272,7 +272,7 @@ public class Emailer
                     originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
                     originalPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
                     // create the Multipart and add its parts to it
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile().toString()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile()});
                     mp.addBodyPart(originalPictureMimeBodyPart);
                 }
 

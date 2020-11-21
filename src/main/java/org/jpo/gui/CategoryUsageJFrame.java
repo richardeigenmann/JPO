@@ -175,7 +175,7 @@ public class CategoryUsageJFrame extends JFrame {
         final Enumeration<Category> categoryEnumeration = listModel.elements();
         while ( categoryEnumeration.hasMoreElements() ) {
             c = categoryEnumeration.nextElement();
-            LOGGER.log(Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{c.getKey().toString(), c.toString()});
+            LOGGER.log(Level.INFO, "Setting Status to undefined on Category: {0} {1}", new Object[]{c.getKey(), c});
             c.setStatus(Category.UNDEFINED);
             // force screen update:
             listModel.setElementAt(c, listModel.indexOf(c));
@@ -187,7 +187,7 @@ public class CategoryUsageJFrame extends JFrame {
         final Enumeration<Category> categoryEnumeration2 = listModel.elements();
         while (categoryEnumeration2.hasMoreElements()) {
             c = categoryEnumeration2.nextElement();
-            LOGGER.log(Level.INFO, "Checking Category: {0} {1}", new Object[]{c.getKey().toString(), c.toString()});
+            LOGGER.log(Level.INFO, "Checking Category: {0} {1}", new Object[]{c.getKey(), c});
 
             for (final SortableDefaultMutableTreeNode pictureNode : selectedNodes) {
                 if (pictureNode.getUserObject() instanceof PictureInfo pi) {

@@ -617,8 +617,8 @@ public class PictureCollection {
         final List<SortableDefaultMutableTreeNode> clone = new ArrayList<>(mailSelection.size());
         clone.addAll(mailSelection);
 
-        for (SortableDefaultMutableTreeNode node : clone) {
-            LOGGER.log(Level.FINE, "Removing node: {0}", node.toString());
+        for (final SortableDefaultMutableTreeNode node : clone) {
+            LOGGER.log(Level.FINE, "Removing node: {0}", node);
             removeFromMailSelection(node);
         }
     }
@@ -628,11 +628,10 @@ public class PictureCollection {
      *
      * @param node the node to poll from the mail selection
      */
-    public void removeFromMailSelection(SortableDefaultMutableTreeNode node) {
+    public void removeFromMailSelection(final SortableDefaultMutableTreeNode node) {
         mailSelection.remove(node);
-        Object userObject = node.getUserObject();
-        if (userObject instanceof PictureInfo) {
-            ((PictureInfo) userObject).sendWasMailUnselectedEvent();
+        if (node.getUserObject() instanceof PictureInfo pi) {
+            pi.sendWasMailUnselectedEvent();
         }
     }
 
@@ -642,10 +641,10 @@ public class PictureCollection {
      * @param node The node
      * @return true if part of the mailing set, false if not
      */
-    public boolean isMailSelected(SortableDefaultMutableTreeNode node) {
+    public boolean isMailSelected(final SortableDefaultMutableTreeNode node) {
         try {
             return mailSelection.contains(node);
-        } catch (NullPointerException x) {
+        } catch (final NullPointerException x) {
             return false;
         }
     }
@@ -675,18 +674,15 @@ public class PictureCollection {
      * @param file The File object of the file to check for
      * @return true if found, false if not
      */
-    public boolean isInCollection(File file) {
+    public boolean isInCollection(final File file) {
         LOGGER.log(Level.FINE, "Checking if File {0} exists in the collection", file);
-        SortableDefaultMutableTreeNode node;
-        Object nodeObject;
-        File highresFile;
         final Enumeration<TreeNode> e = getRootNode().preorderEnumeration();
         while (e.hasMoreElements()) {
-            node = (SortableDefaultMutableTreeNode) e.nextElement();
-            nodeObject = node.getUserObject();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) e.nextElement();
+            final Object nodeObject = node.getUserObject();
             if (nodeObject instanceof PictureInfo pi) {
-                highresFile = pi.getImageFile();
-                LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile().toString());
+                final File highresFile = pi.getImageFile();
+                LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile());
                 if ((highresFile != null) && (highresFile.compareTo(file) == 0)) {
                     LOGGER.log(Level.INFO, "Found a match on: {0}", ((PictureInfo) nodeObject).getDescription());
                     return true;
@@ -703,15 +699,13 @@ public class PictureCollection {
      * @param checksum The checksum of the picture to check for
      * @return true if found, false if not
      */
-    public boolean isInCollection(long checksum) {
-        SortableDefaultMutableTreeNode node;
-        Object nodeObject;
+    public boolean isInCollection(final long checksum) {
         final Enumeration<TreeNode> e = getRootNode().preorderEnumeration();
         while (e.hasMoreElements()) {
-            node = (SortableDefaultMutableTreeNode) e.nextElement();
-            nodeObject = node.getUserObject();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) e.nextElement();
+            final Object nodeObject = node.getUserObject();
             if (nodeObject instanceof PictureInfo pi) {
-                LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile().toString());
+                LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile());
                 if (pi.getChecksum() == checksum) {
                     LOGGER.log(Level.FINE, "Found a match on: {0}", ((PictureInfo) nodeObject).getDescription());
                     return true;
@@ -777,15 +771,11 @@ public class PictureCollection {
 
     private void addYearQueries() {
         final TreeSet<String> years = new TreeSet<>();
-
-        DefaultMutableTreeNode testNode;
-        Object nodeObject;
-        Calendar cal;
         for (final Enumeration<TreeNode> e = getRootNode().breadthFirstEnumeration(); e.hasMoreElements(); ) {
-            testNode = (DefaultMutableTreeNode) e.nextElement();
-            nodeObject = testNode.getUserObject();
+            final DefaultMutableTreeNode testNode = (DefaultMutableTreeNode) e.nextElement();
+            final Object nodeObject = testNode.getUserObject();
             if (nodeObject instanceof PictureInfo pi) {
-                cal = pi.getCreationTimeAsDate();
+                final Calendar cal = pi.getCreationTimeAsDate();
                 if (cal != null) {
                     int year = cal.get(Calendar.YEAR);
                     years.add(Integer.toString(year));
@@ -862,16 +852,14 @@ public class PictureCollection {
 
         final Set<SortableDefaultMutableTreeNode> linkingGroups = new HashSet<>();
 
-        final Object userObject = suppliedNode.getUserObject();
-        if (userObject instanceof PictureInfo pictureInfo) {
+        if (suppliedNode.getUserObject() instanceof PictureInfo pictureInfo) {
             final File comparingFile = pictureInfo.getImageFile();
             if (isNull(comparingFile)) {
                 return linkingGroups;
             }
             for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
                 final SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-                final Object nodeObject = testNode.getUserObject();
-                if (nodeObject instanceof PictureInfo pi && !isNull(pi.getImageFile()) && pi.getImageFile().equals(comparingFile)) {
+                if (testNode.getUserObject() instanceof PictureInfo pi && !isNull(pi.getImageFile()) && pi.getImageFile().equals(comparingFile)) {
                     linkingGroups.add(testNode.getParent());
                 }
             }
@@ -887,7 +875,7 @@ public class PictureCollection {
      */
     public void addToSelectedNodes(final SortableDefaultMutableTreeNode node) {
         if (isSelected(node)) {
-            LOGGER.fine(String.format("The node %s is already selected. Leaving it selected.", node.toString()));
+            LOGGER.log(Level.FINE, "The node {0} is already selected. Leaving it selected.", node.toString());
             return;
         }
         selection.add(node);

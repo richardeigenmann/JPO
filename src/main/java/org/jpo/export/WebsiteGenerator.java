@@ -432,7 +432,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param groupNode The node at which the extraction is to start.
      */
     public void writeGroup(final SortableDefaultMutableTreeNode groupNode) {
-        LOGGER.info(String.format("Processing Group: %s", groupNode.toString()));
+        LOGGER.log(Level.INFO, "Processing Group: {0}", groupNode);
         try {
             publish(String.format("Processing Group: %s", groupNode.toString()));
 
@@ -601,13 +601,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         if (request.isExportHighres()) {
             files.add(highresFile);
             if (request.isRotateHighres() && (pictureInfo.getRotation() != 0)) {
-                LOGGER.fine(String.format("Copying and rotating picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString()));
+                LOGGER.log(Level.FINE, "Copying and rotating picture {0} to {1}", new Object[]{pictureInfo.getImageLocation(), highresFile});
                 scp.setScaleFactor(1);
                 scp.scalePicture();
                 scp.setJpgQuality(request.getMidresJpgQuality());
                 scp.writeScaledJpg(highresFile);
             } else {
-                LOGGER.fine(String.format("Copying picture %s to %s", pictureInfo.getImageLocation(), highresFile.toString()));
+                LOGGER.log(Level.FINE, "Copying picture {0} to {1}", new Object[]{pictureInfo.getImageLocation(), highresFile});
                 Tools.copyPicture(pictureInfo.getImageFile(), highresFile);
             }
         }

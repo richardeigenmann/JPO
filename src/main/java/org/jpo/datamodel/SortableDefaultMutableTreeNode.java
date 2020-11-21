@@ -545,7 +545,7 @@ public class SortableDefaultMutableTreeNode
      */
     @Override
     public void pictureInfoChangeEvent(final PictureInfoChangeEvent e) {
-        LOGGER.fine(String.format("The SDMTN %s received a PictureInfoChangeEvent %s", this.toString(), e.toString()));
+        LOGGER.log(Level.FINE, "The SDMTN {0} received a PictureInfoChangeEvent {1}", new Object[]{this, e});
         getPictureCollection().sendNodeChanged(this);
     }
 
