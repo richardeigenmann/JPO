@@ -133,23 +133,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return new WebsiteGenerator(request);
     }
 
-    /**
-     * return everything of the filename up to the extension.
-     *
-     * @param s The string for which the root of the filename is being requested
-     * @return the filename
-     */
-    public static String getFilenameRoot(final String s) {
-        String fnroot = null;
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 && i < s.length() - 1) {
-            fnroot = s.substring(0, i);
-        }
-        return fnroot;
-    }
-
-
     static final Map<String, String> CHARACTER_TRANSLATION = new HashMap<>();
 
     static {
@@ -771,7 +754,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                         if (nde.getUserObject() instanceof PictureInfo pi) {
                             switch (request.getPictureNaming()) {
                                 case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                                    final String rootName = cleanupFilename(getFilenameRoot(pi.getImageFile().getName()));
+                                    final String rootName = cleanupFilename(FilenameUtils.getBaseName(pi.getImageFile().getName()));
                                     nodeUrl = rootName + ".htm";
                                     lowresFn = rootName + "_l." + extension;
                                     break;
@@ -928,7 +911,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber - 2);
                 Object userObject = priorNode.getUserObject();
                 if (userObject instanceof PictureInfo pi) {
-                    previousHtmlFilename = cleanupFilename(getFilenameRoot(pi.getImageFile().getName() + ".htm"));
+                    previousHtmlFilename = cleanupFilename(FilenameUtils.getBaseName(pi.getImageFile().getName() + ".htm"));
                 } else {
                     previousHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
                 }
@@ -954,7 +937,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 SortableDefaultMutableTreeNode priorNode = (SortableDefaultMutableTreeNode) (pictureNode.getParent()).getChildAt(childNumber);
                 Object userObject = priorNode.getUserObject();
                 if (userObject instanceof PictureInfo pi) {
-                    nextHtmlFilename = cleanupFilename(getFilenameRoot((pi.getImageFile().getName()) + ".htm"));
+                    nextHtmlFilename = cleanupFilename(FilenameUtils.getBaseName((pi.getImageFile().getName()) + ".htm"));
                 } else {
                     nextHtmlFilename = INDEX_PAGE; // actually something has gone horribly wrong
                 }
@@ -976,7 +959,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private File getOutputImageFilename(final PictureInfo pictureInfo, final String extension) {
         switch (request.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
-                final String rootName = cleanupFilename(getFilenameRoot(pictureInfo.getImageFile().getName()));
+                final String rootName = cleanupFilename(FilenameUtils.getBaseName(pictureInfo.getImageFile().getName()));
                 return new File(request.getTargetDirectory(), rootName + extension);
             }
             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {

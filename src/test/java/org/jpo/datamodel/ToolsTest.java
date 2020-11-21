@@ -5,7 +5,12 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
 
@@ -166,5 +171,60 @@ public class ToolsTest {
         final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
         assertEquals(expected, result);
     }
+
+    @Test
+    public void testInventFilename() {
+        try {
+            final Path tempDirWithPrefix = Files.createTempDirectory("ToolsInventFilename");
+            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), "gaga.jpg");
+            assertEquals("gaga.jpg", f.getName());
+            Files.delete(tempDirWithPrefix);
+        } catch (IOException e) {
+            fail("Could not run test testInventFilename");
+        }
+    }
+
+    @Test
+    public void testInventFilenameExists() {
+        try {
+            final Path tempDirWithPrefix = Files.createTempDirectory("ToolsInventFilename");
+            final File f_exists = new File(tempDirWithPrefix.toFile(), "gaga.jpg");
+            new FileOutputStream(f_exists).close();
+            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), "gaga.jpg");
+            assertEquals("gaga_1.jpg", f.getName());
+            Files.delete(f_exists.toPath());
+            Files.delete(tempDirWithPrefix);
+        } catch (IOException e) {
+            fail("Could not run test testInventFilename");
+        }
+    }
+
+    @Test
+    public void testInventFilenameExists50() {
+        try {
+            final Path tempDirWithPrefix = Files.createTempDirectory("ToolsInventFilename");
+            final File f_exists = new File(tempDirWithPrefix.toFile(), "gaga.jpg");
+            new FileOutputStream(f_exists).close();
+            final File[] existingFiles = new File[50];
+            for (int i = 0; i < 50; i++) {
+                final File f_exists_50 = new File(tempDirWithPrefix.toFile(), "gaga_" + i + ".jpg");
+                new FileOutputStream(f_exists_50).close();
+                existingFiles[i] = f_exists_50;
+            }
+
+            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), "gaga.jpg");
+
+            assertEquals(19, f.getName().length());
+
+            Files.delete(f_exists.toPath());
+            for (int i = 0; i < 50; i++) {
+                Files.delete(existingFiles[i].toPath());
+            }
+            Files.delete(tempDirWithPrefix);
+        } catch (IOException e) {
+            fail("Could not run test testInventFilename");
+        }
+    }
+
 
 }

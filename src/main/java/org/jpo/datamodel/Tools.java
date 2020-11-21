@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.SourcePicture;
@@ -192,43 +193,38 @@ public class Tools {
 
 
     /**
-     * Method that returns a file handle for a picture that does not exist in
-     * the target directory. It tries the combination of path and name first and
-     * then tries to suffix _0 _1 _2 etc to the name. If it returns null then it
-     * failed
+     * Method that returns a file object that does not exist in
+     * the target directory based on the supplied name.
+     * If the name doesn't exist you get that back.
+     * If it exists it tries a suffix of _0 up to _49.
+     * If those are all taken it tries 50 random strings.
+     * If that all fails (how could it?) then it returns a random filename of 50 chars.
      *
      * @param targetDir the directory in which the picture needs to go
-     * @param startName the name to start from
-     * @return the new picture filename
+     * @param startName the name to start trying
+     * @return the new filename
      */
     @NotNull
-    public static File inventPicFilename(final File targetDir, final String startName) {
-        File testFile = new File(targetDir, startName);
+    public static File inventFilename(final File targetDir, final String startName) {
+        final File testFile = new File(targetDir, startName);
         if (!testFile.exists()) {
             return testFile;
         }
 
-        int dotPoint = startName.lastIndexOf('.');
-        final String startNameRoot = startName.substring(0, dotPoint);
-        final String startNameSuffix = startName.substring(dotPoint);
-
         for (int i = 1; i < 50; i++) {
-            testFile = new File(targetDir, startNameRoot + "_" + i + startNameSuffix);
-            if (!testFile.exists()) {
-                return testFile;
+            final File newFile = new File(targetDir, FilenameUtils.getBaseName(startName) + "_" + i + "." + FilenameUtils.getExtension(startName));
+            if (!newFile.exists()) {
+                return newFile;
             }
         }
 
         for (int i = 1; i < 50; i++) {
-            testFile = new File(targetDir, startNameRoot + "_" + RandomStringUtils.random(10, true, true));
-            if (!testFile.exists()) {
-                return testFile;
+            final File newFile = new File(targetDir, FilenameUtils.getBaseName(startName) + "_" + RandomStringUtils.random(10, true, true) + "." + FilenameUtils.getExtension(startName));
+            if (!newFile.exists()) {
+                return newFile;
             }
         }
-
-        LOGGER.log(Level.SEVERE, "Could not invent a picture filename for the directory {0} and the name {1} returning any long string", new Object[]{targetDir, startName});
-
-        return new File(targetDir, RandomStringUtils.random(50, true, true));
+        return new File(targetDir, RandomStringUtils.random(50, true, true) + "." + FilenameUtils.getExtension(startName));
     }
 
     /**

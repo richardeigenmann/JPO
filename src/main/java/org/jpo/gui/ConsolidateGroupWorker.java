@@ -191,7 +191,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
             // make sure that we get a new filename. Some cameras might keep reusing the name DSC_01234.jpg
             // over and over again which would overwrite pictures in the worst case.
-            final File newFile = Tools.inventPicFilename(targetDirectory, pictureInfo.getImageFile().getName());
+            final File newFile = Tools.inventFilename(targetDirectory, pictureInfo.getImageFile().getName());
             try {
                 moveFile(pictureFile, newFile);
             } catch (final IOException ex) {

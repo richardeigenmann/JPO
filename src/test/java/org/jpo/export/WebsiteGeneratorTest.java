@@ -113,12 +113,6 @@ public class WebsiteGeneratorTest {
     }
 
     @Test
-    public void getFilenameRoot() {
-        String root = WebsiteGenerator.getFilenameRoot("gaga.txt");
-        assertEquals("gaga", root);
-    }
-
-    @Test
     public void testGenerateWebsite() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
 

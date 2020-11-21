@@ -64,7 +64,7 @@ public class RenameMenuItems {
                 // add a menu item to replace if we can find %20 strings in the filename
                 final Optional<String> potentialNewFilename = PicturePopupMenu.replaceEscapedSpaces(pi.getImageFile().getName());
                 if (potentialNewFilename.isPresent()) {
-                    final File suggestedFileName = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilename.get());
+                    final File suggestedFileName = Tools.inventFilename(pi.getImageFile().getParentFile(), potentialNewFilename.get());
                     final JMenuItem renameSpaceJMenuItem = new JMenuItem("To: " + suggestedFileName.getName());
                     renameSpaceJMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new RenameFileRequest(node, suggestedFileName.getName())));
                     menuItems.add(renameSpaceJMenuItem);
@@ -73,7 +73,7 @@ public class RenameMenuItems {
                 // add a menu item to replace if we can find %20 strings in the filename
                 final Optional<String> potentialNewFilename2 = PicturePopupMenu.replace2520(pi.getImageFile().getName());
                 if (potentialNewFilename2.isPresent()) {
-                    final File suggestedFileName2 = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilename2.get());
+                    final File suggestedFileName2 = Tools.inventFilename(pi.getImageFile().getParentFile(), potentialNewFilename2.get());
                     final JMenuItem renameSpaceJMenuItem2 = new JMenuItem("To: " + suggestedFileName2.getName());
                     renameSpaceJMenuItem2.addActionListener(e -> JpoEventBus.getInstance().post(new RenameFileRequest(node, suggestedFileName2.getName())));
                     menuItems.add(renameSpaceJMenuItem2);
@@ -81,7 +81,7 @@ public class RenameMenuItems {
 
                 final Optional<String> potentialNewFilenameWithoutUndescores = PicturePopupMenu.replaceUnderscore(pi.getImageFile().getName());
                 if (potentialNewFilenameWithoutUndescores.isPresent()) {
-                    final File suggestedFileName3 = Tools.inventPicFilename(pi.getImageFile().getParentFile(), potentialNewFilenameWithoutUndescores.get());
+                    final File suggestedFileName3 = Tools.inventFilename(pi.getImageFile().getParentFile(), potentialNewFilenameWithoutUndescores.get());
                     final JMenuItem renameUnderscoreJMenuItem = new JMenuItem("To: " + suggestedFileName3.getName());
                     renameUnderscoreJMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new RenameFileRequest(node, suggestedFileName3.getName())));
                     menuItems.add(renameUnderscoreJMenuItem);

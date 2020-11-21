@@ -198,7 +198,7 @@ public class JpoWriter {
                                      final boolean copyPics
     ) throws IOException {
         if (copyPics) {
-            final File targetHighresFile = Tools.inventPicFilename(highresTargetDir, pictureInfo.getImageFile().getName());
+            final File targetHighresFile = Tools.inventFilename(highresTargetDir, pictureInfo.getImageFile().getName());
             FileUtils.copyFile(pictureInfo.getImageFile(), targetHighresFile);
             final PictureInfo tempPi = pictureInfo.getClone();
             tempPi.setImageLocation(targetHighresFile);

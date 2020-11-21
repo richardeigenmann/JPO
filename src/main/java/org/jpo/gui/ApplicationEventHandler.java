@@ -129,7 +129,7 @@ public class ApplicationEventHandler {
             File newName = new File(selectedValue);
 
             if (newName.exists()) {
-                final File alternativeNewName = Tools.inventPicFilename(newName.getParentFile(), newName.getName());
+                final File alternativeNewName = Tools.inventFilename(newName.getParentFile(), newName.getName());
                 int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
                         String.format(Settings.getJpoResources().getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
                         Settings.getJpoResources().getString("FileRenameTargetExistsTitle"),
@@ -1084,7 +1084,7 @@ public class ApplicationEventHandler {
         Objects.requireNonNull(targetDirectory, "targetDirectory must not be null");
 
         final File originalFile = pictureInfo.getImageFile();
-        final File targetFile = Tools.inventPicFilename(targetDirectory, originalFile.getName());
+        final File targetFile = Tools.inventFilename(targetDirectory, originalFile.getName());
         try {
             FileUtils.copyFile(originalFile, targetFile);
         } catch (final IOException e) {

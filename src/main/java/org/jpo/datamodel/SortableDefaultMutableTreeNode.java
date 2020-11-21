@@ -1054,7 +1054,7 @@ public class SortableDefaultMutableTreeNode
                         () -> progressBar.setValue(progressBar.getValue() + 1)
                 );
             }
-            final File targetFile = Tools.inventPicFilename(targetDir, file.getName());
+            final File targetFile = Tools.inventFilename(targetDir, file.getName());
             LOGGER.log(Level.FINE, "Target file name chosen as: {0}", new Object[]{targetFile});
             copyPicture(file, targetFile);
 
