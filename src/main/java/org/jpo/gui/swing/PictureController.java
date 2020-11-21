@@ -82,7 +82,6 @@ public class PictureController extends JComponent {
         // make graphics faster
         this.setDoubleBuffered(false);
 
-        // register an interest in mouse events
         final Listener mouseListener = new Listener();
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
@@ -91,52 +90,63 @@ public class PictureController extends JComponent {
             @Override
             public void keyPressed(KeyEvent keyEvent) {
                 int k = keyEvent.getKeyCode();
-                if ((k == KeyEvent.VK_SPACE) || (k == KeyEvent.VK_HOME)) {
-                    resetPicture();
-                    keyEvent.consume();
-                } else if ((k == KeyEvent.VK_PAGE_UP)) {
-                    zoomIn();
-                    keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_PAGE_DOWN ) ) {
-                    zoomOut();
-                    keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_1 ) ) {
-                    zoomFull();
-                    keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_UP ) || ( k == KeyEvent.VK_KP_UP ) ) {
-                    scrollDown();
-                    keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_DOWN ) || ( k == KeyEvent.VK_KP_DOWN ) ) {
-                    scrollUp();
-                    keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_LEFT ) || ( k == KeyEvent.VK_KP_LEFT ) ) {
-                    scrollRight();
-                    keyEvent.consume();
-                } else if ( ( k == KeyEvent.VK_RIGHT ) || ( k == KeyEvent.VK_KP_RIGHT ) ) {
-                    scrollLeft();
+                if (handleKeystroke(k)) {
                     keyEvent.consume();
                 }
             }
         } );
 
-        addComponentListener( new ComponentAdapter() {
-
+        addComponentListener(new ComponentAdapter() {
             @Override
-            public void componentResized( ComponentEvent e ) {
-                if ( centerWhenScaled ) {
+            public void componentResized(ComponentEvent e) {
+                if (centerWhenScaled) {
                     resetPicture();
                 }
             }
 
-        } );
+        });
+    }
 
+    /**
+     * Handles the keystroke and returns if it was able to find a handler for the keystroke
+     *
+     * @param keyCode The keyCode
+     * @return true if there was some action to do on the keyCode, false if not
+     */
+    private boolean handleKeystroke(int keyCode) {
+        if ((keyCode == KeyEvent.VK_SPACE) || (keyCode == KeyEvent.VK_HOME)) {
+            resetPicture();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_PAGE_UP)) {
+            zoomIn();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_PAGE_DOWN)) {
+            zoomOut();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_1)) {
+            zoomFull();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_UP) || (keyCode == KeyEvent.VK_KP_UP)) {
+            scrollDown();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_DOWN) || (keyCode == KeyEvent.VK_KP_DOWN)) {
+            scrollUp();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_LEFT) || (keyCode == KeyEvent.VK_KP_LEFT)) {
+            scrollRight();
+            return true;
+        } else if ((keyCode == KeyEvent.VK_RIGHT) || (keyCode == KeyEvent.VK_KP_RIGHT)) {
+            scrollLeft();
+            return true;
+        }
+        return false;
     }
 
     /**
      * Initialises the widgets
      */
     private void initComponents() {
-        setFocusable( true );
+        setFocusable(true);
     }
 
     /**

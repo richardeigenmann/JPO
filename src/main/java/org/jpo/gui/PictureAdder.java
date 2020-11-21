@@ -153,10 +153,8 @@ public class PictureAdder
         final File[] fileArray = dir.listFiles();
         if (fileArray != null) {
             for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-                if (fileArray[i].isDirectory() && recurseDirectories) {
-                    if (Tools.hasPictures(fileArray[i])) {
-                        addDirectory(directoryNode, fileArray[i]);
-                    }
+                if (fileArray[i].isDirectory() && recurseDirectories && Tools.hasPictures(fileArray[i])) {
+                    addDirectory(directoryNode, fileArray[i]);
                 } else {
                     if (directoryNode.addSinglePicture(fileArray[i], newOnly, selectedCategories)) {
                         publish(1);

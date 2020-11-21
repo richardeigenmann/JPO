@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.CollectionJTree;
@@ -172,53 +173,22 @@ public class CollectionJTreeController {
         @Override
         @SuppressWarnings({"unchecked"})
         public boolean importData(final TransferSupport support) {
-            final JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
-            final SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            LOGGER.log(Level.INFO, "Choosing node {0} as target for path {1}, ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
-
             final int actionType = support.getDropAction();
             if (!((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE))) {
                 LOGGER.log(Level.INFO, "The event has an odd Action Type: {0}. Drop rejected. Copy is {1}, Move is {2}", new Object[]{actionType, TransferHandler.COPY, TransferHandler.MOVE});
                 return false;
             }
 
-            final List<SortableDefaultMutableTreeNode> transferableNodes;
+            final JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
+            final SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
+            LOGGER.log(Level.INFO, "Choosing node {0} as target for path {1}, ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
 
-            try {
-                Transferable t = support.getTransferable();
-                Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
-                transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
-            } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
-                LOGGER.log(Level.INFO, x.getMessage());
-                return false;
-            }
 
-            for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
-                if (targetNode.isNodeAncestor(sourceNode)) {
-                    JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            Settings.getJpoResources().getString("moveNodeError"),
-                            Settings.getJpoResources().getString("genericError"),
-                            JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
+            final List<SortableDefaultMutableTreeNode> transferableNodes = getTransferableNodes(support.getTransferable());
+            if (transferableNodes == null) return false;
+            if (ancestorViolationCheck(targetNode, transferableNodes)) return false;
 
-            // The drop is a valid one.
-            //  memorise the group of the drop location.
-            SortableDefaultMutableTreeNode groupOfDropLocation;
-            if ( targetNode.getUserObject() instanceof GroupInfo ) {
-                groupOfDropLocation = targetNode;
-            } else {
-                // the parent must be a group node
-                groupOfDropLocation = targetNode.getParent();
-            }
-            if ( ( groupOfDropLocation != null ) && ( groupOfDropLocation.getUserObject() instanceof GroupInfo ) ) {
-                Settings.memorizeGroupOfDropLocation( groupOfDropLocation );
-                JpoEventBus.getInstance().post( new RecentDropNodesChangedEvent() );
-            } else {
-                LOGGER.info( "Failed to find the group of the drop location. Not memorizing." );
-            }
-
+            memorizeGroupOfDropLocation(targetNode);
             transferableNodes.forEach(sourceNode -> {
                 if (actionType == TransferHandler.MOVE) {
                     if (dropLocation.getChildIndex() == -1) {
@@ -241,14 +211,56 @@ public class CollectionJTreeController {
                             targetNode.add( cloneNode );
                         } else {
                             // dropping onto a picture
-                            cloneNode.moveBefore( targetNode );
+                            cloneNode.moveBefore(targetNode);
                         }
                     } else {
-                        cloneNode.moveToIndex( targetNode, dropLocation.getChildIndex() );
+                        cloneNode.moveToIndex(targetNode, dropLocation.getChildIndex());
                     }
                 }
-            } );
+            });
             return true;
+        }
+    }
+
+    private boolean ancestorViolationCheck(final SortableDefaultMutableTreeNode targetNode, final List<SortableDefaultMutableTreeNode> transferableNodes) {
+        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
+            if (targetNode.isNodeAncestor(sourceNode)) {
+                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("moveNodeError"),
+                        Settings.getJpoResources().getString("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {
+        final List<SortableDefaultMutableTreeNode> transferableNodes;
+        try {
+            final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
+            transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
+        } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
+            LOGGER.log(Level.INFO, x.getMessage());
+            return null;
+        }
+        return transferableNodes;
+    }
+
+    private void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode targetNode) {
+        SortableDefaultMutableTreeNode groupOfDropLocation;
+        if (targetNode.getUserObject() instanceof GroupInfo) {
+            groupOfDropLocation = targetNode;
+        } else {
+            // the parent must be a group node
+            groupOfDropLocation = targetNode.getParent();
+        }
+        if ((groupOfDropLocation != null) && (groupOfDropLocation.getUserObject() instanceof GroupInfo)) {
+            Settings.memorizeGroupOfDropLocation(groupOfDropLocation);
+            JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
+        } else {
+            LOGGER.info("Failed to find the group of the drop location. Not memorizing.");
         }
     }
 
@@ -259,7 +271,7 @@ public class CollectionJTreeController {
     private final JTree collectionJTree = new CollectionJTree() {
 
         @Override
-        public String getToolTipText( MouseEvent mouseEvent ) {
+        public String getToolTipText(MouseEvent mouseEvent) {
             if ( collectionJTree.getRowForLocation( mouseEvent.getX(), mouseEvent.getY() ) == -1 ) {
                 return null;
             }
