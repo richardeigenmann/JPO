@@ -3,14 +3,19 @@
     "runtime": "org.freedesktop.Platform",
     "runtime-version": "18.08",
     "sdk": "org.freedesktop.Sdk",
-    "sdk-extensions" : [ "org.freedesktop.Sdk.Extension.openjdk11" ],
-    "command" : "flatpak-run.sh",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.openjdk15"
+    ],
+    "command": "flatpak-run.sh",
     "modules": [
-	{
-            "name" : "openjdk",
-            "buildsystem" : "simple",
-            "build-commands" : [ "/usr/lib/sdk/openjdk11/install.sh" ]
-        }, {
+        {
+            "name": "openjdk",
+            "buildsystem": "simple",
+            "build-commands": [
+                "/usr/lib/sdk/openjdk15/install.sh"
+            ]
+        },
+        {
             "name": "jpo-launcher",
             "buildsystem": "simple",
             "build-commands": [
@@ -26,12 +31,12 @@
             "name": "jpo",
             "buildsystem": "simple",
             "build-commands": [
-                "install -D jpo-0.13-all.jar /app/bin/jpo-0.13-all.jar"
+                "install -D jpo-0.14-all.jar /app/bin/jpo-0.14-all.jar"
             ],
             "sources": [
                 {
                     "type": "file",
-                    "path": "build/jars/signed/jpo-0.13-all.jar"
+                    "path": "build/jars/signed/jpo-0.14-all.jar"
                 }
             ]
         }
