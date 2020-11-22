@@ -60,7 +60,7 @@ test {
 javadoc {
     options.encoding = "UTF-8"
     options.addBooleanOption('-enable-preview', true)
-    options.addStringOption('-release', '14')
+    options.addStringOption('-release', '15')
 }
 
 task openJavadocInBrowser {
