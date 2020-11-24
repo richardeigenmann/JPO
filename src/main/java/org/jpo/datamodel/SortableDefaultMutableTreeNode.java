@@ -913,16 +913,18 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean moveToLastChild(final SortableDefaultMutableTreeNode targetNode) {
         if (this.isRoot()) {
-            LOGGER.fine("You can't move the root node to be a child of another node! Aborting move.");
+            LOGGER.log(Level.SEVERE, "You can't move the root node to be a child of another node! Aborting move.");
             return false;
         }
         if (!targetNode.getAllowsChildren()) {
-            LOGGER.fine("You can't move a node onto a node that doesn't allow child nodes.");
+            LOGGER.log(Level.SEVERE, "You can't move a node onto a node that doesn't allow child nodes.");
             return false;
         }
 
         synchronized (targetNode.getRoot()) {
+            LOGGER.log(Level.INFO, "Removing node {0} from its parent", this);
             this.removeFromParent();
+            LOGGER.log(Level.INFO, "Adding node {0} to target node {1}", new Object[]{this, targetNode});
             targetNode.add(this);
         }
 
@@ -964,18 +966,19 @@ public class SortableDefaultMutableTreeNode
     public boolean moveToIndex(final SortableDefaultMutableTreeNode parentNode,
                                final int index) {
         if (isNodeDescendant(parentNode)) {
-            LOGGER.fine("Can't move to a descendant node. Aborting move.");
+            LOGGER.log(Level.SEVERE, "Can't move to a descendant node. Aborting move.");
             return false;
         }
 
         int offset = 0;
         if (this.getParent() != null) {
             if (this.getParent().equals(parentNode) && (this.getParent().getIndex(this) < index)) {
-                // correct the index because the poll will take away one slot
+                // correct the index if the node goes to the same parent but further down the list
                 offset = -1;
             }
             this.removeFromParent();
         }
+        LOGGER.log(Level.INFO, "Inserting node {0} at index {1} on parent node {2}", new Object[]{this, index + offset, parentNode});
         parentNode.insert(this, index + offset);
         getPictureCollection().setUnsavedUpdates();
         return true;

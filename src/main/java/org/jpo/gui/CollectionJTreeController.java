@@ -191,6 +191,7 @@ public class CollectionJTreeController {
             memorizeGroupOfDropLocation(targetNode);
             transferableNodes.forEach(sourceNode -> {
                 if (actionType == TransferHandler.MOVE) {
+                    LOGGER.log(Level.INFO, "Processing a MOVE on node: {0}", sourceNode);
                     if (dropLocation.getChildIndex() == -1) {
                         if (targetNode.getUserObject() instanceof GroupInfo) {
                             // append to end of group if dropping on a group node
@@ -237,13 +238,13 @@ public class CollectionJTreeController {
 
     @Nullable
     private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {
-        final List<SortableDefaultMutableTreeNode> transferableNodes;
+        List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
         try {
             final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
             transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
+            LOGGER.log(Level.INFO, "processing a list with {0} transferable nodes", transferableNodes.size());
         } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
-            LOGGER.log(Level.INFO, x.getMessage());
-            return null;
+            LOGGER.log(Level.SEVERE, x.getMessage());
         }
         return transferableNodes;
     }
