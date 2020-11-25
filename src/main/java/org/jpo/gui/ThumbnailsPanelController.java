@@ -15,6 +15,7 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
@@ -541,7 +542,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * it is on the EDT)
      */
     private void updateTitle() {
-        LOGGER.fine(String.format("setting title to: %s", mySetOfNodes.getTitle()));
+        LOGGER.log(Level.FINE, "setting title to: {0}", mySetOfNodes.getTitle());
         titleJPanel.setTitle(mySetOfNodes.getTitle());
     }
 

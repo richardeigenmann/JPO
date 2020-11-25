@@ -875,7 +875,7 @@ public class PictureCollection {
      */
     public void addToSelectedNodes(final SortableDefaultMutableTreeNode node) {
         if (isSelected(node)) {
-            LOGGER.log(Level.FINE, "The node {0} is already selected. Leaving it selected.", node.toString());
+            LOGGER.log(Level.FINE, "The node {0} is already selected. Leaving it selected.", node);
             return;
         }
         selection.add(node);

@@ -219,7 +219,7 @@ public class ThumbnailController
     private void attachChangeListeners() {
         // unattach from the change Listener
         if (registeredPictureInfoChangeListener != null) {
-            LOGGER.fine(String.format("unattaching MyPictureInfoChangeEventHandler %d from PictureInfo %d", myPictureInfoChangeEventHandler.hashCode(), registeredPictureInfoChangeListener.hashCode()));
+            LOGGER.log(Level.FINE, "unattaching MyPictureInfoChangeEventHandler {0} from PictureInfo {1}", new Object[]{myPictureInfoChangeEventHandler.hashCode(), registeredPictureInfoChangeListener.hashCode()});
             registeredPictureInfoChangeListener.removePictureInfoChangeListener(myPictureInfoChangeEventHandler);
             registeredPictureInfoChangeListener = null;
         }
@@ -232,7 +232,7 @@ public class ThumbnailController
         // attach the change Listener
         if (myNode != null) {
             if (myNode.getUserObject() instanceof PictureInfo pi) {
-                LOGGER.fine(String.format("attaching ThumbnailController %d to PictureInfo %d", this.hashCode(), pi.hashCode()));
+                LOGGER.log(Level.FINE, "attaching ThumbnailController {0} to PictureInfo {1}", new Object[]{this.hashCode(), pi.hashCode()});
                 pi.addPictureInfoChangeListener(myPictureInfoChangeEventHandler);
                 registeredPictureInfoChangeListener = pi; //remember so we can poll
             } else if (myNode.getUserObject() instanceof GroupInfo gi) {
@@ -331,7 +331,7 @@ public class ThumbnailController
                 if (Settings.getPictureCollection().isSelected(myNode)) {
                     Settings.getPictureCollection().removeFromSelection(myNode);
                 } else {
-                    LOGGER.fine(String.format("Adding; Now Selected: %d", Settings.getPictureCollection().getSelection().size()));
+                    LOGGER.log(Level.FINE, "Adding; Now Selected: {0}", Settings.getPictureCollection().getSelection().size());
                     Settings.getPictureCollection().addToSelectedNodes(myNode);
                 }
             } else {
@@ -340,7 +340,7 @@ public class ThumbnailController
                 } else {
                     Settings.getPictureCollection().clearSelection();
                     Settings.getPictureCollection().addToSelectedNodes(myNode);
-                    LOGGER.fine(String.format("1 selection added; Now Selected: %d", Settings.getPictureCollection().getSelection().size()));
+                    LOGGER.log(Level.FINE, "1 selection added; Now Selected: {0}", Settings.getPictureCollection().getSelection().size());
                 }
             }
         }
@@ -356,7 +356,7 @@ public class ThumbnailController
             } else if (myNode.getUserObject() instanceof GroupInfo) {
                 JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( myNode, e.getComponent(), e.getX(), e.getY() ) );
             } else {
-                LOGGER.severe(String.format("Processing a right click response on an unknown node type: %s", myNode.getUserObject().getClass().toString()));
+                LOGGER.log(Level.SEVERE, "Processing a right click response on an unknown node type: {0}", myNode.getUserObject().getClass());
             }
         }
 
@@ -407,7 +407,7 @@ public class ThumbnailController
          */
         @Override
         public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
-            LOGGER.fine(String.format("Got a Group Change event: %s", groupInfoChangeEvent.toString()));
+            LOGGER.log(Level.FINE, "Got a Group Change event: {0}", groupInfoChangeEvent);
             if (groupInfoChangeEvent.getWasSelected()) {
                 myThumbnail.setSelected();
             } else if (groupInfoChangeEvent.getWasUnselected()) {
@@ -492,7 +492,7 @@ public class ThumbnailController
 
             try {
                 event.startDrag(DragSource.DefaultMoveNoDrop, transferable, new ThumbnailDragSourceListener());
-                LOGGER.log(Level.FINE, "Drag started on node: {0}", myNode.getUserObject().toString());
+                LOGGER.log(Level.FINE, "Drag started on node: {0}", myNode.getUserObject());
             } catch (InvalidDnDOperationException x) {
                 LOGGER.log(Level.FINE, "Threw a InvalidDnDOperationException: reason: {0}", x.getMessage());
             }

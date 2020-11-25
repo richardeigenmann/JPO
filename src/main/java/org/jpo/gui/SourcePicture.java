@@ -451,7 +451,7 @@ public class SourcePicture {
      * @param statusMessage status message
      */
     private void setStatus(final SourcePictureStatus statusCode, final String statusMessage) {
-        LOGGER.fine(String.format("Sending status code %s with message %s to %d listeners", statusCode, statusMessage, sourcePictureListeners.size()));
+        LOGGER.log(Level.FINE, "Sending status code {0} with message {1} to {2} listeners", new Object[]{statusCode, statusMessage, sourcePictureListeners.size()});
         pictureStatusCode = statusCode;
         pictureStatusMessage = statusMessage;
         synchronized (sourcePictureListeners) {

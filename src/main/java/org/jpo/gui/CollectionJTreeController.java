@@ -2,7 +2,7 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.Nullable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.CollectionJTree;
@@ -185,7 +185,6 @@ public class CollectionJTreeController {
 
 
             final List<SortableDefaultMutableTreeNode> transferableNodes = getTransferableNodes(support.getTransferable());
-            if (transferableNodes == null) return false;
             if (ancestorViolationCheck(targetNode, transferableNodes)) return false;
 
             memorizeGroupOfDropLocation(targetNode);
@@ -236,7 +235,7 @@ public class CollectionJTreeController {
         return false;
     }
 
-    @Nullable
+    @NonNull
     private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {
         List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
         try {

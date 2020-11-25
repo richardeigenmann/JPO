@@ -476,7 +476,7 @@ public class PictureInfoEditor extends JFrame {
         checksumJLabel.setText(Settings.getJpoResources().getString("checksumJLabel") + pictureInfo.getChecksumAsString());
         fileHashJLabel.setText(Settings.getJpoResources().getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
         filmReferenceJTextField.setText(pictureInfo.getFilmReference());
-        LOGGER.info(String.format("Retrieving angle: %f", pictureInfo.getRotation()));
+        LOGGER.log(Level.INFO, "Retrieving angle: {0}", pictureInfo.getRotation());
         angleModel.setValue(pictureInfo.getRotation());
         latitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().x));
         longitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().y));
@@ -552,7 +552,7 @@ public class PictureInfoEditor extends JFrame {
                 filmReferenceJTextField.setText(pictureInfo.getFilmReference());
             }
             if (e.getRotationChanged()) {
-                LOGGER.info(String.format("Processing a Rotation Changed notification: angle is: %f", pictureInfo.getRotation()));
+                LOGGER.log(Level.INFO, "Processing a Rotation Changed notification: angle is: {0}", pictureInfo.getRotation());
                 angleModel.setValue(pictureInfo.getRotation());
             }
             if (e.getLatLngChanged()) {

@@ -913,11 +913,11 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean moveToLastChild(final SortableDefaultMutableTreeNode targetNode) {
         if (this.isRoot()) {
-            LOGGER.log(Level.SEVERE, "You can't move the root node to be a child of another node! Aborting move.");
+            LOGGER.log(Level.SEVERE, "You can\'t move the root node to be a child of another node! Aborting move.");
             return false;
         }
         if (!targetNode.getAllowsChildren()) {
-            LOGGER.log(Level.SEVERE, "You can't move a node onto a node that doesn't allow child nodes.");
+            LOGGER.log(Level.SEVERE, "You can\'t move a node onto a node that doesn't allow child nodes.");
             return false;
         }
 
