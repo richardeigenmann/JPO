@@ -709,26 +709,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 midresHtmlWriter.newLine();
                 midresHtmlWriter.write("<table class=\"numberPickTable\">");
                 midresHtmlWriter.newLine();
-                String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " "));
-                StringBuilder dhtmlArray = new StringBuilder(String.format("content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription));
-                if (pictureInfo.getCreationTime().length() > 0) {
-                    dhtmlArray.append("<p><strong>Date:</strong><br>").append(pictureInfo.getCreationTime().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("</p>");
-                }
-
-                if (pictureInfo.getPhotographer().length() > 0) {
-                    dhtmlArray.append("<strong>Photographer:</strong><br>").append(pictureInfo.getPhotographer().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
-                }
-                if (pictureInfo.getComment().length() > 0) {
-                    dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
-                }
-                if (pictureInfo.getFilmReference().length() > 0) {
-                    dhtmlArray.append("<strong>Film Reference:</strong><br>").append(pictureInfo.getFilmReference().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
-                }
-                if (pictureInfo.getCopyrightHolder().length() > 0) {
-                    dhtmlArray.append("<strong>Copyright Holder:</strong><br>").append(pictureInfo.getCopyrightHolder().replaceAll("\'", "\\\\'").replaceAll("\n", " ")).append("<br>");
-                }
-
-                dhtmlArray.append("'\n");
+                final String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replace("\'", "\\\\'"));
+                final StringBuilder dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
 
                 int startNumber = (int) Math.floor((childNumber - indexBeforeCurrent - 1) / (double) indexPerRow) * indexPerRow + 1;
                 if (startNumber < 1) {
@@ -870,6 +852,30 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         }
         picsWroteCounter++;
+    }
+
+    @NotNull
+    private StringBuilder startDhtmlArray(int childNumber, int childCount, PictureInfo pictureInfo, String htmlFriendlyDescription) {
+        final StringBuilder dhtmlArray = new StringBuilder(String.format("content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription));
+        if (pictureInfo.getCreationTime().length() > 0) {
+            dhtmlArray.append("<p><strong>Date:</strong><br>").append(pictureInfo.getCreationTime().replace("\'", "\\\\'")).append("</p>");
+        }
+
+        if (pictureInfo.getPhotographer().length() > 0) {
+            dhtmlArray.append("<strong>Photographer:</strong><br>").append(pictureInfo.getPhotographer().replace("\'", "\\\\'")).append("<br>");
+        }
+        if (pictureInfo.getComment().length() > 0) {
+            dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replace("\'", "\\\\'")).append("<br>");
+        }
+        if (pictureInfo.getFilmReference().length() > 0) {
+            dhtmlArray.append("<strong>Film Reference:</strong><br>").append(pictureInfo.getFilmReference().replace("\'", "\\\\'")).append("<br>");
+        }
+        if (pictureInfo.getCopyrightHolder().length() > 0) {
+            dhtmlArray.append("<strong>Copyright Holder:</strong><br>").append(pictureInfo.getCopyrightHolder().replace("\'", "\\\\'")).append("<br>");
+        }
+
+        dhtmlArray.append("'\n");
+        return dhtmlArray;
     }
 
     private void writeLinks(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final PictureInfo pictureInfo, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
