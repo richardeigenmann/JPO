@@ -512,7 +512,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         updateTitle();
 
         if (initialisedMaxThumbnails != Settings.getMaxThumbnails()) {
-            LOGGER.info(String.format("There are %d initialised thumbnails which is not equal to the defined maximum number of %d. Therefore reinitialising", initialisedMaxThumbnails, Settings.getMaxThumbnails()));
+            LOGGER.log(Level.INFO, "There are {0} initialised thumbnails which is not equal to the defined maximum number of {1}. Therefore reinitialising", new Object[]{initialisedMaxThumbnails, Settings.getMaxThumbnails()});
             initThumbnailsArray();
         }
 

@@ -755,7 +755,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                             }
 
                             midresHtmlWriter.write("<a href=\"" + nodeUrl + "\"");
-                            String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4(((PictureInfo) nde.getUserObject()).getDescription().replaceAll("\'", "\\\\'").replaceAll("\n", " "));
+                            final String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4(((PictureInfo) nde.getUserObject()).getDescription().replace("\'", "\\\\'"));
                             if (request.isGenerateMouseover()) {
                                 midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i));
                                 dhtmlArray.append(String.format("content[%d]='", i));
@@ -986,7 +986,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.info("Setting up ssh connection:");
         final JSch jsch = new JSch();
         try {
-            LOGGER.info(String.format("Setting up session for user: %s server: %s port: %d and connecting...", request.getSshUser(), request.getSshServer(), request.getSshPort()));
+            LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{request.getSshUser(), request.getSshServer(), request.getSshPort()});
             final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
             if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
                 session.setPassword(request.getSshPassword());

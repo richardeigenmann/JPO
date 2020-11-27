@@ -917,7 +917,7 @@ public class SortableDefaultMutableTreeNode
             return false;
         }
         if (!targetNode.getAllowsChildren()) {
-            LOGGER.log(Level.SEVERE, "You can''t move a node onto a node that doesn't allow child nodes.");
+            LOGGER.log(Level.SEVERE, "You can''t move a node onto a node that doesn''t allow child nodes.");
             return false;
         }
 
@@ -966,7 +966,7 @@ public class SortableDefaultMutableTreeNode
     public boolean moveToIndex(final SortableDefaultMutableTreeNode parentNode,
                                final int index) {
         if (isNodeDescendant(parentNode)) {
-            LOGGER.log(Level.SEVERE, "Can't move to a descendant node. Aborting move.");
+            LOGGER.log(Level.SEVERE, "Can''t move to a descendant node. Aborting move.");
             return false;
         }
 
