@@ -226,18 +226,13 @@ public class PictureInfoTest {
         assertEquals(filename, "picture.jpg");
     }
 
+    private int eventsReceived;
+
     /**
      * A dumb PictureInfoChangeListener that only counts the events received
      */
-    private final PictureInfoChangeListener pictureInfoChangeListener = new PictureInfoChangeListener() {
+    private final PictureInfoChangeListener pictureInfoChangeListener = e -> eventsReceived++;
 
-        @Override
-        public void pictureInfoChangeEvent(PictureInfoChangeEvent pictureInfoChangeEvent) {
-            eventsReceived++;
-        }
-    };
-
-    private int eventsReceived;
 
     /**
      * Test the change listener

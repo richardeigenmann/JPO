@@ -101,13 +101,7 @@ public class GroupInfoTest {
         gi.setGroupName("Change the name without a change listener attached");
         assertEquals(0, receivedGroupInfoChangedEvents.size());
 
-        final GroupInfoChangeListener listener = new GroupInfoChangeListener() {
-
-            @Override
-            public void groupInfoChangeEvent(final GroupInfoChangeEvent event) {
-                receivedGroupInfoChangedEvents.add(event);
-            }
-        };
+        final GroupInfoChangeListener listener = event -> receivedGroupInfoChangedEvents.add(event);
         gi.addGroupInfoChangeListener(listener);
         gi.setGroupName("Change with Change Listener");
         assertEquals(1, receivedGroupInfoChangedEvents.size());

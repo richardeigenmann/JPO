@@ -87,7 +87,7 @@ public class ChangeWindowPopupMenu extends JPopupMenu
     /**
      * Object that must implement the functions dealing with the user request.
      */
-    private final ChangeWindowInterface caller;
+    private final transient ChangeWindowInterface caller;
 
     /**
      * Creates a popup menu which allows the user to choose how he would like

@@ -74,7 +74,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The Thumbnail Controller for the thumbnail being shown
      */
-    private final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
+    private final transient ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
 
     /**
      * The description of the picture
@@ -463,7 +463,7 @@ public class PictureInfoEditor extends JFrame {
         getContentPane().add(mainPanel);
     }
 
-    private final MapViewer mapViewer = new MapViewer();
+    private final transient MapViewer mapViewer = new MapViewer();
 
     /**
      * populates the text fields with the values from the PictureInfo object
@@ -525,7 +525,7 @@ public class PictureInfoEditor extends JFrame {
      * Set up a PictureInfoChangeListener to get updated on change events in the
      * Picture Metadata
      */
-    private final PictureInfoChangeListener myPictureInfoChangeListener = new PictureInfoChangeListener() {
+    private final transient PictureInfoChangeListener myPictureInfoChangeListener = new PictureInfoChangeListener() {
         /**
          * here we get notified by the PictureInfo object that something has
          * changed.

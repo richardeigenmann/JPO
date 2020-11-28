@@ -82,7 +82,7 @@ public class PicturePopupMenu extends JPopupMenu {
      * Reference to the {@link NodeNavigatorInterface} which indicates the nodes
      * being displayed.
      */
-    private final NodeNavigatorInterface mySetOfNodes;
+    private final transient NodeNavigatorInterface mySetOfNodes;
     /**
      * Index of the {@link #mySetOfNodes} being popped up.
      */

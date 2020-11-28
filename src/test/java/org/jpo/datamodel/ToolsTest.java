@@ -172,11 +172,13 @@ public class ToolsTest {
         assertEquals(expected, result);
     }
 
+    private static String TEST_IMAGE_FILENAME = "gaga.jpg";
+
     @Test
     public void testInventFilename() {
         try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("ToolsInventFilename");
-            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), "gaga.jpg");
+            final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilename");
+            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
             assertEquals("gaga.jpg", f.getName());
             Files.delete(tempDirWithPrefix);
         } catch (IOException e) {
@@ -187,12 +189,12 @@ public class ToolsTest {
     @Test
     public void testInventFilenameExists() {
         try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("ToolsInventFilename");
-            final File f_exists = new File(tempDirWithPrefix.toFile(), "gaga.jpg");
-            new FileOutputStream(f_exists).close();
-            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), "gaga.jpg");
+            final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilenameExists");
+            final File fExists = new File(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
+            new FileOutputStream(fExists).close();
+            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
             assertEquals("gaga_1.jpg", f.getName());
-            Files.delete(f_exists.toPath());
+            Files.delete(fExists.toPath());
             Files.delete(tempDirWithPrefix);
         } catch (IOException e) {
             fail("Could not run test testInventFilename");
@@ -202,9 +204,9 @@ public class ToolsTest {
     @Test
     public void testInventFilenameExists50() {
         try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("ToolsInventFilename");
-            final File f_exists = new File(tempDirWithPrefix.toFile(), "gaga.jpg");
-            new FileOutputStream(f_exists).close();
+            final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilenameExists50");
+            final File fExists = new File(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
+            new FileOutputStream(fExists).close();
             final File[] existingFiles = new File[50];
             for (int i = 0; i < 50; i++) {
                 final File f_exists_50 = new File(tempDirWithPrefix.toFile(), "gaga_" + i + ".jpg");
@@ -212,11 +214,11 @@ public class ToolsTest {
                 existingFiles[i] = f_exists_50;
             }
 
-            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), "gaga.jpg");
+            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
 
             assertEquals(19, f.getName().length());
 
-            Files.delete(f_exists.toPath());
+            Files.delete(fExists.toPath());
             for (int i = 0; i < 50; i++) {
                 Files.delete(existingFiles[i].toPath());
             }

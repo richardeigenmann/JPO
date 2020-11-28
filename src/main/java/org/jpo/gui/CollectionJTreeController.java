@@ -114,6 +114,20 @@ public class CollectionJTreeController {
         }
     }
 
+    private static boolean ancestorViolationCheck(final SortableDefaultMutableTreeNode targetNode, final List<SortableDefaultMutableTreeNode> transferableNodes) {
+        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
+            if (targetNode.isNodeAncestor(sourceNode)) {
+                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                        Settings.getJpoResources().getString("moveNodeError"),
+                        Settings.getJpoResources().getString("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private class MyTransferHandler
             extends TransferHandler {
 
@@ -222,18 +236,6 @@ public class CollectionJTreeController {
         }
     }
 
-    private boolean ancestorViolationCheck(final SortableDefaultMutableTreeNode targetNode, final List<SortableDefaultMutableTreeNode> transferableNodes) {
-        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
-            if (targetNode.isNodeAncestor(sourceNode)) {
-                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("moveNodeError"),
-                        Settings.getJpoResources().getString("genericError"),
-                        JOptionPane.ERROR_MESSAGE);
-                return true;
-            }
-        }
-        return false;
-    }
 
     @NonNull
     private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {

@@ -588,7 +588,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleShowCategoryUsageEditorRequest(final ShowCategoryUsageEditorRequest request) {
-        new CategoryUsageJFrame(request);
+        JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "This dialog was removed. Use AssignCategories instead");
     }
 
     /**

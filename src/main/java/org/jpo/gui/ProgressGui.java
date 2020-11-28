@@ -53,7 +53,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
      * variable that is checked periodically that stops the addDirectory loop in
      * a controlled way
      */
-    private final InterruptSemaphore interruptSemaphore = new InterruptSemaphore();
+    private final transient InterruptSemaphore interruptSemaphore = new InterruptSemaphore();
     
     /**
      * how long the gui should show after it has finished.

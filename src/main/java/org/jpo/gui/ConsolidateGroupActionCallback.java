@@ -3,7 +3,7 @@ package org.jpo.gui;
 import java.io.File;
 
 /*
- Copyright (C) 2015 - 2019 Richard Eigenmann.
+ Copyright (C) 2015 - 2020 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,7 +31,7 @@ public interface ConsolidateGroupActionCallback {
      *
      * @param highresDirectory The target directory
      * @param recurseSubgroups true if the sub-groups are to consolidated,
-     * false if not
+     *                         false if not
      */
-    void consolidateGroupCallback(File highresDirectory, boolean recurseSubgroups);
+    void consolidateGroupCallback(final File highresDirectory, final boolean recurseSubgroups);
 }

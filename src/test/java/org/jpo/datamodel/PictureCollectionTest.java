@@ -235,33 +235,31 @@ public class PictureCollectionTest {
     public void testAddToMailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(0, pictureCollection.getMailSelectedNodes().size());
-        pictureCollection.addToMailSelection( picture1 );
-        assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
-        pictureCollection.addToMailSelection( picture1 ); //adding the same node again
-        assertEquals( 1, pictureCollection.getMailSelectedNodes().size() );
+        pictureCollection.addToMailSelection(picture1);
+        assertEquals(1, pictureCollection.getMailSelectedNodes().size());
+        pictureCollection.addToMailSelection(picture1); //adding the same node again
+        assertEquals(1, pictureCollection.getMailSelectedNodes().size());
     }
-    /**
-     * Let's create a quick and dirty change listener
-     */
-    private final PictureInfoChangeListener listener = new PictureInfoChangeListener() {
 
-        @Override
-        public void pictureInfoChangeEvent( PictureInfoChangeEvent e ) {
-            if (e.getWasSelected()) {
-                selectedCount++;
-            } else if (e.getWasUnselected()) {
-                unselectedCount++;
-            } else if (e.getWasMailSelected()) {
-                mailSelectedCount++;
-            } else if (e.getWasMailUnselected()) {
-                mailUnselectedCount++;
-            }
-        }
-    };
     private int selectedCount;
     private int unselectedCount;
     private int mailSelectedCount;
     private int mailUnselectedCount;
+
+    /**
+     * Let's create a quick and dirty change listener
+     */
+    private final PictureInfoChangeListener listener = e -> {
+        if (e.getWasSelected()) {
+            selectedCount++;
+        } else if (e.getWasUnselected()) {
+            unselectedCount++;
+        } else if (e.getWasMailSelected()) {
+            mailSelectedCount++;
+        } else if (e.getWasMailUnselected()) {
+            mailUnselectedCount++;
+        }
+    };
 
     /**
      * Test for the Select notification

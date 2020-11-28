@@ -38,7 +38,7 @@ public class ConsolidateGroupJFrame extends JFrame {
     /**
      * Handler for the success action
      */
-    private final ConsolidateGroupActionCallback consolidateGroupAction;
+    private final transient ConsolidateGroupActionCallback consolidateGroupAction;
     /**
      * Chooser to pick the highres directory
      */

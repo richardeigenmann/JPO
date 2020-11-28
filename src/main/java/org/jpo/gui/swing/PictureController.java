@@ -69,7 +69,7 @@ public class PictureController extends JComponent {
      */
     public final Point focusPoint = new Point();
 
-    private final PictureControllerImage pictureControllerImage;
+    private final transient PictureControllerImage pictureControllerImage;
 
     /**
      * Constructs a PicturePane components.

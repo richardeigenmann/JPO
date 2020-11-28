@@ -69,7 +69,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * The currently displayed ScalablePicture.
      */
-    private final ScalablePicture scalablePicture;
+    private final transient ScalablePicture scalablePicture;
 
     /**
      * The type of overlay that should be shown

@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 public final class TableSorter extends TableMap {
 
     int[] indexes;
-    final List<Integer> sortingColumns = new ArrayList<>();
+    final transient List<Integer> sortingColumns = new ArrayList<>();
     boolean ascending = true;
     int compares;
     /**
