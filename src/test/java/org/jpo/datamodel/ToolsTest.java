@@ -172,7 +172,7 @@ public class ToolsTest {
         assertEquals(expected, result);
     }
 
-    private static String TEST_IMAGE_FILENAME = "gaga.jpg";
+    private static final String TEST_IMAGE_FILENAME = "gaga.jpg";
 
     @Test
     public void testInventFilename() {
@@ -197,7 +197,7 @@ public class ToolsTest {
             Files.delete(fExists.toPath());
             Files.delete(tempDirWithPrefix);
         } catch (IOException e) {
-            fail("Could not run test testInventFilename");
+            fail("Could not run test testInventFilenameExists");
         }
     }
 
@@ -209,9 +209,9 @@ public class ToolsTest {
             new FileOutputStream(fExists).close();
             final File[] existingFiles = new File[50];
             for (int i = 0; i < 50; i++) {
-                final File f_exists_50 = new File(tempDirWithPrefix.toFile(), "gaga_" + i + ".jpg");
-                new FileOutputStream(f_exists_50).close();
-                existingFiles[i] = f_exists_50;
+                final File fExists50 = new File(tempDirWithPrefix.toFile(), "gaga_" + i + ".jpg");
+                new FileOutputStream(fExists50).close();
+                existingFiles[i] = fExists50;
             }
 
             final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
@@ -224,7 +224,7 @@ public class ToolsTest {
             }
             Files.delete(tempDirWithPrefix);
         } catch (IOException e) {
-            fail("Could not run test testInventFilename");
+            fail("Could not run test testInventFilenameExists50");
         }
     }
 
