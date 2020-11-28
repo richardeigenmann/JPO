@@ -226,12 +226,12 @@ public class PictureInfoTest {
         assertEquals(filename, "picture.jpg");
     }
 
-    private int eventsReceived;
+    private static int eventsReceived;
 
     /**
      * A dumb PictureInfoChangeListener that only counts the events received
      */
-    private final PictureInfoChangeListener pictureInfoChangeListener = e -> eventsReceived++;
+    private static final PictureInfoChangeListener pictureInfoChangeListener = e -> eventsReceived++;
 
 
     /**
