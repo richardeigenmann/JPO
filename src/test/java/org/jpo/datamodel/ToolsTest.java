@@ -179,9 +179,9 @@ public class ToolsTest {
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilename");
             final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
-            assertEquals("gaga.jpg", f.getName());
+            assertEquals(TEST_IMAGE_FILENAME, f.getName());
             Files.delete(tempDirWithPrefix);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             fail("Could not run test testInventFilename");
         }
     }
@@ -196,7 +196,7 @@ public class ToolsTest {
             assertEquals("gaga_1.jpg", f.getName());
             Files.delete(fExists.toPath());
             Files.delete(tempDirWithPrefix);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             fail("Could not run test testInventFilenameExists");
         }
     }
@@ -223,7 +223,7 @@ public class ToolsTest {
                 Files.delete(existingFiles[i].toPath());
             }
             Files.delete(tempDirWithPrefix);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             fail("Could not run test testInventFilenameExists50");
         }
     }

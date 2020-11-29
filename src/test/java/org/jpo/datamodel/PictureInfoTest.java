@@ -226,33 +226,27 @@ public class PictureInfoTest {
         assertEquals(filename, "picture.jpg");
     }
 
-    private static int eventsReceived;
-
-    /**
-     * A dumb PictureInfoChangeListener that only counts the events received
-     */
-    private static final PictureInfoChangeListener pictureInfoChangeListener = e -> eventsReceived++;
-
-
     /**
      * Test the change listener
      */
     @Test
     public void testPictureInfoChangeListener() {
-        eventsReceived = 0;
+        int[] eventsReceived = new int[1];
+        eventsReceived[0] = 0;
+        final PictureInfoChangeListener pictureInfoChangeListener = e -> eventsReceived[0]++;
         final PictureInfo pi = new PictureInfo();
-        assertEquals( 0, eventsReceived);
+        assertEquals(0, eventsReceived[0]);
         pi.setDescription("Step 1");
         // There is no listener attached so there is no event
-        assertEquals( 0, eventsReceived);
+        assertEquals(0, eventsReceived[0]);
         pi.addPictureInfoChangeListener(pictureInfoChangeListener);
         pi.setDescription("Step 2");
         // The listener should have fired and we should have 1 event
-        assertEquals( 1, eventsReceived);
+        assertEquals(1, eventsReceived[0]);
         pi.removePictureInfoChangeListener(pictureInfoChangeListener);
         pi.setDescription("Step 3");
         // The detached listener should not have fired
-        assertEquals( 1, eventsReceived);
+        assertEquals(1, eventsReceived[0]);
     }
 
     /**

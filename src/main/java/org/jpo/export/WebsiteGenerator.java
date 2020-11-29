@@ -1122,7 +1122,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             LOGGER.info("Remote system is " + ftp.getSystemType());
-            //ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
             ftp.addProtocolCommandListener(new ProtocolCommandListener() {
                 @Override
                 public void protocolCommandSent(ProtocolCommandEvent event) {
