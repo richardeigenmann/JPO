@@ -217,13 +217,12 @@ public class ApplicationEventHandler {
 
         int picsMoved = 0;
         for (SortableDefaultMutableTreeNode node : request.nodes()) {
-            final Object userObject = node.getUserObject();
-            if (userObject instanceof PictureInfo pi) {
+            if (node.getUserObject() instanceof PictureInfo pi) {
                 if (ConsolidateGroupWorker.movePicture(pi, request.targetLocation())) {
                     picsMoved++;
                 }
             } else {
-                LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
+                LOGGER.log(Level.INFO, "Node {0} is not a picture. Skipping the move for this node.", node);
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
@@ -1058,7 +1057,7 @@ public class ApplicationEventHandler {
                     picsCopied++;
                 }
             } else {
-                LOGGER.log(Level.INFO, "Skipping non PictureInfo node {0}", node);
+                LOGGER.log(Level.INFO, "Node {0} is not a picture. Can''t copy other nodes to a directroy.", node);
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
@@ -1542,7 +1541,16 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleHelpAboutFrameRequest(final OpenHelpAboutFrameRequest request) {
-        new HelpAboutWindow();
+        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                Settings.getJpoResources().getString("HelpAboutText") + Settings.getJpoResources().getString("HelpAboutUser") + System.getProperty("user.name") + "\n" + Settings.getJpoResources().getString("HelpAboutOs") + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n" + Settings.getJpoResources().getString("HelpAboutJvm") + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n" + Settings.getJpoResources().getString("HelpAboutJvmMemory") + Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0) + " MB\n" + Settings.getJpoResources().getString("HelpAboutJvmFreeMemory") + Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0) + " MB\n");
+
+        // while we're at it dump the stuff to the log
+        LOGGER.info("HelpAboutWindow: Help About showed the following information");
+        LOGGER.log(Level.INFO, "User: {0}", System.getProperty("user.name"));
+        LOGGER.log(Level.INFO, "Operating System: {0}  {1}", new Object[]{System.getProperty("os.name"), System.getProperty("os.version")});
+        LOGGER.log(Level.INFO, "Java: {0}", System.getProperty("java.version"));
+        LOGGER.log(Level.INFO, "Max Memory: {0} MB", Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0));
+        LOGGER.log(Level.INFO, "Free Memory: {0} MB", Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0));
     }
 
     /**

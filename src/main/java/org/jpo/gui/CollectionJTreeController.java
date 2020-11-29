@@ -176,6 +176,36 @@ public class CollectionJTreeController {
             return support.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor);
         }
 
+
+        @NonNull
+        private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {
+            List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
+            try {
+                final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
+                transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
+                LOGGER.log(Level.INFO, "processing a list with {0} transferable nodes", transferableNodes.size());
+            } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
+                LOGGER.log(Level.SEVERE, x.getMessage());
+            }
+            return transferableNodes;
+        }
+
+        private void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode targetNode) {
+            SortableDefaultMutableTreeNode groupOfDropLocation;
+            if (targetNode.getUserObject() instanceof GroupInfo) {
+                groupOfDropLocation = targetNode;
+            } else {
+                // the parent must be a group node
+                groupOfDropLocation = targetNode.getParent();
+            }
+            if ((groupOfDropLocation != null) && (groupOfDropLocation.getUserObject() instanceof GroupInfo)) {
+                Settings.memorizeGroupOfDropLocation(groupOfDropLocation);
+                JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
+            } else {
+                LOGGER.info("Failed to find the group of the drop location. Not memorizing.");
+            }
+        }
+
         /**
          * This method is called on a successful drop (or paste) and initiates
          * the transfer of data to the target component. This method returns
@@ -237,34 +267,6 @@ public class CollectionJTreeController {
     }
 
 
-    @NonNull
-    private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {
-        List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
-        try {
-            final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
-            transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
-            LOGGER.log(Level.INFO, "processing a list with {0} transferable nodes", transferableNodes.size());
-        } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
-            LOGGER.log(Level.SEVERE, x.getMessage());
-        }
-        return transferableNodes;
-    }
-
-    private void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode targetNode) {
-        SortableDefaultMutableTreeNode groupOfDropLocation;
-        if (targetNode.getUserObject() instanceof GroupInfo) {
-            groupOfDropLocation = targetNode;
-        } else {
-            // the parent must be a group node
-            groupOfDropLocation = targetNode.getParent();
-        }
-        if ((groupOfDropLocation != null) && (groupOfDropLocation.getUserObject() instanceof GroupInfo)) {
-            Settings.memorizeGroupOfDropLocation(groupOfDropLocation);
-            JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
-        } else {
-            LOGGER.info("Failed to find the group of the drop location. Not memorizing.");
-        }
-    }
 
 
     /**

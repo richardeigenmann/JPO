@@ -184,15 +184,6 @@ public class PictureInfoEditor extends JFrame {
      */
     private static final ImageIcon ROTATE_RIGHT_ICON = new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("icon_RotCWDown.gif")));
 
-    /**
-     * Constructs a Picture Info Editor
-     *
-     * @param setOfNodes Set of nodes
-     * @param index      index
-     */
-    public PictureInfoEditor(NodeNavigatorInterface setOfNodes, int index) {
-        this(setOfNodes.getNode(index));
-    }
 
     /**
      * Constructor a Picture Info Editor
@@ -202,8 +193,9 @@ public class PictureInfoEditor extends JFrame {
     public PictureInfoEditor(final SortableDefaultMutableTreeNode editNode) {
         super(Settings.getJpoResources().getString("PictureInfoEditorHeading"));
 
-        pictureInfo = (PictureInfo) Objects.requireNonNull(editNode.getUserObject());
         this.myNode = editNode;
+        this.pictureInfo = (PictureInfo) editNode.getUserObject();
+        Objects.requireNonNull(pictureInfo);
 
         // set this up so that we can close the GUI if the picture node is removed while we
         // are displaying it.
@@ -469,20 +461,17 @@ public class PictureInfoEditor extends JFrame {
      * populates the text fields with the values from the PictureInfo object
      */
     private void loadData() {
-        creationTimeJTextField.setText(pictureInfo.getCreationTime());
-        parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
-        descriptionJTextArea.setText(pictureInfo.getDescription());
-        highresLocationJTextField.setText(pictureInfo.getImageFile().toString());
-        checksumJLabel.setText(Settings.getJpoResources().getString("checksumJLabel") + pictureInfo.getChecksumAsString());
-        fileHashJLabel.setText(Settings.getJpoResources().getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
-        filmReferenceJTextField.setText(pictureInfo.getFilmReference());
-        LOGGER.log(Level.INFO, "Retrieving angle: {0}", pictureInfo.getRotation());
-        angleModel.setValue(pictureInfo.getRotation());
-        latitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().x));
-        longitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().y));
-        commentJTextField.setText(pictureInfo.getComment());
-        photographerJTextField.setText(pictureInfo.getPhotographer());
-        copyrightHolderJTextField.setText(pictureInfo.getCopyrightHolder());
+        setDescription();
+        setHighresLocation();
+        setChecksum();
+        setFileHash();
+        setCreationTime();
+        setFilmReference();
+        setRotation();
+        setLatLng();
+        setComment();
+        setPhotographer();
+        setCopyrightHolder();
 
         listModel.removeAllElements();
         categoriesJList.clearSelection();
@@ -525,53 +514,88 @@ public class PictureInfoEditor extends JFrame {
      * Set up a PictureInfoChangeListener to get updated on change events in the
      * Picture Metadata
      */
-    private final transient PictureInfoChangeListener myPictureInfoChangeListener = new PictureInfoChangeListener() {
-        /**
-         * here we get notified by the PictureInfo object that something has
-         * changed.
-         */
-        @Override
-        public void pictureInfoChangeEvent(final PictureInfoChangeEvent e) {
-            if (e.getDescriptionChanged()) {
-                descriptionJTextArea.setText(pictureInfo.getDescription());
-            }
-            if (e.getHighresLocationChanged()) {
-                highresLocationJTextField.setText(pictureInfo.getImageLocation());
-            }
-            if (e.getChecksumChanged()) {
-                checksumJLabel.setText(Settings.getJpoResources().getString("checksumJLabel") + pictureInfo.getChecksumAsString());
-            }
-            if (e.getFileHashChanged()) {
-                fileHashJLabel.setText(Settings.getJpoResources().getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
-            }
-            if (e.getCreationTimeChanged()) {
-                creationTimeJTextField.setText(pictureInfo.getCreationTime());
-                parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
-            }
-            if (e.getFilmReferenceChanged()) {
-                filmReferenceJTextField.setText(pictureInfo.getFilmReference());
-            }
-            if (e.getRotationChanged()) {
-                LOGGER.log(Level.INFO, "Processing a Rotation Changed notification: angle is: {0}", pictureInfo.getRotation());
-                angleModel.setValue(pictureInfo.getRotation());
-            }
-            if (e.getLatLngChanged()) {
-                latitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().x));
-                longitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().y));
-                positionMap();
-            }
-            if (e.getCommentChanged()) {
-                commentJTextField.setText(pictureInfo.getComment());
-            }
-            if (e.getPhotographerChanged()) {
-                photographerJTextField.setText(pictureInfo.getPhotographer());
-            }
-            if (e.getCopyrightHolderChanged()) {
-                copyrightHolderJTextField.setText(pictureInfo.getCopyrightHolder());
-            }
-
+    private final transient PictureInfoChangeListener myPictureInfoChangeListener = e -> {
+        if (e.getDescriptionChanged()) {
+            setDescription();
+        }
+        if (e.getHighresLocationChanged()) {
+            setHighresLocation();
+        }
+        if (e.getChecksumChanged()) {
+            setChecksum();
+        }
+        if (e.getFileHashChanged()) {
+            setFileHash();
+        }
+        if (e.getCreationTimeChanged()) {
+            setCreationTime();
+        }
+        if (e.getFilmReferenceChanged()) {
+            setFilmReference();
+        }
+        if (e.getRotationChanged()) {
+            setRotation();
+        }
+        if (e.getLatLngChanged()) {
+            setLatLng();
+            positionMap();
+        }
+        if (e.getCommentChanged()) {
+            setComment();
+        }
+        if (e.getPhotographerChanged()) {
+            setPhotographer();
+        }
+        if (e.getCopyrightHolderChanged()) {
+            setCopyrightHolder();
         }
     };
+
+    private void setCopyrightHolder() {
+        copyrightHolderJTextField.setText(pictureInfo.getCopyrightHolder());
+    }
+
+    private void setPhotographer() {
+        photographerJTextField.setText(pictureInfo.getPhotographer());
+    }
+
+    private void setComment() {
+        commentJTextField.setText(pictureInfo.getComment());
+    }
+
+    private void setLatLng() {
+        latitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().x));
+        longitudeJTextField.setText(Double.toString(pictureInfo.getLatLng().y));
+    }
+
+    private void setRotation() {
+        angleModel.setValue(pictureInfo.getRotation());
+    }
+
+    private void setFilmReference() {
+        filmReferenceJTextField.setText(pictureInfo.getFilmReference());
+    }
+
+    private void setCreationTime() {
+        creationTimeJTextField.setText(pictureInfo.getCreationTime());
+        parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
+    }
+
+    private void setFileHash() {
+        fileHashJLabel.setText(Settings.getJpoResources().getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
+    }
+
+    private void setChecksum() {
+        checksumJLabel.setText(Settings.getJpoResources().getString("checksumJLabel") + pictureInfo.getChecksumAsString());
+    }
+
+    private void setHighresLocation() {
+        highresLocationJTextField.setText(pictureInfo.getImageFile().toString());
+    }
+
+    private void setDescription() {
+        descriptionJTextArea.setText(pictureInfo.getDescription());
+    }
 
     /**
      * This utility method builds a string from the selected categories in a

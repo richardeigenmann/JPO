@@ -81,7 +81,7 @@ public class CameraDownloadWizardStep5
         sortChoice.setMaximumSize( new Dimension( 220, 30 ) );
         stepComponent.add( sortChoice );
         sortChoice.addActionListener(( ActionEvent e ) -> {
-            final JComboBox cb = (JComboBox) e.getSource();
+            final JComboBox<SortOption> cb = (JComboBox<SortOption>) e.getSource();
             SortOption sortOption = (SortOption) cb.getSelectedItem();
             if ( sortOption == null ) {
                 sortOption = sortOptions.get(3); // by creation time

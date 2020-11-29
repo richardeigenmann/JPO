@@ -430,7 +430,7 @@ public class ThumbnailDescriptionController
      * @param showFilename send true to make it visible, false to hide it.
      */
     public void showFilename(final boolean showFilename) {
-        if (showFilenameState
+        if (Boolean.TRUE.equals(showFilenameState)
                 && (referringNode != null)
                 && (referringNode.getUserObject() != null)
                 && !(referringNode.getUserObject() instanceof PictureInfo)) {

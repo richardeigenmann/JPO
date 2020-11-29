@@ -145,7 +145,7 @@ public class OverlayedPictureController extends PictureController implements Sca
      * This object is a reference to an Exif Info object that tries to keep tabs
      * on the information in the image.
      */
-    private ExifInfo exifInfo;
+    private transient ExifInfo exifInfo;
 
     /**
      * Brings up the indicated picture on the display.
@@ -273,7 +273,7 @@ public class OverlayedPictureController extends PictureController implements Sca
      * on with the ScalablePicture being displayed in this PicturePane. These
      * objects must implement the ScalablePictureListener interface.
      */
-    private final Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet(new HashSet<>() );
+    private final transient Set<ScalablePictureListener> picturePaneListeners = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * method to register the listening object of the status events

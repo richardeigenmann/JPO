@@ -2,7 +2,8 @@ package org.jpo.export;
 
 import com.jcraft.jsch.*;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.net.PrintCommandListener;
+import org.apache.commons.net.ProtocolCommandEvent;
+import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
@@ -608,9 +609,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFile.getName(), midresDimension.width, midresDimension.height, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
 
             if (request.isLinkToHighres()) {
-                midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">" + imgTag + "</a>");
+                writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), imgTag);
             } else if (request.isExportHighres()) {
-                midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">" + imgTag + "</a>");
+                writeHyperlink(midresHtmlWriter, highresFile.getName(), imgTag);
             } else {
                 midresHtmlWriter.write(imgTag);
             }
@@ -781,6 +782,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
+    private void writeHyperlink(final Writer out, final String target, final String linkText) throws IOException {
+        out.write("<a href=\"" + target + "\">" + linkText + "</a>");
+    }
+
     @NotNull
     private Dimension writeMidresPicture(PictureInfo pictureInfo, File midresFile, ScalablePicture scp) {
         final Dimension midresDimension = new Dimension();
@@ -894,31 +899,28 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void writeLinks(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final PictureInfo pictureInfo, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
-        midresHtmlWriter.write("<p><a href=\""
-                + groupFile.getName()
-                + "#"
-                + StringEscapeUtils.escapeHtml4(lowresFile.getName())
-                + "\">Up</a>");
+        writeHyperlink(midresHtmlWriter, groupFile.getName() + "#" + StringEscapeUtils.escapeHtml4(lowresFile.getName()), "Up");
         midresHtmlWriter.write("&nbsp;");
         midresHtmlWriter.newLine();
         if (childNumber != 1) {
-            midresHtmlWriter.write(String.format("<a href=\"%s\">Previous</a>", getPreviousHtmlFilename(pictureNode, childNumber)));
+            writeHyperlink(midresHtmlWriter, getPreviousHtmlFilename(pictureNode, childNumber), "Previous");
             midresHtmlWriter.write("&nbsp;");
         }
         if (request.isLinkToHighres()) {
-            midresHtmlWriter.write("<a href=\"" + pictureInfo.getImageLocation() + "\">Highres</a>");
+            writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), "Highres");
             midresHtmlWriter.write("&nbsp;");
         } else if (request.isExportHighres()) {
             // Link to Highres in target directory
-            midresHtmlWriter.write("<a href=\"" + highresFile.getName() + "\">Highres</a>");
+            writeHyperlink(midresHtmlWriter, highresFile.getName(), "Highres");
             midresHtmlWriter.write("&nbsp;");
         }
         if (childNumber != childCount) {
-            midresHtmlWriter.write("<a href=\"" + getNextHtmlFilename(pictureNode, childNumber) + "\">Next</a>");
+            writeHyperlink(midresHtmlWriter, getNextHtmlFilename(pictureNode, childNumber), "Next");
             midresHtmlWriter.newLine();
         }
         if (request.isGenerateZipfile()) {
-            midresHtmlWriter.write("<br><a href=\"" + request.getDownloadZipFileName() + "\">Download Zip</a>");
+            midresHtmlWriter.write("<br>");
+            writeHyperlink(midresHtmlWriter, request.getDownloadZipFileName(), "Download Zip");
             midresHtmlWriter.newLine();
         }
         midresHtmlWriter.write("</p>");
@@ -1097,7 +1099,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     /*
      * to test you can start up a simple ftp server with docker:
-     * ocker run -d -v <directory on your host>:/home/vsftpd  -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=richi -e FTP_PASS=password -e PASV_ADDRESS=<ip addres, yes ip, not hostname!> --name ftp --restart=always bogem/ftp
+     * docker run -d -v <directory on your host>:/home/vsftpd  -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=user -e FTP_PASS=password -e PASV_ADDRESS=<ip addres, yes ip, not hostname!> --name ftp --restart=always bogem/ftp
+     * username = user
+     * password = password
      */
     private void ftpCopyToServer(final Collection<File> files) {
         LOGGER.info("Setting up ftp connection:");
@@ -1118,17 +1122,28 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             LOGGER.info("Remote system is " + ftp.getSystemType());
-            ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+            //ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+            ftp.addProtocolCommandListener(new ProtocolCommandListener() {
+                @Override
+                public void protocolCommandSent(ProtocolCommandEvent event) {
+                    LOGGER.log(Level.INFO, "Sent: {0}", event.getMessage());
+                }
+
+                @Override
+                public void protocolReplyReceived(ProtocolCommandEvent event) {
+                    LOGGER.log(Level.INFO, "Received: {0}", event.getMessage());
+                }
+            });
             boolean binarymode = ftp.setFileType(FTP.BINARY_FILE_TYPE);
             LOGGER.log(Level.INFO, "Binarymode: {0}", binarymode);
             ftp.enterLocalPassiveMode();
             for (final File file : files) {
-                final InputStream input = new BufferedInputStream(new FileInputStream(file));
-                final String remote = request.getFtpTargetDir() + file.getName();
-                LOGGER.log(Level.INFO, "Putting file {0} to {1}:{2}", new Object[]{file, request.getFtpServer(), remote});
-                boolean done = ftp.storeFile(remote, input);
-                LOGGER.log(Level.INFO, "stored file successfully: {0}", done);
-                input.close();
+                try (final InputStream input = new BufferedInputStream(new FileInputStream(file));) {
+                    final String remote = request.getFtpTargetDir() + file.getName();
+                    LOGGER.log(Level.INFO, "Putting file {0} to {1}:{2}", new Object[]{file, request.getFtpServer(), remote});
+                    boolean done = ftp.storeFile(remote, input);
+                    LOGGER.log(Level.INFO, "stored file successfully: {0}", done);
+                }
             }
         } catch (final IOException ex) {
             Logger.getLogger(WebsiteGenerator.class.getName()).log(Level.SEVERE, null, ex);
