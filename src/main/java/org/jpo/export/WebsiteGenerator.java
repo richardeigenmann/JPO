@@ -595,10 +595,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final String groupDescriptionHtml
                     = StringEscapeUtils.escapeHtml4(pictureNode.getParent().getUserObject().toString());
 
-            midresHtmlWriter.write("<!DOCTYPE HTML>");
-            midresHtmlWriter.newLine();
-            midresHtmlWriter.write("<head>\n\t<link rel=\"StyleSheet\" href=\"org.jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + groupDescriptionHtml + "</title>\n</head>");
-            midresHtmlWriter.newLine();
+            writePageHeader(midresHtmlWriter, groupDescriptionHtml);
             midresHtmlWriter.write("<body onload=\"changetext(content[0])\">");
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<table>");
@@ -608,13 +605,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("<tr><td class=\"midresPictureCell\">");
             final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFile.getName(), midresDimension.width, midresDimension.height, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
 
-            if (request.isLinkToHighres()) {
-                writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), imgTag);
-            } else if (request.isExportHighres()) {
-                writeHyperlink(midresHtmlWriter, highresFile.getName(), imgTag);
-            } else {
-                midresHtmlWriter.write(imgTag);
-            }
+            writeMidresImgTag(pictureInfo, highresFile, midresHtmlWriter, imgTag);
+
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<p>" + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
             midresHtmlWriter.newLine();
@@ -779,6 +771,23 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             midresHtmlWriter.write("</body></html>");
+        }
+    }
+
+    private static void writePageHeader(final BufferedWriter midresHtmlWriter, final String pageTitle) throws IOException {
+        midresHtmlWriter.write("<!DOCTYPE HTML>");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("<head>\n\t<link rel=\"StyleSheet\" href=\"org.jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + pageTitle + "</title>\n</head>");
+        midresHtmlWriter.newLine();
+    }
+
+    private void writeMidresImgTag(PictureInfo pictureInfo, File highresFile, BufferedWriter midresHtmlWriter, String imgTag) throws IOException {
+        if (request.isLinkToHighres()) {
+            writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), imgTag);
+        } else if (request.isExportHighres()) {
+            writeHyperlink(midresHtmlWriter, highresFile.getName(), imgTag);
+        } else {
+            midresHtmlWriter.write(imgTag);
         }
     }
 
