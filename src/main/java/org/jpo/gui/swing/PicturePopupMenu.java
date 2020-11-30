@@ -247,29 +247,7 @@ public class PicturePopupMenu extends JPopupMenu {
         });
         add(pictureMailSelectJMenuItem);
 
-        final JMenuItem pictureMailUnSelectJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailUnselectJMenuItem"));
-        pictureMailUnSelectJMenuItem.addActionListener((ActionEvent e) -> {
-            ArrayList<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>(1);
-            if ((pictureCollection.countSelectedNodes() == 0)
-                    || (!pictureCollection.isSelected(popupNode))) {
-                nodesList.add(popupNode);
-            } else {
-                for (SortableDefaultMutableTreeNode selectedNode : pictureCollection.getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        nodesList.add(selectedNode);
-                    }
-                }
-            }
-            JpoEventBus.getInstance().post(new RemovePictureNodesFromEmailSelectionRequest(nodesList));
-        } /*
-         * 1. If no nodes are selected, mail-unselect the node.
-         *
-         * 2. If multiple nodes are selected but the popup node is not one of them
-         * then mail-unselect the node
-         *
-         * 3. If multiple nodes are selected and the popup node is one of them then
-         * mail-unselect them all
-         */);
+        final JMenuItem pictureMailUnSelectJMenuItem = getPictureMailUnSelectJMenuItem(pictureCollection, popupNode);
         add(pictureMailUnSelectJMenuItem);
 
         final JMenuItem pictureMailUnselectAllJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailUnselectAllJMenuItem"));
@@ -340,7 +318,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
         if (popupNode.getPictureCollection()
                 .getAllowEdits()) {
-            final JMenu rotationMenu = getRotationJMenu(popupNode);
+            add(getRotationJMenu(popupNode));
         }
 
         final JMenuItem pictureRefreshJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureRefreshJMenuItem"));
@@ -356,12 +334,82 @@ public class PicturePopupMenu extends JPopupMenu {
         });
         add(pictureRefreshJMenuItem);
 
-        final JMenu moveMenu = getMoveJMenu(popupNode);
-        add(moveMenu);
+        add(getMoveJMenu(popupNode));
 
+
+        add(getCopyJMenu());
+
+
+        final JMenuItem pictureNodeRemove = new JMenuItem(Settings.getJpoResources().getString("pictureNodeRemove"));
+        pictureNodeRemove.addActionListener((ActionEvent e) -> {
+            final ArrayList<SortableDefaultMutableTreeNode> nodesToRemove = new ArrayList<>();
+            final SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode(index);
+            if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(actionNode))) {
+                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        nodesToRemove.add(selectedNode);
+                    }
+                }
+            } else {
+                nodesToRemove.add(popupNode);
+            }
+            JpoEventBus.getInstance().post(new RemoveNodeRequest(nodesToRemove));
+        });
+        add(pictureNodeRemove);
+        pictureNodeRemove.setVisible(pictureCollection.getAllowEdits());
+
+        add(getFileOperationsMenu());
+        add(getAssignCategoryMenu());
+
+        final JMenuItem showPictureInfoEditorMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureEditJMenuItemLabel"));
+        showPictureInfoEditorMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureInfoEditorRequest(popupNode)));
+        add(showPictureInfoEditorMenuItem);
+
+        final JMenuItem consolidateHereMenuItem = new JMenuItem("Consolidate Here");
+
+        final File imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
+        if (!isNull(imageFile)) {
+            consolidateHereMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(
+                    new ConsolidateGroupDialogRequest(
+                            popupNode.getParent(),
+                            imageFile.getParentFile())
+            ));
+        }
+        add(consolidateHereMenuItem);
+
+    }
+
+    @NotNull
+    private static JMenuItem getPictureMailUnSelectJMenuItem(PictureCollection pictureCollection, SortableDefaultMutableTreeNode popupNode) {
+        final JMenuItem pictureMailUnSelectJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailUnselectJMenuItem"));
+        pictureMailUnSelectJMenuItem.addActionListener((ActionEvent e) -> {
+            ArrayList<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>(1);
+            if ((pictureCollection.countSelectedNodes() == 0)
+                    || (!pictureCollection.isSelected(popupNode))) {
+                nodesList.add(popupNode);
+            } else {
+                for (SortableDefaultMutableTreeNode selectedNode : pictureCollection.getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        nodesList.add(selectedNode);
+                    }
+                }
+            }
+            JpoEventBus.getInstance().post(new RemovePictureNodesFromEmailSelectionRequest(nodesList));
+        } /*
+         * 1. If no nodes are selected, mail-unselect the node.
+         *
+         * 2. If multiple nodes are selected but the popup node is not one of them
+         * then mail-unselect the node
+         *
+         * 3. If multiple nodes are selected and the popup node is one of them then
+         * mail-unselect them all
+         */);
+
+        return pictureMailUnSelectJMenuItem;
+    }
+
+    private JMenu getCopyJMenu() {
         final JMenu copyJMenu = new JMenu(Settings.getJpoResources().getString("copyImageJMenuLabel"));
-        add(copyJMenu);
-
         final JMenuItem copyToNewLocationJMenuItem = new JMenuItem(Settings.getJpoResources().getString("copyToNewLocationJMenuItem"));
         copyToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -454,45 +502,9 @@ public class PicturePopupMenu extends JPopupMenu {
                 memorizedZipFileJMenuItems[i].setVisible(false);
             }
         }
-
-        final JMenuItem pictureNodeRemove = new JMenuItem(Settings.getJpoResources().getString("pictureNodeRemove"));
-        pictureNodeRemove.addActionListener((ActionEvent e) -> {
-            final ArrayList<SortableDefaultMutableTreeNode> nodesToRemove = new ArrayList<>();
-            final SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode(index);
-            if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(actionNode))) {
-                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        nodesToRemove.add(selectedNode);
-                    }
-                }
-            } else {
-                nodesToRemove.add(popupNode);
-            }
-            JpoEventBus.getInstance().post(new RemoveNodeRequest(nodesToRemove));
-        });
-        add(pictureNodeRemove);
-        pictureNodeRemove.setVisible(pictureCollection.getAllowEdits());
-
-        add(getFileOperationsMenu());
-        add(getAssignCategoryMenu());
-
-        final JMenuItem showPictureInfoEditorMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureEditJMenuItemLabel"));
-        showPictureInfoEditorMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureInfoEditorRequest(popupNode)));
-        add(showPictureInfoEditorMenuItem);
-
-        final JMenuItem consolidateHereMenuItem = new JMenuItem("Consolidate Here");
-
-        final File imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
-        if (!isNull(imageFile)) {
-            consolidateHereMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(
-                    new ConsolidateGroupDialogRequest(
-                            popupNode.getParent(),
-                            imageFile.getParentFile())
-            ));
-        }
-        add(consolidateHereMenuItem);
-
+        return copyJMenu;
     }
+
 
     private JMenu getMoveJMenu(final SortableDefaultMutableTreeNode popupNode) {
         final JMenu moveJMenu = new JMenu(Settings.getJpoResources().getString("moveNodeJMenuLabel"));
@@ -650,7 +662,6 @@ public class PicturePopupMenu extends JPopupMenu {
         rotate0JMenuItem.addActionListener((ActionEvent e) ->
                 JpoEventBus.getInstance().post(new SetPictureRotationRequest(popupNode, 0f, QUEUE_PRIORITY.HIGH_PRIORITY)));
         rotationMenu.add(rotate0JMenuItem);
-        add(rotationMenu);
         return rotationMenu;
     }
 
