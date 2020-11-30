@@ -252,6 +252,10 @@ task run(type: JavaExec) {
     main = 'org.jpo.Main'
 }
 
+jacoco {
+    //toolVersion = "0.8.7"
+}
+
 jacocoTestReport {
     group 'verification'
     reports {

@@ -232,37 +232,46 @@ public class CollectionJTreeController {
             if (ancestorViolationCheck(targetNode, transferableNodes)) return false;
 
             memorizeGroupOfDropLocation(targetNode);
-            transferableNodes.forEach(sourceNode -> {
-                if (actionType == TransferHandler.MOVE) {
-                    LOGGER.log(Level.INFO, "Processing a MOVE on node: {0}", sourceNode);
-                    if (dropLocation.getChildIndex() == -1) {
-                        if (targetNode.getUserObject() instanceof GroupInfo) {
-                            // append to end of group if dropping on a group node
-                            sourceNode.moveToLastChild(targetNode);
-                        } else {
-                            // dropping on a PictureInfo
-                            sourceNode.moveBefore(targetNode);
-                        }
-                    } else {
-                        //index was supplied by the JTree notification
-                        sourceNode.moveToIndex( targetNode, dropLocation.getChildIndex() );
-                    }
-                } else {
-                    // Copy
-                    SortableDefaultMutableTreeNode cloneNode = sourceNode.getClone();
-                    if ( dropLocation.getChildIndex() == -1 ) {
-                        if ( targetNode.getUserObject() instanceof GroupInfo ) {
-                            targetNode.add( cloneNode );
-                        } else {
-                            // dropping onto a picture
-                            cloneNode.moveBefore(targetNode);
-                        }
-                    } else {
-                        cloneNode.moveToIndex(targetNode, dropLocation.getChildIndex());
-                    }
-                }
-            });
+            transferableNodes.forEach(sourceNode -> importNode(actionType, dropLocation, targetNode, sourceNode));
             return true;
+        }
+
+        private void importNode(int actionType, JTree.DropLocation dropLocation, SortableDefaultMutableTreeNode targetNode, SortableDefaultMutableTreeNode sourceNode) {
+            if (actionType == TransferHandler.MOVE) {
+                importNodeMove(dropLocation, targetNode, sourceNode);
+            } else {
+                importNodeCopy(dropLocation, targetNode, sourceNode);
+            }
+        }
+
+        private void importNodeCopy(JTree.DropLocation dropLocation, SortableDefaultMutableTreeNode targetNode, SortableDefaultMutableTreeNode sourceNode) {
+            SortableDefaultMutableTreeNode cloneNode = sourceNode.getClone();
+            if (dropLocation.getChildIndex() == -1) {
+                if (targetNode.getUserObject() instanceof GroupInfo) {
+                    targetNode.add(cloneNode);
+                } else {
+                    // dropping onto a picture
+                    cloneNode.moveBefore(targetNode);
+                }
+            } else {
+                cloneNode.moveToIndex(targetNode, dropLocation.getChildIndex());
+            }
+        }
+
+        private void importNodeMove(JTree.DropLocation dropLocation, SortableDefaultMutableTreeNode targetNode, SortableDefaultMutableTreeNode sourceNode) {
+            LOGGER.log(Level.INFO, "Processing a MOVE on node: {0}", sourceNode);
+            if (dropLocation.getChildIndex() == -1) {
+                if (targetNode.getUserObject() instanceof GroupInfo) {
+                    // append to end of group if dropping on a group node
+                    sourceNode.moveToLastChild(targetNode);
+                } else {
+                    // dropping on a PictureInfo
+                    sourceNode.moveBefore(targetNode);
+                }
+            } else {
+                //index was supplied by the JTree notification
+                sourceNode.moveToIndex(targetNode, dropLocation.getChildIndex());
+            }
         }
     }
 

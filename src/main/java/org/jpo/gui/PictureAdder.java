@@ -111,11 +111,7 @@ public class PictureAdder
             final File addFile = chosenFiles[i];
             LOGGER.log(Level.INFO, "File {0} of {1}: {2}", new Object[]{i + 1, chosenFiles.length, addFile});
             if (!addFile.isDirectory()) {
-                if (startNode.addSinglePicture(addFile, newOnly, selectedCategories)) {
-                    publish(1);
-                } else {
-                    publish(-1);
-                }
+                addPicture(startNode, addFile);
             } else {
                 // the file is a directory
                 if (Tools.hasPictures(addFile)) {
@@ -139,8 +135,7 @@ public class PictureAdder
      * @param parentNode the node to which to add
      * @param dir        the directory to add
      */
-    private void addDirectory(
-            final SortableDefaultMutableTreeNode parentNode, File dir) {
+    private void addDirectory(final SortableDefaultMutableTreeNode parentNode, final File dir) {
         final SortableDefaultMutableTreeNode directoryNode;
         if (retainDirectories) {
             directoryNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
@@ -156,14 +151,22 @@ public class PictureAdder
                 if (fileArray[i].isDirectory() && recurseDirectories && Tools.hasPictures(fileArray[i])) {
                     addDirectory(directoryNode, fileArray[i]);
                 } else {
-                    if (directoryNode.addSinglePicture(fileArray[i], newOnly, selectedCategories)) {
-                        publish(1);
-                    } else {
-                        publish(-1);
-                    }
+                    addPicture(directoryNode, fileArray[i]);
                 }
             }
         }
+        removeEmptyDirectoryNode(directoryNode);
+    }
+
+    private void addPicture(SortableDefaultMutableTreeNode directoryNode, File file) {
+        if (directoryNode.addSinglePicture(file, newOnly, selectedCategories)) {
+            publish(1);
+        } else {
+            publish(-1);
+        }
+    }
+
+    private void removeEmptyDirectoryNode(final SortableDefaultMutableTreeNode directoryNode) {
         // it can happen that we end up adding no pictures and could be returning a new empty group
         if (retainDirectories && (directoryNode.getChildCount() == 0)) {
             directoryNode.deleteNode();

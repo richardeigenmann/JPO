@@ -333,43 +333,14 @@ public class PicturePopupMenu extends JPopupMenu {
         pictureMailUnselectAllJMenuItem.setVisible(Settings.getPictureCollection()
                 .countMailSelectedNodes() > 0);
 
-        final JMenu userFunctionsJMenu = new JMenu(Settings.getJpoResources().getString("userFunctionsJMenu"));
-        for (int i = 0;
-             i < Settings.MAX_USER_FUNCTIONS;
-             i++) {
-            final int userFunction = i;
-            userFunctionJMenuItems[i] = new JMenuItem();
-            userFunctionJMenuItems[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RunUserFunctionRequest(userFunction, (PictureInfo) popupNode.getUserObject())));
-            userFunctionsJMenu.add(userFunctionJMenuItems[i]);
-        }
+        final JMenu userFunctionsJMenu = getUserFunctionsJMenu();
 
         add(userFunctionsJMenu);
         labelUserFunctions();
 
         if (popupNode.getPictureCollection()
                 .getAllowEdits()) {
-            final JMenu rotationMenu = new JMenu(Settings.getJpoResources().getString("rotation"));
-
-            final JMenuItem rotate90JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate90"));
-            rotate90JMenuItem.addActionListener((ActionEvent e) ->
-                    JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 90, QUEUE_PRIORITY.HIGH_PRIORITY)));
-            rotationMenu.add(rotate90JMenuItem);
-
-            final JMenuItem rotate180JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate180"));
-            rotate180JMenuItem.addActionListener((ActionEvent e) ->
-                    JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 180, QUEUE_PRIORITY.HIGH_PRIORITY)));
-            rotationMenu.add(rotate180JMenuItem);
-
-            final JMenuItem rotate270JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate270"));
-            rotate270JMenuItem.addActionListener((ActionEvent e) ->
-                    JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 270, QUEUE_PRIORITY.HIGH_PRIORITY)));
-            rotationMenu.add(rotate270JMenuItem);
-
-            final JMenuItem rotate0JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate0"));
-            rotate0JMenuItem.addActionListener((ActionEvent e) ->
-                    JpoEventBus.getInstance().post(new SetPictureRotationRequest(popupNode, 0f, QUEUE_PRIORITY.HIGH_PRIORITY)));
-            rotationMenu.add(rotate0JMenuItem);
-            add(rotationMenu);
+            final JMenu rotationMenu = getRotationJMenu(popupNode);
         }
 
         final JMenuItem pictureRefreshJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureRefreshJMenuItem"));
@@ -385,136 +356,8 @@ public class PicturePopupMenu extends JPopupMenu {
         });
         add(pictureRefreshJMenuItem);
 
-        final JMenu moveJMenu = new JMenu(Settings.getJpoResources().getString("moveNodeJMenuLabel"));
-        add(moveJMenu);
-
-        for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
-            final int dropnode = i;
-            recentDropNodeJMenuItems[i] = new JMenuItem();
-            recentDropNodeJMenuItems[i].addActionListener((ActionEvent event) -> {
-                        final SortableDefaultMutableTreeNode targetNode = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0])[dropnode];
-                        final List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
-                        if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
-                            movingNodes.addAll(Settings.getPictureCollection().getSelection());
-                            Settings.getPictureCollection().clearSelection();
-                        } else {
-                            movingNodes.add(popupNode);
-                        }
-                        JpoEventBus.getInstance().post(new MoveNodeToNodeRequest(movingNodes, targetNode));
-
-                        Settings.memorizeGroupOfDropLocation(Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0])[dropnode]);
-                        JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
-                    }
-                    /*
-                     * Moves the selected nodes to the picked destination. If no
-                     * nodes are in the selection then the popup node is moved. If
-                     * the node for the popup is not in the selection then this node
-                     * only is moved. After the move of the selected nodes they are
-                     * cleared.
-                     *
-                     * @param event
-                     */);
-            moveJMenu.add(recentDropNodeJMenuItems[i]);
-        }
-        moveJMenu.add(movePictureNodeSeparator);
-        labelRecentDropNodes();
-
-        final JMenuItem movePictureToTopJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureToTopJMenuItem"));
-        movePictureToTopJMenuItem.addActionListener((ActionEvent event) -> {
-            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
-                    || (!pictureCollection.isSelected(popupNode))) {
-                JpoEventBus.getInstance().post(new MoveNodeToTopRequest(popupNode));
-            } else {
-                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        JpoEventBus.getInstance().post(new MoveNodeToTopRequest(selectedNode));
-                    }
-                }
-            }
-        });
-        moveJMenu.add(movePictureToTopJMenuItem);
-
-        final JMenuItem movePictureUpJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureUpJMenuItem"));
-        movePictureUpJMenuItem.addActionListener((ActionEvent e) -> {
-            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
-                    || (!pictureCollection.isSelected(popupNode))) {
-                JpoEventBus.getInstance().post(new MoveNodeUpRequest(popupNode));
-            } else {
-                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        JpoEventBus.getInstance().post(new MoveNodeUpRequest(selectedNode));
-                    }
-                }
-            }
-        });
-        moveJMenu.add(movePictureUpJMenuItem);
-
-        final JMenuItem movePictureDownJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureDownJMenuItem"));
-        movePictureDownJMenuItem.addActionListener((ActionEvent e) -> {
-            if ((Settings.getPictureCollection().countSelectedNodes() < 1) || (!pictureCollection.isSelected(popupNode))) {
-                JpoEventBus.getInstance().post(new MoveNodeDownRequest(popupNode));
-            } else {
-                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        JpoEventBus.getInstance().post(new MoveNodeDownRequest(selectedNode));
-                        selectedNode.moveNodeDown();
-                    }
-                }
-            }
-        });
-        moveJMenu.add(movePictureDownJMenuItem);
-
-        final JMenuItem movePictureToBottomJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureToBottomJMenuItem"));
-        movePictureToBottomJMenuItem.addActionListener((ActionEvent e) -> {
-            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
-                    || (!pictureCollection.isSelected(popupNode))) {
-                JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(popupNode));
-            } else {
-                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(selectedNode));
-                    }
-                }
-            }
-        });
-        moveJMenu.add(movePictureToBottomJMenuItem);
-
-        final JMenuItem indentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("indentJMenuItem"));
-        indentJMenuItem.addActionListener((ActionEvent e) -> {
-            final ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
-                    || (!pictureCollection.isSelected(popupNode))) {
-                nodes.add(popupNode);
-            } else {
-                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        nodes.add(selectedNode);
-                    }
-                }
-            }
-            JpoEventBus.getInstance().post(new MoveIndentRequest(nodes));
-        });
-        moveJMenu.add(indentJMenuItem);
-
-        final JMenuItem outdentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("outdentJMenuItem"));
-        outdentJMenuItem.addActionListener((ActionEvent e) -> {
-            final ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
-                    || (!pictureCollection.isSelected(popupNode))) {
-                nodes.add(popupNode);
-            } else {
-                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
-                    if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        nodes.add(selectedNode);
-                    }
-                }
-            }
-            JpoEventBus.getInstance().post(new MoveOutdentRequest(nodes));
-        });
-        moveJMenu.add(outdentJMenuItem);
-
-        moveJMenu.setVisible(popupNode.getPictureCollection()
-                .getAllowEdits());
+        final JMenu moveMenu = getMoveJMenu(popupNode);
+        add(moveMenu);
 
         final JMenu copyJMenu = new JMenu(Settings.getJpoResources().getString("copyImageJMenuLabel"));
         add(copyJMenu);
@@ -649,6 +492,180 @@ public class PicturePopupMenu extends JPopupMenu {
         }
         add(consolidateHereMenuItem);
 
+    }
+
+    private JMenu getMoveJMenu(final SortableDefaultMutableTreeNode popupNode) {
+        final JMenu moveJMenu = new JMenu(Settings.getJpoResources().getString("moveNodeJMenuLabel"));
+
+        for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
+            final int dropnode = i;
+            recentDropNodeJMenuItems[i] = new JMenuItem();
+            recentDropNodeJMenuItems[i].addActionListener((ActionEvent event) -> {
+                        final SortableDefaultMutableTreeNode targetNode = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0])[dropnode];
+                        final List<SortableDefaultMutableTreeNode> movingNodes = new ArrayList<>();
+                        if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
+                            movingNodes.addAll(Settings.getPictureCollection().getSelection());
+                            Settings.getPictureCollection().clearSelection();
+                        } else {
+                            movingNodes.add(popupNode);
+                        }
+                        JpoEventBus.getInstance().post(new MoveNodeToNodeRequest(movingNodes, targetNode));
+
+                        Settings.memorizeGroupOfDropLocation(Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0])[dropnode]);
+                        JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
+                    }
+                    /*
+                     * Moves the selected nodes to the picked destination. If no
+                     * nodes are in the selection then the popup node is moved. If
+                     * the node for the popup is not in the selection then this node
+                     * only is moved. After the move of the selected nodes they are
+                     * cleared.
+                     *
+                     * @param event
+                     */);
+            moveJMenu.add(recentDropNodeJMenuItems[i]);
+        }
+        moveJMenu.add(movePictureNodeSeparator);
+        labelRecentDropNodes();
+
+        final PictureCollection pictureCollection = Settings.getPictureCollection();
+        final JMenuItem movePictureToTopJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureToTopJMenuItem"));
+        movePictureToTopJMenuItem.addActionListener((ActionEvent event) -> {
+            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
+                    || (!pictureCollection.isSelected(popupNode))) {
+                JpoEventBus.getInstance().post(new MoveNodeToTopRequest(popupNode));
+            } else {
+                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        JpoEventBus.getInstance().post(new MoveNodeToTopRequest(selectedNode));
+                    }
+                }
+            }
+        });
+        moveJMenu.add(movePictureToTopJMenuItem);
+
+        final JMenuItem movePictureUpJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureUpJMenuItem"));
+        movePictureUpJMenuItem.addActionListener((ActionEvent e) -> {
+            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
+                    || (!pictureCollection.isSelected(popupNode))) {
+                JpoEventBus.getInstance().post(new MoveNodeUpRequest(popupNode));
+            } else {
+                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        JpoEventBus.getInstance().post(new MoveNodeUpRequest(selectedNode));
+                    }
+                }
+            }
+        });
+        moveJMenu.add(movePictureUpJMenuItem);
+
+        final JMenuItem movePictureDownJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureDownJMenuItem"));
+        movePictureDownJMenuItem.addActionListener((ActionEvent e) -> {
+            if ((Settings.getPictureCollection().countSelectedNodes() < 1) || (!pictureCollection.isSelected(popupNode))) {
+                JpoEventBus.getInstance().post(new MoveNodeDownRequest(popupNode));
+            } else {
+                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        JpoEventBus.getInstance().post(new MoveNodeDownRequest(selectedNode));
+                        selectedNode.moveNodeDown();
+                    }
+                }
+            }
+        });
+        moveJMenu.add(movePictureDownJMenuItem);
+
+        final JMenuItem movePictureToBottomJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureToBottomJMenuItem"));
+        movePictureToBottomJMenuItem.addActionListener((ActionEvent e) -> {
+            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
+                    || (!pictureCollection.isSelected(popupNode))) {
+                JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(popupNode));
+            } else {
+                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(selectedNode));
+                    }
+                }
+            }
+        });
+        moveJMenu.add(movePictureToBottomJMenuItem);
+
+        final JMenuItem indentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("indentJMenuItem"));
+        indentJMenuItem.addActionListener((ActionEvent e) -> {
+            final ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
+                    || (!pictureCollection.isSelected(popupNode))) {
+                nodes.add(popupNode);
+            } else {
+                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        nodes.add(selectedNode);
+                    }
+                }
+            }
+            JpoEventBus.getInstance().post(new MoveIndentRequest(nodes));
+        });
+        moveJMenu.add(indentJMenuItem);
+
+        final JMenuItem outdentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("outdentJMenuItem"));
+        outdentJMenuItem.addActionListener((ActionEvent e) -> {
+            final ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
+            if ((Settings.getPictureCollection().countSelectedNodes() < 1)
+                    || (!pictureCollection.isSelected(popupNode))) {
+                nodes.add(popupNode);
+            } else {
+                for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        nodes.add(selectedNode);
+                    }
+                }
+            }
+            JpoEventBus.getInstance().post(new MoveOutdentRequest(nodes));
+        });
+        moveJMenu.add(outdentJMenuItem);
+
+        moveJMenu.setVisible(popupNode.getPictureCollection()
+                .getAllowEdits());
+        return moveJMenu;
+    }
+
+    private JMenu getRotationJMenu(SortableDefaultMutableTreeNode popupNode) {
+        final JMenu rotationMenu = new JMenu(Settings.getJpoResources().getString("rotation"));
+
+        final JMenuItem rotate90JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate90"));
+        rotate90JMenuItem.addActionListener((ActionEvent e) ->
+                JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 90, QUEUE_PRIORITY.HIGH_PRIORITY)));
+        rotationMenu.add(rotate90JMenuItem);
+
+        final JMenuItem rotate180JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate180"));
+        rotate180JMenuItem.addActionListener((ActionEvent e) ->
+                JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 180, QUEUE_PRIORITY.HIGH_PRIORITY)));
+        rotationMenu.add(rotate180JMenuItem);
+
+        final JMenuItem rotate270JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate270"));
+        rotate270JMenuItem.addActionListener((ActionEvent e) ->
+                JpoEventBus.getInstance().post(new RotatePictureRequest(popupNode, 270, QUEUE_PRIORITY.HIGH_PRIORITY)));
+        rotationMenu.add(rotate270JMenuItem);
+
+        final JMenuItem rotate0JMenuItem = new JMenuItem(Settings.getJpoResources().getString("rotate0"));
+        rotate0JMenuItem.addActionListener((ActionEvent e) ->
+                JpoEventBus.getInstance().post(new SetPictureRotationRequest(popupNode, 0f, QUEUE_PRIORITY.HIGH_PRIORITY)));
+        rotationMenu.add(rotate0JMenuItem);
+        add(rotationMenu);
+        return rotationMenu;
+    }
+
+    @NotNull
+    private JMenu getUserFunctionsJMenu() {
+        final JMenu userFunctionsJMenu = new JMenu(Settings.getJpoResources().getString("userFunctionsJMenu"));
+        for (int i = 0;
+             i < Settings.MAX_USER_FUNCTIONS;
+             i++) {
+            final int userFunction = i;
+            userFunctionJMenuItems[i] = new JMenuItem();
+            userFunctionJMenuItems[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RunUserFunctionRequest(userFunction, (PictureInfo) popupNode.getUserObject())));
+            userFunctionsJMenu.add(userFunctionJMenuItems[i]);
+        }
+        return userFunctionsJMenu;
     }
 
     private JMenu getFileOperationsMenu() {
