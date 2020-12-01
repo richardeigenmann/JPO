@@ -48,20 +48,22 @@ public class SettingsDialog extends JDialog {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( SettingsDialog.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(SettingsDialog.class.getName());
+    /**
+     * Defines the size of this dialog box
+     */
+    private static final Dimension SETTINGS_DIALOG_SIZE = new Dimension(700, 330);
     /**
      * field that allows the user to capture the file that should be
      * automatically loaded
      */
     private final JTextField autoLoadJTextField = new JTextField();
-
     private final SpinnerModel model
             = new SpinnerNumberModel(Settings.getTagCloudWords(), //initial value
             0, //min
             2000, //max
             1);                //step
     private final JSpinner tagCloudWordsJSpinner = new JSpinner(model);
-
     /**
      * Dropdown to indicate what preference the user has for JPO startup
      */
@@ -70,7 +72,6 @@ public class SettingsDialog extends JDialog {
      * Dropdown to indicate the preferred size of the viewer window
      */
     private final JComboBox<String> viewerSizeDropdown = new JComboBox<>();
-
     /**
      * maximum size of picture
      */
@@ -83,19 +84,17 @@ public class SettingsDialog extends JDialog {
      * tickbox that indicates whether to scale the thumbnails quickly
      */
     private final JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox(Settings.getJpoResources().getString("pictureViewerFastScale"));
-
     /**
      * User picks the thumbnail cache directory here
      */
     private final DirectoryChooser thumbnailCacheDirPathChooser
             = new DirectoryChooser(Settings.getJpoResources().getString("genericSelectText"),
             DirectoryChooser.DIR_MUST_BE_WRITABLE);
-
     /**
      * field that allows the user to capture the maximum number of thumbnails to
      * be displayed
      */
-    private final WholeNumberField maxThumbnails = new WholeNumberField( 0, 4 );
+    private final WholeNumberField maxThumbnails = new WholeNumberField(0, 4);
     /**
      * fields that allows the user to capture the desired size of thumbnails
      */
@@ -158,11 +157,6 @@ public class SettingsDialog extends JDialog {
      * Text Field that holds the password for the email server
      */
     private final JPasswordField emailPasswordJTextField = new JPasswordField();
-    /**
-     * Defines the size of this dialog box
-     */
-    private static final Dimension SETTINGS_DIALOG_SIZE = new Dimension( 700, 330 );
-
     private final JTextArea highresStatsJTA = new JTextArea();
     private final JTextArea lowresStatsJTA = new JTextArea();
 
@@ -181,39 +175,62 @@ public class SettingsDialog extends JDialog {
     }
 
     /**
+     * returns the index for the size dropdowns based on the supplied
+     * parameters.
+     *
+     * @param maximise        whether the index should be maximised
+     * @param targetDimension the target size of the window
+     * @return the index
+     */
+    private static int findSizeIndex(boolean maximise,
+                                     Dimension targetDimension) {
+        if (maximise) {
+            return 0;
+        } else {
+            int settingsArea = targetDimension.width * targetDimension.height;
+            int index = 1;
+            for (int i = 1; i < Settings.getWindowSizes().length; i++) {
+                if (Settings.getWindowSizes()[i].width * Settings.getWindowSizes()[i].height <= settingsArea) {
+                    index = i;
+                } else {
+                    break;
+                }
+            }
+            return index;
+        }
+    }
+
+    /**
      * Create the GUI elements
      */
     private void initComponents() {
         setTitle(Settings.getJpoResources().getString("settingsDialogTitle"));
 
         // General tab
-        final JPanel generalJPanel = new JPanel( new MigLayout() );
+        final JPanel generalJPanel = new JPanel(new MigLayout());
 
         final JLabel languageJLabel = new JLabel(Settings.getJpoResources().getString("languageJLabel"));
-        generalJPanel.add( languageJLabel );
-        generalJPanel.add( languageJComboBox, "wrap" );
+        generalJPanel.add(languageJLabel);
+        generalJPanel.add(languageJComboBox, "wrap");
 
         // Initial Windowsize stuff
         generalJPanel.add(new JLabel(Settings.getJpoResources().getString("windowSizeChoicesJlabel")));
-        final String[] windowSizeChoices = new String[Settings.getWindowSizes().length];
-        windowSizeChoices[0] = Settings.getJpoResources().getString("windowSizeChoicesMaximum");
-        for ( int i = 1; i < Settings.getWindowSizes().length; i++ ) {
-            windowSizeChoices[i] = Settings.getWindowSizes()[i].width + " x " + Settings.getWindowSizes()[i].height;
-        }
-        final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>( windowSizeChoices );
-        startupSizeDropdown.setModel( dcbm );
-        generalJPanel.add( startupSizeDropdown, "wrap" );
-        startupSizeDropdown.addActionListener( new ActionListener() {
+
+        final String[] windowSizeChoices = getWindowSizeChoices();
+        final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>(windowSizeChoices);
+        startupSizeDropdown.setModel(dcbm);
+        generalJPanel.add(startupSizeDropdown, "wrap");
+        startupSizeDropdown.addActionListener(new ActionListener() {
 
             boolean firstrun = true;
 
             @Override
-            public void actionPerformed( ActionEvent e ) {
-                if ( firstrun ) {
+            public void actionPerformed(ActionEvent e) {
+                if (firstrun) {
                     // don't change the window size when setting up the gui
                     firstrun = false;
                 } else {
-                    if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
+                    if (startupSizeDropdown.getSelectedIndex() == 0) {
                         Settings.getAnchorFrame().setExtendedState(Frame.MAXIMIZED_BOTH);
                     } else {
                         Settings.getAnchorFrame().setExtendedState(Frame.NORMAL);
@@ -234,12 +251,8 @@ public class SettingsDialog extends JDialog {
         autoLoadJTextField.setInputVerifier(new FileTextFieldVerifier());
         generalJPanel.add(autoLoadJTextField);
 
-        final JButton autoLoadJButton = new JButton(Settings.getJpoResources().getString("threeDotText"));
-        autoLoadJButton.setPreferredSize(Settings.getThreeDotButtonSize());
-        autoLoadJButton.setMinimumSize(Settings.getThreeDotButtonSize());
-        autoLoadJButton.setMaximumSize(Settings.getThreeDotButtonSize());
-        autoLoadJButton.addActionListener((ActionEvent e) -> autoLoadChooser());
-        generalJPanel.add(autoLoadJButton, "wrap");
+
+        generalJPanel.add(getAutoLoadJButton(), "wrap");
 
         final JLabel wordCloudWordJLabel = new JLabel("Max Word Cloud Words");
         generalJPanel.add(wordCloudWordJLabel);
@@ -365,40 +378,12 @@ public class SettingsDialog extends JDialog {
         // Email Server
         final JPanel emailServerJPanel = new JPanel(new MigLayout());
         final JLabel emailJLabel = new JLabel(Settings.getJpoResources().getString("emailJLabel"));
-        emailServerJPanel.add( emailJLabel, "span, wrap" );
+        emailServerJPanel.add(emailJLabel, "span, wrap");
 
         emailServerJPanel.add(new JLabel(Settings.getJpoResources().getString("predefinedEmailJLabel")));
 
-        JComboBox<String> predefinedEmailJComboBox = new JComboBox<>();
-        predefinedEmailJComboBox.addItem( "Localhost" );
-        predefinedEmailJComboBox.addItem( "Gmail" );
-        predefinedEmailJComboBox.addItem( "Compuserve" );
-        predefinedEmailJComboBox.addItem( "Hotmail" );
-        predefinedEmailJComboBox.addItem( "Other" );
-        predefinedEmailJComboBox.addActionListener(( ActionEvent e ) -> {
-            final String cbSelection = (String) predefinedEmailJComboBox.getSelectedItem();
-            if ("Localhost".equals(cbSelection)) {
-                emailServerJTextField.setText("localhost");
-                emailPortJTextField.setText("25");
-                authenticationJComboBox.setSelectedIndex(1); //Password
-            } else if ("Compuserve".equals(cbSelection)) {
-                emailServerJTextField.setText("smtp.compuserve.com");
-                emailPortJTextField.setText("25");
-                authenticationJComboBox.setSelectedIndex(1); //Password
-            } else if ( "Gmail".equals( cbSelection ) ) {
-                emailServerJTextField.setText( "smtp.gmail.com" );
-                emailPortJTextField.setText( "465" );
-                authenticationJComboBox.setSelectedIndex( 2 ); //SSL
-            } else if ( "Hotmail".equals( cbSelection ) ) {
-                emailServerJTextField.setText( "smtp.live.com" );
-                emailPortJTextField.setText( "25" );
-                authenticationJComboBox.setSelectedIndex(1); //Password
-            } else if ("Other".equals(cbSelection)) {
-                emailServerJTextField.setText("");
-                emailPortJTextField.setText("25");
-            }
-        });
-        emailServerJPanel.add(predefinedEmailJComboBox, "wrap");
+
+        emailServerJPanel.add(getPredefinedEmailJComboBox(), "wrap");
 
         emailServerJPanel.add(new JLabel(Settings.getJpoResources().getString("emailServerJLabel")));
         emailServerJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
@@ -477,25 +462,25 @@ public class SettingsDialog extends JDialog {
 
         cacheJPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailDirLabel")));
         cacheJPanel.add(thumbnailCacheDirPathChooser);
-        cacheJPanel.add( new JLabel( "(Needs restart)" ), "wrap" );
+        cacheJPanel.add(new JLabel("(Needs restart)"), "wrap");
 
-        cacheJPanel.add( new JLabel( "Highres Stats:" ) );
-        cacheJPanel.add( new JLabel( "Lowres Stats:" ), "wrap" );
+        cacheJPanel.add(new JLabel("Highres Stats:"));
+        cacheJPanel.add(new JLabel("Lowres Stats:"), "wrap");
 
-        cacheJPanel.add( new JScrollPane( highresStatsJTA ) );
-        cacheJPanel.add( new JScrollPane( lowresStatsJTA ), "wrap" );
+        cacheJPanel.add(new JScrollPane(highresStatsJTA));
+        cacheJPanel.add(new JScrollPane(lowresStatsJTA), "wrap");
 
         final JButton clearHighresCacheJButton = new JButton("Clear");
-        clearHighresCacheJButton.addActionListener(( ActionEvent e ) -> clearHighresCache());
+        clearHighresCacheJButton.addActionListener((ActionEvent e) -> clearHighresCache());
 
         final JButton clearThumbnailCacheJButton = new JButton("Clear");
-        clearThumbnailCacheJButton.addActionListener(( ActionEvent e ) -> clearThumbnailCache());
+        clearThumbnailCacheJButton.addActionListener((ActionEvent e) -> clearThumbnailCache());
 
-        cacheJPanel.add( clearHighresCacheJButton );
-        cacheJPanel.add( clearThumbnailCacheJButton );
+        cacheJPanel.add(clearHighresCacheJButton);
+        cacheJPanel.add(clearThumbnailCacheJButton);
 
         final JButton updateCacheStatsJButton = new JButton("Update");
-        updateCacheStatsJButton.addActionListener(( ActionEvent e ) -> updateCacheStats());
+        updateCacheStatsJButton.addActionListener((ActionEvent e) -> updateCacheStats());
         cacheJPanel.add(updateCacheStatsJButton);
 
         // set up the main part of the dialog
@@ -518,17 +503,7 @@ public class SettingsDialog extends JDialog {
         Container buttonContainer = new Container();
         buttonContainer.setLayout(new FlowLayout());
 
-        JButton saveButton = new JButton(Settings.getJpoResources().getString("genericSaveButtonLabel"));
-        saveButton.setPreferredSize(Settings.getDefaultButtonDimension());
-        saveButton.setMinimumSize(Settings.getDefaultButtonDimension());
-        saveButton.setMaximumSize(Settings.getDefaultButtonDimension());
-        saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        saveButton.addActionListener((ActionEvent e) -> {
-            writeValues();
-            Settings.writeSettings();
-            getRid();
-        });
-        buttonContainer.add(saveButton);
+        buttonContainer.add(getSaveButton());
 
         JButton cancelButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
         cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
@@ -544,10 +519,61 @@ public class SettingsDialog extends JDialog {
         addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosing( WindowEvent evt ) {
+            public void windowClosing(WindowEvent evt) {
                 getRid();
             }
-        } );
+        });
+    }
+
+    private String[] getWindowSizeChoices() {
+        final String[] windowSizeChoices = new String[Settings.getWindowSizes().length];
+        windowSizeChoices[0] = Settings.getJpoResources().getString("windowSizeChoicesMaximum");
+        for (int i = 1; i < Settings.getWindowSizes().length; i++) {
+            windowSizeChoices[i] = Settings.getWindowSizes()[i].width + " x " + Settings.getWindowSizes()[i].height;
+        }
+        return windowSizeChoices;
+    }
+
+    private JButton getAutoLoadJButton() {
+        final JButton autoLoadJButton = new JButton(Settings.getJpoResources().getString("threeDotText"));
+        autoLoadJButton.setPreferredSize(Settings.getThreeDotButtonSize());
+        autoLoadJButton.setMinimumSize(Settings.getThreeDotButtonSize());
+        autoLoadJButton.setMaximumSize(Settings.getThreeDotButtonSize());
+        autoLoadJButton.addActionListener((ActionEvent e) -> autoLoadChooser());
+        return autoLoadJButton;
+    }
+
+    private JComboBox getPredefinedEmailJComboBox() {
+        final JComboBox<String> predefinedEmailJComboBox = new JComboBox<>();
+        predefinedEmailJComboBox.addItem("Localhost");
+        predefinedEmailJComboBox.addItem("Gmail");
+        predefinedEmailJComboBox.addItem("Compuserve");
+        predefinedEmailJComboBox.addItem("Hotmail");
+        predefinedEmailJComboBox.addItem("Other");
+        predefinedEmailJComboBox.addActionListener((ActionEvent e) -> {
+            final String cbSelection = (String) predefinedEmailJComboBox.getSelectedItem();
+            if ("Localhost".equals(cbSelection)) {
+                emailServerJTextField.setText("localhost");
+                emailPortJTextField.setText("25");
+                authenticationJComboBox.setSelectedIndex(1); //Password
+            } else if ("Compuserve".equals(cbSelection)) {
+                emailServerJTextField.setText("smtp.compuserve.com");
+                emailPortJTextField.setText("25");
+                authenticationJComboBox.setSelectedIndex(1); //Password
+            } else if ("Gmail".equals(cbSelection)) {
+                emailServerJTextField.setText("smtp.gmail.com");
+                emailPortJTextField.setText("465");
+                authenticationJComboBox.setSelectedIndex(2); //SSL
+            } else if ("Hotmail".equals(cbSelection)) {
+                emailServerJTextField.setText("smtp.live.com");
+                emailPortJTextField.setText("25");
+                authenticationJComboBox.setSelectedIndex(1); //Password
+            } else if ("Other".equals(cbSelection)) {
+                emailServerJTextField.setText("");
+                emailPortJTextField.setText("25");
+            }
+        });
+        return predefinedEmailJComboBox;
     }
 
     /**
@@ -555,16 +581,16 @@ public class SettingsDialog extends JDialog {
      * object's values are
      */
     private void initValues() {
-        for (int i = 0; i < Settings.getSupportedLanguages().length; i++ ) {
-            if ( Settings.getCurrentLocale().equals( Settings.getSupportedLocale()[i] ) ) {
-                languageJComboBox.setSelectedIndex( i );
+        for (int i = 0; i < Settings.getSupportedLanguages().length; i++) {
+            if (Settings.getCurrentLocale().equals(Settings.getSupportedLocale()[i])) {
+                languageJComboBox.setSelectedIndex(i);
                 break;
             }
         }
 
         autoLoadJTextField.setText(Settings.getAutoLoad());
 
-        startupSizeDropdown.setSelectedIndex( findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()) );
+        startupSizeDropdown.setSelectedIndex(findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()));
         viewerSizeDropdown.setSelectedIndex(findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()));
 
         maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
@@ -597,30 +623,21 @@ public class SettingsDialog extends JDialog {
 
     }
 
-    /**
-     * returns the index for the size dropdowns based on the supplied
-     * parameters.
-     *
-     * @param maximise whether the index should be maximised
-     * @param targetDimension the target size of the window
-     * @return the index
-     */
-    private static int findSizeIndex( boolean maximise,
-            Dimension targetDimension ) {
-        if ( maximise ) {
-            return 0;
-        } else {
-            int settingsArea = targetDimension.width * targetDimension.height;
-            int index = 1;
-            for ( int i = 1; i < Settings.getWindowSizes().length; i++ ) {
-                if ( Settings.getWindowSizes()[i].width * Settings.getWindowSizes()[i].height <= settingsArea ) {
-                    index = i;
-                } else {
-                    break;
-                }
-            }
-            return index;
-        }
+    private JButton getSaveButton() {
+        final JButton saveButton = new JButton(Settings.getJpoResources().getString("genericSaveButtonLabel"));
+        saveButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        saveButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        saveButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        saveButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        saveButton.addActionListener((
+                ActionEvent e) ->
+
+        {
+            writeValues();
+            Settings.writeSettings();
+            getRid();
+        });
+        return saveButton;
     }
 
     /**
@@ -629,17 +646,17 @@ public class SettingsDialog extends JDialog {
      */
     private void writeValues() {
         Locale comboBoxLocale = Settings.getSupportedLocale()[languageJComboBox.getSelectedIndex()];
-        boolean localeChanged = Settings.setLocale( comboBoxLocale );
-        if ( localeChanged ) {
-            LOGGER.info( "Locale changed!" );
-            JpoEventBus.getInstance().post( new LocaleChangedEvent() );
+        boolean localeChanged = Settings.setLocale(comboBoxLocale);
+        if (localeChanged) {
+            LOGGER.info("Locale changed!");
+            JpoEventBus.getInstance().post(new LocaleChangedEvent());
         }
 
         Settings.setAutoLoad(autoLoadJTextField.getText());
 
         Settings.setTagCloudWords((Integer) tagCloudWordsJSpinner.getValue());
 
-        if ( startupSizeDropdown.getSelectedIndex() == 0 ) {
+        if (startupSizeDropdown.getSelectedIndex() == 0) {
             Settings.setMaximiseJpoOnStartup(true);
             Settings.setMainFrameDimensions(new Dimension(0, 0));
         } else {
@@ -650,7 +667,7 @@ public class SettingsDialog extends JDialog {
         Settings.setMaximumPictureSize(maximumPictureSizeJTextField.getValue());
         Settings.setDontEnlargeSmallImages(dontEnlargeJCheckBox.isSelected());
 
-        if ( viewerSizeDropdown.getSelectedIndex() == 0 ) {
+        if (viewerSizeDropdown.getSelectedIndex() == 0) {
             Settings.setMaximisePictureViewerWindow(true);
             Settings.setPictureViewerDefaultDimensions(new Dimension(0, 0));
         } else {
@@ -689,34 +706,34 @@ public class SettingsDialog extends JDialog {
      *
      * @param validationFile the file to validate
      */
-    public void checkAutoLoad(String validationFile ) {
-        LOGGER.log( Level.FINE, "SettingsDialog.checkAutoLoad: called on: {0}", validationFile );
-        File testFile = new File( validationFile );
+    public void checkAutoLoad(String validationFile) {
+        LOGGER.log(Level.FINE, "SettingsDialog.checkAutoLoad: called on: {0}", validationFile);
+        File testFile = new File(validationFile);
 
-        if ( "".equals( validationFile ) ) {
-            autoLoadJTextField.setForeground( Color.black );
+        if ("".equals(validationFile)) {
+            autoLoadJTextField.setForeground(Color.black);
             return;
         }
 
-        if ( !testFile.exists() ) {
+        if (!testFile.exists()) {
             LOGGER.log(Level.WARNING, "SettingsDialog.checkAutoLoad: {0} doesn''t exist.", testFile);
             autoLoadJTextField.setForeground(Color.red);
             return;
         } else {
-            if ( !testFile.canRead() ) {
+            if (!testFile.canRead()) {
                 LOGGER.log(Level.WARNING, "SettingsDialog.checkAutoLoad: {0} can''t read.", testFile);
                 autoLoadJTextField.setForeground(Color.red);
                 return;
             }
         }
-        autoLoadJTextField.setForeground( Color.black );
+        autoLoadJTextField.setForeground(Color.black);
     }
 
     /**
      * method that gets rid of the SettingsDialog
      */
     private void getRid() {
-        setVisible( false );
+        setVisible(false);
         dispose();
     }
 
@@ -726,44 +743,16 @@ public class SettingsDialog extends JDialog {
      */
     private void autoLoadChooser() {
         JFileChooser jFileChooser = new JFileChooser();
-        jFileChooser.setFileFilter( new XmlFilter() );
+        jFileChooser.setFileFilter(new XmlFilter());
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogTitle(Settings.getJpoResources().getString("autoLoadChooserTitle"));
         jFileChooser.setCurrentDirectory(new File(autoLoadJTextField.getText()));
 
         int returnVal = jFileChooser.showDialog(this, Settings.getJpoResources().getString("genericSelectText"));
-        if ( returnVal == JFileChooser.APPROVE_OPTION ) {
-            autoLoadJTextField.setText( jFileChooser.getSelectedFile().getPath() );
-            checkAutoLoad( autoLoadJTextField.getText() );
-        }
-    }
-
-    /**
-     * special inner class that verifies whether the path indicated by the
-     * component is valid
-     */
-    class FileTextFieldVerifier
-            extends InputVerifier {
-
-        @Override
-        public boolean shouldYieldFocus( JComponent source, JComponent target ) {
-            String validationFile = ( (JTextComponent) source ).getText();
-            LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile );
-            LOGGER.log( Level.INFO, "JComponent = {0}", Integer.toString( source.hashCode() ) );
-            LOGGER.log( Level.INFO, "autoLoadJTextField = {0}", Integer.toString( autoLoadJTextField.hashCode() ) );
-
-            if ( source.hashCode() == autoLoadJTextField.hashCode() ) {
-                checkAutoLoad( validationFile );
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean verify( JComponent input ) {
-            LOGGER.log( Level.INFO, "SettingsDialog.FileTextFieldVerifyer.verify: called with: {0}", ( (JTextComponent) input ).getText() );
-            return true;
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            autoLoadJTextField.setText(jFileChooser.getSelectedFile().getPath());
+            checkAutoLoad(autoLoadJTextField.getText());
         }
     }
 
@@ -789,6 +778,34 @@ public class SettingsDialog extends JDialog {
     private void clearThumbnailCache() {
         JpoCache.clearThumbnailCache();
         updateCacheStats();
+    }
+
+    /**
+     * special inner class that verifies whether the path indicated by the
+     * component is valid
+     */
+    class FileTextFieldVerifier
+            extends InputVerifier {
+
+        @Override
+        public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            String validationFile = ((JTextComponent) source).getText();
+            LOGGER.log(Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile);
+            LOGGER.log(Level.INFO, "JComponent = {0}", Integer.toString(source.hashCode()));
+            LOGGER.log(Level.INFO, "autoLoadJTextField = {0}", Integer.toString(autoLoadJTextField.hashCode()));
+
+            if (source.hashCode() == autoLoadJTextField.hashCode()) {
+                checkAutoLoad(validationFile);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean verify(JComponent input) {
+            LOGGER.log(Level.INFO, "SettingsDialog.FileTextFieldVerifyer.verify: called with: {0}", ((JTextComponent) input).getText());
+            return true;
+        }
     }
 
 }
