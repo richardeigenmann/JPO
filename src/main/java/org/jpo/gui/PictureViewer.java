@@ -7,7 +7,6 @@ import org.jpo.eventbus.RotatePictureRequest;
 import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
 import org.jpo.eventbus.ShowPicturePopUpMenuRequest;
 import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
-import org.jpo.gui.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;
 import org.jpo.gui.swing.PictureFrame;
 import org.jpo.gui.swing.ResizableJFrame.WindowSize;
@@ -91,6 +90,98 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
     private void attachListeners() {
         final OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
+        addStatusListener(pictureJPanel);
+
+        pictureFrame.getResizableJFrame().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                closeViewer();
+            }
+        });
+
+        pictureFrame.getFocussableDescriptionField().addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e);
+                saveChangedDescription();
+            }
+        });
+
+        addKeyListener(pictureJPanel);
+
+        pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener((ActionEvent e) -> {
+            JpoEventBus.getInstance().post(new RotatePictureRequest(getCurrentNode(), 270, QUEUE_PRIORITY.HIGH_PRIORITY));
+            pictureFrame.getPictureController().requestFocusInWindow();
+        });
+
+        pictureFrame.getPictureViewerNavBar().rotateRightJButton.addActionListener((ActionEvent e) -> {
+            JpoEventBus.getInstance().post(new RotatePictureRequest(getCurrentNode(), 90, QUEUE_PRIORITY.HIGH_PRIORITY));
+            pictureFrame.getPictureController().requestFocusInWindow();
+        });
+
+        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().zoomIn());
+
+        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().zoomOut());
+
+        pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener((ActionEvent e) -> requestScreenSizeMenu());
+
+        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0)));
+
+        pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener((ActionEvent e) -> cycleInfoDisplay());
+
+        pictureFrame.getPictureViewerNavBar().resetJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().resetPicture());
+
+        pictureFrame.getPictureViewerNavBar().speedSlider.addChangeListener((ChangeEvent ce) -> {
+            if (!pictureFrame.getPictureViewerNavBar().speedSlider.getValueIsAdjusting()) {
+                setTimerDelay(pictureFrame.getPictureViewerNavBar().speedSlider.getValue());
+            }
+        });
+
+        pictureFrame.getPictureViewerNavBar().closeJButton.addActionListener((ActionEvent e) -> closeViewer());
+
+        pictureFrame.getPictureViewerNavBar().previousJButton.addActionListener((ActionEvent e) -> requestPriorPicture());
+
+        pictureFrame.getPictureViewerNavBar().getNextJButton().addActionListener((ActionEvent e) -> requestNextPicture());
+
+        pictureFrame.getPictureViewerNavBar().clockJButton.addActionListener((ActionEvent e) -> requestAutoAdvance());
+    }
+
+    private void addKeyListener(OverlayedPictureController pictureJPanel) {
+        pictureJPanel.addKeyListener(new KeyAdapter() {
+            /**
+             * method that analysed the key that was pressed
+             */
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                final int k = keyEvent.getKeyCode();
+                if ((k == KeyEvent.VK_I)) {
+                    pictureFrame.cycleInfoDisplay();
+                    keyEvent.consume();
+                } else if ((k == KeyEvent.VK_N)) {
+                    requestNextPicture();
+                    keyEvent.consume();
+                } else if ((k == KeyEvent.VK_M)) {
+                    keyEvent.consume();
+                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0));
+                } else if ((k == KeyEvent.VK_P)) {
+                    requestPriorPicture();
+                    keyEvent.consume();
+                } else if ((k == KeyEvent.VK_F)) {
+                    requestScreenSizeMenu();
+                    keyEvent.consume();
+                }
+                if (!keyEvent.isConsumed()) {
+                    JOptionPane.showMessageDialog(pictureFrame.getResizableJFrame(),
+                            Settings.getJpoResources().getString("PictureViewerKeycodes"),
+                            Settings.getJpoResources().getString("PictureViewerKeycodesTitle"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+    }
+
+    private void addStatusListener(final OverlayedPictureController pictureJPanel) {
         pictureJPanel.addStatusListener(new ScalablePictureListener() {
 
             /**
@@ -148,7 +239,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
              * @param percentage the percentage
              */
             @Override
-            public void sourceLoadProgressNotification(final SourcePictureStatus statusCode,
+            public void sourceLoadProgressNotification(final SourcePicture.SourcePictureStatus statusCode,
                                                        final int percentage) {
                 final Runnable runnable = () -> {
                     switch (statusCode) {
@@ -172,91 +263,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 }
             }
         });
-
-        pictureFrame.getResizableJFrame().addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent we) {
-                closeViewer();
-            }
-        });
-
-        pictureFrame.getFocussableDescriptionField().addFocusListener(new FocusAdapter() {
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                saveChangedDescription();
-            }
-        });
-
-        pictureJPanel.addKeyListener(new KeyAdapter() {
-            /**
-             * method that analysed the key that was pressed
-             */
-            @Override
-            public void keyPressed(KeyEvent keyEvent) {
-                final int k = keyEvent.getKeyCode();
-                if ((k == KeyEvent.VK_I)) {
-                    pictureFrame.cycleInfoDisplay();
-                    keyEvent.consume();
-                } else if ((k == KeyEvent.VK_N)) {
-                    requestNextPicture();
-                    keyEvent.consume();
-                } else if ((k == KeyEvent.VK_M)) {
-                    keyEvent.consume();
-                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0));
-                } else if ((k == KeyEvent.VK_P)) {
-                    requestPriorPicture();
-                    keyEvent.consume();
-                } else if ((k == KeyEvent.VK_F)) {
-                    requestScreenSizeMenu();
-                    keyEvent.consume();
-                }
-                if (!keyEvent.isConsumed()) {
-                    JOptionPane.showMessageDialog(pictureFrame.getResizableJFrame(),
-                            Settings.getJpoResources().getString("PictureViewerKeycodes"),
-                            Settings.getJpoResources().getString("PictureViewerKeycodesTitle"),
-                            JOptionPane.INFORMATION_MESSAGE);
-                }
-            }
-        });
-
-        pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener((ActionEvent e) -> {
-            JpoEventBus.getInstance().post(new RotatePictureRequest(getCurrentNode(), 270, QUEUE_PRIORITY.HIGH_PRIORITY));
-            pictureFrame.getPictureController().requestFocusInWindow();
-        });
-
-        pictureFrame.getPictureViewerNavBar().rotateRightJButton.addActionListener((ActionEvent e) -> {
-            JpoEventBus.getInstance().post(new RotatePictureRequest(getCurrentNode(), 90, QUEUE_PRIORITY.HIGH_PRIORITY));
-            pictureFrame.getPictureController().requestFocusInWindow();
-        });
-
-        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().zoomIn());
-
-        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().zoomOut());
-
-        pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener((ActionEvent e) -> requestScreenSizeMenu());
-
-        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0)));
-
-        pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener((ActionEvent e) -> cycleInfoDisplay());
-
-        pictureFrame.getPictureViewerNavBar().resetJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().resetPicture());
-
-        pictureFrame.getPictureViewerNavBar().speedSlider.addChangeListener((ChangeEvent ce) -> {
-            if (!pictureFrame.getPictureViewerNavBar().speedSlider.getValueIsAdjusting()) {
-                setTimerDelay(pictureFrame.getPictureViewerNavBar().speedSlider.getValue());
-            }
-        });
-
-        pictureFrame.getPictureViewerNavBar().closeJButton.addActionListener((ActionEvent e) -> closeViewer());
-
-        pictureFrame.getPictureViewerNavBar().previousJButton.addActionListener((ActionEvent e) -> requestPriorPicture());
-
-        pictureFrame.getPictureViewerNavBar().getNextJButton().addActionListener((ActionEvent e) -> requestNextPicture());
-
-        pictureFrame.getPictureViewerNavBar().clockJButton.addActionListener((ActionEvent e) -> requestAutoAdvance());
-
     }
 
     /**

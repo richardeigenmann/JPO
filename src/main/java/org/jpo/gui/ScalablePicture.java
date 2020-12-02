@@ -303,56 +303,59 @@ public class ScalablePicture
                     }
                 }
 
-                /* note that I have tried to use other AffineTransformOps such as TYPE_BILINEAR and
+                double factor = getFactor();
+                final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
+                final AffineTransformOp opStep = new AffineTransformOp(afStep, getAffineTransformOp());
+                scaledPicture = sourcePicture.getSourceBufferedImage();
+                for ( int i = 0; i < getScaleSteps(); i++ ) {
+                    Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
+                    pStep = afStep.transform(pStep, null);
+                    final Dimension size = new Dimension((int) Math.rint(pStep.getX()), (int) Math.rint(pStep.getY()));
+                    int imageType = sourcePicture.getSourceBufferedImage().getType();
+                    LOGGER.log(Level.FINE, "getType from source image returned {0}", imageType);
+                    if ((imageType == 0) || (imageType == 13)) {
+                        imageType = BufferedImage.TYPE_3BYTE_BGR;
+                        LOGGER.log(Level.FINE, "Because we don''t like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: {0}", BufferedImage.TYPE_3BYTE_BGR);
+                    }
+                    ensureMinimumSize(size);
+                    BufferedImage biStep = new BufferedImage(size.width, size.height, imageType);
+                    scaledPicture = opStep.filter(scaledPicture, biStep);
+                }
+                setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
+            } else if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
+                setStatus(SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null.");
+            }
+        } catch (final OutOfMemoryError e) {
+            LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage());
+            setStatus(SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageFile.toString());
+            scaledPicture = null;
+            Tools.dealOutOfMemoryError();
+        }
+    }
+
+    private void ensureMinimumSize(Dimension size) {
+        if (size.width == 0) {
+            size.width = 100;
+        }
+        if (size.height == 0) {
+            size.height = 100;
+        }
+    }
+
+    private int getAffineTransformOp() {
+                 /* note that I have tried to use other AffineTransformOps such as TYPE_BILINEAR and
                  TYPE_BICUBIC. Only they don't work as they muck about with the color channels
                  and we end up with a non JFIF compliant JPEG image. This doesn't display well
                  in most programs which makes this format useless. This is thoroughly explained
                  in the following article. The workaround doesn't work though.
                  http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4503132
                  RE, 7.9.2005  */
-                double factor;
-                int affineTransformType;
-                if ( fastScale ) {
-                    affineTransformType = AffineTransformOp.TYPE_NEAREST_NEIGHBOR;
-                    factor = scaleFactor;
-                } else {
-                    affineTransformType = AffineTransformOp.TYPE_BICUBIC;
-                    factor = Math.pow( scaleFactor, 1f / getScaleSteps() );
-                }
 
-                final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
-                final AffineTransformOp opStep = new AffineTransformOp(afStep, affineTransformType);
-                scaledPicture = sourcePicture.getSourceBufferedImage();
-                for ( int i = 0; i < getScaleSteps(); i++ ) {
-                    Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
-                    pStep = afStep.transform(pStep, null );
-                    int x = (int) Math.rint( pStep.getX() );
-                    int y = (int) Math.rint( pStep.getY() );
-                    int imageType = sourcePicture.getSourceBufferedImage().getType();
-                    LOGGER.log(Level.FINE, "getType from source image returned {0}", imageType);
-                    if ( x == 0 ) {
-                        x = 100;
-                    }
-                    if ( y == 0 ) {
-                        y = 100;
-                    }
-                    if ( ( imageType == 0 ) || ( imageType == 13 ) ) {
-                        imageType = BufferedImage.TYPE_3BYTE_BGR;
-                        LOGGER.log(Level.FINE, "Because we don''t like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: {0}", BufferedImage.TYPE_3BYTE_BGR);
-                    }
-                    BufferedImage biStep = new BufferedImage(x, y, imageType);
-                    scaledPicture = opStep.filter( scaledPicture, biStep);
-                }
-                setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
-            } else if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
-                setStatus( SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null." );
-            }
-        } catch ( final OutOfMemoryError e ) {
-            LOGGER.log( Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage() );
-            setStatus( SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageFile.toString() );
-            scaledPicture = null;
-            Tools.dealOutOfMemoryError();
-        }
+        return fastScale ? AffineTransformOp.TYPE_NEAREST_NEIGHBOR : AffineTransformOp.TYPE_BICUBIC;
+    }
+
+    private double getFactor() {
+        return fastScale ? scaleFactor : Math.pow(scaleFactor, 1f / getScaleSteps());
     }
 
     /**
