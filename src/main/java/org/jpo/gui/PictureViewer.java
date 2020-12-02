@@ -534,6 +534,33 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * of the current node.
      */
     private void setIconDecorations() {
+        setIconDecorationPreviousButton();
+        setIconDecorationNextButton();
+    }
+
+    private void setIconDecorationPreviousButton() {
+        final SortableDefaultMutableTreeNode currentNode = getCurrentNode();
+        if (currentNode == null) {
+            return;
+        }
+        // let's see what we have in the way of previous siblings..
+        if (currentNode.getPreviousSibling() != null) {
+            pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
+        } else {
+            // determine if there are any previous nodes that are not groups.
+            DefaultMutableTreeNode testNode = currentNode.getPreviousNode();
+            while ((testNode != null) && (!(testNode.getUserObject() instanceof PictureInfo))) {
+                testNode = testNode.getPreviousNode();
+            }
+            if (testNode == null) {
+                pictureFrame.getPictureViewerNavBar().setPreviousButtonBeginning();
+            } else {
+                pictureFrame.getPictureViewerNavBar().setPreviousButtonHasPrevious();
+            }
+        }
+    }
+
+    private void setIconDecorationNextButton() {
         final SortableDefaultMutableTreeNode currentNode = getCurrentNode();
         if (currentNode == null) {
             return;
@@ -559,22 +586,6 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
             } else {
                 pictureFrame.getPictureViewerNavBar().setNextButtonEnd();
-            }
-        }
-
-        // let's see what we have in the way of previous siblings..
-        if (currentNode.getPreviousSibling() != null) {
-            pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
-        } else {
-            // determine if there are any previous nodes that are not groups.
-            DefaultMutableTreeNode testNode = currentNode.getPreviousNode();
-            while ((testNode != null) && (!(testNode.getUserObject() instanceof PictureInfo))) {
-                testNode = testNode.getPreviousNode();
-            }
-            if (testNode == null) {
-                pictureFrame.getPictureViewerNavBar().setPreviousButtonBeginning();
-            } else {
-                pictureFrame.getPictureViewerNavBar().setPreviousButtonHasPrevious();
             }
         }
     }

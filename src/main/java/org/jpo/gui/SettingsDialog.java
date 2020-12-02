@@ -543,7 +543,7 @@ public class SettingsDialog extends JDialog {
         return autoLoadJButton;
     }
 
-    private JComboBox getPredefinedEmailJComboBox() {
+    private JComboBox<String> getPredefinedEmailJComboBox() {
         final JComboBox<String> predefinedEmailJComboBox = new JComboBox<>();
         predefinedEmailJComboBox.addItem("Localhost");
         predefinedEmailJComboBox.addItem("Gmail");
