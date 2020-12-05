@@ -203,4 +203,26 @@ public class WebsiteGeneratorTest {
         }
     }
 
+    @Test
+    public void testGenerateZipFile() {
+        final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
+        request.setGenerateZipfile(true);
+        request.setPictureNaming(GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER);
+        request.setSequentialStartNumber(5);
+        final SortableDefaultMutableTreeNode startNode = new SortableDefaultMutableTreeNode();
+        startNode.setUserObject(new GroupInfo("Root Node"));
+        request.setStartNode(startNode);
+        try {
+            final Path tempDirWithPrefix = Files.createTempDirectory("GenerateZipFile");
+            request.setTargetDirectory(tempDirWithPrefix.toFile());
+            startNode.add(new SortableDefaultMutableTreeNode(new PictureInfo(new File(WebsiteGeneratorTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg").toURI()), "Picture 1")));
+            WebsiteGenerator.generateZipfileTest(request);
+
+            FileUtils.deleteDirectory(request.getTargetDirectory());
+        } catch (final IOException | URISyntaxException e) {
+            fail("Hit an unexpected IOException: " + e.getMessage());
+        }
+    }
+
+
 }
