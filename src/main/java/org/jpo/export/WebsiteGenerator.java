@@ -783,7 +783,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     lowresFn = "jpo_" + root + "_l." + extension;
                     break;
                 default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                    final int hashCode = nde.hashCode();
                     lowresFn = "jpo_" + nde.hashCode() + "_l." + extension;
                     break;
             }

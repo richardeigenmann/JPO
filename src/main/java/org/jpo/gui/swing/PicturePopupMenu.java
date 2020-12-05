@@ -552,6 +552,22 @@ public class PicturePopupMenu extends JPopupMenu {
     private JMenu getMoveJMenu(final SortableDefaultMutableTreeNode popupNode) {
         final JMenu moveJMenu = new JMenu(Settings.getJpoResources().getString("moveNodeJMenuLabel"));
 
+        addRecentDropNodes(popupNode, moveJMenu);
+        moveJMenu.add(movePictureNodeSeparator);
+        labelRecentDropNodes();
+
+        final PictureCollection pictureCollection = Settings.getPictureCollection();
+        moveJMenu.add(getMovePictureToTopJMenuItem(pictureCollection));
+        moveJMenu.add(getMovePictureUpJMenuItem(pictureCollection));
+        moveJMenu.add(getMovePictureDownJMenuItem(pictureCollection));
+        moveJMenu.add(getMovePictureToBottomJMenuItem(pictureCollection));
+        moveJMenu.add(getIndentJMenuItem(pictureCollection));
+        moveJMenu.add(getOutdentJMenuItem(pictureCollection));
+        moveJMenu.setVisible(popupNode.getPictureCollection().getAllowEdits());
+        return moveJMenu;
+    }
+
+    private void addRecentDropNodes(final SortableDefaultMutableTreeNode popupNode, final JMenu moveJMenu) {
         for (int i = 0; i < Settings.getMaxDropnodes(); i++) {
             final int dropnode = i;
             recentDropNodeJMenuItems[i] = new JMenuItem();
@@ -580,10 +596,9 @@ public class PicturePopupMenu extends JPopupMenu {
                      */);
             moveJMenu.add(recentDropNodeJMenuItems[i]);
         }
-        moveJMenu.add(movePictureNodeSeparator);
-        labelRecentDropNodes();
+    }
 
-        final PictureCollection pictureCollection = Settings.getPictureCollection();
+    private JMenuItem getMovePictureToTopJMenuItem(final PictureCollection pictureCollection) {
         final JMenuItem movePictureToTopJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureToTopJMenuItem"));
         movePictureToTopJMenuItem.addActionListener((ActionEvent event) -> {
             if ((Settings.getPictureCollection().countSelectedNodes() < 1)
@@ -597,8 +612,11 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         });
-        moveJMenu.add(movePictureToTopJMenuItem);
 
+        return movePictureToTopJMenuItem;
+    }
+
+    private JMenuItem getMovePictureUpJMenuItem(final PictureCollection pictureCollection) {
         final JMenuItem movePictureUpJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureUpJMenuItem"));
         movePictureUpJMenuItem.addActionListener((ActionEvent e) -> {
             if ((Settings.getPictureCollection().countSelectedNodes() < 1)
@@ -612,8 +630,10 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         });
-        moveJMenu.add(movePictureUpJMenuItem);
+        return movePictureUpJMenuItem;
+    }
 
+    private JMenuItem getMovePictureDownJMenuItem(final PictureCollection pictureCollection) {
         final JMenuItem movePictureDownJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureDownJMenuItem"));
         movePictureDownJMenuItem.addActionListener((ActionEvent e) -> {
             if ((Settings.getPictureCollection().countSelectedNodes() < 1) || (!pictureCollection.isSelected(popupNode))) {
@@ -627,8 +647,11 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         });
-        moveJMenu.add(movePictureDownJMenuItem);
 
+        return movePictureDownJMenuItem;
+    }
+
+    private JMenuItem getMovePictureToBottomJMenuItem(final PictureCollection pictureCollection) {
         final JMenuItem movePictureToBottomJMenuItem = new JMenuItem(Settings.getJpoResources().getString("movePictureToBottomJMenuItem"));
         movePictureToBottomJMenuItem.addActionListener((ActionEvent e) -> {
             if ((Settings.getPictureCollection().countSelectedNodes() < 1)
@@ -642,8 +665,11 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         });
-        moveJMenu.add(movePictureToBottomJMenuItem);
 
+        return movePictureToBottomJMenuItem;
+    }
+
+    private JMenuItem getIndentJMenuItem(final PictureCollection pictureCollection) {
         final JMenuItem indentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("indentJMenuItem"));
         indentJMenuItem.addActionListener((ActionEvent e) -> {
             final ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -659,8 +685,11 @@ public class PicturePopupMenu extends JPopupMenu {
             }
             JpoEventBus.getInstance().post(new MoveIndentRequest(nodes));
         });
-        moveJMenu.add(indentJMenuItem);
 
+        return indentJMenuItem;
+    }
+
+    private JMenuItem getOutdentJMenuItem(final PictureCollection pictureCollection) {
         final JMenuItem outdentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("outdentJMenuItem"));
         outdentJMenuItem.addActionListener((ActionEvent e) -> {
             final ArrayList<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -676,11 +705,8 @@ public class PicturePopupMenu extends JPopupMenu {
             }
             JpoEventBus.getInstance().post(new MoveOutdentRequest(nodes));
         });
-        moveJMenu.add(outdentJMenuItem);
 
-        moveJMenu.setVisible(popupNode.getPictureCollection()
-                .getAllowEdits());
-        return moveJMenu;
+        return outdentJMenuItem;
     }
 
     private JMenu getRotationJMenu(SortableDefaultMutableTreeNode popupNode) {
