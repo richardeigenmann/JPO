@@ -303,26 +303,9 @@ public class ScalablePicture
                     }
                 }
 
-                double factor = getFactor();
-                final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
-                final AffineTransformOp opStep = new AffineTransformOp(afStep, getAffineTransformOp());
-                scaledPicture = sourcePicture.getSourceBufferedImage();
-                for ( int i = 0; i < getScaleSteps(); i++ ) {
-                    Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
-                    pStep = afStep.transform(pStep, null);
-                    final Dimension size = new Dimension((int) Math.rint(pStep.getX()), (int) Math.rint(pStep.getY()));
-                    int imageType = sourcePicture.getSourceBufferedImage().getType();
-                    LOGGER.log(Level.FINE, "getType from source image returned {0}", imageType);
-                    if ((imageType == 0) || (imageType == 13)) {
-                        imageType = BufferedImage.TYPE_3BYTE_BGR;
-                        LOGGER.log(Level.FINE, "Because we don''t like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: {0}", BufferedImage.TYPE_3BYTE_BGR);
-                    }
-                    ensureMinimumSize(size);
-                    BufferedImage biStep = new BufferedImage(size.width, size.height, imageType);
-                    scaledPicture = opStep.filter(scaledPicture, biStep);
-                }
-                setStatus( SCALABLE_PICTURE_READY, "Scaled Picture is ready." );
-            } else if ( getStatusCode() != SCALABLE_PICTURE_LOADING ) {
+                scaledPicture = extracted(sourcePicture.getSourceBufferedImage());
+                setStatus(SCALABLE_PICTURE_READY, "Scaled Picture is ready.");
+            } else if (getStatusCode() != SCALABLE_PICTURE_LOADING) {
                 setStatus(SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null.");
             }
         } catch (final OutOfMemoryError e) {
@@ -331,6 +314,28 @@ public class ScalablePicture
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
         }
+    }
+
+    private BufferedImage extracted(final BufferedImage sourcePicture) {
+        BufferedImage scaledPicture = sourcePicture;
+        double factor = getFactor();
+        final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
+        final AffineTransformOp opStep = new AffineTransformOp(afStep, getAffineTransformOp());
+        for (int i = 0; i < getScaleSteps(); i++) {
+            Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
+            pStep = afStep.transform(pStep, null);
+            final Dimension size = new Dimension((int) Math.rint(pStep.getX()), (int) Math.rint(pStep.getY()));
+            int imageType = sourcePicture.getType();
+            LOGGER.log(Level.FINE, "getType from source image returned {0}", imageType);
+            if ((imageType == 0) || (imageType == 13)) {
+                imageType = BufferedImage.TYPE_3BYTE_BGR;
+                LOGGER.log(Level.FINE, "Because we don''t like imageType 0 we are setting the target type to BufferedImage.TYPE_3BYTE_BGR which has code: {0}", BufferedImage.TYPE_3BYTE_BGR);
+            }
+            ensureMinimumSize(size);
+            BufferedImage biStep = new BufferedImage(size.width, size.height, imageType);
+            scaledPicture = opStep.filter(scaledPicture, biStep);
+        }
+        return scaledPicture;
     }
 
     private void ensureMinimumSize(Dimension size) {
