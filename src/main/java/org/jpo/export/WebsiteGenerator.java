@@ -618,9 +618,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("<td class=\"midresSidebarCell\">");
 
             if (request.isGenerateMap()) {
-                midresHtmlWriter.write("<div id=\"map\"></div>");
-                midresHtmlWriter.write("<br />");
-                midresHtmlWriter.newLine();
+                writeMapDiv(midresHtmlWriter);
             }
 
             // Do the matrix with the pictures to click
@@ -630,92 +628,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final int matrixWidth = 130;
             midresHtmlWriter.write(String.format("Picture %d of %d", childNumber, childCount));
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write("<table class=\"numberPickTable\">");
+            final StringBuilder dhtmlArray = writeNumberPickTable(pictureNode, childNumber, childCount, pictureInfo, extension, midresHtmlWriter, indexBeforeCurrent, indexPerRow, indexToShow, matrixWidth);
             midresHtmlWriter.newLine();
-            final String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replace("\'", "\\\\'"));
-            final StringBuilder dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
-
-            int startNumber = (int) Math.floor((childNumber - indexBeforeCurrent - 1) / (double) indexPerRow) * indexPerRow + 1;
-            if (startNumber < 1) {
-                startNumber = 1;
-            }
-            int endNumber = startNumber + indexToShow;
-            if (endNumber > childCount) {
-                endNumber = childCount + 1;
-            }
-            endNumber = endNumber + indexPerRow - (childCount % indexPerRow);
-
-            for (int i = startNumber; i < endNumber; i++) {
-                if ((i - 1) % indexPerRow == 0) {
-                    midresHtmlWriter.write("<tr>");
-                    midresHtmlWriter.newLine();
-                }
-                midresHtmlWriter.write("<td class=\"numberPickCell\">");
-                if (i <= childCount) {
-                    String nodeUrl;
-                    String lowresFn;
-
-                    final SortableDefaultMutableTreeNode nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i - 1);
-                    if (nde.getUserObject() instanceof PictureInfo pi) {
-                        switch (request.getPictureNaming()) {
-                            case PICTURE_NAMING_BY_ORIGINAL_NAME:
-                                final String rootName = cleanupFilename(FilenameUtils.getBaseName(pi.getImageFile().getName()));
-                                nodeUrl = rootName + ".htm";
-                                lowresFn = rootName + "_l." + extension;
-                                break;
-                            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
-                                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() + i - childNumber - 1);
-                                final String padding = "00000";
-                                final String root = padding.substring(convertedNumber.length()) + convertedNumber;
-                                nodeUrl = "jpo_" + root + ".htm";
-                                lowresFn = "jpo_" + root + "_l." + extension;
-                                break;
-                            default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
-                                final int hashCode = nde.hashCode();
-                                nodeUrl = "jpo_" + hashCode + ".htm";
-                                lowresFn = "jpo_" + nde.hashCode() + "_l." + extension;
-                                break;
-                        }
-
-                        midresHtmlWriter.write("<a href=\"" + nodeUrl + "\"");
-                        final String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4(((PictureInfo) nde.getUserObject()).getDescription().replace("\'", "\\\\'"));
-                        if (request.isGenerateMouseover()) {
-                            midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i));
-                            dhtmlArray.append(String.format("content[%d]='", i));
-
-                            dhtmlArray.append(String.format("<p>Picture %d/%d:</p>", i, childCount));
-                            dhtmlArray.append(String.format("<p><img src=\"%s\" width=%d alt=\"Thumbnail\"></p>", lowresFn, matrixWidth - 10));
-                            dhtmlArray.append("<p><i>").append(htmlFriendlyDescription2).append("</i></p>'\n");
-                        } else {
-                            dhtmlArray.append(String.format("<p>Item %d/%d:</p>", i, childCount));
-                            dhtmlArray.append("<p><i>").append(htmlFriendlyDescription2).append("</p></i>'\n");
-                        }
-                    }
-                    midresHtmlWriter.write(">");
-                    if (i == childNumber) {
-                        midresHtmlWriter.write("<b>");
-                    }
-                    midresHtmlWriter.write(Integer.toString(i));
-                    if (i == childNumber) {
-                        midresHtmlWriter.write("</b>");
-                    }
-                    midresHtmlWriter.write("</a>");
-                } else {
-                    midresHtmlWriter.write("&nbsp;");
-                }
-                midresHtmlWriter.write("</td>");
-                midresHtmlWriter.newLine();
-                if (i % indexPerRow == 0) {
-                    midresHtmlWriter.write("</tr>");
-                    midresHtmlWriter.newLine();
-                }
-            }
-            midresHtmlWriter.write("</table>");
-            midresHtmlWriter.newLine();
-            // End of picture matrix
-
-            midresHtmlWriter.newLine();
-
             writeLinks(pictureNode, groupFile, childNumber, childCount, pictureInfo, lowresFile, highresFile, midresHtmlWriter);
 
             midresHtmlWriter.newLine();
@@ -739,39 +653,173 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.newLine();
 
             if (request.isGenerateMouseover()) {
-                writeJpoJs(request.getTargetDirectory());
-                files.add(new File(request.getTargetDirectory(), JPO_JS));
-                midresHtmlWriter.write("<script type=\"text/javascript\" src=\"org.jpo.js\" ></script>");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<script type=\"text/javascript\">");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<!-- ");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("/* Textual Tooltip Script- (c) Dynamic Drive (www.dynamicdrive.com) For full source code, installation instructions, 100's more DHTML scripts, and Terms Of Use, visit dynamicdrive.com */ ");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("var content=new Array() ");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write(dhtmlArray.toString());
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("//-->");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("</script>");
-                midresHtmlWriter.newLine();
+                writeMouseOverJavaScript(midresHtmlWriter, dhtmlArray);
             }
 
             if (request.isGenerateMap()) {
-                midresHtmlWriter.write("<script type=\"text/javascript\"> <!--");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write(String.format("var lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y));
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("--> </script>");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>");
-                midresHtmlWriter.newLine();
+                writeMapJavaScript(pictureInfo, midresHtmlWriter);
             }
 
             midresHtmlWriter.write("</body></html>");
         }
+    }
+
+    private void writeMapJavaScript(PictureInfo pictureInfo, BufferedWriter midresHtmlWriter) throws IOException {
+        midresHtmlWriter.write("<script type=\"text/javascript\"> <!--");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write(String.format("var lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y));
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("--> </script>");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("<script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>");
+        midresHtmlWriter.newLine();
+    }
+
+    private void writeMouseOverJavaScript(BufferedWriter midresHtmlWriter, StringBuilder dhtmlArray) throws IOException {
+        writeJpoJs(request.getTargetDirectory());
+        files.add(new File(request.getTargetDirectory(), JPO_JS));
+        midresHtmlWriter.write("<script type=\"text/javascript\" src=\"org.jpo.js\" ></script>");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("<script type=\"text/javascript\">");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("<!-- ");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("/* Textual Tooltip Script- (c) Dynamic Drive (www.dynamicdrive.com) For full source code, installation instructions, 100's more DHTML scripts, and Terms Of Use, visit dynamicdrive.com */ ");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("var content=new Array() ");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write(dhtmlArray.toString());
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("//-->");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("</script>");
+        midresHtmlWriter.newLine();
+    }
+
+    @NotNull
+    private StringBuilder writeNumberPickTable(SortableDefaultMutableTreeNode pictureNode, int childNumber, int childCount, PictureInfo pictureInfo, String extension, BufferedWriter midresHtmlWriter, int indexBeforeCurrent, int indexPerRow, int indexToShow, int matrixWidth) throws IOException {
+        midresHtmlWriter.write("<table class=\"numberPickTable\">");
+        midresHtmlWriter.newLine();
+        final String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replace("\'", "\\\\'"));
+        final StringBuilder dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
+
+        int startNumber = (int) Math.floor((childNumber - indexBeforeCurrent - 1) / (double) indexPerRow) * indexPerRow + 1;
+        if (startNumber < 1) {
+            startNumber = 1;
+        }
+        int endNumber = startNumber + indexToShow;
+        if (endNumber > childCount) {
+            endNumber = childCount + 1;
+        }
+        endNumber = endNumber + indexPerRow - (childCount % indexPerRow);
+
+        for (int i = startNumber; i < endNumber; i++) {
+            if ((i - 1) % indexPerRow == 0) {
+                midresHtmlWriter.write("<tr>");
+                midresHtmlWriter.newLine();
+            }
+            midresHtmlWriter.write("<td class=\"numberPickCell\">");
+            if (i <= childCount) {
+                final SortableDefaultMutableTreeNode nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i - 1);
+
+                if (nde.getUserObject() instanceof PictureInfo pi) {
+                    final String nodeUrl = getNodeUrl(nde, i, childNumber);
+                    final String lowresFn = getLowresFilename(nde, extension, i, childNumber);
+                    writePictureTableHyperlink(childCount, midresHtmlWriter, matrixWidth, dhtmlArray, i, nodeUrl, lowresFn, pi);
+                }
+                midresHtmlWriter.write(">");
+                if (i == childNumber) {
+                    midresHtmlWriter.write("<b>");
+                }
+                midresHtmlWriter.write(Integer.toString(i));
+                if (i == childNumber) {
+                    midresHtmlWriter.write("</b>");
+                }
+                midresHtmlWriter.write("</a>");
+            } else {
+                midresHtmlWriter.write("&nbsp;");
+            }
+            midresHtmlWriter.write("</td>");
+            midresHtmlWriter.newLine();
+            if (i % indexPerRow == 0) {
+                midresHtmlWriter.write("</tr>");
+                midresHtmlWriter.newLine();
+            }
+        }
+        midresHtmlWriter.write("</table>");
+        midresHtmlWriter.newLine();
+        // End of picture matrix
+        return dhtmlArray;
+    }
+
+    private void writePictureTableHyperlink(int childCount, BufferedWriter midresHtmlWriter, int matrixWidth, StringBuilder dhtmlArray, int i, String nodeUrl, String lowresFn, PictureInfo pi) throws IOException {
+        midresHtmlWriter.write("<a href=\"" + nodeUrl + "\"");
+        final String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4((pi.getDescription().replace("\'", "\\\\'")));
+        if (request.isGenerateMouseover()) {
+            midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i));
+            dhtmlArray.append(String.format("content[%d]='", i));
+
+            dhtmlArray.append(String.format("<p>Picture %d/%d:</p>", i, childCount));
+            dhtmlArray.append(String.format("<p><img src=\"%s\" width=%d alt=\"Thumbnail\"></p>", lowresFn, matrixWidth - 10));
+            dhtmlArray.append("<p><i>").append(htmlFriendlyDescription2).append("</i></p>'\n");
+        } else {
+            dhtmlArray.append(String.format("<p>Item %d/%d:</p>", i, childCount));
+            dhtmlArray.append("<p><i>").append(htmlFriendlyDescription2).append("</p></i>'\n");
+        }
+    }
+
+    private String getLowresFilename(final SortableDefaultMutableTreeNode nde, final String extension, final int i, final int childNumber) {
+        String lowresFn = "";
+        if (nde.getUserObject() instanceof PictureInfo pi) {
+            switch (request.getPictureNaming()) {
+                case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                    final String rootName = cleanupFilename(FilenameUtils.getBaseName(pi.getImageFile().getName()));
+                    lowresFn = rootName + "_l." + extension;
+                    break;
+                case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() + i - childNumber - 1);
+                    final String padding = "00000";
+                    final String root = padding.substring(convertedNumber.length()) + convertedNumber;
+                    lowresFn = "jpo_" + root + "_l." + extension;
+                    break;
+                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+                    final int hashCode = nde.hashCode();
+                    lowresFn = "jpo_" + nde.hashCode() + "_l." + extension;
+                    break;
+            }
+
+        }
+        return lowresFn;
+    }
+
+    private String getNodeUrl(final SortableDefaultMutableTreeNode nde, final int i, final int childNumber) {
+        String nodeUrl = "";
+        if (nde.getUserObject() instanceof PictureInfo pi) {
+            switch (request.getPictureNaming()) {
+                case PICTURE_NAMING_BY_ORIGINAL_NAME:
+                    final String rootName = cleanupFilename(FilenameUtils.getBaseName(pi.getImageFile().getName()));
+                    nodeUrl = rootName + ".htm";
+                    break;
+                case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+                    final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() + i - childNumber - 1);
+                    final String padding = "00000";
+                    final String root = padding.substring(convertedNumber.length()) + convertedNumber;
+                    nodeUrl = "jpo_" + root + ".htm";
+                    break;
+                default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
+                    final int hashCode = nde.hashCode();
+                    nodeUrl = "jpo_" + hashCode + ".htm";
+                    break;
+            }
+
+        }
+        return nodeUrl;
+    }
+
+    private void writeMapDiv(BufferedWriter midresHtmlWriter) throws IOException {
+        midresHtmlWriter.write("<div id=\"map\"></div>");
+        midresHtmlWriter.write("<br />");
+        midresHtmlWriter.newLine();
     }
 
     private static void writePageHeader(final BufferedWriter midresHtmlWriter, final String pageTitle) throws IOException {

@@ -303,7 +303,7 @@ public class ScalablePicture
                     }
                 }
 
-                scaledPicture = extracted(sourcePicture.getSourceBufferedImage());
+                scaledPicture = scaleIt(sourcePicture.getSourceBufferedImage());
                 setStatus(SCALABLE_PICTURE_READY, "Scaled Picture is ready.");
             } else if (getStatusCode() != SCALABLE_PICTURE_LOADING) {
                 setStatus(SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null.");
@@ -316,13 +316,13 @@ public class ScalablePicture
         }
     }
 
-    private BufferedImage extracted(final BufferedImage sourcePicture) {
-        BufferedImage scaledPicture = sourcePicture;
+    private BufferedImage scaleIt(final BufferedImage sourcePicture) {
+        BufferedImage resultImage = sourcePicture;
         double factor = getFactor();
         final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
         final AffineTransformOp opStep = new AffineTransformOp(afStep, getAffineTransformOp());
         for (int i = 0; i < getScaleSteps(); i++) {
-            Point2D pStep = new Point2D.Float(scaledPicture.getWidth(), scaledPicture.getHeight());
+            Point2D pStep = new Point2D.Float(resultImage.getWidth(), resultImage.getHeight());
             pStep = afStep.transform(pStep, null);
             final Dimension size = new Dimension((int) Math.rint(pStep.getX()), (int) Math.rint(pStep.getY()));
             int imageType = sourcePicture.getType();
@@ -333,9 +333,9 @@ public class ScalablePicture
             }
             ensureMinimumSize(size);
             BufferedImage biStep = new BufferedImage(size.width, size.height, imageType);
-            scaledPicture = opStep.filter(scaledPicture, biStep);
+            resultImage = opStep.filter(resultImage, biStep);
         }
-        return scaledPicture;
+        return resultImage;
     }
 
     private void ensureMinimumSize(Dimension size) {

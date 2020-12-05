@@ -249,42 +249,45 @@ public class PicturePopupMenu extends JPopupMenu {
         return showCategoryUsageJMenuItemMenuItem;
     }
 
+
+    /**
+     * Adds a picture to the selection of pictures to be mailed.
+     */
     private JMenuItem getPictureMailSelectJMenuItem() {
         final PictureCollection pictureCollection = Settings.getPictureCollection();
         final JMenuItem pictureMailSelectJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailSelectJMenuItem"));
         pictureMailSelectJMenuItem.addActionListener((ActionEvent e) -> {
-            /*
-             * Adds a picture to the selection of pictures to be mailed.
-             *
-             * 1. If no nodes are selected, mail-select the node.
-             *
-             * 2. If multiple nodes are selected but the popup node is not one of them
-             * then mail-select the node
-             *
-             * 3. If multiple nodes are selected and the popup node is one of them then
-             * mail-select them all
-             */
-            final ArrayList<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>(1);
+            final ArrayList<SortableDefaultMutableTreeNode> nodesToMailSelect = new ArrayList<>(1);
             if ((pictureCollection.countSelectedNodes() < 1)
                     || (!pictureCollection.isSelected(popupNode))) {
-                nodesList.add(popupNode);
+                // if there are no selected nodes or the action fired on a node that is not part of the selection,
+                // add just this node to the new mail selection
+                nodesToMailSelect.add(popupNode);
             } else {
-                for (SortableDefaultMutableTreeNode selectedNode : pictureCollection.getSelection()) {
+                // add the lot
+                for (final SortableDefaultMutableTreeNode selectedNode : pictureCollection.getSelection()) {
                     if (selectedNode.getUserObject() instanceof PictureInfo) {
-                        nodesList.add(selectedNode);
+                        nodesToMailSelect.add(selectedNode);
                     }
                 }
             }
-            JpoEventBus.getInstance().post(new AddPictureNodesToEmailSelectionRequest(nodesList));
+            JpoEventBus.getInstance().post(new AddPictureNodesToEmailSelectionRequest(nodesToMailSelect));
         });
+
+
+        pictureMailSelectJMenuItem.setVisible(isEmailSelectable(pictureCollection));
+        return pictureMailSelectJMenuItem;
+    }
+
+    /**
+     * if there is no selection and we click on a node which is not email selected
+     * then offer to email select it
+     * if there is a selection but some are not email selected, offer to select them
+     * if there is a selection but the selected node is not part of it
+     * and the node is not selected then offer to select it
+     */
+    private boolean isEmailSelectable(PictureCollection pictureCollection) {
         boolean emailSelectable = false;
-        /*
-         * if there is no selection and we click on a node which is not email selected
-         *   then offer to email select it
-         * if there is a selection but some are not email selected, offer to select them
-         * if there is a selection but the selected node is not part of it
-         *   and the node is not selected then offer to select it
-         */
         if ((pictureCollection.countSelectedNodes() == 0)
                 || (!pictureCollection.isSelected(popupNode))) {
 
@@ -302,10 +305,18 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         }
-        pictureMailSelectJMenuItem.setVisible(emailSelectable);
-        return pictureMailSelectJMenuItem;
+        return emailSelectable;
     }
 
+    /**
+     * 1. If no nodes are selected, mail-unselect the node.
+     * <p>
+     * 2. If multiple nodes are selected but the popup node is not one of them
+     * then mail-unselect the node
+     * <p>
+     * 3. If multiple nodes are selected and the popup node is one of them then
+     * mail-unselect them all
+     */
     private JMenuItem getPictureMailUnSelectJMenuItem() {
         final JMenuItem pictureMailUnSelectJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailUnselectJMenuItem"));
         pictureMailUnSelectJMenuItem.addActionListener((ActionEvent e) -> {
@@ -321,25 +332,22 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
             JpoEventBus.getInstance().post(new RemovePictureNodesFromEmailSelectionRequest(nodesList));
-        } /*
-         * 1. If no nodes are selected, mail-unselect the node.
-         *
-         * 2. If multiple nodes are selected but the popup node is not one of them
-         * then mail-unselect the node
-         *
-         * 3. If multiple nodes are selected and the popup node is one of them then
-         * mail-unselect them all
-         */);
+        });
 
 
+        pictureMailUnSelectJMenuItem.setVisible(isEmailUnSelectable());
+        return pictureMailUnSelectJMenuItem;
+    }
+
+    /**
+     * if there is no selection and we click on a node which is email selected
+     * then offer to unselect it
+     * if there is a selection and email selected, offer to unselect them
+     * if there is a selection but the selected node is not part of it
+     * and the node is selected then offer to unselect it
+     */
+    private boolean isEmailUnSelectable() {
         boolean emailUnSelectable = false;
-        /*
-         * if there is no selection and we click on a node which is email selected
-         *   then offer to unselect it
-         * if there is a selection and email selected, offer to unselect them
-         * if there is a selection but the selected node is not part of it
-         *   and the node is selected then offer to unselect it
-         */
         if ((Settings.getPictureCollection().countSelectedNodes() == 0)
                 || (!Settings.getPictureCollection().isSelected(popupNode))) {
 
@@ -357,8 +365,7 @@ public class PicturePopupMenu extends JPopupMenu {
                 }
             }
         }
-        pictureMailUnSelectJMenuItem.setVisible(emailUnSelectable);
-        return pictureMailUnSelectJMenuItem;
+        return emailUnSelectable;
     }
 
     private JMenuItem getPictureMailUnselectAllJMenuItem() {
@@ -427,6 +434,20 @@ public class PicturePopupMenu extends JPopupMenu {
 
     private JMenu getCopyJMenu() {
         final JMenu copyJMenu = new JMenu(Settings.getJpoResources().getString("copyImageJMenuLabel"));
+        copyJMenu.add(getCopyToNewLocationJMenuItem());
+        copyJMenu.addSeparator();
+        addCopyLocationsJMenuItems(copyJMenu);
+        labelCopyLocations();
+        copyJMenu.addSeparator();
+        copyJMenu.add(getCopyToNewZipfileJMenuItem());
+        copyJMenu.add(getCopyToClipboard());
+        copyJMenu.add(getCopyPathToClipboard());
+        addMemorizedZipFileJMenuItems(copyJMenu);
+        return copyJMenu;
+    }
+
+    @NotNull
+    private JMenuItem getCopyToNewLocationJMenuItem() {
         final JMenuItem copyToNewLocationJMenuItem = new JMenuItem(Settings.getJpoResources().getString("copyToNewLocationJMenuItem"));
         copyToNewLocationJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -437,10 +458,10 @@ public class PicturePopupMenu extends JPopupMenu {
                 JpoEventBus.getInstance().post(new CopyToNewLocationRequest(Settings.getPictureCollection().getSelection()));
             }
         });
-        copyJMenu.add(copyToNewLocationJMenuItem);
+        return copyToNewLocationJMenuItem;
+    }
 
-        copyJMenu.addSeparator();
-
+    private void addCopyLocationsJMenuItems(final JMenu copyJMenu) {
         final String[] copyLocationsArray = Settings.getCopyLocations().toArray(new String[0]);
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
             final File loc = i < copyLocationsArray.length ? new File(copyLocationsArray[i]) : new File(".");
@@ -456,10 +477,9 @@ public class PicturePopupMenu extends JPopupMenu {
             });
             copyJMenu.add(copyLocationJMenuItems[i]);
         }
-        labelCopyLocations();
+    }
 
-        copyJMenu.addSeparator();
-
+    private JMenuItem getCopyToNewZipfileJMenuItem() {
         final JMenuItem copyToNewZipfileJMenuItem = new JMenuItem(Settings.getJpoResources().getString("copyToNewZipfileJMenuItem"));
         copyToNewZipfileJMenuItem.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -470,8 +490,10 @@ public class PicturePopupMenu extends JPopupMenu {
                 JpoEventBus.getInstance().post(new CopyToNewZipfileRequest(Settings.getPictureCollection().getSelection()));
             }
         });
-        copyJMenu.add(copyToNewZipfileJMenuItem);
+        return copyToNewZipfileJMenuItem;
+    }
 
+    private JMenuItem getCopyToClipboard() {
         final JMenuItem copyToClipboard = new JMenuItem("Copy Image to Clipboard");
         copyToClipboard.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -482,8 +504,11 @@ public class PicturePopupMenu extends JPopupMenu {
                 JpoEventBus.getInstance().post(new CopyImageToClipboardRequest(Settings.getPictureCollection().getSelection()));
             }
         });
-        copyJMenu.add(copyToClipboard);
 
+        return copyToClipboard;
+    }
+
+    private JMenuItem getCopyPathToClipboard() {
         final JMenuItem copyPathToClipboard = new JMenuItem("Copy Image Path to Clipboard");
         copyPathToClipboard.addActionListener((ActionEvent e) -> {
             if (Settings.getPictureCollection().countSelectedNodes() < 1) {
@@ -494,9 +519,11 @@ public class PicturePopupMenu extends JPopupMenu {
                 JpoEventBus.getInstance().post(new CopyPathToClipboardRequest(Settings.getPictureCollection().getSelection()));
             }
         });
-        copyJMenu.add(copyPathToClipboard);
 
+        return copyPathToClipboard;
+    }
 
+    private void addMemorizedZipFileJMenuItems(final JMenu copyJMenu) {
         final JMenuItem[] memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
         final String[] memorizedZipFilesArray = Settings.getMemorizedZipFiles().toArray(new String[0]);
         for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
@@ -519,7 +546,6 @@ public class PicturePopupMenu extends JPopupMenu {
                 memorizedZipFileJMenuItems[i].setVisible(false);
             }
         }
-        return copyJMenu;
     }
 
 

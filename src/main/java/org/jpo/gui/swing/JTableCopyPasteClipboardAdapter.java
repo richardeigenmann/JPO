@@ -84,89 +84,98 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
      * @param event event
      */
     @Override
-    public void actionPerformed( ActionEvent event ) {
-        if ( event.getActionCommand().compareTo( "Copy" ) == 0 ) {
-            StringBuilder sbf = new StringBuilder();
-
-            // Check to ensure we have selected only a contiguous block of
-            // cells
-            int numcols = jTable.getSelectedColumnCount();
-            int numrows = jTable.getSelectedRowCount();
-            int[] rowsselected = jTable.getSelectedRows();
-            int[] colsselected = jTable.getSelectedColumns();
-            if ( !( ( numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] &&
-                    numrows == rowsselected.length ) &&
-                    ( numcols - 1 == colsselected[colsselected.length - 1] - colsselected[0] &&
-                    numcols == colsselected.length ) ) ) {
-
-                JOptionPane.showMessageDialog( null,
-                        "Invalid Copy Selection",
-                        "Invalid Copy Selection",
-                        JOptionPane.ERROR_MESSAGE );
-                return;
-            }
-
-
-            for ( int i = 0; i < numrows; i++ ) {
-                for ( int j = 0; j < numcols; j++ ) {
-                    sbf.append( jTable.getValueAt( rowsselected[i], colsselected[j] ) );
-                    if ( j < numcols - 1 ) {
-                        sbf.append( "\t" );
-                    }
-                }
-                sbf.append( "\n" );
-            }
-            StringSelection stringSelection = new StringSelection(sbf.toString());
-            systemClipboard.setContents(stringSelection, stringSelection);
+    public void actionPerformed(final ActionEvent event) {
+        if (event.getActionCommand().compareTo("Copy") == 0) {
+            handleCopyAction();
         }
 
-        if ( event.getActionCommand().compareTo( "Paste" ) == 0 ) {
-            int pasteStartRow = ( jTable.getSelectedRows() )[0];
-            int pasteStartCol = ( jTable.getSelectedColumns() )[0];
-            int pasteCols = jTable.getSelectedColumnCount();
-            int pasteRows = jTable.getSelectedRowCount();
-
-            try {
-                String transferableString =
-                        (String) ( systemClipboard.getContents( this ).getTransferData( DataFlavor.stringFlavor ) );
-
-                StringTokenizer st1 = new StringTokenizer( transferableString, "\n" );
-                int sourceRowCount = st1.countTokens();
-                String rowString = st1.nextToken();
-                StringTokenizer st2 = new StringTokenizer( rowString, "\t" );
-                int sourceColumnCount = st2.countTokens();
-
-                // the underlying assumption is that the transferable is a rectangular array
-                String[][] sourceValues = new String[sourceRowCount][sourceColumnCount];
-
-
-                st1 = new StringTokenizer( transferableString, "\n" );
-                for ( int i = 0; st1.hasMoreTokens(); i++ ) {
-                    rowString = st1.nextToken();
-                    st2 = new StringTokenizer( rowString, "\t" );
-                    for ( int j = 0; st2.hasMoreTokens(); j++ ) {
-                        sourceValues[i][j] = st2.nextToken();
-                    }
-                }
-
-
-                if ( ( pasteRows == 1 ) && ( pasteCols == 1 ) ) {
-                    pasteRows = sourceRowCount;
-                    pasteCols = sourceColumnCount;
-                }
-
-                for (int i = 0; i < pasteRows; i++) {
-                    for (int j = 0; j < pasteCols; j++) {
-                        if ((pasteStartRow + i < jTable.getRowCount()) && (pasteStartCol + j < jTable.getColumnCount())) {
-                            jTable.setValueAt(sourceValues[i % sourceRowCount][j % sourceColumnCount], pasteStartRow + i, pasteStartCol + j);
-                        }
-                        TableModelEvent tme = new TableModelEvent(jTable.getModel(), pasteStartRow + i, pasteStartRow + i, pasteStartCol + j, TableModelEvent.UPDATE);
-                        ((AbstractTableModel) jTable.getModel()).fireTableChanged(tme);
-                    }
-                }
-            } catch (final UnsupportedFlavorException | IOException ex) {
-                // Ignore it then
-            }
+        if (event.getActionCommand().compareTo("Paste") == 0) {
+            handlePasteAction();
         }
+    }
+
+    private void handleCopyAction() {
+        final StringBuilder sbf = new StringBuilder();
+
+        // Check to ensure we have selected only a contiguous block of
+        // cells
+        final int numcols = jTable.getSelectedColumnCount();
+        final int numrows = jTable.getSelectedRowCount();
+        final int[] rowsselected = jTable.getSelectedRows();
+        final int[] colsselected = jTable.getSelectedColumns();
+        if (!((numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] &&
+                numrows == rowsselected.length) &&
+                (numcols - 1 == colsselected[colsselected.length - 1] - colsselected[0] &&
+                        numcols == colsselected.length))) {
+
+            JOptionPane.showMessageDialog(null,
+                    "Invalid Copy Selection",
+                    "Invalid Copy Selection",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+
+        for (int i = 0; i < numrows; i++) {
+            for (int j = 0; j < numcols; j++) {
+                sbf.append(jTable.getValueAt(rowsselected[i], colsselected[j]));
+                if (j < numcols - 1) {
+                    sbf.append("\t");
+                }
+            }
+            sbf.append("\n");
+        }
+        final StringSelection stringSelection = new StringSelection(sbf.toString());
+        systemClipboard.setContents(stringSelection, stringSelection);
+    }
+
+    private void handlePasteAction() {
+        final int pasteStartRow = (jTable.getSelectedRows())[0];
+        final int pasteStartCol = (jTable.getSelectedColumns())[0];
+        int pasteCols = jTable.getSelectedColumnCount();
+        int pasteRows = jTable.getSelectedRowCount();
+
+        try {
+            final String transferableString =
+                    (String) (systemClipboard.getContents(this).getTransferData(DataFlavor.stringFlavor));
+
+            StringTokenizer st1 = new StringTokenizer(transferableString, "\n");
+            final int sourceRowCount = st1.countTokens();
+            String rowString = st1.nextToken();
+            StringTokenizer st2 = new StringTokenizer(rowString, "\t");
+            final int sourceColumnCount = st2.countTokens();
+
+            // the underlying assumption is that the transferable is a rectangular array
+            String[][] sourceValues = new String[sourceRowCount][sourceColumnCount];
+
+
+            st1 = new StringTokenizer(transferableString, "\n");
+            for (int i = 0; st1.hasMoreTokens(); i++) {
+                rowString = st1.nextToken();
+                st2 = new StringTokenizer(rowString, "\t");
+                for (int j = 0; st2.hasMoreTokens(); j++) {
+                    sourceValues[i][j] = st2.nextToken();
+                }
+            }
+
+
+            if ((pasteRows == 1) && (pasteCols == 1)) {
+                pasteRows = sourceRowCount;
+                pasteCols = sourceColumnCount;
+            }
+
+            for (int i = 0; i < pasteRows; i++) {
+                for (int j = 0; j < pasteCols; j++) {
+                    if ((pasteStartRow + i < jTable.getRowCount()) && (pasteStartCol + j < jTable.getColumnCount())) {
+                        jTable.setValueAt(sourceValues[i % sourceRowCount][j % sourceColumnCount], pasteStartRow + i, pasteStartCol + j);
+                    }
+                    TableModelEvent tme = new TableModelEvent(jTable.getModel(), pasteStartRow + i, pasteStartRow + i, pasteStartCol + j, TableModelEvent.UPDATE);
+                    ((AbstractTableModel) jTable.getModel()).fireTableChanged(tme);
+                }
+            }
+        } catch (final UnsupportedFlavorException | IOException ex) {
+            // Ignore it then
+        }
+
     }
 }
