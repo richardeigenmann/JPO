@@ -16,6 +16,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -228,6 +230,25 @@ public class WebsiteGeneratorTest {
 
             FileUtils.deleteDirectory(request.getTargetDirectory());
         } catch (final IOException | URISyntaxException e) {
+            fail("Hit an unexpected IOException: " + e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGenerateFolderIcon() {
+        final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
+        try {
+            final Path tempDirWithPrefix = Files.createTempDirectory("GenerateFolderIcon");
+            request.setTargetDirectory(tempDirWithPrefix.toFile());
+            final List<File> files = new ArrayList<>();
+            WebsiteGenerator.writeFolderIconTest(request, files);
+
+            assertEquals(1, files.size());
+            assert (Files.exists(files.get(0).toPath()));
+            assertEquals(WebsiteGenerator.FOLDER_ICON, files.get(0).getName());
+
+            FileUtils.deleteDirectory(request.getTargetDirectory());
+        } catch (final IOException e) {
             fail("Hit an unexpected IOException: " + e.getMessage());
         }
     }

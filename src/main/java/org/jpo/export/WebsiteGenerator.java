@@ -54,6 +54,8 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE
 public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     public static final String JPO_JS = "jpo.js";
+    public static final String A_HREF = "<a href=\"";
+    static final Map<String, String> CHARACTER_TRANSLATION = new HashMap<>();
     /**
      * Defines a logger for this class
      */
@@ -61,7 +63,37 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static final String JPO_CSS = "jpo.css";
     private static final String ROBOTS_TXT = "robots.txt";
     private static final String INDEX_PAGE = "index.htm";
-    public static final String A_HREF = "<a href=\"";
+    public static final String FOLDER_ICON = "icon_folder_large.jpg";
+
+    static {
+        CHARACTER_TRANSLATION.put(" ", "_");
+        CHARACTER_TRANSLATION.put("%20", "_");
+        CHARACTER_TRANSLATION.put("&", "_and_");
+        CHARACTER_TRANSLATION.put("|", "l");
+        CHARACTER_TRANSLATION.put("<", "_");
+        CHARACTER_TRANSLATION.put(">", "_");
+        CHARACTER_TRANSLATION.put("@", "_");
+        CHARACTER_TRANSLATION.put(":", "_");
+        CHARACTER_TRANSLATION.put("$", "_");
+        CHARACTER_TRANSLATION.put("£", "_");
+        CHARACTER_TRANSLATION.put("^", "_");
+        CHARACTER_TRANSLATION.put("~", "_");
+        CHARACTER_TRANSLATION.put("\"", "_");
+        CHARACTER_TRANSLATION.put("'", "_");
+        CHARACTER_TRANSLATION.put("`", "_");
+        CHARACTER_TRANSLATION.put("?", "_");
+        CHARACTER_TRANSLATION.put("[", "_");
+        CHARACTER_TRANSLATION.put("]", "_");
+        CHARACTER_TRANSLATION.put("{", "_");
+        CHARACTER_TRANSLATION.put("}", "_");
+        CHARACTER_TRANSLATION.put("(", "_");
+        CHARACTER_TRANSLATION.put(")", "_");
+        CHARACTER_TRANSLATION.put("*", "_");
+        CHARACTER_TRANSLATION.put("+", "_");
+        CHARACTER_TRANSLATION.put("/", "_");
+        CHARACTER_TRANSLATION.put("\\", "_");
+        CHARACTER_TRANSLATION.put("%", "_");
+    }
 
     /**
      * Array of the files created
@@ -122,38 +154,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     public static WebsiteGenerator generateWebsite(final GenerateWebsiteRequest request) {
         return new WebsiteGenerator(request);
-    }
-
-    static final Map<String, String> CHARACTER_TRANSLATION = new HashMap<>();
-
-    static {
-        CHARACTER_TRANSLATION.put(" ", "_");
-        CHARACTER_TRANSLATION.put("%20", "_");
-        CHARACTER_TRANSLATION.put("&", "_and_");
-        CHARACTER_TRANSLATION.put("|", "l");
-        CHARACTER_TRANSLATION.put("<", "_");
-        CHARACTER_TRANSLATION.put(">", "_");
-        CHARACTER_TRANSLATION.put("@", "_");
-        CHARACTER_TRANSLATION.put(":", "_");
-        CHARACTER_TRANSLATION.put("$", "_");
-        CHARACTER_TRANSLATION.put("£", "_");
-        CHARACTER_TRANSLATION.put("^", "_");
-        CHARACTER_TRANSLATION.put("~", "_");
-        CHARACTER_TRANSLATION.put("\"", "_");
-        CHARACTER_TRANSLATION.put("'", "_");
-        CHARACTER_TRANSLATION.put("`", "_");
-        CHARACTER_TRANSLATION.put("?", "_");
-        CHARACTER_TRANSLATION.put("[", "_");
-        CHARACTER_TRANSLATION.put("]", "_");
-        CHARACTER_TRANSLATION.put("{", "_");
-        CHARACTER_TRANSLATION.put("}", "_");
-        CHARACTER_TRANSLATION.put("(", "_");
-        CHARACTER_TRANSLATION.put(")", "_");
-        CHARACTER_TRANSLATION.put("*", "_");
-        CHARACTER_TRANSLATION.put("+", "_");
-        CHARACTER_TRANSLATION.put("/", "_");
-        CHARACTER_TRANSLATION.put("\\", "_");
-        CHARACTER_TRANSLATION.put("%", "_");
     }
 
     /**
@@ -270,52 +270,23 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
-    /**
-     * Entry point for the SwingWorker when execute() is called.
-     *
-     * @return an Integer (not sure what to do with this...)
-     * @throws Exception hopefully not
-     */
-    @Override
-    protected Integer doInBackground() throws Exception {
-        LOGGER.info("Hitting doInBackground");
+    @TestOnly
+    public static void writeFolderIconTest(final GenerateWebsiteRequest request, final List<File> files) throws IOException {
+        writeFolderIcon(request, files);
+    }
 
-        generateZipfile(request);
-
-        writeCss(request.getTargetDirectory());
-        files.add(new File(request.getTargetDirectory(), JPO_CSS));
-        if (request.isWriteRobotsTxt()) {
-            writeRobotsTxt(request.getTargetDirectory());
-            files.add(new File(request.getTargetDirectory(), ROBOTS_TXT));
+    private static void writeFolderIcon(final GenerateWebsiteRequest request, final List<File> files) throws IOException {
+        final File folderIconFile = new File(request.getTargetDirectory(), FOLDER_ICON);
+        try (
+                final InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource(FOLDER_ICON)).openStream();
+                final FileOutputStream outStream = new FileOutputStream(folderIconFile);
+                final BufferedInputStream bin = new BufferedInputStream(inStream);
+                final BufferedOutputStream bout = new BufferedOutputStream(outStream);) {
+            files.add(folderIconFile);
+            bin.transferTo(bout);
+        } catch (final IOException e) {
+            throw (e);
         }
-        LOGGER.info("Done static files");
-
-        writeGroup(request.getStartNode());
-
-        if (folderIconRequired) {
-            final File folderIconFile = new File(request.getTargetDirectory(), "jpo_folder_icon.gif");
-            try (
-                    final InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/icon_folder.gif")).openStream();
-                    final FileOutputStream outStream = new FileOutputStream(folderIconFile);
-                    final BufferedInputStream bin = new BufferedInputStream(inStream);
-                    final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-                files.add(folderIconFile);
-                bin.transferTo(bout);
-            } catch (final IOException x) {
-                JOptionPane.showMessageDialog(
-                        Settings.getAnchorFrame(),
-                        "got an IOException copying icon_folder.gif\n" + x.getMessage(),
-                        "IOException",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        if (request.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION) {
-            sshCopyToServer(files);
-        } else if (request.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION) {
-            ftpCopyToServer(files);
-        }
-
-        return Integer.MAX_VALUE;
     }
 
     @TestOnly
@@ -366,6 +337,67 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
+    private static void writePageHeader(final BufferedWriter midresHtmlWriter, final String pageTitle) throws IOException {
+        midresHtmlWriter.write("<!DOCTYPE HTML>");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("<head>\n\t<link rel=\"StyleSheet\" href=\"org.jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + pageTitle + "</title>\n</head>");
+        midresHtmlWriter.newLine();
+    }
+
+    private static File getOutputImageFilename(final GenerateWebsiteRequest request, final PictureInfo pictureInfo, final String suffix, final int picsWroteCounter, final boolean keepExtension) {
+        final String extension = keepExtension ? FilenameUtils.getExtension(pictureInfo.getImageFile().getName()) : "";
+        switch (request.getPictureNaming()) {
+            case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
+                final String rootName = cleanupFilename(FilenameUtils.getBaseName(pictureInfo.getImageFile().getName()));
+                return new File(request.getTargetDirectory(), rootName + suffix + extension);
+            }
+            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
+                final String convertedNumber = Integer.toString(picsWroteCounter);
+                final String padding = "00000";
+                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                final String root = "jpo_" + formattedNumber;
+                return new File(request.getTargetDirectory(), root + suffix + extension);
+            }
+            default -> {
+                final String fn = "jpo_" + pictureInfo.hashCode();
+                return new File(request.getTargetDirectory(), fn + suffix + extension);
+            }
+        }
+    }
+
+    /**
+     * Entry point for the SwingWorker when execute() is called.
+     *
+     * @return an Integer (not sure what to do with this...)
+     * @throws Exception hopefully not
+     */
+    @Override
+    protected Integer doInBackground() throws Exception {
+        LOGGER.info("Hitting doInBackground");
+
+        generateZipfile(request);
+
+        writeCss(request.getTargetDirectory());
+        files.add(new File(request.getTargetDirectory(), JPO_CSS));
+        if (request.isWriteRobotsTxt()) {
+            writeRobotsTxt(request.getTargetDirectory());
+            files.add(new File(request.getTargetDirectory(), ROBOTS_TXT));
+        }
+        LOGGER.info("Done static files");
+
+        writeGroup(request.getStartNode());
+
+        if (folderIconRequired) {
+            writeFolderIcon(request, files);
+        }
+        if (request.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_SSH_LOCATION) {
+            sshCopyToServer(files);
+        } else if (request.getOutputTarget() == GenerateWebsiteRequest.OutputTarget.OUTPUT_FTP_LOCATION) {
+            ftpCopyToServer(files);
+        }
+
+        return Integer.MAX_VALUE;
+    }
 
     /**
      * This method is called by SwingWorker when the background process sends a
@@ -476,7 +508,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     out.write("<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">");
 
                     out.write("<a href=\"jpo_" + node.hashCode() + ".htm\">"
-                            + "<img src=\"jpo_folder_icon.gif\" width=\"32\" height=\"27\" /></a>");
+                            + "<img src=\"" + FOLDER_ICON + "\" width=\"350\" height=\"295\" /></a>");
 
                     out.write("</td>");
                     out.newLine();
@@ -797,13 +829,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         midresHtmlWriter.newLine();
     }
 
-    private static void writePageHeader(final BufferedWriter midresHtmlWriter, final String pageTitle) throws IOException {
-        midresHtmlWriter.write("<!DOCTYPE HTML>");
-        midresHtmlWriter.newLine();
-        midresHtmlWriter.write("<head>\n\t<link rel=\"StyleSheet\" href=\"org.jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + pageTitle + "</title>\n</head>");
-        midresHtmlWriter.newLine();
-    }
-
     private void writeMidresImgTag(PictureInfo pictureInfo, File highresFile, BufferedWriter midresHtmlWriter, String imgTag) throws IOException {
         if (request.isLinkToHighres()) {
             writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), imgTag);
@@ -1009,27 +1034,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 break;
         }
         return nextHtmlFilename;
-    }
-
-    private static File getOutputImageFilename(final GenerateWebsiteRequest request, final PictureInfo pictureInfo, final String suffix, final int picsWroteCounter, final boolean keepExtension) {
-        final String extension = keepExtension ? FilenameUtils.getExtension(pictureInfo.getImageFile().getName()) : "";
-        switch (request.getPictureNaming()) {
-            case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
-                final String rootName = cleanupFilename(FilenameUtils.getBaseName(pictureInfo.getImageFile().getName()));
-                return new File(request.getTargetDirectory(), rootName + suffix + extension);
-            }
-            case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
-                final String convertedNumber = Integer.toString(picsWroteCounter);
-                final String padding = "00000";
-                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                final String root = "jpo_" + formattedNumber;
-                return new File(request.getTargetDirectory(), root + suffix + extension);
-            }
-            default -> {
-                final String fn = "jpo_" + pictureInfo.hashCode();
-                return new File(request.getTargetDirectory(), fn + suffix + extension);
-            }
-        }
     }
 
     private void sshCopyToServer(final List<File> files) {
