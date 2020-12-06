@@ -219,11 +219,12 @@ public class WebsiteGeneratorTest {
             WebsiteGenerator.generateZipfileTest(request);
 
             final File generatedFile = new File(request.getTargetDirectory(), request.getDownloadZipFileName());
-            final ZipFile generatedZipFile = new ZipFile(generatedFile);
-            assert (Files.exists(generatedFile.toPath()));
-            assertEquals(1, generatedZipFile.size());
-            final ZipEntry entry = generatedZipFile.getEntry("jpo_00005_h.jpg");
-            assertNotNull(entry);
+            try (final ZipFile generatedZipFile = new ZipFile(generatedFile)) {
+                assert (Files.exists(generatedFile.toPath()));
+                assertEquals(1, generatedZipFile.size());
+                final ZipEntry entry = generatedZipFile.getEntry("jpo_00005_h.jpg");
+                assertNotNull(entry);
+            }
 
             FileUtils.deleteDirectory(request.getTargetDirectory());
         } catch (final IOException | URISyntaxException e) {

@@ -360,12 +360,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final ZipEntry entry = new ZipEntry(highresFile.getName());
             LOGGER.log(Level.INFO, "Adding to zipfile: {0}", highresFile);
             zipFile.putNextEntry(entry);
-
-            /*int count;
-            final byte[] data = new byte[BUFFER_SIZE];
-            while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
-                zipFile.write(data, 0, count);
-            }*/
             bin.transferTo(zipFile);
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{p, e});
