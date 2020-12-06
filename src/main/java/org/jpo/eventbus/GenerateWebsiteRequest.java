@@ -420,10 +420,14 @@ public class GenerateWebsiteRequest {
     public void setFolderIconRequired(final boolean folderIconRequired) {
         this.folderIconRequired = folderIconRequired;
     }
+
     /**
      * A flag to indicate whether a map should be generated.
      */
     private boolean generateMap;
+
+    private String googleMapsApiKey;
+
     /**
      * A flag to indicate whether DHTML elements should be generated.
      */
@@ -552,6 +556,14 @@ public class GenerateWebsiteRequest {
         this.sshKeyFile = sshKeyFile;
     }
 
+    public String getGoogleMapsApiKey() {
+        return googleMapsApiKey;
+    }
+
+    public void setGoogleMapsApiKey(String googleMapsApiKey) {
+        this.googleMapsApiKey = googleMapsApiKey;
+    }
+
     /**
      * Define the types of output naming convention
      */
@@ -559,6 +571,7 @@ public class GenerateWebsiteRequest {
 
         PICTURE_NAMING_BY_HASH_CODE, PICTURE_NAMING_BY_SEQUENTIAL_NUMBER, PICTURE_NAMING_BY_ORIGINAL_NAME
     }
+
     /**
      * field to store the type of picture naming convention
      */
@@ -827,6 +840,7 @@ public class GenerateWebsiteRequest {
         sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistMidres")).append("\n");
         sb.append(isGenerateMidresHtml() ? Settings.getJpoResources().getString("HtmlDistMidresHtml") + "\n" : "No medium size navigation pages\n");
         sb.append(isGenerateMap() ? Settings.getJpoResources().getString("GenerateMap") + "\n" : "No map\n");
+        sb.append(isGenerateMap() ? "Google Maps APIKEY: " + getGoogleMapsApiKey() + "\n" : "");
         sb.append(isGenerateMouseover() ? Settings.getJpoResources().getString("org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox") + "\n" : "No  DHTML mouseover effects\n");
         sb.append(Settings.getJpoResources().getString("midresSizeJLabel")).append(" ").append(getMidresWidth()).append(" x ").append(getMidresHeight()).append("\n");
         sb.append(Settings.getJpoResources().getString("midresJpgQualitySlider")).append(" ").append(getMidresJpgQualityPercent()).append("\n");
@@ -891,6 +905,7 @@ public class GenerateWebsiteRequest {
         Settings.setDefaultHtmlLowresQuality(getLowresJpgQuality());
         Settings.setDefaultGenerateMidresHtml(isGenerateMidresHtml());
         Settings.setDefaultGenerateMap(isGenerateMap());
+        Settings.setDefaultGoogleMapsApiKey(getGoogleMapsApiKey());
         Settings.setDefaultGenerateDHTML(isGenerateMouseover());
         Settings.setDefaultHtmlMidresWidth(getMidresWidth());
         Settings.setDefaultHtmlMidresHeight(getMidresHeight());
@@ -898,6 +913,7 @@ public class GenerateWebsiteRequest {
         Settings.setDefaultGenerateZipfile(isGenerateZipfile());
         Settings.setDefaultLinkToHighres(isLinkToHighres());
         Settings.setDefaultExportHighres(isExportHighres());
+        Settings.setDefaultRotateHighres(isRotateHighres());
         Settings.setDefaultHtmlPictureNaming(getPictureNaming());
         Settings.setDefaultHtmlOutputTarget(getOutputTarget());
         Settings.setDefaultHtmlFtpServer(getFtpServer());

@@ -6,7 +6,6 @@ import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -39,23 +38,23 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final GenerateWebsiteRequest options;
+    private final GenerateWebsiteRequest request;
 
     /**
      * Asks all the questions we need to know in regards to the thumbnails on
      * the final website.
      *
-     * @param options Options
+     * @param request Options
      */
-    public GenerateWebsiteWizard2Thumbnails(final GenerateWebsiteRequest options) {
+    public GenerateWebsiteWizard2Thumbnails(final GenerateWebsiteRequest request) {
         super(Settings.getJpoResources().getString("HtmlDistThumbnails"), Settings.getJpoResources().getString("HtmlDistThumbnails"));
-        this.options = options;
+        this.request = request;
 
         // load the options into the GUI components
-        picsPerRow.getModel().setValue(options.getPicsPerRow());
-        thumbWidth.getModel().setValue(options.getThumbnailWidth());
-        thumbHeight.getModel().setValue(options.getThumbnailHeight());
-        lowresJpgQualityJSlider.setValue(options.getLowresJpgQualityPercent());
+        picsPerRow.getModel().setValue(request.getPicsPerRow());
+        thumbWidth.getModel().setValue(request.getThumbnailWidth());
+        thumbHeight.getModel().setValue(request.getThumbnailHeight());
+        lowresJpgQualityJSlider.setValue(request.getLowresJpgQualityPercent());
     }
     /**
      * Records the number of columns to generate, 1 to 10, start at 3 increment
@@ -99,14 +98,14 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         final JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]" ) );
         final String ALIGN_LABEL= "align label";
         wizardPanel.add(new JLabel(Settings.getJpoResources().getString("picsPerRowText")), ALIGN_LABEL);
-        picsPerRow.addChangeListener((ChangeEvent arg0) -> options.setPicsPerRow(((SpinnerNumberModel) (picsPerRow.getModel())).getNumber().intValue()));
-        wizardPanel.add( picsPerRow, "wrap" );
+        picsPerRow.addChangeListener(changeListener -> request.setPicsPerRow(((SpinnerNumberModel) (picsPerRow.getModel())).getNumber().intValue()));
+        wizardPanel.add(picsPerRow, "wrap");
 
         wizardPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailSizeJLabel")), ALIGN_LABEL);
-        thumbWidth.addChangeListener((ChangeEvent arg0) -> options.setThumbnailWidth(((SpinnerNumberModel) (thumbWidth.getModel())).getNumber().intValue()));
+        thumbWidth.addChangeListener(changeListener -> request.setThumbnailWidth(((SpinnerNumberModel) (thumbWidth.getModel())).getNumber().intValue()));
         wizardPanel.add(thumbWidth, "split 3");
         wizardPanel.add(new JLabel(" x "));
-        thumbHeight.addChangeListener((ChangeEvent arg0) -> options.setThumbnailHeight(((SpinnerNumberModel) (thumbHeight.getModel())).getNumber().intValue()));
+        thumbHeight.addChangeListener(changeListener -> request.setThumbnailHeight(((SpinnerNumberModel) (thumbHeight.getModel())).getNumber().intValue()));
         wizardPanel.add(thumbHeight, "wrap");
 
         // Thumbnail Quality Slider
@@ -129,16 +128,16 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         lowresJpgQualityJSlider.setPaintTicks(
                 true );
         lowresJpgQualityJSlider.setPaintLabels(
-                true );
-        lowresJpgQualityJSlider.addChangeListener( ( ChangeEvent arg0 ) -> options.setLowresJpgQualityPercent( lowresJpgQualityJSlider.getValue() ));
+                true);
+        lowresJpgQualityJSlider.addChangeListener(changeListener -> request.setLowresJpgQualityPercent(lowresJpgQualityJSlider.getValue()));
 
         final JPanel sliderOwningPanel = new JPanel();
         sliderOwningPanel.add(lowresJpgQualityJSlider);
         wizardPanel.add(sliderOwningPanel, "growx, wrap");
         wizardPanel.add(new JLabel(Settings.getJpoResources().getString("scalingSteps")));
 
-        scalingSteps.addChangeListener( ( ChangeEvent arg0 ) -> options.setScalingSteps( ( (SpinnerNumberModel) ( scalingSteps.getModel() ) ).getNumber().intValue() ));
-        wizardPanel.add( scalingSteps, "wrap" );
+        scalingSteps.addChangeListener(changeListener -> request.setScalingSteps(((SpinnerNumberModel) (scalingSteps.getModel())).getNumber().intValue()));
+        wizardPanel.add(scalingSteps, "wrap");
         return wizardPanel;
     }
 

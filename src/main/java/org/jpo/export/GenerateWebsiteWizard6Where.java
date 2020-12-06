@@ -61,7 +61,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final GenerateWebsiteRequest options;
+    private final GenerateWebsiteRequest request;
     private final JComboBox<String> finalTarget = new JComboBox<>(TARGET_OPTIONS);
     /**
      * Text field that holds the directory that the html is to be exported to.
@@ -129,14 +129,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * This Wizard prompts for the options regarding Highres
      *
-     * @param options The data object with all the settings
+     * @param request The data object with all the settings
      */
-    public GenerateWebsiteWizard6Where(final GenerateWebsiteRequest options) {
+    public GenerateWebsiteWizard6Where(final GenerateWebsiteRequest request) {
         super(Settings.getJpoResources().getString("HtmlDistTarget"), Settings.getJpoResources().getString("HtmlDistTarget"));
-        this.options = options;
+        this.request = request;
 
         // load the options into the GUI components
-        switch (options.getOutputTarget()) {
+        switch (request.getOutputTarget()) {
             case OUTPUT_FTP_LOCATION -> finalTarget.setSelectedIndex(1);
             case OUTPUT_SSH_LOCATION -> finalTarget.setSelectedIndex(2);
             default -> finalTarget.setSelectedIndex(0);
@@ -218,17 +218,17 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 case 1 -> {
                     ftpPanel.setVisible(true);
                     sshPanel.setVisible(false);
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_FTP_LOCATION);
+                    GenerateWebsiteWizard6Where.this.request.setOutputTarget(OUTPUT_FTP_LOCATION);
                 }
                 case 2 -> {
                     ftpPanel.setVisible(false);
                     sshPanel.setVisible(true);
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_SSH_LOCATION);
+                    GenerateWebsiteWizard6Where.this.request.setOutputTarget(OUTPUT_SSH_LOCATION);
                 }
                 default -> {
                     ftpPanel.setVisible(false);
                     sshPanel.setVisible(false);
-                    GenerateWebsiteWizard6Where.this.options.setOutputTarget(OUTPUT_LOCAL_DIRECTORY);
+                    GenerateWebsiteWizard6Where.this.request.setOutputTarget(OUTPUT_LOCAL_DIRECTORY);
                 }
             }
         });
@@ -239,12 +239,12 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         wizardPanel.add(targetDirJTextField, "wrap");
 
-        JButton checkButton = new JButton(Settings.getJpoResources().getString("check"));
+        final JButton checkButton = new JButton(Settings.getJpoResources().getString("check"));
         checkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         checkButton.setMaximumSize(Settings.getDefaultButtonDimension());
         checkButton.addActionListener((ActionEvent arg0) -> {
-            options.setTargetDirectory(targetDirJTextField.getDirectory());
-            setCanGoNext(check(options.getTargetDirectory()));
+            request.setTargetDirectory(targetDirJTextField.getDirectory());
+            setCanGoNext(check(request.getTargetDirectory()));
         });
         wizardPanel.add(checkButton, "wrap");
 
@@ -254,7 +254,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpServer.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                options.setFtpServer(ftpServer.getText());
+                request.setFtpServer(ftpServer.getText());
             }
         });
         ftpPanel.add(ftpServer, "growx, wrap");
@@ -262,14 +262,14 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpPanel.add(new JLabel("FTP Port "), ALIGN_LABEL);
         // Records the ftp port number, 0 to 65535, start at 21 increment 1
 
-        ftpPort.addChangeListener((ChangeEvent arg0) -> options.setFtpPort(((SpinnerNumberModel) (ftpPort.getModel())).getNumber().intValue()));
+        ftpPort.addChangeListener((ChangeEvent arg0) -> request.setFtpPort(((SpinnerNumberModel) (ftpPort.getModel())).getNumber().intValue()));
         ftpPanel.add(ftpPort, "wrap");
 
         ftpPanel.add(new JLabel("FTP user:"), ALIGN_LABEL);
         ftpUser.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                options.setFtpUser(ftpUser.getText());
+                request.setFtpUser(ftpUser.getText());
             }
         });
 
@@ -279,7 +279,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpPassword.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                options.setFtpPassword(ftpPassword.getText());
+                request.setFtpPassword(ftpPassword.getText());
             }
         });
         ftpPanel.add(ftpPassword, "growx, wrap");
@@ -293,7 +293,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     targetDir += '/';
                     ftpTargetDir.setText(targetDir);
                 }
-                options.setFtpTargetDir(targetDir);
+                request.setFtpTargetDir(targetDir);
             }
         });
         ftpPanel.add(ftpTargetDir,
@@ -325,7 +325,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new FocusAdapter() {
                     @Override
                     public void focusLost(FocusEvent e) {
-                        options.setSshServer(sshServer.getText());
+                        request.setSshServer(sshServer.getText());
                     }
                 });
         sshPanel.add(sshServer,
@@ -333,7 +333,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         sshPanel.add(
                 new JLabel("SSH Port "), ALIGN_LABEL);
-        sshPort.addChangeListener((ChangeEvent arg0) -> options.setSshPort(((SpinnerNumberModel) (sshPort.getModel())).getNumber().intValue()));
+        sshPort.addChangeListener((ChangeEvent arg0) -> request.setSshPort(((SpinnerNumberModel) (sshPort.getModel())).getNumber().intValue()));
         sshPanel.add(sshPort,
                 "wrap");
 
@@ -343,7 +343,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new FocusAdapter() {
                     @Override
                     public void focusLost(FocusEvent e) {
-                        options.setSshUser(sshUser.getText());
+                        request.setSshUser(sshUser.getText());
                     }
                 });
         sshPanel.add(sshUser,
@@ -360,13 +360,13 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 sshPassword.setVisible(false);
                 sshKeyfileLabel.setVisible(true);
                 sshKeyFile.setVisible(true);
-                GenerateWebsiteWizard6Where.this.options.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE);
+                GenerateWebsiteWizard6Where.this.request.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE);
             } else {
                 sshPasswordLabel.setVisible(true);
                 sshPassword.setVisible(true);
                 sshKeyfileLabel.setVisible(false);
                 sshKeyFile.setVisible(false);
-                GenerateWebsiteWizard6Where.this.options.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD);
+                GenerateWebsiteWizard6Where.this.request.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD);
             }
         });
         sshPanel.add(sshAuthOoptionChooser,
@@ -378,8 +378,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new FocusAdapter() {
                     @Override
                     public void focusLost(FocusEvent e) {
-                        options.setSshPassword(sshPassword.getText());
-                        LOGGER.info(String.format("Saving SSH Password: %s into options: %s", sshPassword.getText(), options.getSshPassword()));
+                        request.setSshPassword(sshPassword.getText());
+                        LOGGER.info(String.format("Saving SSH Password: %s into options: %s", sshPassword.getText(), request.getSshPassword()));
                     }
                 });
         sshPanel.add(sshPassword,
@@ -391,7 +391,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new FocusAdapter() {
                     @Override
                     public void focusLost(FocusEvent e) {
-                        options.setSshKeyFile(sshKeyFile.getText());
+                        request.setSshKeyFile(sshKeyFile.getText());
                     }
                 });
         sshPanel.add(sshKeyFile,
@@ -403,7 +403,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 new FocusAdapter() {
                     @Override
                     public void focusLost(FocusEvent e) {
-                        options.setSshTargetDir(sshTargetDir.getText());
+                        request.setSshTargetDir(sshTargetDir.getText());
                     }
                 });
         sshPanel.add(sshTargetDir,
@@ -430,7 +430,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         wizardPanel.add(sshPanel,
                 "hidemode 3, wrap");
 
-        setWidgets(options);
+        setWidgets(request);
         return wizardPanel;
     }
 
@@ -445,55 +445,55 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * Loads the data from the options into the GUI widgets
      *
-     * @param options options
+     * @param request options
      */
-    private void setWidgets(GenerateWebsiteRequest options) {
-        switch (options.getOutputTarget()) {
+    private void setWidgets(final GenerateWebsiteRequest request) {
+        switch (request.getOutputTarget()) {
             case OUTPUT_FTP_LOCATION -> finalTarget.setSelectedIndex(1);
             case OUTPUT_SSH_LOCATION -> finalTarget.setSelectedIndex(2);
             default -> finalTarget.setSelectedIndex(0);
         }
 
-        ftpServer.setText(options.getFtpServer());
-        ftpPort.setValue(options.getFtpPort());
-        ftpUser.setText(options.getFtpUser());
-        ftpPassword.setText(options.getFtpPassword());
-        ftpTargetDir.setText(options.getFtpTargetDir());
+        ftpServer.setText(request.getFtpServer());
+        ftpPort.setValue(request.getFtpPort());
+        ftpUser.setText(request.getFtpUser());
+        ftpPassword.setText(request.getFtpPassword());
+        ftpTargetDir.setText(request.getFtpTargetDir());
 
-        sshServer.setText(options.getSshServer());
-        sshPort.setValue(options.getSshPort());
-        sshUser.setText(options.getSshUser());
-        if (options.getSshAuthType() == GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE) {
+        sshServer.setText(request.getSshServer());
+        sshPort.setValue(request.getSshPort());
+        sshUser.setText(request.getSshUser());
+        if (request.getSshAuthType() == GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE) {
             sshAuthOoptionChooser.setSelectedIndex(1);
         } else {
             sshAuthOoptionChooser.setSelectedIndex(0);
         }
-        sshPassword.setText(options.getSshPassword());
-        sshTargetDir.setText(options.getSshTargetDir());
-        sshKeyFile.setText(options.getSshKeyFile());
+        sshPassword.setText(request.getSshPassword());
+        sshTargetDir.setText(request.getSshTargetDir());
+        sshKeyFile.setText(request.getSshKeyFile());
     }
 
     private void testSshConnection() {
-        final String command = "if [ -d " + options.getSshTargetDir() + " ]; then  echo \"Directory exists\"; else echo \"No such directory\"; fi;\n";
+        final String command = "if [ -d " + request.getSshTargetDir() + " ]; then  echo \"Directory exists\"; else echo \"No such directory\"; fi;\n";
         sshError.setText(executeSshCommand(command));
     }
 
     private void sshMkdir() {
-        final String command = "mkdir -pv " + options.getSshTargetDir();
+        final String command = "mkdir -pv " + request.getSshTargetDir();
         sshError.setText(executeSshCommand(command));
     }
 
-    private String executeSshCommand(String command) {
+    private String executeSshCommand(final String command) {
         LOGGER.info("Testing ssh connection:");
         String response = "";
         final JSch jsch = new JSch();
         try {
-            LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{options.getSshUser(), options.getSshServer(), options.getSshPort()});
-            final Session session = jsch.getSession(options.getSshUser(), options.getSshServer(), options.getSshPort());
-            if (options.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
-                session.setPassword(options.getSshPassword());
+            LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{request.getSshUser(), request.getSshServer(), request.getSshPort()});
+            final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
+            if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
+                session.setPassword(request.getSshPassword());
             } else {
-                jsch.addIdentity(options.getSshKeyFile());
+                jsch.addIdentity(request.getSshKeyFile());
             }
             final Properties config = new Properties();
             config.put("StrictHostKeyChecking", "no");
@@ -543,7 +543,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         final FTPClient ftp = new FTPClient();
         int reply;
         try {
-            ftp.connect(options.getFtpServer(), options.getFtpPort());
+            ftp.connect(request.getFtpServer(), request.getFtpPort());
             reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
@@ -552,7 +552,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
 
             LOGGER.info("Good connection:");
-            if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
+            if (!ftp.login(request.getFtpUser(), request.getFtpPassword())) {
                 ftp.logout();
                 LOGGER.info("Could not log in.");
                 returnString += " But could not log in.";
@@ -561,7 +561,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
 
-                boolean dirExists = ftp.changeWorkingDirectory(options.getFtpTargetDir());
+                boolean dirExists = ftp.changeWorkingDirectory(request.getFtpTargetDir());
                 if (!dirExists) {
                     returnString += " But directory doesn't exist.";
                 } else {
@@ -583,7 +583,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         final FTPClient ftp = new FTPClient();
         int reply;
         try {
-            ftp.connect(options.getFtpServer(), options.getFtpPort());
+            ftp.connect(request.getFtpServer(), request.getFtpPort());
             reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
                 ftp.disconnect();
@@ -592,7 +592,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             }
 
             LOGGER.info("Good connection:");
-            if (!ftp.login(options.getFtpUser(), options.getFtpPassword())) {
+            if (!ftp.login(request.getFtpUser(), request.getFtpPassword())) {
                 ftp.logout();
                 LOGGER.info("Could not log in.");
                 returnString += " But could not log in.";
@@ -601,7 +601,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 ftp.setFileType(FTP.BINARY_FILE_TYPE);
                 ftp.enterLocalPassiveMode();
 
-                final boolean dirExists = ftp.makeDirectory(options.getFtpTargetDir());
+                final boolean dirExists = ftp.makeDirectory(request.getFtpTargetDir());
                 if (!dirExists) {
                     returnString += " But could not make the directory.";
                 } else {

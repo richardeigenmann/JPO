@@ -558,6 +558,9 @@ public class Settings {
         return defaultGenerateMap;
     }
 
+    private static String defaultGoogleMapsApiKey = "";
+
+
     /**
      * Whether to generate a map or not
      */
@@ -616,14 +619,20 @@ public class Settings {
      */
     private static boolean defaultExportHighres = false;
 
-    public static boolean isDefaultRotateHighres() {
-        return defaultRotateHighres;
-    }
 
     /**
      * Whether to rotate the Highres pictures or not
      */
     private static boolean defaultRotateHighres = false;
+
+    public static boolean isDefaultRotateHighres() {
+        return defaultRotateHighres;
+    }
+
+    public static void setDefaultRotateHighres(final boolean defaultRotateHighres) {
+        Settings.defaultRotateHighres = defaultRotateHighres;
+
+    }
 
     public static int getDefaultHtmlMidresWidth() {
         return defaultHtmlMidresWidth;
@@ -949,6 +958,14 @@ public class Settings {
      * Default size for buttons such as OK, cancel etc.
      */
     public static final Dimension THREE_DOT_BUTTON_DIMENSION = new Dimension(25, 25);
+
+    public static String getDefaultGoogleMapsApiKey() {
+        return defaultGoogleMapsApiKey;
+    }
+
+    public static void setDefaultGoogleMapsApiKey(String defaultGoogleMapsApiKey) {
+        Settings.defaultGoogleMapsApiKey = defaultGoogleMapsApiKey;
+    }
 
     /**
      * Codes to indicate the field
@@ -1386,7 +1403,7 @@ public class Settings {
         dontEnlargeSmallImages = prefs.getBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
         thumbnailCounter = prefs.getInt("thumbnailCounter", thumbnailCounter);
         writeLog = prefs.getBoolean("writeLog", writeLog);
-        logfile = new File(prefs.get("logfile", logfile.getPath())); // inefficient, RE, 11.11.2006
+        logfile = new File(prefs.get("logfile", logfile.getPath()));
         thumbnailCacheDirectory = prefs.get("thumbnailCacheDirectory", thumbnailCacheDirectory);
         defaultHtmlPicsPerRow = prefs.getInt("defaultHtmlPicsPerRow", defaultHtmlPicsPerRow);
         defaultHtmlThumbnailWidth = prefs.getInt("defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth);
@@ -1400,6 +1417,7 @@ public class Settings {
         defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.valueOf(defaultHtmlSshAuthTypeString);
 
         defaultGenerateMap = prefs.getBoolean("defaultGenerateMap", defaultGenerateMap);
+        defaultGoogleMapsApiKey = prefs.get("defaultGoogleMapsApiKey", defaultGoogleMapsApiKey);
         defaultGenerateDHTML = prefs.getBoolean("defaultGenerateDHTML", defaultGenerateDHTML);
         defaultGenerateZipfile = prefs.getBoolean("defaultGenerateZipfile", defaultGenerateZipfile);
         defaultLinkToHighres = prefs.getBoolean("defaultLinkToHighres", defaultLinkToHighres);
@@ -1423,14 +1441,14 @@ public class Settings {
         defaultHtmlSshKeyFile = prefs.get("defaultHtmlSshKeyFile", defaultHtmlSshKeyFile);
         thumbnailFastScale = prefs.getBoolean("thumbnailFastScale", thumbnailFastScale);
         pictureViewerFastScale = prefs.getBoolean("pictureViewerFastScale", pictureViewerFastScale);
-        defaultLinkToHighres = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
-        int n = prefs.getInt("emailSenders", 0);
-        for (int i = 0; i < n; i++) {
-            emailSenders.add(prefs.get("emailSender-" + i, ""));
+        showThumbOnFileChooser = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
+        int emailSenders = prefs.getInt("emailSenders", 0);
+        for (int i = 0; i < emailSenders; i++) {
+            Settings.emailSenders.add(prefs.get("emailSender-" + i, ""));
         }
-        n = prefs.getInt("emailRecipients", 0);
-        for (int i = 0; i < n; i++) {
-            emailRecipients.add(prefs.get("emailRecipient-" + i, ""));
+        int emailRecipients = prefs.getInt("emailRecipients", 0);
+        for (int i = 0; i < emailRecipients; i++) {
+            Settings.emailRecipients.add(prefs.get("emailRecipient-" + i, ""));
         }
         emailServer = prefs.get("emailServer", emailServer);
         emailPort = prefs.get("emailPort", emailPort);
@@ -1560,6 +1578,7 @@ public class Settings {
         prefs.put("defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name());
         prefs.put("defaultHtmlOutputTarget", defaultHtmlOutputTarget.name());
         prefs.putBoolean("defaultGenerateMap", defaultGenerateMap);
+        prefs.put("defaultGoogleMapsApiKey", defaultGoogleMapsApiKey);
         prefs.putBoolean("defaultGenerateDHTML", defaultGenerateDHTML);
         prefs.putBoolean("defaultGenerateZipfile", defaultGenerateZipfile);
         prefs.putBoolean("defaultLinkToHighres", defaultLinkToHighres);

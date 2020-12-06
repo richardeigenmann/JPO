@@ -10,7 +10,7 @@ import javax.swing.*;
 /*
  GenerateWebsiteWizard7Summary.java:  Summarise before you go and do it
 
- Copyright (C) 2008-2013  Richard Eigenmann.
+ Copyright (C) 2008-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,16 +34,16 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final GenerateWebsiteRequest options;
+    private final GenerateWebsiteRequest request;
 
     /**
      * This Wizard step summarises the settings and then goes off and does them
      *
-     * @param options Options
+     * @param request Options
      */
-    public GenerateWebsiteWizard7Summary( GenerateWebsiteRequest options ) {
+    public GenerateWebsiteWizard7Summary(final GenerateWebsiteRequest request) {
         super(Settings.getJpoResources().getString("summary"), Settings.getJpoResources().getString("summary"));
-        this.options = options;
+        this.request = request;
     }
     /**
      * Shows the summaryTextArea
@@ -57,9 +57,9 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        JPanel wizardStep = new JPanel( new MigLayout() );
+        final JPanel wizardStep = new JPanel(new MigLayout());
 
-        JScrollPane scrollPane = new JScrollPane( summaryTextArea );
+        final JScrollPane scrollPane = new JScrollPane(summaryTextArea);
         wizardStep.add( scrollPane, "grow" );
         return wizardStep;
     }
@@ -69,7 +69,7 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
      */
     @Override
     public void prepareRendering() {
-        summaryTextArea.setText( options.toString() );
-        setCanFinish( true );
+        summaryTextArea.setText(request.toString());
+        setCanFinish(true);
     }
 }

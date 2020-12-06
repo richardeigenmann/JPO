@@ -205,7 +205,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
 
     /**
-     * Write the org.jpo.css file to the target directory.
+     * Write the jpo.css file to the target directory.
      *
      * @param directory The directory to write to
      */
@@ -249,7 +249,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     /**
-     * Write the org.jpo.js file to the target directory.
+     * Write the jpo.js file to the target directory.
      *
      * @param directory The directory to write to
      */
@@ -340,7 +340,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static void writePageHeader(final BufferedWriter midresHtmlWriter, final String pageTitle) throws IOException {
         midresHtmlWriter.write("<!DOCTYPE HTML>");
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("<head>\n\t<link rel=\"StyleSheet\" href=\"org.jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>" + pageTitle + "</title>\n</head>");
+        midresHtmlWriter.write("<head>\n\t<link rel=\"StyleSheet\" href=\"" + JPO_CSS + "\" type=\"text/css\" media=\"screen\" />\n\t<title>" + pageTitle + "</title>\n</head>");
         midresHtmlWriter.newLine();
     }
 
@@ -458,7 +458,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             out.write("<html xml:lang=\"en\" lang=\"en\">");
             out.newLine();
 
-            out.write("<head>\n\t<link rel=\"StyleSheet\" href=\"org.jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>"
+            out.write("<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>"
                     + ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml()
                     + "</title>\n</head>");
             out.newLine();
@@ -590,12 +590,12 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         writeLowres(out, pictureInfo, lowresFile, midresFile, midresHtmlFile, scp);
         final Dimension midresDimension = writeMidresPicture(pictureInfo, midresFile, scp);
         if (request.isGenerateMidresHtml()) {
-            writeMidres(pictureNode, groupFile, childNumber, childCount, pictureInfo, lowresFile, midresFile, highresFile, midresHtmlFile, midresDimension);
+            writeMidres(pictureNode, groupFile, childNumber, childCount, lowresFile, midresFile, highresFile, midresHtmlFile, midresDimension);
         }
         picsWroteCounter++;
     }
 
-    private void writeMidres(SortableDefaultMutableTreeNode pictureNode, File groupFile, int childNumber, int childCount, PictureInfo pictureInfo, File lowresFile, File midresFile, File highresFile, File midresHtmlFile, Dimension midresDimension) throws IOException {
+    private void writeMidres(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final File lowresFile, final File midresFile, final File highresFile, final File midresHtmlFile, final Dimension midresDimension) throws IOException {
         files.add(midresHtmlFile);
         try (
                 final BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
@@ -609,58 +609,26 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("<tr><td colspan=\"2\"><h2>" + groupDescriptionHtml + "</h2></td></tr>");
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write("<tr><td class=\"midresPictureCell\">");
-            final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFile.getName(), midresDimension.width, midresDimension.height, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
+            midresHtmlWriter.write("<tr>");
 
-            writeMidresImgTag(pictureInfo, highresFile, midresHtmlWriter, imgTag);
-
+            midresHtmlWriter.write("<td class=\"midresPictureCell\">");
+            final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
+            writeMidresImgTag(pictureInfo, highresFile, midresFile, midresHtmlWriter, midresDimension);
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<p>" + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("</td>");
             midresHtmlWriter.newLine();
-            midresHtmlWriter.newLine();
 
-            // now do the right column
-            midresHtmlWriter.write("<td class=\"midresSidebarCell\">");
+            final StringBuilder previewArray = writeRightColumnNavAndPreview(pictureNode, groupFile, childNumber, childCount, lowresFile, highresFile, midresHtmlWriter);
 
-            if (request.isGenerateMap()) {
-                writeMapDiv(midresHtmlWriter);
-            }
-
-            // Do the matrix with the pictures to click
-            final int indexBeforeCurrent = 15;
-            final int indexPerRow = 5;
-            final int indexToShow = 35;
-            final int matrixWidth = 130;
-            midresHtmlWriter.write(String.format("Picture %d of %d", childNumber, childCount));
-            midresHtmlWriter.newLine();
-            final StringBuilder dhtmlArray = writeNumberPickTable(pictureNode, childNumber, childCount, pictureInfo, midresHtmlWriter, indexBeforeCurrent, indexPerRow, indexToShow, matrixWidth);
-            midresHtmlWriter.newLine();
-            writeLinks(pictureNode, groupFile, childNumber, childCount, pictureInfo, lowresFile, highresFile, midresHtmlWriter);
-
-            midresHtmlWriter.newLine();
-            midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
-            midresHtmlWriter.newLine();
-
-            if (request.isGenerateMouseover()) {
-                midresHtmlWriter.write("<ilayer id=\"d1\" width=\"" + matrixWidth + "\" height=\"200\" visibility=\"hide\">");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<layer id=\"d2\" width=\"" + matrixWidth + "\" height=\"200\">");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("<div id=\"descriptions\" class=\"sidepanelMouseover\">");
-                midresHtmlWriter.newLine();
-                midresHtmlWriter.write("</div></layer></ilayer>");
-            }
-
-            midresHtmlWriter.newLine();
-            midresHtmlWriter.write("</td></tr>");
+            midresHtmlWriter.write("</tr>");
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("</table>");
             midresHtmlWriter.newLine();
 
             if (request.isGenerateMouseover()) {
-                writeMouseOverJavaScript(midresHtmlWriter, dhtmlArray);
+                writeMouseOverJavaScript(midresHtmlWriter, previewArray);
             }
 
             if (request.isGenerateMap()) {
@@ -671,42 +639,73 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         }
     }
 
-    private void writeMapJavaScript(PictureInfo pictureInfo, BufferedWriter midresHtmlWriter) throws IOException {
-        midresHtmlWriter.write("<script type=\"text/javascript\"> <!--");
+    @NotNull
+    private StringBuilder writeRightColumnNavAndPreview(final SortableDefaultMutableTreeNode pictureNode, File groupFile, int childNumber, int childCount, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
+        // now do the right column
+        midresHtmlWriter.write("<td class=\"midresSidebarCell\">");
+
+        if (request.isGenerateMap()) {
+            writeMapDiv(midresHtmlWriter);
+        }
+
+        // Do the matrix with the pictures to click
+        final int indexBeforeCurrent = 15;
+        final int indexPerRow = 5;
+        final int indexToShow = 35;
+        final int matrixWidth = 130;
+        midresHtmlWriter.write(String.format("Picture %d of %d", childNumber, childCount));
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write(String.format("var lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y));
+        final StringBuilder previewArray = writeNumberPickTable(pictureNode, childNumber, childCount, midresHtmlWriter, indexBeforeCurrent, indexPerRow, indexToShow, matrixWidth);
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("--> </script>");
+        writeLinks(pictureNode, groupFile, childNumber, childCount, lowresFile, highresFile, midresHtmlWriter);
+
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("<script type=\"text/javascript\" src=\"http://maps.google.com/maps/api/js?sensor=false\"></script>");
+        midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
         midresHtmlWriter.newLine();
+
+        if (request.isGenerateMouseover()) {
+            midresHtmlWriter.write("<ilayer id=\"d1\" width=\"" + matrixWidth + "\" height=\"200\" visibility=\"hide\">");
+            midresHtmlWriter.newLine();
+            midresHtmlWriter.write("<layer id=\"d2\" width=\"" + matrixWidth + "\" height=\"200\">");
+            midresHtmlWriter.newLine();
+            midresHtmlWriter.write("<div id=\"descriptions\" class=\"sidepanelMouseover\">");
+            midresHtmlWriter.newLine();
+            midresHtmlWriter.write("</div></layer></ilayer>");
+        }
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("</td>");
+        midresHtmlWriter.newLine();
+        return previewArray;
     }
 
-    private void writeMouseOverJavaScript(BufferedWriter midresHtmlWriter, StringBuilder dhtmlArray) throws IOException {
+    private void writeMapJavaScript(PictureInfo pictureInfo, BufferedWriter midresHtmlWriter) throws IOException {
+        midresHtmlWriter.write("<script type=\"text/javascript\">");
+        midresHtmlWriter.write(String.format("const lat=%f; var lng=%f;", pictureInfo.getLatLng().x, pictureInfo.getLatLng().y));
+        midresHtmlWriter.write("</script>");
+        midresHtmlWriter.newLine();
+        midresHtmlWriter.write("<script defer src=\"https://maps.googleapis.com/maps/api/js?key=" + request.getGoogleMapsApiKey() + "&callback=initMap\"></script>\n");
+    }
+
+    private void writeMouseOverJavaScript(final BufferedWriter midresHtmlWriter, final StringBuilder previewArray) throws IOException {
         writeJpoJs(request.getTargetDirectory());
         files.add(new File(request.getTargetDirectory(), JPO_JS));
-        midresHtmlWriter.write("<script type=\"text/javascript\" src=\"org.jpo.js\" ></script>");
+        midresHtmlWriter.write("<script type=\"text/javascript\" src=\"" + JPO_JS + "\" ></script>");
         midresHtmlWriter.newLine();
         midresHtmlWriter.write("<script type=\"text/javascript\">");
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("<!-- ");
+        midresHtmlWriter.write("const content=new Array() ");
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("/* Textual Tooltip Script- (c) Dynamic Drive (www.dynamicdrive.com) For full source code, installation instructions, 100's more DHTML scripts, and Terms Of Use, visit dynamicdrive.com */ ");
-        midresHtmlWriter.newLine();
-        midresHtmlWriter.write("var content=new Array() ");
-        midresHtmlWriter.newLine();
-        midresHtmlWriter.write(dhtmlArray.toString());
-        midresHtmlWriter.newLine();
-        midresHtmlWriter.write("//-->");
+        midresHtmlWriter.write(previewArray.toString());
         midresHtmlWriter.newLine();
         midresHtmlWriter.write("</script>");
         midresHtmlWriter.newLine();
     }
 
     @NotNull
-    private StringBuilder writeNumberPickTable(SortableDefaultMutableTreeNode pictureNode, int childNumber, int childCount, PictureInfo pictureInfo, BufferedWriter midresHtmlWriter, int indexBeforeCurrent, int indexPerRow, int indexToShow, int matrixWidth) throws IOException {
+    private StringBuilder writeNumberPickTable(final SortableDefaultMutableTreeNode pictureNode, final int childNumber, final int childCount, final BufferedWriter midresHtmlWriter, final int indexBeforeCurrent, final int indexPerRow, final int indexToShow, final int matrixWidth) throws IOException {
         midresHtmlWriter.write("<table class=\"numberPickTable\">");
         midresHtmlWriter.newLine();
+        final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
         final String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replace("\'", "\\\\'"));
         final StringBuilder dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
 
@@ -734,8 +733,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     final String extension = FilenameUtils.getExtension(pictureInfo.getImageFile().getName());
                     final String lowresFn = getLowresFilename(nde, extension, i, childNumber);
                     writePictureTableHyperlink(childCount, midresHtmlWriter, matrixWidth, dhtmlArray, i, nodeUrl, lowresFn, pi);
+                } else if (nde.getUserObject() instanceof GroupInfo gi) {
+                    midresHtmlWriter.write("<a href=\"jpo_" + nde.hashCode() + ".htm\">");
                 }
-                midresHtmlWriter.write(">");
                 if (i == childNumber) {
                     midresHtmlWriter.write("<b>");
                 }
@@ -760,11 +760,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return dhtmlArray;
     }
 
-    private void writePictureTableHyperlink(int childCount, BufferedWriter midresHtmlWriter, int matrixWidth, StringBuilder dhtmlArray, int i, String nodeUrl, String lowresFn, PictureInfo pi) throws IOException {
+    private void writePictureTableHyperlink(final int childCount, final BufferedWriter midresHtmlWriter, final int matrixWidth, final StringBuilder dhtmlArray, final int i, final String nodeUrl, final String lowresFn, final PictureInfo pi) throws IOException {
         midresHtmlWriter.write(A_HREF + nodeUrl + "\"");
         final String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4((pi.getDescription().replace("\'", "\\\\'")));
         if (request.isGenerateMouseover()) {
-            midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i));
+            midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\">", i));
             dhtmlArray.append(String.format("content[%d]='", i));
 
             dhtmlArray.append(String.format("<p>Picture %d/%d:</p>", i, childCount));
@@ -800,27 +800,22 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private String getNodeUrl(final SortableDefaultMutableTreeNode nde, final int i, final int childNumber) {
-        String nodeUrl = "";
         if (nde.getUserObject() instanceof PictureInfo pi) {
             switch (request.getPictureNaming()) {
                 case PICTURE_NAMING_BY_ORIGINAL_NAME:
                     final String rootName = cleanupFilename(FilenameUtils.getBaseName(pi.getImageFile().getName()));
-                    nodeUrl = rootName + ".htm";
-                    break;
+                    return rootName + ".htm";
                 case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                     final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() + i - childNumber - 1);
                     final String padding = "00000";
                     final String root = padding.substring(convertedNumber.length()) + convertedNumber;
-                    nodeUrl = "jpo_" + root + ".htm";
-                    break;
+                    return "jpo_" + root + ".htm";
                 default:  //case GenerateWebsiteRequest.PICTURE_NAMING_BY_HASH_CODE:
                     final int hashCode = nde.hashCode();
-                    nodeUrl = "jpo_" + hashCode + ".htm";
-                    break;
+                    return "jpo_" + hashCode + ".htm";
             }
-
         }
-        return nodeUrl;
+        return "";
     }
 
     private void writeMapDiv(BufferedWriter midresHtmlWriter) throws IOException {
@@ -829,7 +824,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         midresHtmlWriter.newLine();
     }
 
-    private void writeMidresImgTag(PictureInfo pictureInfo, File highresFile, BufferedWriter midresHtmlWriter, String imgTag) throws IOException {
+    private void writeMidresImgTag(final PictureInfo pictureInfo, final File highresFile, final File midresFile, final BufferedWriter midresHtmlWriter, final Dimension midresDimension) throws IOException {
+        final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFile.getName(), midresDimension.width, midresDimension.height, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
         if (request.isLinkToHighres()) {
             writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), imgTag);
         } else if (request.isExportHighres()) {
@@ -955,7 +951,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return dhtmlArray;
     }
 
-    private void writeLinks(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final PictureInfo pictureInfo, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
+    private void writeLinks(final SortableDefaultMutableTreeNode pictureNode, final File groupFile, final int childNumber, final int childCount, final File lowresFile, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
         writeHyperlink(midresHtmlWriter, groupFile.getName() + "#" + StringEscapeUtils.escapeHtml4(lowresFile.getName()), "Up");
         midresHtmlWriter.write("&nbsp;");
         midresHtmlWriter.newLine();
@@ -964,6 +960,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("&nbsp;");
         }
         if (request.isLinkToHighres()) {
+            final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
             writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), "Highres");
             midresHtmlWriter.write("&nbsp;");
         } else if (request.isExportHighres()) {

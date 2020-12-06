@@ -50,6 +50,7 @@ public class GenerateWebsiteRequestDefaultOptions extends GenerateWebsiteRequest
         setMidresJpgQuality(Settings.getDefaultHtmlMidresQuality());
         setGenerateMidresHtml(Settings.isDefaultGenerateMidresHtml());
         setGenerateMap(Settings.isDefaultGenerateMap());
+        setGoogleMapsApiKey(Settings.getDefaultGoogleMapsApiKey());
         setGenerateMouseover(Settings.isDefaultGenerateDHTML());
         setGenerateZipfile(Settings.isDefaultGenerateZipfile());
         setLinkToHighres(Settings.isDefaultLinkToHighres());

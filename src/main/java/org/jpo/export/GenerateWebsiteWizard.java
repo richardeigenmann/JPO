@@ -40,50 +40,50 @@ public class GenerateWebsiteWizard {
      * Options. Since we are creating a new DefaultOptions Object the
      * instantiated class will pull in the defaults from the Settings object.
      */
-    private final GenerateWebsiteRequest options = new GenerateWebsiteRequestDefaultOptions();
+    private final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
     /**
      * Defines the maximum size for horizontally combined objects on a step
      * panel
      */
-    public static final Dimension normalComponentSize = new Dimension( 350, 25 );
+    public static final Dimension NORMAL_COMPONENT_SIZE = new Dimension(350, 25);
 
     /**
      * Creates a Wizard for the generation of a website
      *
      * @param startNode The node for which the website should be generated
      */
-    public GenerateWebsiteWizard( SortableDefaultMutableTreeNode startNode ) {
-        options.setStartNode( startNode );
+    public GenerateWebsiteWizard(final SortableDefaultMutableTreeNode startNode) {
+        request.setStartNode(startNode);
 
-        final WizardModel model = new DefaultWizardModel( new Step[]{
-            new GenerateWebsiteWizard1Welcome( options ),
-            new GenerateWebsiteWizard2Thumbnails( options ),
-            new GenerateWebsiteWizard3Midres( options ),
-            new GenerateWebsiteWizard4Highres( options ),
-            new GenerateWebsiteWizard5Options( options ),
-            new GenerateWebsiteWizard6Where( options ),
-            new GenerateWebsiteWizard7Summary( options ), } );
+        final WizardModel model = new DefaultWizardModel(new Step[]{
+                new GenerateWebsiteWizard1Welcome(request),
+                new GenerateWebsiteWizard2Thumbnails(request),
+                new GenerateWebsiteWizard3Midres(request),
+                new GenerateWebsiteWizard4Highres(request),
+                new GenerateWebsiteWizard5Options(request),
+                new GenerateWebsiteWizard6Where(request),
+                new GenerateWebsiteWizard7Summary(request),});
 
         // the listener traps all
         model.addWizardModelListener( new WizardModelListener() {
             @Override
-            public void stepShown( WizardModelEvent arg0 ) {
+            public void stepShown(final WizardModelEvent arg0) {
                 // noop
             }
 
             @Override
-            public void wizardCanceled( WizardModelEvent arg0 ) {
+            public void wizardCanceled(final WizardModelEvent arg0) {
                 // noop
             }
 
             @Override
-            public void wizardFinished( WizardModelEvent arg0 ) {
-                options.saveToSettings();
-                JpoEventBus.getInstance().post(options);
+            public void wizardFinished(final WizardModelEvent arg0) {
+                request.saveToSettings();
+                JpoEventBus.getInstance().post(request);
             }
 
             @Override
-            public void wizardModelChanged( WizardModelEvent arg0 ) {
+            public void wizardModelChanged(final WizardModelEvent arg0) {
                 // noop
             }
         } );

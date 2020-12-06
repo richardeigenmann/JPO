@@ -10,25 +10,20 @@ function changetext(newtext){
 }
 
 
-( function() {
-    window.onload = function () {
-        var latLng= new google.maps.LatLng(lat, lng);
-
-        var mapDiv = document.getElementById("map");
-        var options = {
-            center: latLng,
-            zoom: 4,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map( mapDiv, options );
-
-        var markerLatLng= new google.maps.LatLng(lat, lng);
-
-        new google.maps.Marker({
-            position: markerLatLng,
-            map: map,
-            draggable: false
-        });
+window.initMap = function() {
+    const mapDiv = document.getElementById("map");
+    const latLng= new google.maps.LatLng(lat, lng);
+    const options = {
+        center: latLng,
+        zoom: 4,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-})();
+    const map = new google.maps.Map( mapDiv, options );
+
+    const marker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        draggable: false
+    });
+};

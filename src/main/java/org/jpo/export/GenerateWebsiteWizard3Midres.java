@@ -7,6 +7,9 @@ import org.jpo.eventbus.GenerateWebsiteRequest;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
@@ -39,24 +42,25 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
     /**
      * The link to the values that this panel should change
      */
-    private final GenerateWebsiteRequest options;
+    private final GenerateWebsiteRequest request;
 
     /**
      * This step asks for all the midres stuff for the webpage generation
      *
-     * @param options The link to the options object with all the settings
+     * @param request The link to the options object with all the settings
      */
-    public GenerateWebsiteWizard3Midres(final GenerateWebsiteRequest options) {
+    public GenerateWebsiteWizard3Midres(final GenerateWebsiteRequest request) {
         super(Settings.getJpoResources().getString("HtmlDistMidres"), Settings.getJpoResources().getString("HtmlDistMidres"));
-        this.options = options;
+        this.request = request;
 
         // populate the widgets with the values from the options
-        generateMidresHtmlJCheckBox.setSelected(options.isGenerateMidresHtml());
-        generateMapJCheckBox.setSelected(options.isGenerateMap());
-        mouseoverJCheckBox.setSelected(options.isGenerateMouseover());
-        midresWidthSpinnerNumberModel.setValue(options.getMidresWidth());
-        midresHeightSpinnerNumberModel.setValue(options.getMidresHeight());
-        midresJpgQualityJSlider.setValue(options.getMidresJpgQualityPercent());
+        generateMidresHtmlJCheckBox.setSelected(request.isGenerateMidresHtml());
+        generateMapJCheckBox.setSelected(request.isGenerateMap());
+        googleMapsApiKeyJTextField.setText(request.getGoogleMapsApiKey());
+        mouseoverJCheckBox.setSelected(request.isGenerateMouseover());
+        midresWidthSpinnerNumberModel.setValue(request.getMidresWidth());
+        midresHeightSpinnerNumberModel.setValue(request.getMidresHeight());
+        midresJpgQualityJSlider.setValue(request.getMidresJpgQualityPercent());
     }
     /**
      * The number model for the width spinner.
@@ -89,6 +93,11 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
     private final JCheckBox generateMapJCheckBox = new JCheckBox(Settings.getJpoResources().getString("GenerateMap"));
 
     /**
+     * The ftp Server
+     */
+    private final JTextField googleMapsApiKeyJTextField = new JTextField();
+
+    /**
      * Tickbox that indicates whether DHTML tags and effects should be
      * generated.
      */
@@ -113,24 +122,35 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         final JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]", "" ) );
 
         generateMidresHtmlJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> {
-            generateMapJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
-            mouseoverJCheckBox.setEnabled( generateMidresHtmlJCheckBox.isSelected() );
-            options.setGenerateMidresHtml( generateMidresHtmlJCheckBox.isSelected() );
+            generateMapJCheckBox.setEnabled(generateMidresHtmlJCheckBox.isSelected());
+            mouseoverJCheckBox.setEnabled(generateMidresHtmlJCheckBox.isSelected());
+            request.setGenerateMidresHtml(generateMidresHtmlJCheckBox.isSelected());
         });
         final String SPANX_WRAP = "spanx, wrap";
-        wizardPanel.add( generateMidresHtmlJCheckBox, SPANX_WRAP);
+        wizardPanel.add(generateMidresHtmlJCheckBox, SPANX_WRAP);
 
-        generateMapJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMap( generateMapJCheckBox.isSelected() ));
-        wizardPanel.add( generateMapJCheckBox, SPANX_WRAP);
+        generateMapJCheckBox.addChangeListener(changeListener -> request.setGenerateMap(generateMapJCheckBox.isSelected()));
+        wizardPanel.add(generateMapJCheckBox, SPANX_WRAP);
 
-        mouseoverJCheckBox.addChangeListener(( ChangeEvent arg0 ) -> options.setGenerateMouseover( mouseoverJCheckBox.isSelected() ));
-        wizardPanel.add( mouseoverJCheckBox, SPANX_WRAP);
+        wizardPanel.add(new JLabel("Google Maps API Key:"), SPANX_WRAP);
+        googleMapsApiKeyJTextField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        googleMapsApiKeyJTextField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                request.setGoogleMapsApiKey(googleMapsApiKeyJTextField.getText());
+            }
+        });
+        wizardPanel.add(googleMapsApiKeyJTextField, "growx, wrap");
+
+
+        mouseoverJCheckBox.addChangeListener(changeListener -> request.setGenerateMouseover(mouseoverJCheckBox.isSelected()));
+        wizardPanel.add(mouseoverJCheckBox, SPANX_WRAP);
 
         wizardPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailSizeJLabel")), "align label");
-        midresWidthJSpinner.addChangeListener((ChangeEvent arg0) -> options.setMidresWidth(((SpinnerNumberModel) (midresWidthJSpinner.getModel())).getNumber().intValue()));
+        midresWidthJSpinner.addChangeListener(changeListener -> request.setMidresWidth(((SpinnerNumberModel) (midresWidthJSpinner.getModel())).getNumber().intValue()));
         wizardPanel.add(midresWidthJSpinner, "split 3");
         wizardPanel.add(new JLabel(" x "));
-        midresHeightJSpinner.addChangeListener((ChangeEvent arg0) -> options.setMidresHeight(((SpinnerNumberModel) (midresHeightJSpinner.getModel())).getNumber().intValue()));
+        midresHeightJSpinner.addChangeListener(changeListener -> request.setMidresHeight(((SpinnerNumberModel) (midresHeightJSpinner.getModel())).getNumber().intValue()));
         wizardPanel.add(midresHeightJSpinner, "wrap");
 
         // Midres Quality Slider
@@ -145,7 +165,7 @@ public class GenerateWebsiteWizard3Midres extends AbstractStep {
         midresJpgQualityJSlider.setMinorTickSpacing(5);
         midresJpgQualityJSlider.setPaintTicks(true);
         midresJpgQualityJSlider.setPaintLabels(true);
-        midresJpgQualityJSlider.addChangeListener((ChangeEvent arg0) -> options.setMidresJpgQualityPercent(midresJpgQualityJSlider.getValue()));
+        midresJpgQualityJSlider.addChangeListener((ChangeEvent arg0) -> request.setMidresJpgQualityPercent(midresJpgQualityJSlider.getValue()));
         wizardPanel.add(midresJpgQualityJSlider, "growx, wrap");
         return wizardPanel;
     }
