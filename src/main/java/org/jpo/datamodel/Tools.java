@@ -177,7 +177,7 @@ public class Tools {
                                           final BufferedOutputStream bout)
             throws IOException {
 
-        Adler32 crc = new Adler32();
+        final Adler32 crc = new Adler32();
         int c;
 
         while ((c = bin.read()) != -1) {
@@ -188,7 +188,6 @@ public class Tools {
         bin.close();
         bout.close();
         return crc.getValue();
-
     }
 
 

@@ -18,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -194,10 +196,8 @@ public class WebsiteGeneratorTest {
 
         // cleanup
         try {
-            if (false) {
-                FileUtils.deleteDirectory(request.getTargetDirectory());
-            }
-        } catch (IOException e) {
+            FileUtils.deleteDirectory(request.getTargetDirectory());
+        } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "Could not delete directory {0}  Exception: {1}", new Object[]{request.getTargetDirectory().toPath(), e.getMessage()});
             fail(e.getMessage());
         }
@@ -217,6 +217,13 @@ public class WebsiteGeneratorTest {
             request.setTargetDirectory(tempDirWithPrefix.toFile());
             startNode.add(new SortableDefaultMutableTreeNode(new PictureInfo(new File(WebsiteGeneratorTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg").toURI()), "Picture 1")));
             WebsiteGenerator.generateZipfileTest(request);
+
+            final File generatedFile = new File(request.getTargetDirectory(), request.getDownloadZipFileName());
+            final ZipFile generatedZipFile = new ZipFile(generatedFile);
+            assert (Files.exists(generatedFile.toPath()));
+            assertEquals(1, generatedZipFile.size());
+            final ZipEntry entry = generatedZipFile.getEntry("jpo_00005_h.jpg");
+            assertNotNull(entry);
 
             FileUtils.deleteDirectory(request.getTargetDirectory());
         } catch (final IOException | URISyntaxException e) {

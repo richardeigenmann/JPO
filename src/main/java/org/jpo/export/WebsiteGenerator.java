@@ -61,10 +61,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static final String JPO_CSS = "jpo.css";
     private static final String ROBOTS_TXT = "robots.txt";
     private static final String INDEX_PAGE = "index.htm";
-    /**
-     * static size of the buffer to be used in copy operations
-     */
-    private static final int BUFFER_SIZE = 2048;
+    public static final String A_HREF = "<a href=\"";
 
     /**
      * Array of the files created
@@ -218,11 +215,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_CSS));
                 final BufferedInputStream bin = new BufferedInputStream(in);
                 final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
-
-            while ((c = bin.read()) != -1) {
-                outStream.write(c);
-            }
+            bin.transferTo(bout);
 
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
@@ -244,11 +237,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final FileOutputStream outStream = new FileOutputStream(new File(directory, ROBOTS_TXT));
                 final BufferedInputStream bin = new BufferedInputStream(in);
                 final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
-
-            while ((c = bin.read()) != -1) {
-                bout.write(c);
-            }
+            bin.transferTo(bout);
 
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
@@ -270,11 +259,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final FileOutputStream outStream = new FileOutputStream(new File(directory, JPO_JS));
                 final BufferedInputStream bin = new BufferedInputStream(in);
                 final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            int c;
-
-            while ((c = bin.read()) != -1) {
-                bout.write(c);
-            }
+            bin.transferTo(bout);
 
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
@@ -315,12 +300,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                     final BufferedInputStream bin = new BufferedInputStream(inStream);
                     final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
                 files.add(folderIconFile);
-
-                int count;
-                final byte[] data = new byte[BUFFER_SIZE];
-                while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
-                    bout.write(data, 0, count);
-                }
+                bin.transferTo(bout);
             } catch (final IOException x) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
@@ -360,32 +340,35 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final BufferedOutputStream bout = new BufferedOutputStream(destination);
                 final ZipOutputStream zipFile = new ZipOutputStream(bout);) {
             int picWroteCounter = request.getSequentialStartNumber();
-            for (SortableDefaultMutableTreeNode p : request.getStartNode().getChildPictureNodes(true)) {
+            for (final SortableDefaultMutableTreeNode p : request.getStartNode().getChildPictureNodes(true)) {
                 final PictureInfo pictureInfo = (PictureInfo) p.getUserObject();
-
-                try (
-                        final InputStream in = new FileInputStream(pictureInfo.getImageFile());
-                        final BufferedInputStream bin = new BufferedInputStream(in)) {
-
-                    final File highresFile = getOutputImageFilename(request, pictureInfo, "_h.", picWroteCounter);
-                    final ZipEntry entry = new ZipEntry(highresFile.getName());
-                    LOGGER.log(Level.INFO, "Adding to zipfile: {0}", highresFile);
-                    zipFile.putNextEntry(entry);
-
-                    int count;
-                    final byte[] data = new byte[BUFFER_SIZE];
-                    while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
-                        zipFile.write(data, 0, count);
-                    }
-                } catch (final IOException e) {
-                    LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{p, e});
-                }
-
+                addZipFileEntry(request, zipFile, picWroteCounter, p, pictureInfo);
                 picWroteCounter++;
             }
         } catch (final IOException x) {
             LOGGER.log(Level.SEVERE, "Error creating Zipfile. Continuing without Zip\n{0}", x.toString());
             request.setGenerateZipfile(false);
+        }
+    }
+
+    private static void addZipFileEntry(final GenerateWebsiteRequest request, final ZipOutputStream zipFile, final int picWroteCounter, final SortableDefaultMutableTreeNode p, final PictureInfo pictureInfo) {
+        try (
+                final InputStream in = new FileInputStream(pictureInfo.getImageFile());
+                final BufferedInputStream bin = new BufferedInputStream(in)) {
+
+            final File highresFile = getOutputImageFilename(request, pictureInfo, "_h.", picWroteCounter, true);
+            final ZipEntry entry = new ZipEntry(highresFile.getName());
+            LOGGER.log(Level.INFO, "Adding to zipfile: {0}", highresFile);
+            zipFile.putNextEntry(entry);
+
+            /*int count;
+            final byte[] data = new byte[BUFFER_SIZE];
+            while ((count = bin.read(data, 0, BUFFER_SIZE)) != -1) {
+                zipFile.write(data, 0, count);
+            }*/
+            bin.transferTo(zipFile);
+        } catch (final IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{p, e});
         }
     }
 
@@ -566,10 +549,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         descriptionsBuffer.putDescription(pictureInfo.getDescription());
 
 
-        final File lowresFile = getOutputImageFilename(request, pictureInfo, "_l.", picsWroteCounter);
-        final File midresFile = getOutputImageFilename(request, pictureInfo, "_m.", picsWroteCounter);
-        final File highresFile = getOutputImageFilename(request, pictureInfo, "_h.", picsWroteCounter);
-        final File midresHtmlFile = getOutputImageFilename(request, pictureInfo, ".htm", picsWroteCounter);
+        final File lowresFile = getOutputImageFilename(request, pictureInfo, "_l.", picsWroteCounter, true);
+        final File midresFile = getOutputImageFilename(request, pictureInfo, "_m.", picsWroteCounter, true);
+        final File highresFile = getOutputImageFilename(request, pictureInfo, "_h.", picsWroteCounter, true);
+        final File midresHtmlFile = getOutputImageFilename(request, pictureInfo, ".htm", picsWroteCounter, false);
         LOGGER.log(Level.INFO, "Filenames: Lowres: {0}, Midres: {1}, Highres {2}, MidresHtml: {3}", new Object[]{lowresFile, midresFile, highresFile, midresHtmlFile});
 
         files.add(lowresFile);
@@ -752,7 +735,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void writePictureTableHyperlink(int childCount, BufferedWriter midresHtmlWriter, int matrixWidth, StringBuilder dhtmlArray, int i, String nodeUrl, String lowresFn, PictureInfo pi) throws IOException {
-        midresHtmlWriter.write("<a href=\"" + nodeUrl + "\"");
+        midresHtmlWriter.write(A_HREF + nodeUrl + "\"");
         final String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4((pi.getDescription().replace("\'", "\\\\'")));
         if (request.isGenerateMouseover()) {
             midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\"", i));
@@ -838,7 +821,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void writeHyperlink(final Writer out, final String target, final String linkText) throws IOException {
-        out.write("<a href=\"" + target + "\">" + linkText + "</a>");
+        out.write(A_HREF + target + "\">" + linkText + "</a>");
     }
 
     @NotNull
@@ -869,7 +852,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         // write an anchor so the up come back
         // but only if we are generating MidresHTML pages
-        out.write("<a href=\"");
+        out.write(A_HREF);
         if (request.isGenerateMidresHtml()) {
             out.write(midresHtmlFile.toPath().getFileName().toString());
         } else {
@@ -1034,15 +1017,15 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return nextHtmlFilename;
     }
 
-    private static File getOutputImageFilename(final GenerateWebsiteRequest request, final PictureInfo pictureInfo, final String suffix, final int picsWroteCounter) {
-        final String extension = FilenameUtils.getExtension(pictureInfo.getImageFile().getName());
+    private static File getOutputImageFilename(final GenerateWebsiteRequest request, final PictureInfo pictureInfo, final String suffix, final int picsWroteCounter, final boolean keepExtension) {
+        final String extension = keepExtension ? FilenameUtils.getExtension(pictureInfo.getImageFile().getName()) : "";
         switch (request.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
                 final String rootName = cleanupFilename(FilenameUtils.getBaseName(pictureInfo.getImageFile().getName()));
                 return new File(request.getTargetDirectory(), rootName + suffix + extension);
             }
             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
-                final String convertedNumber = Integer.toString(picsWroteCounter + request.getSequentialStartNumber() - 1);
+                final String convertedNumber = Integer.toString(picsWroteCounter);
                 final String padding = "00000";
                 final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
                 final String root = "jpo_" + formattedNumber;
