@@ -21,7 +21,7 @@ window.initMap = function() {
 
     const map = new google.maps.Map( mapDiv, options );
 
-    const marker = new google.maps.Marker({
+    new google.maps.Marker({
         position: latLng,
         map: map,
         draggable: false
