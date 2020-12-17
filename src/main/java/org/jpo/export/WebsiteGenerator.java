@@ -16,7 +16,6 @@ import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ScalablePicture;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -441,88 +440,32 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         try {
             publish(String.format("Processing Group: %s", groupNode.toString()));
 
-            File groupFile;
-            if (groupNode.equals(request.getStartNode())) {
-                groupFile = new File(request.getTargetDirectory(), INDEX_PAGE);
-            } else {
-                int hashCode = groupNode.hashCode();
-                groupFile = new File(request.getTargetDirectory(), "jpo_" + hashCode + ".htm");
-            }
+            final File groupFile = getGroupFile(groupNode);
             files.add(groupFile);
             final BufferedWriter out = new BufferedWriter(new FileWriter(groupFile));
-            final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(request.getPicsPerRow(), out);
+            final String title = ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml();
 
-            LOGGER.log(Level.INFO, "Writing: {0}", groupFile);
-            out.write("<!DOCTYPE HTML>");
-            out.newLine();
-            out.write("<html xml:lang=\"en\" lang=\"en\">");
-            out.newLine();
-
-            out.write("<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>"
-                    + ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml()
-                    + "</title>\n</head>");
-            out.newLine();
-
-            // write body
-            out.write("<body>");
-            out.newLine();
-
-            out.write("<table  style=\"border-spacing: " + request.getCellspacing()
-                    + "px; width: "
-                    + (request.getPicsPerRow() * request.getThumbnailWidth() + (request.getPicsPerRow() - 1) * request.getCellspacing())
-                    + "px\">");
-            out.newLine();
-
-            out.write(String.format("<tr><td colspan=\"%d\">", request.getPicsPerRow()));
-
-            out.write(String.format("<h2>%s</h2>", ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml()));
-
-            if (groupNode.equals(request.getStartNode())) {
-                if (request.isGenerateZipfile()) {
-                    out.newLine();
-                    out.write(String.format("<a href=\"%s\">Download High Resolution Pictures as a Zipfile</a>", request.getDownloadZipFileName()));
-                    out.newLine();
-                }
-            } else {
-                //link to parent
-                final SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
-                String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
-                if (parentNode.equals(request.getStartNode())) {
-                    parentLink = INDEX_PAGE;
-                }
-
-                out.write(String.format("<p>Up to: <a href=\"%s\">%s</a>", parentLink, parentNode.toString()));
-                out.newLine();
-            }
+            writeHtmlHeader(out, title);
+            final int tableWidth = (request.getPicsPerRow() * request.getThumbnailWidth() + (request.getPicsPerRow() - 1) * request.getCellspacing());
+            startGroupTable(groupNode, out, tableWidth);
+            writeLinkToZipFile(groupNode, out);
+            writeLinkToParentGroup(groupNode, out);
 
             out.write("</td></tr>\n<tr>");
             out.newLine();
 
-            int childCount = groupNode.getChildCount();
-            int childNumber = 1;
-            final Enumeration<TreeNode> kids = groupNode.children();
-            while (kids.hasMoreElements() && (!progressGui.getInterruptSemaphore().getShouldInterrupt())) {
-                final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
+            final DescriptionsBuffer descriptionsBuffer = new DescriptionsBuffer(request.getPicsPerRow(), out);
+            for (int i = 0; i < groupNode.getChildCount(); i++) {
+                final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) groupNode.getChildAt(i);
                 if (node.getUserObject() instanceof GroupInfo gi) {
-
-                    out.write("<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">");
-
-                    out.write("<a href=\"jpo_" + node.hashCode() + ".htm\">"
-                            + "<img src=\"" + FOLDER_ICON + "\" width=\"350\" height=\"295\" /></a>");
-
-                    out.write("</td>");
-                    out.newLine();
-
+                    writeGroupCell(out, descriptionsBuffer, node);
                     descriptionsBuffer.putDescription(gi.getGroupName());
-
-                    // recursively call the method to output that group.
-                    writeGroup(node);
-                    folderIconRequired = true;
                 } else {
-                    writePicture(node, out, groupFile, childNumber, childCount, descriptionsBuffer);
+                    writePicture(node, out, groupFile, i, groupNode.getChildCount());
+                    descriptionsBuffer.putDescription(((PictureInfo) node.getUserObject()).getDescription());
                 }
-                childNumber++;
             }
+
             if (progressGui.getInterruptSemaphore().getShouldInterrupt()) {
                 progressGui.setDoneString(Settings.getJpoResources().getString("htmlDistillerInterrupt"));
             }
@@ -548,6 +491,84 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     }
 
+    private void writeGroupCell(final BufferedWriter out, final DescriptionsBuffer descriptionsBuffer, final SortableDefaultMutableTreeNode node) throws IOException {
+        out.write("<td class=\"groupThumbnailCell\" valign=\"bottom\" align=\"left\">");
+
+        out.write("<a href=\"jpo_" + node.hashCode() + ".htm\">"
+                + "<img src=\"" + FOLDER_ICON + "\" width=\"350\" height=\"295\" /></a>");
+
+        out.write("</td>");
+        out.newLine();
+
+
+        // recursively call the method to output that group.
+        writeGroup(node);
+        folderIconRequired = true;
+    }
+
+    private void writeLinkToParentGroup(SortableDefaultMutableTreeNode groupNode, BufferedWriter out) throws IOException {
+        if (!groupNode.equals(request.getStartNode())) {
+            //link to parent
+            final SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
+            String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
+            if (parentNode.equals(request.getStartNode())) {
+                parentLink = INDEX_PAGE;
+            }
+
+            out.write(String.format("<p>Up to: <a href=\"%s\">%s</a>", parentLink, parentNode.toString()));
+            out.newLine();
+        }
+    }
+
+    private void writeLinkToZipFile(SortableDefaultMutableTreeNode groupNode, BufferedWriter out) throws IOException {
+        if (groupNode.equals(request.getStartNode())) {
+            if (request.isGenerateZipfile()) {
+                out.newLine();
+                out.write(String.format("<a href=\"%s\">Download High Resolution Pictures as a Zipfile</a>", request.getDownloadZipFileName()));
+                out.newLine();
+            }
+        }
+    }
+
+    private void startGroupTable(SortableDefaultMutableTreeNode groupNode, BufferedWriter out, int tableWidth) throws IOException {
+        out.write("<table  style=\"border-spacing: " + request.getCellspacing()
+                + "px; width: "
+                + tableWidth
+                + "px\">");
+        out.newLine();
+
+        out.write(String.format("<tr><td colspan=\"%d\">", request.getPicsPerRow()));
+
+        out.write(String.format("<h2>%s</h2>", ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml()));
+    }
+
+    private void writeHtmlHeader(BufferedWriter out, String title) throws IOException {
+        out.write("<!DOCTYPE HTML>");
+        out.newLine();
+        out.write("<html xml:lang=\"en\" lang=\"en\">");
+        out.newLine();
+
+        out.write("<head>\n\t<link rel=\"StyleSheet\" href=\"jpo.css\" type=\"text/css\" media=\"screen\" />\n\t<title>"
+                + title
+                + "</title>\n</head>");
+        out.newLine();
+        // write body
+        out.write("<body>");
+        out.newLine();
+    }
+
+    @NotNull
+    private File getGroupFile(SortableDefaultMutableTreeNode groupNode) {
+        File groupFile;
+        if (groupNode.equals(request.getStartNode())) {
+            groupFile = new File(request.getTargetDirectory(), INDEX_PAGE);
+        } else {
+            int hashCode = groupNode.hashCode();
+            groupFile = new File(request.getTargetDirectory(), "jpo_" + hashCode + ".htm");
+        }
+        return groupFile;
+    }
+
     /**
      * Write html for a picture in the set of webpages.
      *
@@ -558,7 +579,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      *                           thumbnails of the parent group
      * @param childNumber        The current position of the picture in the group
      * @param childCount         The total number of pictures in the group
-     * @param descriptionsBuffer A buffer for the thumbnails page
      * @throws IOException If there was some sort of IO Error.
      */
     private void writePicture(
@@ -566,13 +586,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final BufferedWriter out,
             final File groupFile,
             final int childNumber,
-            final int childCount,
-            final DescriptionsBuffer descriptionsBuffer)
+            final int childCount)
             throws IOException {
 
         final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
         publish(String.format("Writing picture node %d: %s", picsWroteCounter, pictureInfo.toString()));
-        descriptionsBuffer.putDescription(pictureInfo.getDescription());
 
 
         final File lowresFile = getOutputImageFilename(request, pictureInfo, "_l.", picsWroteCounter, true);
