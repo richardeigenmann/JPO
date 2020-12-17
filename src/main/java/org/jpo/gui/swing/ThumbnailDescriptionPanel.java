@@ -32,6 +32,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 
+/**
+ * Swing component that show information underneath the thumbnail
+ */
 public class ThumbnailDescriptionPanel extends JPanel {
 
     /**

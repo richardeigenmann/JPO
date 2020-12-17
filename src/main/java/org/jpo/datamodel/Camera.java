@@ -248,7 +248,7 @@ public class Camera implements Serializable {
      * @return the number of files in the camera directory tree
      */
     public int countFiles() {
-        return Tools.countfiles( Objects.requireNonNull(getRootDir()).listFiles() );
+        return Tools.countFiles(Objects.requireNonNull(getRootDir()).listFiles());
     }
 
     /**

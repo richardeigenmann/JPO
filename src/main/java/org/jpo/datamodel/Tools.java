@@ -82,7 +82,7 @@ public class Tools {
      * @param fileArray The files to count
      * @return the number of real files in the array of files
      */
-    public static int countfiles(final File[] fileArray) {
+    public static int countFiles(final File[] fileArray) {
         if (fileArray == null) {
             return 0;
         }
@@ -93,7 +93,7 @@ public class Tools {
                 if (!fileEntry.isDirectory()) {
                     numFiles++;
                 } else {
-                    numFiles += countfiles(fileEntry.listFiles());
+                    numFiles += countFiles(fileEntry.listFiles());
                 }
             } catch (final SecurityException x) {
                 // Log the error and ignore it and continue
@@ -130,38 +130,6 @@ public class Tools {
             }
         }
         return false;
-    }
-
-
-    /**
-     * method to copy any file from sourceUrl source location to sourceUrl
-     * target File location. Works better because files are writable whilst most
-     * URL are read only.
-     *
-     * @param sourceFile source URL
-     * @param targetFile target file
-     */
-    public static void copyPicture(final File sourceFile, final File targetFile) {
-        try (
-                final InputStream in = new FileInputStream(sourceFile);
-                final OutputStream out = new FileOutputStream(targetFile)) {
-
-            final BufferedInputStream bin = new BufferedInputStream(in);
-            final BufferedOutputStream bout = new BufferedOutputStream(out);
-
-            copyBufferedStream(bin, bout);
-        } catch (final IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("copyPictureError1")
-                            + sourceFile.toString()
-                            + Settings.getJpoResources().getString("copyPictureError2")
-                            + targetFile.toString()
-                            + Settings.getJpoResources().getString("copyPictureError3")
-                            + e.getMessage(),
-                    Settings.getJpoResources().getString("genericError"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
     }
 
 

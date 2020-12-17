@@ -62,7 +62,7 @@ public class PictureAdder
 
         LOGGER.log(Level.FINE, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{startNode, chosenFiles.length, newOnly, recurseDirectories, retainDirectories});
 
-        progGui = new ProgressGui(Tools.countfiles(chosenFiles),
+        progGui = new ProgressGui(Tools.countFiles(chosenFiles),
                 Settings.getJpoResources().getString("PictureAdderProgressDialogTitle"),
                 Settings.getJpoResources().getString("picturesAdded"));
         Settings.getPictureCollection().setSendModelUpdates(false);
