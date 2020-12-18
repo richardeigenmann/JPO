@@ -999,17 +999,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.info("Setting up ssh connection:");
         final JSch jsch = new JSch();
         try {
-            LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{request.getSshUser(), request.getSshServer(), request.getSshPort()});
-            final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
-            if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
-                session.setPassword(request.getSshPassword());
-            } else {
-                jsch.addIdentity(request.getSshKeyFile());
-            }
-            final Properties config = new Properties();
-            config.put("StrictHostKeyChecking", "no");
-            session.setConfig(config);
-            session.connect();
+            final Session session = getSshSession(jsch, request);
 
             for (final File file : files) {
                 publish(String.format("scp %s", file.getName()));
@@ -1020,6 +1010,22 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         } catch (final JSchException | IOException ex) {
             LOGGER.severe(ex.getMessage());
         }
+    }
+
+    @NotNull
+    public static Session getSshSession(final JSch jsch, final GenerateWebsiteRequest request) throws JSchException {
+        LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{request.getSshUser(), request.getSshServer(), request.getSshPort()});
+        final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
+        if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
+            session.setPassword(request.getSshPassword());
+        } else {
+            jsch.addIdentity(request.getSshKeyFile());
+        }
+        final Properties config = new Properties();
+        config.put("StrictHostKeyChecking", "no");
+        session.setConfig(config);
+        session.connect();
+        return session;
     }
 
     private void scp(final Session session, final File file) throws JSchException, IOException {

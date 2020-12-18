@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -488,17 +487,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         String response = "";
         final JSch jsch = new JSch();
         try {
-            LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{request.getSshUser(), request.getSshServer(), request.getSshPort()});
-            final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
-            if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
-                session.setPassword(request.getSshPassword());
-            } else {
-                jsch.addIdentity(request.getSshKeyFile());
-            }
-            final Properties config = new Properties();
-            config.put("StrictHostKeyChecking", "no");
-            session.setConfig(config);
-            session.connect();
+            final Session session = WebsiteGenerator.getSshSession(jsch, request);
 
             LOGGER.info("Opening Channel \"exec\"...");
             final Channel channel = session.openChannel("exec");
