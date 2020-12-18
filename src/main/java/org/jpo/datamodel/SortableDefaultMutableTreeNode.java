@@ -411,7 +411,7 @@ public class SortableDefaultMutableTreeNode
         final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
         return ((List<?>) o).stream()
                 .filter(element -> element instanceof SortableDefaultMutableTreeNode)
-                .map(element -> (SortableDefaultMutableTreeNode) element)
+                .map(SortableDefaultMutableTreeNode.class::cast)
                 .collect(Collectors.toList());
     }
 
