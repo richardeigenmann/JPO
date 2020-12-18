@@ -278,8 +278,8 @@ public class WebsiteGeneratorTest {
 
     @Test
     void getEndIndex() {
-        assertEquals(5, WebsiteGenerator.getEndIndex(0, 0, 3, 5));
-        assertEquals(35, WebsiteGenerator.getEndIndex(0, 0, 300, 5));
-        assertEquals(135, WebsiteGenerator.getEndIndex(100, 103, 300, 5));
+        assertEquals(5, WebsiteGenerator.getEndIndex(0, 3, 5));
+        assertEquals(35, WebsiteGenerator.getEndIndex(0, 300, 5));
+        assertEquals(135, WebsiteGenerator.getEndIndex(100, 300, 5));
     }
 }

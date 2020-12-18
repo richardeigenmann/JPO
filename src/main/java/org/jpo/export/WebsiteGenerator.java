@@ -688,7 +688,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         final int matrixWidth = 130;
         final StringBuilder previewArray = writeNumberPickTable(pictureNode, childNumber, midresHtmlWriter, matrixWidth);
         midresHtmlWriter.newLine();
-        writeMidresLinks(pictureNode, childNumber, highresFile, midresHtmlWriter);
+        writeMidresLinks(pictureNode, highresFile, midresHtmlWriter);
 
         midresHtmlWriter.newLine();
         midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
@@ -744,7 +744,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         final StringBuilder dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
 
         final int startIndex = getStartIndex(childNumber, indexPerRow);
-        final int endIndex = getEndIndex(startIndex, childNumber, childCount, indexPerRow);
+        final int endIndex = getEndIndex(startIndex, childCount, indexPerRow);
 
 
         for (int i = startIndex; i < endIndex; i++) {
@@ -803,11 +803,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return startIndex;
     }
 
-    public static int getEndIndex(final int startIndex, final int currentIndex, final int childCount, final int indexPerRow) {
+    public static int getEndIndex(final int startIndex, final int childCount, final int indexPerRow) {
         final int numbersToShow = 35;
         int endIndex = startIndex + numbersToShow;
         if (endIndex > childCount) {
-            endIndex = ((int) ((childCount + indexPerRow) / indexPerRow)) * indexPerRow;
+            endIndex = ((childCount + indexPerRow) / indexPerRow) * indexPerRow;
         }
         return endIndex;
     }
@@ -966,7 +966,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return dhtmlArray;
     }
 
-    private void writeMidresLinks(final SortableDefaultMutableTreeNode pictureNode, final int childNumber, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
+    private void writeMidresLinks(final SortableDefaultMutableTreeNode pictureNode, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
         writeHyperlink(midresHtmlWriter, lowresHtmlFiles.get(pictureNode.getParent().hashCode()).getName() + "#" + StringEscapeUtils.escapeHtml4(lowresFiles.get(pictureNode.hashCode()).getName()), "Up");
         midresHtmlWriter.write("&nbsp;");
         midresHtmlWriter.newLine();
