@@ -31,6 +31,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A little GUI to experiment with the ThumbnailDescriptions
+ */
 public class ThumbnailDescriptionTester {
 
     /**

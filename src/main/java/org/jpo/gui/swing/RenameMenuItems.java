@@ -34,6 +34,9 @@ import static java.util.Objects.isNull;
  */
 
 
+/**
+ * static class to create a collection of Rename menu items.
+ */
 public class RenameMenuItems {
 
     private RenameMenuItems() {

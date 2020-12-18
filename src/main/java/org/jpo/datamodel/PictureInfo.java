@@ -991,6 +991,11 @@ public class PictureInfo implements Serializable {
         }
     }
 
+    /**
+     * Returns a Set of categories that have been applied to this picture
+     *
+     * @return the Set of categories
+     */
     public Set<Integer> getCategoryAssignments() {
         return categoryAssignments;
     }

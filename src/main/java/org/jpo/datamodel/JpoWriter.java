@@ -109,6 +109,12 @@ public class JpoWriter {
         bufferedWriter.newLine();
     }
 
+    /**
+     * Accessor to write the xml header so that it can be unit tested
+     *
+     * @param bufferedWriter the writer where the output goes
+     * @throws IOException Can throw an IOException
+     */
     @TestOnly
     public static void writeXmlHeaderTestOnly(final BufferedWriter bufferedWriter) throws IOException {
         writeXmlHeader(bufferedWriter);

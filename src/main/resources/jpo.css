@@ -64,6 +64,9 @@ img {
     border: 1px solid black;
 }
 
+.selfHighlight {
+    background-color: #6699ff;
+}
 
 .sidepanelMouseover {
     max-width: 180px;

@@ -26,6 +26,10 @@ import static org.jpo.datamodel.Settings.FieldCodes.*;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
+/**
+ * An xml parser to load the collections.
+ */
 public class SaxEventHandler extends DefaultHandler {
 
     private static final String LINE_SEPERATOR = System.getProperty("line.separator");
@@ -34,7 +38,7 @@ public class SaxEventHandler extends DefaultHandler {
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( SaxEventHandler.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(SaxEventHandler.class.getName());
 
     /**
      * temporary reference to the group node being read
@@ -42,6 +46,7 @@ public class SaxEventHandler extends DefaultHandler {
     private SortableDefaultMutableTreeNode currentGroup;
 
     private final StringBuilder lowresUrls;
+
     /**
      * variable used to interpret what the text is that is coming in through the
      * parser.
@@ -68,11 +73,10 @@ public class SaxEventHandler extends DefaultHandler {
      * @param attrs attributes
      */
     @Override
-    public void startElement( final String namespaceURI,
-            final String lName,
-            final String qName,
-            final Attributes attrs )
-            {
+    public void startElement(final String namespaceURI,
+                             final String lName,
+                             final String qName,
+                             final Attributes attrs ) {
         GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
@@ -144,9 +148,9 @@ public class SaxEventHandler extends DefaultHandler {
      * @param qName the qualified name
      */
     @Override
-    public void endElement( final String namespaceURI,
-            final String sName, // simple name
-            final String qName // qualified name
+    public void endElement(final String namespaceURI,
+                           final String sName, // simple name
+                           final String qName // qualified name
     ) {
         if ( null != qName ) {
             switch ( qName ) {

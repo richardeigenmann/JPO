@@ -36,10 +36,20 @@ public class ImageBytes implements Serializable {
     private Instant lastModification;
     private final byte[] bytes;
 
+    /**
+     * Can be queried to see if the image came from the cache or was loaded from disk
+     *
+     * @return true if retrieved from cache
+     */
     public boolean isRetrievedFromCache() {
         return retrievedFromCache;
     }
 
+    /**
+     * Sets the retrievedFromCache flag.
+     *
+     * @param retrievedFromCache the new value for the flag
+     */
     public void setRetrievedFromCache(boolean retrievedFromCache) {
         this.retrievedFromCache = retrievedFromCache;
     }

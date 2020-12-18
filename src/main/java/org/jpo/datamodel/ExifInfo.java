@@ -47,7 +47,7 @@ public class ExifInfo {
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ExifInfo.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(ExifInfo.class.getName());
     /**
      * The File of the image to be decoded
      */
@@ -56,6 +56,12 @@ public class ExifInfo {
      * The brand and model of the camera
      */
     private String camera = "";
+
+    /**
+     * Returns the camera brand
+     *
+     * @return the camera brand
+     */
     public String getCamera() {
         return camera;
     }

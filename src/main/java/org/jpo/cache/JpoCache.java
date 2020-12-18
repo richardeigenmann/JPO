@@ -465,11 +465,21 @@ public class JpoCache {
         }
     }
 
+    /**
+     * Accessor to the cache to facilitate unit tests.
+     *
+     * @param key the entry to remove
+     */
     @TestOnly
     public static void removeFromThumbnailCache(final String key) {
         thumbnailMemoryAndDiskCache.remove(key);
     }
 
+    /**
+     * Accessor to the cache to facilitate unit tests.
+     *
+     * @param key the entry to remove
+     */
     @TestOnly
     public static void removeFromHighresCache(final File key) {
         highresMemoryCache.remove(key);

@@ -65,6 +65,11 @@ public class Settings {
         Settings.pictureCollection = pictureCollection;
     }
 
+    /**
+     * Returns whether a log should be written
+     *
+     * @return true if a log should be written.
+     */
     public static boolean isWriteLog() {
         return writeLog;
     }
