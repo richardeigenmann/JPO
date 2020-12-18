@@ -262,4 +262,24 @@ public class WebsiteGeneratorTest {
     }
 
 
+    @Test
+    void getStartIndex() {
+        assertEquals(0, WebsiteGenerator.getStartIndex(0, 5));
+        assertEquals(0, WebsiteGenerator.getStartIndex(1, 5));
+        assertEquals(0, WebsiteGenerator.getStartIndex(4, 5));
+        assertEquals(0, WebsiteGenerator.getStartIndex(5, 5));
+        assertEquals(0, WebsiteGenerator.getStartIndex(15, 5));
+        assertEquals(0, WebsiteGenerator.getStartIndex(16, 5));
+        assertEquals(0, WebsiteGenerator.getStartIndex(19, 5));
+        assertEquals(5, WebsiteGenerator.getStartIndex(20, 5));
+        assertEquals(205, WebsiteGenerator.getStartIndex(223, 5));
+    }
+
+
+    @Test
+    void getEndIndex() {
+        assertEquals(5, WebsiteGenerator.getEndIndex(0, 0, 3, 5));
+        assertEquals(35, WebsiteGenerator.getEndIndex(0, 0, 300, 5));
+        assertEquals(135, WebsiteGenerator.getEndIndex(100, 103, 300, 5));
+    }
 }
