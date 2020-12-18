@@ -72,9 +72,11 @@ public class WebsiteGeneratorTest {
     public void testWriteCss() {
         try {
             final Path path = Files.createTempDirectory("UnitTestsTempDir");
-            WebsiteGenerator.writeCss(path.toFile());
+            final ArrayList<File> websiteMemberFiles = new ArrayList<>();
+            WebsiteGenerator.writeCss(path.toFile(), websiteMemberFiles);
             final File cssFile = new File(path.toFile(), "jpo.css");
             assertTrue(cssFile.exists());
+            assertEquals(1, websiteMemberFiles.size());
             Files.delete(cssFile.toPath());
             Files.delete(path);
         } catch (IOException ex) {
@@ -89,9 +91,11 @@ public class WebsiteGeneratorTest {
     public void testWriteRobotsTxt() {
         try {
             final Path path = Files.createTempDirectory("UnitTestsTempDir");
-            WebsiteGenerator.writeRobotsTxt(path.toFile());
+            final ArrayList<File> websiteMemberFiles = new ArrayList<>();
+            WebsiteGenerator.writeRobotsTxt(path.toFile(), websiteMemberFiles);
             final File robotsFile = new File(path.toFile(), "robots.txt");
             assertTrue(robotsFile.exists());
+            assertEquals(1, websiteMemberFiles.size());
             Files.delete(robotsFile.toPath());
             Files.delete(path);
         } catch (IOException ex) {
@@ -104,11 +108,14 @@ public class WebsiteGeneratorTest {
      */
     @Test
     public void testWriteJpoJs() {
+
         try {
             final Path path = Files.createTempDirectory("UnitTestsTempDir");
-            WebsiteGenerator.writeJpoJs(path.toFile());
+            final ArrayList<File> websiteMemberFiles = new ArrayList<>();
+            WebsiteGenerator.writeJpoJs(path.toFile(), websiteMemberFiles);
             final File jsFile = new File(path.toFile(), "jpo.js");
             assertTrue(jsFile.exists());
+            assertEquals(1, websiteMemberFiles.size());
             Files.delete(jsFile.toPath());
             Files.delete(path);
         } catch (IOException ex) {
@@ -126,6 +133,7 @@ public class WebsiteGeneratorTest {
         request.setWriteRobotsTxt(true);
         request.setOpenWebsiteAfterRendering(false);
         request.setPictureNaming(GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER);
+        request.setGenerateMouseover(true);
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("Website");
             request.setTargetDirectory(tempDirWithPrefix.toFile());
@@ -240,12 +248,12 @@ public class WebsiteGeneratorTest {
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("GenerateFolderIcon");
             request.setTargetDirectory(tempDirWithPrefix.toFile());
-            final List<File> files = new ArrayList<>();
-            WebsiteGenerator.writeFolderIconTest(request, files);
+            final List<File> websiteMemberFiles = new ArrayList<>();
+            WebsiteGenerator.writeFolderIconTest(request, websiteMemberFiles);
 
-            assertEquals(1, files.size());
-            assert (Files.exists(files.get(0).toPath()));
-            assertEquals(WebsiteGenerator.FOLDER_ICON, files.get(0).getName());
+            assertEquals(1, websiteMemberFiles.size());
+            assert (Files.exists(websiteMemberFiles.get(0).toPath()));
+            assertEquals(WebsiteGenerator.FOLDER_ICON, websiteMemberFiles.get(0).getName());
 
             FileUtils.deleteDirectory(request.getTargetDirectory());
         } catch (final IOException e) {
