@@ -1,10 +1,19 @@
 package org.jpo.gui;
 
 
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.JpoEventBus;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.logging.Logger;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /*
@@ -26,10 +35,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 
 /**
- *
  * @author Richard Eigenmann
  */
 public class ApplicationEventHandlerTest {
+
+    private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandlerTest.class.getName());
+
 
     /**
      * Test Constructor
@@ -38,6 +49,67 @@ public class ApplicationEventHandlerTest {
     public void testConstructor() {
         final ApplicationEventHandler aeh = new ApplicationEventHandler();
         assertNotNull(aeh);
-        assertNotNull( JpoEventBus.getInstance() );
+        assertNotNull(JpoEventBus.getInstance());
+    }
+
+
+    @Test
+    public void testDeleteNodeAndFile() {
+        try {
+            // Create a collection
+            final Path tempDir = Files.createTempDirectory("testDeleteNodeAndFile");
+
+            final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
+            rootNode.setUserObject(new GroupInfo("Root Node"));
+
+            final BufferedInputStream bin1 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).openStream());
+            final File picture1 = new File(tempDir.toFile(), "picture1.jpg");
+            final BufferedOutputStream bout1 = new BufferedOutputStream(new FileOutputStream(picture1));
+            bin1.transferTo(bout1);
+            final File picture2 = new File(tempDir.toFile(), "picture2.jpg");
+            final BufferedInputStream bin2 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).openStream());
+            final BufferedOutputStream bout2 = new BufferedOutputStream(new FileOutputStream(picture2));
+            bin2.transferTo(bout2);
+            final File picture3 = new File(tempDir.toFile(), "picture3.jpg");
+            final BufferedInputStream bin3 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).openStream());
+            final BufferedOutputStream bout3 = new BufferedOutputStream(new FileOutputStream(picture3));
+            bin3.transferTo(bout3);
+
+            final SortableDefaultMutableTreeNode pi1 = new SortableDefaultMutableTreeNode();
+            final PictureInfo pictureInfo1 = new PictureInfo(picture1, "Image 1");
+            pi1.setUserObject(pictureInfo1);
+            rootNode.add(pi1);
+            final SortableDefaultMutableTreeNode pi2 = new SortableDefaultMutableTreeNode();
+            final PictureInfo pictureInfo2 = new PictureInfo(picture2, "Image 2");
+            pi2.setUserObject(pictureInfo2);
+            rootNode.add(pi2);
+            final SortableDefaultMutableTreeNode pi3 = new SortableDefaultMutableTreeNode();
+            final PictureInfo pictureInfo3 = new PictureInfo(picture3, "Image 3");
+            pi3.setUserObject(pictureInfo3);
+            rootNode.add(pi3);
+
+            // Delete node 2
+            //    First assert it exists and has a file
+            assertEquals(pi2, rootNode.getChildAt(1));
+            assert (picture2.exists());
+
+            ApplicationEventHandler.deleteNodeAndFileTest(pi2);
+
+            //    Now the node and the file must be gone
+            assertEquals(pi1, rootNode.getChildAt(0));
+            assertEquals(pi3, rootNode.getChildAt(1));
+            assertFalse(picture2.exists());
+
+
+            // cleanup
+            Files.delete(picture1.toPath());
+            Files.delete(picture3.toPath());
+            Files.delete(tempDir);
+
+        } catch (final IOException e) {
+            fail(e.getMessage());
+        }
+
+
     }
 }

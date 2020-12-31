@@ -6,6 +6,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.JpoCache;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.cache.ThumbnailCreationFactory;
@@ -1358,7 +1359,7 @@ public class ApplicationEventHandler {
                     return;
                 }
             }
-        } catch (NullPointerException ex) {
+        } catch (final NullPointerException ex) {
             return;
         }
 
@@ -1371,8 +1372,9 @@ public class ApplicationEventHandler {
 
         if (option == 0 && highresFile.exists()) {
             try {
-                Files.delete(highresFile.toPath());
-                request.node().deleteNode();
+                //Files.delete(highresFile.toPath());
+                //request.node().deleteNode();
+                deleteNodeAndFile(request.node());
             } catch (IOException e) {
                 LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
@@ -1402,24 +1404,33 @@ public class ApplicationEventHandler {
 
         if (option == 0) {
             for (final SortableDefaultMutableTreeNode selectedNode : request.nodes()) {
-                if (selectedNode.getUserObject() instanceof PictureInfo pi) {
-                    final File highresFile = pi.getImageFile();
-                    if (highresFile.exists()) {
                         try {
-                            Files.delete(highresFile.toPath());
-                            selectedNode.deleteNode();
+                            deleteNodeAndFile(selectedNode);
                         } catch (final IOException e) {
-                            LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{highresFile, e.getMessage()});
+                            LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{selectedNode, e.getMessage()});
                             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                                    Settings.getJpoResources().getString("fileDeleteError") + highresFile.toString(),
+                                    Settings.getJpoResources().getString("fileDeleteError") + selectedNode.toString(),
                                     GENERIC_ERROR,
                                     JOptionPane.ERROR_MESSAGE);
                         }
-                    }
-                }
             }
             Settings.getPictureCollection().clearSelection();
         }
+    }
+
+    @TestOnly
+    public static void deleteNodeAndFileTest(final SortableDefaultMutableTreeNode node) throws IOException {
+        deleteNodeAndFile(node);
+    }
+
+    private static void deleteNodeAndFile(final SortableDefaultMutableTreeNode node) throws IOException {
+        if (node.getUserObject() instanceof PictureInfo pi) {
+            final File highresFile = pi.getImageFile();
+            if (highresFile.exists()) {
+                Files.delete(highresFile.toPath());
+            }
+        }
+        node.deleteNode();
     }
 
     private String getFilenames(final Collection<SortableDefaultMutableTreeNode> nodes) {
