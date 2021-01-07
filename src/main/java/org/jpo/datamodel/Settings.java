@@ -782,6 +782,12 @@ public class Settings {
      */
     private static int defaultHtmlFtpPort = 21;
 
+
+    /**
+     * Returns the ftp port for Html export
+     *
+     * @return the default ftp port for the Html export
+     */
     public static String getDefaultHtmlFtpUser() {
         return defaultHtmlFtpUser;
     }

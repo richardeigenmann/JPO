@@ -11,15 +11,12 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 /*
- ConsolidateGroupWorkerTest.java: 
-
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2020  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,8 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class ApplicationEventHandlerTest {
 
-    private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandlerTest.class.getName());
-
+    private static final String TEST_IMAGE = "exif-test-canon-eos-350d.jpg";
 
     /**
      * Test Constructor
@@ -62,18 +58,21 @@ public class ApplicationEventHandlerTest {
             final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
 
-            final BufferedInputStream bin1 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).openStream());
             final File picture1 = new File(tempDir.toFile(), "picture1.jpg");
-            final BufferedOutputStream bout1 = new BufferedOutputStream(new FileOutputStream(picture1));
-            bin1.transferTo(bout1);
+            try (final BufferedInputStream bin1 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
+                 final BufferedOutputStream bout1 = new BufferedOutputStream(new FileOutputStream(picture1));) {
+                bin1.transferTo(bout1);
+            }
             final File picture2 = new File(tempDir.toFile(), "picture2.jpg");
-            final BufferedInputStream bin2 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).openStream());
-            final BufferedOutputStream bout2 = new BufferedOutputStream(new FileOutputStream(picture2));
-            bin2.transferTo(bout2);
+            try (final BufferedInputStream bin2 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
+                 final BufferedOutputStream bout2 = new BufferedOutputStream(new FileOutputStream(picture2));) {
+                bin2.transferTo(bout2);
+            }
             final File picture3 = new File(tempDir.toFile(), "picture3.jpg");
-            final BufferedInputStream bin3 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).openStream());
-            final BufferedOutputStream bout3 = new BufferedOutputStream(new FileOutputStream(picture3));
-            bin3.transferTo(bout3);
+            try (final BufferedInputStream bin3 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
+                 final BufferedOutputStream bout3 = new BufferedOutputStream(new FileOutputStream(picture3));) {
+                bin3.transferTo(bout3);
+            }
 
             final SortableDefaultMutableTreeNode pi1 = new SortableDefaultMutableTreeNode();
             final PictureInfo pictureInfo1 = new PictureInfo(picture1, "Image 1");

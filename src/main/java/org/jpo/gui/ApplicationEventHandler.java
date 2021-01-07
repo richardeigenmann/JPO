@@ -1372,8 +1372,6 @@ public class ApplicationEventHandler {
 
         if (option == 0 && highresFile.exists()) {
             try {
-                //Files.delete(highresFile.toPath());
-                //request.node().deleteNode();
                 deleteNodeAndFile(request.node());
             } catch (IOException e) {
                 LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});

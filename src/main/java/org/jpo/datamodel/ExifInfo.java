@@ -66,22 +66,47 @@ public class ExifInfo {
         return camera;
     }
 
+    /**
+     * Returns the lens used to take the picture
+     *
+     * @return the lens used to take the picture
+     */
     public String getLens() {
         return lens;
     }
 
+    /**
+     * Returns the aperture used to take the picture
+     *
+     * @return Returns the aperture used to take the picture
+     */
     public String getAperture() {
         return aperture;
     }
 
+    /**
+     * Returns the shutter speed used to take the picture
+     *
+     * @return Returns the shutter speed used to take the picture
+     */
     public String getShutterSpeed() {
         return shutterSpeed;
     }
 
+    /**
+     * Returns the focal length used in the lens
+     *
+     * @return Returns the focal length used in the lens
+     */
     public String getFocalLength() {
         return focalLength;
     }
 
+    /**
+     * Returns the ISO sensitivity used when taking the picture
+     *
+     * @return Returns the ISO sensitivity used when taking the picture
+     */
     public String getIso() {
         return iso;
     }

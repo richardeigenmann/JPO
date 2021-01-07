@@ -140,6 +140,9 @@ public class JpoWriter {
         bufferedWriter.newLine();
     }
 
+    /**
+     * Only to be used in the unit tests
+     */
     @TestOnly
     public static void writeCategoriesBlockTestOnly(final PictureCollection pictureCollection, final BufferedWriter bufferedWriter) throws IOException {
         writeCategoriesBlock(pictureCollection, bufferedWriter);
@@ -214,6 +217,9 @@ public class JpoWriter {
         }
     }
 
+    /**
+     * Only to be used in the unit tests
+     */
     @TestOnly
     public static void writePictureTestOnly(final PictureInfo pictureInfo,
                                             final BufferedWriter bufferedWriter,
@@ -246,6 +252,9 @@ public class JpoWriter {
         }
     }
 
+    /**
+     * Only to be used in the unit tests
+     */
     @TestOnly
     public static void writeCollectionDTDTestOnly(final File directory) {
         writeCollectionDTD(directory);

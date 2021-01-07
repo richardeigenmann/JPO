@@ -53,7 +53,14 @@ public class SaxEventHandler extends DefaultHandler {
      */
     private Settings.FieldCodes currentField;
 
-    public SaxEventHandler( final SortableDefaultMutableTreeNode startNode, final LabelFrame loadProgressGui, final StringBuilder lowresUrls ) {
+    /**
+     * Constructs the Sax XML parser
+     *
+     * @param startNode       The starting node
+     * @param loadProgressGui the progress GUI to update
+     * @param lowresUrls      the lowresUrls to pick up on
+     */
+    public SaxEventHandler(final SortableDefaultMutableTreeNode startNode, final LabelFrame loadProgressGui, final StringBuilder lowresUrls) {
         currentGroup = startNode;
         this.loadProgressGui = loadProgressGui;
         this.lowresUrls = lowresUrls;
