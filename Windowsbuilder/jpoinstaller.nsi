@@ -26,7 +26,7 @@ SetCompressor lzma
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-!insertmacro MUI_PAGE_LICENSE "..\src\dtd\gpl.txt"
+!insertmacro MUI_PAGE_LICENSE "..\src\main\resources\gpl.txt"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
 ; Instfiles page
@@ -69,12 +69,12 @@ SectionEnd
 Section -AdditionalIcons
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
   CreateDirectory "$SMPROGRAMS\Java Picture Organizer"
-  CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Jpo.lnk" "$INSTDIR\org.jpo.exe"
+  CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Jpo.lnk" "$INSTDIR\Jpo.exe"
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
   CreateShortCut "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk" "$INSTDIR\uninst.exe"
   
   ;create desktop shortcut
-  CreateShortCut "$DESKTOP\Jpo.lnk" "$INSTDIR\org.jpo.exe" "$INSTDIR"
+  CreateShortCut "$DESKTOP\Jpo.lnk" "$INSTDIR\Jpo.exe" "$INSTDIR"
 SectionEnd
 
 Section -Post
@@ -103,7 +103,7 @@ Section Uninstall
   Delete "$INSTDIR\${PRODUCT_NAME}.url"
   Delete "$INSTDIR\uninst.exe"
   Delete "$INSTDIR\Jpo.exe"
-  Delete "$INSTDIR\org.jpo-0.13-all.jar"
+  Delete "$INSTDIR\Jpo-all.jar"
   RMDir  "$INSTDIR"
   Delete "$SMPROGRAMS\Java Picture Organizer\Uninstall.lnk"
   Delete "$SMPROGRAMS\Java Picture Organizer\Website.lnk"
