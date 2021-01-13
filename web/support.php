@@ -2,15 +2,9 @@
 
 <div class="container">
     <h3>Pictures with Umlauts don't load on Linux</h3>
-    <p>Linux is perfectly happy to have Umlauts in the file name line Z&uuml;rich.jpg. Yet The Java JFileChooser
-    refuses to see this as a valid filename. Not sure how to fix this.</p>
-
-    <h3>Java Web Start doesn't launch</h3>
-    <p>Your browser may not know that it should start "Java Web Start" when it downloads a
-        <code>.jnlp</code> extension file (Mimetype  <code>application/x-java-jnlp-file</code>).
-        If your browser doesn't have the right association you can run it from the command line or 
-        by creating a desktop icon. The command looks like this:</p>
-    <p><code>javaws http://j-po.sourceforge.net/jpo-stable.jnlp</code></p>
+    <p>Linux is perfectly happy to have Umlauts in the file name line Z&uuml;rich.jpg. Yet the Java JFileChooser
+    refuses to see this as a valid filename. Not sure how to fix this. Update: I am experiencing issues with the
+    Locale on my distro. Setting <code>export LANG=en</code> may help.</p>
 
     <p>Often you will need to tell it where the javaws program was installed. On
         Windows do a search for <code>javaws.exe</code>. On Linux you can <br>
@@ -20,9 +14,7 @@
     <h3>Memory settings:</h3>
     <p>If you get <span style="color:red">out of Memory</span> errors then you are probably best off
         using the local jar way of starting this application as you can then set the initial memory heap with 
-        the -Xms and the maximum memory heap with the -Xmx parameters. Of course this can also be done on 
-        the web start version but you would have to set Jpo up on your own webserver so that you 
-        could specify the memory settings in the .jnlp configuration file.</p>
+        the -Xms and the maximum memory heap with the -Xmx parameters. </p>
     <p>I have discovered the option -XX:+AggressiveHeap which sounds great for what JPO needs. Please let me know if you have issues with this.</p>
 
     <hr>
@@ -39,7 +31,7 @@
 
 
     <hr>
-    <p>Last update to this page: 7 Dec 2018<br>
-        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 13 Jan 2021<br>
+        Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

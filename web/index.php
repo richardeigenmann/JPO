@@ -121,7 +121,7 @@
     <p>Why don't you let the author know? Send him an encouraging email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
     <hr>
 
-    <p>Last update to this page: 3 Dec 2018<br>
-        Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 13 Jan 2021<br>
+        Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

@@ -54,6 +54,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="https://github.com/richardeigenmann/JPO">Github</a>
                         <a class="dropdown-item" href="javadoc/index.html">Javadoc</a>
+                        <a class="dropdown-item" href="windows.php">Set up Dev environment on Windows 10</a>
                         <a class="dropdown-item" href="intellij.php">Set up IntelliJ IDEA Dev environment</a>
                         <a class="dropdown-item" href="commandLineDev.php">Command Line Development</a>
                         <a class="dropdown-item" href="eclipse.php">Set up Eclipse Dev environment</a>
