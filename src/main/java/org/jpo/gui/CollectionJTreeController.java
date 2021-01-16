@@ -152,10 +152,10 @@ public class CollectionJTreeController {
          */
         @Override
         protected Transferable createTransferable(final JComponent component) {
-            final TreePath selected = collectionJTree.getSelectionPath();
-            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) selected.getLastPathComponent();
+            final TreePath selectedTreePath = collectionJTree.getSelectionPath();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) selectedTreePath.getLastPathComponent();
             if (node.isRoot()) {
-                LOGGER.info("The Root node must not be dragged. Dragging disabled.");
+                LOGGER.log(Level.SEVERE, "This is the root node: {0}\nPath: {1}\nIt may not be dragged. Dragging disabled.", new Object[]{node, selectedTreePath});
                 return null;
             }
             List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
