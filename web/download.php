@@ -1,16 +1,19 @@
 <?php include("page-start.php"); ?>
 <div class="container">
-    <h3>System Requirements</h3>
+    <h1>Installing JPO on Windows</h1>
 
-    <h3>Installing on Windows</h3>
+    <p>Click on the green download button and wait for the page to sort out the advertising and start the download.</p>
 
     <a href="https://sourceforge.net/projects/j-po/files/JPO-0.14.exe/download" rel="nofollow">
         <img alt="Download JPO Java Picture Organizer for Windows" src="https://a.fsdn.com/con/app/sf-download-button">
     </a>
 
-    <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a>
+    <p> Alternatively, visit the <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a></p>
 
-    <h3>Scary Warnings</h3>
+   <p>Then install the downloaded file and you will find a JPO icon in your Start Menu and on your Desktop. JPO installs
+   istelf into c:\Program Files\JPO</p>
+
+    <h2>Scary Warnings</h2>
     <img src="jpo_scr_7.jpg" width=400 height=319 alt="Scary Warning"><br>
     <p>Sorry, I have not yet figured out how to digitally sign my packages so Windows insists on splashing up
     a scary warning. If you know how I can improve this user experience, please let me know.</p>
@@ -21,7 +24,7 @@
         how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
 
     <hr>
-    <h3>Local Installation</h3>
+    <h1>Java Local Installation</h1>
     <p>First download the jar file and save it in your program directory:<br>
         <a href="http://j-po.sourceforge.net/Jpo-all.jar">Jpo-all.jar</a><br>
     </p>
@@ -38,7 +41,7 @@
     <p><code>c:\windows\system32\java -XX:+AggressiveHeap --enable preview -jar "c:\Program Files\Jpo\Jpo-all.jar"</code></p>
 
     <hr>
-    <p>Last update to this page: 10 Jan 2021<br>
+    <p>Last update to this page: 14 Jan 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

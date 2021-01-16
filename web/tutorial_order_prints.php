@@ -1,6 +1,6 @@
 <?php include("page-start.php"); ?>
 <div class="container">
-    <h2>Tutorial: Order prints from a lab</h2>
+    <h1>Tutorial: Order prints from a lab</h1>
     <h3>Objective:</h3>
     <p>In this tutorial you will learn:<ul><li>How to order prints from from a lab that has a website with upload</li>
         <li>How to copy the pictures onto a Memory Stick</li>
@@ -17,6 +17,6 @@
 
 <hr>
 <p>Last update to this page: 22 Mar 2014<br>
-    Copyright 2009-2014 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    Copyright 2009-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

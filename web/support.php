@@ -1,7 +1,7 @@
 <?php include("page-start.php"); ?>
 
 <div class="container">
-    <h3>Pictures with Umlauts don't load on Linux</h3>
+    <h1>Pictures with Umlauts don't load on Linux</h1>
     <p>Linux is perfectly happy to have Umlauts in the file name line Z&uuml;rich.jpg. Yet the Java JFileChooser
     refuses to see this as a valid filename. Not sure how to fix this. Update: I am experiencing issues with the
     Locale on my distro. Setting <code>export LANG=en</code> may help.</p>
@@ -11,14 +11,14 @@
         <code>find / -name javaws -print</code></p>
 
     <hr>
-    <h3>Memory settings:</h3>
+    <h1>Memory settings:</h1>
     <p>If you get <span style="color:red">out of Memory</span> errors then you are probably best off
         using the local jar way of starting this application as you can then set the initial memory heap with 
         the -Xms and the maximum memory heap with the -Xmx parameters. </p>
     <p>I have discovered the option -XX:+AggressiveHeap which sounds great for what JPO needs. Please let me know if you have issues with this.</p>
 
     <hr>
-    <h3>Chinese Font</h3>
+    <h1>Chinese Font</h1>
     <p>Franklin He has been kind enough to translate the User Interface to Traditional and Simplified
         Chinese. This looks really cool but poses some installation hassles if your Java system 
         is not correctly configured.
@@ -31,7 +31,7 @@
 
 
     <hr>
-    <p>Last update to this page: 13 Jan 2021<br>
-        Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 14 Jan 2021<br>
+        Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

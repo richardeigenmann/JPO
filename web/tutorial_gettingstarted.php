@@ -1,7 +1,7 @@
 <?php include("page-start.php"); ?>
 <div class="container">
-    <h2>Tutorial: Your first use of the Application:<br>
-        Create a new collection, add pictures and organise them</h2>
+    <h1>Tutorial: Your first use of the Application:<br>
+        Create a new collection, add pictures and organise them</h1>
     <h3>Objective:</h3>
     <p>In this tutorial you will learn:<ul><li>How to add pictures to a new collection.</li>
         <li>How to Organise pictures by

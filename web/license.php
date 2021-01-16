@@ -1,6 +1,6 @@
 <?php include("page-start.php"); ?>
 <div class="container">
-<h2>License</h2>
+<h1>License</h1>
 
 <p>JPO is licensed under the GPL license. It is explained here: <a href="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</a></p>
 
@@ -30,8 +30,8 @@
 </p>
 
 <hr>
-<p>Last update to this page: 2 Jan 2019<br>
-Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 14 Jan 2021<br>
+Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
 <?php include("page-end.php"); ?>

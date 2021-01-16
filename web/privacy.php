@@ -1,6 +1,6 @@
 <?php include("page-start.php"); ?>
 <div class="container">
-<h2>JPO Privacy statement</h2>
+<h1>JPO Privacy statement</h1>
 
 <p>This JPO website is hosted on SourceForge who use cookies and other technologies to track visitors
 to their site. Their Privacy Statement is found <a href="https://slashdotmedia.com/privacy-statement/">here</a>
@@ -21,8 +21,8 @@ your email correspondence like any other.</p>
 <p>Contact the author: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
 
 <hr>
-<p>Last update to this page: 3 Dec 2018<br>
-Copyright 2003-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 14 Jan 2021<br>
+Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
 <?php include("page-end.php"); ?>
