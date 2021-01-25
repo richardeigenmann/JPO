@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 
@@ -499,16 +500,28 @@ public class PictureCollection {
      * @param category The category
      * @return the number at which the category was added
      */
-    public Integer addCategory(String category) {
-        Integer key = null;
-        for (int i = 0; i < Integer.MAX_VALUE; i++) {
-            key = i;
-            if (!categories.containsKey(key)) {
-                break;
+    public Integer addCategory(final String category) {
+        synchronized (categories) { // I'm worried that concurrent modifications could mess things up
+            if (categories.isEmpty()) {
+                addCategory(0, category);
+                return 0;
             }
+
+            if (categories.containsValue(category)) {
+                for (final Map.Entry<Integer, String> entry : categories.entrySet()) {
+                    if (Objects.equals(category, entry.getValue())) {
+                        return entry.getKey();
+                    }
+                }
+                LOGGER.log(Level.SEVERE, "Found category {0} in categories map but then is was gone...", category);
+                return null; // how did this happen?
+            }
+
+            final Integer maxKey = Collections.max(categories.keySet());
+            final Integer nextKey = maxKey + 1;
+            addCategory(nextKey, category);
+            return nextKey;
         }
-        addCategory(key, category);
-        return key;
     }
 
     /**
@@ -538,6 +551,17 @@ public class PictureCollection {
      */
     public Set<Integer> getCategoryKeySet() {
         return categories.keySet();
+    }
+
+    /**
+     * Returns a Java Stream of sorted categories suitable for presenting the categories in a
+     * sorted pick list.
+     *
+     * @return A Steam of Category entries
+     */
+    public Stream<Map.Entry<Integer, String>> getSortedCategoryStream() {
+        return categories.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue());
     }
 
     /**

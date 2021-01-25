@@ -33,10 +33,10 @@ public class CategoryPopupMenu extends JPopupMenu {
         addCategoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
         parentMenu.add(addCategoryMenuItem);
         final PictureCollection pictureCollection = Settings.getPictureCollection();
-        pictureCollection.getCategoryKeySet().forEach(category -> {
-            final String categoryDescription = pictureCollection.getCategory(category);
+        pictureCollection.getSortedCategoryStream().forEach(category -> {
+            final String categoryDescription = category.getValue();
             final JMenuItem categoryMenuItem = new JMenuItem();
-            categoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new AddCategoriesToPictureNodesRequest(category, referringNodes)));
+            categoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new AddCategoriesToPictureNodesRequest(category.getKey(), referringNodes)));
             categoryMenuItem.setText(categoryDescription);
             parentMenu.add(categoryMenuItem);
         });

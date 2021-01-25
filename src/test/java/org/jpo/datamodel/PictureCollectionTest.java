@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -645,5 +646,29 @@ public class PictureCollectionTest {
         assertEquals(4, pictureCollection.getRootNode().getChildCount());
         pictureCollection.clearCollection();
         assertEquals(0, pictureCollection.getRootNode().getChildCount());
+    }
+
+    @Test
+    public void addCategory() {
+        final PictureCollection pictureCollection = new PictureCollection();
+        assertEquals(0, pictureCollection.getCategoryKeySet().size());
+        pictureCollection.addCategory(0, "Switzerland");
+        assertEquals(1, pictureCollection.getCategoryKeySet().size());
+        pictureCollection.addCategory("Mountains");
+        assertEquals(2, pictureCollection.getCategoryKeySet().size());
+        // add a duplicate
+        pictureCollection.addCategory("Mountains");
+        assertEquals(2, pictureCollection.getCategoryKeySet().size());
+    }
+
+    @Test
+    public void getSortedCategoryStream() {
+        final PictureCollection pictureCollection = new PictureCollection();
+        pictureCollection.addCategory("Switzerland");
+        pictureCollection.addCategory("Mountains");
+        pictureCollection.addCategory("Lakes");
+        assertEquals(3, pictureCollection.getCategoryKeySet().size());
+        final String[] result = pictureCollection.getSortedCategoryStream().map(Map.Entry::getValue).toArray(String[]::new);
+        assertArrayEquals(new String[]{"Lakes", "Mountains", "Switzerland"}, result);
     }
 }
