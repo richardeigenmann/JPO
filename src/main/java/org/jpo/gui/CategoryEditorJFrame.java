@@ -11,13 +11,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Iterator;
 import java.util.logging.Logger;
 
 /*
  CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -74,40 +73,11 @@ public class CategoryEditorJFrame
         jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
         jPanel.setLayout( new MigLayout("") );
 
-        final JLabel categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
-        categoryJLabel.setHorizontalAlignment( SwingConstants.LEFT );
-        jPanel.add( categoryJLabel );
-
-        categoryJTextField.setPreferredSize( new Dimension( 200, 25 ) );
-        categoryJTextField.setMinimumSize( new Dimension( 200, 25 ) );
-        categoryJTextField.setMaximumSize( new Dimension( 600, 25 ) );
-        jPanel.add( categoryJTextField );
-
         final DefaultListModel<Category> categoriesListModel = new DefaultListModel<>();
 
-        final Dimension defaultButtonSize = new Dimension( 150, 25 );
-        final Dimension maxButtonSize = new Dimension( 150, 25 );
-
-        final JButton addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
-        addCategoryJButton.setPreferredSize( defaultButtonSize );
-        addCategoryJButton.setMinimumSize( defaultButtonSize );
-        addCategoryJButton.setMaximumSize( maxButtonSize );
-        addCategoryJButton.addActionListener(( ActionEvent evt ) -> {
-            final String category = categoryJTextField.getText();
-            final Integer key = Settings.getPictureCollection().addCategory(category);
-            final Category categoryObject = new Category(key, category);
-            categoriesListModel.addElement(categoryObject);
-            categoryJTextField.setText("");
-        });
-        jPanel.add(addCategoryJButton, "alignx center, wrap");
-
-        final JLabel categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel"));
-        categoriesJLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        jPanel.add(categoriesJLabel);
-
         final JList<Category> categoriesJList = new JList<>(categoriesListModel);
-        categoriesJList.setPreferredSize(new Dimension(180, 250));
         categoriesJList.setMinimumSize(new Dimension(180, 50));
+        categoriesJList.setVisibleRowCount(5);
         categoriesJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         categoriesJList.addListSelectionListener(e -> {
             if (e.getValueIsAdjusting()) {
@@ -121,29 +91,54 @@ public class CategoryEditorJFrame
 
         });
 
-        final Iterator<Integer> i = Settings.getPictureCollection().getCategoryIterator();
-        while (i.hasNext()) {
-            final Integer key = i.next();
-            final String category = Settings.getPictureCollection().getCategory(key);
-            final Category categoryObject = new Category(key, category);
-            categoriesListModel.addElement(categoryObject);
-        }
+        Settings.getPictureCollection().getSortedCategoryStream().forEach(categoryEntry -> {
+            final Category category = new Category(categoryEntry.getKey(), categoryEntry.getValue());
+            categoriesListModel.addElement(category);
+        });
+
 
         final JScrollPane listJScrollPane = new JScrollPane(categoriesJList);
-        listJScrollPane.setPreferredSize( new Dimension( 200, 270 ) );
+        listJScrollPane.setPreferredSize(new Dimension(250, 370));
         listJScrollPane.setMinimumSize(new Dimension(200, 50));
         jPanel.add(listJScrollPane, "push, grow");
 
+
         final JPanel buttonJPanel = new JPanel();
-        buttonJPanel.setLayout( new MigLayout() );
+        buttonJPanel.setLayout(new MigLayout());
+
+        final JLabel categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
+        categoryJLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        buttonJPanel.add(categoryJLabel, "wrap");
+
+        categoryJTextField.setPreferredSize(new Dimension(200, 25));
+        categoryJTextField.setMinimumSize(new Dimension(200, 25));
+        categoryJTextField.setMaximumSize(new Dimension(600, 25));
+        buttonJPanel.add(categoryJTextField, "wrap");
+
+        final Dimension defaultButtonSize = new Dimension(150, 25);
+        final Dimension maxButtonSize = new Dimension(150, 25);
+
+        final JButton addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
+        addCategoryJButton.setPreferredSize(defaultButtonSize);
+        addCategoryJButton.setMinimumSize(defaultButtonSize);
+        addCategoryJButton.setMaximumSize(maxButtonSize);
+        addCategoryJButton.addActionListener((ActionEvent evt) -> {
+            final String category = categoryJTextField.getText();
+            final Integer key = Settings.getPictureCollection().addCategory(category);
+            final Category categoryObject = new Category(key, category);
+            categoriesListModel.addElement(categoryObject);
+            categoryJTextField.setText("");
+        });
+        buttonJPanel.add(addCategoryJButton, "wrap");
+
 
         final JButton deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
-        deleteCategoryJButton.setPreferredSize( defaultButtonSize );
-        deleteCategoryJButton.setMinimumSize( defaultButtonSize );
-        deleteCategoryJButton.setMaximumSize( maxButtonSize );
-        deleteCategoryJButton.addActionListener(( ActionEvent evt ) -> {
+        deleteCategoryJButton.setPreferredSize(defaultButtonSize);
+        deleteCategoryJButton.setMinimumSize(defaultButtonSize);
+        deleteCategoryJButton.setMaximumSize(maxButtonSize);
+        deleteCategoryJButton.addActionListener((ActionEvent evt) -> {
             int index = categoriesJList.getSelectedIndex();
-            if ( index < 0 ) {
+            if (index < 0) {
                 return; // nothing selected
             } // nothing selected
             final Category cat = categoriesJList.getModel().getElementAt( index );
@@ -171,17 +166,17 @@ public class CategoryEditorJFrame
         renameCategoryJButton.setMinimumSize( defaultButtonSize );
         renameCategoryJButton.setMaximumSize( maxButtonSize );
         renameCategoryJButton.addActionListener(( ActionEvent evt ) -> {
-            LOGGER.info( "I want to rename the selected category " );
+            LOGGER.info("I want to rename the selected category ");
             int index = categoriesJList.getSelectedIndex();
-            if ( index < 0 ) {
+            if (index < 0) {
                 return; // nothing selected
             } // nothing selected
-            Category cat = categoriesJList.getModel().getElementAt( index );
+            final Category selectedCategory = categoriesJList.getModel().getElementAt(index);
             categoriesListModel.remove(index);
-            String category1 = categoryJTextField.getText();
-            Settings.getPictureCollection().renameCategory( cat.getKey(), category1 );
-            Category categoryObject1 = new Category( cat.getKey(), category1 );
-            categoriesListModel.insertElementAt(categoryObject1, index);
+            final String renamedCategory = categoryJTextField.getText();
+            Settings.getPictureCollection().renameCategory(selectedCategory.getKey(), renamedCategory);
+            final Category newCategoryObject = new Category(selectedCategory.getKey(), renamedCategory);
+            categoriesListModel.insertElementAt(newCategoryObject, index);
             categoryJTextField.setText("");
         });
         buttonJPanel.add( renameCategoryJButton, "wrap" );
@@ -195,7 +190,7 @@ public class CategoryEditorJFrame
 
         jPanel.add( buttonJPanel, "aligny top, wrap" );
 
-        getContentPane().add( jPanel, BorderLayout.CENTER );
+        getContentPane().add(jPanel);
         pack();
         setLocationRelativeTo(Settings.getAnchorFrame());
         setVisible(true);
