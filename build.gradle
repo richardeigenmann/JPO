@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id "org.sonarqube" version "3.0"
+    id "org.sonarqube" version "3.1.1"
     id "com.github.ben-manes.versions" version "0.36.0"
     id 'signing'
     id 'java'
@@ -123,33 +123,33 @@ dependencies {
     //implementation 'com.adobe.xmp:xmpcore:6.1.10'
     implementation 'org.jetbrains:annotations:20.1.0'
 
-    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.6.1'
-    implementation 'org.apache.xmlgraphics:batik-transcoder:1.13'
-    implementation 'org.apache.xmlgraphics:batik-anim:1.13'
-    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.13'
-    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.13'
-    implementation 'org.apache.xmlgraphics:batik-extension:1.13'
-    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.4'
-    implementation 'org.apache.xmlgraphics:batik-svggen:1.13'
-    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.6.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.6.2'
+    implementation 'org.apache.xmlgraphics:batik-transcoder:1.14'
+    implementation 'org.apache.xmlgraphics:batik-anim:1.14'
+    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.14'
+    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.14'
+    implementation 'org.apache.xmlgraphics:batik-extension:1.14'
+    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
+    implementation 'org.apache.xmlgraphics:batik-svggen:1.14'
+    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.6.2'
     //implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.4.1' //OK -- But what does it do?
-    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6.2'
     testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
-    testImplementation('org.assertj:assertj-core:3.18.1')
+    testImplementation('org.assertj:assertj-core:3.19.0')
     testImplementation('org.assertj:assertj-swing:3.17.1')
 
 }
@@ -253,6 +253,7 @@ task run(type: JavaExec) {
 }
 
 jacoco {
+    //Support for Java 15 starts with 0.8.7
     //toolVersion = "0.8.7"
 }
 
