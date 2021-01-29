@@ -45,15 +45,19 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 public class PictureCollectionTest {
 
+    private static final String SWITZERLAND = "Switzerland";
+    private static final String MOUNTAINS = "Mountains";
+    private static final String LAKES = "Lakes";
+
     /**
      * Let's have a nice little collection for some tests....
      */
     private PictureCollection pictureCollection;
-    private final PictureInfo pi1 = new PictureInfo( new File("/images/image1.jpg"), "Picture 1" );
+    private final PictureInfo pi1 = new PictureInfo(new File("/images/image1.jpg"), "Picture 1");
     // deliberately re-using image1.jpg so that we can find multiple groups referring to the same image.
-    private final PictureInfo pi2 = new PictureInfo( new File("/images/image1.jpg"), "Picture 2");
-    private final PictureInfo pi3 = new PictureInfo( new File("/images/image1.jpg"), "Picture 3" );
-    private final PictureInfo pi4 = new PictureInfo( new File("/images/image1.jpg"), "Picture 4" );
+    private final PictureInfo pi2 = new PictureInfo(new File("/images/image1.jpg"), "Picture 2");
+    private final PictureInfo pi3 = new PictureInfo(new File("/images/image1.jpg"), "Picture 3");
+    private final PictureInfo pi4 = new PictureInfo(new File("/images/image1.jpg"), "Picture 4");
     private final PictureInfo pi5 = new PictureInfo( new File("/images/image5.jpg"), "Picture 5" );
     private final PictureInfo pi6 = new PictureInfo( new File("/images/image6.jpg"), "Picture 6" );
     private final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode( pi1 );
@@ -648,27 +652,28 @@ public class PictureCollectionTest {
         assertEquals(0, pictureCollection.getRootNode().getChildCount());
     }
 
+
     @Test
     public void addCategory() {
-        final PictureCollection pictureCollection = new PictureCollection();
-        assertEquals(0, pictureCollection.getCategoryKeySet().size());
-        pictureCollection.addCategory(0, "Switzerland");
-        assertEquals(1, pictureCollection.getCategoryKeySet().size());
-        pictureCollection.addCategory("Mountains");
-        assertEquals(2, pictureCollection.getCategoryKeySet().size());
+        final PictureCollection myPictureCollection = new PictureCollection();
+        assertEquals(0, myPictureCollection.getCategoryKeySet().size());
+        myPictureCollection.addCategory(0, SWITZERLAND);
+        assertEquals(1, myPictureCollection.getCategoryKeySet().size());
+        myPictureCollection.addCategory(MOUNTAINS);
+        assertEquals(2, myPictureCollection.getCategoryKeySet().size());
         // add a duplicate
-        pictureCollection.addCategory("Mountains");
-        assertEquals(2, pictureCollection.getCategoryKeySet().size());
+        myPictureCollection.addCategory(MOUNTAINS);
+        assertEquals(2, myPictureCollection.getCategoryKeySet().size());
     }
 
     @Test
     public void getSortedCategoryStream() {
-        final PictureCollection pictureCollection = new PictureCollection();
-        pictureCollection.addCategory("Switzerland");
-        pictureCollection.addCategory("Mountains");
-        pictureCollection.addCategory("Lakes");
-        assertEquals(3, pictureCollection.getCategoryKeySet().size());
-        final String[] result = pictureCollection.getSortedCategoryStream().map(Map.Entry::getValue).toArray(String[]::new);
-        assertArrayEquals(new String[]{"Lakes", "Mountains", "Switzerland"}, result);
+        final PictureCollection myPictureCollection = new PictureCollection();
+        myPictureCollection.addCategory(SWITZERLAND);
+        myPictureCollection.addCategory(MOUNTAINS);
+        myPictureCollection.addCategory(LAKES);
+        assertEquals(3, myPictureCollection.getCategoryKeySet().size());
+        final String[] result = myPictureCollection.getSortedCategoryStream().map(Map.Entry::getValue).toArray(String[]::new);
+        assertArrayEquals(new String[]{LAKES, MOUNTAINS, SWITZERLAND}, result);
     }
 }
