@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /*
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +32,7 @@ import java.awt.*;
 public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> {
 
     /**
-     *
+     * The target to notify that the Thumbnail is now ready
      */
     protected final ThumbnailQueueRequestCallbackHandler callbackHandler;
 
@@ -74,10 +74,10 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * @param size            the maximum size of the thumbnail
      */
     public ThumbnailQueueRequest(
-            ThumbnailQueueRequestCallbackHandler callbackHandler,
-            SortableDefaultMutableTreeNode node,
-            QUEUE_PRIORITY priority,
-            Dimension size) {
+            final ThumbnailQueueRequestCallbackHandler callbackHandler,
+            final SortableDefaultMutableTreeNode node,
+            final QUEUE_PRIORITY priority,
+            final Dimension size) {
         this.callbackHandler = callbackHandler;
         this.node = node;
         this.priority = priority;
@@ -114,7 +114,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * @param newPriority The priority of the request:
      *                    {@link QUEUE_PRIORITY#LOW_PRIORITY}, {@link QUEUE_PRIORITY#MEDIUM_PRIORITY} or {@link QUEUE_PRIORITY#HIGH_PRIORITY}
      */
-    public void setPriority(QUEUE_PRIORITY newPriority) {
+    public void setPriority(final QUEUE_PRIORITY newPriority) {
         priority = newPriority;
     }
 
@@ -126,16 +126,17 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      * interface
      */
     @Override
-    public int compareTo(ThumbnailQueueRequest thumbnailQueueRequest) {
+    public int compareTo(final ThumbnailQueueRequest thumbnailQueueRequest) {
         return priority.compareTo(thumbnailQueueRequest.priority);
     }
 
     /**
      * We must override equals if we provide a compareTo
      */
-     @Override public boolean equals(Object obj) {
-         return super.equals(obj);
-     }
+    @Override
+    public boolean equals(final Object obj) {
+        return super.equals(obj);
+    }
 
      /**
       * We must override hashCode if we override equals
@@ -151,7 +152,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      *
      * @param newPriority the new, possibly higher priority
      */
-    public void increasePriorityTo(QUEUE_PRIORITY newPriority) {
+    public void increasePriorityTo(final QUEUE_PRIORITY newPriority) {
         if (priority.compareTo(newPriority) > 0) {
             setPriority(newPriority);
         }
@@ -188,7 +189,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      *
      * @param icon the new icon
      */
-    public void setIcon(ImageIcon icon) {
+    public void setIcon(final ImageIcon icon) {
         this.icon = icon;
     }
 

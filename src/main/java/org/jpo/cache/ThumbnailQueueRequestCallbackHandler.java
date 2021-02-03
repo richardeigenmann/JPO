@@ -4,7 +4,7 @@ package org.jpo.cache;
  ThumbnailQueueRequestCallbackHandler.java: Defines the method that the must be 
  implemented to be notified that the image icon has been created
 
- Copyright (C) 2015-2017  Richard Eigenmann.
+ Copyright (C) 2015-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,6 +31,6 @@ public interface ThumbnailQueueRequestCallbackHandler {
      *
      * @param thumbnailQueueRequest the original request with the thumbnail
      */
-    public void callbackThumbnailCreated( ThumbnailQueueRequest thumbnailQueueRequest );
+    public void callbackThumbnailCreated(final ThumbnailQueueRequest thumbnailQueueRequest);
 
 }

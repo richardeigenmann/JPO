@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2014 - 2020 Richard Eigenmann.
+ Copyright (C) 2014 - 2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -214,28 +214,27 @@ public class JpoCache {
      *
      * @param file     The file of the highres picture for which a thumbnail is needed
      * @param rotation The rotation in degrees (0..360) for the thumbnail
-     * @param size     The maximum size of the thumbnail
+     * @param maxSize  The maximum size of the thumbnail
      * @return The ImageBytes of the thumbnail
      */
-    public static ImageBytes getThumbnailImageBytes(final File file, final double rotation, final Dimension size) {
-        final int maxWidth = size.width;
-        final int maxHeight = size.height;
-        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxWidth, maxHeight);
+    public static ImageBytes getThumbnailImageBytes(final File file, final double rotation, final Dimension maxSize) {
+        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxSize.width, maxSize.height);
         ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
         if (imageBytes != null) {
             imageBytes.setRetrievedFromCache(true);
+            final Path imagePath = Paths.get(file.toURI());
             try {
-                final Path imagePath = Paths.get(file.toURI());
                 final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
                 if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
-                    imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxWidth, maxHeight);
+                    imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxSize);
                 }
             } catch (final IOException ex) {
-                LOGGER.severe(ex.getLocalizedMessage());
+                // We might have the image in the cache but it disappeared from disk
+                LOGGER.log(Level.SEVERE, "Hit IOException: {0}", ex.getLocalizedMessage());
+                imageBytes = null;
             }
-
         } else {
-            imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxWidth, maxHeight);
+            imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxSize);
         }
         return imageBytes;
     }
@@ -246,12 +245,11 @@ public class JpoCache {
      * @param key       the key to store it in the cache
      * @param imageFile The file of the picture
      * @param rotation  the rotation to apply
-     * @param maxWidth  the maximum width
-     * @param maxHeight the maximum height
+     * @param maxSize  the maximum size
      * @return the thumbnail
      */
-    private static ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final int maxWidth, final int maxHeight) {
-        final ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxWidth, maxHeight);
+    private static ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final Dimension maxSize) {
+        final ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxSize);
         try {
             thumbnailMemoryAndDiskCache.put(key, imageBytes);
         } catch (CacheException ex) {
@@ -265,13 +263,10 @@ public class JpoCache {
      *
      * @param file      The the picture file
      * @param rotation  the rotation to apply
-     * @param maxWidth  the maximum width
-     * @param maxHeight the maximum height
+     * @param maxSize the maximum size
      * @return the thumbnail
      */
-    private static ImageBytes createThumbnail(final File file, final double rotation, final int maxWidth, final int maxHeight) {
-        final Dimension maxDimension = new Dimension(maxWidth, maxHeight);
-
+    private static ImageBytes createThumbnail(final File file, final double rotation, final Dimension maxSize) {
         // create a new thumbnail from the highres
         final ScalablePicture scalablePicture = new ScalablePicture();
         if (Settings.isThumbnailFastScale()) {
@@ -279,7 +274,7 @@ public class JpoCache {
         } else {
             scalablePicture.setQualityScale();
         }
-        scalablePicture.setScaleSize(maxDimension);
+        scalablePicture.setScaleSize(maxSize);
         scalablePicture.loadPictureImd(file, rotation);
         if (scalablePicture.getSourcePicture() == null) {
             return null;

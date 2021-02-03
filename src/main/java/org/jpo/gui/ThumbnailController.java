@@ -153,7 +153,7 @@ public class ThumbnailController
         // remove and silence the old request if it is still alive
         if (myThumbnailQueueRequest != null) {
             myThumbnailQueueRequest.cancel();
-            ThumbnailCreationQueue.remove(myThumbnailQueueRequest);
+            ThumbnailCreationQueue.removeFromQueue(myThumbnailQueueRequest);
         }
 
         attachChangeListeners();

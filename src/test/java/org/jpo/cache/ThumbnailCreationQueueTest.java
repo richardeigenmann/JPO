@@ -131,8 +131,8 @@ public class ThumbnailCreationQueueTest {
         // Queue should have two entries after 2 requests
         assertEquals( 2, ThumbnailCreationQueue.size() );
 
-        ThumbnailCreationQueue.remove( req1 );
-        assertEquals( 1, ThumbnailCreationQueue.size() );
+        ThumbnailCreationQueue.removeFromQueue(req1);
+        assertEquals(1, ThumbnailCreationQueue.size());
 
         ThumbnailQueueRequest findResult1 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch1 );
         ThumbnailQueueRequest findResult2 = ThumbnailCreationQueue.findThumbnailQueueRequest( mtqrch2 );

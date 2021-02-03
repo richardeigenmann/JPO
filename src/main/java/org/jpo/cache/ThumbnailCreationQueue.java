@@ -5,12 +5,11 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2003-2020  Richard Eigenmann.
+ Copyright (C) 2003-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -53,7 +52,7 @@ public class ThumbnailCreationQueue {
      * rebuild of the image this is also updated in the request.
      *
      *
-     * @param	callbackHandler	The ThumbnailQueueRequestCallbackHandler which is
+     * @param    callbackHandler    The ThumbnailQueueRequestCallbackHandler which is
      * to be notified when done
      * @param node The node for which to extract a thumbnail
      * @param priority The priority with which the request is to be treated on
@@ -63,26 +62,25 @@ public class ThumbnailCreationQueue {
      * already existed.
      */
     public static ThumbnailQueueRequest requestThumbnailCreation(
-            ThumbnailQueueRequestCallbackHandler callbackHandler,
-            SortableDefaultMutableTreeNode node,
-            QUEUE_PRIORITY priority,
-            Dimension size ) {
-        ThumbnailQueueRequest newThumbnailQueueRequest = new ThumbnailQueueRequest( callbackHandler, node, priority, size );
+            final ThumbnailQueueRequestCallbackHandler callbackHandler,
+            final SortableDefaultMutableTreeNode node,
+            final QUEUE_PRIORITY priority,
+            final Dimension size) {
+        final ThumbnailQueueRequest newThumbnailQueueRequest = new ThumbnailQueueRequest(callbackHandler, node, priority, size);
 
-        ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest( callbackHandler );
-        if ( requestFoundOnQueue == null ) {
-            QUEUE.add( newThumbnailQueueRequest );
+        final ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest(callbackHandler);
+        if (requestFoundOnQueue == null) {
+            QUEUE.add(newThumbnailQueueRequest);
             return newThumbnailQueueRequest;
-        } else if ( ( requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != callbackHandler )
-                || ( requestFoundOnQueue.getNode() != node )
-                || ( requestFoundOnQueue.getSize().width != size.width )
-                || ( requestFoundOnQueue.getSize().height != size.height ) ) {
+        } else if ((requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != callbackHandler)
+                || (requestFoundOnQueue.getNode() != node)
+                || (requestFoundOnQueue.getSize() != size)) {
             requestFoundOnQueue.cancel();
-            remove( requestFoundOnQueue );
-            QUEUE.add( newThumbnailQueueRequest );
+            removeFromQueue(requestFoundOnQueue);
+            QUEUE.add(newThumbnailQueueRequest);
             return newThumbnailQueueRequest;
         } else {
-            requestFoundOnQueue.increasePriorityTo( priority );
+            requestFoundOnQueue.increasePriorityTo(priority);
             return requestFoundOnQueue;
         }
     }
@@ -113,14 +111,13 @@ public class ThumbnailCreationQueue {
     }
 
     /**
-     * removes the request for a specific ThumbnailController from the queue.
+     * removes the request for a specific ThumbnailController from the queue
+     * if it was on the queue in the first place.
      *
      * @param requestToRemove The request to remove
      */
-    public static void remove(final ThumbnailQueueRequest requestToRemove) {
-        if (!QUEUE.remove(requestToRemove)) {
-            LOGGER.log(Level.INFO, "Failed to remove request: {0} from QUEUE", requestToRemove);
-        }
+    public static void removeFromQueue(final ThumbnailQueueRequest requestToRemove) {
+        QUEUE.remove(requestToRemove);
     }
 
     /**
@@ -133,9 +130,9 @@ public class ThumbnailCreationQueue {
      */
     protected static ThumbnailQueueRequest findThumbnailQueueRequest(
             final ThumbnailQueueRequestCallbackHandler callbackHandler ) {
-        for ( Iterator<ThumbnailQueueRequest> i = QUEUE.iterator(); i.hasNext(); ) {
-            final ThumbnailQueueRequest test =  i.next();
-            if ( ( callbackHandler != null ) && ( test.getThumbnailQueueRequestCallbackHandler().equals( callbackHandler ) ) ) {
+        for (final Iterator<ThumbnailQueueRequest> i = QUEUE.iterator(); i.hasNext(); ) {
+            final ThumbnailQueueRequest test = i.next();
+            if ((callbackHandler != null) && (test.getThumbnailQueueRequestCallbackHandler().equals(callbackHandler))) {
                 return test;
             }
         }
