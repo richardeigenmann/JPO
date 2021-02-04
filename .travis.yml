@@ -1,8 +1,8 @@
 language: java
-jdk:
-  - openjdk15
-node_js:
-  - "node"
+os: linux
+dist: focal
+jdk: openjdk15
+#node_js: 'node'
 services:
   - xvfb
 before_install:
