@@ -1,6 +1,5 @@
 package org.jpo.datamodel;
 
-import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
@@ -209,7 +208,6 @@ public class PictureCollection {
             setXmlFile(null);
             getTreeModel().reload();
             Settings.getRecentDropNodes().clear();
-            ThumbnailCreationQueue.clear();
         };
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();

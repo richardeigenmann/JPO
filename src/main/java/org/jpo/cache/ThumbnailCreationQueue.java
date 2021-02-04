@@ -1,11 +1,11 @@
 package org.jpo.cache;
 
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.logging.Logger;
 
 
 /*
@@ -38,11 +38,6 @@ public class ThumbnailCreationQueue {
      * Implemented using a PriorityBlockingQueue
      */
     protected static final PriorityBlockingQueue<ThumbnailQueueRequest> QUEUE = new PriorityBlockingQueue<>();
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( ThumbnailCreationQueue.class.getName() );
 
     /**
      * This method creates a {@link ThumbnailQueueRequest} and sticks it on the
@@ -86,17 +81,9 @@ public class ThumbnailCreationQueue {
     }
 
     /**
-     * Returns the highest priority request on the queue.
-     *
-     * @return The highest priority queue request
-     */
-    public static ThumbnailQueueRequest poll() {
-        return QUEUE.poll();
-    }
-
-    /**
      * Remove all queue requests from the queue.
      */
+    @TestOnly
     public static void clear() {
         QUEUE.clear();
     }
@@ -128,6 +115,7 @@ public class ThumbnailCreationQueue {
      * for which the request is to be found
      * @return The ThumbnailQueueRequest if it exists.
      */
+    @TestOnly
     protected static ThumbnailQueueRequest findThumbnailQueueRequest(
             final ThumbnailQueueRequestCallbackHandler callbackHandler ) {
         for (final Iterator<ThumbnailQueueRequest> i = QUEUE.iterator(); i.hasNext(); ) {

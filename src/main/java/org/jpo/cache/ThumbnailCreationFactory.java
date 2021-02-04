@@ -88,7 +88,7 @@ public class ThumbnailCreationFactory implements Runnable {
     @Override
     public void run() {
         while ( !endThread ) {
-            final ThumbnailQueueRequest request = ThumbnailCreationQueue.poll();
+            final ThumbnailQueueRequest request = ThumbnailCreationQueue.QUEUE.poll();
             if ( request == null ) {
                 try {
                     Thread.sleep(pollingInterval);
