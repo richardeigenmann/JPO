@@ -2,7 +2,7 @@ language: java
 jdk:
   - openjdk15
 node_js:
-  - "10"
+  - "node"
 services:
   - xvfb
 before_install:
