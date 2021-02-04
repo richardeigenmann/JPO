@@ -254,7 +254,7 @@ task run(type: JavaExec) {
 
 jacoco {
     //Support for Java 15 starts with 0.8.7
-    //toolVersion = "0.8.7"
+    toolVersion = "0.8.6"
 }
 
 jacocoTestReport {
@@ -267,11 +267,11 @@ jacocoTestReport {
 
 plugins.withType(JacocoPlugin) {
     // jacoco doesn't like Java 15 in Nov 2020
-    //tasks["test"].finalizedBy 'jacocoTestReport'
+    tasks["test"].finalizedBy 'jacocoTestReport'
 }
 
 // jacoco doesn't like JAVA 15
-//check.dependsOn jacocoTestReport
+check.dependsOn jacocoTestReport
 
 task uploadWebsitePages(type:Exec) {
     group 'website'
