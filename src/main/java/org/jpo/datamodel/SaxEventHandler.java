@@ -231,6 +231,12 @@ public class SaxEventHandler extends DefaultHandler {
         return getCollectionDtdInputSource();
     }
 
+    /**
+     * Returns the collection.dtd definition as an InputSource.
+     *
+     * @return The collection.dtd file
+     * @throws IOException If something went wrong
+     */
     public static InputSource getCollectionDtdInputSource() throws IOException {
         return new InputSource(SaxEventHandler.class.getClassLoader().getResource("collection.dtd").openStream());
     }

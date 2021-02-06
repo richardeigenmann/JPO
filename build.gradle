@@ -61,6 +61,22 @@ javadoc {
     options.encoding = "UTF-8"
     options.addBooleanOption('-enable-preview', true)
     options.addStringOption('-release', '15')
+    // gradle doesn't copy the doc-files images!
+    // this option is ignored
+    options.docFilesSubDirs = true
+    doLast{
+        // instead we have to copy explicitly!
+        copy{
+            from "src/main/java/org/jpo/eventbus/doc-files"
+            into "$project.buildDir/docs/javadoc/org/jpo/eventbus/doc-files"
+            include "*.png"
+        }
+        copy{
+            from "src/main/java/org/jpo/gui/swing/doc-files"
+            into "$project.buildDir/docs/javadoc/org/jpo/gui/swing/doc-files"
+            include "*.png"
+        }
+    }
 }
 
 task openJavadocInBrowser {
@@ -363,4 +379,29 @@ project.tasks["sonarqube"].dependsOn jacocoTestReport
 //    environment << [JPACKAGE_DEBUG: true]
 //}
 
+/*
+
+On a Windows host
+
+"c:\Program Files (x86)\jdk-15.0.1\bin\jpackage" ^
+--type exe ^
+--input . ^
+--name JPO ^
+--description "Java Picture Organizer" ^
+--vendor "Richard Eigenmann" ^
+--app-version 0.14 ^
+--main-jar Jpo-all.jar ^
+--icon favicon.ico ^
+--java-options '--enable-preview' ^
+--win-shortcut ^
+--win-menu ^
+--verbose ^
+--dest c:\Users\richa\Desktop
+
+ */
+
+
 // /usr/java/jdk-15.0.1/bin/jpackage --package-type exe --name JPO --description "Java Picture Organizer" --vendor "Richard Eigenmann" --app-version 0.14 --main-jar Jpo-all.jar --java-options '--enable-preview' --win-shortcut --win-menu
+
+// create favicon
+// inkscape -w 16 -h 16 -e 16.png JPO-Logo.svg; inkscape -w 32 -h 32 -e 32.png JPO-Logo.svg; inkscape -w 48 -h 48 -e 48.png JPO-Logo.svg; inkscape -w 64 -h 64 -e 64.png JPO-Logo.svg; convert 16.png 32.png 48.png 64.png favicon.ico

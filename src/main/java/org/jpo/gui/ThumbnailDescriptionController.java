@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_DESCRIPTION;
@@ -27,7 +28,7 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
 /*
  ThumbnailDescriptionController.java:  class that creates a panel showing the description of a thumbnail
 
- Copyright (C) 2002 - 2020  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002 - 2021  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -51,13 +52,23 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
 public class ThumbnailDescriptionController
         implements PictureInfoChangeListener, GroupInfoChangeListener {
 
+    /**
+     * The logger for the class
+     */
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionController.class.getName());
+
+    /**
+     * The panel with the actual descriptions
+     */
     private final ThumbnailDescriptionPanel panel = new ThumbnailDescriptionPanel();
+
     /**
      * a link to the SortableDefaultMutableTreeNode in the data model. This
      * allows thumbnails to be selected by sending a nodeSelected event to the
      * data model.
      */
     protected SortableDefaultMutableTreeNode referringNode;
+
     /**
      * This field controls how the description panel is shown. It can be set to
      * ThumbnailDescriptionJPanel.LARGE_DESCRIPTION,
@@ -65,6 +76,10 @@ public class ThumbnailDescriptionController
      */
     private DescriptionSize displayMode = LARGE_DESCRIPTION;
 
+    /**
+     * Tracks whether to show the filename or not
+     */
+    private Boolean showFilenameState = Settings.isShowFilenamesOnThumbnailPanel();
 
     /**
      * Construct a new ThumbnailDescriptionJPanel
@@ -73,27 +88,34 @@ public class ThumbnailDescriptionController
         initComponents();
     }
 
+    /**
+     * Returns a popup menu if there are some text patterns that JPO knows how to clean up
+     *
+     * @param text     The text to clean up
+     * @param textArea The widget upon which to open to popup menu
+     * @return an optional pop up menu
+     */
     public static Optional<JPopupMenu> correctTextPopupMenu(@NonNull String text, @NonNull JTextArea textArea) {
-        Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
-        Optional<String> oUnderscore = PicturePopupMenu.replaceUnderscore(text);
+        final Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
+        final Optional<String> oUnderscore = PicturePopupMenu.replaceUnderscore(text);
         if (oSpace.isPresent() || oUnderscore.isPresent()) {
-            JPopupMenu popupmenu = new JPopupMenu();
+            final JPopupMenu popupmenu = new JPopupMenu();
             final String REPLACE_WITH = Settings.getJpoResources().getString("ReplaceWith");
             if (oSpace.isPresent()) {
-                JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
+                final JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
                 popupmenu.add(replaceSpace);
             }
             if (oUnderscore.isPresent()) {
-                JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderscore.get());
+                final JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderscore.get());
                 replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderscore.get()));
                 popupmenu.add(replaceUnderscore);
             }
             if (oUnderscore.isPresent() && oSpace.isPresent()) {
-                Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
+                final Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
                 if (spaceUnderscore.isPresent()) {
                     // to be expected...
-                    JMenuItem replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
+                    final JMenuItem replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
                     replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
                     popupmenu.add(replaceSpaceAndUnderscore);
                 }
@@ -111,12 +133,12 @@ public class ThumbnailDescriptionController
         panel.getPictureDescriptionJTA().setInputVerifier(new InputVerifier() {
 
             @Override
-            public boolean verify(JComponent component) {
+            public boolean verify(final JComponent component) {
                 return true;
             }
 
             @Override
-            public boolean shouldYieldFocus(JComponent source, JComponent target) {
+            public boolean shouldYieldFocus(final JComponent source, final JComponent target) {
                 doUpdate();
                 return true;
             }
@@ -127,9 +149,9 @@ public class ThumbnailDescriptionController
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == BUTTON3) {
-                    Optional<JPopupMenu> optional = correctTextPopupMenu(panel.getDescription(), panel.getPictureDescriptionJTA());
+                    final Optional<JPopupMenu> optional = correctTextPopupMenu(panel.getDescription(), panel.getPictureDescriptionJTA());
                     if (optional.isPresent()) {
-                        JPopupMenu popupmenu = optional.get();
+                        final JPopupMenu popupmenu = optional.get();
                         popupmenu.show(panel.getPictureDescriptionJTA(), e.getX(), e.getY());
                     }
                 }
@@ -142,7 +164,7 @@ public class ThumbnailDescriptionController
                                                                   @Override
                                                                   public void mouseReleased(MouseEvent e) {
                                                                       if (e.getButton() == BUTTON3) {
-                                                                          JPopupMenu popupmenu = new JPopupMenu();
+                                                                          final JPopupMenu popupmenu = new JPopupMenu();
                                                                           for (final JComponent c : RenameMenuItems.getRenameMenuItems(Collections.singleton(referringNode))) {
                                                                               popupmenu.add(c);
                                                                           }
@@ -292,7 +314,7 @@ public class ThumbnailDescriptionController
      * Dimension using the thumbnailSize as width and height.
      */
     public Dimension getPreferredSize() {
-        Dimension d = panel.getPreferredSize();
+        final Dimension d = panel.getPreferredSize();
         int height = 0;
         if (panel.isVisible()) {
             height = d.height;
@@ -306,7 +328,7 @@ public class ThumbnailDescriptionController
      *
      * @param thumbnailSizeFactor Factor
      */
-    public void setFactor(float thumbnailSizeFactor) {
+    public void setFactor(final float thumbnailSizeFactor) {
         panel.setThumbnailSizeFactor(thumbnailSizeFactor);
     }
 
@@ -325,7 +347,7 @@ public class ThumbnailDescriptionController
      *
      * @param referringNode The Node to be displayed
      */
-    public void setNode(SortableDefaultMutableTreeNode referringNode) {
+    public void setNode(final SortableDefaultMutableTreeNode referringNode) {
         if (this.referringNode == referringNode) {
             // Don't refresh the node if it hasn't changed
             return;
@@ -411,7 +433,7 @@ public class ThumbnailDescriptionController
     }
 
     @Override
-    public void groupInfoChangeEvent(GroupInfoChangeEvent groupInfoChangeEvent) {
+    public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
         final Runnable runnable = () -> {
             if (groupInfoChangeEvent.getGroupNameChanged()) {
                 setDescription();
@@ -455,11 +477,12 @@ public class ThumbnailDescriptionController
         MINI_INFO
     }
 
-    private Boolean showFilenameState = false;
 
-    public void setShowFilenamesState(Boolean stateObject) {
+
+    /*public void setShowFilenamesState(final Boolean stateObject) {
+        LOGGER.log(Level.INFO, "Setting the showFilename state on ThumbnailDescriptionController {0} to {1}", new Object[]{this,stateObject});
         this.showFilenameState = stateObject;
-    }
+    }*/
 
 
 }

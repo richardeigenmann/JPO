@@ -5,7 +5,7 @@ import java.util.ListResourceBundle;
 /*
 JpoResources_cn.java:  class that holds the generic labels for the JPO application
 
-Copyright (C) 2002-2019  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2021  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -65,7 +65,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO 版本 0.14 是基于Java/Swing 开发的软件\n"
                     + "作者Richard Eigenmann在瑞士苏黎世, \n"
-                    + "版权 2000 - 2020\n"
+                    + "版权 2000 - 2021\n"
                     + "邮件地址：richard.eigenmann@gmail.com\n"
                     + "软件主页网址：http://j-po.sourceforge.net\n"
                     + "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"
@@ -156,6 +156,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"maxThumbnailsLabelText", "每页显示缩略图个数"},
             {"thumbnailSizeLabel", "缩略图尺寸"},
             {"thumbnailFastScale", "缩略图播放速度"},
+            {"thumbnailShowFilenamesJCheckBox", "Show Filenames in Panel"},
             {"zapThumbnails", "删除所有缩略图"},
             {"thumbnailsDeleted", "缩略图已经删除"},
 
@@ -184,6 +185,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"emailUserJLabel", "用户名："},
             {"emailPasswordJLabel", "密码："},
             {"emailShowPasswordButton", "显示密码"},
+            {"cacheJPanel", "Cache"},
 
             // Settings
             {"thumbNoExistError", "缩略图文件夹不存在。\n请选择菜单编辑|配置来正确设置缩略图文件夹\n缩略图缓存功能已被禁用。"},

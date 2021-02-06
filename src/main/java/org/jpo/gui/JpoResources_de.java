@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 
 /*
-Copyright (C) 2002-2019  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2021  Richard Eigenmann, Zürich, Switzerland
  
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -62,7 +62,7 @@ public class JpoResources_de extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO Version 0.14 ist ein Java/Swing Programm\n"
                     + "geschrieben von Richard Eigenmann, Zürich, Schweiz\n"
-                    + "Copyright 2000 - 2020\n"
+                    + "Copyright 2000 - 2021\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
                     + "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"
@@ -150,6 +150,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"maxThumbnailsLabelText", "Maximale Anzahl Verkleinerungen pro Seite:"},
             {"thumbnailSizeLabel", "Grösse der Verkleinerungen:"},
             {"thumbnailFastScale", "Geschwindigkeit statt Qualität beim verkleinern"},
+            {"thumbnailShowFilenamesJCheckBox", "Dateinamen in der Uebersicht anzeigen"},
             {"zapThumbnails", "Alle Verkleinerungen löschen"},
             {"thumbnailsDeleted", " Verkleinerungen gelöscht"},
 
@@ -178,6 +179,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"emailUserJLabel", "Benutzername:"},
             {"emailPasswordJLabel", "Password:"},
             {"emailShowPasswordButton", "Passwort zeigen"},
+            {"cacheJPanel", "Cache"},
 
             // Settings
             {"thumbNoExistError", "Das Verzeichnis füt die Verkleinerungen existiert nicht.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert."},

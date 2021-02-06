@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -918,18 +919,58 @@ public class Settings {
      */
     private static String defaultHtmlSshKeyFile = "";
 
-    public static boolean isThumbnailFastScale() {
-        return thumbnailFastScale;
-    }
+    /**
+     * true when thumbnails are supposed to scale fast
+     */
+    private static boolean thumbnailFastScale = true;
 
+    /**
+     * Stores the default choice for fast scaling
+     *
+     * @param thumbnailFastScale
+     */
     public static void setThumbnailFastScale(boolean thumbnailFastScale) {
         Settings.thumbnailFastScale = thumbnailFastScale;
     }
 
     /**
+     * returns if thumbnails should be rendered faster instead of better quality
+     *
+     * @return true if speed is desired
+     */
+    public static boolean isThumbnailFastScale() {
+        return thumbnailFastScale;
+    }
+
+    /**
      * true when thumbnails are supposed to scale fast
      */
-    private static boolean thumbnailFastScale = true;
+    private static boolean showFilenamesOnThumbnailPanel = false;
+
+    /**
+     * Stores the default choice for fast scaling
+     *
+     * @param showFilenamesOnThumbnailPanel the new value
+     */
+    public static void setShowFilenamesOnThumbnailPanel(boolean showFilenamesOnThumbnailPanel) {
+        LOGGER.log(Level.INFO, "In future show files on Thumbnail Panel: {0}", showFilenamesOnThumbnailPanel);
+        if (Settings.showFilenamesOnThumbnailPanel != showFilenamesOnThumbnailPanel) {
+            Settings.showFilenamesOnThumbnailPanel = showFilenamesOnThumbnailPanel;
+            Settings.unsavedSettingChanges = true;
+            LOGGER.log(Level.INFO, "Changed the setting and marked Settings as unsaved");
+        }
+    }
+
+    /**
+     * returns if thumbnails should be rendered faster instead of better quality
+     *
+     * @return true if speed is desired
+     */
+    public static boolean isShowFilenamesOnThumbnailPanel() {
+        LOGGER.log(Level.INFO, "show files on Thumbnail Panel: {0}", showFilenamesOnThumbnailPanel);
+        return showFilenamesOnThumbnailPanel;
+    }
+
 
     public static boolean isPictureViewerFastScale() {
         return pictureViewerFastScale;
@@ -1477,6 +1518,7 @@ public class Settings {
         rememberGoogleCredentials = prefs.getBoolean("rememberGoogleCredentials", rememberGoogleCredentials);
         googleUsername = prefs.get("googleUsername", "");
         googlePassword = prefs.get("googlePassword", "");
+        showFilenamesOnThumbnailPanel = prefs.getBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
 
         validateCopyLocations();
         validateSettings();
@@ -1651,6 +1693,8 @@ public class Settings {
             prefs.put("googleUsername", "");
             prefs.put("googlePassword", "");
         }
+        prefs.putBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
+        LOGGER.log(Level.INFO, "writing showFilenamesOnThumbnailPanel as {0}", showFilenamesOnThumbnailPanel);
 
         unsavedSettingChanges = false;
     }

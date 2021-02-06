@@ -21,8 +21,14 @@ package org.jpo.cache;
  * Enums use natural ordering.
  */
 public enum QUEUE_PRIORITY {
+    /**
+     * Highest queue priority
+     */
     HIGH_PRIORITY,
+    /** Medium queue priority */
     MEDIUM_PRIORITY,
+    /** Lower queue priority */
     LOW_PRIORITY,
+    /** Lowest queue priority */
     LOWEST_PRIORITY;
 }

@@ -4,7 +4,7 @@ import java.util.ListResourceBundle;
 
 
 /*
-Copyright (C) 2002-2020  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2021  Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -61,7 +61,7 @@ public class JpoResources_en extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO Version 0.14 is a Java/Swing program\n"
                     + "written by Richard Eigenmann, Zürich, Switzerland\n"
-                    + "Copyright 2000 - 2020\n"
+                    + "Copyright 2000 - 2021\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
                     + "\nThe Exif extraction is courtesy of Drew Noakes\n"
@@ -113,6 +113,7 @@ public class JpoResources_en extends ListResourceBundle {
             // Settings
             {"SettingsTitleFont", "Arial-BOLD-20"},
             {"SettingsCaptionFont", "Arial-PLAIN-16"},
+
             // SettingsDialog Texts
             {"settingsDialogTitle", "Edit Settings"},
             {"browserWindowSettingsJPanel", "General"},
@@ -135,6 +136,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"maxThumbnailsLabelText", "Maximum thumbnails per page:"},
             {"thumbnailSizeLabel", "Thumbnail Size:"},
             {"thumbnailFastScale", "Tick for Speed over Quality when scaling"},
+            {"thumbnailShowFilenamesJCheckBox", "Show Filenames in Panel"},
             {"zapThumbnails", "Delete all Thumbnails"},
             {"thumbnailsDeleted", " Thumbnails deleted"},
             {"autoLoadChooserTitle", "Choose File to automatically load"},
@@ -159,6 +161,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"emailUserJLabel", "Username:"},
             {"emailPasswordJLabel", "Password:"},
             {"emailShowPasswordButton", "Show Password"},
+            {"cacheJPanel", "Cache"},
 
 
             // Settings

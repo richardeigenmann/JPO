@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,29 +44,52 @@ import java.util.logging.Logger;
  * take advantage of the extra space if there is some.
  */
 public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDropTargetDropEventHandler {
-
-    private static final Logger LOGGER = Logger.getLogger(ThumbnailsPanelController.class.getName());
-    private static final Color DIMMED_COLOR = new Color(45, 45, 45, 180);
     /**
-     * The Panel that shows the Thumbnails
+     * The logger for the class
+     */
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailsPanelController.class.getName());
+
+    /**
+     * The color to use for dimming the rectangle overlaying the images during selection
+     */
+    private static final Color DIMMED_COLOR = new Color(45, 45, 45, 180);
+
+    /**
+     * The panel that shows the Thumbnails
      */
     private final JPanel thumbnailsPane;
+
     /**
-     * The Scroll Pane that holds the Thumbnail Panel
+     * The scroll pane that holds the Thumbnail Panel
      */
     private final JScrollPane thumbnailJScrollPane = new JScrollPane();
+
     /**
      * The title above the ThumbnailPanel
      */
     private final ThumbnailPanelTitle titleJPanel;
+
+    /**
+     * The layout manager to lay out the thumbnails
+     */
     private final ThumbnailLayoutManager thumbnailLayoutManager;
+
+    /**
+     * Whether to paint an overlay
+     */
     private boolean paintOverlay;  // default is false
+
+    /**
+     * The overlay rectangle
+     */
     private Rectangle overlayRectangle;
+
     /**
      * This object refers to the set of Nodes that is being browsed in the
      * ThumbnailPanelController
      */
     private NodeNavigatorInterface mySetOfNodes;
+
     /**
      * Listens for changes in the Group and updates the title if anything
      * changed
@@ -75,6 +98,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         LOGGER.info("change event received.");
         updateTitle();
     };
+
     /**
      * a variable to hold the current starting position of thumbnailControllers
      * being displayed out of a group or search. Range 0..count()-1
@@ -85,16 +109,19 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * of pictures.
      */
     private int startIndex;
+
     /**
      * An array that holds the 50 or so ThumbnailComponents that are being
      * displayed
      */
     private ThumbnailController[] thumbnailControllers;
+
     /**
      * An array that holds the 50 or so ThumbnailDescriptionJPanels that are
      * being displayed
      */
     private ThumbnailDescriptionController[] thumbnailDescriptionControllers;
+
     /**
      * This variable keeps track of how many thumbnailControllers per page the
      * component was initialised with. If the number changes because the user
@@ -102,12 +129,18 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * arrays are recreated.
      */
     private int initialisedMaxThumbnails = Integer.MIN_VALUE;
+
     /**
      * Factor for the Thumbnails
      */
     private float thumbnailSizeFactor = 1;
-    // defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the ThumbnailDescriptionPanels
-    private Boolean showFilenamesState = false;
+
+    /**
+     * Whether to show filenames or not.
+     * defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the ThumbnailDescriptionPanels
+     */
+    private Boolean showFilenamesState = Settings.isShowFilenamesOnThumbnailPanel();
+
     /**
      * Point where the mouse was pressed so that we can figure out the rectangle
      * that is being selected.
@@ -188,12 +221,12 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         titleJPanel.getSearchField().addActionListener((ActionEvent e) -> doSearch(titleJPanel.getSearchField().getText()));
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
-            JSlider source = (JSlider) e.getSource();
+            final JSlider source = (JSlider) e.getSource();
             thumbnailSizeFactor = ((float) source.getValue()) / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
             resizeAllThumbnails(thumbnailSizeFactor);
         });
 
-        JPanel whiteArea = new JPanel();
+        final JPanel whiteArea = new JPanel();
         thumbnailJScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, whiteArea);
 
         thumbnailsPane.addMouseListener(new MouseInputAdapter() {
@@ -247,14 +280,14 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         final JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
         final int scrolltrigger = 40;
         if (mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger) {
-            int increment = verticalScrollBar.getUnitIncrement(1);
-            int position = verticalScrollBar.getValue();
+            final int increment = verticalScrollBar.getUnitIncrement(1);
+            final int position = verticalScrollBar.getValue();
             if (position < verticalScrollBar.getMaximum()) {
                 verticalScrollBar.setValue(position + increment);
             }
         } else if (mouseMovedToPoint.y - viewRect.y < scrolltrigger) {
-            int increment = verticalScrollBar.getUnitIncrement(1);
-            int position = verticalScrollBar.getValue();
+            final int increment = verticalScrollBar.getUnitIncrement(1);
+            final int position = verticalScrollBar.getValue();
             if (position > verticalScrollBar.getMinimum()) {
                 verticalScrollBar.setValue(position - increment);
             }
@@ -285,9 +318,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         }
 
         final Rectangle thumbnailRectangle = new Rectangle();
-        SortableDefaultMutableTreeNode node;
         for (final ThumbnailController thumbnailController : thumbnailControllers) {
-            node = thumbnailController.getNode();
+            final SortableDefaultMutableTreeNode node = thumbnailController.getNode();
             if (node == null) {
                 continue;
             }
@@ -299,7 +331,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     }
 
     private void doSearch(final String searchString) {
-        TextQuery textQuery = new TextQuery(searchString);
+        final TextQuery textQuery = new TextQuery(searchString);
         textQuery.setStartNode(Settings.getPictureCollection().getRootNode());
         Settings.getPictureCollection().addQueryToTreeModel(textQuery);
         titleJPanel.hideSearchField();
@@ -307,10 +339,11 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     }
 
     /**
-     * If the button was clicked, flip the state and show or hide the filenames.
+     * If the show filenames button was clicked, flip the state and show or hide the filenames.
      */
     private void showFilenamesButtonClicked() {
         showFilenamesState = !showFilenamesState;
+        Settings.setShowFilenamesOnThumbnailPanel(showFilenamesState);
         for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
         }
@@ -382,7 +415,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     @Subscribe
     public void handleShowGroupRequest(final ShowGroupRequest event) {
         final Runnable runnable = () -> {
-            GroupNavigator groupNavigator = new GroupNavigator();
+            final GroupNavigator groupNavigator = new GroupNavigator();
             groupNavigator.setNode(event.node());
             show(groupNavigator);
         };
@@ -420,13 +453,13 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         newNodeNavigator.addNodeNavigatorListener(this);
 
         if (myLastGroupNode != null) {
-            GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
+            final GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
             gi.removeGroupInfoChangeListener(myGroupInfoChangeListener);
         }
         myLastGroupNode = null;
         if (newNodeNavigator instanceof GroupNavigator) {
             myLastGroupNode = ((GroupNavigator) newNodeNavigator).getGroupNode();
-            GroupInfo groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
+            final GroupInfo groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
             groupInfo.addGroupInfoChangeListener(myGroupInfoChangeListener);
         }
 
@@ -473,8 +506,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Request that the ThumbnailPanel show the last page of Thumbnails
      */
     private void goToLastPage() {
-        int last = mySetOfNodes.getNumberOfNodes();
-        int tgtPage = last / Settings.getMaxThumbnails();
+        final int last = mySetOfNodes.getNumberOfNodes();
+        final int tgtPage = last / Settings.getMaxThumbnails();
         startIndex = tgtPage * Settings.getMaxThumbnails();
         thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         nodeLayoutChanged();
@@ -494,7 +527,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
-            thumbnailDescriptionControllers[i].setShowFilenamesState(showFilenamesState);
+            thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
             thumbnailsPane.add(thumbnailControllers[i].getThumbnail());
             thumbnailsPane.add(thumbnailDescriptionControllers[i].getPanel());
         }
@@ -523,6 +556,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             if (!thumbnailControllers[i].isSameNode(mySetOfNodes, i + startIndex)) {
                 thumbnailControllers[i].setNode(mySetOfNodes, i + startIndex);
                 thumbnailDescriptionControllers[i].setNode(mySetOfNodes.getNode(i + startIndex));
+                thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
             }
         }
     }
@@ -574,9 +608,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * This method select all Thumbnails which are not null
      */
     private void selectAll() {
-        SortableDefaultMutableTreeNode node;
         for (ThumbnailController thumbnailController : thumbnailControllers) {
-            node = thumbnailController.getNode();
+            final SortableDefaultMutableTreeNode node = thumbnailController.getNode();
             if (node != null) {
                 Settings.getPictureCollection().addToSelectedNodes(node);
             }

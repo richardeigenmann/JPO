@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
 /*
- Copyright (C) 2002-2020  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2021  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -17,6 +17,7 @@ package org.jpo.gui;
  */
 
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.JpoCache;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.JpoEventBus;
@@ -39,7 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * GUI that allows the settings to be changed.
+ * A window to modify the settings of the JPO application
  *
  * @author Richard Eigenmann
  */
@@ -49,29 +50,36 @@ public class SettingsDialog extends JDialog {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(SettingsDialog.class.getName());
+
     /**
      * Defines the size of this dialog box
      */
     private static final Dimension SETTINGS_DIALOG_SIZE = new Dimension(700, 330);
+
     /**
      * field that allows the user to capture the file that should be
      * automatically loaded
      */
     private final JTextField autoLoadJTextField = new JTextField();
+
     private final SpinnerModel model
-            = new SpinnerNumberModel(Settings.getTagCloudWords(), //initial value
-            0, //min
-            2000, //max
-            1);                //step
+            = new SpinnerNumberModel(Settings.getTagCloudWords(),
+            0,
+            2000,
+            1);
+
     private final JSpinner tagCloudWordsJSpinner = new JSpinner(model);
+
     /**
      * Dropdown to indicate what preference the user has for JPO startup
      */
     private final JComboBox<String> startupSizeDropdown = new JComboBox<>();
+
     /**
      * Dropdown to indicate the preferred size of the viewer window
      */
     private final JComboBox<String> viewerSizeDropdown = new JComboBox<>();
+
     /**
      * maximum size of picture
      */
@@ -109,6 +117,10 @@ public class SettingsDialog extends JDialog {
      * tickbox that indicates whether to scale the thumbnails quickly
      */
     private final JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailFastScale"));
+    /**
+     * tickbox that indicates whether to show the filenames or not
+     */
+    private final JCheckBox thumbnailShowFilenamesJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailShowFilenamesJCheckBox"));
     /**
      * Text Filed that holds the first user Function
      */
@@ -205,8 +217,45 @@ public class SettingsDialog extends JDialog {
      */
     private void initComponents() {
         setTitle(Settings.getJpoResources().getString("settingsDialogTitle"));
+        getContentPane().setLayout(new BorderLayout());
+        final JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.setTabPlacement(JTabbedPane.TOP);
+        tabbedPane.setPreferredSize(SETTINGS_DIALOG_SIZE);
+        tabbedPane.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        tabbedPane.add(Settings.getJpoResources().getString("browserWindowSettingsJPanel"), getGeneralJPanel());
+        tabbedPane.add(Settings.getJpoResources().getString("pictureViewerJPanel"), getPictureViewerJPanel());
+        tabbedPane.add(Settings.getJpoResources().getString("thumbnailSettingsJPanel"), getThumbnailsJPanel());
+        tabbedPane.add(Settings.getJpoResources().getString("userFunctionJPanel"), getUserFunctionsJPanel());
+        tabbedPane.add(Settings.getJpoResources().getString("emailJPanel"), getEmailServerJPanel());
+        tabbedPane.add(Settings.getJpoResources().getString("cacheJPanel"), getCacheJPanel());
+        getContentPane().add(tabbedPane, BorderLayout.NORTH);
 
-        // General tab
+        final Container buttonContainer = new Container();
+        buttonContainer.setLayout(new FlowLayout());
+        buttonContainer.add(getSaveButton());
+
+        final JButton cancelButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
+        cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
+        cancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        cancelButton.addActionListener((ActionEvent e) -> getRid());
+        buttonContainer.add(cancelButton);
+
+        getContentPane().add(buttonContainer, BorderLayout.SOUTH);
+
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent evt) {
+                getRid();
+            }
+        });
+    }
+
+    @NotNull
+    private JPanel getGeneralJPanel() {
         final JPanel generalJPanel = new JPanel(new MigLayout());
 
         final JLabel languageJLabel = new JLabel(Settings.getJpoResources().getString("languageJLabel"));
@@ -251,19 +300,21 @@ public class SettingsDialog extends JDialog {
         autoLoadJTextField.setInputVerifier(new FileTextFieldVerifier());
         generalJPanel.add(autoLoadJTextField);
 
-
         generalJPanel.add(getAutoLoadJButton(), "wrap");
 
         final JLabel wordCloudWordJLabel = new JLabel("Max Word Cloud Words");
         generalJPanel.add(wordCloudWordJLabel);
 
         generalJPanel.add(tagCloudWordsJSpinner, "wrap");
+        return generalJPanel;
+    }
 
-        // set up the pictureViewerJPanel
+    @NotNull
+    private JPanel getPictureViewerJPanel() {
         final JPanel pictureViewerJPanel = new JPanel(new MigLayout());
-
         // PictureViewer size stuff
         pictureViewerJPanel.add(new JLabel(Settings.getJpoResources().getString("pictureViewerSizeChoicesJlabel")));
+        final String[] windowSizeChoices = getWindowSizeChoices();
         final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<>(windowSizeChoices);
         viewerSizeDropdown.setModel(viewerSizeModel);
         pictureViewerJPanel.add(viewerSizeDropdown, "wrap");
@@ -281,8 +332,11 @@ public class SettingsDialog extends JDialog {
 
         pictureViewerJPanel.add(dontEnlargeJCheckBox, "wrap");
         pictureViewerJPanel.add(pictureViewerFastScaleJCheckBox);
+        return pictureViewerJPanel;
+    }
 
-        // set up the thumbnailSettingsJPanel
+    @NotNull
+    private JPanel getThumbnailsJPanel() {
         final JPanel thumbnailsJPanel = new JPanel(new MigLayout());
 
         final JLabel maxThumbnailsLabel = new JLabel(Settings.getJpoResources().getString("maxThumbnailsLabelText"));
@@ -319,8 +373,13 @@ public class SettingsDialog extends JDialog {
         jpgQualityJSlider.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 20));
         thumbnailsJPanel.add(jpgQualityJSlider, "span, grow, wrap");
 
-        thumbnailsJPanel.add(thumbnailFastScaleJCheckBox);
+        thumbnailsJPanel.add(thumbnailFastScaleJCheckBox, "wrap");
+        thumbnailsJPanel.add(thumbnailShowFilenamesJCheckBox);
+        return thumbnailsJPanel;
+    }
 
+    @NotNull
+    private JPanel getUserFunctionsJPanel() {
         // User Functions
         final JPanel userFunctionsJPanel = new JPanel(new MigLayout());
         final JLabel userFunction1JLabel = new JLabel(Settings.getJpoResources().getString("userFunction1JLabel"));
@@ -374,7 +433,11 @@ public class SettingsDialog extends JDialog {
         userFunctionHelpJTextArea.setWrapStyleWord(true);
         userFunctionHelpJTextArea.setLineWrap(true);
         userFunctionsJPanel.add(userFunctionHelpJTextArea, "span, grow");
+        return userFunctionsJPanel;
+    }
 
+    @NotNull
+    private JPanel getEmailServerJPanel() {
         // Email Server
         final JPanel emailServerJPanel = new JPanel(new MigLayout());
         final JLabel emailJLabel = new JLabel(Settings.getJpoResources().getString("emailJLabel"));
@@ -456,7 +519,11 @@ public class SettingsDialog extends JDialog {
 
         emailServerJPanel.add(showPasswordButton);
         emailServerJPanel.add(showPasswordLabel, "wrap");
+        return emailServerJPanel;
+    }
 
+    @NotNull
+    private JPanel getCacheJPanel() {
         // Cache Panel
         final JPanel cacheJPanel = new JPanel(new MigLayout());
 
@@ -482,47 +549,7 @@ public class SettingsDialog extends JDialog {
         final JButton updateCacheStatsJButton = new JButton("Update");
         updateCacheStatsJButton.addActionListener((ActionEvent e) -> updateCacheStats());
         cacheJPanel.add(updateCacheStatsJButton);
-
-        // set up the main part of the dialog
-        getContentPane().setLayout(new BorderLayout());
-
-        final JTabbedPane tabbedPanel = new JTabbedPane();
-        tabbedPanel.setTabPlacement(JTabbedPane.TOP);
-        tabbedPanel.setPreferredSize(SETTINGS_DIALOG_SIZE);
-        tabbedPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-        tabbedPanel.add(Settings.getJpoResources().getString("browserWindowSettingsJPanel"), generalJPanel);
-        tabbedPanel.add(Settings.getJpoResources().getString("pictureViewerJPanel"), pictureViewerJPanel);
-        tabbedPanel.add(Settings.getJpoResources().getString("thumbnailSettingsJPanel"), thumbnailsJPanel);
-        tabbedPanel.add(Settings.getJpoResources().getString("userFunctionJPanel"), userFunctionsJPanel);
-        tabbedPanel.add(Settings.getJpoResources().getString("emailJPanel"), emailServerJPanel);
-        tabbedPanel.add("Cache", cacheJPanel);
-
-        getContentPane().add(tabbedPanel, BorderLayout.NORTH);
-
-        Container buttonContainer = new Container();
-        buttonContainer.setLayout(new FlowLayout());
-
-        buttonContainer.add(getSaveButton());
-
-        JButton cancelButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
-        cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
-        cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
-        cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
-        cancelButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        cancelButton.addActionListener((ActionEvent e) -> getRid());
-        buttonContainer.add(cancelButton);
-
-        getContentPane().add(buttonContainer, BorderLayout.SOUTH);
-
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosing(WindowEvent evt) {
-                getRid();
-            }
-        });
+        return cacheJPanel;
     }
 
     private String[] getWindowSizeChoices() {
@@ -601,6 +628,7 @@ public class SettingsDialog extends JDialog {
         thumbnailSize.setValue(Settings.getThumbnailSize());
         jpgQualityJSlider.setValue((int) (Settings.getDefaultHtmlLowresQuality() * 100));
         thumbnailFastScaleJCheckBox.setSelected(Settings.isThumbnailFastScale());
+        thumbnailShowFilenamesJCheckBox.setSelected(Settings.isShowFilenamesOnThumbnailPanel());
 
         userFunction1NameJTextField.setText(Settings.getUserFunctionNames()[0]);
         userFunction2NameJTextField.setText(Settings.getUserFunctionNames()[1]);
@@ -681,6 +709,7 @@ public class SettingsDialog extends JDialog {
         Settings.setThumbnailSize(thumbnailSize.getValue());
         Settings.setDefaultHtmlLowresQuality(((float) jpgQualityJSlider.getValue()) / 100);
         Settings.setThumbnailFastScale(thumbnailFastScaleJCheckBox.isSelected());
+        Settings.setShowFilenamesOnThumbnailPanel(thumbnailShowFilenamesJCheckBox.isSelected());
 
         Settings.getUserFunctionNames()[0] = userFunction1NameJTextField.getText();
         Settings.getUserFunctionNames()[1] = userFunction2NameJTextField.getText();
@@ -788,8 +817,8 @@ public class SettingsDialog extends JDialog {
             extends InputVerifier {
 
         @Override
-        public boolean shouldYieldFocus(JComponent source, JComponent target) {
-            String validationFile = ((JTextComponent) source).getText();
+        public boolean shouldYieldFocus(final JComponent source, final JComponent target) {
+            final String validationFile = ((JTextComponent) source).getText();
             LOGGER.log(Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile);
             LOGGER.log(Level.INFO, "JComponent = {0}", Integer.toString(source.hashCode()));
             LOGGER.log(Level.INFO, "autoLoadJTextField = {0}", Integer.toString(autoLoadJTextField.hashCode()));
@@ -802,7 +831,7 @@ public class SettingsDialog extends JDialog {
         }
 
         @Override
-        public boolean verify(JComponent input) {
+        public boolean verify(final JComponent input) {
             LOGGER.log(Level.INFO, "SettingsDialog.FileTextFieldVerifyer.verify: called with: {0}", ((JTextComponent) input).getText());
             return true;
         }
