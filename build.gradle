@@ -272,8 +272,8 @@ task runExcludingTests(type: JavaExec) {
     group 'build'
     description 'Runs JPO from the shadowJar'
     dependsOn shadowJar
-    tasks.withType(Test) {enabled = false}
-    tasks.withType(Javadoc) {enabled = false}
+    //tasks.withType(Test) {enabled = false}
+    //tasks.withType(Javadoc) {enabled = false}
     classpath = files( 'build/libs/Jpo-all.jar' )
     main = 'org.jpo.Main'
 }
