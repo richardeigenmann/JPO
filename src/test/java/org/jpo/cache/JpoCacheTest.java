@@ -111,9 +111,14 @@ public class JpoCacheTest {
 
             com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
             // some test runs fail. The overwrite may not have happened. Trying to force a sync. Maybe that helps?
-            try (final FileOutputStream fos = new FileOutputStream("gaga")) {
+            final File dummyFileToForceASync = new File("DummyFileToForceASync");
+            try (final FileOutputStream fos = new FileOutputStream(dummyFileToForceASync)) {
                 fos.getFD().sync();
+                fos.close();
             }
+            Files.delete(dummyFileToForceASync.toPath());
+
+
             final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that the overwritten tempFile {0} was not retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
