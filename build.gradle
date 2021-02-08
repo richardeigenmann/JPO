@@ -268,6 +268,16 @@ task run(type: JavaExec) {
     main = 'org.jpo.Main'
 }
 
+task runExcludingTests(type: JavaExec) {
+    group 'build'
+    description 'Runs JPO from the shadowJar'
+    dependsOn shadowJar
+    tasks.withType(Test) {enabled = false}
+    tasks.withType(Javadoc) {enabled = false}
+    classpath = files( 'build/libs/Jpo-all.jar' )
+    main = 'org.jpo.Main'
+}
+
 jacoco {
     //Support for Java 15 starts with 0.8.7
     toolVersion = "0.8.6"
