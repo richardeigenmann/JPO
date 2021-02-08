@@ -16,11 +16,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class FileLoadRequestTest {
 
+    public static final String AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN = "An IllegalArgumentException was supposed to be thrown";
+
     @Test
     void makeFileLoadRequest() {
         try {
             final File existingFile = new File(Objects.requireNonNull(NodeStatisticsTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).toURI());
-            final FileLoadRequest request = new FileLoadRequest(existingFile);
+            new FileLoadRequest(existingFile);
         } catch (final IllegalArgumentException e) {
             fail("There wasn't supposed to be an IllegalArgumentException in this test. Exception reads: " + e.getMessage());
         } catch (final URISyntaxException e) {
@@ -32,11 +34,10 @@ class FileLoadRequestTest {
     void makeFileLoadRequestInexistantFile() {
         try {
             final File inexistantFile = new File("no_such_file.txt");
-            final FileLoadRequest request = new FileLoadRequest(inexistantFile);
-            fail("An IllegalArgumentException was supposed to be thrown");
+            new FileLoadRequest(inexistantFile);
+            fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"no_such_file.txt\" must exist before we can load it!", e.getMessage());
-            return;
         }
     }
 
@@ -47,12 +48,14 @@ class FileLoadRequestTest {
         try {
             tempDir = Files.createTempDirectory("makeFileLoadRequestUnreadableFile");
             unreadableFile = new File(tempDir.toFile(), "unreadableFile.jpg");
-            final FileWriter writer = new FileWriter(unreadableFile);
-            writer.write("Some random text");
-            writer.close();
-            unreadableFile.setReadable(false);
-            final FileLoadRequest request = new FileLoadRequest(unreadableFile);
-            fail("An IllegalArgumentException was supposed to be thrown");
+            try (final FileWriter writer = new FileWriter(unreadableFile)) {
+                writer.write("Some random text");
+            }
+            if (!unreadableFile.setReadable(false)) {
+                fail("Could not set the test file to unreadable");
+            }
+            new FileLoadRequest(unreadableFile);
+            fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"" + unreadableFile + "\" must be readable for FileLoadRequest!", e.getMessage());
         } catch (final IOException e) {
@@ -61,7 +64,7 @@ class FileLoadRequestTest {
             try {
                 Files.delete(unreadableFile.toPath());
                 Files.delete(tempDir);
-            } catch (IOException e) {
+            } catch (final IOException | NullPointerException e) {
                 fail("Could no clean up from test: " + e.getMessage());
             }
 
@@ -72,12 +75,11 @@ class FileLoadRequestTest {
     void makeFileLoadRequestOnDirectory() {
         try {
             final File directory = new File(".");
-            final FileLoadRequest request = new FileLoadRequest(directory);
+            new FileLoadRequest(directory);
+            fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("\".\" is a directory. FileLoadRequest can only handle actual files.", e.getMessage());
-            return;
         }
-        fail("An IllegalArgumentException was supposed to be thrown");
     }
 
 
