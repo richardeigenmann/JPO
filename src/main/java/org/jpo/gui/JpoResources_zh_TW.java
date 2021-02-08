@@ -701,7 +701,10 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"PrivacyTumbProgBarDone", "%d Thumbnails Deleted"},
 
             {"org.jpo.dataModel.XmlReader.loadProgressGuiTitle", "裝載文件"},
-            {"org.jpo.dataModel.XmlReader.progressUpdate", "%d 組 %d 圖片 負荷"}
+            {"org.jpo.dataModel.XmlReader.progressUpdate", "%d 組 %d 圖片 負荷"},
+
+            //CategoryPopupMenu
+            {"CategoryPopupMenu", "Add a Category to the Picture"}
     };
 }
 

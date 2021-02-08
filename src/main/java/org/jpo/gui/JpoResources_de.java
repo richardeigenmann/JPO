@@ -698,7 +698,10 @@ public class JpoResources_de extends ListResourceBundle {
             {"PrivacyTumbProgBarDone", "%d Verkleinerungen gelöscht"},
 
             {"org.jpo.dataModel.XmlReader.loadProgressGuiTitle", "Lade Datei"},
-            {"org.jpo.dataModel.XmlReader.progressUpdate", "%d Gruppen und %d Bilder geladen"}
+            {"org.jpo.dataModel.XmlReader.progressUpdate", "%d Gruppen und %d Bilder geladen"},
+
+            //CategoryPopupMenu
+            {"CategoryPopupMenu", "Add a Category to the Picture"}
     };
 }
 

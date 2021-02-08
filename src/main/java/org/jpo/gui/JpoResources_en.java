@@ -674,8 +674,10 @@ public class JpoResources_en extends ListResourceBundle {
 
 
             {"org.jpo.dataModel.XmlReader.loadProgressGuiTitle", "Loading File"},
-            {"org.jpo.dataModel.XmlReader.progressUpdate", "Loaded: %d Groups, %d Pictures"}
+            {"org.jpo.dataModel.XmlReader.progressUpdate", "Loaded: %d Groups, %d Pictures"},
 
+            //CategoryPopupMenu
+            {"CategoryPopupMenu", "Add a Category to the Picture"}
 
     };
 }

@@ -1865,7 +1865,7 @@ public class Settings {
         return jpoResources;
     }
 
-    public static void setJpoResources(ResourceBundle jpoResources) {
+    public static void setJpoResources(final ResourceBundle jpoResources) {
         Settings.jpoResources = jpoResources;
     }
 

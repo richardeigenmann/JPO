@@ -819,7 +819,7 @@ public class SettingsDialog extends JDialog {
         @Override
         public boolean shouldYieldFocus(final JComponent source, final JComponent target) {
             final String validationFile = ((JTextComponent) source).getText();
-            LOGGER.log(Level.INFO, "SettingsDialog.FileTextFieldVerifyer.shouldYieldFocus: called with: {0}", validationFile);
+            LOGGER.log(Level.INFO, "shouldYieldFocus: called with: {0}", validationFile);
             LOGGER.log(Level.INFO, "JComponent = {0}", Integer.toString(source.hashCode()));
             LOGGER.log(Level.INFO, "autoLoadJTextField = {0}", Integer.toString(autoLoadJTextField.hashCode()));
 
@@ -832,7 +832,7 @@ public class SettingsDialog extends JDialog {
 
         @Override
         public boolean verify(final JComponent input) {
-            LOGGER.log(Level.INFO, "SettingsDialog.FileTextFieldVerifyer.verify: called with: {0}", ((JTextComponent) input).getText());
+            LOGGER.log(Level.INFO, "verify: called with: {0}", ((JTextComponent) input).getText());
             return true;
         }
     }
