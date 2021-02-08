@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 
 /*
- Copyright (C) 2017 -2020  Richard Eigenmann.
+ Copyright (C) 2017 -2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,13 +34,13 @@ import java.io.File;
 public record FileLoadRequest(@NotNull File fileToLoad) {
     public FileLoadRequest {
         if (!fileToLoad.exists()) {
-            throw new IllegalArgumentException(String.format("File %s must exist before we can load it!"));
+            throw new IllegalArgumentException(String.format("File \"%s\" must exist before we can load it!", fileToLoad));
         }
         if (!fileToLoad.canRead()) {
-            throw new IllegalArgumentException(String.format("File %s must be readable if we are to load it!"));
+            throw new IllegalArgumentException(String.format("File \"%s\" must be readable for FileLoadRequest!", fileToLoad));
         }
         if (fileToLoad.isDirectory()) {
-            throw new IllegalArgumentException(String.format("%s is a directory. What should we do here?"));
+            throw new IllegalArgumentException(String.format("\"%s\" is a directory. FileLoadRequest can only handle actual files.", fileToLoad));
         }
     }
 }
