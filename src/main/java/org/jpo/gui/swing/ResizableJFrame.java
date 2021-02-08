@@ -13,7 +13,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_DEFAULT;
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_FULLSCREEN;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -84,18 +84,18 @@ public class ResizableJFrame
     /**
      * Creates a new instance of ResizableJFrame
      *
-     * @param title Title for the frame
+     * @param title     Title for the frame
      * @param component The Component to show in the frame
      */
-    public ResizableJFrame( String title, Component component ) {
-        super( title );
+    public ResizableJFrame(final String title, final Component component) {
+        super(title);
         Tools.checkEDT();
 
-        getContentPane().setLayout( new BorderLayout() );
+        getContentPane().setLayout(new BorderLayout());
         getContentPane().add("Center", component);
         setBackground(Settings.getPictureviewerBackgroundColor());
 
-        setUndecorated( !decorateWindow );
+        setUndecorated(!decorateWindow);
 
         if (Settings.isMaximisePictureViewerWindow()) {
             maximise();

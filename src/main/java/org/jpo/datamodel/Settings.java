@@ -128,7 +128,7 @@ public class Settings {
         return maximisePictureViewerWindow;
     }
 
-    public static void setMaximisePictureViewerWindow(boolean maximisePictureViewerWindow) {
+    public static void setMaximisePictureViewerWindow(final boolean maximisePictureViewerWindow) {
         Settings.maximisePictureViewerWindow = maximisePictureViewerWindow;
     }
 

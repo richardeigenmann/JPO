@@ -1,6 +1,7 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.OverlayedPictureController;
@@ -11,9 +12,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /*
- PictureFrame.java:  Class that manages the frame and display of the Picutre
+ PictureFrame.java:  Class that manages the frame and display of the Picture
 
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -112,26 +113,29 @@ public class PictureFrame {
 
         viewerPanel.setBackground(Settings.getPictureviewerBackgroundColor());
         viewerPanel.setOpaque(true);
-        viewerPanel.setFocusable( false );
+        viewerPanel.setFocusable(false);
+        viewerPanel.setLayout(new MigLayout("insets 0", "[grow, fill]", "[grow, fill][]"));
+        viewerPanel.add(pictureController, "span, grow");
 
-        viewerPanel.setLayout( new MigLayout( "insets 0", "[grow, fill]", "[grow, fill][]" ) );
+        viewerPanel.add(getLowerBar());
+    }
 
-        viewerPanel.add( pictureController, "span, grow" );
-
-        final JPanel lowerBar = new JPanel( new MigLayout( "insets 0, wrap 3", "[left][grow, fill][right]", "[]" ) );
+    @NotNull
+    private JPanel getLowerBar() {
+        final JPanel lowerBar = new JPanel(new MigLayout("insets 0, wrap 3", "[left][grow, fill][right]", "[]"));
         lowerBar.setBackground(Settings.getPictureviewerBackgroundColor());
         lowerBar.setOpaque(true);
-        lowerBar.setFocusable( false );
+        lowerBar.setFocusable(false);
 
-        loadJProgressBar.setPreferredSize( new Dimension( 120, 20 ) );
-        loadJProgressBar.setMaximumSize( new Dimension( 140, 20 ) );
+        loadJProgressBar.setPreferredSize(new Dimension(120, 20));
+        loadJProgressBar.setMaximumSize(new Dimension(140, 20));
         loadJProgressBar.setMinimumSize(new Dimension(80, 20));
         loadJProgressBar.setBackground(Settings.getPictureviewerBackgroundColor());
         loadJProgressBar.setBorderPainted(true);
-        loadJProgressBar.setBorder( BorderFactory.createLineBorder( Color.gray, 1 ) );
+        loadJProgressBar.setBorder(BorderFactory.createLineBorder(Color.gray, 1));
 
-        loadJProgressBar.setMinimum( 0 );
-        loadJProgressBar.setMaximum( 100 );
+        loadJProgressBar.setMinimum(0);
+        loadJProgressBar.setMaximum(100);
         loadJProgressBar.setStringPainted(true);
         loadJProgressBar.setVisible(false);
 
@@ -156,8 +160,8 @@ public class PictureFrame {
         descriptionJScrollPane.setOpaque(true);
         lowerBar.add(descriptionJScrollPane);
 
-        lowerBar.add( navButtonPanel );
-        viewerPanel.add( lowerBar );
+        lowerBar.add(navButtonPanel);
+        return lowerBar;
     }
 
     /**
@@ -165,9 +169,9 @@ public class PictureFrame {
      *
      * @param newDescription The new description to be shown
      */
-    public void setDescription( String newDescription ) {
+    public void setDescription(String newDescription) {
         Tools.checkEDT();
-        descriptionJTextField.setText( newDescription );
+        descriptionJTextField.setText(newDescription);
     }
 
     /**

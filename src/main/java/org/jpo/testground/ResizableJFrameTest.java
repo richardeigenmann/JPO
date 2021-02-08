@@ -16,7 +16,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
 
 
 /*
- Copyright (C) 2002-2014  Richard Eigenmann.
+ Copyright (C) 2002-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -42,13 +42,13 @@ public class ResizableJFrameTest {
      *
      * @param args the command line arguments
      */
-    public static void main( String[] args ) {
+    public static void main(final String[] args) {
         Settings.loadSettings();
         try {
             SwingUtilities.invokeAndWait(ResizableJFrameTest::new
             );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            Logger.getLogger( ResizableJFrameTest.class.getName() ).log( Level.SEVERE, null, ex );
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(ResizableJFrameTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
         }
     }
@@ -59,56 +59,57 @@ public class ResizableJFrameTest {
     public ResizableJFrameTest() {
 
         final JPanel p = new JPanel();
-        p.setLayout( new BorderLayout() );
+        p.setLayout(new BorderLayout());
 
-        final ResizableJFrame resizableJFrame = new ResizableJFrame( "ResizableJFrameTest", p );
-        resizableJFrame.setDefaultCloseOperation( WindowConstants.DISPOSE_ON_CLOSE );
+        final ResizableJFrame resizableJFrame = new ResizableJFrame("ResizableJFrameTest", p);
+        resizableJFrame.switchWindowMode(WINDOW_FULLSCREEN);
+        resizableJFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        JPanel buttonPanel = new JPanel();
-        JButton fullScreen = new JButton( "FullScreen" );
-        fullScreen.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_FULLSCREEN ));
-        buttonPanel.add( fullScreen );
+        final JPanel buttonPanel = new JPanel();
+        final JButton fullScreen = new JButton("FullScreen");
+        fullScreen.addActionListener((ActionEvent e) -> resizableJFrame.resizeTo(WINDOW_FULLSCREEN));
+        buttonPanel.add(fullScreen);
 
-        JButton normalScreen = new JButton( "Normal" );
-        normalScreen.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_DEFAULT ));
-        buttonPanel.add( normalScreen );
+        final JButton normalScreen = new JButton("Normal");
+        normalScreen.addActionListener((ActionEvent e) -> resizableJFrame.resizeTo(WINDOW_DEFAULT));
+        buttonPanel.add(normalScreen);
 
-        JButton leftSize = new JButton( "Left" );
-        leftSize.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_LEFT ));
-        buttonPanel.add( leftSize );
+        final JButton leftSize = new JButton("Left");
+        leftSize.addActionListener((ActionEvent e) -> resizableJFrame.resizeTo(WINDOW_LEFT));
+        buttonPanel.add(leftSize);
 
-        JButton topLeftSize = new JButton( "Top Left" );
+        final JButton topLeftSize = new JButton("Top Left");
         topLeftSize.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_TOP_LEFT ));
         buttonPanel.add( topLeftSize );
 
-        JButton bottomLeftSize = new JButton( "Bottom Left" );
+        final JButton bottomLeftSize = new JButton("Bottom Left");
         bottomLeftSize.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_BOTTOM_LEFT ));
         buttonPanel.add( bottomLeftSize );
 
-        JButton rightSize = new JButton( "Right" );
+        final JButton rightSize = new JButton("Right");
         rightSize.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_RIGHT ));
         buttonPanel.add( rightSize );
 
-        JButton topRightSize = new JButton( "Top Right" );
+        final JButton topRightSize = new JButton("Top Right");
         topRightSize.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_TOP_RIGHT ));
         buttonPanel.add( topRightSize );
 
-        JButton bottomRightSize = new JButton( "Bottom Right" );
+        final JButton bottomRightSize = new JButton("Bottom Right");
         bottomRightSize.addActionListener( ( ActionEvent e ) -> resizableJFrame.resizeTo( WINDOW_BOTTOM_RIGHT ));
         buttonPanel.add( bottomRightSize );
 
-        JButton decorateButton = new JButton( "Decorate" );
+        final JButton decorateButton = new JButton("Decorate");
         decorateButton.addActionListener( ( ActionEvent e ) -> resizableJFrame.showWindowDecorations( true ));
         buttonPanel.add( decorateButton );
 
-        JButton undecorateButton = new JButton( "Undecorate" );
+        final JButton undecorateButton = new JButton("Undecorate");
         undecorateButton.addActionListener( ( ActionEvent e ) -> resizableJFrame.showWindowDecorations( false ));
         buttonPanel.add( undecorateButton );
 
         final JTextArea jta = new JTextArea( 20, 80 );
         jta.setCaret( new NonFocussedCaret() );
 
-        JButton refresh = new JButton( "Refresh" );
+        final JButton refresh = new JButton("Refresh");
         refresh.addActionListener( ( ActionEvent e ) -> jta.setText( ScreenHelper.explainGraphicsEnvironment().toString() ));
         buttonPanel.add( refresh );
 
