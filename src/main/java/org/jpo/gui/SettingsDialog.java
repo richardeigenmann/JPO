@@ -219,7 +219,7 @@ public class SettingsDialog extends JDialog {
         setTitle(Settings.getJpoResources().getString("settingsDialogTitle"));
         getContentPane().setLayout(new BorderLayout());
         final JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.setTabPlacement(JTabbedPane.TOP);
+        tabbedPane.setTabPlacement(SwingConstants.TOP);
         tabbedPane.setPreferredSize(SETTINGS_DIALOG_SIZE);
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
         tabbedPane.add(Settings.getJpoResources().getString("browserWindowSettingsJPanel"), getGeneralJPanel());

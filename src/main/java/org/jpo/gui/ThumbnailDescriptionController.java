@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import static java.awt.event.MouseEvent.BUTTON3;
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_DESCRIPTION;
@@ -52,10 +51,6 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
 public class ThumbnailDescriptionController
         implements PictureInfoChangeListener, GroupInfoChangeListener {
 
-    /**
-     * The logger for the class
-     */
-    private static final Logger LOGGER = Logger.getLogger(ThumbnailDescriptionController.class.getName());
 
     /**
      * The panel with the actual descriptions
@@ -476,13 +471,5 @@ public class ThumbnailDescriptionController
          */
         MINI_INFO
     }
-
-
-
-    /*public void setShowFilenamesState(final Boolean stateObject) {
-        LOGGER.log(Level.INFO, "Setting the showFilename state on ThumbnailDescriptionController {0} to {1}", new Object[]{this,stateObject});
-        this.showFilenameState = stateObject;
-    }*/
-
 
 }
