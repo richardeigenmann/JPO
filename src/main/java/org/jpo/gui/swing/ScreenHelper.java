@@ -6,7 +6,7 @@ import java.awt.*;
 /*
 ScreenHelper.java:  class that helps with screen size logic
 
-Copyright (C) 2006-2020  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006-2021  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -78,9 +78,9 @@ public class ScreenHelper {
         Rectangle virtualBounds = new Rectangle();
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice[] gs = ge.getScreenDevices();
-        for (GraphicsDevice gd : gs) {
-            GraphicsConfiguration[] gc = gd.getConfigurations();
-            for (GraphicsConfiguration gc1 : gc) {
+        for (final GraphicsDevice gd : gs) {
+            final GraphicsConfiguration[] gc = gd.getConfigurations();
+            for (final GraphicsConfiguration gc1 : gc) {
                 virtualBounds = virtualBounds.union(gc1.getBounds());
             }
         }
@@ -89,21 +89,22 @@ public class ScreenHelper {
 
 
     /**
-     *  Returns the GraphicsConfiguration of the primary screen
-     * @return Graphics Configuration
+     * Returns the bounds of the primary screen
+     *
+     * @return The bounds of the primary screen
      */
-    public static GraphicsConfiguration getPrimaryScreen() {
+    public static Rectangle getPrimaryScreenBounds() {
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice gd = ge.getDefaultScreenDevice();
-        return gd.getDefaultConfiguration();
+        return gd.getDefaultConfiguration().getBounds();
     }
 
-
     /**
-     *  Returns the graphics Configuration of the secondary screen
-     * @return the Graphics Configuration
+     * Returns the graphics Configuration of the secondary screen
+     *
+     * @return the Graphics Configuration of the secondary screen
      */
-    public static GraphicsConfiguration getSecondaryScreenGraphicsConfiguration() {
+    private static GraphicsConfiguration getSecondaryScreenGraphicsConfiguration() {
         final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         final GraphicsDevice[] gd = ge.getScreenDevices();
         if (gd.length > 1) {
@@ -138,7 +139,7 @@ public class ScreenHelper {
         } else if ( getNumberOfScreenDevices() > 1 ) {
             return getSecondaryScreenBounds();
         }
-        return getPrimaryScreen().getBounds();
+        return getPrimaryScreenBounds();
     }
 
 
@@ -154,9 +155,9 @@ public class ScreenHelper {
             return new Rectangle( xsb.x, xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
         } else {
             if ( getNumberOfScreenDevices() > 1 ) {
-                return getPrimaryScreen().getBounds();
+                return getPrimaryScreenBounds();
             } else {
-                Rectangle bounds = getPrimaryScreen().getBounds();
+                final Rectangle bounds = getPrimaryScreenBounds();
                 return new Rectangle( bounds.x, bounds.y, ( bounds.width / 2 ), bounds.height );
             }
         }
@@ -179,7 +180,7 @@ public class ScreenHelper {
             if ( getNumberOfScreenDevices() > 1 ) {
                 return getSecondaryScreenGraphicsConfiguration().getBounds();
             } else {
-                Rectangle bounds = getPrimaryScreen().getBounds();
+                final Rectangle bounds = getPrimaryScreenBounds();
                 return new Rectangle( bounds.x + ( bounds.width / 2 ), bounds.y, ( bounds.width / 2 ), bounds.height );
             }
         }
@@ -234,14 +235,14 @@ public class ScreenHelper {
     /**
      * helper variable
      */
-    private static StringBuilder b;
+    private static StringBuilder stringBuilder;
 
     /**
      * concatenates strings with a system dependent newline.
      * @param s String
      */
     private static void sbadd(final String s) {
-        b.append(s).append(System.getProperty("line.separator"));
+        stringBuilder.append(s).append(System.getProperty("line.separator"));
     }
 
 
@@ -250,7 +251,7 @@ public class ScreenHelper {
      * @return A description of the graphics configuration
      */
     public static StringBuilder explainGraphicsEnvironment() {
-        b = new StringBuilder();
+        stringBuilder = new StringBuilder();
         if (GraphicsEnvironment.isHeadless()) {
             sbadd("HEADLESS: The GraphicsEnvironment is reporting no Display, Keyboard and Mound can be supported in this environment");
         } else {
@@ -281,52 +282,52 @@ public class ScreenHelper {
         sbadd( "The bottom left window bounds are: " + getBottomLeftScreenBounds().toString() );
         sbadd( "The right window bounds are: " + getRightScreenBounds().toString() );
         sbadd( "The top right window bounds are: " + getTopRightScreenBounds().toString() );
-        sbadd( "The bottom right window bounds are: " + getBottomRightScreenBounds().toString() );
+        sbadd( "The bottom right window bounds are: " + getBottomRightScreenBounds().toString());
 
 
-        sbadd( "The Default Screen Device configuration:" );
-        GraphicsDevice defaultScreenDevice = ge.getDefaultScreenDevice();
-        explainGraphicsDevice( defaultScreenDevice );
+        sbadd("The Default Screen Device configuration:");
+        explainGraphicsDevice(ge.getDefaultScreenDevice() );
 
 
         for (final GraphicsDevice device : gd) {
             explainGraphicsDevice(device);
         }
 
-        return b;
+        return stringBuilder;
     }
 
 
     /**
-     *  Explains the graphics device to the log file
-     * @param d GraphicsDevice
+     * Explains the graphics device to the log file
+     *
+     * @param graphicsDevice GraphicsDevice
      */
-    public static void explainGraphicsDevice( GraphicsDevice d ) {
-        final String id = d.getIDstring();
-        sbadd( "================== Device: " + id );
-        if ( d.isFullScreenSupported() ) {
-            sbadd( "FullScreenexclusive mode is supported" );
+    private static void explainGraphicsDevice(final GraphicsDevice graphicsDevice) {
+        final String id = graphicsDevice.getIDstring();
+        sbadd("================== Device: " + id);
+        if (graphicsDevice.isFullScreenSupported()) {
+            sbadd("FullScreenexclusive mode is supported");
         } else {
-            sbadd( "FullScreenexclusive mode is not supported" );
+            sbadd("FullScreenexclusive mode is not supported");
         }
-        if ( d.isDisplayChangeSupported() ) {
-            sbadd( "DisplayChangeSupported is supported" );
+        if (graphicsDevice.isDisplayChangeSupported()) {
+            sbadd("DisplayChangeSupported is supported");
         } else {
-            sbadd( "DisplayChangeSupported is not supported" );
+            sbadd("DisplayChangeSupported is not supported");
         }
-        sbadd( "AvailableAcceleratedMemory: " + d.getAvailableAcceleratedMemory());
-        explainDisplayMode( id, d.getDisplayMode() );
+        sbadd("AvailableAcceleratedMemory: " + graphicsDevice.getAvailableAcceleratedMemory());
+        explainDisplayMode(id, graphicsDevice.getDisplayMode());
 
-        DisplayMode[] dm = d.getDisplayModes();
-        for ( int i = 0; i < dm.length; i++ ) {
-            explainDisplayMode( id + " possibleMode [" + i + "]", dm[i] );
+        final DisplayMode[] dm = graphicsDevice.getDisplayModes();
+        for (int i = 0; i < dm.length; i++) {
+            explainDisplayMode(id + " possibleMode [" + i + "]", dm[i]);
         }
 
 
-        sbadd( "**Default Graphics Configuration:" );
-        explainGraphicsConfiguration( id, d.getDefaultConfiguration() );
-        sbadd( "**Available GraphicsConfigurations:" );
-        GraphicsConfiguration[] gc = d.getConfigurations();
+        sbadd("**Default Graphics Configuration:");
+        explainGraphicsConfiguration(id, graphicsDevice.getDefaultConfiguration());
+        sbadd("**Available GraphicsConfigurations:");
+        GraphicsConfiguration[] gc = graphicsDevice.getConfigurations();
         for ( int i = 0; i < gc.length; i++ ) {
             explainGraphicsConfiguration( id + " Available Configuration [" + i + "] ", gc[i] );
         }
@@ -351,6 +352,6 @@ public class ScreenHelper {
     public static void explainGraphicsConfiguration(final String id,
                                                     final GraphicsConfiguration gc) {
         final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        sbadd("Graphicsconfiguration for Device: " + id + " Bounds: " + gc.getBounds().toString() + " Insets: " + toolkit.getScreenInsets(gc).toString());
+        sbadd("Graphicsconfiguration for Device: " + id + " Bounds: " + gc.getBounds() + " Insets: " + toolkit.getScreenInsets(gc));
     }
 }

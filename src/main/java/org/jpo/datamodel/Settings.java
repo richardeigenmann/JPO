@@ -18,7 +18,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /*
- * Copyright (C) 2002 - 2020 Richard Eigenmann, Zürich, Switzerland This program
+ * Copyright (C) 2002 - 2021 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -85,10 +85,20 @@ public class Settings {
      */
     private static File logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
 
+    /**
+     * Returns if the window should be maximised on JPO startup
+     *
+     * @return true if the window should be maxunused on JPO startup
+     */
     public static boolean isMaximiseJpoOnStartup() {
         return maximiseJpoOnStartup;
     }
 
+    /**
+     * Remembers if the window should be maximised on JPO startup
+     *
+     * @param maximiseJpoOnStartup
+     */
     public static void setMaximiseJpoOnStartup(boolean maximiseJpoOnStartup) {
         Settings.maximiseJpoOnStartup = maximiseJpoOnStartup;
     }
@@ -107,20 +117,32 @@ public class Settings {
         Settings.mainFrameDimensions = mainFrameDimensions;
     }
 
+    public record WindowSize(String label, Dimension dimension) {
+    }
+
+    ;
+
 
     /**
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
      */
-    private static final Dimension[] windowSizes = {new Dimension(0, 0), new Dimension(1050, 760), new Dimension(1250, 900), new Dimension(1450, 1190), new Dimension(2150, 1300)};
+    private static final WindowSize[] windowSizes = {
+            new WindowSize("Maximum", new Dimension(0, 0)),
+            new WindowSize("HD 720p", new Dimension(1280, 720)),
+            new WindowSize("Full HD", new Dimension(1920, 1080)),
+            new WindowSize("2K", new Dimension(2048, 1400)),
+            new WindowSize("UHD", new Dimension(3840, 2160)),
+            new WindowSize("4K", new Dimension(4096, 3000)),
+            new WindowSize("8K", new Dimension(7680, 4320))
+    };
 
     /**
      * the dimensions of the main JPO frame
      */
-    private static Dimension mainFrameDimensions = new Dimension(windowSizes[4]);
+    private static Dimension mainFrameDimensions = new Dimension(windowSizes[4].dimension());
 
-
-    public static Dimension[] getWindowSizes() {
+    public static WindowSize[] getWindowSizes() {
         return windowSizes;
     }
 
@@ -149,7 +171,7 @@ public class Settings {
     /**
      * the dimensions of the "Default" picture viewer
      */
-    private static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1]);
+    private static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1].dimension());
 
     /**
      * the default place for the divider.
@@ -802,11 +824,19 @@ public class Settings {
      */
     private static String defaultHtmlFtpUser = "";
 
+    /**
+     * Returns the default ftp user for Html export
+     */
     public static String getDefaultHtmlFtpPassword() {
         return defaultHtmlFtpPassword;
     }
 
-    public static void setDefaultHtmlFtpPassword(String defaultHtmlFtpPassword) {
+    /**
+     * Remebers the default ftp password for Html export
+     *
+     * @param defaultHtmlFtpPassword The default password for the ftp export
+     */
+    public static void setDefaultHtmlFtpPassword(final String defaultHtmlFtpPassword) {
         Settings.defaultHtmlFtpPassword = defaultHtmlFtpPassword;
     }
 
@@ -815,10 +845,18 @@ public class Settings {
      */
     private static String defaultHtmlFtpPassword = "";
 
+    /**
+     * Returns the default directory for the ftp export
+     *
+     * @return The default directory for the ftp target
+     */
     public static String getDefaultHtmlFtpTargetDir() {
         return defaultHtmlFtpTargetDir;
     }
 
+    /**
+     * Remembers the default ftp password for Html export
+     */
     public static void setDefaultHtmlFtpTargetDir(final String defaultHtmlFtpTargetDir) {
         Settings.defaultHtmlFtpTargetDir = defaultHtmlFtpTargetDir;
     }
@@ -828,10 +866,16 @@ public class Settings {
      */
     private static String defaultHtmlFtpTargetDir = "";
 
+    /**
+     * Returns the default ftp target directory for Html export
+     */
     public static String getDefaultHtmlSshServer() {
         return defaultHtmlSshServer;
     }
 
+    /**
+     * Remembers the default ftp target directory for Html export
+     */
     public static void setDefaultHtmlSshServer(final String defaultHtmlSshServer) {
         Settings.defaultHtmlSshServer = defaultHtmlSshServer;
     }
@@ -1851,7 +1895,7 @@ public class Settings {
         try {
             jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", newLocale);
             currentLocale = newLocale;
-        } catch (MissingResourceException mre) {
+        } catch (final MissingResourceException mre) {
             LOGGER.info(mre.getMessage());
             jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", DEFAULT_LOCALE);
             currentLocale = DEFAULT_LOCALE;

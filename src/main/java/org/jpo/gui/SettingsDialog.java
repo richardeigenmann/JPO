@@ -202,7 +202,7 @@ public class SettingsDialog extends JDialog {
             int settingsArea = targetDimension.width * targetDimension.height;
             int index = 1;
             for (int i = 1; i < Settings.getWindowSizes().length; i++) {
-                if (Settings.getWindowSizes()[i].width * Settings.getWindowSizes()[i].height <= settingsArea) {
+                if (Settings.getWindowSizes()[i].dimension().width * Settings.getWindowSizes()[i].dimension().height <= settingsArea) {
                     index = i;
                 } else {
                     break;
@@ -283,7 +283,7 @@ public class SettingsDialog extends JDialog {
                         Settings.getAnchorFrame().setExtendedState(Frame.MAXIMIZED_BOTH);
                     } else {
                         Settings.getAnchorFrame().setExtendedState(Frame.NORMAL);
-                        Settings.getAnchorFrame().setSize(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()]);
+                        Settings.getAnchorFrame().setSize(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()].dimension());
                     }
                 }
             }
@@ -314,8 +314,8 @@ public class SettingsDialog extends JDialog {
         final JPanel pictureViewerJPanel = new JPanel(new MigLayout());
         // PictureViewer size stuff
         pictureViewerJPanel.add(new JLabel(Settings.getJpoResources().getString("pictureViewerSizeChoicesJlabel")));
-        final String[] windowSizeChoices = getWindowSizeChoices();
-        final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<>(windowSizeChoices);
+
+        final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<>(getWindowSizeChoices());
         viewerSizeDropdown.setModel(viewerSizeModel);
         pictureViewerJPanel.add(viewerSizeDropdown, "wrap");
         // End of PictureViewer size stuff
@@ -556,7 +556,9 @@ public class SettingsDialog extends JDialog {
         final String[] windowSizeChoices = new String[Settings.getWindowSizes().length];
         windowSizeChoices[0] = Settings.getJpoResources().getString("windowSizeChoicesMaximum");
         for (int i = 1; i < Settings.getWindowSizes().length; i++) {
-            windowSizeChoices[i] = Settings.getWindowSizes()[i].width + " x " + Settings.getWindowSizes()[i].height;
+            windowSizeChoices[i] = Settings.getWindowSizes()[i].label() + " ("
+                    + Settings.getWindowSizes()[i].dimension().width + 'x'
+                    + Settings.getWindowSizes()[i].dimension().height + ')';
         }
         return windowSizeChoices;
     }
@@ -689,7 +691,7 @@ public class SettingsDialog extends JDialog {
             Settings.setMainFrameDimensions(new Dimension(0, 0));
         } else {
             Settings.setMaximiseJpoOnStartup(false);
-            Settings.setMainFrameDimensions(new Dimension(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()]));
+            Settings.setMainFrameDimensions(new Dimension(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()].dimension()));
         }
 
         Settings.setMaximumPictureSize(maximumPictureSizeJTextField.getValue());
@@ -700,7 +702,7 @@ public class SettingsDialog extends JDialog {
             Settings.setPictureViewerDefaultDimensions(new Dimension(0, 0));
         } else {
             Settings.setMaximisePictureViewerWindow(false);
-            Settings.setPictureViewerDefaultDimensions(new Dimension(Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()]));
+            Settings.setPictureViewerDefaultDimensions(new Dimension(Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()].dimension()));
         }
 
         Settings.setPictureViewerFastScale(pictureViewerFastScaleJCheckBox.isSelected());

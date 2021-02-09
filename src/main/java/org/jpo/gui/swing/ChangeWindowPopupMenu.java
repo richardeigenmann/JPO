@@ -1,7 +1,6 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
-import org.jpo.gui.ChangeWindowInterface;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -87,15 +86,15 @@ public class ChangeWindowPopupMenu extends JPopupMenu
     /**
      * Object that must implement the functions dealing with the user request.
      */
-    private final transient ChangeWindowInterface caller;
+    private final transient ResizableJFrame caller;
 
     /**
      * Creates a popup menu which allows the user to choose how he would like
      * his window to be positioned and whether it should have decorations.
      *
-     * @param caller	The object requesting the menu.
+     * @param caller The object requesting the menu.
      */
-    public ChangeWindowPopupMenu( ChangeWindowInterface caller ) {
+    public ChangeWindowPopupMenu(final ResizableJFrame caller) {
         this.caller = caller;
         initComponents();
     }
@@ -160,7 +159,7 @@ public class ChangeWindowPopupMenu extends JPopupMenu
         } else if ( actionEvent.getSource() == bottomRightWindowJMenuItem ) {
             caller.switchWindowMode( WINDOW_BOTTOM_RIGHT );
         } else if ( actionEvent.getSource() == defaultWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_DEFAULT );
+            caller.switchWindowMode(WINDOW_CUSTOM_SIZE);
         } else if ( actionEvent.getSource() == windowDecorationsJMenuItem ) {
             caller.showWindowDecorations( true );
         } else if ( actionEvent.getSource() == windowNoDecorationsJMenuItem ) {
