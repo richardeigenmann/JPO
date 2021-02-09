@@ -142,6 +142,10 @@ public class JpoWriter {
 
     /**
      * Only to be used in the unit tests
+     *
+     * @param pictureCollection The picture collection
+     * @param bufferedWriter    The buffered writer
+     * @throws IOException if soemthing goes wrong in the IO
      */
     @TestOnly
     public static void writeCategoriesBlockTestOnly(final PictureCollection pictureCollection, final BufferedWriter bufferedWriter) throws IOException {
@@ -219,6 +223,7 @@ public class JpoWriter {
 
     /**
      * Only to be used in the unit tests
+     * @param pictureInfo The PictureInfo
      */
     @TestOnly
     public static void writePictureTestOnly(final PictureInfo pictureInfo,
@@ -254,6 +259,7 @@ public class JpoWriter {
 
     /**
      * Only to be used in the unit tests
+     * @param directory the directory to use
      */
     @TestOnly
     public static void writeCollectionDTDTestOnly(final File directory) {

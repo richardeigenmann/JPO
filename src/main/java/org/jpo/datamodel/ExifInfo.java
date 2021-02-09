@@ -136,6 +136,11 @@ public class ExifInfo {
      */
     private String createDateTime = "";
 
+    /**
+     * Returns the Latitude and Longitude
+     *
+     * @return the Latitude and Longitude
+     */
     public Point2D.Double getLatLng() {
         return latLng;
     }
@@ -143,8 +148,13 @@ public class ExifInfo {
     /**
      * The parsed GPS coordinates
      */
-    private final Point2D.Double latLng = new Point2D.Double( 0, 0 );
+    private final Point2D.Double latLng = new Point2D.Double(0, 0);
 
+    /**
+     * Returns the width as stored in the Exif
+     *
+     * @return Returns the width as stored in the Exif
+     */
     public String getExifWidth() {
         return exifWidth;
     }
@@ -154,6 +164,11 @@ public class ExifInfo {
      */
     private String exifWidth = "";
 
+    /**
+     * Returns the height as stored in the Exif
+     *
+     * @return Returns the height as stored in the Exif
+     */
     public String getExifHeight() {
         return exifHeight;
     }
@@ -161,9 +176,13 @@ public class ExifInfo {
     /**
      * The parsed width
      */
+    private String exifHeight = "";
 
-    private  String exifHeight = "";
-
+    /**
+     * Returns the rotation in the Exif
+     *
+     * @return the rotation in the Exif
+     */
     public int getRotation() {
         return rotation;
     }
