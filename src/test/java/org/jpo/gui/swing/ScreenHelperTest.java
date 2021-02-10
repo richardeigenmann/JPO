@@ -22,7 +22,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testIsXinerama() {
-        final boolean isXinerama = ScreenHelper.isXinerama();
+        ScreenHelper.isXinerama();
         // not much we can test here as each machine will be different
         // but at least the code executes without a crash
     }

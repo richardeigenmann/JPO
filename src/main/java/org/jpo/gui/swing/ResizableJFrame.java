@@ -118,6 +118,7 @@ public class ResizableJFrame
             case WINDOW_TOP_RIGHT -> setBounds(ScreenHelper.getTopRightScreenBounds());
             case WINDOW_BOTTOM_LEFT -> setBounds(ScreenHelper.getBottomLeftScreenBounds());
             case WINDOW_BOTTOM_RIGHT -> setBounds(ScreenHelper.getBottomRightScreenBounds());
+            // no default is deliberate
         }
     }
 

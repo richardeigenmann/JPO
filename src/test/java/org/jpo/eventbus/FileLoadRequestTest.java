@@ -62,9 +62,11 @@ class FileLoadRequestTest {
             fail("Something went wrong in the test: " + e.getMessage());
         } finally {
             try {
-                Files.delete(unreadableFile.toPath());
+                if (unreadableFile != null) {
+                    Files.delete(unreadableFile.toPath());
+                }
                 Files.delete(tempDir);
-            } catch (final IOException | NullPointerException e) {
+            } catch (final IOException e) {
                 fail("Could no clean up from test: " + e.getMessage());
             }
 

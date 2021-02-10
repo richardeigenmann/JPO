@@ -136,6 +136,7 @@ public class ResizableJFrameTest {
         controlFrame.setVisible(true);
         controlFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         controlFrame.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(final WindowEvent e) {
                 resizableJFrame.dispose();
             }

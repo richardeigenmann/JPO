@@ -114,7 +114,6 @@ public class JpoCacheTest {
             final File dummyFileToForceASync = new File("DummyFileToForceASync");
             try (final FileOutputStream fos = new FileOutputStream(dummyFileToForceASync)) {
                 fos.getFD().sync();
-                fos.close();
             }
             Files.delete(dummyFileToForceASync.toPath());
 

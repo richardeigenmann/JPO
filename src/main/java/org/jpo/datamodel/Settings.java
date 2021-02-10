@@ -120,9 +120,6 @@ public class Settings {
     public record WindowSize(String label, Dimension dimension) {
     }
 
-    ;
-
-
     /**
      * A set of window sizes that the user can choose his preferred size from.
      * The first option will be to maximise the window
