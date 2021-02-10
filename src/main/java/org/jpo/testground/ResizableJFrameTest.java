@@ -54,7 +54,7 @@ public class ResizableJFrameTest {
 
         final JPanel buttonPanel = new JPanel();
         final JButton fullScreen = new JButton("FullScreen");
-        fullScreen.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_FULLSCREEN));
+        fullScreen.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_UNDECORATED_FULLSCREEN));
         buttonPanel.add(fullScreen);
 
         final JButton custom1Button = new JButton("Custom 1");
@@ -80,7 +80,7 @@ public class ResizableJFrameTest {
 
 
         final JButton leftSize = new JButton("Left");
-        leftSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_LEFT));
+        leftSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_UNDECORATED_LEFT));
         buttonPanel.add(leftSize);
 
         final JButton topLeftSize = new JButton("Top Left");
@@ -92,7 +92,7 @@ public class ResizableJFrameTest {
         buttonPanel.add(bottomLeftSize);
 
         final JButton rightSize = new JButton("Right");
-        rightSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_RIGHT));
+        rightSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_UNDECORATED_RIGHT));
         buttonPanel.add(rightSize);
 
         final JButton topRightSize = new JButton("Top Right");

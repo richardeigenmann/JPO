@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2020-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,35 +21,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class CloseApplicationRequestTest {
+public class ShutdownApplicationRequestTest {
+
+    private final JpoEventBus jpoEventBus;
+    /**
+     * Receives the event.
+     */
+    private ShutdownApplicationRequest receivedEvent;
 
     /**
      * Constructor
      */
-    public CloseApplicationRequestTest() {
+    public ShutdownApplicationRequestTest() {
         jpoEventBus = JpoEventBus.getInstance();
     }
-
-    private final JpoEventBus jpoEventBus;
 
     /**
      * Test receiving an event.
      */
     @Test
     public void testReceivingEvent() {
-        CloseApplicationRequestTest.EventBusSubscriber myEventBusSubscriber = new CloseApplicationRequestTest.EventBusSubscriber();
-        jpoEventBus.register( myEventBusSubscriber );
+        final ShutdownApplicationRequestTest.EventBusSubscriber myEventBusSubscriber = new ShutdownApplicationRequestTest.EventBusSubscriber();
+        jpoEventBus.register(myEventBusSubscriber);
 
-        CloseApplicationRequest newRequest = new CloseApplicationRequest();
-        jpoEventBus.post( newRequest );
+        final ShutdownApplicationRequest newRequest = new ShutdownApplicationRequest();
+        jpoEventBus.post(newRequest);
         // After firing a CloseApplicationRequest we expect it to be received by the listener
-        assertEquals(                receivedEvent, newRequest );
+        assertEquals(receivedEvent, newRequest);
     }
-
-    /**
-     * Receives the event.
-     */
-    private CloseApplicationRequest receivedEvent;
 
     /**
      * Subscribes to the event.
@@ -57,7 +56,7 @@ public class CloseApplicationRequestTest {
     private class EventBusSubscriber {
 
         @Subscribe
-        public void handleCloseApplicationRequest( CloseApplicationRequest event ) {
+        public void handleCloseApplicationRequest(final ShutdownApplicationRequest event) {
             receivedEvent = event;
         }
     }

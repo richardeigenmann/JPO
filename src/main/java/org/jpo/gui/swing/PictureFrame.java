@@ -101,7 +101,7 @@ public class PictureFrame {
     public PictureFrame() {
         viewerPanel = new JPanel();
         inittializeGui();
-        myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"), viewerPanel, ResizableJFrame.WindowSize.WINDOW_BOTTOM_RIGHT);
+        myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"), viewerPanel, ResizableJFrame.WindowSize.WINDOW_DECORATED_FULLSCREEN);
     }
 
     /**

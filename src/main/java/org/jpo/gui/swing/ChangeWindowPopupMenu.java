@@ -145,11 +145,11 @@ public class ChangeWindowPopupMenu extends JPopupMenu
         // Group popup menu				
 
         if ( actionEvent.getSource() == fullScreenJMenuItem ) {
-            caller.switchWindowMode( WINDOW_FULLSCREEN );
+            caller.switchWindowMode(WINDOW_UNDECORATED_FULLSCREEN);
         } else if ( actionEvent.getSource() == leftWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_LEFT );
+            caller.switchWindowMode(WINDOW_UNDECORATED_LEFT);
         } else if ( actionEvent.getSource() == rightWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_RIGHT );
+            caller.switchWindowMode(WINDOW_UNDECORATED_RIGHT);
         } else if ( actionEvent.getSource() == topLeftWindowJMenuItem ) {
             caller.switchWindowMode( WINDOW_TOP_LEFT );
         } else if ( actionEvent.getSource() == topRightWindowJMenuItem ) {

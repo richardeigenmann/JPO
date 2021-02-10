@@ -193,24 +193,24 @@ public class SettingsDialog extends JDialog {
      * @param maximise        whether the index should be maximised
      * @param targetDimension the target size of the window
      * @return the index
-     */
+     *
     private static int findSizeIndex(boolean maximise,
                                      Dimension targetDimension) {
         if (maximise) {
             return 0;
         } else {
             int settingsArea = targetDimension.width * targetDimension.height;
-            int index = 1;
-            for (int i = 1; i < Settings.getWindowSizes().length; i++) {
-                if (Settings.getWindowSizes()[i].dimension().width * Settings.getWindowSizes()[i].dimension().height <= settingsArea) {
-                    index = i;
-                } else {
-                    break;
-                }
-            }
-            return index;
-        }
+    int index = 1;
+    for (int i = 1; i < Settings.getWindowSizes().length; i++) {
+    if (Settings.getWindowSizes()[i].dimension().width * Settings.getWindowSizes()[i].dimension().height <= settingsArea) {
+    index = i;
+    } else {
+    break;
     }
+    }
+    return index;
+    }
+    }*/
 
     /**
      * Create the GUI elements
@@ -265,8 +265,7 @@ public class SettingsDialog extends JDialog {
         // Initial Windowsize stuff
         generalJPanel.add(new JLabel(Settings.getJpoResources().getString("windowSizeChoicesJlabel")));
 
-        final String[] windowSizeChoices = getWindowSizeChoices();
-        final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>(windowSizeChoices);
+        final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>(getWindowSizeChoices());
         startupSizeDropdown.setModel(dcbm);
         generalJPanel.add(startupSizeDropdown, "wrap");
         startupSizeDropdown.addActionListener(new ActionListener() {
@@ -274,8 +273,8 @@ public class SettingsDialog extends JDialog {
             boolean firstrun = true;
 
             @Override
-            public void actionPerformed(ActionEvent e) {
-                if (firstrun) {
+            public void actionPerformed(final ActionEvent e) {
+            /*    if (firstrun) {
                     // don't change the window size when setting up the gui
                     firstrun = false;
                 } else {
@@ -285,7 +284,7 @@ public class SettingsDialog extends JDialog {
                         Settings.getAnchorFrame().setExtendedState(Frame.NORMAL);
                         Settings.getAnchorFrame().setSize(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()].dimension());
                     }
-                }
+                }*/
             }
         });
         // End of Initial Windowsize stuff
@@ -553,15 +552,14 @@ public class SettingsDialog extends JDialog {
     }
 
     private String[] getWindowSizeChoices() {
-        final String[] windowSizeChoices = new String[Settings.getWindowSizes().length];
-        windowSizeChoices[0] = Settings.getJpoResources().getString("windowSizeChoicesMaximum");
-        for (int i = 1; i < Settings.getWindowSizes().length; i++) {
-            windowSizeChoices[i] = Settings.getWindowSizes()[i].label() + " ("
-                    + Settings.getWindowSizes()[i].dimension().width + 'x'
-                    + Settings.getWindowSizes()[i].dimension().height + ')';
-        }
-        return windowSizeChoices;
+        return new String[]{
+                Settings.getJpoResources().getString("windowSizeChoicesMaximum"),
+                "Primary",
+                "Secondary",
+                "Last Position"
+        };
     }
+
 
     private JButton getAutoLoadJButton() {
         final JButton autoLoadJButton = new JButton(Settings.getJpoResources().getString("threeDotText"));
@@ -619,8 +617,8 @@ public class SettingsDialog extends JDialog {
 
         autoLoadJTextField.setText(Settings.getAutoLoad());
 
-        startupSizeDropdown.setSelectedIndex(findSizeIndex(Settings.isMaximiseJpoOnStartup(), Settings.getMainFrameDimensions()));
-        viewerSizeDropdown.setSelectedIndex(findSizeIndex(Settings.isMaximisePictureViewerWindow(), Settings.getPictureViewerDefaultDimensions()));
+        startupSizeDropdown.setSelectedIndex(Settings.getStartupSizeChoice());
+        viewerSizeDropdown.setSelectedIndex(Settings.getNewViewerSizeChoice());
 
         maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
         dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
@@ -683,30 +681,12 @@ public class SettingsDialog extends JDialog {
         }
 
         Settings.setAutoLoad(autoLoadJTextField.getText());
-
         Settings.setTagCloudWords((Integer) tagCloudWordsJSpinner.getValue());
-
-        if (startupSizeDropdown.getSelectedIndex() == 0) {
-            Settings.setMaximiseJpoOnStartup(true);
-            Settings.setMainFrameDimensions(new Dimension(0, 0));
-        } else {
-            Settings.setMaximiseJpoOnStartup(false);
-            Settings.setMainFrameDimensions(new Dimension(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()].dimension()));
-        }
-
+        Settings.setStartupSizeChoice(startupSizeDropdown.getSelectedIndex());
         Settings.setMaximumPictureSize(maximumPictureSizeJTextField.getValue());
         Settings.setDontEnlargeSmallImages(dontEnlargeJCheckBox.isSelected());
-
-        if (viewerSizeDropdown.getSelectedIndex() == 0) {
-            Settings.setMaximisePictureViewerWindow(true);
-            Settings.setPictureViewerDefaultDimensions(new Dimension(0, 0));
-        } else {
-            Settings.setMaximisePictureViewerWindow(false);
-            Settings.setPictureViewerDefaultDimensions(new Dimension(Settings.getWindowSizes()[viewerSizeDropdown.getSelectedIndex()].dimension()));
-        }
-
+        Settings.setNewViewerSizeChoice(viewerSizeDropdown.getSelectedIndex());
         Settings.setPictureViewerFastScale(pictureViewerFastScaleJCheckBox.isSelected());
-
         Settings.setMaxThumbnails(maxThumbnails.getValue());
         Settings.setThumbnailSize(thumbnailSize.getValue());
         Settings.setDefaultHtmlLowresQuality(((float) jpgQualityJSlider.getValue()) / 100);
@@ -737,9 +717,9 @@ public class SettingsDialog extends JDialog {
      *
      * @param validationFile the file to validate
      */
-    public void checkAutoLoad(String validationFile) {
+    public void checkAutoLoad(final String validationFile) {
         LOGGER.log(Level.FINE, "SettingsDialog.checkAutoLoad: called on: {0}", validationFile);
-        File testFile = new File(validationFile);
+        final File testFile = new File(validationFile);
 
         if ("".equals(validationFile)) {
             autoLoadJTextField.setForeground(Color.black);
@@ -773,14 +753,14 @@ public class SettingsDialog extends JDialog {
      * selected into the JTextField of the autoFileJTextField.
      */
     private void autoLoadChooser() {
-        JFileChooser jFileChooser = new JFileChooser();
+        final JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter(new XmlFilter());
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogTitle(Settings.getJpoResources().getString("autoLoadChooserTitle"));
         jFileChooser.setCurrentDirectory(new File(autoLoadJTextField.getText()));
 
-        int returnVal = jFileChooser.showDialog(this, Settings.getJpoResources().getString("genericSelectText"));
+        final int returnVal = jFileChooser.showDialog(this, Settings.getJpoResources().getString("genericSelectText"));
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             autoLoadJTextField.setText(jFileChooser.getSelectedFile().getPath());
             checkAutoLoad(autoLoadJTextField.getText());

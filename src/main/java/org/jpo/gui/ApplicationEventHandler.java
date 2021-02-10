@@ -38,11 +38,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_LEFT;
-import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_RIGHT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_LEFT;
+import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_RIGHT;
 
 /*
- Copyright (C) 2014-2020  Richard Eigenmann.
+ Copyright (C) 2014-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -422,8 +422,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCloseApplicationRequest(final CloseApplicationRequest request) {
-        JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest());
+    public void handleCloseApplicationRequest(final ShutdownApplicationRequest request) {
         if (Settings.isUnsavedSettingChanges()) {
             Settings.writeSettings();
         }
@@ -458,9 +457,9 @@ public class ApplicationEventHandler {
         Tools.checkEDT();
         final SortableDefaultMutableTreeNode rootNode = request.node();
         final PictureViewer p1 = new PictureViewer();
-        p1.switchWindowMode(WINDOW_LEFT);
+        p1.switchWindowMode(WINDOW_UNDECORATED_LEFT);
         final PictureViewer p2 = new PictureViewer();
-        p2.switchWindowMode(WINDOW_RIGHT);
+        p2.switchWindowMode(WINDOW_UNDECORATED_RIGHT);
         final RandomNavigator rb1 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
         final RandomNavigator rb2 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
         p1.showNode(rb1, 0);
@@ -1597,6 +1596,12 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleUnsavedUpdatesDialogRequest(final UnsavedUpdatesDialogRequest request) {
         Tools.checkEDT();
+
+        // a good time to save the window coordinates
+        LOGGER.log(Level.INFO, "Info requesting positions to be saved.");
+        JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest());
+
+
         if (Settings.getPictureCollection().getUnsavedUpdates()) {
             final Object[] options = {
                     Settings.getJpoResources().getString("discardChanges"),

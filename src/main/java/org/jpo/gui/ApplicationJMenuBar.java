@@ -340,7 +340,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         fileJMenu.add(fileSaveAsJMenuItem);
 
         fileExitJMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
-        fileExitJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new CloseApplicationRequest())));
+        fileExitJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new ShutdownApplicationRequest())));
         fileJMenu.add(fileExitJMenuItem);
 
         //Build the Edit menu.

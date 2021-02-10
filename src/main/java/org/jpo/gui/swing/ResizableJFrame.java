@@ -42,15 +42,27 @@ public class ResizableJFrame
         /**
          * Switches the Window to fullscreen
          */
-        WINDOW_FULLSCREEN,
+        WINDOW_UNDECORATED_FULLSCREEN,
+        /**
+         * Switches the Window to fullscreen
+         */
+        WINDOW_DECORATED_FULLSCREEN,
+        /**
+         * Switches the Window to the primary display, filling it
+         */
+        WINDOW_DECORATED_PRIMARY,
+        /**
+         * Switches the Window to the primary display, filling it
+         */
+        WINDOW_DECORATED_SECONDARY,
         /**
          * Switches the window to occupy the left side
          */
-        WINDOW_LEFT,
+        WINDOW_UNDECORATED_LEFT,
         /**
          * Switches the window to occupy the right side
          */
-        WINDOW_RIGHT,
+        WINDOW_UNDECORATED_RIGHT,
         /**
          * Switches the window to occupy the top left of the screen
          */
@@ -96,24 +108,25 @@ public class ResizableJFrame
     /**
      * request that the window showing the picture be changed be changed.
      *
-     * @param newMode {@link WindowSize#WINDOW_FULLSCREEN}, {@link WindowSize#WINDOW_LEFT},
-     * {@link WindowSize#WINDOW_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT},
-     * {@link WindowSize#WINDOW_TOP_RIGHT}, {@link WindowSize#WINDOW_BOTTOM_LEFT},
-     * {@link WindowSize#WINDOW_BOTTOM_RIGHT} or
-     * {@link WindowSize#WINDOW_CUSTOM_SIZE} need to be indicated.
-     *
+     * @param newMode {@link WindowSize#WINDOW_UNDECORATED_FULLSCREEN}, {@link WindowSize#WINDOW_UNDECORATED_LEFT},
+     *                {@link WindowSize#WINDOW_UNDECORATED_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT},
+     *                {@link WindowSize#WINDOW_TOP_RIGHT}, {@link WindowSize#WINDOW_BOTTOM_LEFT},
+     *                {@link WindowSize#WINDOW_BOTTOM_RIGHT} or
+     *                {@link WindowSize#WINDOW_CUSTOM_SIZE} need to be indicated.
      */
     public void switchWindowMode(final WindowSize newMode) {
         boolean newDecoration = switch (newMode) {
-            case WINDOW_FULLSCREEN, WINDOW_LEFT, WINDOW_RIGHT -> false;
+            case WINDOW_UNDECORATED_FULLSCREEN, WINDOW_UNDECORATED_LEFT, WINDOW_UNDECORATED_RIGHT -> false;
             default -> true;
         };
         showWindowDecorations(newDecoration);
 
         switch (newMode) {
-            case WINDOW_FULLSCREEN -> maximise();
-            case WINDOW_LEFT -> setBounds(ScreenHelper.getLeftScreenBounds());
-            case WINDOW_RIGHT -> setBounds(ScreenHelper.getRightScreenBounds());
+            case WINDOW_UNDECORATED_FULLSCREEN, WINDOW_DECORATED_FULLSCREEN -> maximise();
+            case WINDOW_DECORATED_PRIMARY -> setBounds(ScreenHelper.getBottomLeftScreenBounds());
+            case WINDOW_DECORATED_SECONDARY -> setBounds(ScreenHelper.getBottomRightScreenBounds());
+            case WINDOW_UNDECORATED_LEFT -> setBounds(ScreenHelper.getLeftScreenBounds());
+            case WINDOW_UNDECORATED_RIGHT -> setBounds(ScreenHelper.getRightScreenBounds());
             case WINDOW_TOP_LEFT -> setBounds(ScreenHelper.getTopLeftScreenBounds());
             case WINDOW_TOP_RIGHT -> setBounds(ScreenHelper.getTopRightScreenBounds());
             case WINDOW_BOTTOM_LEFT -> setBounds(ScreenHelper.getBottomLeftScreenBounds());

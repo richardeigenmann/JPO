@@ -1,6 +1,6 @@
 import org.jpo.Main;
 import org.jpo.datamodel.Settings;
-import org.jpo.eventbus.CloseApplicationRequest;
+import org.jpo.eventbus.ShutdownApplicationRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -28,8 +28,8 @@ public class MainTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final String[] args = {""};
-                Main.main( args );
-                JpoEventBus.getInstance().post( new CloseApplicationRequest() );
+                Main.main(args);
+                JpoEventBus.getInstance().post(new ShutdownApplicationRequest());
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail(ex.getMessage());

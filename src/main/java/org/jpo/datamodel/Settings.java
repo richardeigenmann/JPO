@@ -42,15 +42,572 @@ public class Settings {
 
 
     /**
+     * the default value for maxThumbnails
+     */
+    public static final int DEFAULT_MAX_THUMBNAILS = 50;
+    /**
+     * the dimension of mini thumbnails in the group folders
+     */
+    public static final Dimension miniThumbnailSize = new Dimension(100, 75);
+    /**
+     * The minimum width for the left panels
+     */
+    public static final int LEFT_PANEL_MINIMUM_WIDTH = 300;
+    /**
+     * the minimum Dimension for the InfoPanel
+     */
+    public static final Dimension INFO_PANEL_MINIMUM_DIMENSION = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 100);
+    /**
+     * the preferred Dimension for the InfoPanel
+     */
+    public static final Dimension INFO_PANEL_PREFERRED_SIZE = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 100);
+    /**
+     * the minimum Dimension for the Navigator Panel
+     */
+    public static final Dimension JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 450);
+    /**
+     * The polling interval in milliseconds for the ThumbnailCreationThreads to
+     * check Whether there is something new to render.
+     */
+    public static final int THUMBNAIL_CREATION_THREAD_POLLING_TIME = 200;
+    /**
+     * The number of thumbnail creation threads to spawn.
+     */
+    public static final int NUMBER_OF_THUMBNAIL_CREATION_THREADS = 5;
+    /**
+     * number of recent files shown in the file menu
+     */
+    public static final int MAX_MEMORISE = 9;
+    /**
+     * URL of the document type definition in the xml file.
+     */
+    public static final String COLLECTION_DTD = "file:./collection.dtd";
+    /**
+     * Default size for buttons such as OK, cancel etc.
+     */
+    public static final Dimension THREE_DOT_BUTTON_DIMENSION = new Dimension(25, 25);
+    /**
+     * date format for adding new pictures from the camera
+     */
+    public static final String ADD_FROM_CAMERA_DATE_FORMAT = "dd.MM.yyyy  HH:mm";
+    /**
+     * handle to the user Preferences
+     */
+    public static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
+    /**
+     * number of user Functions
+     */
+    public static final int MAX_USER_FUNCTIONS = 3;
+    /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(Settings.class.getName());
-
+    /**
+     * Array of recently used files
+     */
+    private static final String[] recentCollections = new String[MAX_MEMORISE];
+    /**
+     * standard size for all JTextFields that need to record a filename.
+     */
+    private static final Dimension filenameFieldPreferredSize = new Dimension(300, 20);
+    /**
+     * standard size for all JTextFields that need to record a filename
+     */
+    private static final Dimension filenameFieldMinimumSize = new Dimension(150, 20);
+    /**
+     * standard size for all JTextFields that need to record a filename
+     */
+    private static final Dimension filenameFieldMaximumSize = new Dimension(600, 20);
+    /**
+     * standard size for all JTextFields that need to record a short text.
+     */
+    private static final Dimension shortFieldPreferredSize = new Dimension(350, 20);
+    /**
+     * standard size for all JTextFields that need to record a short text
+     */
+    private static final Dimension shortFieldMinimumSize = new Dimension(150, 20);
+    /**
+     * standard size for all JTextFields that need to record a short text
+     */
+    private static final Dimension shortFieldMaximumSize = new Dimension(1000, 20);
+    /**
+     * standard size for all JTextFields that need to record a normal length
+     * text
+     */
+    private static final Dimension textfieldPreferredSize = new Dimension(350, 20);
+    /**
+     * standard size for all JTextFields that need to record a normal length
+     * text
+     */
+    private static final Dimension textfieldMinimumSize = new Dimension(150, 20);
+    /**
+     * standard size for all JTextFields that need to record a normal length
+     * text
+     */
+    private static final Dimension textfieldMaximumSize = new Dimension(1000, 20);
+    /**
+     * standard size for all JTextFields that need to record a normal length
+     * text
+     */
+    private static final Dimension shortNumberPreferredSize = new Dimension(60, 20);
+    /**
+     * standard size for all JTextFields that need to record a normal length
+     * text
+     */
+    private static final Dimension shortNumberMinimumSize = new Dimension(60, 20);
+    /**
+     * standard size for all JTextFields that need to record a normal length
+     * text
+     */
+    private static final Dimension shortNumberMaximumSize = new Dimension(100, 20);
+    /**
+     * fixed size for the threeDotButton which opens the JFileChooser dialog
+     */
+    private static final Dimension threeDotButtonSize = new Dimension(25, 20);
+    /**
+     * Default size for buttons such as OK, cancel etc.
+     */
+    private static final Dimension defaultButtonDimension = new Dimension(80, 25);
+    /**
+     * The color to use when the thumbnail has been selected
+     */
+    private static final Color SELECTED_COLOR = new Color(45, 47, 84);
+    /**
+     * The color to use for text background when the thumbnail has been selected
+     */
+    private static final Color SELECTED_COLOR_TEXT = new Color(145, 149, 153);
+    /**
+     * The color to use when the thumbnail has been selected
+     */
+    private static final Color UNSELECTED_COLOR = Color.WHITE;
+    /**
+     * The default application background color.
+     */
+    private static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
+    /**
+     * The background color for the picture Viewer
+     */
+    private static final Color PICTUREVIEWER_BACKGROUND_COLOR = Color.BLACK;
+    /**
+     * The text color for the picture Viewer
+     */
+    private static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
+    /**
+     * The PictureViewer minimum size
+     */
+    private static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension(300, 300);
+    /*
+     * ------------------------------------------------------------------------------
+     *
+     *
+     *
+     *
+     * /**
+     * Default locale if all else fails use this one.
+     */
+    private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+    /**
+     * Supported Languages
+     */
+    private static final String[] supportedLanguages = {"English", "Deutsch", "Simplified Chinese", "Traditional Chinese"};
+    /**
+     * Locales for the languages in supportedLanguages
+     */
+    private static final Locale[] supportedLocale = {Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE};
+    /**
+     * MAX number of recent Drop Nodes
+     */
+    private static final int MAX_DROPNODES = 12;
+    /**
+     * Recently used Drop Nodes to make it simple to re-use
+     */
+    private static final Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
+    /**
+     * Queue of recently used directories in copy operations and other file
+     * selections.
+     */
+    private static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
+    /**
+     * Array of recently used zip files operations and other file selections.
+     */
+    private static final Queue<String> memorizedZipFiles = EvictingQueue.create(MAX_MEMORISE);
+    /**
+     * Array of user function names
+     */
+    private static final String[] userFunctionNames = new String[MAX_USER_FUNCTIONS];
+    /**
+     * Array of user function commands
+     */
+    private static final String[] userFunctionCmd = new String[MAX_USER_FUNCTIONS];
     /**
      * A static reference to the Collection being displayed. In future perhaps
      * we will allow multiple collections to be loaded.
      */
     private static PictureCollection pictureCollection = new PictureCollection();
+    /**
+     * flag to indicate that debug information should be logged
+     */
+    private static boolean writeLog = false;
+    /**
+     * the filename of the logfile
+     */
+    private static File logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
+    /**
+     * Choice for the JPO window size on startup.
+     * Defaults to 0 = Maximise
+     */
+    private static int startupSizeChoice = 0;
+    /**
+     * the size and position of the main JPO frame
+     */
+    private static Rectangle lastMainFrameCoordinates = new Rectangle(0, 0, 500, 300);
+    /**
+     * The choice of position and size of a new Picture Viewer window.
+     * Defaults to 0 = Maximise;
+     */
+    private static int newViewerSizeChoice = 0;
+    /**
+     * the position and size of the last picture viewer window
+     */
+    private static Rectangle lastViewerCoordinates = new Rectangle(0, 0, 500, 300);
+    /**
+     * the default place for the divider.
+     */
+    private static int preferredMasterDividerSpot = 350;
+    /**
+     * the preferred Dimension for the Navigator Panel
+     */
+    public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension(preferredMasterDividerSpot, 800);
+    /**
+     * the default place for the left side divider.
+     */
+    private static int preferredLeftDividerSpot = getLastMainFrameCoordinates().height - 200;
+    /**
+     * the default width of the divider
+     */
+    private static int dividerWidth = 12;
+    /**
+     * the minimum Dimension for the JPO Window
+     */
+    public static final Dimension jpoJFrameMinimumSize
+            = new Dimension(JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.width + dividerWidth + THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.width,
+            Math.max(JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.height + dividerWidth + INFO_PANEL_MINIMUM_DIMENSION.height,
+                    THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.height));
+    /**
+     * the preferred Dimension for the JPO Window
+     */
+    public static final Dimension jpoJFramePreferredSize
+            = new Dimension(jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
+            Math.max(jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + INFO_PANEL_PREFERRED_SIZE.height,
+                    thumbnailJScrollPanePreferredSize.height));
+    /**
+     * a variable that sets the maximum number of thumbnails that shall be
+     * displayed at one time.
+     */
+    private static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
+    /**
+     * Setting for the width of the thumbnails. Set by default to 350 pixels.
+     */
+    private static int thumbnailSize = 350;
+    /**
+     * the minimum Dimension for the Thumbnail Panel
+     */
+    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (thumbnailSize * 1.4f), (int) (thumbnailSize * 1.8f));
+    /**
+     * the preferred Dimension for the Thumbnail Panel
+     */
+    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (thumbnailSize * 2.2f), 800);
+    /**
+     * The collection that should be loaded automatically
+     */
+    private static String autoLoad;
+    /**
+     * A counter that keeps track of the number of thumbnails created
+     */
+    private static int thumbnailCounter = 0;
+    /**
+     * a flag that indicates that small images should not be enlarged
+     */
+    private static boolean dontEnlargeSmallImages = true;
+    /**
+     * variable that tracks if there are unsaved changes in these settings.
+     */
+    private static boolean unsavedSettingChanges = false;
+    /**
+     * list of email senders
+     */
+    private static final TreeSet<Object> emailSenders = new TreeSet<>() {
+        @Override
+        public boolean add(Object o) {
+            boolean b = super.add(o);
+            if (b) {
+                setUnsavedSettingChanges(true);
+            }
+            return b;
+        }
+    };
+    /**
+     * list of email senders
+     */
+    private static final TreeSet<Object> emailRecipients = new TreeSet<>() {
+        @Override
+        public boolean add(Object o) {
+            boolean b = super.add(o);
+            if (b) {
+                setUnsavedSettingChanges(true);
+            }
+            return b;
+        }
+    };
+    /**
+     * handle to the main frame of the application. It's purpose it to have a
+     * handy reference for dialog boxes and the like to have a reference object.
+     */
+    private static JFrame anchorFrame = null;
+    /**
+     * The maximum number of pictures to keep in memory
+     * <p>
+     * public static int maxCache;
+     */
+
+    private static String thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
+            + System.getProperty("file.separator")
+            + "Jpo-Thumbnail-Cache";
+    /**
+     * The maximum size a picture is zoomed to. This is to stop the Java engine
+     * creating enormous temporary images which lock the computer up completely.
+     */
+    private static int maximumPictureSize = 6000;
+    /**
+     * the font used to display the title. Currently Arial Bold 20.
+     */
+    private static Font titleFont;
+    /**
+     * The default number of pictures per row for the Html export
+     */
+    private static int defaultHtmlPicsPerRow = 3;
+    /**
+     * The default width for pictures for the Html export overview
+     */
+    private static int defaultHtmlThumbnailWidth = 300;
+    /**
+     * The default height for pictures for the Html export overview
+     */
+    private static int defaultHtmlThumbnailHeight = 300;
+    /**
+     * Whether to generate the midres html pages or not
+     */
+    private static boolean defaultGenerateMidresHtml = true;
+    private static String defaultGoogleMapsApiKey = "";
+    /**
+     * Whether to generate a map or not
+     */
+    private static boolean defaultGenerateMap = true;
+    /**
+     * Whether to generate DHTML effects or not
+     */
+    private static boolean defaultGenerateDHTML = true;
+    /**
+     * Whether to generate a zip file with the highres pictures
+     */
+    private static boolean defaultGenerateZipfile = false;
+    /**
+     * Whether to generate a link to highres pictures at the current location or
+     * not
+     */
+    private static boolean defaultLinkToHighres = false;
+    /**
+     * Whether to export the Highres pictures or not
+     */
+    private static boolean defaultExportHighres = false;
+    /**
+     * Whether to rotate the Highres pictures or not
+     */
+    private static boolean defaultRotateHighres = false;
+    /**
+     * The default midres width for pictures for the Html export
+     */
+    private static int defaultHtmlMidresWidth = 700;
+    /**
+     * The default midres height for pictures for the Html export
+     */
+    private static int defaultHtmlMidresHeight = 700;
+    /**
+     * Picture naming convention on HTML output
+     */
+    private static GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
+    /**
+     * OutputTarget convention for HTML output
+     */
+    private static GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+    /**
+     * The default color for the background on the web page is white.
+     */
+    private static Color htmlBackgroundColor = Color.WHITE;
+    /**
+     * This constant defines the text color on the web page.
+     */
+    private static Color htmlFontColor = Color.BLACK;
+    /**
+     * The default quality for Thumbnail pictures for the Html export
+     */
+    private static float defaultHtmlLowresQuality = 0.8f;
+    /**
+     * The default quality for Midres pictures for the Html export
+     */
+    private static float defaultHtmlMidresQuality = 0.8f;
+    /**
+     * Whether to write the robots.txt on the generate webpage
+     */
+    private static boolean writeRobotsTxt = false;
+    /**
+     * The default ftp server for Html export
+     */
+    private static String defaultHtmlFtpServer = "";
+    /**
+     * The default ftp port for Html export
+     */
+    private static int defaultHtmlFtpPort = 21;
+    /**
+     * The default ftp user for Html export
+     */
+    private static String defaultHtmlFtpUser = "";
+    /**
+     * The default ftp password for Html export
+     */
+    private static String defaultHtmlFtpPassword = "";
+    /**
+     * The default ftp target directory for Html export
+     */
+    private static String defaultHtmlFtpTargetDir = "";
+    /**
+     * The default ssh server for Html export
+     */
+    private static String defaultHtmlSshServer = "";
+    /**
+     * The default ssh port for Html export
+     */
+    private static int defaultHtmlSshPort = 22;
+    /**
+     * The default ssh user for Html export
+     */
+    private static String defaultHtmlSshUser = "";
+    /**
+     * OutputTarget convention for HTML output
+     */
+    private static GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD;
+    /**
+     * The default ssh password for Html export
+     */
+    private static String defaultHtmlSshPassword = "";
+    /**
+     * The default ssh target directory for Html export
+     */
+    private static String defaultHtmlSshTargetDir = "";
+    /**
+     * The default ssh key file for Html export
+     */
+    private static String defaultHtmlSshKeyFile = "";
+    /**
+     * true when thumbnails are supposed to scale fast
+     */
+    private static boolean thumbnailFastScale = true;
+    /**
+     * true when thumbnails are supposed to scale fast
+     */
+    private static boolean showFilenamesOnThumbnailPanel = false;
+    /**
+     * true when the pictureViewer is supposed to scale fast
+     */
+    private static boolean pictureViewerFastScale = true;
+    /**
+     * Informs the PictureAdder whether to show a thumbnail or not
+     */
+    private static boolean showThumbOnFileChooser = true;
+    /**
+     * Collection of cameras
+     */
+    private static List<Camera> cameras = new ArrayList<>();
+    /**
+     * Email Server
+     */
+    private static String emailServer = "";
+    /**
+     * Email Server port
+     */
+    private static String emailPort = "25";
+    /**
+     * Email authentication 0 = None 1 = Password 2 = SSL
+     */
+    private static int emailAuthentication = 0;
+    /**
+     * Email User
+     */
+    private static String emailUser = "";
+    /**
+     * Email Password
+     */
+    private static String emailPassword = "";
+    /**
+     * Should emails have scaled images
+     */
+    private static boolean emailScaleImages = true;
+    /**
+     * The last size we scaled images to in the email dialog
+     */
+    private static Dimension emailDimensions = new Dimension(350, 300);
+    /**
+     * Should emails contain the original images
+     */
+    private static boolean emailSendOriginal = false;
+    /**
+     * The number of Words that the TagCloud should show.
+     */
+    private static int tagCloudWords = 200;
+    /**
+     * The last sort choice of the user
+     */
+    private static FieldCodes lastSortChoice = FieldCodes.CREATION_TIME;
+    /**
+     * The last choice in the Camera Download Wizard whether to copy or move
+     */
+    private static boolean lastCameraWizardCopyMode = true;
+    /**
+     * Whether to remember the Google login credentials for the Picasa upload.
+     */
+    private static boolean rememberGoogleCredentials = false;
+    /**
+     * Google user name if rememberGoogleCredentials is true
+     */
+    private static String googleUsername;
+    /**
+     * Google password if rememberGoogleCredentials is true;
+     */
+    private static String googlePassword;
+    /**
+     * The locale to be used for the application
+     */
+    private static Locale currentLocale = Locale.getDefault();
+    /**
+     * the resourceBundle is a Java thing that sorts out language customisation
+     */
+    private static ResourceBundle jpoResources;
+    private static MainWindow mainWindow;
+
+    static {
+        if (preferredLeftDividerSpot < 0) {
+            preferredLeftDividerSpot = 150;
+        }
+    }
+
+    /*
+     * I'm using a class block initializer here so that we don't ever end up
+     * without a ResourceBundle. This proves highly annoying to the Unit Tests
+     * and caused me frustration and headaches. RE, 20.1.2007
+     */
+    static {
+        setLocale(currentLocale);
+    }
 
     /**
      * @return the main pictureCollection
@@ -75,125 +632,93 @@ public class Settings {
         return writeLog;
     }
 
-    /**
-     * flag to indicate that debug information should be logged
-     */
-    private static boolean writeLog = false;
+    public static void setWriteLog(boolean writeLog) {
+        Settings.writeLog = writeLog;
+    }
 
     /**
-     * the filename of the logfile
-     */
-    private static File logfile = new File(new File(System.getProperty("java.io.tmpdir")), "JPO.log");
-
-    /**
-     * Returns if the window should be maximised on JPO startup
+     * Returns the choice the user made about the application window start up size.
+     * 0 = Maximise
+     * 1 = Primary Screen
+     * 2 = Secondary Screen
+     * 3 = Last Size
      *
      * @return true if the window should be maxunused on JPO startup
      */
-    public static boolean isMaximiseJpoOnStartup() {
-        return maximiseJpoOnStartup;
+    public static int getStartupSizeChoice() {
+        return startupSizeChoice;
     }
 
     /**
-     * Remembers if the window should be maximised on JPO startup
+     * Remembers if the choice for the startup size
      *
-     * @param maximiseJpoOnStartup
+     * @param startupSizeChoice The choice value to remember
      */
-    public static void setMaximiseJpoOnStartup(boolean maximiseJpoOnStartup) {
-        Settings.maximiseJpoOnStartup = maximiseJpoOnStartup;
+    public static void setStartupSizeChoice(final int startupSizeChoice) {
+        if (Settings.startupSizeChoice != startupSizeChoice) {
+            Settings.startupSizeChoice = startupSizeChoice;
+            setUnsavedSettingChanges(true);
+        }
     }
 
-    /**
-     * Flag to indicate whether the JPO window should be maximised on startup or
-     * left for the OS to decide on the size together with the JVM
-     */
-    private static boolean maximiseJpoOnStartup = true;
-
-    public static Dimension getMainFrameDimensions() {
-        return mainFrameDimensions;
+    public static Rectangle getLastMainFrameCoordinates() {
+        return lastMainFrameCoordinates;
     }
 
-    public static void setMainFrameDimensions(Dimension mainFrameDimensions) {
-        Settings.mainFrameDimensions = mainFrameDimensions;
-    }
-
-    public record WindowSize(String label, Dimension dimension) {
-    }
-
-    /**
-     * A set of window sizes that the user can choose his preferred size from.
-     * The first option will be to maximise the window
-     */
-    private static final WindowSize[] windowSizes = {
-            new WindowSize("Maximum", new Dimension(0, 0)),
-            new WindowSize("HD 720p", new Dimension(1280, 720)),
-            new WindowSize("Full HD", new Dimension(1920, 1080)),
-            new WindowSize("2K", new Dimension(2048, 1400)),
-            new WindowSize("UHD", new Dimension(3840, 2160)),
-            new WindowSize("4K", new Dimension(4096, 3000)),
-            new WindowSize("8K", new Dimension(7680, 4320))
-    };
-
-    /**
-     * the dimensions of the main JPO frame
-     */
-    private static Dimension mainFrameDimensions = new Dimension(windowSizes[4].dimension());
-
-    public static WindowSize[] getWindowSizes() {
-        return windowSizes;
-    }
-
-    public static boolean isMaximisePictureViewerWindow() {
-        return maximisePictureViewerWindow;
-    }
-
-    public static void setMaximisePictureViewerWindow(final boolean maximisePictureViewerWindow) {
-        Settings.maximisePictureViewerWindow = maximisePictureViewerWindow;
-    }
-
-    /**
-     * Flag to indicate whether the JPO window should be maximised on startup or
-     * left for the OS to decide on the size together with the JVM
-     */
-    private static boolean maximisePictureViewerWindow = true;
-
-    public static Dimension getPictureViewerDefaultDimensions() {
-        return pictureViewerDefaultDimensions;
-    }
-
-    public static void setPictureViewerDefaultDimensions(Dimension pictureViewerDefaultDimensions) {
-        Settings.pictureViewerDefaultDimensions = pictureViewerDefaultDimensions;
-    }
-
-    /**
-     * the dimensions of the "Default" picture viewer
-     */
-    private static Dimension pictureViewerDefaultDimensions = new Dimension(windowSizes[1].dimension());
-
-    /**
-     * the default place for the divider.
-     */
-    private static int preferredMasterDividerSpot = 350;
-
-    /**
-     * the default place for the left side divider.
-     */
-    private static int preferredLeftDividerSpot = mainFrameDimensions.height - 200;
-    static {
-        if (preferredLeftDividerSpot < 0) {
-            preferredLeftDividerSpot = 150;
+    public static void setLastMainFrameCoordinates(final Rectangle mainFrameCoordinates) {
+        LOGGER.log(Level.INFO, "Remembering the last main frame coordinates: {0}", mainFrameCoordinates);
+        if (Settings.lastMainFrameCoordinates != mainFrameCoordinates) {
+            Settings.lastMainFrameCoordinates = mainFrameCoordinates;
+            setUnsavedSettingChanges(true);
         }
     }
 
     /**
-     * the default width of the divider
+     * Returns the size choice for a new Picture Viewer window
+     * 0 = Maximise
+     * 1 = Primary Screen
+     * 2 = Secondary Screen
+     * 3 = Last Size
+     *
+     * @return the size choice for a new Picture Viewer window
      */
-    private static int dividerWidth = 12;
+    public static int getNewViewerSizeChoice() {
+        return newViewerSizeChoice;
+    }
 
     /**
-     * the default value for maxThumbnails
+     * Remembers the choice for new Picture Viewer windows
+     *
+     * @param newViewerSizeChoice The choice to remember
      */
-    public static final int DEFAULT_MAX_THUMBNAILS = 50;
+    public static void setNewViewerSizeChoice(final int newViewerSizeChoice) {
+        if (Settings.newViewerSizeChoice != newViewerSizeChoice) {
+            Settings.newViewerSizeChoice = newViewerSizeChoice;
+            setUnsavedSettingChanges(true);
+        }
+    }
+
+    /**
+     * Returns the Last saved position and size of the Picture Viewer
+     *
+     * @return the last saved position and size of the Picture Viewer
+     */
+    public static Rectangle getLastViewerCoordinates() {
+        return lastViewerCoordinates;
+    }
+
+    /**
+     * Remembers the last saved position and size of the Picture Viewer
+     *
+     * @param lastViewerCoordinates the last position and size of the Picture Viewer
+     */
+    public static void setLastViewerCoordinates(final Rectangle lastViewerCoordinates) {
+        LOGGER.log(Level.INFO, "Remembering the last viewer frame coordinates: {0}", lastViewerCoordinates);
+        if (Settings.lastViewerCoordinates != lastViewerCoordinates) {
+            Settings.lastViewerCoordinates = lastViewerCoordinates;
+            setUnsavedSettingChanges(true);
+        }
+    }
 
     public static int getMaxThumbnails() {
         return maxThumbnails;
@@ -203,12 +728,6 @@ public class Settings {
         Settings.maxThumbnails = maxThumbnails;
     }
 
-    /**
-     * a variable that sets the maximum number of thumbnails that shall be
-     * displayed at one time.
-     */
-    private static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
-
     public static int getThumbnailSize() {
         return thumbnailSize;
     }
@@ -216,68 +735,6 @@ public class Settings {
     public static void setThumbnailSize(int thumbnailSize) {
         Settings.thumbnailSize = thumbnailSize;
     }
-
-    /**
-     * Setting for the width of the thumbnails. Set by default to 350 pixels.
-     */
-    private static int thumbnailSize = 350;
-
-    /**
-     * the dimension of mini thumbnails in the group folders
-     */
-    public static final Dimension miniThumbnailSize = new Dimension(100, 75);
-
-    /**
-     * The minimum width for the left panels
-     */
-    public static final int LEFT_PANEL_MINIMUM_WIDTH = 300;
-    /**
-     * the minimum Dimension for the InfoPanel
-     */
-    public static final Dimension INFO_PANEL_MINIMUM_DIMENSION = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 100);
-    /**
-     * the preferred Dimension for the InfoPanel
-     */
-    public static final Dimension INFO_PANEL_PREFERRED_SIZE = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 100);
-    /**
-     * the minimum Dimension for the Navigator Panel
-     */
-    public static final Dimension JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE = new Dimension(LEFT_PANEL_MINIMUM_WIDTH, 450);
-    /**
-     * the preferred Dimension for the Navigator Panel
-     */
-    public static final Dimension jpoNavigatorJTabbedPanePreferredSize = new Dimension(preferredMasterDividerSpot, 800);
-    /**
-     * the minimum Dimension for the Thumbnail Panel
-     */
-    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (thumbnailSize * 1.4f), (int) (thumbnailSize * 1.8f));
-    /**
-     * the preferred Dimension for the Thumbnail Panel
-     */
-    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (thumbnailSize * 2.2f), 800);
-    /**
-     * the minimum Dimension for the JPO Window
-     */
-    public static final Dimension jpoJFrameMinimumSize
-            = new Dimension(JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.width + dividerWidth + THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.width,
-            Math.max(JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE.height + dividerWidth + INFO_PANEL_MINIMUM_DIMENSION.height,
-                    THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE.height));
-    /**
-     * the preferred Dimension for the JPO Window
-     */
-    public static final Dimension jpoJFramePreferredSize
-            = new Dimension(jpoNavigatorJTabbedPanePreferredSize.width + dividerWidth + thumbnailJScrollPanePreferredSize.width,
-            Math.max(jpoNavigatorJTabbedPanePreferredSize.height + dividerWidth + INFO_PANEL_PREFERRED_SIZE.height,
-                    thumbnailJScrollPanePreferredSize.height));
-    /**
-     * The polling interval in milliseconds for the ThumbnailCreationThreads to
-     * check Whether there is something new to render.
-     */
-    public static final int THUMBNAIL_CREATION_THREAD_POLLING_TIME = 200;
-    /**
-     * The number of thumbnail creation threads to spawn.
-     */
-    public static final int NUMBER_OF_THUMBNAIL_CREATION_THREADS = 5;
 
     public static String getAutoLoad() {
         return autoLoad;
@@ -288,47 +745,23 @@ public class Settings {
     }
 
     /**
-     * The collection that should be loaded automatically
-     */
-    private static String autoLoad;
-
-    /**
      * Method to clear the autoload collection.
      */
     public static void clearAutoLoad() {
         autoLoad = "";
     }
 
-    /**
-     * number of recent files shown in the file menu
-     */
-    public static final int MAX_MEMORISE = 9;
-
     public static String[] getRecentCollections() {
         return recentCollections;
-    }
-
-    /**
-     * Array of recently used files
-     */
-    private static final String[] recentCollections = new String[MAX_MEMORISE];
-    /**
-     * A counter that keeps track of the number of thumbnails created
-     */
-    private static int thumbnailCounter = 0;
-
-    public static void setDontEnlargeSmallImages(boolean dontEnlargeSmallImages) {
-        Settings.dontEnlargeSmallImages = dontEnlargeSmallImages;
     }
 
     public static boolean isDontEnlargeSmallImages() {
         return dontEnlargeSmallImages;
     }
 
-    /**
-     * a flag that indicates that small images should not be enlarged
-     */
-    private static boolean dontEnlargeSmallImages = true;
+    public static void setDontEnlargeSmallImages(boolean dontEnlargeSmallImages) {
+        Settings.dontEnlargeSmallImages = dontEnlargeSmallImages;
+    }
 
     public static boolean isUnsavedSettingChanges() {
         return unsavedSettingChanges;
@@ -338,15 +771,6 @@ public class Settings {
         Settings.unsavedSettingChanges = unsavedSettingChanges;
     }
 
-    /**
-     * variable that tracks if there are unsaved changes in these settings.
-     */
-    private static boolean unsavedSettingChanges = false;
-    /**
-     * URL of the document type definition in the xml file.
-     */
-    public static final String COLLECTION_DTD = "file:./collection.dtd";
-
     public static JFrame getAnchorFrame() {
         return anchorFrame;
     }
@@ -355,26 +779,9 @@ public class Settings {
         Settings.anchorFrame = anchorFrame;
     }
 
-    /**
-     * handle to the main frame of the application. It's purpose it to have a
-     * handy reference for dialog boxes and the like to have a reference object.
-     */
-    private static JFrame anchorFrame = null;
-
     public static String getThumbnailCacheDirectory() {
         return thumbnailCacheDirectory;
     }
-
-    /**
-     * The maximum number of pictures to keep in memory
-     * <p>
-     * public static int maxCache;
-     */
-
-    private static String thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
-            + System.getProperty("file.separator")
-            + "Jpo-Thumbnail-Cache";
-
 
     public static int getMaximumPictureSize() {
         return maximumPictureSize;
@@ -384,157 +791,69 @@ public class Settings {
         Settings.maximumPictureSize = maximumPictureSize;
     }
 
-    /**
-     * The maximum size a picture is zoomed to. This is to stop the Java engine
-     * creating enormous temporary images which lock the computer up completely.
-     */
-    private static int maximumPictureSize = 6000;
-
     public static Dimension getFilenameFieldPreferredSize() {
         return filenameFieldPreferredSize;
     }
-
-    /**
-     * standard size for all JTextFields that need to record a filename.
-     */
-    private static final Dimension filenameFieldPreferredSize = new Dimension(300, 20);
 
     public static Dimension getFilenameFieldMinimumSize() {
         return filenameFieldMinimumSize;
     }
 
-    /**
-     * standard size for all JTextFields that need to record a filename
-     */
-    private static final Dimension filenameFieldMinimumSize = new Dimension(150, 20);
-
     public static Dimension getFilenameFieldMaximumSize() {
         return filenameFieldMaximumSize;
     }
-
-    /**
-     * standard size for all JTextFields that need to record a filename
-     */
-    private static final Dimension filenameFieldMaximumSize = new Dimension(600, 20);
 
     public static Dimension getShortFieldPreferredSize() {
         return shortFieldPreferredSize;
     }
 
-    /**
-     * standard size for all JTextFields that need to record a short text.
-     */
-    private static final Dimension shortFieldPreferredSize = new Dimension(350, 20);
-
     public static Dimension getShortFieldMinimumSize() {
         return shortFieldMinimumSize;
     }
-
-    /**
-     * standard size for all JTextFields that need to record a short text
-     */
-    private static final Dimension shortFieldMinimumSize = new Dimension(150, 20);
 
     public static Dimension getShortFieldMaximumSize() {
         return shortFieldMaximumSize;
     }
 
-    /**
-     * standard size for all JTextFields that need to record a short text
-     */
-    private static final Dimension shortFieldMaximumSize = new Dimension(1000, 20);
-
     public static Dimension getTextfieldPreferredSize() {
         return textfieldPreferredSize;
     }
-
-    /**
-     * standard size for all JTextFields that need to record a normal length
-     * text
-     */
-    private static final Dimension textfieldPreferredSize = new Dimension(350, 20);
 
     public static Dimension getTextfieldMinimumSize() {
         return textfieldMinimumSize;
     }
 
-    /**
-     * standard size for all JTextFields that need to record a normal length
-     * text
-     */
-    private static final Dimension textfieldMinimumSize = new Dimension(150, 20);
-
     public static Dimension getTextfieldMaximumSize() {
         return textfieldMaximumSize;
     }
-
-    /**
-     * standard size for all JTextFields that need to record a normal length
-     * text
-     */
-    private static final Dimension textfieldMaximumSize = new Dimension(1000, 20);
 
     public static Dimension getShortNumberPreferredSize() {
         return shortNumberPreferredSize;
     }
 
-    /**
-     * standard size for all JTextFields that need to record a normal length
-     * text
-     */
-    private static final Dimension shortNumberPreferredSize = new Dimension(60, 20);
-
     public static Dimension getShortNumberMinimumSize() {
         return shortNumberMinimumSize;
     }
-
-    /**
-     * standard size for all JTextFields that need to record a normal length
-     * text
-     */
-    private static final Dimension shortNumberMinimumSize = new Dimension(60, 20);
 
     public static Dimension getShortNumberMaximumSize() {
         return shortNumberMaximumSize;
     }
 
-    /**
-     * standard size for all JTextFields that need to record a normal length
-     * text
-     */
-    private static final Dimension shortNumberMaximumSize = new Dimension(100, 20);
-
     public static Dimension getThreeDotButtonSize() {
         return threeDotButtonSize;
     }
 
-    /**
-     * fixed size for the threeDotButton which opens the JFileChooser dialog
-     */
-    private static final Dimension threeDotButtonSize = new Dimension(25, 20);
-
     public static Font getTitleFont() {
         return titleFont;
-    }
-
-    /**
-     * the font used to display the title. Currently Arial Bold 20.
-     */
-    private static Font titleFont;
-
-
-    public static void setDefaultHtmlPicsPerRow(final int defaultHtmlPicsPerRow) {
-        Settings.defaultHtmlPicsPerRow = defaultHtmlPicsPerRow;
     }
 
     public static int getDefaultHtmlPicsPerRow() {
         return defaultHtmlPicsPerRow;
     }
 
-    /**
-     * The default number of pictures per row for the Html export
-     */
-    private static int defaultHtmlPicsPerRow = 3;
+    public static void setDefaultHtmlPicsPerRow(final int defaultHtmlPicsPerRow) {
+        Settings.defaultHtmlPicsPerRow = defaultHtmlPicsPerRow;
+    }
 
     public static int getDefaultHtmlThumbnailWidth() {
         return defaultHtmlThumbnailWidth;
@@ -544,11 +863,6 @@ public class Settings {
         Settings.defaultHtmlThumbnailWidth = defaultHtmlThumbnailWidth;
     }
 
-    /**
-     * The default width for pictures for the Html export overview
-     */
-    private static int defaultHtmlThumbnailWidth = 300;
-
     public static int getDefaultHtmlThumbnailHeight() {
         return defaultHtmlThumbnailHeight;
     }
@@ -557,79 +871,45 @@ public class Settings {
         Settings.defaultHtmlThumbnailHeight = defaultHtmlThumbnailHeight;
     }
 
-    /**
-     * The default height for pictures for the Html export overview
-     */
-    private static int defaultHtmlThumbnailHeight = 300;
-
-    public static void setDefaultGenerateMidresHtml(final boolean defaultGenerateMidresHtml) {
-        Settings.defaultGenerateMidresHtml = defaultGenerateMidresHtml;
-    }
-
     public static boolean isDefaultGenerateMidresHtml() {
         return defaultGenerateMidresHtml;
     }
 
-    /**
-     * Whether to generate the midres html pages or not
-     */
-    private static boolean defaultGenerateMidresHtml = true;
-
-    public static void setDefaultGenerateMap(final boolean defaultGenerateMap) {
-        Settings.defaultGenerateMap = defaultGenerateMap;
+    public static void setDefaultGenerateMidresHtml(final boolean defaultGenerateMidresHtml) {
+        Settings.defaultGenerateMidresHtml = defaultGenerateMidresHtml;
     }
 
     public static boolean isDefaultGenerateMap() {
         return defaultGenerateMap;
     }
 
-    private static String defaultGoogleMapsApiKey = "";
-
-
-    /**
-     * Whether to generate a map or not
-     */
-    private static boolean defaultGenerateMap = true;
-
-    public static void setDefaultGenerateDHTML(final boolean defaultGenerateDHTML) {
-        Settings.defaultGenerateDHTML = defaultGenerateDHTML;
+    public static void setDefaultGenerateMap(final boolean defaultGenerateMap) {
+        Settings.defaultGenerateMap = defaultGenerateMap;
     }
 
     public static boolean isDefaultGenerateDHTML() {
         return defaultGenerateDHTML;
     }
 
-    /**
-     * Whether to generate DHTML effects or not
-     */
-    private static boolean defaultGenerateDHTML = true;
-
-    public static void setDefaultGenerateZipfile(final boolean defaultGenerateZipfile) {
-        Settings.defaultGenerateZipfile = defaultGenerateZipfile;
+    public static void setDefaultGenerateDHTML(final boolean defaultGenerateDHTML) {
+        Settings.defaultGenerateDHTML = defaultGenerateDHTML;
     }
 
     public static boolean isDefaultGenerateZipfile() {
         return defaultGenerateZipfile;
     }
 
-    /**
-     * Whether to generate a zip file with the highres pictures
-     */
-    private static boolean defaultGenerateZipfile = false;
-
-    public static void setDefaultLinkToHighres(boolean defaultLinkToHighres) {
-        Settings.defaultLinkToHighres = defaultLinkToHighres;
+    public static void setDefaultGenerateZipfile(final boolean defaultGenerateZipfile) {
+        Settings.defaultGenerateZipfile = defaultGenerateZipfile;
     }
 
     public static boolean isDefaultLinkToHighres() {
         return defaultLinkToHighres;
     }
 
-    /**
-     * Whether to generate a link to highres pictures at the current location or
-     * not
-     */
-    private static boolean defaultLinkToHighres = false;
+    public static void setDefaultLinkToHighres(boolean defaultLinkToHighres) {
+        Settings.defaultLinkToHighres = defaultLinkToHighres;
+    }
 
     public static boolean isDefaultExportHighres() {
         return defaultExportHighres;
@@ -638,17 +918,6 @@ public class Settings {
     public static void setDefaultExportHighres(final boolean defaultExportHighres) {
         Settings.defaultExportHighres = defaultExportHighres;
     }
-
-    /**
-     * Whether to export the Highres pictures or not
-     */
-    private static boolean defaultExportHighres = false;
-
-
-    /**
-     * Whether to rotate the Highres pictures or not
-     */
-    private static boolean defaultRotateHighres = false;
 
     public static boolean isDefaultRotateHighres() {
         return defaultRotateHighres;
@@ -667,23 +936,13 @@ public class Settings {
         Settings.defaultHtmlMidresWidth = defaultHtmlMidresWidth;
     }
 
-    /**
-     * The default midres width for pictures for the Html export
-     */
-    private static int defaultHtmlMidresWidth = 700;
-
-    public static void setDefaultHtmlMidresHeight(final int defaultHtmlMidresHeight) {
-        Settings.defaultHtmlMidresHeight = defaultHtmlMidresHeight;
-    }
-
     public static int getDefaultHtmlMidresHeight() {
         return defaultHtmlMidresHeight;
     }
 
-    /**
-     * The default midres height for pictures for the Html export
-     */
-    private static int defaultHtmlMidresHeight = 700;
+    public static void setDefaultHtmlMidresHeight(final int defaultHtmlMidresHeight) {
+        Settings.defaultHtmlMidresHeight = defaultHtmlMidresHeight;
+    }
 
     public static GenerateWebsiteRequest.PictureNamingType getDefaultHtmlPictureNaming() {
         return defaultHtmlPictureNaming;
@@ -693,23 +952,13 @@ public class Settings {
         Settings.defaultHtmlPictureNaming = defaultHtmlPictureNaming;
     }
 
-    /**
-     * Picture naming convention on HTML output
-     */
-    private static GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_HASH_CODE;
-
-    public static void setDefaultHtmlOutputTarget(GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget) {
-        Settings.defaultHtmlOutputTarget = defaultHtmlOutputTarget;
-    }
-
     public static GenerateWebsiteRequest.OutputTarget getDefaultHtmlOutputTarget() {
         return defaultHtmlOutputTarget;
     }
 
-    /**
-     * OutputTarget convention for HTML output
-     */
-    private static GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY;
+    public static void setDefaultHtmlOutputTarget(GenerateWebsiteRequest.OutputTarget defaultHtmlOutputTarget) {
+        Settings.defaultHtmlOutputTarget = defaultHtmlOutputTarget;
+    }
 
     public static Color getHtmlBackgroundColor() {
         return htmlBackgroundColor;
@@ -719,23 +968,13 @@ public class Settings {
         Settings.htmlBackgroundColor = htmlBackgroundColor;
     }
 
-    /**
-     * The default color for the background on the web page is white.
-     */
-    private static Color htmlBackgroundColor = Color.WHITE;
-
-    public static void setHtmlFontColor(Color htmlFontColor) {
-        Settings.htmlFontColor = htmlFontColor;
-    }
-
     public static Color getHtmlFontColor() {
         return htmlFontColor;
     }
 
-    /**
-     * This constant defines the text color on the web page.
-     */
-    private static Color htmlFontColor = Color.BLACK;
+    public static void setHtmlFontColor(Color htmlFontColor) {
+        Settings.htmlFontColor = htmlFontColor;
+    }
 
     public static float getDefaultHtmlLowresQuality() {
         return defaultHtmlLowresQuality;
@@ -745,23 +984,13 @@ public class Settings {
         Settings.defaultHtmlLowresQuality = defaultHtmlLowresQuality;
     }
 
-    /**
-     * The default quality for Thumbnail pictures for the Html export
-     */
-    private static float defaultHtmlLowresQuality = 0.8f;
-
-    public static void setDefaultHtmlMidresQuality(final float defaultHtmlMidresQuality) {
-        Settings.defaultHtmlMidresQuality = defaultHtmlMidresQuality;
-    }
-
     public static float getDefaultHtmlMidresQuality() {
         return defaultHtmlMidresQuality;
     }
 
-    /**
-     * The default quality for Midres pictures for the Html export
-     */
-    private static float defaultHtmlMidresQuality = 0.8f;
+    public static void setDefaultHtmlMidresQuality(final float defaultHtmlMidresQuality) {
+        Settings.defaultHtmlMidresQuality = defaultHtmlMidresQuality;
+    }
 
     public static boolean isWriteRobotsTxt() {
         return writeRobotsTxt;
@@ -771,11 +1000,6 @@ public class Settings {
         Settings.writeRobotsTxt = writeRobotsTxt;
     }
 
-    /**
-     * Whether to write the robots.txt on the generate webpage
-     */
-    private static boolean writeRobotsTxt = false;
-
     public static String getDefaultHtmlFtpServer() {
         return defaultHtmlFtpServer;
     }
@@ -784,11 +1008,6 @@ public class Settings {
         Settings.defaultHtmlFtpServer = defaultHtmlFtpServer;
     }
 
-    /**
-     * The default ftp server for Html export
-     */
-    private static String defaultHtmlFtpServer = "";
-
     public static int getDefaultHtmlFtpPort() {
         return defaultHtmlFtpPort;
     }
@@ -796,12 +1015,6 @@ public class Settings {
     public static void setDefaultHtmlFtpPort(int defaultHtmlFtpPort) {
         Settings.defaultHtmlFtpPort = defaultHtmlFtpPort;
     }
-
-    /**
-     * The default ftp port for Html export
-     */
-    private static int defaultHtmlFtpPort = 21;
-
 
     /**
      * Returns the ftp port for Html export
@@ -815,11 +1028,6 @@ public class Settings {
     public static void setDefaultHtmlFtpUser(String defaultHtmlFtpUser) {
         Settings.defaultHtmlFtpUser = defaultHtmlFtpUser;
     }
-
-    /**
-     * The default ftp user for Html export
-     */
-    private static String defaultHtmlFtpUser = "";
 
     /**
      * Returns the default ftp user for Html export
@@ -838,11 +1046,6 @@ public class Settings {
     }
 
     /**
-     * The default ftp password for Html export
-     */
-    private static String defaultHtmlFtpPassword = "";
-
-    /**
      * Returns the default directory for the ftp export
      *
      * @return The default directory for the ftp target
@@ -859,11 +1062,6 @@ public class Settings {
     }
 
     /**
-     * The default ftp target directory for Html export
-     */
-    private static String defaultHtmlFtpTargetDir = "";
-
-    /**
      * Returns the default ftp target directory for Html export
      */
     public static String getDefaultHtmlSshServer() {
@@ -877,11 +1075,6 @@ public class Settings {
         Settings.defaultHtmlSshServer = defaultHtmlSshServer;
     }
 
-    /**
-     * The default ssh server for Html export
-     */
-    private static String defaultHtmlSshServer = "";
-
     public static int getDefaultHtmlSshPort() {
         return defaultHtmlSshPort;
     }
@@ -889,11 +1082,6 @@ public class Settings {
     public static void setDefaultHtmlSshPort(int defaultHtmlSshPort) {
         Settings.defaultHtmlSshPort = defaultHtmlSshPort;
     }
-
-    /**
-     * The default ssh port for Html export
-     */
-    private static int defaultHtmlSshPort = 22;
 
     public static String getDefaultHtmlSshUser() {
         return defaultHtmlSshUser;
@@ -903,11 +1091,6 @@ public class Settings {
         Settings.defaultHtmlSshUser = defaultHtmlSshUser;
     }
 
-    /**
-     * The default ssh user for Html export
-     */
-    private static String defaultHtmlSshUser = "";
-
     public static GenerateWebsiteRequest.SshAuthType getDefaultHtmlSshAuthType() {
         return defaultHtmlSshAuthType;
     }
@@ -915,11 +1098,6 @@ public class Settings {
     public static void setDefaultHtmlSshAuthType(GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType) {
         Settings.defaultHtmlSshAuthType = defaultHtmlSshAuthType;
     }
-
-    /**
-     * OutputTarget convention for HTML output
-     */
-    private static GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD;
 
     public static String getDefaultHtmlSshPassword() {
         return defaultHtmlSshPassword;
@@ -929,11 +1107,6 @@ public class Settings {
         Settings.defaultHtmlSshPassword = defaultHtmlSshPassword;
     }
 
-    /**
-     * The default ssh password for Html export
-     */
-    private static String defaultHtmlSshPassword = "";
-
     public static String getDefaultHtmlSshTargetDir() {
         return defaultHtmlSshTargetDir;
     }
@@ -941,11 +1114,6 @@ public class Settings {
     public static void setDefaultHtmlSshTargetDir(String defaultHtmlSshTargetDir) {
         Settings.defaultHtmlSshTargetDir = defaultHtmlSshTargetDir;
     }
-
-    /**
-     * The default ssh target directory for Html export
-     */
-    private static String defaultHtmlSshTargetDir = "";
 
     public static String getDefaultHtmlSshKeyFile() {
         return defaultHtmlSshKeyFile;
@@ -956,14 +1124,13 @@ public class Settings {
     }
 
     /**
-     * The default ssh key file for Html export
+     * returns if thumbnails should be rendered faster instead of better quality
+     *
+     * @return true if speed is desired
      */
-    private static String defaultHtmlSshKeyFile = "";
-
-    /**
-     * true when thumbnails are supposed to scale fast
-     */
-    private static boolean thumbnailFastScale = true;
+    public static boolean isThumbnailFastScale() {
+        return thumbnailFastScale;
+    }
 
     /**
      * Stores the default choice for fast scaling
@@ -979,14 +1146,10 @@ public class Settings {
      *
      * @return true if speed is desired
      */
-    public static boolean isThumbnailFastScale() {
-        return thumbnailFastScale;
+    public static boolean isShowFilenamesOnThumbnailPanel() {
+        LOGGER.log(Level.INFO, "show files on Thumbnail Panel: {0}", showFilenamesOnThumbnailPanel);
+        return showFilenamesOnThumbnailPanel;
     }
-
-    /**
-     * true when thumbnails are supposed to scale fast
-     */
-    private static boolean showFilenamesOnThumbnailPanel = false;
 
     /**
      * Stores the default choice for fast scaling
@@ -1002,17 +1165,6 @@ public class Settings {
         }
     }
 
-    /**
-     * returns if thumbnails should be rendered faster instead of better quality
-     *
-     * @return true if speed is desired
-     */
-    public static boolean isShowFilenamesOnThumbnailPanel() {
-        LOGGER.log(Level.INFO, "show files on Thumbnail Panel: {0}", showFilenamesOnThumbnailPanel);
-        return showFilenamesOnThumbnailPanel;
-    }
-
-
     public static boolean isPictureViewerFastScale() {
         return pictureViewerFastScale;
     }
@@ -1020,11 +1172,6 @@ public class Settings {
     public static void setPictureViewerFastScale(boolean pictureViewerFastScale) {
         Settings.pictureViewerFastScale = pictureViewerFastScale;
     }
-
-    /**
-     * true when the pictureViewer is supposed to scale fast
-     */
-    private static boolean pictureViewerFastScale = true;
 
     public static boolean isShowThumbOnFileChooser() {
         return showThumbOnFileChooser;
@@ -1034,23 +1181,9 @@ public class Settings {
         Settings.showThumbOnFileChooser = showThumbOnFileChooser;
     }
 
-    /**
-     * Informs the PictureAdder whether to show a thumbnail or not
-     */
-    private static boolean showThumbOnFileChooser = true;
-
     public static Dimension getDefaultButtonDimension() {
         return defaultButtonDimension;
     }
-
-    /**
-     * Default size for buttons such as OK, cancel etc.
-     */
-    private static final Dimension defaultButtonDimension = new Dimension(80, 25);
-    /**
-     * Default size for buttons such as OK, cancel etc.
-     */
-    public static final Dimension THREE_DOT_BUTTON_DIMENSION = new Dimension(25, 25);
 
     public static String getDefaultGoogleMapsApiKey() {
         return defaultGoogleMapsApiKey;
@@ -1058,28 +1191,6 @@ public class Settings {
 
     public static void setDefaultGoogleMapsApiKey(String defaultGoogleMapsApiKey) {
         Settings.defaultGoogleMapsApiKey = defaultGoogleMapsApiKey;
-    }
-
-    /**
-     * Codes to indicate the field
-     */
-    public enum FieldCodes {
-
-        NO_SORTING,
-        DESCRIPTION,
-        FILE_URL,
-        FILE_LOWRES_URL,
-        FILM_REFERENCE,
-        CREATION_TIME,
-        COMMENT,
-        PHOTOGRAPHER,
-        COPYRIGHT_HOLDER,
-        ROTATION,
-        LATLNG,
-        CHECKSUM,
-        CATEGORIES,
-        CATEGORY,
-        CATEGORY_DESCRIPTION,
     }
 
     /**
@@ -1103,33 +1214,13 @@ public class Settings {
         return SELECTED_COLOR;
     }
 
-    /**
-     * The color to use when the thumbnail has been selected
-     */
-    private static final Color SELECTED_COLOR = new Color(45, 47, 84);
-
     public static Color getSelectedColorText() {
         return SELECTED_COLOR_TEXT;
     }
 
-    /**
-     * The color to use for text background when the thumbnail has been selected
-     */
-    private static final Color SELECTED_COLOR_TEXT = new Color(145, 149, 153);
-
     public static Color getUnselectedColor() {
         return UNSELECTED_COLOR;
     }
-
-    /**
-     * The color to use when the thumbnail has been selected
-     */
-    private static final Color UNSELECTED_COLOR = Color.WHITE;
-
-    /**
-     * date format for adding new pictures from the camera
-     */
-    public static final String ADD_FROM_CAMERA_DATE_FORMAT = "dd.MM.yyyy  HH:mm";
 
     public static List<Camera> getCameras() {
         return cameras;
@@ -1139,28 +1230,9 @@ public class Settings {
         Settings.cameras = cameras;
     }
 
-    /**
-     * Collection of cameras
-     */
-    private static List<Camera> cameras = new ArrayList<>();
-
     public static SortedSet<Object> getEmailSenders() {
         return emailSenders;
     }
-
-    /**
-     * list of email senders
-     */
-    private static final TreeSet<Object> emailSenders = new TreeSet<>() {
-        @Override
-        public boolean add(Object o) {
-            boolean b = super.add(o);
-            if (b) {
-                setUnsavedSettingChanges(true);
-            }
-            return b;
-        }
-    };
 
     public static File getLogfile() {
         return logfile;
@@ -1174,30 +1246,16 @@ public class Settings {
         return emailRecipients;
     }
 
-    /**
-     * list of email senders
-     */
-    private static final TreeSet<Object> emailRecipients = new TreeSet<>() {
-        @Override
-        public boolean add(Object o) {
-            boolean b = super.add(o);
-            if (b) {
-                setUnsavedSettingChanges(true);
-            }
-            return b;
-        }
-    };
-
     public static String getEmailServer() {
         return emailServer;
     }
 
-    public static Logger getLOGGER() {
-        return LOGGER;
-    }
-
     public static void setEmailServer(String emailServer) {
         Settings.emailServer = emailServer;
+    }
+
+    public static Logger getLOGGER() {
+        return LOGGER;
     }
 
     public static int getPreferredMasterDividerSpot() {
@@ -1228,11 +1286,6 @@ public class Settings {
         return DEFAULT_MAX_THUMBNAILS;
     }
 
-    /**
-     * Email Server
-     */
-    private static String emailServer = "";
-
     public static String getEmailPort() {
         return emailPort;
     }
@@ -1240,11 +1293,6 @@ public class Settings {
     public static void setEmailPort(String emailPort) {
         Settings.emailPort = emailPort;
     }
-
-    /**
-     * Email Server port
-     */
-    private static String emailPort = "25";
 
     public static int getEmailAuthentication() {
         return emailAuthentication;
@@ -1254,11 +1302,6 @@ public class Settings {
         Settings.emailAuthentication = emailAuthentication;
     }
 
-    /**
-     * Email authentication 0 = None 1 = Password 2 = SSL
-     */
-    private static int emailAuthentication = 0;
-
     public static String getEmailUser() {
         return emailUser;
     }
@@ -1266,11 +1309,6 @@ public class Settings {
     public static void setEmailUser(String emailUser) {
         Settings.emailUser = emailUser;
     }
-
-    /**
-     * Email User
-     */
-    private static String emailUser = "";
 
     public static String getEmailPassword() {
         return emailPassword;
@@ -1280,11 +1318,6 @@ public class Settings {
         Settings.emailPassword = emailPassword;
     }
 
-    /**
-     * Email Password
-     */
-    private static String emailPassword = "";
-
     public static boolean isEmailScaleImages() {
         return emailScaleImages;
     }
@@ -1292,11 +1325,6 @@ public class Settings {
     public static void setEmailScaleImages(boolean emailScaleImages) {
         Settings.emailScaleImages = emailScaleImages;
     }
-
-    /**
-     * Should emails have scaled images
-     */
-    private static boolean emailScaleImages = true;
 
     public static Dimension getEmailDimensions() {
         return emailDimensions;
@@ -1306,11 +1334,6 @@ public class Settings {
         Settings.emailDimensions = emailDimensions;
     }
 
-    /**
-     * The last size we scaled images to in the email dialog
-     */
-    private static Dimension emailDimensions = new Dimension(350, 300);
-
     public static boolean isEmailSendOriginal() {
         return emailSendOriginal;
     }
@@ -1319,50 +1342,21 @@ public class Settings {
         Settings.emailSendOriginal = emailSendOriginal;
     }
 
-    /**
-     * Should emails contain the original images
-     */
-    private static boolean emailSendOriginal = false;
-
     public static Color getJpoBackgroundColor() {
         return JPO_BACKGROUND_COLOR;
     }
-
-    /**
-     * The default application background color.
-     */
-    private static final Color JPO_BACKGROUND_COLOR = Color.WHITE;
 
     public static Color getPictureviewerBackgroundColor() {
         return PICTUREVIEWER_BACKGROUND_COLOR;
     }
 
-    /**
-     * The background color for the picture Viewer
-     */
-    private static final Color PICTUREVIEWER_BACKGROUND_COLOR = Color.BLACK;
-
     public static Color getPictureviewerTextColor() {
         return PICTUREVIEWER_TEXT_COLOR;
     }
 
-    /**
-     * The text color for the picture Viewer
-     */
-    private static final Color PICTUREVIEWER_TEXT_COLOR = Color.WHITE;
-
     public static Dimension getPictureviewerMinimumSize() {
         return PICTUREVIEWER_MINIMUM_SIZE;
     }
-
-    public static void setWriteLog(boolean writeLog) {
-        Settings.writeLog = writeLog;
-    }
-
-    /**
-     * The PictureViewer minimum size
-     */
-    private static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension(300, 300);
 
     public static int getTagCloudWords() {
         return tagCloudWords;
@@ -1372,11 +1366,6 @@ public class Settings {
         Settings.tagCloudWords = tagCloudWords;
     }
 
-    /**
-     * The number of Words that the TagCloud should show.
-     */
-    private static int tagCloudWords = 200;
-
     public static FieldCodes getLastSortChoice() {
         return lastSortChoice;
     }
@@ -1384,11 +1373,6 @@ public class Settings {
     public static void setLastSortChoice(FieldCodes lastSortChoice) {
         Settings.lastSortChoice = lastSortChoice;
     }
-
-    /**
-     * The last sort choice of the user
-     */
-    private static FieldCodes lastSortChoice = FieldCodes.CREATION_TIME;
 
     public static boolean isLastCameraWizardCopyMode() {
         return lastCameraWizardCopyMode;
@@ -1398,11 +1382,6 @@ public class Settings {
         Settings.lastCameraWizardCopyMode = lastCameraWizardCopyMode;
     }
 
-    /**
-     * The last choice in the Camera Download Wizard whether to copy or move
-     */
-    private static boolean lastCameraWizardCopyMode = true;
-
     public static boolean isRememberGoogleCredentials() {
         return rememberGoogleCredentials;
     }
@@ -1410,11 +1389,6 @@ public class Settings {
     public static void setRememberGoogleCredentials(boolean rememberGoogleCredentials) {
         Settings.rememberGoogleCredentials = rememberGoogleCredentials;
     }
-
-    /**
-     * Whether to remember the Google login credentials for the Picasa upload.
-     */
-    private static boolean rememberGoogleCredentials = false;
 
     public static String getGoogleUsername() {
         return googleUsername;
@@ -1424,11 +1398,6 @@ public class Settings {
         Settings.googleUsername = googleUsername;
     }
 
-    /**
-     * Google user name if rememberGoogleCredentials is true
-     */
-    private static String googleUsername;
-
     public static String getGooglePassword() {
         return googlePassword;
     }
@@ -1436,11 +1405,6 @@ public class Settings {
     public static void setGooglePassword(String googlePassword) {
         Settings.googlePassword = googlePassword;
     }
-
-    /**
-     * Google password if rememberGoogleCredentials is true;
-     */
-    private static String googlePassword;
 
     /**
      * method that set the default parameters
@@ -1452,11 +1416,6 @@ public class Settings {
     }
 
     /**
-     * handle to the user Preferences
-     */
-    public static final Preferences prefs = Preferences.userNodeForPackage(Settings.class);
-
-    /**
      * This method reads the settings from the preferences.
      */
     public static void loadSettings() {
@@ -1466,18 +1425,22 @@ public class Settings {
         maximumPictureSize = prefs.getInt("maximumPictureSize", maximumPictureSize);
         maxThumbnails = prefs.getInt("maxThumbnails", maxThumbnails);
         thumbnailSize = prefs.getInt("thumbnailSize", thumbnailSize);
-        maximiseJpoOnStartup = prefs.getBoolean("maximiseJpoOnStartup", maximiseJpoOnStartup);
-        mainFrameDimensions.width = prefs.getInt("mainFrameDimensions.width", mainFrameDimensions.width);
-        mainFrameDimensions.height = prefs.getInt("mainFrameDimensions.height", mainFrameDimensions.height);
+        startupSizeChoice = prefs.getInt("startupSizeChoice", startupSizeChoice);
+        lastMainFrameCoordinates.x = prefs.getInt("lastMainFrameCoordinates.x", lastMainFrameCoordinates.x);
+        lastMainFrameCoordinates.y = prefs.getInt("lastMainFrameCoordinates.y", lastMainFrameCoordinates.y);
+        lastMainFrameCoordinates.width = prefs.getInt("lastMainFrameCoordinates.width", lastMainFrameCoordinates.width);
+        lastMainFrameCoordinates.height = prefs.getInt("lastMainFrameCoordinates.height", lastMainFrameCoordinates.height);
         preferredMasterDividerSpot = prefs.getInt("preferredMasterDividerSpot", preferredMasterDividerSpot);
         preferredLeftDividerSpot = prefs.getInt("preferredLeftDividerSpot", preferredLeftDividerSpot);
 
         dividerWidth = prefs.getInt("dividerWidth", dividerWidth);
         autoLoad = prefs.get("autoload", autoLoad);
 
-        maximisePictureViewerWindow = prefs.getBoolean("maximisePictureViewerWindow", maximisePictureViewerWindow);
-        pictureViewerDefaultDimensions.width = prefs.getInt("pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width);
-        pictureViewerDefaultDimensions.height = prefs.getInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
+        newViewerSizeChoice = prefs.getInt("newViewerSizeChoice", newViewerSizeChoice);
+        lastViewerCoordinates.x = prefs.getInt("lastViewerCoordinates.x", lastViewerCoordinates.x);
+        lastViewerCoordinates.y = prefs.getInt("lastViewerCoordinates.y", lastViewerCoordinates.y);
+        lastViewerCoordinates.width = prefs.getInt("lastViewerCoordinates.width", lastViewerCoordinates.width);
+        lastViewerCoordinates.height = prefs.getInt("lastViewerCoordinates.height", lastViewerCoordinates.height);
 
         for (int i = 0; i < MAX_MEMORISE; i++) {
             String key = "copyLocations-" + i;
@@ -1622,18 +1585,22 @@ public class Settings {
         prefs.putInt("maximumPictureSize", maximumPictureSize);
         prefs.putInt("maxThumbnails", maxThumbnails);
         prefs.putInt("thumbnailSize", thumbnailSize);
-        prefs.putBoolean("maximiseJpoOnStartup", maximiseJpoOnStartup);
-        prefs.putInt("mainFrameDimensions.width", mainFrameDimensions.width);
-        prefs.putInt("mainFrameDimensions.height", mainFrameDimensions.height);
+        prefs.putInt("startupSizeChoice", startupSizeChoice);
+        prefs.putInt("lastMainFrameCoordinates.x", lastMainFrameCoordinates.x);
+        prefs.putInt("lastMainFrameCoordinates.y", lastMainFrameCoordinates.y);
+        prefs.putInt("lastMainFrameCoordinates.width", lastMainFrameCoordinates.width);
+        prefs.putInt("lastMainFrameCoordinates.height", lastMainFrameCoordinates.height);
         prefs.putInt("preferredMasterDividerSpot", preferredMasterDividerSpot);
         prefs.putInt("preferredLeftDividerSpot", preferredLeftDividerSpot);
         prefs.putInt("dividerWidth", dividerWidth);
         if (autoLoad != null) {
             prefs.put("autoload", autoLoad);
         }
-        prefs.putBoolean("maximisePictureViewerWindow", maximisePictureViewerWindow);
-        prefs.putInt("pictureViewerDefaultDimensions.width", pictureViewerDefaultDimensions.width);
-        prefs.putInt("pictureViewerDefaultDimensions.height", pictureViewerDefaultDimensions.height);
+        prefs.putInt("newViewerSizeChoice", newViewerSizeChoice);
+        prefs.putInt("lastViewerCoordinates.x", lastViewerCoordinates.x);
+        prefs.putInt("lastViewerCoordinates.y", lastViewerCoordinates.y);
+        prefs.putInt("lastViewerCoordinates.width", lastViewerCoordinates.width);
+        prefs.putInt("lastViewerCoordinates.height", lastViewerCoordinates.height);
         final Iterator<String> iterator = copyLocations.iterator();
         for (int ordinal = 0; iterator.hasNext(); ordinal++) {
             prefs.put(String.format("copyLocations-%d", ordinal), iterator.next());
@@ -1828,21 +1795,6 @@ public class Settings {
         }
     }
 
-    /*
-     * ------------------------------------------------------------------------------
-     *
-     *
-     *
-     *
-     * /**
-     * Default locale if all else fails use this one.
-     */
-    private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
-    /**
-     * The locale to be used for the application
-     */
-    private static Locale currentLocale = Locale.getDefault();
-
     /**
      * returns the Locale the application is running in.
      *
@@ -1871,15 +1823,6 @@ public class Settings {
     }
 
     /**
-     * Supported Languages
-     */
-    private static final String[] supportedLanguages = {"English", "Deutsch", "Simplified Chinese", "Traditional Chinese"};
-    /**
-     * Locales for the languages in supportedLanguages
-     */
-    private static final Locale[] supportedLocale = {Locale.ENGLISH, Locale.GERMAN, Locale.SIMPLIFIED_CHINESE, Locale.TRADITIONAL_CHINESE};
-
-    /**
      * Sets the new locale. As of 3 Apr 2014 this doesn't send a
      * LocaleChangeEvent any more. Instead the widget changing the locale is
      * expected to send a LocaledChangedEvent
@@ -1902,6 +1845,11 @@ public class Settings {
         return (!currentLocale.equals(oldLocale));
     }
 
+    /*
+     * ------------------------------------------------------------------------------
+     * Stuff for memorizing the copy target locations
+     */
+
     public static ResourceBundle getJpoResources() {
         return jpoResources;
     }
@@ -1910,37 +1858,13 @@ public class Settings {
         Settings.jpoResources = jpoResources;
     }
 
-    /**
-     * the resourceBundle is a Java thing that sorts out language customisation
-     */
-    private static ResourceBundle jpoResources;
-
-    /*
-     * I'm using a class block initializer here so that we don't ever end up
-     * without a ResourceBundle. This proves highly annoying to the Unit Tests
-     * and caused me frustration and headaches. RE, 20.1.2007
-     */
-    static {
-        setLocale(currentLocale);
-    }
-
     public static int getMaxDropnodes() {
         return MAX_DROPNODES;
     }
 
-    /**
-     * MAX number of recent Drop Nodes
-     */
-    private static final int MAX_DROPNODES = 12;
-
     public static Queue<SortableDefaultMutableTreeNode> getRecentDropNodes() {
         return recentDropNodes;
     }
-
-    /**
-     * Recently used Drop Nodes to make it simple to re-use
-     */
-    private static final Queue<SortableDefaultMutableTreeNode> recentDropNodes = EvictingQueue.create(MAX_DROPNODES);
 
     /**
      * This method memorizes the recent drop targets so that they can be
@@ -1958,29 +1882,13 @@ public class Settings {
         }
     }
 
-    /*
-     * ------------------------------------------------------------------------------
-     * Stuff for memorizing the copy target locations
-     */
-
     public static Queue<String> getCopyLocations() {
         return copyLocations;
     }
 
-    /**
-     * Queue of recently used directories in copy operations and other file
-     * selections.
-     */
-    private static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
-
     public static Queue<String> getMemorizedZipFiles() {
         return memorizedZipFiles;
     }
-
-    /**
-     * Array of recently used zip files operations and other file selections.
-     */
-    private static final Queue<String> memorizedZipFiles = EvictingQueue.create(MAX_MEMORISE);
 
     /**
      * This method memorises the directories used in copy operations so that
@@ -2012,6 +1920,10 @@ public class Settings {
             memorizedZipFiles.add(location);
         }
     }
+    /*
+     * ------------------------------------------------------------------------------
+     * Stuff for user Functions
+     */
 
     /**
      * This method validates that the copy locations are valid directories and
@@ -2044,14 +1956,6 @@ public class Settings {
         }
         return new File(System.getProperty("user.dir"));
     }
-    /*
-     * ------------------------------------------------------------------------------
-     * Stuff for user Functions
-     */
-    /**
-     * number of user Functions
-     */
-    public static final int MAX_USER_FUNCTIONS = 3;
 
     public static String[] getUserFunctionNames() {
         return userFunctionNames;
@@ -2061,23 +1965,34 @@ public class Settings {
         return userFunctionCmd;
     }
 
-    /**
-     * Array of user function names
-     */
-    private static final String[] userFunctionNames = new String[MAX_USER_FUNCTIONS];
-    /**
-     * Array of user function commands
-     */
-    private static final String[] userFunctionCmd = new String[MAX_USER_FUNCTIONS];
-
-    private static MainWindow mainWindow;
+    public static MainWindow getMainWindow() {
+        return mainWindow;
+    }
 
     public static void setMainWindow(MainWindow newMainWindow) {
         mainWindow = newMainWindow;
     }
 
-    public static MainWindow getMainWindow() {
-        return mainWindow;
+    /**
+     * Codes to indicate the field
+     */
+    public enum FieldCodes {
+
+        NO_SORTING,
+        DESCRIPTION,
+        FILE_URL,
+        FILE_LOWRES_URL,
+        FILM_REFERENCE,
+        CREATION_TIME,
+        COMMENT,
+        PHOTOGRAPHER,
+        COPYRIGHT_HOLDER,
+        ROTATION,
+        LATLNG,
+        CHECKSUM,
+        CATEGORIES,
+        CATEGORY,
+        CATEGORY_DESCRIPTION,
     }
 
 }

@@ -3,7 +3,6 @@ package org.jpo.gui.swing;
 import bibliothek.gui.dock.common.*;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.*;
 import org.jpo.gui.*;
 
@@ -13,12 +12,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
  MainWindow.java:  main window of the JPO application
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,8 +32,8 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- *
  * Main Window of the JPO application. It uses the
  * <a href="http://www.docking-frames.org/">Docking Frames</a> framework to handle
  * the internal windows.
@@ -41,12 +41,12 @@ import java.util.logging.Logger;
  * @author Richard Eigenmann
  */
 @SuppressWarnings("UnstableApiUsage")
-public class MainWindow extends JFrame {
+public class MainWindow extends ResizableJFrame {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( MainWindow.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(MainWindow.class.getName());
 
     /**
      * The controller for the Docking Frames framework that controls all the
@@ -58,12 +58,21 @@ public class MainWindow extends JFrame {
      * The grid to which all components are added
      */
     private final CGrid grid;
+    /**
+     * A handle to the Collection Tree so that we can ask it to move to the
+     * front.
+     */
+    private DefaultSingleCDockable tree;
+    /**
+     * A handle to the Searches Tree so that we can ask it to move to the front.
+     */
+    private DefaultSingleCDockable searches;
 
     /**
      * Creates the JPO window and lays out the components. It registers itself
      * on the {@link JpoEventBus} and handles the below events. If the window close handles
      * are activated it sends an {@link UnsavedUpdatesDialogRequest} with an
-     * embedded {@link CloseApplicationRequest} to the event handlers.
+     * embedded {@link ShutdownApplicationRequest} to the event handlers.
      *
      * @see JpoEventBus
      * @see ShowGroupRequest
@@ -74,24 +83,24 @@ public class MainWindow extends JFrame {
      * @see UpdateApplicationTitleRequest
      */
     public MainWindow() {
+        super("JPO", new JLabel("starting up..."), WindowSize.WINDOW_TOP_LEFT);
         // Set up Docking Frames
-        control = new CControl( this );
-        grid = new CGrid( control );
+        control = new CControl(this);
+        grid = new CGrid(control);
 
-        Settings.setMainWindow( this );
+        Settings.setMainWindow(this);
 
-        Tools.checkEDT();
         initComponents();
-        JpoEventBus.getInstance().register( this );
+        JpoEventBus.getInstance().register(this);
 
-        addWindowListener( new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosing( WindowEvent e ) {
-                setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
-                JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new CloseApplicationRequest() ) );
+            public void windowClosing(WindowEvent e) {
+                setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new ShutdownApplicationRequest()));
             }
-        } );
+        });
     }
 
     private void initComponents() {
@@ -104,25 +113,32 @@ public class MainWindow extends JFrame {
         }
         setTitle(Settings.getJpoResources().getString("ApplicationTitle"));
 
-        setMinimumSize( Settings.jpoJFrameMinimumSize );
-        setPreferredSize(Settings.getMainFrameDimensions());
+        setMinimumSize(Settings.jpoJFrameMinimumSize);
+        setPreferredSize(Settings.getLastMainFrameCoordinates().getSize());
 
         final ApplicationJMenuBar menuBar = new ApplicationJMenuBar();
-        setJMenuBar( menuBar );
+        setJMenuBar(menuBar);
 
         // Set Tooltipps to snappy mode
         final ToolTipManager ttm = ToolTipManager.sharedInstance();
-        ttm.setDismissDelay( 1500 );
-        ttm.setInitialDelay( 100 );
+        ttm.setDismissDelay(1500);
+        ttm.setInitialDelay(100);
 
-        InfoPanelController infoPanelController = new InfoPanelController();
-        final JScrollPane statsScroller = new JScrollPane( infoPanelController.getInfoPanel() );
-        statsScroller.setWheelScrollingEnabled( true );
-        statsScroller.getVerticalScrollBar().setUnitIncrement( 20 );
+        final InfoPanelController infoPanelController = new InfoPanelController();
+        final JScrollPane statsScroller = new JScrollPane(infoPanelController.getInfoPanel());
+        statsScroller.setWheelScrollingEnabled(true);
+        statsScroller.getVerticalScrollBar().setUnitIncrement(20);
         pack();
 
-        if (Settings.isMaximiseJpoOnStartup()) {
-            setExtendedState( MAXIMIZED_BOTH );
+        switch (Settings.getStartupSizeChoice()) {
+            case 0 -> switchWindowMode(WindowSize.WINDOW_DECORATED_FULLSCREEN);
+            case 1 -> switchWindowMode(WindowSize.WINDOW_DECORATED_PRIMARY);
+            case 2 -> switchWindowMode(WindowSize.WINDOW_DECORATED_SECONDARY);
+            default -> {
+                switchWindowMode(WindowSize.WINDOW_CUSTOM_SIZE);
+                setBounds(Settings.getLastMainFrameCoordinates());
+                LOGGER.log(Level.INFO, "Setting MainWindow bounds: {0}", Settings.getLastMainFrameCoordinates());
+            }
         }
 
         final Component thumbnailPanel = (new ThumbnailsPanelController()).getView();
@@ -135,53 +151,42 @@ public class MainWindow extends JFrame {
                 new QueriesJTreeController().getJComponent());
 
         final JButton loadJButton = new JButton("Properties - Load");
-        loadJButton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new LoadDockablesPositionsRequest() ));
+        loadJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new LoadDockablesPositionsRequest()));
         final JButton saveJbutton = new JButton("Save");
-        saveJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new SaveDockablesPositionsRequest() ));
-        JButton resetJbutton = new JButton( "Reset" );
-        resetJbutton.addActionListener(( ActionEvent e ) -> JpoEventBus.getInstance().post( new RestoreDockablesPositionsRequest() ));
+        saveJbutton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest()));
+        final JButton resetJbutton = new JButton("Reset");
+        resetJbutton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RestoreDockablesPositionsRequest()));
 
         final JPanel propertiesJPanel = new JPanel();
-        propertiesJPanel.setLayout( new BoxLayout( propertiesJPanel, BoxLayout.Y_AXIS ) );
-        propertiesJPanel.add( loadJButton );
-        propertiesJPanel.add( saveJbutton );
-        propertiesJPanel.add( resetJbutton );
+        propertiesJPanel.setLayout(new BoxLayout(propertiesJPanel, BoxLayout.Y_AXIS));
+        propertiesJPanel.add(loadJButton);
+        propertiesJPanel.add(saveJbutton);
+        propertiesJPanel.add(resetJbutton);
 
         SingleCDockable properties = new DefaultSingleCDockable("PropertiesId", "Properties", propertiesJPanel);
         SingleCDockable tagDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
-        SingleCDockable statsDockable = new DefaultSingleCDockable( "StatsId", "Stats", statsScroller );
-        SingleCDockable thumbnailsDockable = new DefaultSingleCDockable( "ThumbnailsId", "Thumbnails", thumbnailPanel );
+        SingleCDockable statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
+        SingleCDockable thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
 
-        grid.add( 0, 0, 0.2, 0.8, tree );
-        grid.add( 0, 0, 0.2, 0.8, searches );
+        grid.add(0, 0, 0.2, 0.8, tree);
+        grid.add(0, 0, 0.2, 0.8, searches);
         grid.add(0, 1, 0.2, 0.2, tagDockable);
         grid.add(0, 1, 0.2, 0.2, properties);
         grid.add(0, 1, 0.2, 0.2, statsDockable);
-        grid.add( 1, 0, .5, 2, thumbnailsDockable );
+        grid.add(1, 0, .5, 2, thumbnailsDockable);
 
         final CContentArea content = control.getContentArea();
-        content.deploy( grid );
+        content.deploy(grid);
 
-        thumbnailsDockable.setVisible( true );
-        tree.setVisible( true );
-        searches.setVisible( true );
-        tagDockable.setVisible( true );
+        thumbnailsDockable.setVisible(true);
+        tree.setVisible(true);
+        searches.setVisible(true);
+        tagDockable.setVisible(true);
 
-        getContentPane().add( control.getContentArea() );
+        getContentPane().add(control.getContentArea());
 
-        setVisible( true );
+        setVisible(true);
     }
-
-    /**
-     * A handle to the Collection Tree so that we can ask it to move to the
-     * front.
-     */
-    private DefaultSingleCDockable tree;
-
-    /**
-     * A handle to the Searches Tree so that we can ask it to move to the front.
-     */
-    private DefaultSingleCDockable searches;
 
     /**
      * If a ShowGroupRequest is seen we will switch the collection tab to the
@@ -214,8 +219,8 @@ public class MainWindow extends JFrame {
      * @param request The new Title Request
      */
     @Subscribe
-    public void handleUpdateApplicationTitleRequest( final UpdateApplicationTitleRequest request ) {
-        if ( SwingUtilities.isEventDispatchThread() ) {
+    public void handleUpdateApplicationTitleRequest(final UpdateApplicationTitleRequest request) {
+        if (SwingUtilities.isEventDispatchThread()) {
             setTitle(request.newTitle());
         } else {
             SwingUtilities.invokeLater(()
@@ -232,9 +237,11 @@ public class MainWindow extends JFrame {
      */
     @Subscribe
     public void handleSaveDockablesPositionsRequest(final SaveDockablesPositionsRequest request) {
+        LOGGER.log(Level.INFO, "Saving Main Window position and size");
         try {
+            Settings.setLastMainFrameCoordinates(this.getBounds());
             control.getResources().writePreferences();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             LOGGER.severe(ex.getMessage());
         }
     }
@@ -261,9 +268,9 @@ public class MainWindow extends JFrame {
      * @param request The RestoreDockablesPositionsRequest
      */
     @Subscribe
-    public void handleRestoreDockablesPositionsRequest( RestoreDockablesPositionsRequest request ) {
-        CContentArea content = control.getContentArea();
-        content.deploy( grid );
+    public void handleRestoreDockablesPositionsRequest(final RestoreDockablesPositionsRequest request) {
+        final CContentArea content = control.getContentArea();
+        content.deploy(grid);
     }
 
 }
