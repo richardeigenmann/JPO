@@ -1,5 +1,7 @@
 package org.jpo.gui;
 
+import org.jpo.datamodel.Settings;
+
 import java.util.ListResourceBundle;
 
 
@@ -59,7 +61,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"areYouSure", "Are you sure?"},
 
             // Help About Dialog
-            {"HelpAboutText", "JPO Version 0.14 is a Java/Swing program\n"
+            {"HelpAboutText", "JPO Version " + Settings.JPO_VERSION + " is a Java/Swing program\n"
                     + "written by Richard Eigenmann, Zürich, Switzerland\n"
                     + "Copyright 2000 - 2021\n"
                     + "richard.eigenmann@gmail.com\n"

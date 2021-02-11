@@ -13,6 +13,7 @@
         <li><strong>Dean S. Jones</strong> for his icon collection on <a href="http://sourceforge.net/projects/icon-collection/">http://sourceforge.net/projects/icon-collection/</a> that I have modified to suit my needs.</li>
         <li><strong>Rob Camick</strong> for his Wrap Layout <a href="https://tips4java.wordpress.com/2008/11/06/wrap-layout">https://tips4java.wordpress.com/2008/11/06/wrap-layout/</a></li>
         <li><strong>Font Awesome</strong> for the Free Icon Fonts <a href="https://fontawesome.com/">https://fontawesome.com/</a></li>
+        <li><strong>JSON in Java [package org.json]</strong> for JSON parser <a href="https://github.com/stleary/JSON-java">https://github.com/stleary/JSON-java</a></li>
         <li><strong>Sandra Keller</strong> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
     </ul>
 
@@ -34,7 +35,7 @@
     <p>Download stats <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/stats/timeline?dates=2019-12-01%20to%202020-03-01&period=monthly">Sourceforge</a></p>
 
     <hr>
-    <p>Last update to this page: 14 September 2020<br>
-        Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 11 February 2021<br>
+        Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

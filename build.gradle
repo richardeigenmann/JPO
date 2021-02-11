@@ -162,6 +162,7 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6.2'
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6.2'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6.2'
+    implementation group: 'org.json', name: 'json', version: '20201115'
     testImplementation('org.junit.jupiter:junit-jupiter:5.7.0')
     testImplementation('org.junit.jupiter:junit-jupiter-api:5.7.0')
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.7.0')
@@ -314,7 +315,7 @@ task uploadWebsitePages(type:Exec) {
             '--include="*.gif"',
             '--include="*.png"',
             '--include="*.jpg"',
-            '--include="*.jnlp"',
+            '--include="*.json"',
             '--include="*.bat"',
             "${projectDir}/web/", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
@@ -391,6 +392,9 @@ project.tasks["sonarqube"].dependsOn jacocoTestReport
 /*
 
 On a Windows host
+cd to a directory like Desktop\build
+copy the Jpo-all.jar file there and the favicon.ico
+then run
 
 "c:\Program Files (x86)\jdk-15.0.1\bin\jpackage" ^
 --type exe ^
@@ -413,4 +417,4 @@ On a Windows host
 // /usr/java/jdk-15.0.1/bin/jpackage --package-type exe --name JPO --description "Java Picture Organizer" --vendor "Richard Eigenmann" --app-version 0.14 --main-jar Jpo-all.jar --java-options '--enable-preview' --win-shortcut --win-menu
 
 // create favicon
-// inkscape -w 16 -h 16 -e 16.png JPO-Logo.svg; inkscape -w 32 -h 32 -e 32.png JPO-Logo.svg; inkscape -w 48 -h 48 -e 48.png JPO-Logo.svg; inkscape -w 64 -h 64 -e 64.png JPO-Logo.svg; convert 16.png 32.png 48.png 64.png favicon.ico
+// FILE=JPO-Logo_v2.svg; inkscape -w 16 -h 16 -e 16.png ${FILE}; inkscape -w 32 -h 32 -e 32.png ${FILE}; inkscape -w 48 -h 48 -e 48.png ${FILE}; inkscape -w 64 -h 64 -e 64.png ${FILE}; convert 16.png 32.png 48.png 64.png favicon.ico

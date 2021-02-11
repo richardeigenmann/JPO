@@ -63,7 +63,7 @@ public class Main {
      * @param args The command line arguments
      */
     public static void main( String[] args ) {
-        if (! verifyJavaVersion() ) {
+        if (!verifyJavaVersion()) {
             final String message = "The JPO application uses new features\nthat were added to the Java language in version 1.8.\nYour Java installation reports version " + System.getProperty("java.version") + "\n";
             System.out.println(message);
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(), message, "Old Version Error", JOptionPane.ERROR_MESSAGE);
@@ -71,19 +71,19 @@ public class Main {
         }
 
         // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007
-        System.setSecurityManager( null );
+        System.setSecurityManager(null);
 
-        System.out.println( "\nJPO version 0.14\n"
-                + "Copyright (C) 2000-2020 Richard Eigenmann,\nZurich, Switzerland\n"
+        System.out.println("\nJPO version " + Settings.JPO_VERSION + "\n"
+                + "Copyright (C) 2000-2021 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"
                 + "to redistribute it under certain conditions;\n"
-                + "see Help | License for details.\n\n" );
+                + "see Help | License for details.\n\n");
 
-        System.out.println( "Checking that we have all jar/class files available..." );
-        StringBuilder foundClasses = new StringBuilder( "These classes were found:\n" );
-        StringBuilder missingClasses = new StringBuilder( "The Installation is faulty! The following classes and libraries are missing:\n" );
+        System.out.println("Checking that we have all jar/class files available...");
+        StringBuilder foundClasses = new StringBuilder("These classes were found:\n");
+        StringBuilder missingClasses = new StringBuilder("The Installation is faulty! The following classes and libraries are missing:\n");
 
         isClassLoadable("org.jpo.gui.ApplicationEventHandler", "Jpo-0.14.jar", foundClasses, missingClasses );
         isClassLoadable("org.tagcloud.TagCloud", "TagCloud.jar", foundClasses, missingClasses );

@@ -1,5 +1,7 @@
 package org.jpo.gui;
 
+import org.jpo.datamodel.Settings;
+
 import java.util.ListResourceBundle;
 
 
@@ -10,8 +12,8 @@ This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -60,7 +62,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"areYouSure", "Sind Sie sicher?"},
 
             // Help About Dialog
-            {"HelpAboutText", "JPO Version 0.14 ist ein Java/Swing Programm\n"
+            {"HelpAboutText", "JPO Version " + Settings.JPO_VERSION + " ist ein Java/Swing Programm\n"
                     + "geschrieben von Richard Eigenmann, Zürich, Schweiz\n"
                     + "Copyright 2000 - 2021\n"
                     + "richard.eigenmann@gmail.com\n"
