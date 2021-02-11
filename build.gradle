@@ -268,14 +268,14 @@ task run(type: JavaExec) {
     main = 'org.jpo.Main'
 }
 
-task runExcludingTests(type: JavaExec) {
+test.onlyIf { !project.hasProperty('skipTests') }
+javadoc.onlyIf { !project.hasProperty('skipJavadoc') }
+
+tasks.register('runExcludingTests') {
     group 'build'
-    description 'Runs JPO from the shadowJar'
-    dependsOn shadowJar
-    //tasks.withType(Test) {enabled = false}
-    //tasks.withType(Javadoc) {enabled = false}
-    classpath = files( 'build/libs/Jpo-all.jar' )
-    main = 'org.jpo.Main'
+    project.ext.skipTests = true
+    project.ext.skipJavadoc = true
+    dependsOn run
 }
 
 jacoco {
@@ -296,7 +296,6 @@ plugins.withType(JacocoPlugin) {
     tasks["test"].finalizedBy 'jacocoTestReport'
 }
 
-// jacoco doesn't like JAVA 15
 check.dependsOn jacocoTestReport
 
 task uploadWebsitePages(type:Exec) {
