@@ -287,6 +287,18 @@ public class Settings {
      */
     private static int dividerWidth = 12;
     /**
+     * Setting for the width of the thumbnails. Set by default to 350 pixels.
+     */
+    private static int thumbnailSize = 350;
+    /**
+     * the minimum Dimension for the Thumbnail Panel
+     */
+    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (thumbnailSize * 1.4f), (int) (thumbnailSize * 1.8f));
+    /**
+     * the preferred Dimension for the Thumbnail Panel
+     */
+    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (thumbnailSize * 2.2f), 800);
+    /**
      * the minimum Dimension for the JPO Window
      */
     public static final Dimension jpoJFrameMinimumSize
@@ -305,18 +317,6 @@ public class Settings {
      * displayed at one time.
      */
     private static int maxThumbnails = DEFAULT_MAX_THUMBNAILS;
-    /**
-     * Setting for the width of the thumbnails. Set by default to 350 pixels.
-     */
-    private static int thumbnailSize = 350;
-    /**
-     * the minimum Dimension for the Thumbnail Panel
-     */
-    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (thumbnailSize * 1.4f), (int) (thumbnailSize * 1.8f));
-    /**
-     * the preferred Dimension for the Thumbnail Panel
-     */
-    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (thumbnailSize * 2.2f), 800);
     /**
      * The collection that should be loaded automatically
      */
