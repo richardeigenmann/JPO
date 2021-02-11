@@ -21,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Richard Eigenmann
  */
-public class ApplicationEventHandlerTest {
+class ApplicationEventHandlerTest {
 
     private static final String TEST_IMAGE = "exif-test-canon-eos-350d.jpg";
 
@@ -42,7 +42,7 @@ public class ApplicationEventHandlerTest {
      * Test Constructor
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         final ApplicationEventHandler aeh = new ApplicationEventHandler();
         assertNotNull(aeh);
         assertNotNull(JpoEventBus.getInstance());
@@ -50,7 +50,7 @@ public class ApplicationEventHandlerTest {
 
 
     @Test
-    public void testDeleteNodeAndFile() {
+    void testDeleteNodeAndFile() {
         try {
             // Create a collection
             final Path tempDir = Files.createTempDirectory("testDeleteNodeAndFile");

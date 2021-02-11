@@ -22,8 +22,8 @@ import java.util.prefs.Preferences;
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
- * distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ * Without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
  * PARTICULAR PURPOSE. See the GNU General Public License for more details. You
  * should have received a copy of the GNU General Public License along with this
  * program; if not, write to the Free Software Foundation, Inc., 59 Temple Place
@@ -632,6 +632,11 @@ public class Settings {
         return writeLog;
     }
 
+    /**
+     * Sets the writeLog flag
+     *
+     * @param writeLog the value to set the writelog flag to.
+     */
     public static void setWriteLog(boolean writeLog) {
         Settings.writeLog = writeLog;
     }
@@ -661,10 +666,20 @@ public class Settings {
         }
     }
 
+    /**
+     * Returns the position and size of the last main window
+     *
+     * @return the position and size of the last main window
+     */
     public static Rectangle getLastMainFrameCoordinates() {
         return lastMainFrameCoordinates;
     }
 
+    /**
+     * Remembers the position and size of the last Main Window
+     *
+     * @param mainFrameCoordinates The position and size of the last main window
+     */
     public static void setLastMainFrameCoordinates(final Rectangle mainFrameCoordinates) {
         LOGGER.log(Level.INFO, "Remembering the last main frame coordinates: {0}", mainFrameCoordinates);
         if (Settings.lastMainFrameCoordinates != mainFrameCoordinates) {
@@ -720,10 +735,20 @@ public class Settings {
         }
     }
 
+    /**
+     * Returns the maximum number of thumbnails to show on the Thumbnail Panel
+     *
+     * @return the maximum number of thumbnails to show on the Thumbnail Panel
+     */
     public static int getMaxThumbnails() {
         return maxThumbnails;
     }
 
+    /**
+     * Remembers the maximum number of thumbnails to show on the Thumbnail Panel
+     *
+     * @param maxThumbnails The number to remember
+     */
     public static void setMaxThumbnails(int maxThumbnails) {
         Settings.maxThumbnails = maxThumbnails;
     }

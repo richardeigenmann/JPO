@@ -47,8 +47,8 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_RI
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -71,6 +71,7 @@ public class ApplicationEventHandler {
      */
     private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandler.class.getName());
     private static final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
+    public static final String GENERIC_INFO = Settings.getJpoResources().getString("genericInfo");
 
     /**
      * This class handles most of the events flying around the JPO application
@@ -228,7 +229,7 @@ public class ApplicationEventHandler {
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 String.format(Settings.getJpoResources().getString("moveToNewLocationSuccess"), picsMoved, request.nodes().size()),
-                Settings.getJpoResources().getString("genericInfo"),
+                GENERIC_INFO,
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -1062,7 +1063,7 @@ public class ApplicationEventHandler {
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 String.format(Settings.getJpoResources().getString("copyToNewLocationSuccess"), picsCopied, request.nodes().size()),
-                Settings.getJpoResources().getString("genericInfo"),
+                GENERIC_INFO,
                 JOptionPane.INFORMATION_MESSAGE);
 
     }
@@ -1182,7 +1183,7 @@ public class ApplicationEventHandler {
 
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 String.format("Copied %d files of %d to zipfile %s", picsCopied, request.nodes().size(), request.targetZipfile()),
-                Settings.getJpoResources().getString("genericInfo"),
+                GENERIC_INFO,
                 JOptionPane.INFORMATION_MESSAGE);
 
     }

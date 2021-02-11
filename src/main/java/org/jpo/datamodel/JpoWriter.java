@@ -223,7 +223,12 @@ public class JpoWriter {
 
     /**
      * Only to be used in the unit tests
-     * @param pictureInfo The PictureInfo
+     *
+     * @param pictureInfo      The PictureInfo
+     * @param bufferedWriter   The buffered writer
+     * @param highresTargetDir The highres target directory
+     * @param copyPics         whether to copy the pictures
+     * @throws IOException throws an IOException when things go wrong
      */
     @TestOnly
     public static void writePictureTestOnly(final PictureInfo pictureInfo,

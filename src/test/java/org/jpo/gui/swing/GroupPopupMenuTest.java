@@ -24,11 +24,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
-public class GroupPopupMenuTest {
+class GroupPopupMenuTest {
 
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         FailOnThreadViolationRepaintManager.install();
     }
@@ -56,7 +56,7 @@ public class GroupPopupMenuTest {
     private JMenuItem properties;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
         try {
@@ -91,7 +91,7 @@ public class GroupPopupMenuTest {
      * Test that out Group Node was created for the correct node.
      */
     @Test
-    public void testRememberingPopupNode() {
+    void testRememberingPopupNode() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -117,7 +117,7 @@ public class GroupPopupMenuTest {
      * Get the children
      */
     @Test
-    public void testGetChildren() {
+    void testGetChildren() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {

@@ -16,10 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-public class CategoryPopupMenuTest {
+class CategoryPopupMenuTest {
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
@@ -27,7 +27,7 @@ public class CategoryPopupMenuTest {
      * Tests constructing a CategoryEditorJFrame
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -40,7 +40,7 @@ public class CategoryPopupMenuTest {
 
                 final CategoryPopupMenu jPopupMenu = new CategoryPopupMenu(nodes);
                 assertNotNull(jPopupMenu);
-                assertEquals(jPopupMenu.getLabel(), "Add a Category to the Picture");
+                assertEquals("Add a Category to the Picture", jPopupMenu.getLabel());
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());

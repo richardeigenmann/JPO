@@ -10,10 +10,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TagCloudControllerTest {
+class TagCloudControllerTest {
 
     @Test
-    public void testAddWord() {
+    void testAddWord() {
         final Map<String, Integer> wordCountMap = new HashMap<>();
 
         try {
@@ -31,7 +31,7 @@ public class TagCloudControllerTest {
     }
 
     @Test
-    public void testSplitAndAdd() {
+    void testSplitAndAdd() {
         final Map<String, Integer> wordCountMap = new HashMap<>();
 
         try {
@@ -50,7 +50,7 @@ public class TagCloudControllerTest {
     }
 
     @Test
-    public void testSplitAndAddApostrophe() {
+    void testSplitAndAddApostrophe() {
         final Map<String, Integer> wordCountMap = new HashMap<>();
 
         try {
@@ -69,7 +69,7 @@ public class TagCloudControllerTest {
     }
 
     @Test
-    public void testSplitAndAddNoNumbers() {
+    void testSplitAndAddNoNumbers() {
         final Map<String, Integer> wordCountMap = new HashMap<>();
 
         try {
