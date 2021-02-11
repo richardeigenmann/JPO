@@ -1,5 +1,7 @@
 package org.jpo.gui.swing;
 
+import org.jpo.datamodel.Settings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Logger;
@@ -10,8 +12,8 @@ import java.util.logging.Logger;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -82,21 +84,26 @@ public class ResizableJFrame
         /**
          * Switches the window to a custom size and position.
          */
-        WINDOW_CUSTOM_SIZE
+        WINDOW_CUSTOM_SIZE,
+        /**
+         * Switches the window to the position of the last viewer
+         */
+        WINDOW_CUSTOM_SIZE_LAST_VIEWER,
+        /**
+         * Switches the window to the position of the main window
+         */
+        WINDOW_CUSTOM_SIZE_MAIN_FRAME
     }
 
     /**
      * Creates a new instance of ResizableJFrame
+     * After instantiating the class you need to add the Component you want to show, call pack and setVisible just
+     * like a normal JFrame. You can then call switchWindowMode to set it to the desired size.
      *
-     * @param title     Title for the frame
-     * @param component The Component to show in the frame
+     * @param title Title for the frame
      */
-    public ResizableJFrame(final String title, final Component component, final WindowSize initialSize) {
+    public ResizableJFrame(final String title) {
         super(title);
-        getContentPane().add(component);
-        pack();
-        setVisible(true);
-        switchWindowMode(initialSize);
     }
 
     /**
@@ -131,6 +138,8 @@ public class ResizableJFrame
             case WINDOW_TOP_RIGHT -> setBounds(ScreenHelper.getTopRightScreenBounds());
             case WINDOW_BOTTOM_LEFT -> setBounds(ScreenHelper.getBottomLeftScreenBounds());
             case WINDOW_BOTTOM_RIGHT -> setBounds(ScreenHelper.getBottomRightScreenBounds());
+            case WINDOW_CUSTOM_SIZE_MAIN_FRAME -> setBounds(Settings.getLastMainFrameCoordinates());
+            case WINDOW_CUSTOM_SIZE_LAST_VIEWER -> setBounds(Settings.getLastViewerCoordinates());
             // no default is deliberate
         }
     }

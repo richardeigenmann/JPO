@@ -23,8 +23,8 @@ import java.util.logging.Logger;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -52,21 +52,21 @@ public class MainWindow extends ResizableJFrame {
      * The controller for the Docking Frames framework that controls all the
      * internal windows.
      */
-    private final CControl control;
+    private final transient CControl control;
 
     /**
      * The grid to which all components are added
      */
-    private final CGrid grid;
+    private final transient CGrid grid;
     /**
      * A handle to the Collection Tree so that we can ask it to move to the
      * front.
      */
-    private DefaultSingleCDockable tree;
+    private transient DefaultSingleCDockable tree;
     /**
      * A handle to the Searches Tree so that we can ask it to move to the front.
      */
-    private DefaultSingleCDockable searches;
+    private transient DefaultSingleCDockable searches;
 
     /**
      * Creates the JPO window and lays out the components. It registers itself
@@ -83,14 +83,17 @@ public class MainWindow extends ResizableJFrame {
      * @see UpdateApplicationTitleRequest
      */
     public MainWindow() {
-        super("JPO", new JLabel("starting up..."), WindowSize.WINDOW_TOP_LEFT);
+        super(Settings.getJpoResources().getString("ApplicationTitle"));
         // Set up Docking Frames
         control = new CControl(this);
         grid = new CGrid(control);
+        initComponents();
+    }
+
+    private void initComponents() {
 
         Settings.setMainWindow(this);
-
-        initComponents();
+        Settings.setAnchorFrame(this);
         JpoEventBus.getInstance().register(this);
 
         addWindowListener(new WindowAdapter() {
@@ -101,17 +104,14 @@ public class MainWindow extends ResizableJFrame {
                 JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new ShutdownApplicationRequest()));
             }
         });
-    }
 
-    private void initComponents() {
-        Settings.setAnchorFrame(this);
+
         try {
             final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel(Windows);
         } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             LOGGER.fine("Could not set Look and Feel");
         }
-        setTitle(Settings.getJpoResources().getString("ApplicationTitle"));
 
         setMinimumSize(Settings.jpoJFrameMinimumSize);
         setPreferredSize(Settings.getLastMainFrameCoordinates().getSize());
@@ -128,17 +128,15 @@ public class MainWindow extends ResizableJFrame {
         final JScrollPane statsScroller = new JScrollPane(infoPanelController.getInfoPanel());
         statsScroller.setWheelScrollingEnabled(true);
         statsScroller.getVerticalScrollBar().setUnitIncrement(20);
+
         pack();
+        setVisible(true);
 
         switch (Settings.getStartupSizeChoice()) {
             case 0 -> switchWindowMode(WindowSize.WINDOW_DECORATED_FULLSCREEN);
             case 1 -> switchWindowMode(WindowSize.WINDOW_DECORATED_PRIMARY);
             case 2 -> switchWindowMode(WindowSize.WINDOW_DECORATED_SECONDARY);
-            default -> {
-                switchWindowMode(WindowSize.WINDOW_CUSTOM_SIZE);
-                setBounds(Settings.getLastMainFrameCoordinates());
-                LOGGER.log(Level.INFO, "Setting MainWindow bounds: {0}", Settings.getLastMainFrameCoordinates());
-            }
+            default -> switchWindowMode(WindowSize.WINDOW_CUSTOM_SIZE_MAIN_FRAME);
         }
 
         final Component thumbnailPanel = (new ThumbnailsPanelController()).getView();

@@ -10,6 +10,7 @@ import org.jpo.gui.ScalablePicture;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.logging.Logger;
 
 /*
  PictureFrame.java:  Class that manages the frame and display of the Picture
@@ -19,8 +20,8 @@ import java.awt.*;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -28,6 +29,7 @@ import java.awt.*;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Class that manages the frame and display of the Picture.
  *
@@ -35,12 +37,53 @@ import java.awt.*;
  */
 public class PictureFrame {
 
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(PictureFrame.class.getName());
 
     /**
      * The pane that handles the image drawing aspects.
-     *
      */
-    private final OverlayedPictureController pictureController = new OverlayedPictureController( new ScalablePicture() );
+    private final OverlayedPictureController pictureController = new OverlayedPictureController(new ScalablePicture());
+    /**
+     * Navigation Panel
+     */
+    private final PictureViewerNavBar navButtonPanel = new PictureViewerNavBar();
+    /**
+     * The root JPanel
+     */
+    private final JPanel viewerPanel;
+    /**
+     * The Window in which the viewer will place it's components.
+     */
+    private final ResizableJFrame myJFrame;
+    /**
+     * progress bar to track the pictures loaded so far
+     */
+    private final JProgressBar loadJProgressBar = new JProgressBar();
+    /**
+     * This textarea shows the description of the picture being shown
+     */
+    private final JTextArea descriptionJTextField = new JTextArea();
+
+    /**
+     * Constructor. Initialises the GUI widgets.
+     */
+    public PictureFrame() {
+        viewerPanel = new JPanel();
+        inittializeGui();
+        myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"));
+        myJFrame.getContentPane().add(viewerPanel);
+        myJFrame.pack();
+        switch (Settings.getNewViewerSizeChoice()) {
+            case 0 -> myJFrame.switchWindowMode(ResizableJFrame.WindowSize.WINDOW_DECORATED_FULLSCREEN);
+            case 1 -> myJFrame.switchWindowMode(ResizableJFrame.WindowSize.WINDOW_DECORATED_PRIMARY);
+            case 2 -> myJFrame.switchWindowMode(ResizableJFrame.WindowSize.WINDOW_DECORATED_SECONDARY);
+            default -> myJFrame.switchWindowMode(ResizableJFrame.WindowSize.WINDOW_CUSTOM_SIZE_LAST_VIEWER);
+        }
+        myJFrame.setVisible(true);
+    }
 
     /**
      * Provides direct access to the panel that shows the picture.
@@ -50,10 +93,6 @@ public class PictureFrame {
     public OverlayedPictureController getPictureController() {
         return pictureController;
     }
-    /**
-     * Navigation Panel
-     */
-    private final PictureViewerNavBar navButtonPanel = new PictureViewerNavBar();
 
     /**
      * Provides direct access to the navButtonPanel
@@ -65,27 +104,6 @@ public class PictureFrame {
     }
 
     /**
-     * The root JPanel
-     */
-    private final JPanel viewerPanel;
-
-    /**
-     * The Window in which the viewer will place it's components.
-     *
-     */
-    private final ResizableJFrame myJFrame;
-
-    /**
-     * progress bar to track the pictures loaded so far
-     */
-    private final JProgressBar loadJProgressBar = new JProgressBar();
-    /**
-     * This textarea shows the description of the picture being shown
-     *
-     */
-    private final JTextArea descriptionJTextField = new JTextArea();
-
-    /**
      * Returns the Component of the Description Text Area so that others can
      * attach a FocusListener to it.
      *
@@ -93,15 +111,6 @@ public class PictureFrame {
      */
     public Component getFocussableDescriptionField() {
         return descriptionJTextField;
-    }
-
-    /**
-     * Constructor. Initialises the GUI widgets.
-     */
-    public PictureFrame() {
-        viewerPanel = new JPanel();
-        inittializeGui();
-        myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"), viewerPanel, ResizableJFrame.WindowSize.WINDOW_DECORATED_FULLSCREEN);
     }
 
     /**
@@ -165,6 +174,15 @@ public class PictureFrame {
     }
 
     /**
+     * Returns the description that the user could have modified
+     *
+     * @return the description
+     */
+    public String getDescription() {
+        return descriptionJTextField.getText();
+    }
+
+    /**
      * Sets the description to the supplied string.
      *
      * @param newDescription The new description to be shown
@@ -172,15 +190,6 @@ public class PictureFrame {
     public void setDescription(String newDescription) {
         Tools.checkEDT();
         descriptionJTextField.setText(newDescription);
-    }
-
-    /**
-     * Returns the description that the user could have modified
-     *
-     * @return the description
-     */
-    public String getDescription() {
-        return descriptionJTextField.getText();
     }
 
     /**
@@ -194,6 +203,7 @@ public class PictureFrame {
     }
 
     public void getRid() {
+        Settings.setLastViewerCoordinates(myJFrame.getBounds());
         myJFrame.dispose();
     }
 
@@ -224,5 +234,5 @@ public class PictureFrame {
         pictureController.requestFocusInWindow();
     }
 
- 
+
 }

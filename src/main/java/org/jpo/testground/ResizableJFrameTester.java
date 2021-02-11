@@ -23,8 +23,8 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -37,19 +37,23 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
  * A class to test the ResizableJFrame. This can be problematic because
  * different users are likely to have different screen configurations.
  */
-public class ResizableJFrameTest {
+public class ResizableJFrameTester {
 
     /**
      * Constructor for the test window
      */
-    public ResizableJFrameTest() {
+    public ResizableJFrameTester() {
 
         final JPanel bluePanel = new JPanel();
         bluePanel.setBackground(Color.CYAN);
         bluePanel.setMaximumSize(new Dimension(200, 200));
         bluePanel.setPreferredSize(new Dimension(250, 250));
 
-        final ResizableJFrame resizableJFrame = new ResizableJFrame("Blue Window", bluePanel, WINDOW_BOTTOM_RIGHT);
+        final ResizableJFrame resizableJFrame = new ResizableJFrame("Blue Window");
+        resizableJFrame.getContentPane().add(bluePanel);
+        resizableJFrame.pack();
+        resizableJFrame.switchWindowMode(WINDOW_BOTTOM_RIGHT);
+        resizableJFrame.setVisible(true);
         resizableJFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         final JPanel buttonPanel = new JPanel();
@@ -151,10 +155,10 @@ public class ResizableJFrameTest {
     public static void main(final String[] args) {
         Settings.loadSettings();
         try {
-            SwingUtilities.invokeAndWait(ResizableJFrameTest::new
+            SwingUtilities.invokeAndWait(ResizableJFrameTester::new
             );
         } catch (final InterruptedException | InvocationTargetException ex) {
-            Logger.getLogger(ResizableJFrameTest.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ResizableJFrameTester.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
         }
     }

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-public class ResizableJFrameTest {
+class ResizableJFrameTest {
 
     @BeforeAll
     public static void setUpOnce() {
@@ -23,11 +23,11 @@ public class ResizableJFrameTest {
      * Test the listener
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ResizableJFrame frame = new ResizableJFrame("Title", new JPanel(), ResizableJFrame.WindowSize.WINDOW_TOP_LEFT);
+                final ResizableJFrame frame = new ResizableJFrame("Title");
                 assertNotNull(frame);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
