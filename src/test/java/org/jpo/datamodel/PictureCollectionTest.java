@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2019  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -246,25 +246,25 @@ public class PictureCollectionTest {
         assertEquals(1, pictureCollection.getMailSelectedNodes().size());
     }
 
-    private int selectedCount;
-    private int unselectedCount;
-    private int mailSelectedCount;
-    private int mailUnselectedCount;
+    private class CountingPictureInfoChangeListener implements PictureInfoChangeListener {
+        public int selectedCount;
+        public int unselectedCount;
+        public int mailSelectedCount;
+        public int mailUnselectedCount;
 
-    /**
-     * Let's create a quick and dirty change listener
-     */
-    private final PictureInfoChangeListener listener = e -> {
-        if (e.getWasSelected()) {
-            selectedCount++;
-        } else if (e.getWasUnselected()) {
-            unselectedCount++;
-        } else if (e.getWasMailSelected()) {
-            mailSelectedCount++;
-        } else if (e.getWasMailUnselected()) {
-            mailUnselectedCount++;
+        @Override
+        public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
+            if (pictureInfoChangeEvent.getWasSelected()) {
+                selectedCount++;
+            } else if (pictureInfoChangeEvent.getWasUnselected()) {
+                unselectedCount++;
+            } else if (pictureInfoChangeEvent.getWasMailSelected()) {
+                mailSelectedCount++;
+            } else if (pictureInfoChangeEvent.getWasMailUnselected()) {
+                mailUnselectedCount++;
+            }
         }
-    };
+    }
 
     /**
      * Test for the Select notification
@@ -272,43 +272,42 @@ public class PictureCollectionTest {
     @Test
     public void testSelectNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        pi1.addPictureInfoChangeListener(listener);
-        selectedCount = 0;
-        unselectedCount = 0;
-        pictureCollection.addToSelectedNodes( picture1 );
+        final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
+        pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
+        pictureCollection.addToSelectedNodes(picture1);
         // We should have received a notification that the picture was selected
-        assertEquals(  1, selectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.selectedCount);
 
         // do it again.
-        pictureCollection.addToSelectedNodes( picture1 );
+        pictureCollection.addToSelectedNodes(picture1);
         // As we are adding the same node again we should not get a change event
-        assertEquals( 1, selectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.selectedCount);
 
         // add another node where we are not listening.
         pictureCollection.addToSelectedNodes( picture2 );
         // As we are not listening on the second node we should still be with 1 event
-        assertEquals( 1, selectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.selectedCount);
 
         pictureCollection.removeFromSelection( picture1 );
         // We should have received a notification that the picture was unselected
-        assertEquals( 1, unselectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.unselectedCount);
 
         pictureCollection.addToSelectedNodes( picture1 );
         // We should have received a notification that the picture was selected
-        assertEquals( 2, selectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.selectedCount);
 
         pictureCollection.clearSelection();
         // We should have received a notification that the picture was unselected
-        assertEquals( 2, unselectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.unselectedCount);
 
-        pi1.removePictureInfoChangeListener( listener );
-        pictureCollection.addToSelectedNodes( picture1 );
+        pi1.removePictureInfoChangeListener(countingPictureInfoChangeListener);
+        pictureCollection.addToSelectedNodes(picture1);
         // We should not have received a notification that the picture was selected
-        assertEquals( 2, selectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.selectedCount);
 
         pictureCollection.clearSelection();
         // We should have received a notification that the picture was unselected
-        assertEquals( 2, unselectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.unselectedCount);
     }
 
     /**
@@ -317,18 +316,17 @@ public class PictureCollectionTest {
     @Test
     public void testClearMailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        pi1.addPictureInfoChangeListener(listener);
-        mailSelectedCount = 0;
-        mailUnselectedCount = 0;
-        pictureCollection.addToMailSelection( picture1 );
+        final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
+        pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
+        pictureCollection.addToMailSelection(picture1);
         // We should have received a notification that the picture was selected
-        assertEquals(  1, mailSelectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.mailSelectedCount);
 
         // Before the removal we should have 0 unselect events
-        assertEquals( 0, mailUnselectedCount );
+        assertEquals(0, countingPictureInfoChangeListener.mailUnselectedCount);
         pictureCollection.clearMailSelection();
         // We should have received a notification that the picture was unselected
-        assertEquals( 1, mailUnselectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.mailUnselectedCount);
     }
 
     /**
@@ -337,45 +335,44 @@ public class PictureCollectionTest {
     @Test
     public void testMailSelectNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        pi1.addPictureInfoChangeListener(listener);
-        mailSelectedCount = 0;
-        mailUnselectedCount = 0;
-        pictureCollection.addToMailSelection( picture1 );
+        final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
+        pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
+        pictureCollection.addToMailSelection(picture1);
         // We should have received a notification that the picture was selected
-        assertEquals(  1, mailSelectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.mailSelectedCount);
 
         // do it again.
-        pictureCollection.addToMailSelection( picture1 );
+        pictureCollection.addToMailSelection(picture1);
         // As we are adding the same node again we should not get a change event
-        assertEquals( 1, mailSelectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.mailSelectedCount);
 
         // add another node where we are not listening.
         pictureCollection.addToMailSelection( picture2 );
         // As we are not listening on the second node we should still be with 1 event
-        assertEquals( 1, mailSelectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.mailSelectedCount);
 
         // Before the removal we should have 0 unselect events
-        assertEquals( 0, mailUnselectedCount );
-        pictureCollection.removeFromMailSelection( picture1 );
+        assertEquals(0, countingPictureInfoChangeListener.mailUnselectedCount);
+        pictureCollection.removeFromMailSelection(picture1);
         // We should have received a notification that the picture was unselected
-        assertEquals( 1, mailUnselectedCount );
+        assertEquals(1, countingPictureInfoChangeListener.mailUnselectedCount);
 
         pictureCollection.addToMailSelection( picture1 );
         // We should have received a notification that the picture was selected
-        assertEquals( 2, mailSelectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.mailSelectedCount);
 
         pictureCollection.clearMailSelection();
         // We should have received a notification that the picture was unselected
-        assertEquals( 2, mailUnselectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.mailUnselectedCount);
 
-        pi1.removePictureInfoChangeListener( listener );
-        pictureCollection.addToMailSelection( picture1 );
+        pi1.removePictureInfoChangeListener(countingPictureInfoChangeListener);
+        pictureCollection.addToMailSelection(picture1);
         // We should not have received a notification that the picture was selected
-        assertEquals( 2, mailSelectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.mailSelectedCount);
 
         pictureCollection.clearSelection();
         // We should have received a notification that the picture was unselected
-        assertEquals(  2, mailUnselectedCount );
+        assertEquals(2, countingPictureInfoChangeListener.mailUnselectedCount);
 
     }
 
