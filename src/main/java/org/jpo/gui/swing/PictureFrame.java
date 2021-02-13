@@ -10,7 +10,6 @@ import org.jpo.gui.ScalablePicture;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.logging.Logger;
 
 /*
  PictureFrame.java:  Class that manages the frame and display of the Picture
@@ -36,11 +35,6 @@ import java.util.logging.Logger;
  * @author Richard Eigenmann
  */
 public class PictureFrame {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(PictureFrame.class.getName());
 
     /**
      * The pane that handles the image drawing aspects.

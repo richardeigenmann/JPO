@@ -2047,7 +2047,6 @@ public class Settings {
      * @param ignore send true to turn off version alerting
      */
     public static void setIgnoreVersionAlerts(final boolean ignore) {
-        LOGGER.info("Setting ignoreVersionAlerts to: " + ignore);
         if (ignoreVersionAlerts != ignore) {
             ignoreVersionAlerts = ignore;
             setUnsavedSettingChanges(true);

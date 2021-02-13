@@ -348,7 +348,7 @@ public class SettingsDialog extends JDialog {
         thumbnailsJPanel.add(jpgQualitySlider, "wrap");
 
         //Create the label table
-        Dictionary<Integer, JLabel> labelTable = new Hashtable<>();
+        final Dictionary<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
         labelTable.put(80, new JLabel(Settings.getJpoResources().getString("jpgQualityGood")));
         labelTable.put(100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));
