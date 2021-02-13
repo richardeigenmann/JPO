@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
 import org.json.JSONObject;
 
@@ -58,7 +59,7 @@ public class VersionUpdate {
                 EventQueue.invokeLater(() -> showOutOfDateDialog(latestVersion));
             }
         } catch (final IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Could not determine latest version: {0}", e.getMessage());
         }
     }
 
@@ -90,6 +91,12 @@ public class VersionUpdate {
         return obj.getString("currentVersion");
     }
 
+    @TestOnly
+    public static String getLatestJpoVersionTestOnly() throws IOException {
+        return getLatestJpoVersion();
+    }
+
+
     /**
      * This method checks the Settings to determine if we are allowed to check for version updates. This
      * is only allowed if the ignoreVersionAlerts flag is not set and if that is OK, then we must not
@@ -102,12 +109,11 @@ public class VersionUpdate {
     }
 
     private void showOutOfDateDialog(final String latestVersion) {
-        final JEditorPane ep = new JEditorPane("text/html", "<html><body>"
-                + "You are running version " + Settings.JPO_VERSION
-                + " of JPO.<br>The current version is " + latestVersion
-                + "<br>Would you like to visit the website<br><a href=\"" + Settings.JPO_DOWNLOAD_URL
-                + "\">" + Settings.JPO_DOWNLOAD_URL + "</a><br>so you can upgrade?"
-                + "</body></html>");
+        final String outdatedMessage = String.format(
+                Settings.getJpoResources().getString("VersionUpdate.outdatedMessage"),
+                Settings.JPO_VERSION, latestVersion, Settings.JPO_DOWNLOAD_URL, Settings.JPO_DOWNLOAD_URL);
+        final JEditorPane ep = new JEditorPane("text/html", outdatedMessage);
+
         ep.addHyperlinkListener(e -> {
             if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
                 openDownloadLinkInBrowser();
@@ -115,7 +121,7 @@ public class VersionUpdate {
         ep.setEditable(false);
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
-        final JCheckBox snoozeJCheckBox = new JCheckBox("Snooze alert for a fortnight");
+        final JCheckBox snoozeJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.snoozeJCheckBox"));
 
         ep.setFont(snoozeJCheckBox.getFont());
 
@@ -131,7 +137,7 @@ public class VersionUpdate {
 
         snoozeJCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        final JCheckBox neverShowJCheckBox = new JCheckBox("Don't ask again (Edit > Settings)");
+        final JCheckBox neverShowJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.neverShowJCheckBox"));
         neverShowJCheckBox.addItemListener(neverShowListener -> Settings.setIgnoreVersionAlerts(neverShowListener.getStateChange() == SELECTED));
 
         final JPanel content = new JPanel();

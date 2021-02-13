@@ -706,7 +706,19 @@ public class JpoResources_de extends ListResourceBundle {
             {"org.jpo.dataModel.XmlReader.progressUpdate", "%d Gruppen und %d Bilder geladen"},
 
             //CategoryPopupMenu
-            {"CategoryPopupMenu", "Add a Category to the Picture"}
+            {"CategoryPopupMenu", "Add a Category to the Picture"},
+
+            //VersionUpdate
+            {"VersionUpdate.outdatedMessage", """
+                    <html><body>
+                    Sie verwenden die Version %s
+                    von JPO.<br>Die aktuelle Version ist %s 
+                    <br>Möchten Sie die Webseite <br>
+                    <a href="%s">%s</a><br> öffnen, von der aus Sie aktualisieren können?
+                    </body></html>"""},
+            {"VersionUpdate.snoozeJCheckBox", "Diese Benachrichtigung für 2 Wochen aussetzen"},
+            {"VersionUpdate.neverShowJCheckBox", "Nie mehr fragen (Editieren > Einstellungen)"}
+
     };
 }
 

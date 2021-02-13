@@ -712,7 +712,19 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"org.jpo.dataModel.XmlReader.progressUpdate", "%d 组 %d 图片 负荷"},
 
             //CategoryPopupMenu
-            {"CategoryPopupMenu", "Add a Category to the Picture"}
+            {"CategoryPopupMenu", "Add a Category to the Picture"},
+
+            //VersionUpdate
+            {"VersionUpdate.outdatedMessage", """
+                    <html><body>
+                    You are running version %s
+                    of JPO.<br>The current version is %s 
+                    <br>Would you like to visit the website<br>
+                    <a href="%s">%s</a><br>so you can upgrade?
+                    </body></html>"""},
+            {"VersionUpdate.snoozeJCheckBox", "Snooze alert for a fortnight"},
+            {"VersionUpdate.neverShowJCheckBox", "Don't ask again (Edit > Settings)"}
+
     };
 }
 
