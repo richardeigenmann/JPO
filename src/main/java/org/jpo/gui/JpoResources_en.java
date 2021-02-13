@@ -121,6 +121,8 @@ public class JpoResources_en extends ListResourceBundle {
             {"browserWindowSettingsJPanel", "General"},
             {"languageJLabel", "Language:"},
             {"autoLoadJLabelLabel", "Automatically load:"},
+            {"wordCloudWordJLabel", "Max Word Cloud Words:"},
+            {"checkForUpdatesJLabel", "Check for updates on startup:"},
             {"windowSizeChoicesJlabel", "When JPO starts size Window to:"},
             {"windowSizeChoicesMaximum", "Maximum"},
             {"pictureViewerJPanel", "Picture Viewer"},
@@ -444,6 +446,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"HelpLicenseMenuItemText", "License"},
             {"HelpPrivacyMenuItemText", "Privacy"},
             {"HelpResetWindowsJMenuItem", "Reset Windows"},
+            {"HelpCheckForUpdates", "Check for Updates"},
 
             // PictureViewer
             {"autoAdvanceDialogTitle", "Start Automatic Advance Timer"},

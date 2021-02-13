@@ -6,8 +6,8 @@ package org.jpo.gui;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -29,15 +29,17 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.awt.event.ItemEvent.DESELECTED;
 
 /**
  * A window to modify the settings of the JPO application
@@ -262,34 +264,12 @@ public class SettingsDialog extends JDialog {
         generalJPanel.add(languageJLabel);
         generalJPanel.add(languageJComboBox, "wrap");
 
-        // Initial Windowsize stuff
         generalJPanel.add(new JLabel(Settings.getJpoResources().getString("windowSizeChoicesJlabel")));
 
         final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>(getWindowSizeChoices());
         startupSizeDropdown.setModel(dcbm);
         generalJPanel.add(startupSizeDropdown, "wrap");
-        startupSizeDropdown.addActionListener(new ActionListener() {
 
-            boolean firstrun = true;
-
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-            /*    if (firstrun) {
-                    // don't change the window size when setting up the gui
-                    firstrun = false;
-                } else {
-                    if (startupSizeDropdown.getSelectedIndex() == 0) {
-                        Settings.getAnchorFrame().setExtendedState(Frame.MAXIMIZED_BOTH);
-                    } else {
-                        Settings.getAnchorFrame().setExtendedState(Frame.NORMAL);
-                        Settings.getAnchorFrame().setSize(Settings.getWindowSizes()[startupSizeDropdown.getSelectedIndex()].dimension());
-                    }
-                }*/
-            }
-        });
-        // End of Initial Windowsize stuff
-
-        //Autoload stuff
         final JLabel autoLoadJLabel = new JLabel(Settings.getJpoResources().getString("autoLoadJLabelLabel"));
         generalJPanel.add(autoLoadJLabel);
 
@@ -301,10 +281,19 @@ public class SettingsDialog extends JDialog {
 
         generalJPanel.add(getAutoLoadJButton(), "wrap");
 
-        final JLabel wordCloudWordJLabel = new JLabel("Max Word Cloud Words");
+        final JLabel wordCloudWordJLabel = new JLabel(Settings.getJpoResources().getString("wordCloudWordJLabel"));
         generalJPanel.add(wordCloudWordJLabel);
 
         generalJPanel.add(tagCloudWordsJSpinner, "wrap");
+
+        final JLabel checkForUpdatesJLabel = new JLabel(Settings.getJpoResources().getString("checkForUpdatesJLabel"));
+        generalJPanel.add(checkForUpdatesJLabel);
+
+        final JCheckBox checkForUpdatesOnStartupJCheckBox = new JCheckBox("");
+        checkForUpdatesOnStartupJCheckBox.setSelected(!Settings.isIgnoreVersionAlerts());
+        checkForUpdatesOnStartupJCheckBox.addItemListener(itemEvent -> Settings.setIgnoreVersionAlerts(itemEvent.getStateChange() == DESELECTED));
+        generalJPanel.add(checkForUpdatesOnStartupJCheckBox, "wrap");
+
         return generalJPanel;
     }
 
@@ -359,7 +348,7 @@ public class SettingsDialog extends JDialog {
         thumbnailsJPanel.add(jpgQualitySlider, "wrap");
 
         //Create the label table
-        Hashtable<Integer, JLabel> labelTable = new Hashtable<>();
+        Dictionary<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
         labelTable.put(80, new JLabel(Settings.getJpoResources().getString("jpgQualityGood")));
         labelTable.put(100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));

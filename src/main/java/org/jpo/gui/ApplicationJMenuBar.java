@@ -12,13 +12,13 @@ import java.awt.event.KeyEvent;
 /*
  ApplicationJMenuBar.java:  main menu for the application
 
- Copyright (C) 2002 -2020 Richard Eigenmann.
+ Copyright (C) 2002 -2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -192,8 +192,12 @@ public class ApplicationJMenuBar extends JMenuBar {
     private final JMenuItem helpResetWindowsJMenuItem = new JMenuItem();
 
     /**
+     * Menu item to check for updates
+     */
+    private final JMenuItem helpCheckForUpdatesJMenuItem = new JMenuItem();
+
+    /**
      * Creates a menu object for use in the main frame of the application.
-     *
      */
     public ApplicationJMenuBar() {
         init();
@@ -257,6 +261,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         helpLicenseJMenuItem.setText(Settings.getJpoResources().getString("HelpLicenseMenuItemText"));
         helpPrivacyJMenuItem.setText(Settings.getJpoResources().getString("HelpPrivacyMenuItemText"));
         helpResetWindowsJMenuItem.setText(Settings.getJpoResources().getString("HelpResetWindowsJMenuItem"));
+        helpCheckForUpdatesJMenuItem.setText(Settings.getJpoResources().getString("HelpCheckForUpdates"));
     }
 
     /**
@@ -414,6 +419,9 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         helpResetWindowsJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RestoreDockablesPositionsRequest()));
         helpJMenu.add(helpResetWindowsJMenuItem);
+
+        helpCheckForUpdatesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckForUpdatesRequest(true)));
+        helpJMenu.add(helpCheckForUpdatesJMenuItem);
 
     }
 

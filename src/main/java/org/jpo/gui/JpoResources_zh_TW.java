@@ -136,6 +136,8 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"browserWindowSettingsJPanel", "一般項"},
             {"languageJLabel", "語言："},
             {"autoLoadJLabelLabel", "啟動加載："},
+            {"wordCloudWordJLabel", "Max Word Cloud Words:"},
+            {"checkForUpdatesJLabel", "Check for updates on startup:"},
             {"windowSizeChoicesJlabel", "當JPO啟動大小Window時："},
             {"windowSizeChoicesMaximum", "最大值"},
 
@@ -463,6 +465,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"HelpLicenseMenuItemText", "授權"},
             {"HelpPrivacyMenuItemText", "隱私"},
             {"HelpResetWindowsJMenuItem", "重置Windows"},
+            {"HelpCheckForUpdates", "Check for Updates"},
 
             // PictureViewer
             {"autoAdvanceDialogTitle", "自動播放"},

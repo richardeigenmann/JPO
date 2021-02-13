@@ -28,13 +28,16 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -326,6 +329,7 @@ public class ApplicationEventHandler {
         } else {
             JpoEventBus.getInstance().post(new StartNewCollectionRequest());
         }
+        JpoEventBus.getInstance().post(new CheckForUpdatesRequest(false));
     }
 
     /**
@@ -1805,6 +1809,19 @@ public class ApplicationEventHandler {
         }
     }
 
+
+    /**
+     * Listens to the CheckForUpdatesRequest and fulfills it if the conditions are met
+     *
+     * @param request the request object which contains the forceCheck flag
+     */
+    @Subscribe
+    public void handleCheckForUpdatesRequest(final CheckForUpdatesRequest request) {
+        LOGGER.log(Level.INFO, "Caught the request to check for Updates");
+        if (request.forceCheck() || VersionUpdate.mayCheckForUpdates()) {
+            new VersionUpdate();
+        }
+    }
 
     /**
      * Inner class that monitors the collection for changes and figures out

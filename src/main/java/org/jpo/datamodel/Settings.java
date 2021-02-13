@@ -9,6 +9,8 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Queue;
 import java.util.*;
@@ -611,6 +613,16 @@ public class Settings {
     private static ResourceBundle jpoResources;
     private static MainWindow mainWindow;
 
+    /**
+     * Flag to prevent the showing of new version alerts
+     */
+    private static boolean ignoreVersionAlerts = false;
+
+    /**
+     * Timestamp before which the version alerts shall not be shown
+     */
+    private static LocalDateTime snoozeVersionAlertsExpiryDateTime = LocalDateTime.now();
+
     static {
         if (preferredLeftDividerSpot < 0) {
             preferredLeftDividerSpot = 150;
@@ -1189,7 +1201,6 @@ public class Settings {
      * @return true if speed is desired
      */
     public static boolean isShowFilenamesOnThumbnailPanel() {
-        LOGGER.log(Level.INFO, "show files on Thumbnail Panel: {0}", showFilenamesOnThumbnailPanel);
         return showFilenamesOnThumbnailPanel;
     }
 
@@ -1565,6 +1576,11 @@ public class Settings {
         googleUsername = prefs.get("googleUsername", "");
         googlePassword = prefs.get("googlePassword", "");
         showFilenamesOnThumbnailPanel = prefs.getBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
+        snoozeVersionAlertsExpiryDateTime = LocalDateTime.ofEpochSecond(prefs.getLong("snoozeVersionAlertsExpiryDateTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), 0, ZoneOffset.UTC);
+        LOGGER.log(Level.INFO, "loaded snoozeVersionAlertsExpiryDateTime as {0}", snoozeVersionAlertsExpiryDateTime);
+        ignoreVersionAlerts = prefs.getBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
+        LOGGER.log(Level.INFO, "loaded ignoreVersionAlerts as {0}", ignoreVersionAlerts);
+
 
         validateCopyLocations();
         validateSettings();
@@ -1745,7 +1761,8 @@ public class Settings {
         }
         prefs.putBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
         LOGGER.log(Level.INFO, "writing showFilenamesOnThumbnailPanel as {0}", showFilenamesOnThumbnailPanel);
-
+        prefs.putLong("snoozeVersionAlertsExpiryDateTime", snoozeVersionAlertsExpiryDateTime.toEpochSecond(ZoneOffset.UTC));
+        prefs.putBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
         unsavedSettingChanges = false;
     }
 
@@ -2014,6 +2031,48 @@ public class Settings {
     public static void setMainWindow(MainWindow newMainWindow) {
         mainWindow = newMainWindow;
     }
+
+    /**
+     * Returns if version alerts are supposed to be suppressed
+     *
+     * @return true if version alerts are supposed to be suppressed
+     */
+    public static boolean isIgnoreVersionAlerts() {
+        return ignoreVersionAlerts;
+    }
+
+    /**
+     * Remembers the user choice about prompfting version alerts
+     *
+     * @param ignore send true to turn off version alerting
+     */
+    public static void setIgnoreVersionAlerts(final boolean ignore) {
+        LOGGER.info("Setting ignoreVersionAlerts to: " + ignore);
+        if (ignoreVersionAlerts != ignore) {
+            ignoreVersionAlerts = ignore;
+            setUnsavedSettingChanges(true);
+        }
+    }
+
+    /**
+     * Records the expiry DateTime before which the version alerts shall not be shown.
+     *
+     * @param expiryDateTime the exipry DateTime for the snooze
+     */
+    public static void setSnoozeVersionAlertsExpiryDateTime(final LocalDateTime expiryDateTime) {
+        if (snoozeVersionAlertsExpiryDateTime != expiryDateTime) {
+            LOGGER.log(Level.INFO, "Snoozing version alerts till: {0}", expiryDateTime);
+            snoozeVersionAlertsExpiryDateTime = expiryDateTime;
+        }
+    }
+
+    /**
+     * Returns the cords the expiry DateTime before which the version alerts shall not be shown.
+     */
+    public static LocalDateTime getSnoozeVersionAlertsExpiryDateTime() {
+        return snoozeVersionAlertsExpiryDateTime;
+    }
+
 
     /**
      * Codes to indicate the field
