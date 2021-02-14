@@ -391,9 +391,11 @@ project.tasks["sonarqube"].dependsOn jacocoTestReport
 
 /*
 
+How to do a release:
+
 On a Windows host
 cd to a directory like Desktop\build
-copy the Jpo-all.jar file there and the favicon.ico
+copy the build/libs/Jpo-all.jar file there and the web/favicon.ico
 then run
 
 "c:\Program Files (x86)\jdk-15.0.1\bin\jpackage" ^
@@ -410,6 +412,11 @@ then run
 --win-menu ^
 --verbose ^
 --dest c:\Users\richa\Desktop
+
+Then move the JPO-0.14.exe file back to the source tree into
+build/executables
+
+Make sure the file web/jpo-version.json is up to date
 
  */
 

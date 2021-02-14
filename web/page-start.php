@@ -17,9 +17,18 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" href="download.php" aria-current="page">Download</a>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="downloadDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Download
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarSupportedContent">
+                        <li><a class="dropdown-item" href="download.php">Windows 10</a></li>
+                        <li><a class="dropdown-item" href="downloadLinux.php">Linux</a></li>
+                        <li><a class="dropdown-item" href="runJavaDirectly.php">Run Java directly</a></li>
+                    </ul>
                 </li>
+
 
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarTutorialsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

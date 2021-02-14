@@ -12,6 +12,58 @@ Java Picture Organizer
 
 Homepage: http://j-po.sourceforge.net/
 
+## About JPO the Java Picture Organizer
+
+JPO is a program that helps you organise your digital pictures by putting them in collections. There you can browse the
+pictures, skip through the thumbnails, share them by email or generate a website. A powerful picture viewer allows you
+to see the pictures full screen with simple Zoom-in and Zoom-out with the left and right mouse buttons.</p>
+
+A fundamental design principle is that JPO doesn't mess with your pictures. They stay unchanged on your disk unless you
+ask JPO to move them somewhere or to delete them.
+
+JPO is not a photo editing application. There are many excellent packages out there with which you can touch up your
+pictures. You can make JPO open such a program for you.
+
+Richard Eigenmann from Z&uuml;rich has spent the last 21 years building and improving JPO as an OpenSource project. He
+hopes you will find it useful and enjoys feedback.
+
+### Features
+
+* Quickly Organize digital images into collections and groups </li>
+* Creates web pages from your collection </li>
+* Download pictures from Camera with the ability to load only the new ones</li>
+* Send rescaled images and originals via email</li>
+* View pictures as a slide show </li>
+* Simple zoom-in and zoom-out with left / right mouse buttons</li>
+* Rotation on the fly without modifying the original image</li>
+* Browse image thumbnails </li>
+* Automatically advancing slide shows</li>
+* Captures metadata and has search features</li>
+* Displays EXIF and IPTC metadata</li>
+* Export to directory facility to share via e-mail or CD-ROM </li>
+* Open XML data structures </li>
+* Pure Java, no native libraries</li>
+* Runs on Windows, Linux and Mac OS, anywhere Java runs</li>
+* Can call up outside applications</li>
+* Leaves your pictures where they are</li>
+* Can move pictures to new locations to tidy up</li>
+* Doesn't modify your original pictures</li>
+* Open source license</li>
+
+## Installing JPO on Windows 10
+
+Visit the SourceForge.net download page by clicking this green button. Note that the download starts directly after 5
+seconds. Install the application like any other windows application. You can remove it just like any other windows
+application by opening the Start menu, clicking on the cogwheel icon (Settings), choosing Apps in the Settings Window
+that opens up, scroll down to JPO and there click on the Uninstall button.
+
+[![Download Button](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/j-po/files/JPO-0.14.exe/download)
+
+<p>Alternatively, visit the <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a></p>
+
+Why the scary warning about the Unknown Publisher? I haven't figured out how to make Microsoft recognize me as a trusted
+publisher. If you know how I can improve this, please write to me.
+
 ## Exploring the code - with SourceTrail
 
 See https://sourcetrail.com
