@@ -16,8 +16,8 @@ This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -43,22 +43,6 @@ public class ThumbnailPanelTitle
     }
 
 
-    public JButton getFirstThumbnailsPageButton() {
-        return firstThumbnailsPageButton;
-    }
-
-    public JButton getNextThumbnailsPageButton() {
-        return nextThumbnailsPageButton;
-    }
-
-    public JButton getLastThumbnailsPageButton() {
-        return lastThumbnailsPageButton;
-    }
-
-    public JButton getPreviousThumbnailsPageButton() {
-        return previousThumbnailsPageButton;
-    }
-
     /**
      * Allows the caller to get a handle on the showFilenamesButton so that a controller
      * can bind to the click event and act on it.
@@ -79,28 +63,6 @@ public class ThumbnailPanelTitle
 
     private final JButton searchButton = new JButton("\uf002");
 
-    /**
-     * a button to navigate back to the first page
-     **/
-    private final JButton firstThumbnailsPageButton =
-            new JButton(new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_first.gif"))));
-    /**
-     * a button to navigate to the next page
-     **/
-    private final JButton nextThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Forward24.gif"))) );
-
-    /**
-     *  a button to navigate to the last page
-     **/
-    private final JButton lastThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_last.gif"))) );
-
-    /**
-     *  a button to navigate to the first page
-     **/
-    private final JButton previousThumbnailsPageButton =
-            new JButton( new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Back24.gif"))) );
 
     /**
      * JLabel for holding the thumbnail counts
@@ -123,19 +85,28 @@ public class ThumbnailPanelTitle
     private static final int THUMBNAILSIZE_SLIDER_MIN = 5;
 
     /**
-     *  The smallest size for the thumbnail slider
+     * The smallest size for the thumbnail slider
      */
     public static final int THUMBNAILSIZE_SLIDER_MAX = 20;
 
     /**
-     *  The starting position for the thumbnail slider
+     * The starting position for the thumbnail slider
      */
     private static final int THUMBNAILSIZE_SLIDER_INIT = 20;
 
     /**
-     *   Slider to control the size of the thumbnails
+     * The panel with the navigation buttons
      */
-    private final JSlider resizeJSlider = new JSlider( SwingConstants.HORIZONTAL,
+    private final NavigationButtonPanel navigationButtonPanel = new NavigationButtonPanel();
+
+    public NavigationButtonPanel getNavigationButtonPanel() {
+        return navigationButtonPanel;
+    }
+
+    /**
+     * Slider to control the size of the thumbnails
+     */
+    private final JSlider resizeJSlider = new JSlider(SwingConstants.HORIZONTAL,
             THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
 
     public void addResizeChangeListener(ChangeListener cl) {
@@ -146,39 +117,6 @@ public class ThumbnailPanelTitle
      * Sets up the components. Must be on the EDT.
      */
     private void initComponents() {
-        Tools.checkEDT();
-        firstThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
-        firstThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        firstThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
-        firstThumbnailsPageButton.setOpaque( false );
-        firstThumbnailsPageButton.setEnabled( false );
-        firstThumbnailsPageButton.setFocusPainted(false);
-        firstThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
-
-        previousThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
-        previousThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        previousThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
-        previousThumbnailsPageButton.setOpaque( false );
-        previousThumbnailsPageButton.setEnabled( false );
-        previousThumbnailsPageButton.setFocusPainted(false);
-        previousThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
-
-        nextThumbnailsPageButton.setBorder( BorderFactory.createEmptyBorder( 1, 1, 1, 1 ) );
-        nextThumbnailsPageButton.setPreferredSize( new Dimension( 25, 25 ) );
-        nextThumbnailsPageButton.setVerticalAlignment( SwingConstants.CENTER );
-        nextThumbnailsPageButton.setOpaque( false );
-        nextThumbnailsPageButton.setEnabled( false );
-        nextThumbnailsPageButton.setFocusPainted(false);
-        nextThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
-
-        lastThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        lastThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
-        lastThumbnailsPageButton.setVerticalAlignment(SwingConstants.CENTER);
-        lastThumbnailsPageButton.setOpaque(false);
-        lastThumbnailsPageButton.setEnabled(false);
-        lastThumbnailsPageButton.setFocusPainted(false);
-        lastThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
-
         resizeJSlider.setSnapToTicks(false);
         resizeJSlider.setMaximumSize(new Dimension(150, 40));
         resizeJSlider.setMajorTickSpacing(4);
@@ -201,15 +139,15 @@ public class ThumbnailPanelTitle
         });
 
         final BoxLayout bl = new BoxLayout(this, BoxLayout.X_AXIS);
-        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));    // JA
+        setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         setLayout(bl);
         setBackground(Color.LIGHT_GRAY);
         add(Box.createRigidArea(new Dimension(5, 0)));
-        add(firstThumbnailsPageButton);
-        add(previousThumbnailsPageButton);
-        add(nextThumbnailsPageButton);
-        add(lastThumbnailsPageButton);
-        lblPage.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));                    // JA
+
+
+        add(navigationButtonPanel);
+
+        lblPage.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         add(lblPage);
         add(title);
         add(resizeJSlider);
@@ -219,6 +157,93 @@ public class ThumbnailPanelTitle
         add(showFienamesButton);
 
         title.setFont(Settings.getTitleFont());
+    }
+
+    public class NavigationButtonPanel extends JPanel {
+
+        /**
+         * a button to navigate back to the first page
+         **/
+        private final JButton firstThumbnailsPageButton =
+                new JButton(new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_first.gif"))));
+        /**
+         * a button to navigate to the next page
+         **/
+        private final JButton nextThumbnailsPageButton =
+                new JButton(new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Forward24.gif"))));
+
+        /**
+         * a button to navigate to the last page
+         **/
+        private final JButton lastThumbnailsPageButton =
+                new JButton(new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("icon_last.gif"))));
+
+        /**
+         * a button to navigate to the first page
+         **/
+        private final JButton previousThumbnailsPageButton =
+                new JButton(new ImageIcon(Objects.requireNonNull(ThumbnailPanelTitle.class.getClassLoader().getResource("Back24.gif"))));
+
+        public NavigationButtonPanel() {
+            super();
+            final BoxLayout boxLayout = new BoxLayout(this, BoxLayout.X_AXIS);
+            setLayout(boxLayout);
+            setBackground(Color.LIGHT_GRAY);
+
+            firstThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            firstThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
+            firstThumbnailsPageButton.setVerticalAlignment(SwingConstants.CENTER);
+            firstThumbnailsPageButton.setOpaque(false);
+            firstThumbnailsPageButton.setEnabled(false);
+            firstThumbnailsPageButton.setFocusPainted(false);
+            firstThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
+
+            previousThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            previousThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
+            previousThumbnailsPageButton.setVerticalAlignment(SwingConstants.CENTER);
+            previousThumbnailsPageButton.setOpaque(false);
+            previousThumbnailsPageButton.setEnabled(false);
+            previousThumbnailsPageButton.setFocusPainted(false);
+            previousThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
+
+            nextThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            nextThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
+            nextThumbnailsPageButton.setVerticalAlignment(SwingConstants.CENTER);
+            nextThumbnailsPageButton.setOpaque(false);
+            nextThumbnailsPageButton.setEnabled(false);
+            nextThumbnailsPageButton.setFocusPainted(false);
+            nextThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
+
+            lastThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
+            lastThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
+            lastThumbnailsPageButton.setVerticalAlignment(SwingConstants.CENTER);
+            lastThumbnailsPageButton.setOpaque(false);
+            lastThumbnailsPageButton.setEnabled(false);
+            lastThumbnailsPageButton.setFocusPainted(false);
+            lastThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
+
+            add(firstThumbnailsPageButton);
+            add(previousThumbnailsPageButton);
+            add(nextThumbnailsPageButton);
+            add(lastThumbnailsPageButton);
+        }
+
+        public JButton getFirstThumbnailsPageButton() {
+            return firstThumbnailsPageButton;
+        }
+
+        public JButton getNextThumbnailsPageButton() {
+            return nextThumbnailsPageButton;
+        }
+
+        public JButton getLastThumbnailsPageButton() {
+            return lastThumbnailsPageButton;
+        }
+
+        public JButton getPreviousThumbnailsPageButton() {
+            return previousThumbnailsPageButton;
+        }
+
     }
 
     public void hideSearchField() {

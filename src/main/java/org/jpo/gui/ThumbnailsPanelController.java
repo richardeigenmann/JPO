@@ -24,8 +24,8 @@ import java.util.logging.Logger;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -213,10 +213,10 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         initThumbnailsArray();
 
         // Wire up the events
-        titleJPanel.getFirstThumbnailsPageButton().addActionListener((ActionEvent e) -> goToFirstPage());
-        titleJPanel.getPreviousThumbnailsPageButton().addActionListener((ActionEvent e) -> goToPreviousPage());
-        titleJPanel.getNextThumbnailsPageButton().addActionListener((ActionEvent e) -> goToNextPage());
-        titleJPanel.getLastThumbnailsPageButton().addActionListener((ActionEvent e) -> goToLastPage());
+        titleJPanel.getNavigationButtonPanel().getFirstThumbnailsPageButton().addActionListener((ActionEvent e) -> goToFirstPage());
+        titleJPanel.getNavigationButtonPanel().getPreviousThumbnailsPageButton().addActionListener((ActionEvent e) -> goToPreviousPage());
+        titleJPanel.getNavigationButtonPanel().getNextThumbnailsPageButton().addActionListener((ActionEvent e) -> goToNextPage());
+        titleJPanel.getNavigationButtonPanel().getLastThumbnailsPageButton().addActionListener((ActionEvent e) -> goToLastPage());
         titleJPanel.getShowFienamesButton().addActionListener((ActionEvent e) -> showFilenamesButtonClicked());
         titleJPanel.getSearchField().addActionListener((ActionEvent e) -> doSearch(titleJPanel.getSearchField().getText()));
 
@@ -587,21 +587,23 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void setButtonStatus() {
         Tools.checkEDT();
         if (startIndex == 0) {
-            titleJPanel.getFirstThumbnailsPageButton().setEnabled(false);
-            titleJPanel.getPreviousThumbnailsPageButton().setEnabled(false);
+            titleJPanel.getNavigationButtonPanel().getFirstThumbnailsPageButton().setEnabled(false);
+            titleJPanel.getNavigationButtonPanel().getPreviousThumbnailsPageButton().setEnabled(false);
         } else {
-            titleJPanel.getFirstThumbnailsPageButton().setEnabled(true);
-            titleJPanel.getPreviousThumbnailsPageButton().setEnabled(true);
+            titleJPanel.getNavigationButtonPanel().getFirstThumbnailsPageButton().setEnabled(true);
+            titleJPanel.getNavigationButtonPanel().getPreviousThumbnailsPageButton().setEnabled(true);
         }
 
         int count = mySetOfNodes.getNumberOfNodes();
         if ((startIndex + Settings.getMaxThumbnails()) < count) {
-            titleJPanel.getLastThumbnailsPageButton().setEnabled(true);
-            titleJPanel.getNextThumbnailsPageButton().setEnabled(true);
+            titleJPanel.getNavigationButtonPanel().getLastThumbnailsPageButton().setEnabled(true);
+            titleJPanel.getNavigationButtonPanel().getNextThumbnailsPageButton().setEnabled(true);
         } else {
-            titleJPanel.getLastThumbnailsPageButton().setEnabled(false);
-            titleJPanel.getNextThumbnailsPageButton().setEnabled(false);
+            titleJPanel.getNavigationButtonPanel().getLastThumbnailsPageButton().setEnabled(false);
+            titleJPanel.getNavigationButtonPanel().getNextThumbnailsPageButton().setEnabled(false);
         }
+
+        titleJPanel.getNavigationButtonPanel().setVisible(mySetOfNodes.getNumberOfNodes() >= Settings.getMaxThumbnails());
     }
 
     /**
