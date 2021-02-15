@@ -4,37 +4,36 @@
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
         <!-- Indicators -->
         <div class="carousel-indicators">
-            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Organize your Pictures"></button>
+            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true"  aria-label="Organize your Pictures"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Present your Pictures"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Free Open Source Software"></button>
             <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3" aria-label="Cross Platform because of Java"></button>
         </div>
 
-        <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="carousel-item active">
-                <img src="jpo_scr_1.png" class="d-block" width=697 height=510 alt="Screenshot of JPO">
+                <img src="jpo_scr_1.png" class="d-block" style="margin-left: auto; margin-right: auto;" width=697 height=510 alt="Screenshot of JPO">
                 <div class="carousel-caption bg-dark">
                     Organize your Pictures
                 </div>
             </div>
 
             <div class="carousel-item">
-                <img src="jpo_scr_2.jpg" class="d-block" width=659 height=505 alt="Screenshot of JPO">
+                <img src="jpo_scr_2.jpg" class="d-block" style="margin-left: auto; margin-right: auto;" width=659 height=505 alt="Screenshot of JPO">
                 <div class="carousel-caption bg-dark">
                     Present your Pictures
                 </div>
             </div>
 
             <div class="carousel-item">
-                <img src="jpo_scr_6_foss.png" class="d-block" width=700 height=580 alt="JPO is Free Open Source Software">
+                <img src="jpo_scr_6_foss.png" class="d-block" style="margin-left: auto; margin-right: auto;" width=700 height=580 alt="JPO is Free Open Source Software">
                 <div class="carousel-caption bg-dark">
                     Free Open Source Software
                 </div>
             </div>
 
             <div class="carousel-item">
-                <img src="jpo_scr_3.png" class="d-block" width=700 height=580 alt="Screenshot of JPO">
+                <img src="jpo_scr_3.png" class="d-block" style="margin-left: auto; margin-right: auto;" width=700 height=580 alt="Screenshot of JPO">
                 <div class="carousel-caption bg-dark">
                     Cross Platform because of Java
                 </div>
@@ -53,6 +52,7 @@
           </button>
     </div>
 
+    <br style="height: 2em;">
 
     <p>JPO is a program that helps you organise your digital pictures by putting them in
         collections. There you can browse the pictures, skip through the thumbnails, share
@@ -121,7 +121,7 @@
     <p>Why don't you let the author know? Send him an encouraging email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
     <hr>
 
-    <p>Last update to this page: 13 Feb 2021<br>
+    <p>Last update to this page: 15 Feb 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>
