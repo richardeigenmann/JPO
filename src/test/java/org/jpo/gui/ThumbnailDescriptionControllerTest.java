@@ -96,7 +96,7 @@ public class ThumbnailDescriptionControllerTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 panel.setNode(null);
                 assertEquals("No node for this position.", panel.getDescription());
