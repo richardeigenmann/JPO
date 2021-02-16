@@ -28,13 +28,13 @@ import static org.jpo.datamodel.Tools.copyBufferedStream;
 
 
 /*
- Copyright (C) 2003 - 2020  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2021  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -71,7 +71,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param userObject User Object
      */
-    public SortableDefaultMutableTreeNode(GroupInfo userObject) {
+    public SortableDefaultMutableTreeNode(final GroupInfo userObject) {
         this((Object) userObject);
     }
 
@@ -80,7 +80,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param userObject User Object
      */
-    public SortableDefaultMutableTreeNode(PictureInfo userObject) {
+    public SortableDefaultMutableTreeNode(final PictureInfo userObject) {
         this((Object) userObject);
     }
 
@@ -264,10 +264,9 @@ public class SortableDefaultMutableTreeNode
      * found.
      */
     public SortableDefaultMutableTreeNode findFirstPicture() {
-        SortableDefaultMutableTreeNode testNode;
         final Enumeration<TreeNode> e = children();
         while (e.hasMoreElements()) {
-            testNode = (SortableDefaultMutableTreeNode) e.nextElement();
+            SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             if (testNode.getUserObject() instanceof PictureInfo) {
                 return testNode;
             } else if (testNode.getUserObject() instanceof GroupInfo) {
@@ -292,10 +291,8 @@ public class SortableDefaultMutableTreeNode
             boolean recursive) {
         final List<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
         final Enumeration<TreeNode> kids = this.children();
-        SortableDefaultMutableTreeNode node;
-
         while (kids.hasMoreElements()) {
-            node = (SortableDefaultMutableTreeNode) kids.nextElement();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
             if (recursive && node.getUserObject() instanceof GroupInfo) {
                 pictureNodes.addAll(node.getChildPictureNodes(true));
             } else if (node.getUserObject() instanceof PictureInfo) {
@@ -313,9 +310,8 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean hasChildPictureNodes() {
         final Enumeration<TreeNode> kids = this.breadthFirstEnumeration();
-        SortableDefaultMutableTreeNode node;
         while (kids.hasMoreElements()) {
-            node = (SortableDefaultMutableTreeNode) kids.nextElement();
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) kids.nextElement();
             if (node.getUserObject() instanceof PictureInfo) {
                 return true;
             }
@@ -718,7 +714,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param newNode the new node
      */
-    public void add(SortableDefaultMutableTreeNode newNode) {
+    public void add(final SortableDefaultMutableTreeNode newNode) {
         synchronized (this.getRoot()) {
             super.add(newNode);
         }
@@ -794,7 +790,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized (this.getRoot()) {
-            SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final SortableDefaultMutableTreeNode parentNode = this.getParent();
             int currentIndex = parentNode.getIndex(this);
             // abort if this action was attempted on the top node or not a child
             if (currentIndex < 1) {
