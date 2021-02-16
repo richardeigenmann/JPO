@@ -8,15 +8,15 @@ import java.util.logging.Logger;
 
 /*
  FlatGroupNavigator.java:  an implementation of the NodeNavigator for 
-browsing all the pictures of a group sequentially.
+ browsing all the pictures of a group sequentially.
 
- Copyright (C) 2006-2019 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2021 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -42,10 +42,9 @@ public class FlatGroupNavigator
      * @param groupNode The groupNode under which the pictures should be
      *                  displayed.
      */
-    public FlatGroupNavigator(SortableDefaultMutableTreeNode groupNode) {
+    public FlatGroupNavigator(final SortableDefaultMutableTreeNode groupNode) {
         this.groupNode = groupNode;
-        MyTreeModelListener myTreeModelListener = new MyTreeModelListener();
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener(myTreeModelListener);
+        Settings.getPictureCollection().getTreeModel().addTreeModelListener(new MyTreeModelListener());
         buildFromScratch();
     }
 
@@ -111,7 +110,12 @@ public class FlatGroupNavigator
 
             // Problem here is that if the current node was removed we are no longer on the node that was removed
             final TreePath currentNodeTreePath = new TreePath(groupNode.getPath());
-            for (TreePath removedChild : (TreePath[]) e.getChildren()) {
+            LOGGER.log(Level.INFO, "The current group node has this path: {0}", currentNodeTreePath);
+
+            for (final Object child : e.getChildren()) {
+                final TreePath removedChild = new TreePath(child);
+                LOGGER.log(Level.INFO, "Deleted child [{0}] has path: {1}", new Object[]{child, removedChild});
+
                 if (removedChild.isDescendant(currentNodeTreePath)) {
                     LOGGER.info("Oh dear, our group has just disappeared.");
                     clear();
@@ -126,6 +130,7 @@ public class FlatGroupNavigator
                     LOGGER.log(Level.INFO, "The removed {0} node(s) are children of the current group (which has {1} nodes)", new Object[]{childIndices.length, myNodeCount});
                     buildFromScratch();
                     notifyNodeNavigatorListeners();
+                    // TODO: How to tell a Picture Viewer that the picture it is showing has moved to up an index position?
                 }
             }
         }
