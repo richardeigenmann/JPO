@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 Richard Eigenmann -->
+<!-- see https://www.freedesktop.org/software/appstream/docs/ -->
+
+<component>
+    <id>io.sourceforge.j-po</id>
+    <name>Java Picture Organizer</name>
+    <summary>An application to organize your digital pictures</summary>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL</project_license>
+    <icon type="local" width="128" height="128">/app/share/icons/hicolor/scalable/apps/io.sourceforge.j-po.svg</icon>
+
+    <developer_name>Richard Eigenmann</developer_name>
+
+    <url type="homepage">https://j-po.sourceforge.io</url>
+    <url type="help">https://j-po.sourceforge.io/tutorial_gettingstarted.php</url>
+    <url type="bugtracker">https://github.com/richardeigenmann/JPO/issues</url>
+    <url type="contact">https://j-po.sourceforge.io/about.php</url>
+
+    <launchable type="desktop-id">io.sourceforge.j-po.desktop</launchable>
+
+    <description>
+        <p>Jpo is a program to organize, share and present your digital images. It can create webpages and
+            allows you to tag pictures. It does not modify your pictures.
+        </p>
+    </description>
+
+    <screenshots>
+        <screenshot type="default">
+            <image>https://j-po.sourceforge.io/jpo_scr_3.png</image>
+            <caption>Main view</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://j-po.sourceforge.io/jpo_scr_1.png</image>
+            <caption>Main view</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://j-po.sourceforge.io/jpo_scr_2.jpg</image>
+            <caption>Main view</caption>
+        </screenshot>
+    </screenshots>
+
+    <categories>
+        <category>Graphics</category>
+        <category>Photography</category>
+        <category>Viewer</category>
+        <category>Java</category>
+    </categories>
+
+
+    <releases>
+        <release version="0.14" date="2021-02-20">
+        </release>
+    </releases>
+
+</component>

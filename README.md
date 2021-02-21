@@ -91,9 +91,9 @@ sourcetrail
 ## Experimental: Running with Flatpak
 
 ```bash
-flatpak-builder build-dir --force-clean org.richinet.jpo.json
-flatpak-builder --run build-dir org.richinet.jpo.json flatpak-run.sh
-flatpak-builder --repo=repo --force-clean build-dir org.richinet.jpo.json
+flatpak-builder build-dir --force-clean io.sourceforge.j-po.json
+flatpak-builder --run build-dir io.sourceforge.j-po.json flatpak-run.sh
+flatpak-builder --repo=repo --force-clean build-dir io.sourceforge.j-po.json
 flatpak --user remote-add --no-gpg-verify --if-not-exists tutorial-repo repo
 flatpak --user install tutorial-repo org.richinet.jpo
 flatpak run org.richinet.jpo

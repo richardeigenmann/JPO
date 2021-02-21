@@ -230,7 +230,7 @@ task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build
 
         ant.signjar(
             destDir: "${signdir.absolutePath}",
-                  jar: 'build/libs/org.jpo-all.jar',
+                  jar: 'build/libs/Jpo-all.jar',
                   alias: props.getProperty("keyalias"),
                   storetype: "jks",
                   keystore: props.getProperty("keystoreFileName"),
@@ -242,7 +242,7 @@ task signJar(dependsOn: 'shadowJar',description: 'Sign shadowJar.',group: 'build
     }
 }
 
-task buildWindowsExecutable(type: Exec) {
+/*task buildWindowsExecutable(type: Exec) {
     group = 'build'
     dependsOn shadowJar
     File exedir  = new File("$buildDir/executables") as File
@@ -258,7 +258,7 @@ task buildWindowsInstaller(type: Exec) {
     commandLine '/usr/bin/makensis', 
         '-XOutFile ' + exedir + '/JPO-Installer-0.14.exe',
         projectDir.absolutePath + '/Windowsbuilder/jpoinstaller.nsi'
-}
+}*/
 
 
 task run(type: JavaExec) {
@@ -317,6 +317,7 @@ task uploadWebsitePages(type:Exec) {
             '--include="*.jpg"',
             '--include="*.json"',
             '--include="*.bat"',
+            '--include="*.flatpakref"',
             "${projectDir}/web/", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
@@ -336,7 +337,16 @@ task uploadWindowsInstaller(type:Exec) {
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
     //commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-Installer-${jpoVersion}.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
-    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-${jpoVersion}.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
+    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-${jpoVersion}.exe", "${buildDir}/jars/signed/Jpo-all.jar", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
+    commandLine ('rsync', '-avP', "${buildDir}/jars/signed/Jpo-all.jar", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/Jpo-all-${jpoVersion}.jar")
+}
+
+task uploadFlatpakRepo(type:Exec) {
+    group 'website'
+    description 'Publishes the JPO flatpak repo'
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine ('rsync', '-arvP', "${buildDir}/flatpak-repo", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
 task uploadWebsite() {
@@ -425,3 +435,39 @@ Make sure the file web/jpo-version.json is up to date
 
 // create favicon
 // FILE=JPO-Logo_v2.svg; inkscape -w 16 -h 16 -e 16.png ${FILE}; inkscape -w 32 -h 32 -e 32.png ${FILE}; inkscape -w 48 -h 48 -e 48.png ${FILE}; inkscape -w 64 -h 64 -e 64.png ${FILE}; convert 16.png 32.png 48.png 64.png favicon.ico
+
+
+
+/*
+depends on signJar
+# see https://blogs.gnome.org/alexl/2017/02/10/maintaining-a-flatpak-repository/
+mkdir -p build/flatpak
+flatpak run io.sourceforge.j-po
+flatpak remove io.sourceforge.j-po
+
+flatpak run io.sourceforge.j-po
+
+
+# add the repo:
+flatpak --user remote-add --no-gpg-verify flatpak-repo repo
+flatpak remotes
+
+# Install
+flatpak --user install flatpak-repo io.sourceforge.j-po
+
+flatpak-builder --user --install build/flatpak --repo=build/flatpak-repo --force-clean src/flatpak/io.sourceforge.j-po.json
+# build into repo
+flatpak-builder --repo=build/flatpak-repo --keep-build-dirs --force-clean build/flatpak src/flatpak/io.sourceforge.j-po.json
+flatpak build-export repo build/flatpak-repo build/flatpak stable
+flatpak build-sign build/flatpak-repo --gpg-sign=A67917F40940020B0134D3F53949172FBD2EAF66
+flatpak build-update-repo build/flatpak-repo --gpg-sign=A67917F40940020B0134D3F53949172FBD2EAF66
+gpg2 --export A67917F40940020B0134D3F53949172FBD2EAF66 > repo-public-key.gpg
+base64 repo-public-key.gpg | tr -d '\n'
+# add it to the flatpakref file
+# upload repo to sf
+# upload flatpakref
+
+
+flatpak --user install https://j-po.sourceforge.io/io.sourceforge.j-po.flatpakref
+
+ */

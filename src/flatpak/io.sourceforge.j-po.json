@@ -1,0 +1,58 @@
+{
+    "app-id": "io.sourceforge.j-po",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "20.08",
+    "sdk": "org.freedesktop.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.openjdk"
+    ],
+    "command": "flatpak-run.sh",
+    "modules": [
+        {
+            "name": "openjdk",
+            "buildsystem": "simple",
+            "build-commands": [
+                "/usr/lib/sdk/openjdk/install.sh"
+            ]
+        },
+        {
+            "name": "jpo",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -D Jpo-all.jar /app/bin/Jpo-all.jar",
+                "install -D flatpak-run.sh /app/bin/flatpak-run.sh",
+                "install -D io.sourceforge.j-po.desktop /app/share/applications/io.sourceforge.j-po.desktop",
+                "install -D io.sourceforge.j-po.metainfo.xml /app/share/metainfo/io.sourceforge.j-po.metainfo.xml",
+                "install -Dm644 JPO-Logo_v2.svg /app/share/icons/hicolor/scalable/apps/$FLATPAK_ID.svg"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "../../build/jars/signed/Jpo-all.jar"
+                },
+                {
+                    "type": "file",
+                    "path": "flatpak-run.sh"
+                },
+                {
+                    "type": "file",
+                    "path": "io.sourceforge.j-po.desktop"
+                },
+                {
+                    "type": "file",
+                    "path": "io.sourceforge.j-po.metainfo.xml"
+                },
+                {
+                    "type": "file",
+                    "path": "../docsrc/JPO-Logo_v2.svg"
+                }
+            ]
+        }
+    ],
+    "finish-args": [
+        "--socket=x11",
+        "--filesystem=host",
+        "--share=network",
+        "--env=PATH=/app/jre/bin:/app/bin"
+    ]
+}

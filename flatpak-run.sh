@@ -1,1 +1,0 @@
-/app/jre/bin/java -jar /app/bin/Jpo-all.jar
