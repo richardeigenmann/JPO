@@ -14,7 +14,7 @@ flatpak list
 flatpack uninstall io.sourceforge.j-po
     </pre>
 
-    <p>JPO should now show up in your application menu and possibly your desktpü with its icon.
+    <p>JPO should now show up in your application menu and possibly your desktop with its icon.
     On Ubuntu 18.0 and Debian It showed up only after a reboot. On OpenSuse it showed up right away.
     If you are impatient you can run it from the command line:
     </p>
