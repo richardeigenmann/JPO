@@ -134,7 +134,8 @@ public class ThumbnailPanelTitle
         searchButton.addActionListener(e -> {
             searchField.setVisible(!searchField.isVisible());
             Tools.checkEDT();
-            searchField.revalidate();
+            searchField.getParent().validate();
+            ;
             searchField.requestFocus();
         });
 
