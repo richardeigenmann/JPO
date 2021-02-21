@@ -11,7 +11,7 @@ flatpak --user install https://j-po.sourceforge.io/io.sourceforge.j-po.flatpakre
 flatpak list
 
 # to uninstall
-flatpack uninstall io.sourceforge.j-po
+flatpak uninstall io.sourceforge.j-po
     </pre>
 
     <p>JPO should now show up in your application menu and possibly your desktop with its icon.
