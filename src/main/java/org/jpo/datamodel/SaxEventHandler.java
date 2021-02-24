@@ -12,13 +12,13 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.Settings.FieldCodes.*;
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -33,6 +33,7 @@ import static org.jpo.datamodel.Settings.FieldCodes.*;
 public class SaxEventHandler extends DefaultHandler {
 
     private static final String LINE_SEPERATOR = System.getProperty("line.separator");
+    public static final String INDEX = "index";
     private final LabelFrame loadProgressGui;
 
     /**
@@ -120,19 +121,19 @@ public class SaxEventHandler extends DefaultHandler {
             currentField = ROTATION;
         } else if ( "LATLNG".equals( qName ) ) {
             currentField = LATLNG;
-        } else if ( "checksum".equals( qName ) ) {
+        } else if ("checksum".equals(qName)) {
             currentField = CHECKSUM;
-        } else if ( "categoryAssignment".equals( qName ) && attrs != null && attrs.getValue( "index" ) != null ) {
-            ( (PictureInfo) currentPicture.getUserObject() ).addCategoryAssignment( attrs.getValue( "index" ) );
-        } else if ( "categories".equals( qName ) ) {
+        } else if ("categoryAssignment".equals(qName) && attrs != null && attrs.getValue(INDEX) != null) {
+            ((PictureInfo) currentPicture.getUserObject()).addCategoryAssignment(attrs.getValue(INDEX));
+        } else if ("categories".equals(qName)) {
             currentField = CATEGORIES;
-        } else if ( "category".equals( qName ) && attrs != null && attrs.getValue( "index" ) != null ) {
-            temporaryCategoryIndex = attrs.getValue( "index" );
+        } else if ("category".equals(qName) && attrs != null && attrs.getValue(INDEX) != null) {
+            temporaryCategoryIndex = attrs.getValue(INDEX);
             currentField = CATEGORY;
-        } else if ( "categoryDescription".equals( qName ) ) {
+        } else if ("categoryDescription".equals(qName)) {
             currentField = CATEGORY_DESCRIPTION;
         } else {
-            LOGGER.log( Level.INFO, "XmlReader: Don''t know what to do with ELEMENT: {0}", qName );
+            LOGGER.log(Level.INFO, "XmlReader: Don''t know what to do with ELEMENT: {0}", qName);
         }
     }
 
