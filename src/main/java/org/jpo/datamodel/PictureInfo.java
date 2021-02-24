@@ -383,8 +383,9 @@ public class PictureInfo implements Serializable {
             myImageLocation = myImageLocation.concat(s);
             try {
                 imageFile = new File(new URL(myImageLocation).toURI());
-            } catch (URISyntaxException | MalformedURLException e) {
+            } catch (final URISyntaxException | MalformedURLException e) {
                 // Ignore it
+                LOGGER.log(Level.INFO, "Exception when parsing ImageLocation: {0} Exception: {1}", new Object[]{myImageLocation, e.getMessage()});
             }
             sendImageLocationChangedEvent();
         }
