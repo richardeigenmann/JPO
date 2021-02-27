@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,13 +23,13 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
-public class PicturePopupMenuTest {
+class PicturePopupMenuTest {
 
     /**
      * Defines a LOGGER for this class
@@ -72,7 +73,7 @@ public class PicturePopupMenuTest {
      * Test that out Group Node was created for the correct node.
      */
     @Test
-    public void testRememberingPopupNode() {
+    void testRememberingPopupNode() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -98,7 +99,7 @@ public class PicturePopupMenuTest {
      * Get the children
      */
     @Test
-    public void testMenuTitle() {
+    void testMenuTitle() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -116,7 +117,7 @@ public class PicturePopupMenuTest {
      * Test clicking showPicture
      */
     @Test
-    public void testShowPictureJMenuItemClick() {
+    void testShowPictureJMenuItemClick() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -144,7 +145,7 @@ public class PicturePopupMenuTest {
      * Test clicking showMap
      */
     @Test
-    public void testShowMap() {
+    void testShowMap() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -172,7 +173,7 @@ public class PicturePopupMenuTest {
      * Test clicking showMap
      */
     @Test
-    public void testOpenFolder() {
+    void testOpenFolder() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -180,11 +181,10 @@ public class PicturePopupMenuTest {
                 final SortableDefaultMutableTreeNode pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
                 final SingleNodeNavigator navigator = new SingleNodeNavigator(pictureNode);
                 final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(navigator, 0);
-                final File temp;
                 try {
-                    temp = File.createTempFile("JPO-Unit-Test", ".jpg");
-                    temp.deleteOnExit();
-                    pictureInfo.setImageLocation(temp);
+                    final File tempFile = File.createTempFile("testOpenFolder", ".jpg");
+                    tempFile.deleteOnExit();
+                    pictureInfo.setImageLocation(tempFile);
 
                     final JMenuItem openFolder = (JMenuItem) picturePopupMenu.getComponent(4);
                     assertEquals("Open Folder", openFolder.getText());
@@ -198,7 +198,8 @@ public class PicturePopupMenuTest {
                     assertEquals(0, eventsReceived[0]);
                     openFolder.doClick();
                     assertEquals(1, eventsReceived[0]);
-                } catch (IOException e) {
+                    Files.delete(tempFile.toPath());
+                } catch (final IOException e) {
                     fail(e.getMessage());
                 }
             });
@@ -209,17 +210,16 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testNavigateTo() {
+    void testNavigateTo() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final PictureInfo pictureInfo = new PictureInfo();
                 final SortableDefaultMutableTreeNode pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
-                final File temp;
                 try {
-                    temp = File.createTempFile("JPO-Unit-Test", ".jpg");
-                    temp.deleteOnExit();
-                    pictureInfo.setImageLocation(temp);
+                    final File tempFile = File.createTempFile("testNavigateTo", ".jpg");
+                    tempFile.deleteOnExit();
+                    pictureInfo.setImageLocation(tempFile);
                     final SortableDefaultMutableTreeNode parentNode = new SortableDefaultMutableTreeNode(new GroupInfo("Parent Group"));
                     parentNode.add(pictureNode);
                     Settings.getPictureCollection().getRootNode().add(parentNode);
@@ -241,7 +241,8 @@ public class PicturePopupMenuTest {
                     assertEquals(0, eventsReceived[0]);
                     navigateTo0.doClick();
                     assertEquals(1, eventsReceived[0]);
-                } catch (IOException e) {
+                    Files.delete(tempFile.toPath());
+                } catch (final IOException e) {
                     fail(e.getMessage());
                 }
             });
@@ -252,7 +253,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testCategories() {
+    void testCategories() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -277,7 +278,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testSelectForEmail() {
+    void testSelectForEmail() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -302,7 +303,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testUnselectForEmail() {
+    void testUnselectForEmail() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -328,7 +329,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testClearEmailSelection() {
+    void testClearEmailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -353,7 +354,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testUserFunctions() {
+    void testUserFunctions() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -383,7 +384,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testRotation() {
+    void testRotation() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -425,7 +426,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testRefresh() {
+    void testRefresh() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -450,7 +451,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testMove() {
+    void testMove() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -517,7 +518,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testCopy() {
+    void testCopy() {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
@@ -552,7 +553,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testCopyToClipboard() {
+    void testCopyToClipboard() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -579,7 +580,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testRemoveNode() {
+    void testRemoveNode() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -604,7 +605,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testMoveToNewLocation() {
+    void testMoveToNewLocation() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -633,7 +634,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testFileRename() {
+    void testFileRename() {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
@@ -663,7 +664,7 @@ public class PicturePopupMenuTest {
 
 
     @Test
-    public void testFileDelete() {
+    void testFileDelete() {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
@@ -690,7 +691,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testAddCategoryMenuItem() {
+    void testAddCategoryMenuItem() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -717,7 +718,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testProperties() {
+    void testProperties() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -742,18 +743,17 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testConsolidateHere() {
+    void testConsolidateHere() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final PictureInfo pictureInfo = new PictureInfo();
                 final SortableDefaultMutableTreeNode pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
                 final SingleNodeNavigator navigator = new SingleNodeNavigator(pictureNode);
-                final File temp;
                 try {
-                    temp = File.createTempFile("JPO-Unit-Test", ".jpg");
-                    temp.deleteOnExit();
-                    pictureInfo.setImageLocation(temp);
+                    final File tempFile = File.createTempFile("testConsolidateHere", ".jpg");
+                    tempFile.deleteOnExit();
+                    pictureInfo.setImageLocation(tempFile);
                     final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(navigator, 0);
                     final SortableDefaultMutableTreeNode parentNode = new SortableDefaultMutableTreeNode(new GroupInfo("Parent Group"));
                     parentNode.add(pictureNode);
@@ -770,7 +770,8 @@ public class PicturePopupMenuTest {
                     assertEquals(0, eventsReceived[0]);
                     consolidateHere.doClick();
                     assertEquals(1, eventsReceived[0]);
-                } catch (IOException e) {
+                    Files.delete(tempFile.toPath());
+                } catch (final IOException e) {
                     fail(e.getMessage());
                 }
             });
@@ -781,7 +782,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testReplaceEscapedSpaces() {
+    void testReplaceEscapedSpaces() {
         final String s = "filename%20extension.jpg";
         final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assert (o.isPresent());
@@ -789,7 +790,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testReplaceDoubleEscapedSpaces() {
+    void testReplaceDoubleEscapedSpaces() {
         final String s = "filename%20%20extension.jpg";
         final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assert (o.isPresent());
@@ -798,7 +799,7 @@ public class PicturePopupMenuTest {
 
 
     @Test
-    public void testReplace2520() {
+    void testReplace2520() {
         final String s = "/dir1/dir2/filename%2520extension%2520more.jpg";
         final Optional<String> o = PicturePopupMenu.replace2520(s);
         assert (o.isPresent());
@@ -808,14 +809,14 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testReplaceNoEscapedSpaces() {
+    void testReplaceNoEscapedSpaces() {
         final String s = "filenameExtension.jpg";
         final Optional<String> o = PicturePopupMenu.replaceEscapedSpaces(s);
         assertFalse(o.isPresent());
     }
 
     @Test
-    public void testReplaceNoEscapedSpacesSingeChars() {
+    void testReplaceNoEscapedSpacesSingeChars() {
         final String s1 = "filename2Extension.jpg";
         final Optional<String> o1 = PicturePopupMenu.replaceEscapedSpaces(s1);
         o1.ifPresent(s -> fail(String.format("There wasn't supposed to be anything that changed between%n%s and%n%s", s1, s)));
@@ -830,7 +831,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testReplaceUnderscore() {
+    void testReplaceUnderscore() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final String s = "filename_extension.jpg";
         final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
@@ -839,7 +840,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testReplaceDoubleUnderscores() {
+    void testReplaceDoubleUnderscores() {
         final String s = "filename__extension.jpg";
         final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assert (o.isPresent());
@@ -847,7 +848,7 @@ public class PicturePopupMenuTest {
     }
 
     @Test
-    public void testReplaceNoUnderscores() {
+    void testReplaceNoUnderscores() {
         final String s = "filenameExtension%20.jpg";
         final Optional<String> o = PicturePopupMenu.replaceUnderscore(s);
         assertFalse(o.isPresent());

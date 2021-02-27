@@ -23,10 +23,11 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-public class WebsiteGeneratorTest {
+class WebsiteGeneratorTest {
 
     /**
      * Defines a LOGGER for this class
@@ -37,7 +38,7 @@ public class WebsiteGeneratorTest {
      * Test of cleanupFilename method, of class WebsiteGenerator.
      */
     @Test
-    public void testCleanupFilename() {
+    void testCleanupFilename() {
         assertEquals("file_space.jpg", WebsiteGenerator.cleanupFilename("file space.jpg"));
         assertEquals("file_space.jpg", WebsiteGenerator.cleanupFilename("file%20space.jpg"));
         assertEquals("file_and_ampersand.jpg", WebsiteGenerator.cleanupFilename("file&ampersand.jpg"));
@@ -69,7 +70,7 @@ public class WebsiteGeneratorTest {
      * Test of writeCss method, of class WebsiteGenerator.
      */
     @Test
-    public void testWriteCss() {
+    void testWriteCss() {
         try {
             final Path path = Files.createTempDirectory("UnitTestsTempDir");
             final ArrayList<File> websiteMemberFiles = new ArrayList<>();
@@ -88,7 +89,7 @@ public class WebsiteGeneratorTest {
      * Test of writeRobotsTxt method, of class WebsiteGenerator.
      */
     @Test
-    public void testWriteRobotsTxt() {
+    void testWriteRobotsTxt() {
         try {
             final Path path = Files.createTempDirectory("UnitTestsTempDir");
             final ArrayList<File> websiteMemberFiles = new ArrayList<>();
@@ -107,7 +108,7 @@ public class WebsiteGeneratorTest {
      * Test of writeJpoJs method, of class WebsiteGenerator.
      */
     @Test
-    public void testWriteJpoJs() {
+    void testWriteJpoJs() {
 
         try {
             final Path path = Files.createTempDirectory("UnitTestsTempDir");
@@ -118,13 +119,13 @@ public class WebsiteGeneratorTest {
             assertEquals(1, websiteMemberFiles.size());
             Files.delete(jsFile.toPath());
             Files.delete(path);
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             fail(ex.getMessage());
         }
     }
 
     @Test
-    public void testGenerateWebsite() {
+    void testGenerateWebsite() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
 
         // set up the request
@@ -165,15 +166,7 @@ public class WebsiteGeneratorTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 WebsiteGenerator myWebsiteGenerator = WebsiteGenerator.generateWebsite(request);
-                while (!myWebsiteGenerator.isDone()) {
-                    LOGGER.info("Waiting for website to finish rendering...");
-                    try {
-                        Thread.sleep(400);
-                    } catch (final InterruptedException e) {
-                        fail("Why did the loop to wait for the website to render get interrupted?");
-                        Thread.currentThread().interrupt();
-                    }
-                }
+                await().until(() -> myWebsiteGenerator.isDone());
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             LOGGER.severe("Why was the website generation interrupted?");
@@ -214,7 +207,7 @@ public class WebsiteGeneratorTest {
     }
 
     @Test
-    public void testGenerateZipFile() {
+    void testGenerateZipFile() {
         final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
         request.setGenerateZipfile(true);
         request.setPictureNaming(GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER);
@@ -243,7 +236,7 @@ public class WebsiteGeneratorTest {
     }
 
     @Test
-    public void testGenerateFolderIcon() {
+    void testGenerateFolderIcon() {
         final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("GenerateFolderIcon");

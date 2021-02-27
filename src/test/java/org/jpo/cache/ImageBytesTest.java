@@ -3,18 +3,19 @@ package org.jpo.cache;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -27,11 +28,11 @@ import static org.junit.jupiter.api.Assertions.fail;
 /**
  * @author Richard Eigenmann
  */
-public class ImageBytesTest {
+class ImageBytesTest {
 
 
     @Test
-    public void constructorTest() {
+    void constructorTest() {
         byte[] sourceBytes = "Any String you want".getBytes();
         final ImageBytes ib = new ImageBytes(sourceBytes);
         byte[] bytes = ib.getBytes();
@@ -39,7 +40,7 @@ public class ImageBytesTest {
     }
 
     @Test
-    public void testSerializable() {
+    void testSerializable() {
         byte[] sourceBytes = "Any String you want".getBytes();
         final ImageBytes ib = new ImageBytes(sourceBytes);
         try {
@@ -49,6 +50,7 @@ public class ImageBytesTest {
             ) {
                 out.writeObject(ib);
             } catch (final IOException e) {
+                Files.delete(tempFile.toPath());
                 fail(e.getMessage());
             }
 
@@ -60,6 +62,8 @@ public class ImageBytesTest {
                 assertArrayEquals(ib.getBytes(), ib2.getBytes());
             } catch (final IOException | ClassNotFoundException ex) {
                 fail(ex.getMessage());
+            } finally {
+                Files.delete(tempFile.toPath());
             }
         } catch (final IOException e) {
             fail(e.getMessage());

@@ -12,29 +12,31 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-public class JpoWriterTest {
+class JpoWriterTest {
 
     @Test
-    public void writeCollectionDTD() {
+    void writeCollectionDTD() {
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("TestJpoWriter");
             final File tempDir = tempDirWithPrefix.toFile();
             final File expectedDtdFile = new File(tempDir, "collection.dtd");
-            assertFalse( expectedDtdFile.exists() );
+            assertFalse(expectedDtdFile.exists());
             JpoWriter.writeCollectionDTDTestOnly(tempDirWithPrefix.toFile());
-            assertTrue( expectedDtdFile.exists() );
+            assertTrue(expectedDtdFile.exists());
             try (final Stream<String> s = Files.lines(expectedDtdFile.toPath())) {
                 assertEquals(78, s.count());
             }
+            Files.delete(expectedDtdFile.toPath());
+            Files.delete(tempDirWithPrefix);
         } catch (final IOException e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    public void writeCategoriesBlock() {
+    void writeCategoriesBlock() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        try  {
+        try {
             final File tempFile = File.createTempFile("temp", null);
             try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
                 final PictureCollection pictureCollection = new PictureCollection();
@@ -54,8 +56,8 @@ public class JpoWriterTest {
     }
 
     @Test
-    public void writeXmlHeader() {
-        try  {
+    void writeXmlHeader() {
+        try {
             final File tempFile = File.createTempFile("temp", null);
             try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
                 JpoWriter.writeXmlHeaderTestOnly(bout);
@@ -70,8 +72,8 @@ public class JpoWriterTest {
     }
 
     @Test
-    public void writePicture() {
-        try  {
+    void writePicture() {
+        try {
             final File tempFile = File.createTempFile("temp", null);
             try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
                 final PictureInfo pictureInfo = new PictureInfo();

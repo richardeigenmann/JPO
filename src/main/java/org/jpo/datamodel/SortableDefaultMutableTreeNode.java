@@ -54,6 +54,7 @@ public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
         implements Comparable<SortableDefaultMutableTreeNode>, PictureInfoChangeListener {
 
+    public static final String GENERIC_ERROR = "genericError";
     /**
      * Defines a logger for this class
      */
@@ -406,7 +407,7 @@ public class SortableDefaultMutableTreeNode
         final Transferable t = event.getTransferable();
         final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
         return ((List<?>) o).stream()
-                .filter(element -> element instanceof SortableDefaultMutableTreeNode)
+                .filter(SortableDefaultMutableTreeNode.class::isInstance)
                 .map(SortableDefaultMutableTreeNode.class::cast)
                 .collect(Collectors.toList());
     }
@@ -467,9 +468,10 @@ public class SortableDefaultMutableTreeNode
                         Current node: {1}""", new Object[]{sourceNode, this});
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                         Settings.getJpoResources().getString("moveNodeError"),
-                        Settings.getJpoResources().getString("genericError"),
+                        Settings.getJpoResources().getString(GENERIC_ERROR),
                         JOptionPane.ERROR_MESSAGE);
                 dropEvent.dropComplete(false);
+
                 return;
             }
         }
@@ -633,7 +635,7 @@ public class SortableDefaultMutableTreeNode
             LOGGER.info("Delete attempted on Root node. Can't do this! Aborted.");
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("deleteRootNodeError"),
-                    Settings.getJpoResources().getString("genericError"),
+                    Settings.getJpoResources().getString(GENERIC_ERROR),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -1027,7 +1029,7 @@ public class SortableDefaultMutableTreeNode
                             + targetFile.toString()
                             + Settings.getJpoResources().getString("copyPictureError3")
                             + e.getMessage(),
-                    Settings.getJpoResources().getString("genericError"),
+                    Settings.getJpoResources().getString(GENERIC_ERROR),
                     JOptionPane.ERROR_MESSAGE);
             return Long.MIN_VALUE;
         }

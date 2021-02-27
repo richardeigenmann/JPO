@@ -135,7 +135,6 @@ public class ThumbnailPanelTitle
             searchField.setVisible(!searchField.isVisible());
             Tools.checkEDT();
             searchField.getParent().validate();
-            ;
             searchField.requestFocus();
         });
 

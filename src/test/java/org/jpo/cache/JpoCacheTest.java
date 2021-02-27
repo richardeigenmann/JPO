@@ -1,7 +1,6 @@
 package org.jpo.cache;
 
 import org.jpo.datamodel.Settings;
-import org.jpo.export.WebsiteGeneratorTest;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -18,13 +17,13 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -37,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Richard Eigenmann
  */
-public class JpoCacheTest {
+class JpoCacheTest {
 
     /**
      * Defines a LOGGER for this class
@@ -58,7 +57,7 @@ public class JpoCacheTest {
 
     private static File getFileFromResouces(final String filename) {
         try {
-            return new File(WebsiteGeneratorTest.class.getClassLoader().getResource(filename).toURI());
+            return new File(JpoCacheTest.class.getClassLoader().getResource(filename).toURI());
         } catch (URISyntaxException e) {
             LOGGER.log(Level.SEVERE, "Could not retrieve test resource image {0}", filename);
             return null;
@@ -66,7 +65,7 @@ public class JpoCacheTest {
     }
 
     @Test
-    public void testLoadProperties() {
+    void testLoadProperties() {
         Settings.loadSettings();
         Properties props = JpoCache.loadProperties();
         // Expecting more than x properties to be defined in the cache.ccf file
@@ -74,12 +73,12 @@ public class JpoCacheTest {
     }
 
     @Test
-    public void testGetFolderIconDimensions() {
+    void testGetFolderIconDimensions() {
         assertEquals(new Dimension(350, 295), JpoCache.getGroupThumbnailDimension());
     }
 
     @Test
-    public void testGetHighresImageBytes() {
+    void testGetHighresImageBytes() {
         try {
             JpoCache.removeFromHighresCache(IMAGE_FILE_1);
             final ImageBytes imageBytes = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
@@ -94,7 +93,7 @@ public class JpoCacheTest {
     }
 
     @Test
-    public void testGetHighresImageBytesFileChanged() {
+    void testGetHighresImageBytesFileChanged() {
         try {
             final File tempFile = File.createTempFile("testImage", ".jpg");
             LOGGER.log(Level.INFO, "Creating temporary file {0}", tempFile);
@@ -139,7 +138,7 @@ public class JpoCacheTest {
     }
 
     @Test
-    public void testGetThumbnailImageBytes() {
+    void testGetThumbnailImageBytes() {
         final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", IMAGE_FILE_1, 0.0, 350, 350);
         JpoCache.removeFromThumbnailCache(key);
         final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
@@ -151,7 +150,7 @@ public class JpoCacheTest {
     }
 
     @Test
-    public void testGetThumbnailImageBytesFileChanged() {
+    void testGetThumbnailImageBytesFileChanged() {
         try {
             final File tempFile = File.createTempFile("testImage", ".jpg");
             com.google.common.io.Files.copy(IMAGE_FILE_1, tempFile);
@@ -170,6 +169,8 @@ public class JpoCacheTest {
             final ImageBytes imageBytes3 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
             assertEquals(16076, imageBytes3.getBytes().length);
             assertTrue(imageBytes3.isRetrievedFromCache());
+
+            Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
         }

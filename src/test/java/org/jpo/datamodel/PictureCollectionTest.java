@@ -14,10 +14,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -27,8 +26,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -43,7 +42,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
-public class PictureCollectionTest {
+class PictureCollectionTest {
 
     private static final String SWITZERLAND = "Switzerland";
     private static final String MOUNTAINS = "Mountains";
@@ -97,7 +96,7 @@ public class PictureCollectionTest {
      * Test the find parents group method
      */
     @Test
-    public void testFindParentGroups() {
+    void testFindParentGroups() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         // Test that something is returned when looking for parent groups
         assertNotNull(pictureCollection.findLinkingGroups(picture1));
@@ -107,7 +106,7 @@ public class PictureCollectionTest {
      * Test the find parents group method
      */
     @Test
-    public void testFindLinkingGroups1() {
+    void testFindLinkingGroups1() {
         // Test that it returns an empty Set if the node is not a PictureInfo node
         assertEquals(0, pictureCollection.findLinkingGroups(group1).size());
     }
@@ -116,7 +115,7 @@ public class PictureCollectionTest {
      * Test the find parents group method
      */
     @Test
-    public void testFindLinkingGroups2() {
+    void testFindLinkingGroups2() {
         //test that the parent group is one of the returned groups
         final Set<SortableDefaultMutableTreeNode> linkingGroups = pictureCollection.findLinkingGroups(picture1);
         assertTrue(linkingGroups.contains(group1));
@@ -124,7 +123,7 @@ public class PictureCollectionTest {
     }
 
     @Test
-    public void testFindLinkingGroups3() {
+    void testFindLinkingGroups3() {
         //test that the 4 groups which refer to the same picture are returned
         final Set<SortableDefaultMutableTreeNode> findLinkingGroups = pictureCollection.findLinkingGroups(picture1);
         assertEquals(4, findLinkingGroups.size());
@@ -134,13 +133,13 @@ public class PictureCollectionTest {
      * Test remembering the xml file
      */
     @Test
-    public void testSetXmlFile() {
+    void testSetXmlFile() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final File f = new File("dir/test.xml");
-        pictureCollection.setXmlFile( f );
+        pictureCollection.setXmlFile(f);
         final File f2 = pictureCollection.getXmlFile();
         // Checking that we get the same file back that we put in
-        assertEquals( f, f2 );
+        assertEquals(f, f2);
 
         pictureCollection.clearCollection();
         File f3 = pictureCollection.getXmlFile();
@@ -153,17 +152,17 @@ public class PictureCollectionTest {
      * a few tests to verify the selection thing works.
      */
     @Test
-    public void testSelections() {
+    void testSelections() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(0, pictureCollection.getSelection().size());
-        pictureCollection.addToSelectedNodes( group1 );
-        pictureCollection.addToSelectedNodes( picture1 );
-        assertEquals( 2, pictureCollection.getSelection().size() );
-        assertEquals( 2, pictureCollection.countSelectedNodes() );
+        pictureCollection.addToSelectedNodes(group1);
+        pictureCollection.addToSelectedNodes(picture1);
+        assertEquals(2, pictureCollection.getSelection().size());
+        assertEquals(2, pictureCollection.countSelectedNodes());
         // We should find that the node we selected is actually in the selected set
-        assertTrue( pictureCollection.isSelected( group1 ) );
+        assertTrue(pictureCollection.isSelected(group1));
         // We should find that the second node we selected is actually in the selected set
-        assertTrue( pictureCollection.isSelected( picture1 ) );
+        assertTrue(pictureCollection.isSelected(picture1));
         // A Node that was not selected should not be in the selection
         assertFalse( pictureCollection.isSelected( group2 ) );
 
@@ -192,16 +191,16 @@ public class PictureCollectionTest {
      * a few tests to verify the selection thing works.
      */
     @Test
-    public void testMailSelections() {
+    void testMailSelections() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(0, pictureCollection.getMailSelectedNodes().size());
-        pictureCollection.addToMailSelection( group1 );
-        pictureCollection.addToMailSelection( picture1 );
-        assertEquals( 2, pictureCollection.getMailSelectedNodes().size() );
+        pictureCollection.addToMailSelection(group1);
+        pictureCollection.addToMailSelection(picture1);
+        assertEquals(2, pictureCollection.getMailSelectedNodes().size());
         // We should find that the node we selected is actually in the selected set
-        assertTrue( pictureCollection.isMailSelected( group1 ) );
+        assertTrue(pictureCollection.isMailSelected(group1));
         // We should find that the second node we selected is actually in the selected set
-        assertTrue( pictureCollection.isMailSelected( picture1 ) );
+        assertTrue(pictureCollection.isMailSelected(picture1));
         // A Node that was not selected should not be in the selection
         assertFalse( pictureCollection.isMailSelected( group2 ) );
 
@@ -237,7 +236,7 @@ public class PictureCollectionTest {
      * here are a few tests to verify the selection thing works.
      */
     @Test
-    public void testAddToMailSelection() {
+    void testAddToMailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection(picture1);
@@ -270,7 +269,7 @@ public class PictureCollectionTest {
      * Test for the Select notification
      */
     @Test
-    public void testSelectNotification() {
+    void testSelectNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
         pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
@@ -314,7 +313,7 @@ public class PictureCollectionTest {
      * test the clearMailSelection method
      */
     @Test
-    public void testClearMailSelection() {
+    void testClearMailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
         pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
@@ -333,7 +332,7 @@ public class PictureCollectionTest {
      * test the mail selection method
      */
     @Test
-    public void testMailSelectNotification() {
+    void testMailSelectNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
         pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
@@ -386,16 +385,16 @@ public class PictureCollectionTest {
      * picture results in a treeModel change event being fired
      */
     @Test
-    public void testChangeNotification() {
+    void testChangeNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
         nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
 
             @Override
-            public void treeNodesChanged( TreeModelEvent e ) {
+            public void treeNodesChanged(TreeModelEvent e) {
                 nodesChanged++;
             }
 
@@ -418,14 +417,8 @@ public class PictureCollectionTest {
         Settings.setPictureCollection( pictureCollection );
         assertEquals( 0, nodesChanged);
         pi1.setDescription( "Changed Description" );
-        try {
-            Thread.sleep( 80 );  // give the threads some time to do the notifications.
-        } catch ( InterruptedException ex ) {
-            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
-            Thread.currentThread().interrupt();
-        }
         // After updating the description we should have 1 node changed
-        assertEquals(  1, nodesChanged);
+        await().until(() -> nodesChanged == 1);
         // No nodes should have been inserted
         assertEquals(  0, nodesInserted);
         // No nodes should have been removed
@@ -436,16 +429,16 @@ public class PictureCollectionTest {
 
 
     @Test
-    public void testInsertNotification() {
+    void testInsertNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
         nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
 
             @Override
-            public void treeNodesChanged( TreeModelEvent e ) {
+            public void treeNodesChanged(TreeModelEvent e) {
                 nodesChanged++;
             }
 
@@ -469,29 +462,23 @@ public class PictureCollectionTest {
         assertEquals( 0, nodesChanged);
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode();
         group1.add(newNode);
-        try {
-            Thread.sleep( 80 );  // give the threads some time to do the notifications.
-        } catch ( final InterruptedException ex ) {
-            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
-            Thread.currentThread().interrupt();
-        }
-        assertEquals(  0, nodesChanged);
-        assertEquals(  1, nodesInserted);
+        await().until(() -> nodesInserted == 1);
+        assertEquals(0, nodesChanged);
         assertEquals( 0, nodesRemoved);
         assertEquals( 0, nodeStructureChanged);
     }
 
     @Test
-    public void testRemoveNodesNotification() {
+    void testRemoveNodesNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
         nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
 
             @Override
-            public void treeNodesChanged( TreeModelEvent e ) {
+            public void treeNodesChanged(TreeModelEvent e) {
                 nodesChanged++;
             }
 
@@ -514,29 +501,23 @@ public class PictureCollectionTest {
         Settings.setPictureCollection( pictureCollection );
         assertEquals( 0, nodesChanged);
         group1.deleteNode();
-        try {
-            Thread.sleep( 80 );  // give the threads some time to do the notifications.
-        } catch ( final InterruptedException ex ) {
-            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
-            Thread.currentThread().interrupt();
-        }
-        assertEquals(  0, nodesChanged);
+        await().until(() -> nodesRemoved == 1);
+        assertEquals(0, nodesChanged);
         assertEquals(  0, nodesInserted);
-        assertEquals( 1, nodesRemoved);
         assertEquals( 0, nodeStructureChanged);
     }
 
     @Test
-    public void testStructureChangedNotification() {
+    void testStructureChangedNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         nodesChanged = 0;
         nodesInserted = 0;
         nodesRemoved = 0;
         nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener( new TreeModelListener() {
+        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
 
             @Override
-            public void treeNodesChanged( TreeModelEvent e ) {
+            public void treeNodesChanged(TreeModelEvent e) {
                 nodesChanged++;
             }
 
@@ -559,16 +540,10 @@ public class PictureCollectionTest {
         Settings.setPictureCollection( pictureCollection );
         assertEquals( 0, nodesChanged);
         GuiActionRunner.execute(() -> pictureCollection.getRootNode().sortChildren(Settings.FieldCodes.DESCRIPTION));
-        try {
-            Thread.sleep( 80 );  // give the threads some time to do the notifications.
-        } catch ( final InterruptedException ex ) {
-            Logger.getLogger( PictureCollectionTest.class.getName() ).log( Level.SEVERE, null, ex );
-            Thread.currentThread().interrupt();
-        }
-        assertEquals(  0, nodesChanged);
+        await().until(() -> nodeStructureChanged == 1);
+        assertEquals(0, nodesChanged);
         assertEquals(  0, nodesInserted);
         assertEquals( 0, nodesRemoved);
-        assertEquals( 1, nodeStructureChanged);
     }
 
 
@@ -576,57 +551,58 @@ public class PictureCollectionTest {
      * Test sendModelUpdates
      */
     @Test
-    public void testSendModelUpdates() {
+    void testSendModelUpdates() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection pc = new PictureCollection();
         // Default of sendModelUpdates should be true
-        assertTrue( pc.getSendModelUpdates());
-        pc.setSendModelUpdates( false );
+        assertTrue(pc.getSendModelUpdates());
+        pc.setSendModelUpdates(false);
         // sendModelUpdates should be false when changed
         assertFalse(pc.getSendModelUpdates());
-        pc.setSendModelUpdates( true );
+        pc.setSendModelUpdates(true);
         // sendModelUpdates should be true when turned on again
-        assertTrue( pc.getSendModelUpdates());
+        assertTrue(pc.getSendModelUpdates());
     }
 
     @Test
-    public void fileSave() {
+    void fileSave() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection picCollection = new PictureCollection();
         try {
             SwingUtilities.invokeAndWait(picCollection::clearCollection);
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
 
         try {
-            final File tempFile = File.createTempFile("testPictureCollection", ".xml");
+            final File tempFile = File.createTempFile("fileSave", ".xml");
             picCollection.setXmlFile(tempFile);
             picCollection.fileSave();
             assertTrue(tempFile.exists());
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {
                 assertEquals(7, s.count());
             }
+            Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    public void fileSaveNoPriorFile() {
+    void fileSaveNoPriorFile() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final PictureCollection picCollection = new PictureCollection();
         try {
             SwingUtilities.invokeAndWait(picCollection::clearCollection);
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
 
         try {
             // createTempFile actually creates the file
-            final File tempFile = File.createTempFile("testPictureCollection", ".xml");
+            final File tempFile = File.createTempFile("fileSaveNoPriorFile", ".xml");
             // So let's just go and delete it
             Files.delete(tempFile.toPath());
             assertFalse(tempFile.exists());
@@ -636,13 +612,14 @@ public class PictureCollectionTest {
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {
                 assertEquals(7, s.count());
             }
+            Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
         }
     }
 
     @Test
-    public void clearCollection() {
+    void clearCollection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assertEquals(4, pictureCollection.getRootNode().getChildCount());
         pictureCollection.clearCollection();
@@ -651,7 +628,7 @@ public class PictureCollectionTest {
 
 
     @Test
-    public void addCategory() {
+    void addCategory() {
         final PictureCollection myPictureCollection = new PictureCollection();
         assertEquals(0, myPictureCollection.getCategoryKeySet().size());
         myPictureCollection.addCategory(0, SWITZERLAND);
@@ -664,7 +641,7 @@ public class PictureCollectionTest {
     }
 
     @Test
-    public void getSortedCategoryStream() {
+    void getSortedCategoryStream() {
         final PictureCollection myPictureCollection = new PictureCollection();
         myPictureCollection.addCategory(SWITZERLAND);
         myPictureCollection.addCategory(MOUNTAINS);

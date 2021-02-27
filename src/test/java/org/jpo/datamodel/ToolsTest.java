@@ -2,6 +2,8 @@ package org.jpo.datamodel;
 
 import org.jpo.gui.swing.EdtViolationException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -32,18 +34,19 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Tests for the Tools class
  *
  * @author Richard Eigenmann
  */
-public class ToolsTest {
+class ToolsTest {
 
     /**
      * Constructor for the Tools Test class
      */
     @Test
-    public void testCheckEDTnotOnEDT() {
+    void testCheckEDTnotOnEDT() {
         // if not on EDT must throw Error
         final boolean[] errorThrown = {false};
         final Thread t = new Thread(() -> {
@@ -68,11 +71,11 @@ public class ToolsTest {
      * method
      */
     @Test
-    public void testCheckEDTOnEDT() {
+    void testCheckEDTOnEDT() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         // if on EDT must not throw Error
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 try {
                     Tools.checkEDT();
                     return;
@@ -87,95 +90,30 @@ public class ToolsTest {
     }
 
 
-
     /**
      * Test of parseDate
      */
-    @Test
-    public void testParseDateTime() {
-        final String d = "2017:01:28 12:26:04";
-        final String expected = "2017-01-28 12:26:04";
+    @ParameterizedTest
+    @CsvSource({
+            "2017:01:28 12:26:04, 2017-01-28 12:26:04",
+            "2017:01:28, 2017-01-28 00:00:00",
+            "15.01.2017, 2017-01-15 00:00:00",  // German
+            "15.01.2017 18:11, 2017-01-15 18:11:00",  // German with Time
+            "15.01.2017 18:11:33, 2017-01-15 18:11:33", // German with Seconds
+            "9/11/2001, 2001-09-11 00:00:00",  // American
+            "9/11/2001 08:46, 2001-09-11 08:46:00"  // American with Time
+    })
+    void testParseDateTime(final String d, final String expected) {
         final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
         assertEquals(expected, result);
     }
 
-    /**
-     * Test of parseDate
-     */
-    @Test
-    public void testParseDate() {
-        final String d = "2017:01:28";
-        final String expected = "2017-01-28 00:00:00";
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test of parseDate
-     */
-    @Test
-    public void testParseDateGerman() {
-        final String d = "15.01.2017";
-        final String expected = "2017-01-15 00:00:00";
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test of parseDate
-     */
-    @Test
-    public void testParseDateGermanMinutes() {
-        final String d = "15.01.2017 18:11";
-        final String expected = "2017-01-15 18:11:00";
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test of parseDate
-     */
-    @Test
-    public void testParseDateGermanSeconds() {
-        final String d = "15.01.2017 18:11:33";
-        final String expected = "2017-01-15 18:11:33";
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test of parseDate
-     */
-    @Test
-    public void testParseDateAmerican() {
-        final String d = "9/11/2001";
-        final String expected = "2001-09-11 00:00:00";
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
-    }
-
-    /**
-     * Test of parseDate
-     */
-    @Test
-    public void testParseDateAmericanTime() {
-        final String d = "9/11/2001 08:46";
-        final String expected = "2001-09-11 08:46:00";
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
-    }
 
     private static final String TEST_IMAGE_FILENAME = "gaga.jpg";
 
     @Test
-    public void testInventFilename() {
+    void testInventFilename() {
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilename");
             final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
@@ -187,7 +125,7 @@ public class ToolsTest {
     }
 
     @Test
-    public void testInventFilenameExists() {
+    void testInventFilenameExists() {
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilenameExists");
             final File fExists = new File(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
@@ -202,7 +140,7 @@ public class ToolsTest {
     }
 
     @Test
-    public void testInventFilenameExists50() {
+    void testInventFilenameExists50() {
         try {
             final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilenameExists50");
             final File fExists = new File(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
