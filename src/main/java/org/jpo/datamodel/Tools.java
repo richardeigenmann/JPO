@@ -25,13 +25,13 @@ import java.util.zip.Adler32;
 
 
 /*
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -338,8 +338,7 @@ public class Tools {
                         .toFormatter();
                 final LocalDateTime parsedResult = LocalDateTime.parse(dateString, formatter);
                 LOGGER.log(Level.FINE, "Matched {0} on pattern {1}", new Object[]{dateString, pattern});
-                final GregorianCalendar gc = GregorianCalendar.from(ZonedDateTime.of(parsedResult, ZoneId.systemDefault()));
-                return gc;
+                return GregorianCalendar.from(ZonedDateTime.of(parsedResult, ZoneId.systemDefault()));
             } catch (final DateTimeParseException e) {
                 // skip and continue with the next pattern
             }
