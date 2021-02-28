@@ -72,20 +72,19 @@ class ScalablePictureTest {
         assertNotNull(scalablePicture);
 
         final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            scalablePicture.loadPictureImd(imageFile, 90.0);
+            assertEquals(233, scalablePicture.getSourcePicture().getWidth());
+            assertEquals(350, scalablePicture.getSourcePicture().getHeight());
+
+            scalablePicture.setScaleFactor(2.0);
+            scalablePicture.scalePicture();
+            assertEquals(466, scalablePicture.getScaledWidth());
+            assertEquals(700, scalablePicture.getScaledHeight());
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
-        scalablePicture.loadPictureImd(imageFile, 90.0);
-        assertEquals(233, scalablePicture.getSourcePicture().getWidth());
-        assertEquals(350, scalablePicture.getSourcePicture().getHeight());
-
-        scalablePicture.setScaleFactor(2.0);
-        scalablePicture.scalePicture();
-        assertEquals(466, scalablePicture.getScaledWidth());
-        assertEquals(700, scalablePicture.getScaledHeight());
     }
 
     /**
@@ -113,7 +112,7 @@ class ScalablePictureTest {
         assertEquals(466, scalablePicture.getScaledHeight());
 
         try {
-            final Path tempFile = Files.createTempFile(null, null);
+            final Path tempFile = Files.createTempFile("testLoadingScalingWriting", "jpg");
             final File outputFile = tempFile.toFile();
             Files.delete(outputFile.toPath());
             assertFalse(outputFile.exists());

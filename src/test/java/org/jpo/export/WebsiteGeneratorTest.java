@@ -166,7 +166,7 @@ class WebsiteGeneratorTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 WebsiteGenerator myWebsiteGenerator = WebsiteGenerator.generateWebsite(request);
-                await().until(() -> myWebsiteGenerator.isDone());
+                await().until(myWebsiteGenerator::isDone);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             LOGGER.severe("Why was the website generation interrupted?");
