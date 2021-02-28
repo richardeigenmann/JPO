@@ -8,10 +8,17 @@ import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.Adler32;
@@ -40,6 +47,11 @@ import java.util.zip.Adler32;
 public class Tools {
 
     /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
+
+    /**
      * Private constructor to hide implicit public one. Explanation: Utility
      * classes, which are collections of static members, are not meant to be
      * instantiated. Even abstract utility classes, which can be extended,
@@ -52,12 +64,6 @@ public class Tools {
     private Tools() {
         throw new IllegalStateException("Utility class");
     }
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(Tools.class.getName());
-
 
     /**
      * method that tests the file extension of a File object for being the
@@ -293,7 +299,8 @@ public class Tools {
         return formatter.format(currentTime);
     }
 
-    /**
+
+    /*
      * This method tries it's best to parse the supplied date into a Java Date
      * object.
      *
@@ -301,48 +308,43 @@ public class Tools {
      * @return the Java Calendar object or null if it could not be parsed.
      */
     public static Calendar parseDate(final String dateString) {
-        final SimpleDateFormat df = new SimpleDateFormat();
-        df.setLenient(true);
         final String[] patterns = {
-                "dd.MM.yyyy HH:mm:ss",
-                "dd.MM.yyyy HH:mm",
-                "dd.MM.yyyy",
-                "yyyy:MM:dd HH:mm:ss",
-                "yyyy:MM:dd HH:mm",
-                "yyyy:MM:dd",
-                "MM.yyyy",
-                "MM-yyyy",
-                "dd-MM-yyyy",
-                "dd.MM.yy",
-                "dd-MM-yy",
-                "MM/dd/yy HH:mm:ss",
-                "MM/dd/yy HH:mm",
-                "MM/dd/yy",
-                "MM/dd/yyyy HH:mm:ss",
-                "MM/dd/yyyy HH:mm",
-                "MM/dd/yyyy",
-                "dd MMM yyyy",
-                "dd MMM yy",
-                "yyyy"
+                "uuuu[:L:dd[ HH:mm[:ss]]]",
+                "uu[:L:dd[ HH:mm[:ss]]]",
+                "[dd.L.]uuuu[ HH:mm[:ss]]",
+                "L/dd/uuuu[ HH:mm[:ss]]",
+                "L/dd/uu[ HH:mm[:ss]]",
+                "L.uuuu",
+                "dd.L.uuuu",
+                "dd.L.uu",
+                "L-uuuu",
+                "dd-L-uuuu",
+                "dd LLL uu",
+                "dd LLL uuuu",
+                "dd-L-uu",
+                "uuuu-L-dd[ HH:mm[:ss]]",
+                "uuuu-L-dd[ HH.mm[.ss]]",
+                "uuuu-L-dd[ 'at' HH.mm[.ss]]"
         };
-        Date d = null;
-        boolean notFound = true;
-        for (int i = 0; (i < patterns.length) && notFound; i++) {
+        for (final String pattern : patterns) {
             try {
-                df.applyPattern(patterns[i]);
-                d = df.parse(dateString);
-                notFound = false;
-            } catch (ParseException x) {
-                // skip and continue with next pattern
+                final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                        .appendPattern(pattern)
+                        .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
+                        .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
+                        .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
+                        .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                        .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                        .toFormatter();
+                final LocalDateTime parsedResult = LocalDateTime.parse(dateString, formatter);
+                LOGGER.log(Level.FINE, "Matched {0} on pattern {1}", new Object[]{dateString, pattern});
+                final GregorianCalendar gc = GregorianCalendar.from(ZonedDateTime.of(parsedResult, ZoneId.systemDefault()));
+                return gc;
+            } catch (final DateTimeParseException e) {
+                // skip and continue with the next pattern
             }
         }
-        if (d != null) {
-            final Calendar cal = Calendar.getInstance();
-            cal.setTime(d);
-            return cal;
-        } else {
-            return null;
-        }
+        return null;
     }
 
 
