@@ -163,6 +163,7 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6.2'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6.2'
     implementation group: 'org.json', name: 'json', version: '20201115'
+    implementation 'org.bidib.com.jidesoft:jide-common:3.7.11'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'

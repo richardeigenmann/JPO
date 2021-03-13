@@ -15,6 +15,7 @@
         <li><strong>Font Awesome</strong> for the Free Icon Fonts <a href="https://fontawesome.com/">https://fontawesome.com/</a></li>
         <li><strong>JSON in Java [package org.json]</strong> for JSON parser <a href="https://github.com/stleary/JSON-java">https://github.com/stleary/JSON-java</a></li>
         <li><strong>Awaitility</strong> for asynchroneous testing <a href="https://github.com/awaitility/awaitility/wiki/Getting_started">https://github.com/awaitility/awaitility/wiki/Getting_started</a></li>
+        <li><strong>Jidesoft</strong> for the JIDE Common Layer (Open Source Project) which I use for the JidePopupMenu which overflows nicely<a href="http://www.jidesoft.com/products/oss.htm">http://www.jidesoft.com/products/oss.htm</a></li>
         <li><strong>Sandra Keller</strong> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
     </ul>
 

@@ -1,5 +1,6 @@
 package org.jpo.gui.swing;
 
+import com.jidesoft.swing.JidePopupMenu;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -16,8 +17,8 @@ import java.util.List;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Creates a JPopupMenu with entries for all the categories
  */
-public class CategoryPopupMenu extends JPopupMenu {
+public class CategoryPopupMenu extends JidePopupMenu {
     public CategoryPopupMenu(final List<SortableDefaultMutableTreeNode> referringNodes) {
         super(Settings.getJpoResources().getString("CategoryPopupMenu"));
         CategoryPopupMenu.addMenuItems(this, referringNodes);
@@ -39,7 +40,7 @@ public class CategoryPopupMenu extends JPopupMenu {
     /**
      * This method adds a bunch of JMenuItems to the supplied parent menu.
      * The input parameter parentMenu is modified because I need to call add several times.
-     * I can't send back a collection of JMenuItems that wil then be added to the parent
+     * I can't send back a collection of JMenuItems that will then be added to the parent
      * JPopupMenu or JMenu.
      *
      * @param parentMenu     the JPopupMenu or JMenu to add the JMenuItems to
