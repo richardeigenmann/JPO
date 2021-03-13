@@ -1,10 +1,10 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Category;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +21,8 @@ import java.util.logging.Logger;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -30,6 +30,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * CategoryEditorJFrame.java: Creates a GUI to edit the categories of the
  * collection
@@ -47,55 +48,29 @@ public class CategoryEditorJFrame
      */
     private final JTextField categoryJTextField = new JTextField();
 
+    private final DefaultListModel<Category> categoriesListModel = new DefaultListModel<>();
+    private static final Dimension MAX_BUTTON_SIZE = new Dimension(150, 25);
+    private static final Dimension DEFAULT_BUTTON_SIZE = new Dimension(150, 25);
+
     /**
      * Creates a GUI to edit the categories of the collection
-     *
-     *
      */
     public CategoryEditorJFrame() {
-        Tools.checkEDT();
-        initComponents();
-    }
-
-    private void initComponents() {
-        addWindowListener( new WindowAdapter() {
+        setTitle(Settings.getJpoResources().getString("CategoryEditorJFrameTitle"));
+        addWindowListener(new WindowAdapter() {
 
             @Override
-            public void windowClosing( WindowEvent e ) {
-                setDefaultCloseOperation( DO_NOTHING_ON_CLOSE );
+            public void windowClosing(WindowEvent e) {
+                setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
                 getRid();
             }
-        } );
-
-        setTitle(Settings.getJpoResources().getString("CategoryEditorJFrameTitle"));
+        });
 
         final JPanel jPanel = new JPanel();
-        jPanel.setBorder( BorderFactory.createEmptyBorder( 8, 8, 8, 8 ) );
-        jPanel.setLayout( new MigLayout("") );
+        jPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+        jPanel.setLayout(new MigLayout(""));
 
-        final DefaultListModel<Category> categoriesListModel = new DefaultListModel<>();
-
-        final JList<Category> categoriesJList = new JList<>(categoriesListModel);
-        categoriesJList.setMinimumSize(new Dimension(180, 50));
-        categoriesJList.setVisibleRowCount(5);
-        categoriesJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        categoriesJList.addListSelectionListener(e -> {
-            if (e.getValueIsAdjusting()) {
-                return;
-            }
-            if (!categoriesJList.isSelectionEmpty()) {
-                final int index = categoriesJList.getSelectedIndex();
-                final Category cat = (Category) categoriesJList.getModel().getElementAt(index);
-                categoryJTextField.setText(cat.getValue());
-            }
-
-        });
-
-        Settings.getPictureCollection().getSortedCategoryStream().forEach(categoryEntry -> {
-            final Category category = new Category(categoryEntry.getKey(), categoryEntry.getValue());
-            categoriesListModel.addElement(category);
-        });
-
+        final JList<Category> categoriesJList = getCategoriesJList();
 
         final JScrollPane listJScrollPane = new JScrollPane(categoriesJList);
         listJScrollPane.setPreferredSize(new Dimension(250, 370));
@@ -103,69 +78,43 @@ public class CategoryEditorJFrame
         jPanel.add(listJScrollPane, "push, grow");
 
 
-        final JPanel buttonJPanel = new JPanel();
-        buttonJPanel.setLayout(new MigLayout());
+        final JPanel rightColumn = new JPanel();
+        rightColumn.setLayout(new MigLayout());
 
         final JLabel categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
         categoryJLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        buttonJPanel.add(categoryJLabel, "wrap");
+        rightColumn.add(categoryJLabel, "wrap");
 
         categoryJTextField.setPreferredSize(new Dimension(200, 25));
         categoryJTextField.setMinimumSize(new Dimension(200, 25));
         categoryJTextField.setMaximumSize(new Dimension(600, 25));
-        buttonJPanel.add(categoryJTextField, "wrap");
+        rightColumn.add(categoryJTextField, "wrap");
 
-        final Dimension defaultButtonSize = new Dimension(150, 25);
-        final Dimension maxButtonSize = new Dimension(150, 25);
+        final JButton addCategoryJButton = getAddCategoryJButton();
+        rightColumn.add(addCategoryJButton, "wrap");
+        final JButton deleteCategoryJButton = getDeleteCategoryJButton(categoriesJList);
+        rightColumn.add(deleteCategoryJButton, "wrap");
+        final JButton renameCategoryJButton = getRenameCategoryJButton(categoriesJList);
+        rightColumn.add(renameCategoryJButton, "wrap");
+        final JButton doneJButton = getDoneJButton();
+        rightColumn.add(doneJButton, "wrap");
 
-        final JButton addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
-        addCategoryJButton.setPreferredSize(defaultButtonSize);
-        addCategoryJButton.setMinimumSize(defaultButtonSize);
-        addCategoryJButton.setMaximumSize(maxButtonSize);
-        addCategoryJButton.addActionListener((ActionEvent evt) -> {
-            final String category = categoryJTextField.getText();
-            final Integer key = Settings.getPictureCollection().addCategory(category);
-            final Category categoryObject = new Category(key, category);
-            categoriesListModel.addElement(categoryObject);
-            categoryJTextField.setText("");
-        });
-        buttonJPanel.add(addCategoryJButton, "wrap");
+        jPanel.add(rightColumn, "aligny top, wrap");
+
+        getContentPane().add(jPanel);
+        pack();
+        setLocationRelativeTo(Settings.getAnchorFrame());
+        setVisible(true);
+    }
 
 
-        final JButton deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
-        deleteCategoryJButton.setPreferredSize(defaultButtonSize);
-        deleteCategoryJButton.setMinimumSize(defaultButtonSize);
-        deleteCategoryJButton.setMaximumSize(maxButtonSize);
-        deleteCategoryJButton.addActionListener((ActionEvent evt) -> {
-            int index = categoriesJList.getSelectedIndex();
-            if (index < 0) {
-                return; // nothing selected
-            } // nothing selected
-            final Category cat = categoriesJList.getModel().getElementAt( index );
-            int count = PictureCollection.countCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
-            if ( count > 0 ) {
-                int answer = JOptionPane.showConfirmDialog(CategoryEditorJFrame.this,
-                        Settings.getJpoResources().getString("countCategoryUsageWarning1") + count + Settings.getJpoResources().getString("countCategoryUsageWarning2"),
-                        Settings.getJpoResources().getString("genericWarning"),
-                        JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.QUESTION_MESSAGE);
-                if ( answer == JOptionPane.CANCEL_OPTION ) {
-                    return;
-                } else {
-                    Settings.getPictureCollection().removeCategoryUsage( cat.getKey(), Settings.getPictureCollection().getRootNode() );
-                }
-
-            }
-            categoriesListModel.remove(index);
-            Settings.getPictureCollection().removeCategory(cat.getKey());
-        });
-        buttonJPanel.add( deleteCategoryJButton, "wrap" );
-
+    @NotNull
+    private JButton getRenameCategoryJButton(final JList<Category> categoriesJList) {
         final JButton renameCategoryJButton = new JButton(Settings.getJpoResources().getString("renameCategoryJButton"));
-        renameCategoryJButton.setPreferredSize( defaultButtonSize );
-        renameCategoryJButton.setMinimumSize( defaultButtonSize );
-        renameCategoryJButton.setMaximumSize( maxButtonSize );
-        renameCategoryJButton.addActionListener(( ActionEvent evt ) -> {
+        renameCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
+        renameCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
+        renameCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
+        renameCategoryJButton.addActionListener((ActionEvent evt) -> {
             LOGGER.info("I want to rename the selected category ");
             int index = categoriesJList.getSelectedIndex();
             if (index < 0) {
@@ -179,28 +128,107 @@ public class CategoryEditorJFrame
             categoriesListModel.insertElementAt(newCategoryObject, index);
             categoryJTextField.setText("");
         });
-        buttonJPanel.add( renameCategoryJButton, "wrap" );
+        return renameCategoryJButton;
+    }
 
+    @NotNull
+    private JButton getDeleteCategoryJButton(final JList<Category> categoriesJList) {
+        final JButton deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
+        deleteCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
+        deleteCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
+        deleteCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
+        deleteCategoryJButton.addActionListener((ActionEvent evt) -> {
+            int index = categoriesJList.getSelectedIndex();
+            if (index < 0) {
+                return; // nothing selected
+            } // nothing selected
+            final Category cat = categoriesJList.getModel().getElementAt(index);
+            int count = PictureCollection.countCategoryUsage(cat.getKey(), Settings.getPictureCollection().getRootNode());
+            if (count > 0) {
+                int answer = JOptionPane.showConfirmDialog(CategoryEditorJFrame.this,
+                        Settings.getJpoResources().getString("countCategoryUsageWarning1") + count + Settings.getJpoResources().getString("countCategoryUsageWarning2"),
+                        Settings.getJpoResources().getString("genericWarning"),
+                        JOptionPane.OK_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+                if (answer == JOptionPane.CANCEL_OPTION) {
+                    return;
+                } else {
+                    Settings.getPictureCollection().removeCategoryUsage(cat.getKey(), Settings.getPictureCollection().getRootNode());
+                }
+
+            }
+            categoriesListModel.remove(index);
+            Settings.getPictureCollection().removeCategory(cat.getKey());
+        });
+        return deleteCategoryJButton;
+    }
+
+    @NotNull
+    private JButton getAddCategoryJButton() {
+        final JButton addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
+        addCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
+        addCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
+        addCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
+        addCategoryJButton.addActionListener((ActionEvent evt) -> {
+            final String category = categoryJTextField.getText();
+            if (category.length() > 0) {
+                final Integer key = Settings.getPictureCollection().addCategory(category);
+                final Category categoryObject = new Category(key, category);
+                categoriesListModel.addElement(categoryObject);
+                categoryJTextField.setText("");
+            }
+        });
+        return addCategoryJButton;
+    }
+
+    @NotNull
+    private JButton getDoneJButton() {
         final JButton doneJButton = new JButton(Settings.getJpoResources().getString("doneJButton"));
-        doneJButton.setPreferredSize( defaultButtonSize );
-        doneJButton.setMinimumSize( defaultButtonSize );
-        doneJButton.setMaximumSize( maxButtonSize );
-        doneJButton.addActionListener(( ActionEvent evt ) -> getRid());
-        buttonJPanel.add( doneJButton, "wrap" );
+        doneJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
+        doneJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
+        doneJButton.setMaximumSize(MAX_BUTTON_SIZE);
+        doneJButton.addActionListener((ActionEvent evt) -> getRid());
+        return doneJButton;
+    }
 
-        jPanel.add( buttonJPanel, "aligny top, wrap" );
 
-        getContentPane().add(jPanel);
-        pack();
-        setLocationRelativeTo(Settings.getAnchorFrame());
-        setVisible(true);
+    private JList<Category> getCategoriesJList() {
+        final JList<Category> categoriesJList = new JList<>(categoriesListModel);
+        categoriesJList.setMinimumSize(new Dimension(180, 50));
+        categoriesJList.setVisibleRowCount(5);
+        categoriesJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        categoriesJList.addListSelectionListener(e ->
+
+        {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            if (!categoriesJList.isSelectionEmpty()) {
+                final int index = categoriesJList.getSelectedIndex();
+                final Category cat = categoriesJList.getModel().getElementAt(index);
+                categoryJTextField.setText(cat.getValue());
+            }
+
+        });
+
+        Settings.getPictureCollection().
+
+                getSortedCategoryStream().
+
+                forEach(categoryEntry ->
+
+                {
+                    final Category category = new Category(categoryEntry.getKey(), categoryEntry.getValue());
+                    categoriesListModel.addElement(category);
+                });
+        return categoriesJList;
     }
 
     /**
      * method that closes the frame and gets rid of it
      */
     private void getRid() {
-        setVisible( false );
+        setVisible(false);
         dispose();
     }
 
