@@ -324,7 +324,8 @@ public class Tools {
                 "dd-L-uu",
                 "uuuu-L-dd[ HH:mm[:ss]]",
                 "uuuu-L-dd[ HH.mm[.ss]]",
-                "uuuu-L-dd[ 'at' HH.mm[.ss]]"
+                "uuuu-L-dd[ 'at' HH.mm[.ss]]",
+                "uuuuLLdd"
         };
         for (final String pattern : patterns) {
             try {
