@@ -105,7 +105,7 @@ public class GroupInfoTest {
         gi.addGroupInfoChangeListener(listener);
         gi.setGroupName("Change with Change Listener");
         assertEquals(1, receivedGroupInfoChangedEvents.size());
-        assertEquals(gi, receivedGroupInfoChangedEvents.get(0).getGroupeInfo());
+        assertEquals(gi, receivedGroupInfoChangedEvents.get(0).getGroupInfo());
         assertTrue(receivedGroupInfoChangedEvents.get(0).getGroupNameChanged());
         assertFalse(receivedGroupInfoChangedEvents.get(0).getThumbnailChanged());
         assertFalse(receivedGroupInfoChangedEvents.get(0).getWasSelected());
@@ -118,7 +118,7 @@ public class GroupInfoTest {
         Settings.getPictureCollection().setSendModelUpdates(true);
         gi.setGroupName("Change with sendModelUpdates true");
         assertEquals(2, receivedGroupInfoChangedEvents.size());
-        assertEquals(gi, receivedGroupInfoChangedEvents.get(1).getGroupeInfo());
+        assertEquals(gi, receivedGroupInfoChangedEvents.get(1).getGroupInfo());
         assertTrue(receivedGroupInfoChangedEvents.get(1).getGroupNameChanged());
 
         gi.removeGroupInfoChangeListener(listener);

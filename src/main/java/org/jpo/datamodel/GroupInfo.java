@@ -10,19 +10,20 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*
  GroupInfo.java:  definitions for the group objects
 
- Copyright (C) 2002 - 2020 Richard Eigenmann.
+ Copyright (C) 2002 - 2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -60,11 +61,10 @@ public class GroupInfo implements Serializable {
     /**
      * Constructor to create a new GroupInfo object.
      *
-     * @param	description	The description of the Group
-     *
+     * @param    description    The description of the Group
      */
-    public GroupInfo( String description ) {
-        setGroupName( description );
+    public GroupInfo(final String description) {
+        setGroupName(description);
     }
 
     /**
@@ -107,9 +107,9 @@ public class GroupInfo implements Serializable {
      * @see #getGroupName
      *
      */
-    public void setGroupName( String name ) {
-        if ( !groupName.toString().equals( name ) ) {
-            groupName = new StringBuilder( name );
+    public void setGroupName(final String name) {
+        if (!groupName.toString().equals(name)) {
+            groupName = new StringBuilder(name);
             sendGroupNameChangedEvent();
         }
 
@@ -120,22 +120,19 @@ public class GroupInfo implements Serializable {
      * that the description was updated.
      */
     private void sendGroupNameChangedEvent() {
-        LOGGER.fine( "preparing to send GroupName changed event" );
+        LOGGER.log(Level.INFO, "preparing to send GroupName changed event");
         if ( ( Settings.getPictureCollection() != null ) && ( Settings.getPictureCollection().getSendModelUpdates() ) ) {
-            final GroupInfoChangeEvent gice = new GroupInfoChangeEvent(this);
-            gice.setGroupNameChanged();
-            sendGroupInfoChangedEvent( gice );
-            LOGGER.fine( "sent description changed event" );
+            final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
+            groupInfoChangeEvent.setGroupNameChanged();
+            sendGroupInfoChangedEvent(groupInfoChangeEvent);
+            LOGGER.log(Level.INFO, "sent description changed event");
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
     /**
-     * this method writes all attributes of the picture in the JPO xml data
-     * format with the highres and lowres locations passed in as parameters.
-     * This became necessary because when the XmlDistiller copies the pictures
-     * to a new location we don't want to write the URLs of the original
-     * pictures whilst all other attributes are retained.
+     * this method writes all attributes of the group to the JPO xml data
+     * format with the highres locations passed in as parameters.
      *
      * @param out        The BufferedWriter receiving the xml data. I use a BufferedWriter because it has a newLine method
      * @param rootNode   The starting node
@@ -183,9 +180,9 @@ public class GroupInfo implements Serializable {
      * notification.
      */
     public void sendWasSelectedEvent() {
-        final GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
-        gice.setWasSelected();
-        sendGroupInfoChangedEvent( gice );
+        final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
+        groupInfoChangeEvent.setWasSelected();
+        sendGroupInfoChangedEvent(groupInfoChangeEvent);
     }
 
     /**
@@ -196,10 +193,10 @@ public class GroupInfo implements Serializable {
      * this notification.
      */
     public void sendWasUnselectedEvent() {
-        LOGGER.fine( "Sending unselected event" );
-        GroupInfoChangeEvent gice = new GroupInfoChangeEvent( this );
-        gice.setWasUnselected();
-        sendGroupInfoChangedEvent( gice );
+        LOGGER.fine("Sending unselected event");
+        final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
+        groupInfoChangeEvent.setWasUnselected();
+        sendGroupInfoChangedEvent(groupInfoChangeEvent);
     }
 
     /**
@@ -232,11 +229,11 @@ public class GroupInfo implements Serializable {
      *
      * @param groupInfoChangeEvent The Event we want to notify.
      */
-    private void sendGroupInfoChangedEvent( GroupInfoChangeEvent groupInfoChangeEvent ) {
-        if ( Settings.getPictureCollection().getSendModelUpdates() ) {
-            synchronized ( groupInfoListeners ) {
+    private void sendGroupInfoChangedEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
+        if (Settings.getPictureCollection().getSendModelUpdates()) {
+            synchronized (groupInfoListeners) {
                 groupInfoListeners.forEach(groupInfoChangeListener
-                        -> groupInfoChangeListener.groupInfoChangeEvent( groupInfoChangeEvent )
+                        -> groupInfoChangeListener.groupInfoChangeEvent(groupInfoChangeEvent)
                 );
             }
         }

@@ -9,7 +9,6 @@ import org.jpo.gui.swing.CollectionJTree;
 
 import javax.swing.*;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
@@ -51,19 +50,16 @@ public class CollectionJTreeController {
      * @param pictureCollection the PictureCollection to control
      */
     public CollectionJTreeController(final PictureCollection pictureCollection) {
-        Tools.checkEDT();
         collectionJTree.setModel(pictureCollection.getTreeModel());
-        collectionJTree.setEditable(true);
-        collectionJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         collectionJTree.setTransferHandler(new MyTransferHandler());
+        ToolTipManager.sharedInstance().registerComponent(collectionJTree);
         collectionJTree.setDragEnabled(true);
         collectionJTree.setDropMode(DropMode.ON_OR_INSERT);
-        ToolTipManager.sharedInstance().registerComponent(collectionJTree);
 
         collectionJScrollPane.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter();
+        final CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter();
         collectionJTree.addMouseListener( mouseAdapter );
         registerOnEventBus();
     }
@@ -285,18 +281,18 @@ public class CollectionJTreeController {
 
         @Override
         public String getToolTipText(MouseEvent mouseEvent) {
-            if ( collectionJTree.getRowForLocation( mouseEvent.getX(), mouseEvent.getY() ) == -1 ) {
+            if (collectionJTree.getRowForLocation(mouseEvent.getX(), mouseEvent.getY()) == -1) {
                 return null;
             }
-            TreePath curPath = collectionJTree.getPathForLocation( mouseEvent.getX(), mouseEvent.getY() );
-            SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
-            Object userObject = node.getUserObject();
+            final TreePath curPath = collectionJTree.getPathForLocation(mouseEvent.getX(), mouseEvent.getY());
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
+            final Object userObject = node.getUserObject();
             String toolTip = "";
             if (userObject instanceof GroupInfo groupInfo) {
                 toolTip = String.format("<html>Group: %s</html>", groupInfo.getGroupName());
             } else if (userObject instanceof PictureInfo pictureInfo) {
-                File highresFile = pictureInfo.getImageFile();
-                String fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize(highresFile.length());
+                final File highresFile = pictureInfo.getImageFile();
+                final String fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize(highresFile.length());
                 toolTip = String.format("<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.getJpoResources().getString("CollectionSizeJLabel"), fileSize);
             }
             return toolTip;

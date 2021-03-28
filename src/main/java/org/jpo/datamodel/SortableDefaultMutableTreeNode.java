@@ -52,7 +52,7 @@ import static org.jpo.datamodel.Tools.copyBufferedStream;
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
-        implements Comparable<SortableDefaultMutableTreeNode>, PictureInfoChangeListener {
+        implements Comparable<SortableDefaultMutableTreeNode>, PictureInfoChangeListener, GroupInfoChangeListener {
 
     public static final String GENERIC_ERROR = "genericError";
     /**
@@ -89,7 +89,7 @@ public class SortableDefaultMutableTreeNode
      * Constructor for a new node including a user object. The user object must
      * be a PictureInfo or GroupInfo object. Set to private so that this constructor
      */
-    private SortableDefaultMutableTreeNode(Object userObject) {
+    private SortableDefaultMutableTreeNode(final Object userObject) {
         super();
         setUserObject(userObject);
     }
@@ -124,7 +124,7 @@ public class SortableDefaultMutableTreeNode
             //Remove all children from the node
             getPictureCollection().setSendModelUpdates(false);
             removeAllChildren();
-            for (SortableDefaultMutableTreeNode childNode : childNodes) {
+            for (final SortableDefaultMutableTreeNode childNode : childNodes) {
                 add(childNode);
             }
         }
@@ -289,7 +289,7 @@ public class SortableDefaultMutableTreeNode
      * @return A List of child nodes that hold a picture
      */
     public List<SortableDefaultMutableTreeNode> getChildPictureNodes(
-            boolean recursive) {
+            final boolean recursive) {
         final List<SortableDefaultMutableTreeNode> pictureNodes = new ArrayList<>();
         final Enumeration<TreeNode> kids = this.children();
         while (kids.hasMoreElements()) {
@@ -331,6 +331,7 @@ public class SortableDefaultMutableTreeNode
      */
     @Override
     public void setUserObject(final Object userObject) {
+        removeOldListener(getUserObject());
         if (userObject instanceof String s) {
             // this gets called when the JTree is being edited with F2
             final Object obj = getUserObject();
@@ -340,11 +341,10 @@ public class SortableDefaultMutableTreeNode
                 pi.setDescription(s);
             }
         } else if (userObject instanceof PictureInfo pictureInfo) {
-            Object oldUserObject = getUserObject();
-            if (oldUserObject instanceof PictureInfo oldPi) {
-                oldPi.removePictureInfoChangeListener(this);
-            }
             pictureInfo.addPictureInfoChangeListener(this);
+            super.setUserObject(userObject);
+        } else if (userObject instanceof GroupInfo groupInfo) {
+            groupInfo.addGroupInfoChangeListener(this);
             super.setUserObject(userObject);
         } else {
             // fall back on the default behaviour
@@ -352,6 +352,14 @@ public class SortableDefaultMutableTreeNode
         }
         if (getPictureCollection() != null && getPictureCollection().getSendModelUpdates()) {
             getPictureCollection().sendNodeChanged(this);
+        }
+    }
+
+    private void removeOldListener(final Object userObject) {
+        if (userObject instanceof PictureInfo pictureInfo) {
+            pictureInfo.removePictureInfoChangeListener(this);
+        } else if (userObject instanceof GroupInfo groupInfo) {
+            groupInfo.removeGroupInfoChangeListener(this);
         }
     }
 
@@ -539,11 +547,17 @@ public class SortableDefaultMutableTreeNode
      * This is where the Nodes in the tree find out about changes in the
      * PictureInfo object
      *
-     * @param e The event
+     * @param pictureInfoChangeEvent The event
      */
     @Override
-    public void pictureInfoChangeEvent(final PictureInfoChangeEvent e) {
-        LOGGER.log(Level.FINE, "The SDMTN {0} received a PictureInfoChangeEvent {1}", new Object[]{this, e});
+    public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
+        LOGGER.log(Level.FINE, "The SDMTN {0} received a PictureInfoChangeEvent {1}", new Object[]{this, pictureInfoChangeEvent});
+        getPictureCollection().sendNodeChanged(this);
+    }
+
+    @Override
+    public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
+        LOGGER.log(Level.INFO, "The SDMTN {0} received a GroupInfoChangeEvent {1}", new Object[]{this, groupInfoChangeEvent});
         getPictureCollection().sendNodeChanged(this);
     }
 

@@ -9,35 +9,35 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Richard Eigenmann
  */
-public class PictureInfoChangeEventTest {
+class PictureInfoChangeEventTest {
 
     /**
      * Constructor and get
      */
     @Test
-    public void testConstructor() {
-        PictureInfo pictureInfo = new PictureInfo();
-        PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent( pictureInfo );
-        assertNotNull( pictureInfoChangeEvent );
-        assertEquals( pictureInfo, pictureInfoChangeEvent.getPictureInfo() );
+    void testConstructor() {
+        final PictureInfo pictureInfo = new PictureInfo();
+        final PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent(pictureInfo);
+        assertNotNull(pictureInfoChangeEvent);
+        assertEquals(pictureInfo, pictureInfoChangeEvent.getPictureInfo());
     }
 
     @Test
-    public void testSetThumbnailChanged() {
-        PictureInfo pictureInfo = new PictureInfo();
-        PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent( pictureInfo );
-        assertFalse( pictureInfoChangeEvent.getThumbnailChanged() );
-        
+    void testSetThumbnailChanged() {
+        final PictureInfo pictureInfo = new PictureInfo();
+        final PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent(pictureInfo);
+        assertFalse(pictureInfoChangeEvent.getThumbnailChanged());
+
         pictureInfoChangeEvent.setThumbnailChanged();
         assertTrue(pictureInfoChangeEvent.getThumbnailChanged());
     }
-    
+
     @Test
-    public void testCreationTimeChanged() {
-        PictureInfo pictureInfo = new PictureInfo();
-        PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent( pictureInfo );
-        assertFalse( pictureInfoChangeEvent.getCreationTimeChanged() );
-        
+    void testCreationTimeChanged() {
+        final PictureInfo pictureInfo = new PictureInfo();
+        final PictureInfoChangeEvent pictureInfoChangeEvent = new PictureInfoChangeEvent(pictureInfo);
+        assertFalse(pictureInfoChangeEvent.getCreationTimeChanged());
+
         pictureInfoChangeEvent.setCreationTimeChanged();
         assertTrue(pictureInfoChangeEvent.getCreationTimeChanged());
     }

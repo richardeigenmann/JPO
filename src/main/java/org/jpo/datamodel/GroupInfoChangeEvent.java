@@ -1,15 +1,15 @@
 package org.jpo.datamodel;
 
 /*
-PictureInfoChangeEvent.java:  This event holds information about how the picture changed
+GroupInfoChangeEvent.java:  This event holds information about how the group changed
 
-Copyright (C) 2002 - 2020  Richard Eigenmann.
+Copyright (C) 2002 - 2021  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -19,11 +19,11 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 
-/** 
- *  Objects of this class have details about what was changed in a PictureInfo 
- *  object. Several things may have changed in a single event.
+/**
+ * Objects of this class have details about what was changed in a GroupInfo
+ * object. Several things may have changed in a single event.
  *
- * @see PictureInfo
+ * @see GroupInfo
  */
 public class GroupInfoChangeEvent {
 
@@ -34,11 +34,11 @@ public class GroupInfoChangeEvent {
 
 
     /**
-     * Constructor for the PictureInforChangeEvent
+     * Constructor for the GroupInfoChangeEvent
      *
      * @param groupInfo The group info
      */
-    public GroupInfoChangeEvent( GroupInfo groupInfo ) {
+    public GroupInfoChangeEvent(final GroupInfo groupInfo) {
         this.groupInfo = groupInfo;
     }
 
@@ -48,7 +48,7 @@ public class GroupInfoChangeEvent {
      *
      * @return the GroupInfo object that changed
      */
-    public GroupInfo getGroupeInfo() {
+    public GroupInfo getGroupInfo() {
         return groupInfo;
     }
 
@@ -57,11 +57,12 @@ public class GroupInfoChangeEvent {
      * toString method that returns the description of the group
      *
      * @return The description of the group
-     */
-    @Override
+     *
+     @Override
     public String toString() {
         return "This is a GroupInfoChangeEvent from " + groupInfo;
     }
+    */
 
 //-----------------
     /**

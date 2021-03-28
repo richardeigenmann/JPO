@@ -4,13 +4,9 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellEditor;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeCellEditor;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.net.URL;
 import java.util.logging.Level;
@@ -19,13 +15,13 @@ import java.util.logging.Logger;
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002 - 2020  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002 - 2021  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Eithout even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -54,12 +50,13 @@ public class CollectionJTree
      * Constructor for the CollectionJTree, sets styles, cellrenderer, minimum size.
      */
     public CollectionJTree() {
-        Tools.checkEDT();
         putClientProperty("JTree.lineStyle", "Angled");
         setShowsRootHandles(true);
         setOpaque(true);
         setBackground(Settings.getJpoBackgroundColor());
         setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
+        setEditable(true);
+        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
         final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
 
@@ -102,21 +99,21 @@ public class CollectionJTree
             }
         };
 
-        TreeCellEditor localCellEditor = new DefaultCellEditor(new JTextField());
-        TreeCellEditor treeCellEditor = new DefaultTreeCellEditor(this, renderer, localCellEditor) {
+        final TreeCellEditor localCellEditor = new DefaultCellEditor(new JTextField());
+        final TreeCellEditor treeCellEditor = new DefaultTreeCellEditor(this, renderer, localCellEditor) {
 
             /**
-             *  This solution to the bug 4745084 found on
-             *  http://forum.java.sun.com/thread.jspa?threadID=196868&start=15&tstart=0
-             *  The problem is that when you hit F2 to edit the field without this override you
-             *  fall back on the default icon set.
+             * This solution to the bug 4745084 found on
+             * http://forum.java.sun.com/thread.jspa?threadID=196868&start=15&tstart=0
+             * The problem is that when you hit F2 to edit the field without this override you
+             * fall back on the default icon set.
              */
             @Override
             protected void determineOffset(JTree tree, Object value,
                                            boolean isSelected, boolean isExpanded, boolean isLeaf,
                                            int row) {
                 super.determineOffset(tree, value, isSelected, isExpanded, isLeaf, row);
-                Component rendererComponent = super.renderer.getTreeCellRendererComponent(tree, value, isSelected, isExpanded, isLeaf, row, true);
+                final Component rendererComponent = super.renderer.getTreeCellRendererComponent(tree, value, isSelected, isExpanded, isLeaf, row, true);
                 if (rendererComponent instanceof JLabel) {
                     super.editingIcon = ((JLabel) rendererComponent).getIcon();
                 }
@@ -133,11 +130,13 @@ public class CollectionJTree
      */
     private static final ImageIcon CLOSED_FOLDER_ICON;
 
+    private static final String CLASSLOADER_COULD_NOT_FIND_THE_FILE_0 = "Classloader could not find the file: {0}";
+
     static {
         final String CLOSED_FOLDER_ICON_FILE = "icon_folder_closed.gif";
         final URL resource = CollectionJTree.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", CLOSED_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, CLOSED_FOLDER_ICON_FILE);
             CLOSED_FOLDER_ICON = null;
         } else {
             CLOSED_FOLDER_ICON = new ImageIcon(resource);
@@ -158,7 +157,7 @@ public class CollectionJTree
         final String OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
         final URL resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", OPEN_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, OPEN_FOLDER_ICON_FILE);
             OPEN_FOLDER_ICON = null;
         } else {
             OPEN_FOLDER_ICON = new ImageIcon(resource);
@@ -178,7 +177,7 @@ public class CollectionJTree
         final String PICTURE_ICON_FILE = "icon_picture.gif";
         final URL resource = CollectionJTree.class.getClassLoader().getResource(PICTURE_ICON_FILE);
         if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", PICTURE_ICON_FILE);
+            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, PICTURE_ICON_FILE);
             PICTURE_ICON = null;
         } else {
             PICTURE_ICON = new ImageIcon(resource);
