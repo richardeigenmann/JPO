@@ -315,7 +315,7 @@ public class Tools {
                 "L/dd/uuuu[ HH:mm[:ss]]",
                 "L/dd/uu[ HH:mm[:ss]]",
                 "L.uuuu",
-                "dd.L.uuuu",
+                "d.L.uuuu",
                 "dd.L.uu",
                 "L-uuuu",
                 "dd-L-uuuu",

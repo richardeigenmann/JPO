@@ -43,6 +43,48 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 class ToolsTest {
 
     /**
+     * Test of parseDate
+     */
+    @ParameterizedTest
+    @CsvSource({
+            "2017:01:28 12:26:04,   2017-01-28 12:26:04",
+            "2017:01:28 11:51,      2017-01-28 11:51:00",
+            "2017:01:28,            2017-01-28 00:00:00",
+            "17:01:28,              2017-01-28 00:00:00",
+            "15.01.2017, 2017-01-15 00:00:00",  // German
+            "15.01.2017 18:11, 2017-01-15 18:11:00",  // German with Time
+            "15.01.2017 18:11:33, 2017-01-15 18:11:33", // German with Seconds
+            "9/11/2001, 2001-09-11 00:00:00",  // American
+            "12/11/2001, 2001-12-11 00:00:00",  // American
+            "9/11/01, 2001-09-11 00:00:00",  // American
+            "9/11/2001 08:46, 2001-09-11 08:46:00",  // American with Time
+            "9/11/01 08:46, 2001-09-11 08:46:00",  // American with Time
+            "9/11/2001 08:46:22, 2001-09-11 08:46:22",  // American with Time
+            "9/11/01 08:46:22, 2001-09-11 08:46:22",  // American with Time
+            "2021, 2021-01-01 00:00:00",
+            "20210314, 2021-03-14 00:00:00",
+            "02.2021, 2021-02-01 00:00:00",
+            "02-2021, 2021-02-01 00:00:00",
+            "15-2-2021, 2021-02-15 00:00:00",
+            "15.02.2021, 2021-02-15 00:00:00",
+            "15.2.2021, 2021-02-15 00:00:00",
+            "2.4.1978, 1978-04-02 00:00:00",
+            "15.02.21, 2021-02-15 00:00:00",
+            "15 Feb 21, 2021-02-15 00:00:00",
+            "15 Feb 2021, 2021-02-15 00:00:00",
+            "15-02-21, 2021-02-15 00:00:00",
+            "2021-02-26, 2021-02-26 00:00:00",
+            "2021-02-26 22:09:30, 2021-02-26 22:09:30",
+            "2021-02-26 22.09.30, 2021-02-26 22:09:30",
+            "2021-02-26 at 22.09.30, 2021-02-26 22:09:30" // found on a WhatsApp image
+    })
+    void testParseDateTime(final String d, final String expected) {
+        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
+        assertEquals(expected, result);
+    }
+
+    /**
      * Constructor for the Tools Test class
      */
     @Test
@@ -82,51 +124,11 @@ class ToolsTest {
                 } catch (final EdtViolationException ex) {
                     fail("An EDT violation should not have been thrown!");
                 }
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( "Something went wrong with the EDT thread test" );
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            fail("Something went wrong with the EDT thread test");
             Thread.currentThread().interrupt();
         }
-    }
-
-    /**
-     * Test of parseDate
-     */
-    @ParameterizedTest
-    @CsvSource({
-            "2017:01:28 12:26:04,   2017-01-28 12:26:04",
-            "2017:01:28 11:51,      2017-01-28 11:51:00",
-            "2017:01:28,            2017-01-28 00:00:00",
-            "17:01:28,              2017-01-28 00:00:00",
-            "15.01.2017, 2017-01-15 00:00:00",  // German
-            "15.01.2017 18:11, 2017-01-15 18:11:00",  // German with Time
-            "15.01.2017 18:11:33, 2017-01-15 18:11:33", // German with Seconds
-            "9/11/2001, 2001-09-11 00:00:00",  // American
-            "12/11/2001, 2001-12-11 00:00:00",  // American
-            "9/11/01, 2001-09-11 00:00:00",  // American
-            "9/11/2001 08:46, 2001-09-11 08:46:00",  // American with Time
-            "9/11/01 08:46, 2001-09-11 08:46:00",  // American with Time
-            "9/11/2001 08:46:22, 2001-09-11 08:46:22",  // American with Time
-            "9/11/01 08:46:22, 2001-09-11 08:46:22",  // American with Time
-            "2021, 2021-01-01 00:00:00",
-            "20210314, 2021-03-14 00:00:00",
-            "02.2021, 2021-02-01 00:00:00",
-            "02-2021, 2021-02-01 00:00:00",
-            "15-2-2021, 2021-02-15 00:00:00",
-            "15.02.2021, 2021-02-15 00:00:00",
-            "15.02.21, 2021-02-15 00:00:00",
-            "15 Feb 21, 2021-02-15 00:00:00",
-            "15 Feb 2021, 2021-02-15 00:00:00",
-            "15-02-21, 2021-02-15 00:00:00",
-            "2021-02-26, 2021-02-26 00:00:00",
-            "2021-02-26 22:09:30, 2021-02-26 22:09:30",
-            "2021-02-26 22.09.30, 2021-02-26 22:09:30",
-            "2021-02-26 at 22.09.30, 2021-02-26 22:09:30" // found on a WhatsApp image
-    })
-    void testParseDateTime(final String d, final String expected) {
-        final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        final String result = format.format(Objects.requireNonNull(Tools.parseDate(d)).getTime());
-        assertEquals(expected, result);
     }
 
 
