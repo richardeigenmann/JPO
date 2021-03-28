@@ -1,6 +1,8 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
@@ -34,13 +36,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -114,6 +116,11 @@ public class PictureInfoEditor extends JFrame {
     private final JLabel fileHashJLabel = new JLabel();
 
     /**
+     * Label to display the file Size of the image file
+     */
+    private final JLabel fileSizeJLabel = new JLabel();
+
+    /**
      * The location of the image file
      */
     private final JTextField filmReferenceJTextField = new JTextField();
@@ -184,6 +191,7 @@ public class PictureInfoEditor extends JFrame {
      */
     private static final ImageIcon ROTATE_RIGHT_ICON = new ImageIcon(Objects.requireNonNull(PictureInfoEditor.class.getClassLoader().getResource("icon_RotCWDown.gif")));
 
+    private static final NumberFormat NUMBER_FORMAT_FOR_LATLNG = new DecimalFormat("###.#####################");
 
     /**
      * Constructor a Picture Info Editor
@@ -232,6 +240,36 @@ public class PictureInfoEditor extends JFrame {
         final JTabbedPane tabs = new JTabbedPane();
         mainPanel.add(tabs, "wrap");
 
+        final JPanel rotationPanel = getRotationPanel();
+        mainPanel.add(rotationPanel);
+
+        final JPanel buttonJPanel = getButtonPanel();
+        mainPanel.add(buttonJPanel);
+
+        final JPanel infoTab = getInfoTab();
+        final JScrollPane infoTabJScrollPane = new JScrollPane(infoTab);
+        infoTabJScrollPane.setWheelScrollingEnabled(true);
+        tabs.add("Info", infoTabJScrollPane);
+
+        final JPanel fileTab = getFileTab();
+        tabs.add("File", fileTab);
+
+        final JPanel categoriesTab = getCategoriesTab();
+        tabs.add("Categories", categoriesTab);
+
+        final JScrollPane exifJScrollPane = getExifJScrollPane();
+        tabs.add("Exif", exifJScrollPane);
+
+        tabs.add("Map", mapViewer.getJXMapViewer());
+
+        mapViewer.getJXMapViewer().addMouseListener(new MyMapClickListener(mapViewer.getJXMapViewer()));
+
+        setLayout(new MigLayout());
+        getContentPane().add(mainPanel);
+    }
+
+    @NotNull
+    private JPanel getRotationPanel() {
         final JPanel rotationPanel = new JPanel();
         final JLabel rotationJLabel = new JLabel(Settings.getJpoResources().getString("rotationLabel"));
         rotationPanel.add(rotationJLabel);
@@ -259,9 +297,11 @@ public class PictureInfoEditor extends JFrame {
         });
         rotateRightJButton.setToolTipText(Settings.getJpoResources().getString("rotateRightJButton.ToolTipText"));
         rotationPanel.add(rotateRightJButton);
+        return rotationPanel;
+    }
 
-        mainPanel.add(rotationPanel);
-
+    @NotNull
+    private JPanel getButtonPanel() {
         final JPanel buttonJPanel = new JPanel();
         buttonJPanel.setLayout(new FlowLayout());
 
@@ -293,8 +333,90 @@ public class PictureInfoEditor extends JFrame {
         resetJButton.setBorder(BorderFactory.createRaisedBevelBorder());
         resetJButton.addActionListener((ActionEvent e) -> loadData());
         buttonJPanel.add(resetJButton);
-        mainPanel.add(buttonJPanel);
+        return buttonJPanel;
+    }
 
+    @NotNull
+    private JScrollPane getExifJScrollPane() {
+        // Add Exif panel
+        exifTagsJTextArea.setWrapStyleWord(true);
+        exifTagsJTextArea.setLineWrap(false);
+        exifTagsJTextArea.setEditable(true);
+        exifTagsJTextArea.setRows(17);
+        exifTagsJTextArea.setColumns(35);
+
+        // stop undesired scrolling in the window when doing append
+        final NonFocussedCaret dumbCaret = new NonFocussedCaret();
+        exifTagsJTextArea.setCaret(dumbCaret);
+
+        final JScrollPane exifJScrollPane = new JScrollPane();
+        exifJScrollPane.setViewportView(exifTagsJTextArea);
+        exifJScrollPane.setWheelScrollingEnabled(true);
+        return exifJScrollPane;
+    }
+
+    @NotNull
+    private JPanel getCategoriesTab() {
+        final JPanel categoriesTab = new JPanel(new MigLayout());
+        final JLabel categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel-2"));
+        categoriesTab.add(categoriesJLabel, "wrap");
+
+        categoriesTab.add(categoryAssignmentsJLabel, "wrap");
+
+        categoriesJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        categoriesJList.addListSelectionListener((ListSelectionEvent e) -> {
+                    if (e.getValueIsAdjusting()) {
+                        return;
+                    }
+                    if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(setupCategories))) {
+                        new CategoryEditorJFrame();
+                    } else if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(noCategories))) {
+                        categoriesJList.clearSelection();
+                    }
+                    categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
+                }
+        );
+
+        categoriesTab.add(listJScrollPane, "push, grow, wrap");
+        return categoriesTab;
+    }
+
+    @NotNull
+    private JPanel getFileTab() {
+        final JPanel fileTab = new JPanel(new MigLayout());
+        JLabel highresLocationJLabel = new JLabel(Settings.getJpoResources().getString("highresLocationLabel"));
+        fileTab.add(highresLocationJLabel, "span 2, wrap");
+        highresErrorJLabel.setFont(ERROR_LABEL_FONT);
+        highresLocationJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
+        fileTab.add(highresLocationJTextField);
+
+        final JButton highresLocationJButton = new ThreeDotButton();
+        highresLocationJButton.addActionListener((ActionEvent e) -> chooseFile());
+        fileTab.add(highresLocationJButton, "wrap");
+        fileTab.add(highresErrorJLabel, "span 2, wrap");
+
+        final JButton refreshChecksumJButton = new JButton(Settings.getJpoResources().getString("checksumJButton"));
+        refreshChecksumJButton.setPreferredSize(new Dimension(80, 25));
+        refreshChecksumJButton.setMinimumSize(new Dimension(80, 25));
+        refreshChecksumJButton.setMaximumSize(new Dimension(80, 25));
+        refreshChecksumJButton.addActionListener((ActionEvent e) -> new Thread(
+                () -> {
+                    pictureInfo.setSha256();
+                    pictureInfo.calculateChecksum();
+                }
+        ).start());
+
+        fileTab.add(checksumJLabel, "wrap");
+        fileTab.add(fileHashJLabel, "wrap");
+        fileTab.add(refreshChecksumJButton, "wrap");
+
+        fileTab.add(fileSizeJLabel);
+
+        return fileTab;
+    }
+
+    @NotNull
+    private JPanel getInfoTab() {
         final JPanel infoTab = new JPanel();
         infoTab.setLayout(new MigLayout());
 
@@ -363,96 +485,18 @@ public class PictureInfoEditor extends JFrame {
         final JLabel latitudeJLabel = new JLabel(Settings.getJpoResources().getString("latitudeLabel"));
         infoTab.add(latitudeJLabel, "aligny top");
 
-        NumberFormat nfl = new DecimalFormat("###.#####################");
-        latitudeJTextField = new JFormattedTextField(nfl);
+
+        latitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
         latitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
         infoTab.add(latitudeJTextField, "wrap");
 
         final JLabel longitudeJLabel = new JLabel(Settings.getJpoResources().getString("longitudeLabel"));
         infoTab.add(longitudeJLabel, "aligny top");
 
-        longitudeJTextField = new JFormattedTextField(nfl);
+        longitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
         longitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
         infoTab.add(longitudeJTextField, "wrap");
-
-        final JScrollPane jScrollPane = new JScrollPane(infoTab);
-        jScrollPane.setWheelScrollingEnabled(true);
-        tabs.add("Info", jScrollPane);
-
-        final JPanel fileTab = new JPanel(new MigLayout());
-        JLabel highresLocationJLabel = new JLabel(Settings.getJpoResources().getString("highresLocationLabel"));
-        fileTab.add(highresLocationJLabel, "span 2, wrap");
-        highresErrorJLabel.setFont(ERROR_LABEL_FONT);
-        highresLocationJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        fileTab.add(highresLocationJTextField);
-
-        final JButton highresLocationJButton = new ThreeDotButton();
-        highresLocationJButton.addActionListener((ActionEvent e) -> chooseFile());
-        fileTab.add(highresLocationJButton, "wrap");
-        fileTab.add(highresErrorJLabel, "span 2, wrap");
-
-        final JButton refreshChecksumJButton = new JButton(Settings.getJpoResources().getString("checksumJButton"));
-        refreshChecksumJButton.setPreferredSize(new Dimension(80, 25));
-        refreshChecksumJButton.setMinimumSize(new Dimension(80, 25));
-        refreshChecksumJButton.setMaximumSize(new Dimension(80, 25));
-        refreshChecksumJButton.addActionListener((ActionEvent e) -> new Thread(
-                () -> {
-                    pictureInfo.setSha256();
-                    pictureInfo.calculateChecksum();
-                }
-        ).start());
-
-        fileTab.add(checksumJLabel, "wrap");
-        fileTab.add(fileHashJLabel, "wrap");
-        fileTab.add(refreshChecksumJButton, "wrap");
-
-        tabs.add("File", fileTab);
-
-        final JPanel categoriesTab = new JPanel(new MigLayout());
-        final JLabel categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel-2"));
-        categoriesTab.add(categoriesJLabel, "wrap");
-
-        categoriesTab.add(categoryAssignmentsJLabel, "wrap");
-
-        categoriesJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        categoriesJList.addListSelectionListener((ListSelectionEvent e) -> {
-                    if (e.getValueIsAdjusting()) {
-                        return;
-                    }
-                    if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(setupCategories))) {
-                        new CategoryEditorJFrame();
-                    } else if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(noCategories))) {
-                        categoriesJList.clearSelection();
-                    }
-                    categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
-                }
-        );
-
-        categoriesTab.add(listJScrollPane, "push, grow, wrap");
-        tabs.add("Categories", categoriesTab);
-
-        // Add Exif panel
-        exifTagsJTextArea.setWrapStyleWord(true);
-        exifTagsJTextArea.setLineWrap(false);
-        exifTagsJTextArea.setEditable(true);
-        exifTagsJTextArea.setRows(17);
-        exifTagsJTextArea.setColumns(35);
-
-        // stop undesired scrolling in the window when doing append
-        final NonFocussedCaret dumbCaret = new NonFocussedCaret();
-        exifTagsJTextArea.setCaret(dumbCaret);
-
-        final JScrollPane exifJScrollPane = new JScrollPane();
-        exifJScrollPane.setViewportView(exifTagsJTextArea);
-        exifJScrollPane.setWheelScrollingEnabled(true);
-
-        tabs.add("Exif", exifJScrollPane);
-
-        tabs.add("Map", mapViewer.getJXMapViewer());
-        mapViewer.getJXMapViewer().addMouseListener(new MyMapClickListener(mapViewer.getJXMapViewer()));
-
-        setLayout(new MigLayout());
-        getContentPane().add(mainPanel);
+        return infoTab;
     }
 
     private final transient MapViewer mapViewer = new MapViewer();
@@ -591,6 +635,7 @@ public class PictureInfoEditor extends JFrame {
 
     private void setHighresLocation() {
         highresLocationJTextField.setText(pictureInfo.getImageFile().toString());
+        fileSizeJLabel.setText(pictureInfo.getImageFile() == null ? "no file" : FileUtils.byteCountToDisplaySize(pictureInfo.getImageFile().length()));
     }
 
     private void setDescription() {
