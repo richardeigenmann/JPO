@@ -1,5 +1,8 @@
 package org.jpo.datamodel;
 
+import javax.swing.tree.TreeNode;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -7,13 +10,13 @@ import java.util.logging.Logger;
 /*
  CategoryQuery.java:  A type of query for Categories
 
- Copyright (C) 2006-20204  Richard Eigenmann.
+ Copyright (C) 2006-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -113,6 +116,32 @@ public class CategoryQuery implements Query {
     @Override
     public void refresh() {
         resultList = null;
-        resultList = PictureCollection.getCategoryUsageNodes( key, Settings.getPictureCollection().getRootNode() );
+        resultList = getCategoryUsageNodes(key, Settings.getPictureCollection().getRootNode());
     }
+
+    /**
+     * Returns an List of the nodes that match this category
+     *
+     * @param key       The key of the category to find
+     * @param startNode the node at which to start
+     * @return the list of nodes
+     */
+    private static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
+            final Integer key, final SortableDefaultMutableTreeNode startNode) {
+        final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
+        final Enumeration<TreeNode> nodes = startNode.children();
+        while (nodes.hasMoreElements()) {
+            final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            if (n.getUserObject() instanceof PictureInfo pi
+                    && pi.containsCategory(key)) {
+                resultList.add(n);
+            }
+            if (n.getChildCount() > 0) {
+                resultList.addAll(getCategoryUsageNodes(key, n));
+            }
+        }
+        return resultList;
+    }
+
+
 }

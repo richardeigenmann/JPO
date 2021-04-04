@@ -2,15 +2,15 @@ package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.datamodel.Category;
-import org.jpo.datamodel.PictureCollection;
-import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.*;
 
 import javax.swing.*;
+import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Enumeration;
 import java.util.logging.Logger;
 
 /*
@@ -143,7 +143,7 @@ public class CategoryEditorJFrame
                 return; // nothing selected
             } // nothing selected
             final Category cat = categoriesJList.getModel().getElementAt(index);
-            int count = PictureCollection.countCategoryUsage(cat.getKey(), Settings.getPictureCollection().getRootNode());
+            int count = countCategoryUsage(cat.getKey(), Settings.getPictureCollection().getRootNode());
             if (count > 0) {
                 int answer = JOptionPane.showConfirmDialog(CategoryEditorJFrame.this,
                         Settings.getJpoResources().getString("countCategoryUsageWarning1") + count + Settings.getJpoResources().getString("countCategoryUsageWarning2"),
@@ -161,6 +161,30 @@ public class CategoryEditorJFrame
             Settings.getPictureCollection().removeCategory(cat.getKey());
         });
         return deleteCategoryJButton;
+    }
+
+    /**
+     * Counts the number of nodes using the category
+     *
+     * @param key       The Key
+     * @param startNode the node to start from
+     * @return the number of nodes
+     */
+    private static int countCategoryUsage(final Integer key,
+                                          final SortableDefaultMutableTreeNode startNode) {
+        final Enumeration<TreeNode> nodes = startNode.children();
+        int count = 0;
+        while (nodes.hasMoreElements()) {
+            final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            if (n.getUserObject() instanceof PictureInfo pi
+                    && pi.containsCategory(key)) {
+                count++;
+            }
+            if (n.getChildCount() > 0) {
+                count += countCategoryUsage(key, n);
+            }
+        }
+        return count;
     }
 
     @NotNull
