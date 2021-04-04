@@ -10,7 +10,7 @@ buildscript {
 
 plugins {
     id "org.sonarqube" version "3.1.1"
-    id "com.github.ben-manes.versions" version "0.36.0"
+    id "com.github.ben-manes.versions" version "0.38.0"
     id 'signing'
     id 'java'
     id 'jacoco'
@@ -101,7 +101,7 @@ dependencies {
     implementation 'org.apache.commons:commons-jcs3:3.0'
     implementation 'org.apache.commons:commons-jcs3-core:3.0'
     implementation 'org.apache.commons:commons-jcs3-jcache:3.0'
-    implementation 'org.apache.commons:commons-lang3:3.11'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
     //implementation 'org.apache.commons:commons-jcs-core:2.2.1'
     //implementation 'org.apache.commons:commons-jcs-jcache:2.2.1'
     implementation 'org.apache.commons:commons-text:1.9'
@@ -114,7 +114,7 @@ dependencies {
     //implementation files('libs/gdata-media-1.0.jar')
     //implementation files('libs/gdata-photos-2.0.jar')
 
-    implementation 'com.google.guava:guava:30.1-jre'
+    implementation 'com.google.guava:guava:30.1.1-jre'
     implementation 'javax.mail:javax.mail-api:1.6.2'
     implementation 'com.jcraft:jsch:0.1.55'
 
@@ -139,7 +139,7 @@ dependencies {
     //implementation 'com.adobe.xmp:xmpcore:6.1.10'
     implementation 'org.jetbrains:annotations:20.1.0'
 
-    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.6.4'
     implementation 'org.apache.xmlgraphics:batik-transcoder:1.14'
     implementation 'org.apache.xmlgraphics:batik-anim:1.14'
     implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.14'
@@ -147,26 +147,26 @@ dependencies {
     implementation 'org.apache.xmlgraphics:batik-extension:1.14'
     implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.6'
     implementation 'org.apache.xmlgraphics:batik-svggen:1.14'
-    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.6.2'
+    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.6.4'
     //implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.4.1' //OK -- But what does it do?
-    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6.2'
-    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6.2'
-    implementation group: 'org.json', name: 'json', version: '20201115'
+    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.6.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.6.4'
+    implementation group: 'org.json', name: 'json', version: '20210307'
     implementation 'org.bidib.com.jidesoft:jide-common:3.7.11'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.0-M1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.0-M1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0-M1'
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.0.3'
@@ -187,6 +187,9 @@ sourceSets {
     }
 }
     
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
 
 test {
     useJUnitPlatform()
