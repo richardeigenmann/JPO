@@ -260,12 +260,35 @@ public class PictureInfoEditor extends JFrame {
         final JScrollPane exifJScrollPane = getExifJScrollPane();
         tabs.add("Exif", exifJScrollPane);
 
-        tabs.add("Map", mapViewer.getJXMapViewer());
+        final JPanel mapTab = getMapTab();
+
+        tabs.add("Map", mapTab);
 
         mapViewer.getJXMapViewer().addMouseListener(new MyMapClickListener(mapViewer.getJXMapViewer()));
 
         setLayout(new MigLayout());
         getContentPane().add(mainPanel);
+    }
+
+    @NotNull
+    private JPanel getMapTab() {
+        final JPanel mapTab = new JPanel();
+        mapTab.setLayout(new MigLayout());
+        mapTab.add(mapViewer.getJXMapViewer(), "push, grow, span 4, wrap");
+        final JLabel latitudeJLabel = new JLabel(Settings.getJpoResources().getString("latitudeLabel"));
+        mapTab.add(latitudeJLabel, "aligny top");
+
+        latitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
+        latitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
+        mapTab.add(latitudeJTextField);
+
+        final JLabel longitudeJLabel = new JLabel(Settings.getJpoResources().getString("longitudeLabel"));
+        mapTab.add(longitudeJLabel, "aligny top");
+
+        longitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
+        longitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
+        mapTab.add(longitudeJTextField, "wrap");
+        return mapTab;
     }
 
     @NotNull
@@ -482,20 +505,6 @@ public class PictureInfoEditor extends JFrame {
         copyrightHolderJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
         infoTab.add(copyrightHolderJTextField, "span 2, wrap");
 
-        final JLabel latitudeJLabel = new JLabel(Settings.getJpoResources().getString("latitudeLabel"));
-        infoTab.add(latitudeJLabel, "aligny top");
-
-
-        latitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
-        latitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
-        infoTab.add(latitudeJTextField, "wrap");
-
-        final JLabel longitudeJLabel = new JLabel(Settings.getJpoResources().getString("longitudeLabel"));
-        infoTab.add(longitudeJLabel, "aligny top");
-
-        longitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
-        longitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
-        infoTab.add(longitudeJTextField, "wrap");
         return infoTab;
     }
 
