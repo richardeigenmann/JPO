@@ -120,12 +120,12 @@ public class GroupInfo implements Serializable {
      * that the description was updated.
      */
     private void sendGroupNameChangedEvent() {
-        LOGGER.log(Level.INFO, "preparing to send GroupName changed event");
+        LOGGER.log(Level.FINE, "preparing to send GroupName changed event");
         if ( ( Settings.getPictureCollection() != null ) && ( Settings.getPictureCollection().getSendModelUpdates() ) ) {
             final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
             groupInfoChangeEvent.setGroupNameChanged();
             sendGroupInfoChangedEvent(groupInfoChangeEvent);
-            LOGGER.log(Level.INFO, "sent description changed event");
+            LOGGER.log(Level.FINE, "sent description changed event");
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }

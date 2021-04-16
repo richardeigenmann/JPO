@@ -93,7 +93,10 @@ public class PictureCollection {
      * collection.
      */
     private DefaultTreeModel queriesTreeModel;
+
     private DefaultMutableTreeNode yearsTreeNode;
+
+    private DefaultMutableTreeNode categoriesTreeNode;
     /**
      * status variable to find out if a thread is loading a file
      */
@@ -388,6 +391,9 @@ public class PictureCollection {
         final DefaultMutableTreeNode byYearsTreeNode = new DefaultMutableTreeNode("By Year");
         setYearsTreeNode(byYearsTreeNode);
         getQueriesRootNode().add(byYearsTreeNode);
+        final DefaultMutableTreeNode byCategoriesTreeNode = new DefaultMutableTreeNode("By Category");
+        setCategoriesTreeNode(byCategoriesTreeNode);
+        getQueriesRootNode().add(byCategoriesTreeNode);
     }
 
     /**
@@ -400,12 +406,31 @@ public class PictureCollection {
     }
 
     /**
+     * Remembers the node on which the categories were added
+     *
+     * @param node The node
+     */
+    private void setCategoriesTreeNode(final DefaultMutableTreeNode node) {
+        categoriesTreeNode = node;
+    }
+
+
+    /**
      * Node for the Years tree
      *
      * @return the node
      */
     public DefaultMutableTreeNode getYearsTreeNode() {
         return yearsTreeNode;
+    }
+
+    /**
+     * Node for the Years tree
+     *
+     * @return the node
+     */
+    public DefaultMutableTreeNode getCategoriesTreeNode() {
+        return categoriesTreeNode;
     }
 
     /**
@@ -448,6 +473,18 @@ public class PictureCollection {
     }
 
     /**
+     * Adds a query to the Query Category Tree Model.
+     *
+     * @param query The new Query to add
+     */
+    public void addCategoryQueryToTreeModel(final Query query) {
+        LOGGER.log(Level.INFO, "Adding query {0}", query);
+        final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(query);
+        getCategoriesTreeNode().add(newNode);
+        queriesTreeModel.nodesWereInserted(getCategoriesTreeNode(), new int[]{getCategoriesTreeNode().getIndex(newNode)});
+    }
+
+    /**
      * This adds a category to the HashMap
      *
      * @param index    The index
@@ -455,20 +492,13 @@ public class PictureCollection {
      */
     public void addCategory(final Integer index, final String category) {
         categories.put(index, category);
-
-        SwingUtilities.invokeLater(
-                () -> {
-                    // add a new CategoryQuery to the Searches tree
-                    final CategoryQuery categoryQuery = new CategoryQuery(index);
-                    addQueryToTreeModel(categoryQuery);
-                }
-        );
     }
 
     /**
-     * This adds a category to the HashMap
+     * This adds a category to the HashMap if it doesn't already exist and
+     * returns the corresponding Integer code for the category.
      *
-     * @param category The category
+     * @param category The category to save or look up
      * @return the number at which the category was added
      */
     public Integer addCategory(final String category) {
@@ -757,6 +787,7 @@ public class PictureCollection {
         try {
             fileLoad(getXmlFile(), getRootNode());
             addYearQueries();
+            addCategoriesQueries();
             fileLoading = false;
         } catch (FileNotFoundException ex) {
             fileLoading = false;
@@ -784,8 +815,21 @@ public class PictureCollection {
                     years.forEach(this::addYearQuery);
                 }
         );
-
     }
+
+    private void addCategoriesQueries() {
+        SwingUtilities.invokeLater(
+                () -> {
+                    getCategoriesTreeNode().removeAllChildren();
+                    getSortedCategoryStream().forEach(categoryEntry -> {
+                        LOGGER.log(Level.INFO, "Adding category {0} to Tree", categoryEntry.getValue());
+                        final CategoryQuery categoryQuery = new CategoryQuery(categoryEntry.getKey());
+                        addCategoryQueryToTreeModel(categoryQuery);
+                    });
+                }
+        );
+    }
+
 
     /**
      * method that saves the entire index in XML format.
