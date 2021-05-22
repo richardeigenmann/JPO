@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
 import org.jpo.datamodel.Settings;
@@ -318,7 +317,10 @@ public class SourcePicture {
     }
 
 
-    @TestOnly
+    /**
+     * Returns a reader for the Image
+     * TODO: can throw a java.util.NoSuchElementException --> What should we do then?
+     */
     public static ImageReader getImageIOReader(final ImageInputStream iis) {
         final Iterator<ImageReader> readerIterator = ImageIO.getImageReaders(iis);
         return readerIterator.next();
