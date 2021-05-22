@@ -55,32 +55,32 @@ public class PrivacyJFrame
      * Creates the GUI widgets.
      */
     private void initGui() {
-        final MigLayout layout = new MigLayout( "insets 10" );
-        final JPanel privacyPanel = new JPanel( layout );
+        final var layout = new MigLayout("insets 10");
+        final var privacyPanel = new JPanel(layout);
 
-        final JCheckBox clearRecentFiles = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearRecentFiles"));
-        privacyPanel.add( clearRecentFiles );
-        final JButton clearRecentFilesButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
-        clearRecentFilesButton.addActionListener(( ActionEvent e ) -> privacyController.clearRecentFiles());
-        privacyPanel.add( clearRecentFilesButton, "wrap" );
+        final var clearRecentFiles = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearRecentFiles"));
+        privacyPanel.add(clearRecentFiles);
+        final var clearRecentFilesButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
+        clearRecentFilesButton.addActionListener((ActionEvent e) -> privacyController.clearRecentFiles());
+        privacyPanel.add(clearRecentFilesButton, "wrap");
 
-        final JCheckBox clearAutoload = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearAutoload"));
-        privacyPanel.add( clearAutoload );
-        final JButton clearAutoloadButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
+        final var clearAutoload = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearAutoload"));
+        privacyPanel.add(clearAutoload);
+        final var clearAutoloadButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
         clearAutoloadButton.addActionListener(( ActionEvent e ) -> privacyController.clearAutoload());
         privacyPanel.add( clearAutoloadButton, "wrap" );
 
-        final JCheckBox clearMemorisedDirs = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearMemorisedDirs"));
+        final var clearMemorisedDirs = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearMemorisedDirs"));
         privacyPanel.add( clearMemorisedDirs );
-        final JButton clearMemorisedDirsButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
+        final var clearMemorisedDirsButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
         clearMemorisedDirsButton.addActionListener(( ActionEvent e ) -> privacyController.clearMemorisedDirs());
         privacyPanel.add( clearMemorisedDirsButton, "wrap" );
 
-        final JButton selected = new JButton(Settings.getJpoResources().getString("PrivacySelected"));
+        final var selected = new JButton(Settings.getJpoResources().getString("PrivacySelected"));
         selected.addActionListener(( ActionEvent e ) -> privacyController.clearSelected( clearRecentFiles.isSelected(), clearAutoload.isSelected(), clearMemorisedDirs.isSelected() ));
         privacyPanel.add( selected, "split 2" );
 
-        final JButton all = new JButton(Settings.getJpoResources().getString("PrivacyAll"));
+        final var all = new JButton(Settings.getJpoResources().getString("PrivacyAll"));
         all.addActionListener(( ActionEvent e ) -> privacyController.clearAll());
         privacyPanel.add( all );
 
@@ -165,6 +165,7 @@ public class PrivacyJFrame
          */
         public void clearMemorisedDirs() {
             Settings.clearCopyLocations();
+            Settings.clearSourceLocations();
         }
     }
 }

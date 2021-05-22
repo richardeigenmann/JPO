@@ -2,10 +2,11 @@ package org.jpo.gui;
 
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
 import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.SourceLocationsChangedEvent;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;
@@ -16,13 +17,13 @@ import java.io.File;
 
 
 /*
- Copyright (C) 2002, 2020 Richard Eigenmann.
+ Copyright (C) 2002, 2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -46,13 +47,13 @@ public class PictureFileChooser
     /**
      * Construct the PictureFileChooser and show it.
      *
-     * @param startNode The node to which the selected pictures are to be added.
-     * It must be a GroupInfo Node.
+     * @param request The ChooseAndAddPicturesToGroupRequest which has a link to the node that should be added to.
+     *                It must be a GroupInfo Node.
      */
-    public PictureFileChooser( final SortableDefaultMutableTreeNode startNode ) {
+    public PictureFileChooser(final ChooseAndAddPicturesToGroupRequest request) {
         Tools.checkEDT();
 
-        if ( !( startNode.getUserObject() instanceof GroupInfo ) ) {
+        if (!(request.node().getUserObject() instanceof GroupInfo)) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("notGroupInfo"),
@@ -65,43 +66,39 @@ public class PictureFileChooser
 
         if (jFileChooser.showOpenDialog(Settings.getAnchorFrame()) == JFileChooser.APPROVE_OPTION) {
             final File[] chosenFiles = jFileChooser.getSelectedFiles();
+            Settings.memorizeSourceLocation(jFileChooser.getCurrentDirectory().getPath());
             Settings.memorizeCopyLocation(jFileChooser.getCurrentDirectory().getPath());
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
+            JpoEventBus.getInstance().post(new SourceLocationsChangedEvent());
 
             Settings.setShowThumbOnFileChooser(showThumbnailJCheckBox.isSelected());
 
-            PictureAdder pictureAdder = new PictureAdder(startNode, chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories());
+            // ToDo: This must be fired off from the Event handler!
+            var pictureAdder = new PictureAdder(request.node(), chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories());
             pictureAdder.execute();
         }
     }
 
     /**
-     * This method is invoked from the FileChooser and creates the thumbnail.
-     *
-     * See <a href="http://java.sun.com/developer/JDCTechTips/index.html">Core
-     * Java Technologies Tech Tips</a> for the March 16 2004 issue on Preview
-     * panels in the JFileChooser.
+     * This method is invoked from the FileChooser and creates the thumbnail as a preview in the chooser window
      *
      * @param changeEvent The event from the FileChooser that changed
      */
     @Override
-    public void propertyChange( PropertyChangeEvent changeEvent ) {
-        String changeName = changeEvent.getPropertyName();
-        if ( changeName.equals( JFileChooser.SELECTED_FILE_CHANGED_PROPERTY ) ) {
-            File file = (File) changeEvent.getNewValue();
-            if ( ( file != null ) && ( showThumbnailJCheckBox.isSelected() ) ) {
-                ImageIcon icon = new ImageIcon( file.getPath() );
-                if ( icon.getIconWidth() > OPTIONS_PANEL_DIMENSION.getWidth() ) {
-                    icon = new ImageIcon( icon.getImage().getScaledInstance( (int) OPTIONS_PANEL_DIMENSION.getWidth(), -1,
-                            Image.SCALE_DEFAULT ) );
-                    if ( icon.getIconHeight() > OPTIONS_PANEL_DIMENSION.getHeight() ) {
-                        icon = new ImageIcon( icon.getImage().getScaledInstance( -1, (int) OPTIONS_PANEL_DIMENSION.getHeight(),
-                                Image.SCALE_DEFAULT ) );
+    public void propertyChange(final PropertyChangeEvent changeEvent) {
+        if (changeEvent.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+            final var file = (File) changeEvent.getNewValue();
+            if ((file != null) && (showThumbnailJCheckBox.isSelected())) {
+                var icon = new ImageIcon(file.getPath());
+                if (icon.getIconWidth() > OPTIONS_PANEL_DIMENSION.getWidth()) {
+                    icon = new ImageIcon(icon.getImage().getScaledInstance((int) OPTIONS_PANEL_DIMENSION.getWidth(), -1,
+                            Image.SCALE_DEFAULT));
+                    if (icon.getIconHeight() > OPTIONS_PANEL_DIMENSION.getHeight()) {
+                        icon = new ImageIcon(icon.getImage().getScaledInstance(-1, (int) OPTIONS_PANEL_DIMENSION.getHeight(),
+                                Image.SCALE_DEFAULT));
                     }
                 }
-                final ImageIcon setIcon = icon;
-                Tools.checkEDT();
-                thumbnailJLabel.setIcon( setIcon );
+                thumbnailJLabel.setIcon(icon);
             }
         }
     }
@@ -155,7 +152,7 @@ public class PictureFileChooser
         showThumbnailJCheckBox.setSelected(Settings.isShowThumbOnFileChooser());
         retainDirectoriesJCheckBox.setSelected(true);
 
-        JPanel optionsJPanel = new JPanel();
+        final var optionsJPanel = new JPanel();
         optionsJPanel.setLayout( new BoxLayout( optionsJPanel, BoxLayout.Y_AXIS ) );
         optionsJPanel.add( recurseJCheckBox, BorderLayout.WEST );
         optionsJPanel.add(newOnlyJCheckBox, BorderLayout.WEST);
@@ -166,7 +163,7 @@ public class PictureFileChooser
 
         categoryJScrollPane.loadCategories(Settings.getPictureCollection().getCategoryIterator());
 
-        JTabbedPane tabbedPane = new JTabbedPane();
+        final var tabbedPane = new JTabbedPane();
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
         tabbedPane.add(Settings.getJpoResources().getString("pictureAdderOptionsTab"), optionsJPanel);
         tabbedPane.add(Settings.getJpoResources().getString("pictureAdderThumbnailTab"), thumbnailJLabel);
@@ -177,7 +174,7 @@ public class PictureFileChooser
         jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileChooserAddButtonLabel"));
         jFileChooser.setDialogTitle(Settings.getJpoResources().getString("PictureAdderDialogTitle"));
         jFileChooser.setAccessory(tabbedPane);
-        jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
+        jFileChooser.setCurrentDirectory(Settings.getMostRecentSourceLocation());
         jFileChooser.addPropertyChangeListener(this);
     }
 }

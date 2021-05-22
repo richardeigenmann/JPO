@@ -1487,7 +1487,7 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleChooseAndAddPicturesToGroupRequest(final ChooseAndAddPicturesToGroupRequest request) {
-        new PictureFileChooser(request.node());
+        new PictureFileChooser(request);
     }
 
     /**

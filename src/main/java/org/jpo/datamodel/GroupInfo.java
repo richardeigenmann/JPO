@@ -122,7 +122,7 @@ public class GroupInfo implements Serializable {
     private void sendGroupNameChangedEvent() {
         LOGGER.log(Level.FINE, "preparing to send GroupName changed event");
         if ( ( Settings.getPictureCollection() != null ) && ( Settings.getPictureCollection().getSendModelUpdates() ) ) {
-            final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
+            final var groupInfoChangeEvent = new GroupInfoChangeEvent(this);
             groupInfoChangeEvent.setGroupNameChanged();
             sendGroupInfoChangedEvent(groupInfoChangeEvent);
             LOGGER.log(Level.FINE, "sent description changed event");
@@ -180,7 +180,7 @@ public class GroupInfo implements Serializable {
      * notification.
      */
     public void sendWasSelectedEvent() {
-        final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
+        final var groupInfoChangeEvent = new GroupInfoChangeEvent(this);
         groupInfoChangeEvent.setWasSelected();
         sendGroupInfoChangedEvent(groupInfoChangeEvent);
     }
@@ -194,7 +194,7 @@ public class GroupInfo implements Serializable {
      */
     public void sendWasUnselectedEvent() {
         LOGGER.fine("Sending unselected event");
-        final GroupInfoChangeEvent groupInfoChangeEvent = new GroupInfoChangeEvent(this);
+        final var groupInfoChangeEvent = new GroupInfoChangeEvent(this);
         groupInfoChangeEvent.setWasUnselected();
         sendGroupInfoChangedEvent(groupInfoChangeEvent);
     }

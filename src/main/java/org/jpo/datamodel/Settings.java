@@ -22,7 +22,7 @@ import java.util.prefs.Preferences;
 /*
  * Copyright (C) 2002 - 2021 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation;
+ * the GNU General Public License as published by the Free Software Foundation,
  * either version 2 of the License, or any later version. This program is
  * distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
  * Without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
@@ -246,6 +246,11 @@ public class Settings {
      * selections.
      */
     private static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
+    /**
+     * Queue of recently used directories in source operations and other file
+     * selections.
+     */
+    private static final Queue<String> sourceLocations = EvictingQueue.create(MAX_MEMORISE);
     /**
      * Array of recently used zip files operations and other file selections.
      */
@@ -1495,17 +1500,24 @@ public class Settings {
         lastViewerCoordinates.width = prefs.getInt("lastViewerCoordinates.width", lastViewerCoordinates.width);
         lastViewerCoordinates.height = prefs.getInt("lastViewerCoordinates.height", lastViewerCoordinates.height);
 
-        for (int i = 0; i < MAX_MEMORISE; i++) {
+        for (var i = 0; i < MAX_MEMORISE; i++) {
             String key = "copyLocations-" + i;
             String loc = prefs.get(key, null);
             if (loc != null) {
                 copyLocations.add(loc);
             }
         }
-        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+        for (var i = 0; i < MAX_MEMORISE; i++) {
+            String key = "sourceLocations-" + i;
+            String loc = prefs.get(key, null);
+            if (loc != null) {
+                sourceLocations.add(loc);
+            }
+        }
+        for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentCollections[i] = prefs.get("recentCollections-" + i, null);
         }
-        for (int i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
+        for (var i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
             userFunctionNames[i] = prefs.get("userFunctionName-" + i, null);
             userFunctionCmd[i] = prefs.get("userFunctionCmd-" + i, null);
         }
@@ -1518,11 +1530,11 @@ public class Settings {
         defaultHtmlThumbnailWidth = prefs.getInt("defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth);
         defaultHtmlThumbnailHeight = prefs.getInt("defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight);
         defaultGenerateMidresHtml = prefs.getBoolean("defaultGenerateMidresHtml", defaultGenerateMidresHtml);
-        String defaultHtmlPictureNamingString = prefs.get("defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name());
+        var defaultHtmlPictureNamingString = prefs.get("defaultHtmlPictureNamingString", defaultHtmlPictureNaming.name());
         defaultHtmlPictureNaming = GenerateWebsiteRequest.PictureNamingType.valueOf(defaultHtmlPictureNamingString);
-        String defaultHtmlOutputTargetString = prefs.get("defaultHtmlOutputTarget", defaultHtmlOutputTarget.name());
+        var defaultHtmlOutputTargetString = prefs.get("defaultHtmlOutputTarget", defaultHtmlOutputTarget.name());
         defaultHtmlOutputTarget = GenerateWebsiteRequest.OutputTarget.valueOf(defaultHtmlOutputTargetString);
-        String defaultHtmlSshAuthTypeString = prefs.get("defaultHtmlSshAuthType", defaultHtmlSshAuthType.name());
+        var defaultHtmlSshAuthTypeString = prefs.get("defaultHtmlSshAuthType", defaultHtmlSshAuthType.name());
         defaultHtmlSshAuthType = GenerateWebsiteRequest.SshAuthType.valueOf(defaultHtmlSshAuthTypeString);
 
         defaultGenerateMap = prefs.getBoolean("defaultGenerateMap", defaultGenerateMap);
@@ -1551,12 +1563,12 @@ public class Settings {
         thumbnailFastScale = prefs.getBoolean("thumbnailFastScale", thumbnailFastScale);
         pictureViewerFastScale = prefs.getBoolean("pictureViewerFastScale", pictureViewerFastScale);
         showThumbOnFileChooser = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
-        int emailSenders = prefs.getInt("emailSenders", 0);
-        for (int i = 0; i < emailSenders; i++) {
+        var emailSenders = prefs.getInt("emailSenders", 0);
+        for (var i = 0; i < emailSenders; i++) {
             Settings.emailSenders.add(prefs.get("emailSender-" + i, ""));
         }
-        int emailRecipients = prefs.getInt("emailRecipients", 0);
-        for (int i = 0; i < emailRecipients; i++) {
+        var emailRecipients = prefs.getInt("emailRecipients", 0);
+        for (var i = 0; i < emailRecipients; i++) {
             Settings.emailRecipients.add(prefs.get("emailRecipient-" + i, ""));
         }
         emailServer = prefs.get("emailServer", emailServer);
@@ -1583,6 +1595,7 @@ public class Settings {
 
 
         validateCopyLocations();
+        validateSourceLocations();
         validateSettings();
 
         loadCameraSettings();
@@ -1614,7 +1627,7 @@ public class Settings {
                     writeLog = false;
                 }
             } else {
-                File testFileParent = logfile.getParentFile();
+                var testFileParent = logfile.getParentFile();
                 if (testFileParent == null) {
                     // the parent of root dir is null
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
@@ -1660,13 +1673,17 @@ public class Settings {
         prefs.putInt("lastViewerCoordinates.width", lastViewerCoordinates.width);
         prefs.putInt("lastViewerCoordinates.height", lastViewerCoordinates.height);
         final Iterator<String> iterator = copyLocations.iterator();
-        for (int ordinal = 0; iterator.hasNext(); ordinal++) {
+        for (var ordinal = 0; iterator.hasNext(); ordinal++) {
             prefs.put(String.format("copyLocations-%d", ordinal), iterator.next());
+        }
+        final Iterator<String> iterator2 = sourceLocations.iterator();
+        for (var ordinal = 0; iterator2.hasNext(); ordinal++) {
+            prefs.put(String.format("sourceLocations-%d", ordinal), iterator2.next());
         }
 
         // recent collections
-        int n = 0;
-        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+        var n = 0;
+        for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             if (recentCollections[i] != null) {
                 prefs.put(String.format("recentCollections-%d", n), recentCollections[i]);
                 n++;
@@ -1773,7 +1790,7 @@ public class Settings {
      */
     public static void writeCameraSettings() {
         prefs.putInt("NumberOfCameras", cameras.size());
-        int i = 0;
+        var i = 0;
         for (final Camera c : cameras) {
             final String camera = "Camera[" + i + "]";
             prefs.put(camera + ".description", c.getDescription());
@@ -1794,10 +1811,10 @@ public class Settings {
      */
     @SuppressWarnings("unchecked")
     public static void loadCameraSettings() {
-        int numberOfCameras = prefs.getInt("NumberOfCameras", 0);
-        for (int i = 0; i < numberOfCameras; i++) {
-            final Camera camera = new Camera();
-            final String CAMERA = "Camera[" + i + "]";
+        var numberOfCameras = prefs.getInt("NumberOfCameras", 0);
+        for (var i = 0; i < numberOfCameras; i++) {
+            final var camera = new Camera();
+            final var CAMERA = "Camera[" + i + "]";
             camera.setDescription(prefs.get(CAMERA + ".description", "unknown"));
             camera.setCameraMountPoint(prefs.get(CAMERA + ".cameraMountPoint", FileSystemView.getFileSystemView().getHomeDirectory().toString()));
             camera.setUseFilename(prefs.getBoolean(CAMERA + ".useFilename", true));
@@ -1824,7 +1841,7 @@ public class Settings {
      * @param recentFile The collection file name to be memorised
      */
     public static void pushRecentCollection(final String recentFile) {
-        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+        for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             if ((recentCollections[i] != null)
                     && (recentCollections[i].equals(recentFile))) {
                 // it was already in the list make it the first one
@@ -1848,7 +1865,7 @@ public class Settings {
      * {@code JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() ); }
      */
     public static void clearRecentCollection() {
-        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+        for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentCollections[i] = null;
             writeSettings();
         }
@@ -1890,7 +1907,7 @@ public class Settings {
      * @return true if the locale was changed, false if not.
      */
     public static boolean setLocale(final Locale newLocale) {
-        Locale oldLocale = currentLocale;
+        var oldLocale = currentLocale;
         try {
             jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", newLocale);
             currentLocale = newLocale;
@@ -1969,6 +1986,26 @@ public class Settings {
     }
 
     /**
+     * This method memorises the directories used in source operations so that
+     * they can be offered as options in drop down lists.
+     * <p>
+     * The callers of this method need to make sure they notify interested
+     * listeners of a change by calling:
+     * <p>
+     * {@code JpoEventBus.getInstance().post( new SourceLocationsChangedEvent() );}
+     *
+     * @param location The new location to memorise
+     */
+    public static void memorizeSourceLocation(final String location) {
+        if (!sourceLocations.contains(location)) {
+            sourceLocations.add(location);
+        }
+        validateSourceLocations();
+        writeSettings();
+    }
+
+
+    /**
      * This method memorises the zip files used in copy operations so that they
      * can be offered as options in drop down lists.
      *
@@ -1993,6 +2030,14 @@ public class Settings {
     }
 
     /**
+     * This method validates that the source locations are valid directories and
+     * removes those that don't exist
+     */
+    public static void validateSourceLocations() {
+        sourceLocations.removeIf(location -> !new File(location).exists());
+    }
+
+    /**
      * This method clears the copy locations and saves the settings
      */
     public static void clearCopyLocations() {
@@ -2001,13 +2046,38 @@ public class Settings {
     }
 
     /**
-     * This method returns the most recently used copy location. If there is no
+     * This method clears the source locations and saves the settings
+     */
+    public static void clearSourceLocations() {
+        sourceLocations.clear();
+        writeSettings();
+    }
+
+
+    /**
+     * This method returns the most recently used source location. If there is no
+     * most recent sourceLocation then the user's home directory is returned.
+     *
+     * @return Returns the most recent source location directory or the user's
+     * home directory
+     */
+    public static File getMostRecentCopyLocation() {
+        for (final String sourceLocation : sourceLocations) {
+            if (sourceLocation != null) {
+                return new File(sourceLocation);
+            }
+        }
+        return new File(System.getProperty("user.dir"));
+    }
+
+    /**
+     * This method returns the most recently used source location. If there is no
      * most recent copyLocation then the user's home directory is returned.
      *
      * @return Returns the most recent copy location directory or the user's
      * home directory
      */
-    public static File getMostRecentCopyLocation() {
+    public static File getMostRecentSourceLocation() {
         for (String copyLocation : copyLocations) {
             if (copyLocation != null) {
                 return new File(copyLocation);

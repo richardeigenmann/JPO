@@ -17,9 +17,9 @@ package org.jpo.eventbus;
  */
 
 /**
- * This event indicates that the copy locations in the Settings object changed
+ * This event indicates that the source locations in the Settings object changed
  *
  * @author Richard Eigenmann
  */
-public class CopyLocationsChangedEvent {
+public class SourceLocationsChangedEvent {
 }

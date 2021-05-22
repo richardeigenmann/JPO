@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 public class PictureViewerTest {
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
@@ -28,15 +28,15 @@ public class PictureViewerTest {
      * Test the listener
      */
     @Test
-    public void testConstructor() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testConstructor() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                final PictureViewer pictureViewer = new PictureViewer();
-                assertNotNull( pictureViewer );
-            } );
-        } catch ( final InterruptedException | InvocationTargetException ex ) {
-            fail( ex.getMessage() );
+            SwingUtilities.invokeAndWait(() -> {
+                final var pictureViewer = new PictureViewer();
+                assertNotNull(pictureViewer);
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
 
