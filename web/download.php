@@ -7,7 +7,7 @@
     other windows application by opening the Start menu, clicking on the cogwheel icon (Settings), choosing Apps
     in the Settings Window that opens up, scroll down to JPO and there click on the Uninstall button.</p>
 
-    <a href="https://sourceforge.net/projects/j-po/files/JPO-0.14.exe/download" rel="nofollow">
+    <a href="https://sourceforge.net/projects/j-po/files/JPO-0.15.exe/download" rel="nofollow">
         <img alt="Download JPO Java Picture Organizer for Windows" src="https://a.fsdn.com/con/app/sf-download-button">
     </a>
 
@@ -27,7 +27,7 @@
         how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
 
     <hr>
-    <p>Last update to this page: 13 Feb 2021<br>
+    <p>Last update to this page: 23 May 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include("page-end.php"); ?>

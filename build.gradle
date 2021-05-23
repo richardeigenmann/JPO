@@ -413,13 +413,13 @@ cd to a directory like Desktop\build
 copy the build/libs/Jpo-all.jar file there and the web/favicon.ico
 then run
 
-"c:\Program Files (x86)\jdk-15.0.1\bin\jpackage" ^
+"c:\Program Files (x86)\jdk-16.0.1\bin\jpackage" ^
 --type exe ^
 --input . ^
 --name JPO ^
 --description "Java Picture Organizer" ^
 --vendor "Richard Eigenmann" ^
---app-version 0.14 ^
+--app-version 0.15 ^
 --main-jar Jpo-all.jar ^
 --icon favicon.ico ^
 --java-options '--enable-preview' ^
@@ -428,7 +428,7 @@ then run
 --verbose ^
 --dest c:\Users\richa\Desktop
 
-Then move the JPO-0.14.exe file back to the source tree into
+Then move the JPO-0.15.exe file back to the source tree into
 build/executables
 
 Make sure the file web/jpo-version.json is up to date
