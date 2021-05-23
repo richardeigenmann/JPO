@@ -11,9 +11,10 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -77,27 +78,30 @@ class PictureFileChooserTest {
      * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
      */
     private static JDialog waitForDialog(final String titleToFind, int attempts) {
-        JDialog win = null;
-        do {
-            for (final var window : Frame.getWindows()) {
-                if (window instanceof JDialog jDialog) {
-                    if (titleToFind.equals(jDialog.getTitle())) {
-                        win = jDialog;
-                        break;
-                    }
+        final JDialog[] foundJDialog = new JDialog[1];
+        foundJDialog[0] = null;
+        await().atMost(5, SECONDS).until(() -> searchForDialog(titleToFind, foundJDialog));
+        return foundJDialog[0];
+    }
+
+    /**
+     * Searches for the Dialog window and returns true if it found it. The actual dialog
+     * is returned in the resultJDialog array (pass by reference)
+     *
+     * @param titleToFind
+     * @param resultJDialog
+     * @return
+     */
+    private static boolean searchForDialog(final String titleToFind, final JDialog[] resultJDialog) {
+        for (final var window : Frame.getWindows()) {
+            if (window instanceof JDialog jDialog) {
+                if (titleToFind.equals(jDialog.getTitle())) {
+                    resultJDialog[0] = jDialog;
+                    return true;
                 }
             }
-            LOGGER.log(Level.INFO, "Looking for a JDialog with the title {0} {1} attempts at 250ms intervals remaining", new Object[]{titleToFind, attempts});
-            attempts--;
-            if (win == null) {
-                try {
-                    Thread.sleep(250);
-                } catch (InterruptedException ex) {
-                    break;
-                }
-            }
-        } while (win == null && attempts >= 0);
-        return win;
+        }
+        return false;
     }
 
     /**
