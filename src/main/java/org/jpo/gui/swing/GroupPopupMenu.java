@@ -271,7 +271,7 @@ public class GroupPopupMenu extends JPopupMenu {
         final var sortJMenu = new JMenu(Settings.getJpoResources().getString("sortJMenu"));
         //requests a sort by Description
         final List<SortOption> sortOptions = Settings.getSortOptions();
-        final SortOption sortByDescription = sortOptions.get(1);
+        final var sortByDescription = sortOptions.get(1);
         final var sortByDescriptionJMenuItem = new JMenuItem(sortByDescription.getDescription());
         sortByDescriptionJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new SortGroupRequest(popupNode, sortByDescription.getSortCode())));
         sortJMenu.add(sortByDescriptionJMenuItem);
@@ -309,7 +309,7 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem getGroupSelectForEmail() {
-        final JMenuItem groupSelectForEmail = new JMenuItem(Settings.getJpoResources().getString("groupSelectForEmail"));
+        final var groupSelectForEmail = new JMenuItem(Settings.getJpoResources().getString("groupSelectForEmail"));
         groupSelectForEmail.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new AddGroupToEmailSelectionRequest(popupNode)));
         return groupSelectForEmail;
     }

@@ -247,10 +247,9 @@ public class Settings {
      */
     private static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
     /**
-     * Queue of recently used directories in source operations and other file
-     * selections.
+     * The most recently used directory for Add Pictures command
      */
-    private static final Queue<String> sourceLocations = EvictingQueue.create(MAX_MEMORISE);
+    private static String defaultSourceLocation = "";
     /**
      * Array of recently used zip files operations and other file selections.
      */
@@ -1215,7 +1214,6 @@ public class Settings {
      * @param showFilenamesOnThumbnailPanel the new value
      */
     public static void setShowFilenamesOnThumbnailPanel(boolean showFilenamesOnThumbnailPanel) {
-        LOGGER.log(Level.INFO, "In future show files on Thumbnail Panel: {0}", showFilenamesOnThumbnailPanel);
         if (Settings.showFilenamesOnThumbnailPanel != showFilenamesOnThumbnailPanel) {
             Settings.showFilenamesOnThumbnailPanel = showFilenamesOnThumbnailPanel;
             Settings.unsavedSettingChanges = true;
@@ -1507,13 +1505,7 @@ public class Settings {
                 copyLocations.add(loc);
             }
         }
-        for (var i = 0; i < MAX_MEMORISE; i++) {
-            String key = "sourceLocations-" + i;
-            String loc = prefs.get(key, null);
-            if (loc != null) {
-                sourceLocations.add(loc);
-            }
-        }
+        defaultSourceLocation = prefs.get("defaultSourceLocation", defaultSourceLocation);
         for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentCollections[i] = prefs.get("recentCollections-" + i, null);
         }
@@ -1589,13 +1581,9 @@ public class Settings {
         googlePassword = prefs.get("googlePassword", "");
         showFilenamesOnThumbnailPanel = prefs.getBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
         snoozeVersionAlertsExpiryDateTime = LocalDateTime.ofEpochSecond(prefs.getLong("snoozeVersionAlertsExpiryDateTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), 0, ZoneOffset.UTC);
-        LOGGER.log(Level.INFO, "loaded snoozeVersionAlertsExpiryDateTime as {0}", snoozeVersionAlertsExpiryDateTime);
         ignoreVersionAlerts = prefs.getBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
-        LOGGER.log(Level.INFO, "loaded ignoreVersionAlerts as {0}", ignoreVersionAlerts);
-
 
         validateCopyLocations();
-        validateSourceLocations();
         validateSettings();
 
         loadCameraSettings();
@@ -1676,10 +1664,7 @@ public class Settings {
         for (var ordinal = 0; iterator.hasNext(); ordinal++) {
             prefs.put(String.format("copyLocations-%d", ordinal), iterator.next());
         }
-        final Iterator<String> iterator2 = sourceLocations.iterator();
-        for (var ordinal = 0; iterator2.hasNext(); ordinal++) {
-            prefs.put(String.format("sourceLocations-%d", ordinal), iterator2.next());
-        }
+        prefs.put("defaultSourceLocation", defaultSourceLocation);
 
         // recent collections
         var n = 0;
@@ -1777,7 +1762,6 @@ public class Settings {
             prefs.put("googlePassword", "");
         }
         prefs.putBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
-        LOGGER.log(Level.INFO, "writing showFilenamesOnThumbnailPanel as {0}", showFilenamesOnThumbnailPanel);
         prefs.putLong("snoozeVersionAlertsExpiryDateTime", snoozeVersionAlertsExpiryDateTime.toEpochSecond(ZoneOffset.UTC));
         prefs.putBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
         unsavedSettingChanges = false;
@@ -1986,22 +1970,19 @@ public class Settings {
     }
 
     /**
-     * This method memorises the directories used in source operations so that
-     * they can be offered as options in drop down lists.
-     * <p>
-     * The callers of this method need to make sure they notify interested
-     * listeners of a change by calling:
-     * <p>
-     * {@code JpoEventBus.getInstance().post( new SourceLocationsChangedEvent() );}
+     * This method memorises the directory used in the most recent Add Pictures operation.
+     * The location is only memorized if it points to a valid directory.
      *
-     * @param location The new location to memorise
+     * @param newLocation The new location to memorise
      */
-    public static void memorizeSourceLocation(final String location) {
-        if (!sourceLocations.contains(location)) {
-            sourceLocations.add(location);
+    public static void memorizeDefaultSourceLocation(final String newLocation) {
+        LOGGER.log(Level.INFO, "Memorising Default SourceLocation: {0}", newLocation);
+        final var sourceLocationFile = new File(newLocation);
+        if (sourceLocationFile.exists() && sourceLocationFile.isDirectory()) {
+            LOGGER.log(Level.INFO, "It exists and is a directory");
+            defaultSourceLocation = newLocation;
+            writeSettings();
         }
-        validateSourceLocations();
-        writeSettings();
     }
 
 
@@ -2029,27 +2010,12 @@ public class Settings {
         copyLocations.removeIf(location -> !new File(location).exists());
     }
 
-    /**
-     * This method validates that the source locations are valid directories and
-     * removes those that don't exist
-     */
-    public static void validateSourceLocations() {
-        sourceLocations.removeIf(location -> !new File(location).exists());
-    }
 
     /**
      * This method clears the copy locations and saves the settings
      */
     public static void clearCopyLocations() {
         copyLocations.clear();
-        writeSettings();
-    }
-
-    /**
-     * This method clears the source locations and saves the settings
-     */
-    public static void clearSourceLocations() {
-        sourceLocations.clear();
         writeSettings();
     }
 
@@ -2061,23 +2027,23 @@ public class Settings {
      * @return Returns the most recent source location directory or the user's
      * home directory
      */
-    public static File getMostRecentCopyLocation() {
-        for (final String sourceLocation : sourceLocations) {
-            if (sourceLocation != null) {
-                return new File(sourceLocation);
-            }
+    public static File getDefaultSourceLocation() {
+        LOGGER.log(Level.INFO, "Most recent source location: {0}", defaultSourceLocation);
+        final var sourceLocationFile = new File(defaultSourceLocation);
+        if (sourceLocationFile.exists()) {
+            return sourceLocationFile;
         }
         return new File(System.getProperty("user.dir"));
     }
 
     /**
-     * This method returns the most recently used source location. If there is no
+     * This method returns the most recently used copy location. If there is no
      * most recent copyLocation then the user's home directory is returned.
      *
      * @return Returns the most recent copy location directory or the user's
      * home directory
      */
-    public static File getMostRecentSourceLocation() {
+    public static File getMostRecentCopyLocation() {
         for (String copyLocation : copyLocations) {
             if (copyLocation != null) {
                 return new File(copyLocation);

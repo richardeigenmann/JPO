@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
-public class PictureViewerTest {
+class PictureViewerTest {
 
     @BeforeAll
     static void setUpOnce() {

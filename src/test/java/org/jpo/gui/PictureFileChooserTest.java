@@ -63,7 +63,7 @@ class PictureFileChooserTest {
         assertNotNull(jDialog, "The File Choose Dialog Window was not found");
         var jFileChooser = getJFileChooser(jDialog);
         assertNotNull(jFileChooser, "Could not locate the JFileChooser");
-        assertEquals(Settings.getMostRecentSourceLocation(), jFileChooser.getCurrentDirectory());
+        assertEquals(Settings.getDefaultSourceLocation(), jFileChooser.getCurrentDirectory());
         clickJButton(getButton(jDialog, "Cancel"));
     }
 

@@ -6,7 +6,6 @@ import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
 import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.SourceLocationsChangedEvent;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;
@@ -66,10 +65,9 @@ public class PictureFileChooser
 
         if (jFileChooser.showOpenDialog(Settings.getAnchorFrame()) == JFileChooser.APPROVE_OPTION) {
             final File[] chosenFiles = jFileChooser.getSelectedFiles();
-            Settings.memorizeSourceLocation(jFileChooser.getCurrentDirectory().getPath());
+            Settings.memorizeDefaultSourceLocation(jFileChooser.getCurrentDirectory().getPath());
             Settings.memorizeCopyLocation(jFileChooser.getCurrentDirectory().getPath());
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
-            JpoEventBus.getInstance().post(new SourceLocationsChangedEvent());
 
             Settings.setShowThumbOnFileChooser(showThumbnailJCheckBox.isSelected());
 
@@ -174,7 +172,7 @@ public class PictureFileChooser
         jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileChooserAddButtonLabel"));
         jFileChooser.setDialogTitle(Settings.getJpoResources().getString("PictureAdderDialogTitle"));
         jFileChooser.setAccessory(tabbedPane);
-        jFileChooser.setCurrentDirectory(Settings.getMostRecentSourceLocation());
+        jFileChooser.setCurrentDirectory(Settings.getDefaultSourceLocation());
         jFileChooser.addPropertyChangeListener(this);
     }
 }

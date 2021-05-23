@@ -17,8 +17,8 @@ This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -32,6 +32,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 public class PrivacyJFrame
         extends JFrame {
+
 
     /**
      * Constructs a Frame with the privacy options
@@ -60,19 +61,20 @@ public class PrivacyJFrame
 
         final var clearRecentFiles = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearRecentFiles"));
         privacyPanel.add(clearRecentFiles);
-        final var clearRecentFilesButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
+        final var PRIVACY_CLEAR = Settings.getJpoResources().getString("PrivacyClear");
+        final var clearRecentFilesButton = new JButton(PRIVACY_CLEAR);
         clearRecentFilesButton.addActionListener((ActionEvent e) -> privacyController.clearRecentFiles());
         privacyPanel.add(clearRecentFilesButton, "wrap");
 
         final var clearAutoload = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearAutoload"));
         privacyPanel.add(clearAutoload);
-        final var clearAutoloadButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
-        clearAutoloadButton.addActionListener(( ActionEvent e ) -> privacyController.clearAutoload());
-        privacyPanel.add( clearAutoloadButton, "wrap" );
+        final var clearAutoloadButton = new JButton(PRIVACY_CLEAR);
+        clearAutoloadButton.addActionListener((ActionEvent e) -> privacyController.clearAutoload());
+        privacyPanel.add(clearAutoloadButton, "wrap");
 
         final var clearMemorisedDirs = new JCheckBox(Settings.getJpoResources().getString("PrivacyClearMemorisedDirs"));
         privacyPanel.add( clearMemorisedDirs );
-        final var clearMemorisedDirsButton = new JButton(Settings.getJpoResources().getString("PrivacyClear"));
+        final var clearMemorisedDirsButton = new JButton(PRIVACY_CLEAR);
         clearMemorisedDirsButton.addActionListener(( ActionEvent e ) -> privacyController.clearMemorisedDirs());
         privacyPanel.add( clearMemorisedDirsButton, "wrap" );
 
@@ -165,7 +167,6 @@ public class PrivacyJFrame
          */
         public void clearMemorisedDirs() {
             Settings.clearCopyLocations();
-            Settings.clearSourceLocations();
         }
     }
 }
