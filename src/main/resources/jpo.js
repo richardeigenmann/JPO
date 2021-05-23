@@ -1,12 +1,6 @@
 function changetext(newtext){
-    if (document.all || document.getElementById){
-        element=document.getElementById ? document.getElementById("descriptions") : document.all.descriptions;
-        element.innerHTML=newtext;
-    }
-    else if (document.layers){
-        document.d1.document.d2.document.write(newtext);
-        document.d1.document.close();
-    }
+    element=document.getElementById("descriptions");
+    element.innerHTML=newtext;
 }
 
 
@@ -21,9 +15,9 @@ window.initMap = function() {
 
     const map = new google.maps.Map( mapDiv, options );
 
-    new google.maps.Marker({
-        position: latLng,
-        map: map,
-        draggable: false
-    });
+    //new google.maps.Marker({
+    //    position: latLng,
+    //    map: map,
+    //    draggable: false
+    //});
 };

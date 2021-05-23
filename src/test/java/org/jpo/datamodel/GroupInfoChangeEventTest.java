@@ -8,19 +8,16 @@ class GroupInfoChangeEventTest {
 
     @Test
     void testChangingGroupName() {
-        final GroupInfo groupInfo = new GroupInfo("GroupInfo");
+        final var groupInfo = new GroupInfo("GroupInfo");
         final int[] count = new int[1];
-        final GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
-            @Override
-            public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
-                count[0]++;
-                assertEquals(groupInfo, groupInfoChangeEvent.getGroupInfo());
-                assertTrue(groupInfoChangeEvent.getGroupNameChanged());
-                assertFalse(groupInfoChangeEvent.getThumbnailChanged());
-                assertFalse(groupInfoChangeEvent.getWasSelected());
-                assertFalse(groupInfoChangeEvent.getWasUnselected());
+        final GroupInfoChangeListener groupInfoChangeListener = groupInfoChangeEvent -> {
+            count[0]++;
+            assertEquals(groupInfo, groupInfoChangeEvent.getGroupInfo());
+            assertTrue(groupInfoChangeEvent.getGroupNameChanged());
+            assertFalse(groupInfoChangeEvent.getThumbnailChanged());
+            assertFalse(groupInfoChangeEvent.getWasSelected());
+            assertFalse(groupInfoChangeEvent.getWasUnselected());
 
-            }
         };
         groupInfo.addGroupInfoChangeListener(groupInfoChangeListener);
         assertEquals(0, count[0]);
