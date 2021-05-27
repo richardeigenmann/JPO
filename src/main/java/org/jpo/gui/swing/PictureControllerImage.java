@@ -6,13 +6,13 @@ import java.awt.image.BufferedImage;
 /*
  PictureControllerImage.java:  The interface to define the capabilities a Picture controller requires from the provider of the BufferedImage
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -23,7 +23,8 @@ import java.awt.image.BufferedImage;
 
 
 /**
- *The interface to define the capabilities a Picture Controller requires from the provider of the BufferedImage
+ * The interface to define the capabilities a PictureController requires from the provider of the BufferedImage
+ *
  * @author Richard Eigenmann
  */
 public interface PictureControllerImage {
@@ -53,7 +54,7 @@ public interface PictureControllerImage {
      * Set the scale factor to the new desired value. The scale factor is a
      * multiplier by which the original picture needs to be multiplied to get
      * the size of the picture on the screen.
-     * 
+     *
      * The image should only be scaled when 
      * {@link #createScaledPictureInThread(int)} is called.<p>
      *
@@ -62,7 +63,7 @@ public interface PictureControllerImage {
      *
      * @param newFactor new facture
      */
-    void setScaleFactor(double newFactor);
+    void setScaleFactor(final double newFactor);
 
     /**
      * The expectation is that when this method is called on the implementing class that
@@ -71,7 +72,7 @@ public interface PictureControllerImage {
      *
      * @param priority The Thread priority
      */
-    void createScaledPictureInThread(int priority);
+    void createScaledPictureInThread(final int priority);
 
     /**
      * invoke this method to tell the scale process to figure out the scale
@@ -80,7 +81,7 @@ public interface PictureControllerImage {
      *
      * @param newSize new size
      */
-    void setScaleSize(Dimension newSize);
+    void setScaleSize(final Dimension newSize);
 
     /**
      * Must return the scaled image for drawing.

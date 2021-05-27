@@ -1,11 +1,9 @@
 package org.jpo.gui;
 
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.RotatePictureRequest;
-import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
-import org.jpo.eventbus.ShowPicturePopUpMenuRequest;
+import org.jpo.eventbus.*;
 import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;
 import org.jpo.gui.swing.PictureFrame;
@@ -120,9 +118,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             pictureFrame.getPictureController().requestFocusInWindow();
         });
 
-        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().zoomIn());
+        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new PictureControllerZoomRequest(pictureFrame.getPictureController(), Zoom.IN)));
 
-        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().zoomOut());
+        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new PictureControllerZoomRequest(pictureFrame.getPictureController(), Zoom.OUT)));
 
         pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener((ActionEvent e) -> requestScreenSizeMenu());
 
@@ -269,11 +267,16 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * This method saves the text of the textbox to the PictureInfo.
      */
     private void saveChangedDescription() {
-        final SortableDefaultMutableTreeNode node = getCurrentNode();
+        final var node = getCurrentNode();
         if ((node != null) && (node.getUserObject() instanceof PictureInfo pi)) {
             pi.setDescription(
                     pictureFrame.getDescription());
         }
+    }
+
+    @TestOnly
+    public void closeViewerTest() {
+        closeViewer();
     }
 
     /**
@@ -286,6 +289,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         stopTimer();
         pictureFrame.getRid();
     }
+
 
     /**
      * Returns the current Node.
@@ -301,7 +305,11 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             LOGGER.log(Level.WARNING, "Got a npe on node {0}. Message: {1}", new Object[]{myIndex, npe.getMessage()});
             return null;
         }
+    }
 
+    @TestOnly
+    public SortableDefaultMutableTreeNode getCurrentNodeTest() {
+        return getCurrentNode();
     }
 
     /**

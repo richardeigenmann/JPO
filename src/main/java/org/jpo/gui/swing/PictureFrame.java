@@ -125,7 +125,7 @@ public class PictureFrame {
 
     @NotNull
     private JPanel getLowerBar() {
-        final JPanel lowerBar = new JPanel(new MigLayout("insets 0, wrap 3", "[left][grow, fill][right]", "[]"));
+        final var lowerBar = new JPanel(new MigLayout("insets 0, wrap 3", "[left][grow, fill][right]", "[]"));
         lowerBar.setBackground(Settings.getPictureviewerBackgroundColor());
         lowerBar.setOpaque(true);
         lowerBar.setFocusable(false);
@@ -156,7 +156,7 @@ public class PictureFrame {
         descriptionJTextField.setBorder(new EmptyBorder(2, 12, 0, 0));
         descriptionJTextField.setMinimumSize(new Dimension(80, 26));
 
-        final JScrollPane descriptionJScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        final var descriptionJScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         descriptionJScrollPane.setViewportView(descriptionJTextField);
         descriptionJScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         descriptionJScrollPane.setBackground(Settings.getPictureviewerBackgroundColor());
@@ -227,6 +227,5 @@ public class PictureFrame {
         pictureController.cycleInfoDisplay();
         pictureController.requestFocusInWindow();
     }
-
 
 }

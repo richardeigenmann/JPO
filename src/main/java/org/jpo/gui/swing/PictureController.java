@@ -1,10 +1,12 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.PictureControllerZoomRequest;
+import org.jpo.eventbus.Zoom;
 import org.jpo.gui.ScalablePicture;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -17,8 +19,8 @@ import java.util.logging.Logger;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -82,9 +84,10 @@ public class PictureController extends JComponent {
         // make graphics faster
         this.setDoubleBuffered(false);
 
-        final Listener mouseListener = new Listener();
+        final var mouseListener = new PictureControllerMouseListener();
         addMouseListener(mouseListener);
         addMouseMotionListener(mouseListener);
+        addMouseWheelListener(mouseListener);
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -118,13 +121,13 @@ public class PictureController extends JComponent {
             resetPicture();
             return true;
         } else if ((keyCode == KeyEvent.VK_PAGE_UP)) {
-            zoomIn();
+            JpoEventBus.getInstance().post(new PictureControllerZoomRequest(this, Zoom.IN));
             return true;
         } else if ((keyCode == KeyEvent.VK_PAGE_DOWN)) {
-            zoomOut();
+            JpoEventBus.getInstance().post(new PictureControllerZoomRequest(this, Zoom.OUT));
             return true;
         } else if ((keyCode == KeyEvent.VK_1)) {
-            zoomFull();
+            JpoEventBus.getInstance().post(new PictureControllerZoomRequest(this, Zoom.NO_SCALE));
             return true;
         } else if ((keyCode == KeyEvent.VK_UP) || (keyCode == KeyEvent.VK_KP_UP)) {
             scrollDown();
@@ -154,7 +157,7 @@ public class PictureController extends JComponent {
      * there.
      */
     public void resetPicture() {
-        zoomToFit();
+        JpoEventBus.getInstance().post(new PictureControllerZoomRequest(this, Zoom.FIT));
         centerImage();
         requestFocusInWindow();
         centerWhenScaled = true;
@@ -163,6 +166,25 @@ public class PictureController extends JComponent {
     /////////////////////////
     // Zooming Methods     //
     /////////////////////////
+
+    public void handleZoomRequest(final PictureControllerZoomRequest request) {
+        switch (request.zoom()) {
+            case IN:
+                zoomIn();
+                break;
+            case OUT:
+                zoomOut();
+                break;
+            case FIT:
+                zoomToFit();
+                break;
+            case NO_SCALE:
+                zoomFull();
+                break;
+        }
+    }
+
+
     /**
      * Multiplies the scale factor so that paint() method scales the image
      * larger. This method calls
@@ -385,13 +407,14 @@ public class PictureController extends JComponent {
      * left button is clicked the picture is zoomed in, middle resets to full
      * screen, right zooms out.
      */
-    class Listener extends MouseInputAdapter {
+    class PictureControllerMouseListener extends MouseAdapter {
 
         /**
          * used in dragging to find out how much the mouse has moved from the
          * last time
          */
-        private int lastX, lastY;
+        private int lastX;
+        private int lastY;
 
         /**
          * This method traps the mouse events and changes the scale and position
@@ -402,10 +425,10 @@ public class PictureController extends JComponent {
             if (e.getButton() == 3) {
                 // Right Mousebutton zooms out
                 centerWhenScaled = false;
-                zoomOut();
+                JpoEventBus.getInstance().post(new PictureControllerZoomRequest(PictureController.this, Zoom.OUT));
             } else if ( e.getButton() == 2 ) {
                 // Middle Mousebutton resets
-                zoomToFit();
+                JpoEventBus.getInstance().post(new PictureControllerZoomRequest(PictureController.this, Zoom.FIT));
                 centerWhenScaled = true;
             } else if ( e.getButton() == 1 ) {
                 // Left Mousebutton zooms in on selected spot
@@ -422,7 +445,7 @@ public class PictureController extends JComponent {
                         focusPoint.x + (int) (xOffset / pictureControllerImage.getScaleFactor()),
                         focusPoint.y + (int) (yOffset / pictureControllerImage.getScaleFactor()));
                 centerWhenScaled = false;
-                zoomIn();
+                JpoEventBus.getInstance().post(new PictureControllerZoomRequest(PictureController.this, Zoom.IN));
             }
         }
 
@@ -493,10 +516,17 @@ public class PictureController extends JComponent {
          * When mouse is releases we switch off the dragging mode
          */
         @Override
-        public void mouseReleased( final MouseEvent e ) {
-            if ( dragging ) {
-                setDragging( false );
+        public void mouseReleased(final MouseEvent e) {
+            if (dragging) {
+                setDragging(false);
             }
+        }
+
+        @Override
+        public void mouseWheelMoved(final MouseWheelEvent e) {
+            JpoEventBus.getInstance().post(
+                    new PictureControllerZoomRequest(PictureController.this,
+                            e.getWheelRotation() < 0 ? Zoom.IN : Zoom.OUT));
         }
     }
 

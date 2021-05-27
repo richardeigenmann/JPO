@@ -1491,6 +1491,16 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * Handes the request to zoom in on the PictureController
+     *
+     * @param request the Request
+     */
+    @Subscribe
+    public void handlePictureViewerZoomInRequest(final PictureControllerZoomRequest request) {
+        request.pictureController().handleZoomRequest(request);
+    }
+
+    /**
      * Brings up a chooser to pick a flat file and add them to the group.
      *
      * @param request the Request

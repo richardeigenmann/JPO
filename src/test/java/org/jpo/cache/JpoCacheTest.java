@@ -81,10 +81,10 @@ class JpoCacheTest {
     void testGetHighresImageBytes() {
         try {
             JpoCache.removeFromHighresCache(IMAGE_FILE_1);
-            final ImageBytes imageBytes = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
+            final var imageBytes = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
             assertEquals(LENGHT_FILE_1, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
-            final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
+            final var imageBytes2 = JpoCache.getHighresImageBytes(IMAGE_FILE_1);
             assertEquals(LENGHT_FILE_1, imageBytes2.getBytes().length);
             assertTrue(imageBytes2.isRetrievedFromCache());
         } catch (final IOException e) {
@@ -95,13 +95,13 @@ class JpoCacheTest {
     @Test
     void testGetHighresImageBytesFileChanged() {
         try {
-            final File tempFile = File.createTempFile("testImage", ".jpg");
+            final var tempFile = File.createTempFile("testImage", ".jpg");
             LOGGER.log(Level.INFO, "Creating temporary file {0}", tempFile);
             com.google.common.io.Files.copy(IMAGE_FILE_1, tempFile);
 
             // make sure the temp file is not in the cache
             JpoCache.removeFromHighresCache(tempFile);
-            final ImageBytes imageBytes = JpoCache.getHighresImageBytes(tempFile);
+            final var imageBytes = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that the tempFile {0} was not retrieved from cache (actual: {1}) and has 21599 bytes ({2})",
                     new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
@@ -110,21 +110,21 @@ class JpoCacheTest {
 
             com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
             // some test runs fail. The overwrite may not have happened. Trying to force a sync. Maybe that helps?
-            final File dummyFileToForceASync = new File("DummyFileToForceASync");
-            try (final FileOutputStream fos = new FileOutputStream(dummyFileToForceASync)) {
+            final var dummyFileToForceASync = new File("DummyFileToForceASync");
+            try (final var fos = new FileOutputStream(dummyFileToForceASync)) {
                 fos.getFD().sync();
             }
             Files.delete(dummyFileToForceASync.toPath());
 
 
-            final ImageBytes imageBytes2 = JpoCache.getHighresImageBytes(tempFile);
+            final var imageBytes2 = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that the overwritten tempFile {0} was not retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
                     new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
             assertEquals(LENGHT_FILE_2, imageBytes2.getBytes().length);
             assertFalse(imageBytes2.isRetrievedFromCache());
 
-            final ImageBytes imageBytes3 = JpoCache.getHighresImageBytes(tempFile);
+            final var imageBytes3 = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that a new request for unchanged tempFile {0} was retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
                     new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
@@ -152,21 +152,21 @@ class JpoCacheTest {
     @Test
     void testGetThumbnailImageBytesFileChanged() {
         try {
-            final File tempFile = File.createTempFile("testImage", ".jpg");
+            final var tempFile = File.createTempFile("testImage", ".jpg");
             com.google.common.io.Files.copy(IMAGE_FILE_1, tempFile);
 
-            final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", tempFile, 0.0, 350, 350);
+            final var key = String.format("%s-%fdeg-w:%dpx-h:%dpx", tempFile, 0.0, 350, 350);
             JpoCache.removeFromThumbnailCache(key);
-            final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
+            final var imageBytes = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
             assertEquals(13094, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
 
             com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
-            final ImageBytes imageBytes2 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
+            final var imageBytes2 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
             assertEquals(16076, imageBytes2.getBytes().length);
             assertFalse(imageBytes2.isRetrievedFromCache());
 
-            final ImageBytes imageBytes3 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
+            final var imageBytes3 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
             assertEquals(16076, imageBytes3.getBytes().length);
             assertTrue(imageBytes3.isRetrievedFromCache());
 

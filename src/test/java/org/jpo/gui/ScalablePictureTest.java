@@ -7,9 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,9 +32,9 @@ class ScalablePictureTest {
     void testLoading() {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
-        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         try {
-            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
             scalablePicture.loadPictureImd(imageFile, 0.0);
             assertEquals(350, scalablePicture.getSourcePicture().getWidth());
             assertEquals(233, scalablePicture.getSourcePicture().getHeight());
@@ -52,9 +50,9 @@ class ScalablePictureTest {
     void testLoadingWithRotation() {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
-        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         try {
-            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
             scalablePicture.loadPictureImd(imageFile, 90.0);
             assertEquals(233, scalablePicture.getSourcePicture().getWidth());
             assertEquals(350, scalablePicture.getSourcePicture().getHeight());
@@ -71,9 +69,9 @@ class ScalablePictureTest {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
-        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         try {
-            final File imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
             scalablePicture.loadPictureImd(imageFile, 90.0);
             assertEquals(233, scalablePicture.getSourcePicture().getWidth());
             assertEquals(350, scalablePicture.getSourcePicture().getHeight());
@@ -95,7 +93,7 @@ class ScalablePictureTest {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
-        final URL imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
@@ -112,15 +110,15 @@ class ScalablePictureTest {
         assertEquals(466, scalablePicture.getScaledHeight());
 
         try {
-            final Path tempFile = Files.createTempFile("testLoadingScalingWriting", "jpg");
-            final File outputFile = tempFile.toFile();
+            final var tempFile = Files.createTempFile("testLoadingScalingWriting", "jpg");
+            final var outputFile = tempFile.toFile();
             Files.delete(outputFile.toPath());
             assertFalse(outputFile.exists());
             scalablePicture.writeScaledJpg(outputFile);
 
             assertTrue(outputFile.exists());
 
-            final SourcePicture sourcePicture = new SourcePicture();
+            final var sourcePicture = new SourcePicture();
             sourcePicture.loadPicture(outputFile, 0.0);
             assertEquals(700, sourcePicture.getWidth());
             assertEquals(466, sourcePicture.getHeight());
@@ -148,7 +146,7 @@ class ScalablePictureTest {
      */
     @Test
     void scaleDown() {
-        double scaleFactor = ScalablePicture.calcScaleSourceToTarget(200, 200, 100, 100);
+        final var scaleFactor = ScalablePicture.calcScaleSourceToTarget(200, 200, 100, 100);
         assertEquals(0.5, scaleFactor, 0.001);
     }
 
@@ -157,7 +155,7 @@ class ScalablePictureTest {
      */
     @Test
     void scaleHorizontally() {
-        double scaleFactor = ScalablePicture.calcScaleSourceToTarget(200, 100, 400, 400);
+        final var scaleFactor = ScalablePicture.calcScaleSourceToTarget(200, 100, 400, 400);
         assertEquals(2, scaleFactor, 0.001);
     }
 
@@ -166,7 +164,7 @@ class ScalablePictureTest {
      */
     @Test
     void scaleVertically() {
-        double scaleFactor = ScalablePicture.calcScaleSourceToTarget(100, 200, 400, 400);
+        final var scaleFactor = ScalablePicture.calcScaleSourceToTarget(100, 200, 400, 400);
         assertEquals(2, scaleFactor, 0.001);
     }
 
