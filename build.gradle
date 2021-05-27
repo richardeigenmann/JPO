@@ -2,9 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
     }
-    dependencies {
-        //classpath 'com.github.jengelman.gradle.plugins:shadow:7.0.0'
-    }
 }
 
 plugins {
@@ -13,13 +10,10 @@ plugins {
     id 'signing'
     id 'java'
     id 'jacoco'
-    //id 'org.beryx.jlink' version '2.16.4'
     //id 'eclipse'
     id 'idea'
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
-
-//apply plugin: "com.github.johnrengelman.shadow" Version "7.0.0"
 
 java {
     //sourceCompatibility = JavaVersion.VERSION_16
@@ -89,11 +83,10 @@ task openJavadocInBrowser {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 
-def jpoVersion = '0.14'
+def jpoVersion = '0.15'
 
 dependencies {
     implementation 'org.apache.commons:commons-compress:1.20'
@@ -137,7 +130,7 @@ dependencies {
     //used by Metadata Extractor. Note only 5.x seems to be compatible
     //implementation 'com.adobe.xmp:xmpcore:5.1.3'
     //implementation 'com.adobe.xmp:xmpcore:6.1.10'
-    implementation 'org.jetbrains:annotations:21.0.0'
+    implementation 'org.jetbrains:annotations:21.0.1'
 
     implementation 'com.twelvemonkeys.imageio:imageio-batik:3.7.0'
     implementation 'org.apache.xmlgraphics:batik-transcoder:1.14'
@@ -342,7 +335,8 @@ task uploadWindowsInstaller(type:Exec) {
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
     //commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-Installer-${jpoVersion}.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
-    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-${jpoVersion}.exe", "${buildDir}/jars/signed/Jpo-all.jar", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
+    commandLine ('rsync', '-avP', "${buildDir}/jars/signed/Jpo-all.jar", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
+    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-0.15.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
     commandLine ('rsync', '-avP', "${buildDir}/jars/signed/Jpo-all.jar", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/Jpo-all-${jpoVersion}.jar")
 }
 
