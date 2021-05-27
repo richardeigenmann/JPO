@@ -29,8 +29,8 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -345,7 +345,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             ((PictureInfo) this.mySetOfNodes.getNode(this.myIndex).getUserObject()).removePictureInfoChangeListener(this);
         }
         // attach the pictureinfo change listener
-        PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+        final var pictureInfo = (PictureInfo) node.getUserObject();
         pictureInfo.addPictureInfoChangeListener(this);
 
         if (this.mySetOfNodes == null) {
@@ -396,13 +396,13 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
         if (pictureInfoChangedEvent.getHighresLocationChanged()) {
-            SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(myIndex);
-            PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            final var node = mySetOfNodes.getNode(myIndex);
+            final var pictureInfo = (PictureInfo) node.getUserObject();
             setPicture(pictureInfo);
         }
 
         if (pictureInfoChangedEvent.getRotationChanged()) {
-            PictureInfo pictureInfo = (PictureInfo) mySetOfNodes.getNode(myIndex).getUserObject();
+            final var pictureInfo = (PictureInfo) mySetOfNodes.getNode(myIndex).getUserObject();
             setPicture(pictureInfo);
         }
     }
