@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017 - 2020 Richard Eigenmann.
+ Copyright (C) 2017 - 2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -29,12 +29,13 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Test for Group Selection Events
  *
  * @author Richard Eigenmann
  */
-public class ShowAutoAdvanceDialogRequestTest {
+class ShowAutoAdvanceDialogRequestTest {
 
     /**
      * Constructor
@@ -49,22 +50,22 @@ public class ShowAutoAdvanceDialogRequestTest {
      * Test receiving an event.
      */
     @Test
-    public void testReceivingEvent() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testReceivingEvent() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
 
-        final EventBusSubscriber myEventBusSubscriber = new EventBusSubscriber();
-        jpoEventBus.register( myEventBusSubscriber );
+        final var myEventBusSubscriber = new EventBusSubscriber();
+        jpoEventBus.register(myEventBusSubscriber);
 
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                final JFrame jFrame = new JFrame();
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-                final PictureViewer pictureViewer = new PictureViewer();
+            SwingUtilities.invokeAndWait(() -> {
+                final var jFrame = new JFrame();
+                final var node = new SortableDefaultMutableTreeNode();
+                final var pictureViewer = new PictureViewer();
 
-                final ShowAutoAdvanceDialogRequest showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(jFrame, node, pictureViewer);
+                final var showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(jFrame, node, pictureViewer);
                 SwingUtilities.invokeLater(() -> {
                     try {
-                        final Robot r = new Robot();
+                        final var r = new Robot();
                         r.delay(200);
                         r.keyPress(KeyEvent.VK_ENTER);
                         r.delay(20);
