@@ -7,7 +7,7 @@ import java.util.Set;
 /*
  NodeNavigator.java:  an implementation of the NodeNavigatorInterface for browsing pictures sequentially.
 
- Copyright (C) 2006-2020 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2021 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

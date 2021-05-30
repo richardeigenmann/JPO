@@ -121,8 +121,8 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final JMenuItem showPictureJMenuItem = (JMenuItem) picturePopupMenu.getComponent(2);
+                final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
+                final var showPictureJMenuItem = (JMenuItem) picturePopupMenu.getComponent(2);
                 assertEquals("Show Picture", showPictureJMenuItem.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {

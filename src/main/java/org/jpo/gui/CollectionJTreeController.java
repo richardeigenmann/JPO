@@ -13,7 +13,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class CollectionJTreeController {
         collectionJScrollPane.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        final CollectionMouseAdapter mouseAdapter = new CollectionMouseAdapter();
+        final var mouseAdapter = new CollectionMouseAdapter();
         collectionJTree.addMouseListener( mouseAdapter );
         registerOnEventBus();
     }
@@ -97,7 +96,7 @@ public class CollectionJTreeController {
      * @param node The node
      */
     private void expandAndScroll(final SortableDefaultMutableTreeNode node) {
-        final TreePath tp = new TreePath(node.getPath());
+        final var tp = new TreePath(node.getPath());
         final Runnable r = () -> {
             collectionJTree.expandPath(tp);
             collectionJTree.scrollPathToVisible(tp);
@@ -148,8 +147,8 @@ public class CollectionJTreeController {
          */
         @Override
         protected Transferable createTransferable(final JComponent component) {
-            final TreePath selectedTreePath = collectionJTree.getSelectionPath();
-            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) selectedTreePath.getLastPathComponent();
+            final var selectedTreePath = collectionJTree.getSelectionPath();
+            final var node = (SortableDefaultMutableTreeNode) selectedTreePath.getLastPathComponent();
             if (node.isRoot()) {
                 LOGGER.log(Level.SEVERE, "This is the root node: {0}\nPath: {1}\nIt may not be dragged. Dragging disabled.", new Object[]{node, selectedTreePath});
                 return null;
@@ -219,8 +218,8 @@ public class CollectionJTreeController {
                 return false;
             }
 
-            final JTree.DropLocation dropLocation = (JTree.DropLocation) support.getDropLocation();
-            final SortableDefaultMutableTreeNode targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
+            final var dropLocation = (JTree.DropLocation) support.getDropLocation();
+            final var targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
             LOGGER.log(Level.INFO, "Choosing node {0} as target for path {1}, ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
 
 
@@ -286,13 +285,13 @@ public class CollectionJTreeController {
             }
             final TreePath curPath = collectionJTree.getPathForLocation(mouseEvent.getX(), mouseEvent.getY());
             final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
-            final Object userObject = node.getUserObject();
-            String toolTip = "";
+            final var userObject = node.getUserObject();
+            var toolTip = "";
             if (userObject instanceof GroupInfo groupInfo) {
                 toolTip = String.format("<html>Group: %s</html>", groupInfo.getGroupName());
             } else if (userObject instanceof PictureInfo pictureInfo) {
-                final File highresFile = pictureInfo.getImageFile();
-                final String fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize(highresFile.length());
+                final var highresFile = pictureInfo.getImageFile();
+                final var fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize(highresFile.length());
                 toolTip = String.format("<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.getJpoResources().getString("CollectionSizeJLabel"), fileSize);
             }
             return toolTip;
@@ -332,18 +331,19 @@ public class CollectionJTreeController {
          */
         @Override
         public void mouseClicked(final MouseEvent e) {
-            final TreePath clickPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
+            final var clickPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
             if (clickPath == null) { // this happens
                 return;
             }
-            final SortableDefaultMutableTreeNode clickNode = (SortableDefaultMutableTreeNode) clickPath.getLastPathComponent();
+            final var clickNode = (SortableDefaultMutableTreeNode) clickPath.getLastPathComponent();
 
             if (e.getClickCount() == 1 && (!e.isPopupTrigger())) {
                 if (clickNode.getUserObject() instanceof GroupInfo) {
                     JpoEventBus.getInstance().post(new ShowGroupRequest(clickNode));
                 }
             } else if (e.getClickCount() > 1 && (!e.isPopupTrigger())) {
-                JpoEventBus.getInstance().post( new ShowPictureRequest( clickNode ) );
+                final var groupNavigator = new FlatGroupNavigator(clickNode.getParent());
+                JpoEventBus.getInstance().post(new ShowPictureRequest(groupNavigator, clickNode.getParent().getIndex(clickNode)));
             }
         }
 
@@ -371,19 +371,19 @@ public class CollectionJTreeController {
          */
         private void maybeShowPopup(final MouseEvent e) {
             if (e.isPopupTrigger()) {
-                TreePath popupPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
+                final var popupPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
                 if (popupPath == null) {
                     return;
                 } // happens
 
-                final SortableDefaultMutableTreeNode popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
+                final var popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
                 ((JTree) e.getSource()).setSelectionPath(popupPath);
-                Object nodeInfo = popupNode.getUserObject();
+                final var nodeInfo = popupNode.getUserObject();
 
                 if ( nodeInfo instanceof GroupInfo ) {
                     JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( popupNode, e.getComponent(), e.getX(), e.getY() ));
                 } else if ( nodeInfo instanceof PictureInfo ) {
-                    SingleNodeNavigator sb = new SingleNodeNavigator( popupNode );
+                    final var sb = new SingleNodeNavigator(popupNode);
                     JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( sb, 0, e.getComponent(), e.getX(), e.getY() ));
                 }
             }

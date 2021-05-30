@@ -480,32 +480,12 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleShowPictureRequest(final ShowPictureRequest request) {
-        final SortableDefaultMutableTreeNode node = request.node();
-        final var userObject = node.getUserObject();
-
-        final NodeNavigatorInterface navigator;
-        var index = 0;
-
-        if (userObject instanceof PictureInfo) {
-            navigator = new FlatGroupNavigator(node.getParent());
-            for (var i = 0; i < navigator.getNumberOfNodes(); i++) {
-                if (navigator.getNode(i).equals(node)) {
-                    index = i;
-                    break;
-                }
-            }
-        } else if (userObject instanceof GroupInfo && node.hasChildPictureNodes()) {
-            navigator = new FlatGroupNavigator(node);
-        } else {
-            return; // should only be receiving PictureInfo or GroupInfo with child pictures
-        }
-        final int myIndex = index;
         SwingUtilities.invokeLater(() -> {
             final var pictureViewer = new PictureViewer();
-            pictureViewer.showNode(navigator, myIndex);
+            pictureViewer.showNode(request.nodeNavigator(), request.currentIndex());
         });
-
     }
+
 
     /**
      * When the app sees a ShowPictureInfoEditorRequest it will open the

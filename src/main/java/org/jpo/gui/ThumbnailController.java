@@ -365,7 +365,7 @@ public class ThumbnailController
          */
         private void doubleClickResponse() {
             if (myNode.getUserObject() instanceof PictureInfo) {
-                JpoEventBus.getInstance().post(new ShowPictureRequest(myNode));
+                JpoEventBus.getInstance().post(new ShowPictureRequest(myNodeNavigator, myIndex));
             } else if (myNode.getUserObject() instanceof GroupInfo) {
                 JpoEventBus.getInstance().post(new ShowGroupRequest(myNode));
             }

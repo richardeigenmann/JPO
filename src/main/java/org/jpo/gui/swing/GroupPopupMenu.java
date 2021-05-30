@@ -2,10 +2,7 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortOption;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
+import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
@@ -116,7 +113,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
     private JMenuItem getGroupSlideshowJMenuItem() {
         final var groupSlideshowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupSlideshowJMenuItem"));
-        groupSlideshowJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureRequest(popupNode)));
+        groupSlideshowJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureRequest(new FlatGroupNavigator(popupNode), 0)));
         if (!popupNode.hasChildPictureNodes()) {
             groupSlideshowJMenuItem.setEnabled(false);
         }
