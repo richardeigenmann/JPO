@@ -19,6 +19,8 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ScalablePictureTest {
 
+    private static final String EXIF_TEST_NIKON_D_100_1_JPG = "exif-test-nikon-d100-1.jpg";
+
     @BeforeAll
     public static void beforeAll() {
         Settings.loadSettings(); // We need to start the cache
@@ -32,7 +34,7 @@ class ScalablePictureTest {
     void testLoading() {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
-        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         try {
             final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
             scalablePicture.loadPictureImd(imageFile, 0.0);
@@ -50,7 +52,7 @@ class ScalablePictureTest {
     void testLoadingWithRotation() {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
-        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         try {
             final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
             scalablePicture.loadPictureImd(imageFile, 90.0);
@@ -69,7 +71,7 @@ class ScalablePictureTest {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
-        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         try {
             final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
             scalablePicture.loadPictureImd(imageFile, 90.0);
@@ -93,7 +95,7 @@ class ScalablePictureTest {
         final ScalablePicture scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
-        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg");
+        final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         File imageFile = null;
         try {
             imageFile = new File(Objects.requireNonNull(imageUrl).toURI());

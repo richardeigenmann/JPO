@@ -13,11 +13,4 @@ window.initMap = function() {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    const map = new google.maps.Map( mapDiv, options );
-
-    //new google.maps.Marker({
-    //    position: latLng,
-    //    map: map,
-    //    draggable: false
-    //});
 };

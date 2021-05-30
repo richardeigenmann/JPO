@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -35,12 +36,12 @@ class PictureFileChooserTest {
         SwingUtilities.invokeLater(() -> {
             final var sortableDefaultMutableTreeNode = new SortableDefaultMutableTreeNode();
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(sortableDefaultMutableTreeNode);
-            final var pictureFileChooser = new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
+            new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
             // EDT blocks there
         });
 
         // this is a different, non EDT thread...
-        var errorJDialog = waitForDialog("Error", 20);
+        var errorJDialog = waitForDialog("Error");
         assertNotNull(errorJDialog, "The Error Dialog Window was not found");
         var jOptionPane = getJOptionPane(errorJDialog, Settings.getJpoResources().getString("notGroupInfo"));
         assertNotNull(jOptionPane, String.format("The Error Dialog should show the text %s but we can't find a matching JOptionPane", Settings.getJpoResources().getString("notGroupInfo")));
@@ -55,12 +56,12 @@ class PictureFileChooserTest {
             final var groupInfo = new GroupInfo("GroupInfo");
             final var sortableDefaultMutableTreeNode = new SortableDefaultMutableTreeNode(groupInfo);
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(sortableDefaultMutableTreeNode);
-            final var pictureFileChooser = new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
+            new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
             // EDT blocks there
         });
 
         // this is a different, non EDT thread...
-        var jDialog = waitForDialog(Settings.getJpoResources().getString("PictureAdderDialogTitle"), 20);
+        var jDialog = waitForDialog(Settings.getJpoResources().getString("PictureAdderDialogTitle"));
         assertNotNull(jDialog, "The File Choose Dialog Window was not found");
         var jFileChooser = getJFileChooser(jDialog);
         assertNotNull(jFileChooser, "Could not locate the JFileChooser");
@@ -73,11 +74,10 @@ class PictureFileChooserTest {
      * Clever way to find the dialog window in another thread
      *
      * @param titleToFind The title of the dialog window to locate
-     * @param attempts    How many times to wait 250ms before giving up 4 = 1sec 20 = 5sec
      * @return The JDialog that matches the title
      * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
      */
-    private static JDialog waitForDialog(final String titleToFind, int attempts) {
+    private static JDialog waitForDialog(final String titleToFind) {
         final JDialog[] foundJDialog = new JDialog[1];
         foundJDialog[0] = null;
         await().atMost(5, SECONDS).until(() -> searchForDialog(titleToFind, foundJDialog));
@@ -93,12 +93,12 @@ class PictureFileChooserTest {
      * @return
      */
     private static boolean searchForDialog(final String titleToFind, final JDialog[] resultJDialog) {
-        for (final var window : Frame.getWindows()) {
-            if (window instanceof JDialog jDialog) {
-                if (titleToFind.equals(jDialog.getTitle())) {
-                    resultJDialog[0] = jDialog;
-                    return true;
-                }
+        LOGGER.log(Level.FINE, "Searching for dialog with the tile {0}", titleToFind);
+        for (final var window : Window.getWindows()) {
+            if (window instanceof JDialog jDialog
+                    && titleToFind.equals(jDialog.getTitle())) {
+                resultJDialog[0] = jDialog;
+                return true;
             }
         }
         return false;
@@ -205,12 +205,7 @@ class PictureFileChooserTest {
 
 
     private void clickJButton(final JButton btn) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                btn.doClick();
-            }
-        });
+        SwingUtilities.invokeLater(() -> btn.doClick());
     }
 
 }
