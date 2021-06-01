@@ -367,7 +367,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"fileMoveJMenu", "移动文件"},
             {"moveToNewLocationJMenuItem", "选择复制的文件夹位置"},
             {"renameJMenu", "Rename"},
-            {"fileRenameJMenuItem", "重命名"},
+            {"fileRenameJMenuItem", "重命名 %d 個文件"},
             {"FileRenameLabel1", "重命名 \n"},
             {"FileRenameLabel2", "\n成: "},
             {"FileRenameTargetExistsTitle", "目标文件存在"},

@@ -644,7 +644,52 @@ class PicturePopupMenuTest {
                 final JMenu renameJMenu = (JMenu) fileOperations.getItem(3);
                 assertEquals("Rename", renameJMenu.getText());
                 final JMenuItem fileOperationsRename = renameJMenu.getItem(0);
-                assertEquals("Rename", fileOperationsRename.getText());
+                assertEquals("Rename 1 file(s)", fileOperationsRename.getText());
+                final int[] eventsReceived = {0};
+                JpoEventBus.getInstance().register(new Object() {
+                    @Subscribe
+                    public void handleRenamePictureRequest(RenamePictureRequest request) {
+                        eventsReceived[0]++;
+                    }
+                });
+                assertEquals(0, eventsReceived[0]);
+                fileOperationsRename.doClick();
+                assertEquals(1, eventsReceived[0]);
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testFileRename4Files() {
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                final var node1 = new SortableDefaultMutableTreeNode(myPictureInfo);
+                final var node2 = new SortableDefaultMutableTreeNode(myPictureInfo);
+                final var node3 = new SortableDefaultMutableTreeNode(myPictureInfo);
+                final var node4 = new SortableDefaultMutableTreeNode(myPictureInfo);
+                final var groupInfo = new GroupInfo("GroupInfo");
+                final var groupNode = new SortableDefaultMutableTreeNode(groupInfo);
+                groupNode.add(node1);
+                groupNode.add(node2);
+                groupNode.add(node3);
+                groupNode.add(node4);
+                final var myNavigator = new FlatGroupNavigator(groupNode);
+                Settings.getPictureCollection().addToSelectedNodes(node1);
+                Settings.getPictureCollection().addToSelectedNodes(node2);
+                Settings.getPictureCollection().addToSelectedNodes(node3);
+                Settings.getPictureCollection().addToSelectedNodes(node4);
+
+                final PicturePopupMenu picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
+                assumeFalse(GraphicsEnvironment.isHeadless());
+                final JMenu fileOperations = (JMenu) picturePopupMenu.getComponent(16);
+                assertEquals("File operations", fileOperations.getText());
+                final JMenu renameJMenu = (JMenu) fileOperations.getItem(3);
+                assertEquals("Rename", renameJMenu.getText());
+                final JMenuItem fileOperationsRename = renameJMenu.getItem(0);
+                assertEquals("Rename 4 file(s)", fileOperationsRename.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
                     @Subscribe

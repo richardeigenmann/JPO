@@ -361,7 +361,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"fileMoveJMenu", "Datei verschieben"},
             {"moveToNewLocationJMenuItem", "Zielverzeichnis auswählen"},
             {"renameJMenu", "Umbenennen"},
-            {"fileRenameJMenuItem", "Datei Umbenennen"},
+            {"fileRenameJMenuItem", "%d Datei(en) umbenennen"},
             {"FileRenameLabel1", "Benenne \n"},
             {"FileRenameLabel2", "\num in: "},
             {"FileRenameTargetExistsTitle", "Zieldatei existiert shcon"},

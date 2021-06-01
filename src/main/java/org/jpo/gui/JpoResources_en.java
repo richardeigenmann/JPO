@@ -346,7 +346,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"fileMoveJMenu", "Move File"},
             {"moveToNewLocationJMenuItem", "choose target directory"},
             {"renameJMenu", "Rename"},
-            {"fileRenameJMenuItem", "Rename"},
+            {"fileRenameJMenuItem", "Rename %d file(s)"},
             {"FileRenameLabel1", "Rename \n"},
             {"FileRenameLabel2", "\nto: "},
             {"FileRenameTargetExistsTitle", "Target File Exists"},

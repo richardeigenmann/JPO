@@ -768,13 +768,13 @@ public class PicturePopupMenu extends JPopupMenu {
         addMoveLocationTargets(fileMoveJMenu);
         labelMoveLocations();
 
-        final var fileRenameJMenu = new JMenu(Settings.getJpoResources().getString("renameJMenu"));
+        final var fileRenameJMenu = new JMenu(Settings.getJpoResources().getString("renameJMenu")); // Rename
         fileOperationsJMenu.add(fileRenameJMenu);
 
         addRenameMenuItems(fileRenameJMenu);
 
         final var fileDeleteJMenuItem = new JMenuItem(Settings.getJpoResources().getString("fileDeleteJMenuItem"));
-        fileDeleteJMenuItem.addActionListener((ActionEvent e) -> {
+        fileDeleteJMenuItem.addActionListener((final ActionEvent e) -> {
             final SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode(index);
             if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(actionNode))) {
                 JpoEventBus.getInstance().post(new DeleteMultiNodeFileRequest(Settings.getPictureCollection().getSelection()));
@@ -790,12 +790,19 @@ public class PicturePopupMenu extends JPopupMenu {
         return fileOperationsJMenu;
     }
 
+    /**
+     * Adds a the Rename > Rename menu item. The button will trigger a rename on the selected picture
+     * or the set of pictures if the popup was triggered on on of the selection.
+     *
+     * @param fileRenameJMenu the JMenu to which to attach the menu entry
+     */
     private void addRenameMenuItems(final JMenu fileRenameJMenu) {
         final Collection<SortableDefaultMutableTreeNode> renameNodes = new ArrayList<>();
-        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-            renameNodes.add(popupNode);
-        } else {
+        if (Settings.getPictureCollection().countSelectedNodes() > 1
+                && Settings.getPictureCollection().isSelected(popupNode)) {
             renameNodes.addAll(Settings.getPictureCollection().getSelection());
+        } else {
+            renameNodes.add(popupNode);
         }
         for (final JComponent c : RenameMenuItems.getRenameMenuItems(renameNodes)) {
             fileRenameJMenu.add(c);
@@ -836,7 +843,10 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     private String getFilenameMenuText() {
-        if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+        if (Settings.getPictureCollection().countSelectedNodes() > 1
+                && Settings.getPictureCollection().isSelected(popupNode)) {
+            return Settings.getPictureCollection().countSelectedNodes() + " pictures";
+        } else {
             final var imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
             if (isNull(imageFile)) {
                 LOGGER.log(Level.SEVERE, "Node {0} doesn''t have an imageFile!", popupNode);
@@ -844,8 +854,6 @@ public class PicturePopupMenu extends JPopupMenu {
             } else {
                 return imageFile.getPath();
             }
-        } else {
-            return Settings.getPictureCollection().countSelectedNodes() + " pictures";
         }
     }
 
@@ -856,7 +864,8 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private JMenu getAssignCategoryMenu() {
         final var assignCategorisJMenu = new JMenu("Assign Category");
-        if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(popupNode))) {
+        if (Settings.getPictureCollection().countSelectedNodes() > 1
+                && Settings.getPictureCollection().isSelected(popupNode)) {
             // if many nodes selected and the user clicked on one of them
             CategoryPopupMenu.addMenuItems(assignCategorisJMenu, Settings.getPictureCollection().getSelection());
         } else {
