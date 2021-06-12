@@ -3,17 +3,17 @@ package org.jpo.eventbus;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.Collection;
+import java.util.List;
 
 /*
- Copyright (C) 2020 -2021  Richard Eigenmann.
+ Copyright (C) 2021 - 2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
- of the License, or any later version. This program is distributed
+ of the License, or any later version. This program is distributed 
  in the hope that it will be useful, but WITHOUT ANY WARRANTY.
  Without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
@@ -22,13 +22,9 @@ import java.util.Collection;
  */
 
 /**
- * Request to add the specified category to the specified PictureInfo node objects
+ * This request indicates that the user wants to see the CategoryAssignmentWindow for a set of nodes
  *
- * @param category The category to add
- * @param nodes    The collection of nodes to add the category to
  * @author Richard Eigenmann
  */
-public record AddCategoriesToPictureNodesRequest(@NotNull int category,
-                                                 Collection<SortableDefaultMutableTreeNode> nodes) {
+public record CategoryAssignmentWindowRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
 }
-

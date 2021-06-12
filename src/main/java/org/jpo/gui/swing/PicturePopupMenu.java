@@ -188,9 +188,29 @@ public class PicturePopupMenu extends JPopupMenu {
         add(getCopyJMenu());
         add(getPictureNodeRemove());
         add(getFileOperationsMenu());
-        add(getAssignCategoryMenu());
+        //add(getAssignCategoryMenu());
+        add(getAssignCategoryWindow());
         add(getShowPictureInfoEditorMenuItem());
         add(getConsolidateHereMenuItem());
+    }
+
+    private JMenuItem getAssignCategoryWindow() {
+        final var assignCategoryWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("assignCategoryWindowJMenuItem"));
+        assignCategoryWindowJMenuItem.addActionListener((ActionEvent e) -> {
+            final ArrayList<SortableDefaultMutableTreeNode> nodesToAssign = new ArrayList<>();
+            final SortableDefaultMutableTreeNode actionNode = mySetOfNodes.getNode(index);
+            if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(actionNode))) {
+                for (SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+                    if (selectedNode.getUserObject() instanceof PictureInfo) {
+                        nodesToAssign.add(selectedNode);
+                    }
+                }
+            } else {
+                nodesToAssign.add(popupNode);
+            }
+            JpoEventBus.getInstance().post(new CategoryAssignmentWindowRequest(nodesToAssign));
+        });
+        return assignCategoryWindowJMenuItem;
     }
 
     private JMenuItem getTitleJMenuItem(String title) {

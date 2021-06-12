@@ -390,6 +390,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"categoryUsageJMenuItem", "類目"},
             {"navigationJMenu", "導航"},
             {"openFolderJMenuItem", "打開文件夾"},
+            {"assignCategoryWindowJMenuItem", "Assign Categories"},
 
             // ThumbnailJScrollPane
             {"ThumbnailSearchResults", "搜索結果"},

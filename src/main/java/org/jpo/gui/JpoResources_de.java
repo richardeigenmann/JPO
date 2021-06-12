@@ -386,6 +386,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"categoryUsageJMenuItem", "Kategorien"},
             {"navigationJMenu", "Springe zu"},
             {"openFolderJMenuItem", "Ordner Oeffnen"},
+            {"assignCategoryWindowJMenuItem", "Kategorien Zuweisen"},
 
             // ThumbnailJScrollPane
             {"ThumbnailSearchResults", "Suchresultate für: "},

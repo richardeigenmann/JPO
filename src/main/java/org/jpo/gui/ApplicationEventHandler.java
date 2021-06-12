@@ -574,6 +574,17 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * When the app sees a CategoryAssignmentWindowRequest it will open the
+     * CategoryAssignmentWindowRequest for the supplied nodes
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleCategoryAssignmentWindowRequest(final CategoryAssignmentWindowRequest request) {
+        new CategroyAssignmentWindow(request);
+    }
+
+    /**
      * When the app sees a ShowAutoAdvanceDialog it needs to show the Auto Advance dialog
      *
      * @param request The request
