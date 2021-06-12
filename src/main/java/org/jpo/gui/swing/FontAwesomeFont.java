@@ -4,18 +4,17 @@ import org.jpo.testground.PlayWithFontAwesome;
 
 import java.awt.*;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2020-2020 Richard Eigenmann.
+ Copyright (C) 2020-2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -43,12 +42,12 @@ public class FontAwesomeFont {
     private static Font fontAwesomeSolid24;
 
     static {
-        try (final InputStream regular = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf");
-             final InputStream solid = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
-            final Font baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, regular);
+        try (final var regular = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf");
+             final var solid = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
+            final var baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, regular);
             fontAwesomeRegular24 = baseFontRegular.deriveFont(Font.PLAIN, 24f);
             fontAwesomeRegular18 = baseFontRegular.deriveFont(Font.PLAIN, 18f);
-            final Font baseFontSolid = Font.createFont(Font.TRUETYPE_FONT, solid);
+            final var baseFontSolid = Font.createFont(Font.TRUETYPE_FONT, solid);
             fontAwesomeSolid24 = baseFontSolid.deriveFont(Font.PLAIN, 24f);
         } catch (final IOException | FontFormatException e) {
             LOGGER.log(Level.SEVERE, "Could not load FontAwesome font. Exception: {0}", e.getMessage());
