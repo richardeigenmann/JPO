@@ -247,6 +247,14 @@ public class Settings {
      */
     private static final Queue<String> copyLocations = EvictingQueue.create(MAX_MEMORISE);
     /**
+     * constant
+     */
+    private static final String GOOGLE_USERNAME = "googleUsername";
+    /**
+     * constant
+     */
+    private static final String GOOGLE_PASSWORD = "googlePassword";
+    /**
      * The most recently used directory for Add Pictures command
      */
     private static String defaultSourceLocation = "";
@@ -941,6 +949,11 @@ public class Settings {
         return defaultGenerateMap;
     }
 
+    /**
+     * Remembers if generate map should be ticked.
+     *
+     * @param defaultGenerateMap whether generate map should be ticked
+     */
     public static void setDefaultGenerateMap(final boolean defaultGenerateMap) {
         Settings.defaultGenerateMap = defaultGenerateMap;
     }
@@ -1088,7 +1101,8 @@ public class Settings {
     }
 
     /**
-     * Returns the default ftp user for Html export
+     * Returns the default ftp password for Html export
+     * @return the default ftp password
      */
     public static String getDefaultHtmlFtpPassword() {
         return defaultHtmlFtpPassword;
@@ -1113,21 +1127,24 @@ public class Settings {
     }
 
     /**
-     * Remembers the default ftp password for Html export
+     * Remembers the default ftp target directory for Html export
+     * @param defaultHtmlFtpTargetDir The default ftp target directory
      */
     public static void setDefaultHtmlFtpTargetDir(final String defaultHtmlFtpTargetDir) {
         Settings.defaultHtmlFtpTargetDir = defaultHtmlFtpTargetDir;
     }
 
     /**
-     * Returns the default ftp target directory for Html export
+     * Returns the default ssh server for the Html export
+     * @return the default ssh server for the Html export
      */
     public static String getDefaultHtmlSshServer() {
         return defaultHtmlSshServer;
     }
 
     /**
-     * Remembers the default ftp target directory for Html export
+     * Remembers the default ssh server for Html export
+     * @param defaultHtmlSshServer The default ssh server for Html export
      */
     public static void setDefaultHtmlSshServer(final String defaultHtmlSshServer) {
         Settings.defaultHtmlSshServer = defaultHtmlSshServer;
@@ -1193,7 +1210,7 @@ public class Settings {
     /**
      * Stores the default choice for fast scaling
      *
-     * @param thumbnailFastScale
+     * @param thumbnailFastScale true is fast scaling should be used false if not.
      */
     public static void setThumbnailFastScale(boolean thumbnailFastScale) {
         Settings.thumbnailFastScale = thumbnailFastScale;
@@ -1577,8 +1594,8 @@ public class Settings {
         lastCameraWizardCopyMode = prefs.getBoolean("lastCameraWizardCopyMode", lastCameraWizardCopyMode);
 
         rememberGoogleCredentials = prefs.getBoolean("rememberGoogleCredentials", rememberGoogleCredentials);
-        googleUsername = prefs.get("googleUsername", "");
-        googlePassword = prefs.get("googlePassword", "");
+        googleUsername = prefs.get(GOOGLE_USERNAME, "");
+        googlePassword = prefs.get(GOOGLE_PASSWORD, "");
         showFilenamesOnThumbnailPanel = prefs.getBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
         snoozeVersionAlertsExpiryDateTime = LocalDateTime.ofEpochSecond(prefs.getLong("snoozeVersionAlertsExpiryDateTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), 0, ZoneOffset.UTC);
         ignoreVersionAlerts = prefs.getBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
@@ -1755,11 +1772,11 @@ public class Settings {
 
         prefs.putBoolean("rememberGoogleCredentials", rememberGoogleCredentials);
         if (rememberGoogleCredentials) {
-            prefs.put("googleUsername", googleUsername);
-            prefs.put("googlePassword", googlePassword);
+            prefs.put(GOOGLE_USERNAME, googleUsername);
+            prefs.put(GOOGLE_PASSWORD, googlePassword);
         } else {
-            prefs.put("googleUsername", "");
-            prefs.put("googlePassword", "");
+            prefs.put(GOOGLE_USERNAME, "");
+            prefs.put(GOOGLE_PASSWORD, "");
         }
         prefs.putBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
         prefs.putLong("snoozeVersionAlertsExpiryDateTime", snoozeVersionAlertsExpiryDateTime.toEpochSecond(ZoneOffset.UTC));
@@ -2102,7 +2119,8 @@ public class Settings {
     }
 
     /**
-     * Returns the cords the expiry DateTime before which the version alerts shall not be shown.
+     * Returns the expiry DateTime before which the version alerts shall not be shown.
+     * @return The timestamp before which alerts shall not be shown
      */
     public static LocalDateTime getSnoozeVersionAlertsExpiryDateTime() {
         return snoozeVersionAlertsExpiryDateTime;
