@@ -1,7 +1,6 @@
 package org.jpo.gui.swing;
 
 import com.jidesoft.swing.JidePopupMenu;
-import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.AddCategoriesToPictureNodesRequest;
@@ -47,13 +46,13 @@ public class CategoryPopupMenu extends JidePopupMenu {
      * @param referringNodes The nodes on which the selection is to be applied
      */
     public static void addMenuItems(final JComponent parentMenu, final List<SortableDefaultMutableTreeNode> referringNodes) {
-        final JMenuItem addCategoryMenuItem = new JMenuItem("Add Category");
+        final var addCategoryMenuItem = new JMenuItem("Add Category");
         addCategoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
         parentMenu.add(addCategoryMenuItem);
-        final PictureCollection pictureCollection = Settings.getPictureCollection();
+        final var pictureCollection = Settings.getPictureCollection();
         pictureCollection.getSortedCategoryStream().forEach(category -> {
-            final String categoryDescription = category.getValue();
-            final JMenuItem categoryMenuItem = new JMenuItem();
+            final var categoryDescription = category.getValue();
+            final var categoryMenuItem = new JMenuItem();
             categoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new AddCategoriesToPictureNodesRequest(category.getKey(), referringNodes)));
             categoryMenuItem.setText(categoryDescription);
             parentMenu.add(categoryMenuItem);

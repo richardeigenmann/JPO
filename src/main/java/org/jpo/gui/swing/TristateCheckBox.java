@@ -6,17 +6,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * @see <a href="https://stackoverflow.com/a/26749506/804766>https://stackoverflow.com/a/26749506/804766</a>
+ * The TristateCheckBox is a JCheckBox with a third state.
+ * It has an initial state of SELECTED, UNSELECTED or MIXED which it shows with a tick, no tick or a square in the icon.
+ * The click logic depends on whether there was a mixed initial state or not.
+ * If there was no mixed state then the user can only go from UNCHANGED to SELECT/UNSELECT and back to UNCHANGED.
+ * If there was a mixed state then the user can go from UNCHANGED to SELECT to UNSELECT and back to UNCHANGED.
+ * <p>
+ * Original code from StackOverflow customised by Richard Eigenmann
+ *
+ * @author Richard Eigenmann
+ * @see <a href="https://stackoverflow.com/a/26749506/804766">https://stackoverflow.com/a/26749506/804766</a>
  * Copyright: https://creativecommons.org/licenses/by-sa/3.0/
  */
 public class TristateCheckBox extends JCheckBox implements Icon, ActionListener {
 
-    public static final String SELECTION_STATE = "selectionState";
+    public static final String SELECTION = "selection";
     public static final String INITIAL_STATE = "initialState";
 
     public enum TCheckBoxInitialState {SELECTED, UNSELECTED, MIXED}
 
-    public enum TCheckBoxChosenState {SELECT_ALL, UNSELECT_ALL, UNCHANGED}
+    public enum TCheckBoxChosenState {SELECT, UNSELECT, UNCHANGED}
 
     public TristateCheckBox(final String text, final TCheckBoxInitialState initialState) {
         super(text, initialState == TCheckBoxInitialState.SELECTED);
@@ -26,8 +35,8 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
         addActionListener(this);
     }
 
-    public TCheckBoxChosenState getSelectionState() {
-        return (TCheckBoxChosenState) getClientProperty(SELECTION_STATE);
+    public TCheckBoxChosenState getSelection() {
+        return (TCheckBoxChosenState) getClientProperty(SELECTION);
     }
 
     public TCheckBoxInitialState getInitialState() {
@@ -35,12 +44,12 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
     }
 
     public void setSelectionState(final TCheckBoxChosenState state) {
-        putClientProperty(SELECTION_STATE, state);
+        putClientProperty(SELECTION, state);
         switch (state) {
-            case SELECT_ALL:
+            case SELECT:
                 super.setSelected(true);
                 break;
-            case UNSELECT_ALL:
+            case UNSELECT:
                 super.setSelected(false);
                 break;
             default:
@@ -62,7 +71,7 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
         // paints the supercalss checkbox icon
         icon.paintIcon(c, g, x, y);
 
-        if ((getSelectionState() == TCheckBoxChosenState.UNCHANGED) && (getInitialState() == TCheckBoxInitialState.MIXED)) {
+        if ((getSelection() == TCheckBoxChosenState.UNCHANGED) && (getInitialState() == TCheckBoxInitialState.MIXED)) {
             int w = getIconWidth();
             int h = getIconHeight();
             g.setColor(c.isEnabled() ? new Color(51, 51, 51) : new Color(122, 138, 153));
@@ -82,7 +91,7 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
 
     public void actionPerformed(final ActionEvent e) {
         final var tcb = (TristateCheckBox) e.getSource();
-        final var oldState = (TCheckBoxChosenState) tcb.getClientProperty(SELECTION_STATE);
+        final var oldState = (TCheckBoxChosenState) tcb.getClientProperty(SELECTION);
         if (((TCheckBoxInitialState) tcb.getClientProperty(INITIAL_STATE)) == TCheckBoxInitialState.MIXED) {
             setSelectionState(getNextStateForMixedCheckbox(oldState));
         } else {
@@ -92,7 +101,7 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
 
     public static TCheckBoxChosenState getNextStateForPureCheckbox(final TCheckBoxChosenState oldState, final TCheckBoxInitialState initialState) {
         if (oldState == TCheckBoxChosenState.UNCHANGED) {
-            return initialState == TCheckBoxInitialState.SELECTED ? TCheckBoxChosenState.UNSELECT_ALL : TCheckBoxChosenState.SELECT_ALL;
+            return initialState == TCheckBoxInitialState.SELECTED ? TCheckBoxChosenState.UNSELECT : TCheckBoxChosenState.SELECT;
         } else {
             return TCheckBoxChosenState.UNCHANGED;
         }
@@ -101,9 +110,9 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
     public static TCheckBoxChosenState getNextStateForMixedCheckbox(final TCheckBoxChosenState oldState) {
         switch (oldState) {
             case UNCHANGED:
-                return TCheckBoxChosenState.SELECT_ALL;
-            case SELECT_ALL:
-                return TCheckBoxChosenState.UNSELECT_ALL;
+                return TCheckBoxChosenState.SELECT;
+            case SELECT:
+                return TCheckBoxChosenState.UNSELECT;
             default:
                 return TCheckBoxChosenState.UNCHANGED;
         }
