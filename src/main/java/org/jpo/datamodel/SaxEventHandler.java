@@ -33,6 +33,9 @@ import static org.jpo.datamodel.Settings.FieldCodes.*;
 public class SaxEventHandler extends DefaultHandler {
 
     private static final String LINE_SEPERATOR = System.getProperty("line.separator");
+    /**
+     * constant
+     */
     public static final String INDEX = "index";
     private final LabelFrame loadProgressGui;
 
