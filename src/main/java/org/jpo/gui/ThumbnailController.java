@@ -117,15 +117,16 @@ public class ThumbnailController
      * @param index         The index position that should be checked.
      * @return true if the indicated node is already showing, false if not
      */
-    public boolean isSameNode(final NodeNavigatorInterface nodeNavigator,
-                              final int index) {
+    public boolean isAlreadyDisplayingNode(final NodeNavigatorInterface nodeNavigator,
+                                           final int index) {
         if (!nodeNavigator.equals(myNodeNavigator)) {
             return false;
         } else {
             if (index != myIndex) {
                 return false;
             } else {
-                SortableDefaultMutableTreeNode testNode = nodeNavigator.getNode(index);
+                // check if it really is the same node (might have been rearranged)
+                final var testNode = nodeNavigator.getNode(index);
                 if (testNode == null) {
                     return false;
                 } else {
