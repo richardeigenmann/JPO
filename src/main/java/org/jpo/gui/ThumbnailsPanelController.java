@@ -173,7 +173,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
         thumbnailsPane.setLayout(thumbnailLayoutManager);
 
-        final JLayeredPane layeredPane = new JLayeredPane();
+        final var layeredPane = new JLayeredPane();
 
         layeredPane.setLayout(new OverlayLayout(layeredPane));
         layeredPane.add(thumbnailsPane, Integer.valueOf(1));
@@ -185,7 +185,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
                 if (paintOverlay) {
                     super.paintComponent(g);
 
-                    Rectangle outerRect = new Rectangle(0, 0, thumbnailsPane.getWidth(), thumbnailsPane.getHeight());
+                    final var outerRect = new Rectangle(0, 0, thumbnailsPane.getWidth(), thumbnailsPane.getHeight());
                     g.setColor(DIMMED_COLOR);
                     g.fillRect(outerRect.x, outerRect.y, outerRect.width, overlayRectangle.y);
                     g.fillRect(outerRect.x, overlayRectangle.y, overlayRectangle.x, outerRect.height);
@@ -226,7 +226,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             resizeAllThumbnails(thumbnailSizeFactor);
         });
 
-        final JPanel whiteArea = new JPanel();
+        final var whiteArea = new JPanel();
         thumbnailJScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, whiteArea);
 
         thumbnailsPane.addMouseListener(new MouseInputAdapter() {
@@ -272,22 +272,22 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void handleMouseDragged(final MouseEvent e) {
         // do the overlay painting
         paintOverlay = true;
-        final Point mouseMovedToPoint = e.getPoint();
+        final var mouseMovedToPoint = e.getPoint();
         overlayRectangle = getMouseRectangle(mouseMovedToPoint);
         thumbnailsPane.repaint();
 
-        final Rectangle viewRect = thumbnailJScrollPane.getViewport().getViewRect();
-        final JScrollBar verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
-        final int scrolltrigger = 40;
+        final var viewRect = thumbnailJScrollPane.getViewport().getViewRect();
+        final var verticalScrollBar = thumbnailJScrollPane.getVerticalScrollBar();
+        final var scrolltrigger = 40;
         if (mouseMovedToPoint.y - viewRect.y - viewRect.height > -scrolltrigger) {
-            final int increment = verticalScrollBar.getUnitIncrement(1);
-            final int position = verticalScrollBar.getValue();
+            final var increment = verticalScrollBar.getUnitIncrement(1);
+            final var position = verticalScrollBar.getValue();
             if (position < verticalScrollBar.getMaximum()) {
                 verticalScrollBar.setValue(position + increment);
             }
         } else if (mouseMovedToPoint.y - viewRect.y < scrolltrigger) {
-            final int increment = verticalScrollBar.getUnitIncrement(1);
-            final int position = verticalScrollBar.getValue();
+            final var increment = verticalScrollBar.getUnitIncrement(1);
+            final var position = verticalScrollBar.getValue();
             if (position > verticalScrollBar.getMinimum()) {
                 verticalScrollBar.setValue(position - increment);
             }
@@ -306,7 +306,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         paintOverlay = false;
         thumbnailsPane.repaint();
 
-        final Rectangle mouseRectangle = getMouseRectangle(e.getPoint());
+        final var mouseRectangle = getMouseRectangle(e.getPoint());
 
         // I wonder why they don't put the following two lines into the SWING library but
         // let you work out this binary math on your own from the unhelpful description?
@@ -317,7 +317,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             Settings.getPictureCollection().clearSelection();
         }
 
-        final Rectangle thumbnailRectangle = new Rectangle();
+        final var thumbnailRectangle = new Rectangle();
         for (final ThumbnailController thumbnailController : thumbnailControllers) {
             final SortableDefaultMutableTreeNode node = thumbnailController.getNode();
             if (node == null) {
@@ -331,7 +331,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     }
 
     private void doSearch(final String searchString) {
-        final TextQuery textQuery = new TextQuery(searchString);
+        final var textQuery = new TextQuery(searchString);
         textQuery.setStartNode(Settings.getPictureCollection().getRootNode());
         Settings.getPictureCollection().addQueryToTreeModel(textQuery);
         titleJPanel.hideSearchField();
@@ -344,14 +344,14 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private void showFilenamesButtonClicked() {
         showFilenamesState = !showFilenamesState;
         Settings.setShowFilenamesOnThumbnailPanel(showFilenamesState);
-        for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
+        for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
         }
     }
 
     public void resizeAllThumbnails(final float thumbnailSizeFactor) {
         thumbnailLayoutManager.setThumbnailWidth((int) (350 * thumbnailSizeFactor));
-        for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
+        for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i].setFactor(thumbnailSizeFactor);
             thumbnailDescriptionControllers[i].setFactor(thumbnailSizeFactor);
         }
@@ -367,7 +367,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * @return The rectangle in the coordinate space of the parent component
      */
     private Rectangle getMouseRectangle(final Point mousePoint) {
-        final Rectangle rectangle = new Rectangle(mousePressedPoint,
+        final var rectangle = new Rectangle(mousePressedPoint,
                 new Dimension(mousePoint.x - mousePressedPoint.x,
                         mousePoint.y - mousePressedPoint.y));
         if (mousePoint.x < mousePressedPoint.x) {
@@ -415,7 +415,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     @Subscribe
     public void handleShowGroupRequest(final ShowGroupRequest event) {
         final Runnable runnable = () -> {
-            final GroupNavigator groupNavigator = new GroupNavigator();
+            final var groupNavigator = new GroupNavigator();
             groupNavigator.setNode(event.node());
             show(groupNavigator);
         };
@@ -453,13 +453,13 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         newNodeNavigator.addNodeNavigatorListener(this);
 
         if (myLastGroupNode != null) {
-            final GroupInfo gi = (GroupInfo) myLastGroupNode.getUserObject();
+            final var gi = (GroupInfo) myLastGroupNode.getUserObject();
             gi.removeGroupInfoChangeListener(myGroupInfoChangeListener);
         }
         myLastGroupNode = null;
         if (newNodeNavigator instanceof GroupNavigator) {
             myLastGroupNode = ((GroupNavigator) newNodeNavigator).getGroupNode();
-            final GroupInfo groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
+            final var groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
             groupInfo.addGroupInfoChangeListener(myGroupInfoChangeListener);
         }
 
@@ -506,8 +506,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Request that the ThumbnailPanel show the last page of Thumbnails
      */
     private void goToLastPage() {
-        final int last = mySetOfNodes.getNumberOfNodes();
-        final int tgtPage = last / Settings.getMaxThumbnails();
+        final var last = mySetOfNodes.getNumberOfNodes();
+        final var tgtPage = last / Settings.getMaxThumbnails();
         startIndex = tgtPage * Settings.getMaxThumbnails();
         thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
         nodeLayoutChanged();
@@ -524,7 +524,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailDescriptionControllers = new ThumbnailDescriptionController[Settings.getMaxThumbnails()];
         thumbnailsPane.removeAll();
         initialisedMaxThumbnails = Settings.getMaxThumbnails();
-        for (int i = 0; i < Settings.getMaxThumbnails(); i++) {
+        for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
@@ -552,7 +552,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         setPageStats();
         setButtonStatus();
 
-        for (int i = Settings.getMaxThumbnails() - 1; i > -1; i--) {
+        for (var i = Settings.getMaxThumbnails() - 1; i > -1; i--) {
             if (!thumbnailControllers[i].isAlreadyDisplayingNode(mySetOfNodes, i + startIndex)) {
                 thumbnailControllers[i].setNode(mySetOfNodes, i + startIndex);
                 thumbnailDescriptionControllers[i].setNode(mySetOfNodes.getNode(i + startIndex));

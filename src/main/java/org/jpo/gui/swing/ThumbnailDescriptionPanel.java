@@ -3,13 +3,13 @@ package org.jpo.gui.swing;
 /*
  ThumbnailDescriptionPanel.java:  a Swing view for the descriptions of a thumbnail
 
- Copyright (C) 2020  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2020-2021  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -25,8 +25,6 @@ import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -259,50 +257,9 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoriesJSP.repaint();
     }
 
-    /**
-     * Adds a Category visual to the the categoriesJPanel and returns the removeButton JButton to the called who
-     * should then wire up the click event with the removal action
-     *
-     * @param categoryDescription The category to show
-     * @return the remove Button
-     */
-    public AbstractButton addCategory(final String categoryDescription) {
-        Tools.checkEDT();
-        final JPanel categoryPanel = new JPanel();
-        final JLabel categoryLabel = new JLabel(categoryDescription) {
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                Dimension arcs = new Dimension(15, 15);
-                int width = getWidth();
-                int height = getHeight();
-                Graphics2D graphics = (Graphics2D) g;
-                graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-
-                //Draws the rounded opaque panel with borders.
-                graphics.setColor(getBackground());
-                graphics.fillRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);//paint background
-                graphics.setColor(getForeground());
-                graphics.drawRoundRect(0, 0, width - 1, height - 1, arcs.width, arcs.height);//paint border
-                super.paintComponent(g);
-            }
-        };
-        final Border border = categoryLabel.getBorder();
-        final Border margin = new EmptyBorder(6, 6, 6, 6);
-        categoryLabel.setBorder(new CompoundBorder(border, margin));
-
-        categoryPanel.add(categoryLabel);
-        final JButton removeButton = new JButton("\uf057");
-        removeButton.setBorder(new EmptyBorder(0, 0, 0, 0));
-        removeButton.setContentAreaFilled(false);
-        removeButton.setFocusPainted(false);
-        removeButton.setOpaque(false);
-        removeButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
-        categoryPanel.add(removeButton);
-        categoriesJPanel.add(categoryPanel);
-        this.revalidate(); // makes the JScrollPanel reevaluate it's size so it grows
-        return removeButton;
+    public void addToCategopriesJPanel(final JComponent component) {
+        categoriesJPanel.add(component);
+        categoriesJSP.revalidate();
     }
 
     @TestOnly

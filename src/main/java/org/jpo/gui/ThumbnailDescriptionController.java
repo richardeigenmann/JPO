@@ -5,10 +5,8 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RemoveCategoryFromPictureInfoRequest;
-import org.jpo.gui.swing.CategoryPopupMenu;
-import org.jpo.gui.swing.PicturePopupMenu;
-import org.jpo.gui.swing.RenameMenuItems;
-import org.jpo.gui.swing.ThumbnailDescriptionPanel;
+import org.jpo.eventbus.ShowQueryRequest;
+import org.jpo.gui.swing.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,8 +30,8 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -94,15 +92,15 @@ public class ThumbnailDescriptionController
         final Optional<String> oSpace = PicturePopupMenu.replaceEscapedSpaces(text);
         final Optional<String> oUnderscore = PicturePopupMenu.replaceUnderscore(text);
         if (oSpace.isPresent() || oUnderscore.isPresent()) {
-            final JPopupMenu popupmenu = new JPopupMenu();
-            final String REPLACE_WITH = Settings.getJpoResources().getString("ReplaceWith");
+            final var popupmenu = new JPopupMenu();
+            final var REPLACE_WITH = Settings.getJpoResources().getString("ReplaceWith");
             if (oSpace.isPresent()) {
-                final JMenuItem replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
+                final var replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
                 popupmenu.add(replaceSpace);
             }
             if (oUnderscore.isPresent()) {
-                final JMenuItem replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderscore.get());
+                final var replaceUnderscore = new JMenuItem(REPLACE_WITH + oUnderscore.get());
                 replaceUnderscore.addActionListener(e1 -> textArea.setText(oUnderscore.get()));
                 popupmenu.add(replaceUnderscore);
             }
@@ -110,7 +108,7 @@ public class ThumbnailDescriptionController
                 final Optional<String> spaceUnderscore = PicturePopupMenu.replaceUnderscore(oSpace.get());
                 if (spaceUnderscore.isPresent()) {
                     // to be expected...
-                    final JMenuItem replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
+                    final var replaceSpaceAndUnderscore = new JMenuItem(REPLACE_WITH + spaceUnderscore.get());
                     replaceSpaceAndUnderscore.addActionListener(e1 -> textArea.setText(spaceUnderscore.get()));
                     popupmenu.add(replaceSpaceAndUnderscore);
                 }
@@ -159,7 +157,7 @@ public class ThumbnailDescriptionController
                                                                   @Override
                                                                   public void mouseReleased(MouseEvent e) {
                                                                       if (e.getButton() == BUTTON3) {
-                                                                          final JPopupMenu popupmenu = new JPopupMenu();
+                                                                          final var popupmenu = new JPopupMenu();
                                                                           for (final JComponent c : RenameMenuItems.getRenameMenuItems(Collections.singleton(referringNode))) {
                                                                               popupmenu.add(c);
                                                                           }
@@ -182,7 +180,7 @@ public class ThumbnailDescriptionController
         if (referringNode == null) {
             return;
         }
-        final Object userObject = referringNode.getUserObject();
+        final var userObject = referringNode.getUserObject();
         if (userObject != null && !panel.getDescription().equals(userObject.toString())) {
             // the description was changed
             if (userObject instanceof PictureInfo pi) {
@@ -235,13 +233,20 @@ public class ThumbnailDescriptionController
             final Collection<Integer> categories = pi.getCategoryAssignments();
             if (categories != null) {
                 categories.forEach(category -> {
-                    final String categoryDescription = Settings.getPictureCollection().getCategory(category);
-                    final AbstractButton component = panel.addCategory(categoryDescription);
-                    component.addActionListener(e ->
+                    final var categoryDescription = Settings.getPictureCollection().getCategory(category);
+                    final var categoryButton = new CategoryButton(categoryDescription);
+                    panel.addToCategopriesJPanel(categoryButton);
+                    categoryButton.addRemovalListener(e ->
                             JpoEventBus.getInstance().post(
                                     new RemoveCategoryFromPictureInfoRequest(category, pi)
                             )
                     );
+                    categoryButton.addClickListener(e ->
+                            JpoEventBus.getInstance().post(
+                                    new ShowQueryRequest(new CategoryQuery(category))
+                            )
+                    );
+
                 });
             }
             panel.addCategoryMenu();
@@ -310,7 +315,7 @@ public class ThumbnailDescriptionController
      */
     public Dimension getPreferredSize() {
         final Dimension d = panel.getPreferredSize();
-        int height = 0;
+        var height = 0;
         if (panel.isVisible()) {
             height = d.height;
         }
@@ -389,7 +394,7 @@ public class ThumbnailDescriptionController
     }
 
     private void openCategoriesPopupMenu(final Component component, final int x, final int y) {
-        final CategoryPopupMenu menu = new CategoryPopupMenu(Collections.singletonList(referringNode));
+        final var menu = new CategoryPopupMenu(Collections.singletonList(referringNode));
         menu.show(component, x, y);
     }
 

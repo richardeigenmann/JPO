@@ -826,6 +826,11 @@ public class Settings {
         return recentCollections;
     }
 
+    /**
+     * Returns whether to enlarge small images to screen size or not
+     *
+     * @return whether to enlarge images that are smaller than the screen
+     */
     public static boolean isDontEnlargeSmallImages() {
         return dontEnlargeSmallImages;
     }
@@ -889,6 +894,11 @@ public class Settings {
         return shortFieldPreferredSize;
     }
 
+    /**
+     * Gets the minimum size for short fields
+     *
+     * @return the minimum size for short fields
+     */
     public static Dimension getShortFieldMinimumSize() {
         return shortFieldMinimumSize;
     }
@@ -929,6 +939,11 @@ public class Settings {
         return titleFont;
     }
 
+    /**
+     * Returns the default number of html pictures per row
+     *
+     * @return the default number of html pictures per row
+     */
     public static int getDefaultHtmlPicsPerRow() {
         return defaultHtmlPicsPerRow;
     }
@@ -1331,6 +1346,11 @@ public class Settings {
         return UNSELECTED_COLOR;
     }
 
+    /**
+     * Returns a list of the registered cameras
+     *
+     * @return the lsit of cameras
+     */
     public static List<Camera> getCameras() {
         return cameras;
     }
@@ -1995,6 +2015,11 @@ public class Settings {
         }
     }
 
+    /**
+     * Returns the list of copy locations
+     *
+     * @return the list of copy locations
+     */
     public static Queue<String> getCopyLocations() {
         return copyLocations;
     }

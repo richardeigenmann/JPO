@@ -99,17 +99,18 @@ public class JpoResources_zh_TW extends ListResourceBundle {
 
             // PictureViewer
             {"PictureViewerTitle", "JPO圖片瀏覽"},
-            {"PictureViewerKeycodes", "可以使用以下的快捷方式\n"
-                    + "N: 下一張\n"
-                    + "P: 前一張\n"
-                    + "I: 關閉顯示圖片信息\n"
-                    + "<space>,<home>: 适合窗口大小\n"
-                    + "<left>,<right>,<up>,<down>: 圖片移位\n"
-                    + "<PgUp>: 縮小\n"
-                    + "<PgDown>: 放大\n"
-                    + "1: 原始大小\n"
-                    + "F: 窗口尺寸菜單\n"
-                    + "M: 彈出菜單"},
+            {"PictureViewerKeycodes", """
+                    可以使用以下的快捷方式
+                    N: 下一張
+                    P: 前一張
+                    I: 關閉顯示圖片信息
+                    <space>,<home>: 适合窗口大小
+                    <left>,<right>,<up>,<down>: 圖片移位
+                    <PgUp>: 縮小
+                    <PgDown>: 放大
+                    1: 原始大小
+                    F: 窗口尺寸菜單
+                    M: 彈出菜單"""},
             {"PictureViewerKeycodesTitle", "鍵盤快捷方式"},
             {"NavigationPanel", "導航工具"},
             {"fullScreenJButton.ToolTipText", "全屏"},

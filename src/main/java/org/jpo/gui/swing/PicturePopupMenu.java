@@ -188,7 +188,6 @@ public class PicturePopupMenu extends JPopupMenu {
         add(getCopyJMenu());
         add(getPictureNodeRemove());
         add(getFileOperationsMenu());
-        //add(getAssignCategoryMenu());
         add(getAssignCategoryWindow());
         add(getShowPictureInfoEditorMenuItem());
         add(getConsolidateHereMenuItem());
@@ -877,23 +876,6 @@ public class PicturePopupMenu extends JPopupMenu {
         }
     }
 
-    /**
-     * Creates a JMenu of categories that can be assigned
-     *
-     * @return a JMenu of categories that can be assigned
-     */
-    private JMenu getAssignCategoryMenu() {
-        final var assignCategorisJMenu = new JMenu("Assign Category");
-        if (Settings.getPictureCollection().countSelectedNodes() > 1
-                && Settings.getPictureCollection().isSelected(popupNode)) {
-            // if many nodes selected and the user clicked on one of them
-            CategoryPopupMenu.addMenuItems(assignCategorisJMenu, Settings.getPictureCollection().getSelection());
-        } else {
-            // act only on the selected node
-            CategoryPopupMenu.addMenuItems(assignCategorisJMenu, Collections.singletonList(popupNode));
-        }
-        return assignCategorisJMenu;
-    }
 
     /**
      * Returns the title for the popup Menu. If nodes are selected and the
