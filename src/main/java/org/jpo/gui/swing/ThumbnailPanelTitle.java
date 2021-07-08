@@ -2,7 +2,6 @@ package org.jpo.gui.swing;
 
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -248,7 +247,6 @@ public class ThumbnailPanelTitle
 
     public void hideSearchField() {
         searchField.setVisible(false);
-        Tools.checkEDT();
         searchField.revalidate();
     }
 

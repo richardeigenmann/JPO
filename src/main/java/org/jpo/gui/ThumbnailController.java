@@ -22,13 +22,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -60,7 +60,7 @@ public class ThumbnailController
         myThumbnail.addMouseListener(new ThumbnailMouseAdapter());
 
         new DropTarget(myThumbnail, new JpoTransferrableDropTargetListener(this));
-        final DragSource dragSource = DragSource.getDefaultDragSource();
+        final var dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener());
     }
@@ -181,10 +181,10 @@ public class ThumbnailController
     private boolean thumbnailIsInVisibleArea() {
         try {
             if (getThumbnail().getParent().getParent().getParent() instanceof JViewport) {
-                final JViewport viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
-                final Thumbnail thumbnail = getThumbnail();
+                final var viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
+                final var thumbnail = getThumbnail();
                 if (thumbnail != null) {
-                    Point point = thumbnail.getLocation();
+                    final var point = thumbnail.getLocation();
                     if (viewport.getViewRect().contains(point)) {
                         return true;
                     }
@@ -563,8 +563,8 @@ public class ThumbnailController
          *              adjusted
          */
         void setDragCursor(final DragSourceDragEvent event) {
-            final DragSourceContext context = event.getDragSourceContext();
-            final int dndCode = event.getDropAction();
+            final var context = event.getDragSourceContext();
+            final var dndCode = event.getDropAction();
             if ((dndCode & DnDConstants.ACTION_COPY) != 0) {
                 context.setCursor(DragSource.DefaultCopyDrop);
             } else if ((dndCode & DnDConstants.ACTION_MOVE) != 0) {
