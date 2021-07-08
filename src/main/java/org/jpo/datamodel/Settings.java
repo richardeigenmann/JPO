@@ -1125,10 +1125,20 @@ public class Settings {
         Settings.defaultHtmlFtpServer = defaultHtmlFtpServer;
     }
 
+    /**
+     * Returns the default html ftp port
+     *
+     * @return the default html ftp port
+     */
     public static int getDefaultHtmlFtpPort() {
         return defaultHtmlFtpPort;
     }
 
+    /**
+     * Remembers the default html ftp port
+     *
+     * @param defaultHtmlFtpPort the port to remember
+     */
     public static void setDefaultHtmlFtpPort(int defaultHtmlFtpPort) {
         Settings.defaultHtmlFtpPort = defaultHtmlFtpPort;
     }
@@ -1142,12 +1152,18 @@ public class Settings {
         return defaultHtmlFtpUser;
     }
 
+    /**
+     * Remembers the default ftp user account
+     *
+     * @param defaultHtmlFtpUser the new ftp user to remember
+     */
     public static void setDefaultHtmlFtpUser(String defaultHtmlFtpUser) {
         Settings.defaultHtmlFtpUser = defaultHtmlFtpUser;
     }
 
     /**
      * Returns the default ftp password for Html export
+     *
      * @return the default ftp password
      */
     public static String getDefaultHtmlFtpPassword() {

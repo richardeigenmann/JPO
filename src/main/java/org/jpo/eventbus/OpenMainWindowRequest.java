@@ -21,7 +21,7 @@ import org.jpo.gui.ApplicationEventHandler;
  * This request indicates that the app wants to open the MainWindow
  *
  * @author Richard Eigenmann
- * @see ApplicationEventHandler#handleOpenMainWindowRequest(OpenMainWindowRequest)
+ * @see ApplicationEventHandler#handleEvent(OpenMainWindowRequest)
  */
 public class OpenMainWindowRequest {
 }

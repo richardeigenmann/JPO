@@ -85,7 +85,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public static void handleMoveToNewLocationRequest(final MoveToNewLocationRequest request) {
+    public static void handleEvent(final MoveToNewLocationRequest request) {
         final var jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -108,7 +108,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public static void handleRenamePictureRequest(@NonNull final RenamePictureRequest request) {
+    public static void handleEvent(@NonNull final RenamePictureRequest request) {
         for (final SortableDefaultMutableTreeNode node : request.nodes()) {
             renameOnePictureRequest(node);
         }
@@ -157,7 +157,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public static void handleRenameFileRequest(@NonNull final RenameFileRequest request) {
+    public static void handleEvent(@NonNull final RenameFileRequest request) {
         final PictureInfo pi = (PictureInfo) request.node().getUserObject();
         LOGGER.log(Level.INFO, "Renaming node {0} ({1} to new filename: {2}", new Object[]{request.node(), pi.getImageFile().getPath(), request.newFileName()});
         final var imageFile = pi.getImageFile();
@@ -201,7 +201,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public static void handleMoveToDirRequest(final MoveToDirRequest request) {
+    public static void handleEvent(final MoveToDirRequest request) {
         if (!request.targetLocation().isDirectory()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("htmlDistIsDirError"),
@@ -298,18 +298,18 @@ public class ApplicationEventHandler {
      *
      * @param request the startup request
      * @see OpenMainWindowRequest
-     * @see ApplicationEventHandler#handleOpenMainWindowRequest(OpenMainWindowRequest)
+     * @see ApplicationEventHandler#handleEvent(OpenMainWindowRequest)
      * @see StartCameraWatchDaemonRequest
-     * @see ApplicationEventHandler#handleStartCameraWatchDaemonRequest(StartCameraWatchDaemonRequest)
+     * @see ApplicationEventHandler#handleEvent(StartCameraWatchDaemonRequest)
      * @see StartThumbnailCreationFactoryRequest
-     * @see ApplicationEventHandler#handleStartThumbnailCreationFactoryRequest(StartThumbnailCreationFactoryRequest)
+     * @see ApplicationEventHandler#handleEvent(StartThumbnailCreationFactoryRequest)
      * @see FileLoadRequest
-     * @see ApplicationEventHandler#handleFileLoadRequest(FileLoadRequest)
+     * @see ApplicationEventHandler#handleEvent(FileLoadRequest)
      * @see StartNewCollectionRequest
-     * @see ApplicationEventHandler#handleStartNewCollectionRequest(StartNewCollectionRequest)
+     * @see ApplicationEventHandler#handleEvent(StartNewCollectionRequest)
      */
     @Subscribe
-    public void handleApplicationStartupRequest(final ApplicationStartupRequest request) {
+    public void handleEvent(final ApplicationStartupRequest request) {
         LOGGER.info("------------------------------------------------------------\n      Starting JPO");
 
         Settings.loadSettings();
@@ -336,7 +336,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleStartThumbnailCreationFactoryRequest(final StartThumbnailCreationFactoryRequest request) {
+    public void handleEvent(final StartThumbnailCreationFactoryRequest request) {
         new ThumbnailCreationFactory(Settings.THUMBNAIL_CREATION_THREAD_POLLING_TIME);
     }
 
@@ -350,7 +350,7 @@ public class ApplicationEventHandler {
      * @see MainAppModelListener
      */
     @Subscribe
-    public void handleOpenMainWindowRequest(final OpenMainWindowRequest request) {
+    public void handleEvent(final OpenMainWindowRequest request) {
         try {
             SwingUtilities.invokeAndWait(
                     () -> {
@@ -371,7 +371,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleFindDuplicatesRequest(final FindDuplicatesRequest request) {
+    public void handleEvent(final FindDuplicatesRequest request) {
         final var duplicatesQuery = new DuplicatesQuery();
         Settings.getPictureCollection().addQueryToTreeModel(duplicatesQuery);
         JpoEventBus.getInstance().post(new ShowQueryRequest(duplicatesQuery));
@@ -383,7 +383,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCheckIntegrityRequest(final CheckIntegrityRequest request) {
+    public void handleEvent(final CheckIntegrityRequest request) {
         new IntegrityCheckerJFrame(Settings.getPictureCollection().getRootNode());
     }
 
@@ -394,7 +394,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleEditSettingsRequest(final EditSettingsRequest request) {
+    public void handleEvent(final EditSettingsRequest request) {
         new SettingsDialog(true);
     }
 
@@ -404,7 +404,7 @@ public class ApplicationEventHandler {
      * @param request the request object
      */
     @Subscribe
-    public void handleEditCamerasRequest(final EditCamerasRequest request) {
+    public void handleEvent(final EditCamerasRequest request) {
         new CamerasEditor();
     }
 
@@ -414,7 +414,7 @@ public class ApplicationEventHandler {
      * @param request the request object
      */
     @Subscribe
-    public void handleSendEmailRequest(final SendEmailRequest request) {
+    public void handleEvent(final SendEmailRequest request) {
         new EmailerGui();
     }
 
@@ -425,7 +425,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCloseApplicationRequest(final ShutdownApplicationRequest request) {
+    public void handleEvent(final ShutdownApplicationRequest request) {
         if (Settings.isUnsavedSettingChanges()) {
             Settings.writeSettings();
         }
@@ -446,7 +446,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCheckDirectoriesRequest(final CheckDirectoriesRequest request) {
+    public void handleEvent(final CheckDirectoriesRequest request) {
         new ReconcileJFrame(Settings.getPictureCollection().getRootNode());
     }
 
@@ -456,7 +456,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleStartDoublePanelSlideshowRequest(final StartDoublePanelSlideshowRequest request) {
+    public void handleEvent(final StartDoublePanelSlideshowRequest request) {
         Tools.checkEDT();
         final SortableDefaultMutableTreeNode rootNode = request.node();
         final var p1 = new PictureViewer();
@@ -479,7 +479,7 @@ public class ApplicationEventHandler {
      * @param request the {@link ShowPictureRequest}
      */
     @Subscribe
-    public void handleShowPictureRequest(final ShowPictureRequest request) {
+    public void handleEvent(final ShowPictureRequest request) {
         SwingUtilities.invokeLater(() -> {
             final var pictureViewer = new PictureViewer();
             pictureViewer.showNode(request.nodeNavigator(), request.currentIndex());
@@ -494,7 +494,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowPictureInfoEditorRequest(final ShowPictureInfoEditorRequest request) {
+    public void handleEvent(final ShowPictureInfoEditorRequest request) {
         new PictureInfoEditor(request.node());
     }
 
@@ -505,7 +505,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowGroupInfoEditorRequest(final ShowGroupInfoEditorRequest request) {
+    public void handleEvent(final ShowGroupInfoEditorRequest request) {
         new GroupInfoEditor(request.node());
     }
 
@@ -515,7 +515,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleOpenSearchDialogRequest(final OpenSearchDialogRequest request) {
+    public void handleEvent(final OpenSearchDialogRequest request) {
         if (!(request.startNode().getUserObject() instanceof GroupInfo)) {
             LOGGER.log(Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this);
             JOptionPane.showMessageDialog(
@@ -569,7 +569,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowCategoryUsageEditorRequest(final ShowCategoryUsageEditorRequest request) {
+    public void handleEvent(final ShowCategoryUsageEditorRequest request) {
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "This dialog was removed. Use AssignCategories instead");
     }
 
@@ -580,7 +580,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCategoryAssignmentWindowRequest(final CategoryAssignmentWindowRequest request) {
+    public void handleEvent(final CategoryAssignmentWindowRequest request) {
         new CategroyAssignmentWindow(request);
     }
 
@@ -590,7 +590,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowAutoAdvanceDialog(final ShowAutoAdvanceDialogRequest request) {
+    public void handleEvent(final ShowAutoAdvanceDialogRequest request) {
         new AutoAdvanceDialog(request);
     }
 
@@ -601,7 +601,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleChooseAndAddCollectionRequest(final ChooseAndAddCollectionRequest request) {
+    public void handleEvent(final ChooseAndAddCollectionRequest request) {
         final var fileToLoad = chooseXmlFile();
         if (fileToLoad != null) {
             JpoEventBus.getInstance().post(new AddCollectionToGroupRequest(request.node(), fileToLoad));
@@ -616,7 +616,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleShowGroupAsTableRequest(final ShowGroupAsTableRequest request) {
+    public void handleEvent(final ShowGroupAsTableRequest request) {
         final var tableJFrame = new TableJFrame(request.node());
         tableJFrame.pack();
         tableJFrame.setVisible(true);
@@ -633,7 +633,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleFileLoadDialogRequest(final FileLoadDialogRequest request) {
+    public void handleEvent(final FileLoadDialogRequest request) {
         final var fileToLoad = chooseXmlFile();
         if (fileToLoad != null) {
             JpoEventBus.getInstance().post(new FileLoadRequest(fileToLoad));
@@ -652,7 +652,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleFileLoadRequest(final FileLoadRequest request) {
+    public void handleEvent(final FileLoadRequest request) {
         final var fileToLoad = request.fileToLoad();
         new Thread("FileLoadRequest") {
 
@@ -687,7 +687,7 @@ public class ApplicationEventHandler {
      * @param event the event
      */
     @Subscribe
-    public void handleStartNewCollectionRequest(final StartNewCollectionRequest event) {
+    public void handleEvent(final StartNewCollectionRequest event) {
         SwingUtilities.invokeLater(
                 () -> {
                     Settings.getPictureCollection().clearCollection();
@@ -704,7 +704,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleFileSaveRequest(final FileSaveRequest request) {
+    public void handleEvent(final FileSaveRequest request) {
         if (Settings.getPictureCollection().getXmlFile() == null) {
             final var fileSaveAsRequest = new FileSaveAsRequest(request.onSuccessNextRequest());
             JpoEventBus.getInstance().post(fileSaveAsRequest);
@@ -725,7 +725,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleFileSaveAsRequest(final FileSaveAsRequest request) {
+    public void handleEvent(final FileSaveAsRequest request) {
         final var jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
@@ -774,7 +774,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAfterFileSaveRequest(final AfterFileSaveRequest request) {
+    public void handleEvent(final AfterFileSaveRequest request) {
         final var panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.add(new JLabel(Settings.getJpoResources().getString("collectionSaveBody") + Settings.getPictureCollection().getXmlFile().toString()));
@@ -801,7 +801,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAddCollectionToGroupRequest(final AddCollectionToGroupRequest request) {
+    public void handleEvent(final AddCollectionToGroupRequest request) {
         LOGGER.info("Starting");
         Tools.checkEDT();
         final SortableDefaultMutableTreeNode popupNode = request.node();
@@ -827,7 +827,7 @@ public class ApplicationEventHandler {
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleSortGroupRequest(final SortGroupRequest request) {
+    public void handleEvent(final SortGroupRequest request) {
         final SortableDefaultMutableTreeNode popupNode = request.node();
         final FieldCodes sortCriteria = request.sortCriteria();
         popupNode.sortChildren(sortCriteria);
@@ -843,7 +843,7 @@ public class ApplicationEventHandler {
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleAddEmptyGroupRequest(final AddEmptyGroupRequest request) {
+    public void handleEvent(final AddEmptyGroupRequest request) {
         final SortableDefaultMutableTreeNode node = request.node();
         if (!(node.getUserObject() instanceof GroupInfo)) {
             LOGGER.log(Level.WARNING, "node {0} is of type {1} instead of GroupInfo. Proceeding anyway.", new Object[]{node.getUserObject(), node.getUserObject().getClass()});
@@ -860,7 +860,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToHtmlRequest(final ExportGroupToHtmlRequest request) {
+    public void handleEvent(final ExportGroupToHtmlRequest request) {
         new GenerateWebsiteWizard(request.node());
     }
 
@@ -870,7 +870,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleGenerateWebsiteRequest(final GenerateWebsiteRequest request) {
+    public void handleEvent(final GenerateWebsiteRequest request) {
         WebsiteGenerator.generateWebsite(request);
     }
 
@@ -880,7 +880,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupFlatFileRequest(final ExportGroupToFlatFileRequest request) {
+    public void handleEvent(final ExportGroupToFlatFileRequest request) {
         new FlatFileDistiller(request);
     }
 
@@ -890,7 +890,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToNewCollectionRequest(final ExportGroupToNewCollectionRequest request) {
+    public void handleEvent(final ExportGroupToNewCollectionRequest request) {
         new CollectionDistillerJFrame(request);
     }
 
@@ -900,7 +900,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToCollectionRequest(final ExportGroupToCollectionRequest request) {
+    public void handleEvent(final ExportGroupToCollectionRequest request) {
         JpoWriter.writeInThread(request);
     }
 
@@ -911,7 +911,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleExportGroupToPicasaRequest(final ExportGroupToPicasaRequest request) {
+    public void handleEvent(final ExportGroupToPicasaRequest request) {
         final var myRequest = new PicasaUploadRequest();
         myRequest.setNode(request.node());
         new PicasaUploaderWizard(myRequest);
@@ -923,7 +923,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAddGroupToEmailSelectionRequest(final AddGroupToEmailSelectionRequest request) {
+    public void handleEvent(final AddGroupToEmailSelectionRequest request) {
         final SortableDefaultMutableTreeNode groupNode = request.node();
         SortableDefaultMutableTreeNode n;
         for (final Enumeration<TreeNode> e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
@@ -940,7 +940,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleAddPictureModesToEmailSelectionRequest(final AddPictureNodesToEmailSelectionRequest request) {
+    public void handleEvent(final AddPictureNodesToEmailSelectionRequest request) {
         final List<SortableDefaultMutableTreeNode> nodesList = request.nodesList();
         for (final SortableDefaultMutableTreeNode n : nodesList) {
             if (n.getUserObject() instanceof PictureInfo) {
@@ -956,7 +956,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleRemovePictureModesFromEmailSelectionRequest(final RemovePictureNodesFromEmailSelectionRequest request) {
+    public void handleEvent(final RemovePictureNodesFromEmailSelectionRequest request) {
         final List<SortableDefaultMutableTreeNode> nodesList = request.nodesList();
         for (final SortableDefaultMutableTreeNode n : nodesList) {
             if (n.getUserObject() instanceof PictureInfo) {
@@ -971,7 +971,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleClearEmailSelectionRequest(final ClearEmailSelectionRequest request) {
+    public void handleEvent(final ClearEmailSelectionRequest request) {
         Settings.getPictureCollection().clearMailSelection();
     }
 
@@ -981,7 +981,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleConsolidateGroupDialogRequest(final ConsolidateGroupDialogRequest request) {
+    public void handleEvent(final ConsolidateGroupDialogRequest request) {
         new ConsolidateGroupController(request);
     }
 
@@ -991,7 +991,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleConsolidateGroupRequest(final ConsolidateGroupRequest request) {
+    public void handleEvent(final ConsolidateGroupRequest request) {
         new ConsolidateGroupWorker(
                 request.targetDir(),
                 request.node(),
@@ -1008,7 +1008,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToNewLocationRequest(final CopyToNewLocationRequest request) {
+    public void handleEvent(final CopyToNewLocationRequest request) {
         final var jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -1042,7 +1042,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public static void handleCopyToDirRequest(final CopyToDirRequest request) {
+    public static void handleEvent(final CopyToDirRequest request) {
 
         var picsCopied = 0;
         for (final SortableDefaultMutableTreeNode node : request.nodes()) {
@@ -1100,7 +1100,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToNewZipfileRequest(final CopyToNewZipfileRequest request) {
+    public void handleEvent(final CopyToNewZipfileRequest request) {
         final var jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -1128,7 +1128,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyToZipfileRequest(final CopyToZipfileRequest request) {
+    public void handleEvent(final CopyToZipfileRequest request) {
         final var tempFile = new File(request.targetZipfile().getAbsolutePath() + ".org.jpo.temp");
         var picsCopied = 0;
         try (final var zipArchiveOutputStream = new ZipArchiveOutputStream(tempFile)) {
@@ -1215,7 +1215,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyImageToClipboardRequest(final CopyImageToClipboardRequest request) {
+    public void handleEvent(final CopyImageToClipboardRequest request) {
         final var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         final var transferable = new JpoTransferable(request.nodes());
         clipboard.setContents(transferable, (Clipboard clipboard1, Transferable contents) -> LOGGER.info("Lost Ownership of clipboard - not an issue"));
@@ -1227,7 +1227,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleCopyPathToClipboardRequest(final CopyPathToClipboardRequest request) {
+    public void handleEvent(final CopyPathToClipboardRequest request) {
         final var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         final var sb = new StringBuilder();
         for (final SortableDefaultMutableTreeNode s : request.nodes()) {
@@ -1246,7 +1246,7 @@ public class ApplicationEventHandler {
      * @param request The node on which the request was made
      */
     @Subscribe
-    public void handleMoveNodeToTopRequest(final MoveNodeToTopRequest request) {
+    public void handleEvent(final MoveNodeToTopRequest request) {
         final SortableDefaultMutableTreeNode popupNode = request.node();
         popupNode.moveNodeToTop();
         final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -1260,7 +1260,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeUpRequest(final MoveNodeUpRequest request) {
+    public void handleEvent(final MoveNodeUpRequest request) {
         final SortableDefaultMutableTreeNode popupNode = request.node();
         popupNode.moveNodeUp();
         final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -1274,7 +1274,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeDownRequest(final MoveNodeDownRequest request) {
+    public void handleEvent(final MoveNodeDownRequest request) {
         final SortableDefaultMutableTreeNode popupNode = request.node();
         popupNode.moveNodeDown();
         final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -1288,7 +1288,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeToBottomRequest(final MoveNodeToBottomRequest request) {
+    public void handleEvent(final MoveNodeToBottomRequest request) {
         final SortableDefaultMutableTreeNode popupNode = request.node();
         popupNode.moveNodeToBottom();
         final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -1302,7 +1302,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveIndentRequest(final MoveIndentRequest request) {
+    public void handleEvent(final MoveIndentRequest request) {
         final List<SortableDefaultMutableTreeNode> nodes = request.nodes();
         for (SortableDefaultMutableTreeNode node : nodes) {
             node.indentNode();
@@ -1315,7 +1315,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveOutdentRequest(final MoveOutdentRequest request) {
+    public void handleEvent(final MoveOutdentRequest request) {
         final List<SortableDefaultMutableTreeNode> nodes = request.nodes();
         for (SortableDefaultMutableTreeNode node : nodes) {
             node.outdentNode();
@@ -1328,7 +1328,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRemoveNodeRequest(final RemoveNodeRequest request) {
+    public void handleEvent(final RemoveNodeRequest request) {
         final List<SortableDefaultMutableTreeNode> nodesToRemove = request.nodes();
         final SortableDefaultMutableTreeNode firstParentNode = nodesToRemove.get(0).getParent();
         for (SortableDefaultMutableTreeNode deleteNode : nodesToRemove) {
@@ -1343,7 +1343,7 @@ public class ApplicationEventHandler {
      * @param request the request the request
      */
     @Subscribe
-    public void handleDeleteNodeFileRequest(final DeleteNodeFileRequest request) {
+    public void handleEvent(final DeleteNodeFileRequest request) {
         try {
             if (!(request.node().getUserObject() instanceof PictureInfo pi)) {
                 return;
@@ -1382,7 +1382,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleDeleteMultiNodeFileRequest(final DeleteMultiNodeFileRequest request) {
+    public void handleEvent(final DeleteMultiNodeFileRequest request) {
         final var textArea = new JTextArea();
         textArea.setText(getFilenames(request.nodes()));
         textArea.append(Settings.getJpoResources().getString("areYouSure"));
@@ -1444,7 +1444,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleOpenRecentCollectionRequest(final OpenRecentCollectionRequest request) {
+    public void handleEvent(final OpenRecentCollectionRequest request) {
         final int i = request.index();
 
         new Thread("OpenRecentCollectionRequest") {
@@ -1477,7 +1477,7 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handleChooseAndAddPicturesToGroupRequest(final ChooseAndAddPicturesToGroupRequest request) {
+    public void handleEvent(final ChooseAndAddPicturesToGroupRequest request) {
         new PictureFileChooser(request);
     }
 
@@ -1487,7 +1487,7 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handlePictureViewerZoomInRequest(final PictureControllerZoomRequest request) {
+    public void handleEvent(final PictureControllerZoomRequest request) {
         request.pictureController().handleZoomRequest(request);
     }
 
@@ -1497,7 +1497,7 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handleChooseAndAddFlatfileRequest(final ChooseAndAddFlatfileRequest request) {
+    public void handleEvent(final ChooseAndAddFlatfileRequest request) {
         final var jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
         jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileOpenButtonText"));
@@ -1518,7 +1518,7 @@ public class ApplicationEventHandler {
      * @param request the Request
      */
     @Subscribe
-    public void handleAddFlatFileRequest(final AddFlatFileRequest request) {
+    public void handleEvent(final AddFlatFileRequest request) {
         FlatFileReader.handleRequest(request);
     }
 
@@ -1528,7 +1528,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleMoveNodeToNodeRequest(final MoveNodeToNodeRequest request) {
+    public void handleEvent(final MoveNodeToNodeRequest request) {
         final List<SortableDefaultMutableTreeNode> movingNodes = request.movingNodes();
         final SortableDefaultMutableTreeNode targetGroup = request.targetNode();
         for (final SortableDefaultMutableTreeNode movingNode : movingNodes) {
@@ -1542,7 +1542,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleOpenLicenceFrameRequest(final OpenLicenceFrameRequest request) {
+    public void handleEvent(final OpenLicenceFrameRequest request) {
         new LicenseWindow();
     }
 
@@ -1552,7 +1552,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleHelpAboutFrameRequest(final OpenHelpAboutFrameRequest request) {
+    public void handleEvent(final OpenHelpAboutFrameRequest request) {
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 Settings.getJpoResources().getString("HelpAboutText") + Settings.getJpoResources().getString("HelpAboutUser") + System.getProperty("user.name") + "\n" + Settings.getJpoResources().getString("HelpAboutOs") + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n" + Settings.getJpoResources().getString("HelpAboutJvm") + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n" + Settings.getJpoResources().getString("HelpAboutJvmMemory") + Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0) + " MB\n" + Settings.getJpoResources().getString("HelpAboutJvmFreeMemory") + Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0) + " MB\n");
 
@@ -1571,7 +1571,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleOpenPrivacyFrameRequest(final OpenPrivacyFrameRequest request) {
+    public void handleEvent(final OpenPrivacyFrameRequest request) {
         new PrivacyJFrame();
     }
 
@@ -1581,7 +1581,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleStartCameraWatchDaemonRequest(final StartCameraWatchDaemonRequest request) {
+    public void handleEvent(final StartCameraWatchDaemonRequest request) {
         new CameraWatchDaemon();
     }
 
@@ -1598,7 +1598,7 @@ public class ApplicationEventHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleUnsavedUpdatesDialogRequest(final UnsavedUpdatesDialogRequest request) {
+    public void handleEvent(final UnsavedUpdatesDialogRequest request) {
         Tools.checkEDT();
 
         // a good time to save the window coordinates
@@ -1650,7 +1650,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRefreshThumbnailRequest(final RefreshThumbnailRequest request) {
+    public void handleEvent(final RefreshThumbnailRequest request) {
         for (final SortableDefaultMutableTreeNode node : request.nodes()) {
             if (node.isRoot()) {
                 LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
@@ -1668,7 +1668,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRotatePictureRequestRequest(final RotatePictureRequest request) {
+    public void handleEvent(final RotatePictureRequest request) {
         final var pictureInfo = (PictureInfo) request.node().getUserObject();
         pictureInfo.rotate(request.angle());
         LOGGER.info("Changed the rotation");
@@ -1685,7 +1685,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleSetPictureRotationRequest(final SetPictureRotationRequest request) {
+    public void handleEvent(final SetPictureRotationRequest request) {
         final var pictureInfo = (PictureInfo) request.node().getUserObject();
         pictureInfo.setRotation(request.angle());
         final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
@@ -1700,7 +1700,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleOpenCategoryEditorRequest(final OpenCategoryEditorRequest request) {
+    public void handleEvent(final OpenCategoryEditorRequest request) {
         new CategoryEditorJFrame();
     }
 
@@ -1710,7 +1710,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowGroupPopUpMenuRequest(final ShowGroupPopUpMenuRequest request) {
+    public void handleEvent(final ShowGroupPopUpMenuRequest request) {
         final Runnable r = () -> {
             final var groupPopupMenu = new GroupPopupMenu(request.node());
             groupPopupMenu.show(request.invoker(), request.x(), request.y());
@@ -1728,7 +1728,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleShowPicturePopUpMenuRequest(final ShowPicturePopUpMenuRequest request) {
+    public void handleEvent(final ShowPicturePopUpMenuRequest request) {
         final Runnable r = () -> {
             final var picturePopupMenu = new PicturePopupMenu(request.nodes(), request.index());
             picturePopupMenu.show(request.invoker(), request.x(), request.y());
@@ -1747,7 +1747,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRunUserFunctionRequest(final RunUserFunctionRequest request) {
+    public void handleEvent(final RunUserFunctionRequest request) {
         try {
             runUserFunction(request.userFunctionIndex(), request.pictureInfo());
         } catch (ClassCastException | NullPointerException x) {
@@ -1762,7 +1762,7 @@ public class ApplicationEventHandler {
      * @param request The request with the lowres urls to remove
      */
     @Subscribe
-    public void handleRemoveOldLowresThumbnailsRequest(final RemoveOldLowresThumbnailsRequest request) {
+    public void handleEvent(final RemoveOldLowresThumbnailsRequest request) {
         SwingUtilities.invokeLater(
                 () -> new ClearThumbnailsJFrame(request.lowresUrls())
         );
@@ -1774,7 +1774,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleOpenFileExplorerRequest(final OpenFileExplorerRequest request) {
+    public void handleEvent(final OpenFileExplorerRequest request) {
         try {
             Desktop.getDesktop().open(request.directory());
         } catch (IOException e) {
@@ -1789,7 +1789,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleRemoveCategoryFromPictureInfoRequest(final RemoveCategoryFromPictureInfoRequest request) {
+    public void handleEvent(final RemoveCategoryFromPictureInfoRequest request) {
         request.pictureInfo().removeCategory(request.category());
     }
 
@@ -1800,7 +1800,7 @@ public class ApplicationEventHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleAddCategoriesToPictureNodesRequest(final AddCategoriesToPictureNodesRequest request) {
+    public void handleEvent(final AddCategoriesToPictureNodesRequest request) {
         for (final SortableDefaultMutableTreeNode node : request.nodes()) {
             if (node.getUserObject() instanceof PictureInfo pi) {
                 pi.addCategoryAssignment(request.category());
@@ -1815,7 +1815,7 @@ public class ApplicationEventHandler {
      * @param request the request object which contains the forceCheck flag
      */
     @Subscribe
-    public void handleCheckForUpdatesRequest(final CheckForUpdatesRequest request) {
+    public void handleEvent(final CheckForUpdatesRequest request) {
         LOGGER.log(Level.INFO, "Caught the request to check for Updates");
         if (request.forceCheck() || VersionUpdate.mayCheckForUpdates()) {
             new VersionUpdate();
