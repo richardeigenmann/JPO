@@ -535,12 +535,11 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement(noCategories);
 
         final List<Integer> selections = new ArrayList<>();
-        myNode.getPictureCollection().getCategoryKeySet().forEach(key -> {
-            final var category = myNode.getPictureCollection().getCategory(key);
-            final var categoryObject = new Category(key, category);
-            listModel.addElement(categoryObject);
-            if ((pictureInfo.getCategoryAssignments() != null) && (pictureInfo.getCategoryAssignments().contains(key))) {
-                selections.add(listModel.indexOf(categoryObject));
+        myNode.getPictureCollection().getSortedCategoryStream().forEach(entry -> {
+            final var category = new Category(entry.getKey(), entry.getValue());
+            listModel.addElement(category);
+            if ((pictureInfo.getCategoryAssignments() != null) && (pictureInfo.getCategoryAssignments().contains(entry.getKey()))) {
+                selections.add(listModel.indexOf(category));
             }
         });
 
