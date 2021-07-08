@@ -4,6 +4,8 @@ import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.CategoryAssignmentWindowRequest;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.OpenCategoryEditorRequest;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,6 +78,8 @@ public class CategroyAssignmentWindow {
 
             final var buttonPanel = new JPanel();
             buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            final var editCategoriesJButton = new JButton("Categories");
+            editCategoriesJButton.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
             final var cancelJButton = new JButton("Cancel");
             cancelJButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING)));
             final var okJButton = new JButton("Save");
@@ -83,6 +87,7 @@ public class CategroyAssignmentWindow {
                 saveChanges(categoriesPanel, request);
                 frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
             });
+            buttonPanel.add(editCategoriesJButton);
             buttonPanel.add(cancelJButton);
             buttonPanel.add(okJButton);
             outerPanel.add(buttonPanel);
