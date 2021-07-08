@@ -73,6 +73,9 @@ public class PictureInfoEditor extends JFrame {
      */
     private static final Logger LOGGER = Logger.getLogger(PictureInfoEditor.class.getName());
 
+    private static final String ALIGNY_TOP = "aligny top";
+    private static final String SPAN_2_WRAP = "span 2, wrap";
+
     /**
      * The Thumbnail Controller for the thumbnail being shown
      */
@@ -233,31 +236,31 @@ public class PictureInfoEditor extends JFrame {
      * initialise the Swing components and place them.
      */
     private void initComponents() {
-        final JPanel mainPanel = new JPanel(new MigLayout());
+        final var mainPanel = new JPanel(new MigLayout());
 
         mainPanel.add(thumbnailController.getThumbnail());
 
-        final JTabbedPane tabs = new JTabbedPane();
+        final var tabs = new JTabbedPane();
         mainPanel.add(tabs, "wrap");
 
-        final JPanel rotationPanel = getRotationPanel();
+        final var rotationPanel = getRotationPanel();
         mainPanel.add(rotationPanel);
 
-        final JPanel buttonJPanel = getButtonPanel();
+        final var buttonJPanel = getButtonPanel();
         mainPanel.add(buttonJPanel);
 
-        final JPanel infoTab = getInfoTab();
-        final JScrollPane infoTabJScrollPane = new JScrollPane(infoTab);
+        final var infoTab = getInfoTab();
+        final var infoTabJScrollPane = new JScrollPane(infoTab);
         infoTabJScrollPane.setWheelScrollingEnabled(true);
         tabs.add("Info", infoTabJScrollPane);
 
-        final JPanel fileTab = getFileTab();
+        final var fileTab = getFileTab();
         tabs.add("File", fileTab);
 
-        final JPanel categoriesTab = getCategoriesTab();
+        final var categoriesTab = getCategoriesTab();
         tabs.add("Categories", categoriesTab);
 
-        final JScrollPane exifJScrollPane = getExifJScrollPane();
+        final var exifJScrollPane = getExifJScrollPane();
         tabs.add("Exif", exifJScrollPane);
 
         final JPanel mapTab = getMapTab();
@@ -272,18 +275,18 @@ public class PictureInfoEditor extends JFrame {
 
     @NotNull
     private JPanel getMapTab() {
-        final JPanel mapTab = new JPanel();
+        final var mapTab = new JPanel();
         mapTab.setLayout(new MigLayout());
         mapTab.add(mapViewer.getJXMapViewer(), "push, grow, span 4, wrap");
-        final JLabel latitudeJLabel = new JLabel(Settings.getJpoResources().getString("latitudeLabel"));
-        mapTab.add(latitudeJLabel, "aligny top");
+        final var latitudeJLabel = new JLabel(Settings.getJpoResources().getString("latitudeLabel"));
+        mapTab.add(latitudeJLabel, ALIGNY_TOP);
 
         latitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
         latitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
         mapTab.add(latitudeJTextField);
 
-        final JLabel longitudeJLabel = new JLabel(Settings.getJpoResources().getString("longitudeLabel"));
-        mapTab.add(longitudeJLabel, "aligny top");
+        final var longitudeJLabel = new JLabel(Settings.getJpoResources().getString("longitudeLabel"));
+        mapTab.add(longitudeJLabel, ALIGNY_TOP);
 
         longitudeJTextField = new JFormattedTextField(NUMBER_FORMAT_FOR_LATLNG);
         longitudeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
@@ -293,17 +296,17 @@ public class PictureInfoEditor extends JFrame {
 
     @NotNull
     private JPanel getRotationPanel() {
-        final JPanel rotationPanel = new JPanel();
-        final JLabel rotationJLabel = new JLabel(Settings.getJpoResources().getString("rotationLabel"));
+        final var rotationPanel = new JPanel();
+        final var rotationJLabel = new JLabel(Settings.getJpoResources().getString("rotationLabel"));
         rotationPanel.add(rotationJLabel);
 
-        final JSpinner spinner = new JSpinner(angleModel);
+        final var spinner = new JSpinner(angleModel);
 
         //Make the angle formatted without a thousands separator.
         spinner.setEditor(new JSpinner.NumberEditor(spinner, "###.##"));
         rotationPanel.add(spinner);
 
-        final JButton rotateLeftJButton = new JButton(ROTATE_LEFT_ICON);
+        final var rotateLeftJButton = new JButton(ROTATE_LEFT_ICON);
         rotateLeftJButton.setMnemonic(KeyEvent.VK_L);
         rotateLeftJButton.addActionListener((ActionEvent e) -> {
             angleModel.setValue(((Double) angleModel.getValue() + 270) % 360);
@@ -312,7 +315,7 @@ public class PictureInfoEditor extends JFrame {
         rotateLeftJButton.setToolTipText(Settings.getJpoResources().getString("rotateLeftJButton.ToolTipText"));
         rotationPanel.add(rotateLeftJButton);
 
-        final JButton rotateRightJButton = new JButton(ROTATE_RIGHT_ICON);
+        final var rotateRightJButton = new JButton(ROTATE_RIGHT_ICON);
         rotateRightJButton.setMnemonic(KeyEvent.VK_R);
         rotateRightJButton.addActionListener((ActionEvent e) -> {
             angleModel.setValue(((Double) angleModel.getValue() + 90) % 360);
@@ -325,10 +328,10 @@ public class PictureInfoEditor extends JFrame {
 
     @NotNull
     private JPanel getButtonPanel() {
-        final JPanel buttonJPanel = new JPanel();
+        final var buttonJPanel = new JPanel();
         buttonJPanel.setLayout(new FlowLayout());
 
-        final JButton okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
+        final var okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -341,7 +344,7 @@ public class PictureInfoEditor extends JFrame {
         getRootPane().setDefaultButton(okJButton);
         buttonJPanel.add(okJButton);
 
-        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
+        final var cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
         cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -349,7 +352,7 @@ public class PictureInfoEditor extends JFrame {
         cancelJButton.addActionListener((ActionEvent e) -> getRid());
         buttonJPanel.add(cancelJButton);
 
-        final JButton resetJButton = new JButton(Settings.getJpoResources().getString("resetLabel"));
+        final var resetJButton = new JButton(Settings.getJpoResources().getString("resetLabel"));
         resetJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         resetJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         resetJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -369,10 +372,10 @@ public class PictureInfoEditor extends JFrame {
         exifTagsJTextArea.setColumns(35);
 
         // stop undesired scrolling in the window when doing append
-        final NonFocussedCaret dumbCaret = new NonFocussedCaret();
+        final var dumbCaret = new NonFocussedCaret();
         exifTagsJTextArea.setCaret(dumbCaret);
 
-        final JScrollPane exifJScrollPane = new JScrollPane();
+        final var exifJScrollPane = new JScrollPane();
         exifJScrollPane.setViewportView(exifTagsJTextArea);
         exifJScrollPane.setWheelScrollingEnabled(true);
         return exifJScrollPane;
@@ -380,18 +383,18 @@ public class PictureInfoEditor extends JFrame {
 
     @NotNull
     private JPanel getCategoriesTab() {
-        final JPanel categoriesTab = new JPanel(new MigLayout());
-        final JLabel categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel-2"));
+        final var categoriesTab = new JPanel(new MigLayout());
+        final var categoriesJLabel = new JLabel(Settings.getJpoResources().getString("categoriesJLabel-2"));
         categoriesTab.add(categoriesJLabel, "wrap");
 
         categoriesTab.add(categoryAssignmentsJLabel, "wrap");
 
         categoriesJList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         categoriesJList.addListSelectionListener((ListSelectionEvent e) -> {
-                    if (e.getValueIsAdjusting()) {
-                        return;
-                    }
-                    if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(setupCategories))) {
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(setupCategories))) {
                         new CategoryEditorJFrame();
                     } else if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(noCategories))) {
                         categoriesJList.clearSelection();
@@ -406,19 +409,19 @@ public class PictureInfoEditor extends JFrame {
 
     @NotNull
     private JPanel getFileTab() {
-        final JPanel fileTab = new JPanel(new MigLayout());
-        JLabel highresLocationJLabel = new JLabel(Settings.getJpoResources().getString("highresLocationLabel"));
-        fileTab.add(highresLocationJLabel, "span 2, wrap");
+        final var fileTab = new JPanel(new MigLayout());
+        final var highresLocationJLabel = new JLabel(Settings.getJpoResources().getString("highresLocationLabel"));
+        fileTab.add(highresLocationJLabel, SPAN_2_WRAP);
         highresErrorJLabel.setFont(ERROR_LABEL_FONT);
         highresLocationJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
         fileTab.add(highresLocationJTextField);
 
-        final JButton highresLocationJButton = new ThreeDotButton();
+        final var highresLocationJButton = new ThreeDotButton();
         highresLocationJButton.addActionListener((ActionEvent e) -> chooseFile());
         fileTab.add(highresLocationJButton, "wrap");
-        fileTab.add(highresErrorJLabel, "span 2, wrap");
+        fileTab.add(highresErrorJLabel, SPAN_2_WRAP);
 
-        final JButton refreshChecksumJButton = new JButton(Settings.getJpoResources().getString("checksumJButton"));
+        final var refreshChecksumJButton = new JButton(Settings.getJpoResources().getString("checksumJButton"));
         refreshChecksumJButton.setPreferredSize(new Dimension(80, 25));
         refreshChecksumJButton.setMinimumSize(new Dimension(80, 25));
         refreshChecksumJButton.setMaximumSize(new Dimension(80, 25));
@@ -440,24 +443,24 @@ public class PictureInfoEditor extends JFrame {
 
     @NotNull
     private JPanel getInfoTab() {
-        final JPanel infoTab = new JPanel();
+        final var infoTab = new JPanel();
         infoTab.setLayout(new MigLayout());
 
-        JLabel descriptionJLabel = new JLabel(Settings.getJpoResources().getString("pictureDescriptionLabel"));
-        infoTab.add(descriptionJLabel, "span 2, wrap");
+        final var descriptionJLabel = new JLabel(Settings.getJpoResources().getString("pictureDescriptionLabel"));
+        infoTab.add(descriptionJLabel, SPAN_2_WRAP);
 
         descriptionJTextArea.setPreferredSize(new Dimension(400, 150));
         descriptionJTextArea.setWrapStyleWord(true);
         descriptionJTextArea.setLineWrap(true);
         descriptionJTextArea.setEditable(true);
-        infoTab.add(descriptionJTextArea, "span 2, wrap");
+        infoTab.add(descriptionJTextArea, SPAN_2_WRAP);
 
-        final JLabel sizeLabelJLabel = new JLabel("Size:");
-        infoTab.add(sizeLabelJLabel, "aligny top");
+        final var sizeLabelJLabel = new JLabel("Size:");
+        infoTab.add(sizeLabelJLabel, ALIGNY_TOP);
 
         infoTab.add(sizeJLabel, "aligny top, wrap");
 
-        final JLabel creationTimeJLabel = new JLabel(Settings.getJpoResources().getString("creationTimeLabel"));
+        final var creationTimeJLabel = new JLabel(Settings.getJpoResources().getString("creationTimeLabel"));
         infoTab.add(creationTimeJLabel, "spany 3, aligny top");
 
         creationTimeJTextField.setPreferredSize(SHORT_FIELD_DIMENSION);
@@ -477,33 +480,33 @@ public class PictureInfoEditor extends JFrame {
         parsedCreationTimeJLabel.setFont(ERROR_LABEL_FONT);
         infoTab.add(parsedCreationTimeJLabel, "wrap");
 
-        final JButton reparseButton = new JButton("reparse");
+        final var reparseButton = new JButton("reparse");
         infoTab.add(reparseButton, "wrap");
         reparseButton.addActionListener((ActionEvent e) -> doReparseDate());
 
-        final JLabel filmReferenceJLabel = new JLabel(Settings.getJpoResources().getString("filmReferenceLabel"));
-        infoTab.add(filmReferenceJLabel, "span 2, wrap");
+        final var filmReferenceJLabel = new JLabel(Settings.getJpoResources().getString("filmReferenceLabel"));
+        infoTab.add(filmReferenceJLabel, SPAN_2_WRAP);
 
         filmReferenceJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        infoTab.add(filmReferenceJTextField, "span 2, wrap");
+        infoTab.add(filmReferenceJTextField, SPAN_2_WRAP);
 
-        final JLabel commentJLabel = new JLabel(Settings.getJpoResources().getString("commentLabel"));
-        infoTab.add(commentJLabel, "span 2, wrap");
+        final var commentJLabel = new JLabel(Settings.getJpoResources().getString("commentLabel"));
+        infoTab.add(commentJLabel, SPAN_2_WRAP);
 
         commentJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        infoTab.add(commentJTextField, "span 2, wrap");
+        infoTab.add(commentJTextField, SPAN_2_WRAP);
 
-        final JLabel photographerJLabel = new JLabel(Settings.getJpoResources().getString("photographerLabel"));
-        infoTab.add(photographerJLabel, "span 2, wrap");
+        final var photographerJLabel = new JLabel(Settings.getJpoResources().getString("photographerLabel"));
+        infoTab.add(photographerJLabel, SPAN_2_WRAP);
 
         photographerJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        infoTab.add(photographerJTextField, "span 2, wrap");
+        infoTab.add(photographerJTextField, SPAN_2_WRAP);
 
-        final JLabel copyrightHolderJLabel = new JLabel(Settings.getJpoResources().getString("copyrightHolderLabel"));
-        infoTab.add(copyrightHolderJLabel, "span 2, wrap");
+        final var copyrightHolderJLabel = new JLabel(Settings.getJpoResources().getString("copyrightHolderLabel"));
+        infoTab.add(copyrightHolderJLabel, SPAN_2_WRAP);
 
         copyrightHolderJTextField.setPreferredSize(TEXT_FIELD_DIMENSION);
-        infoTab.add(copyrightHolderJTextField, "span 2, wrap");
+        infoTab.add(copyrightHolderJTextField, SPAN_2_WRAP);
 
         return infoTab;
     }
@@ -531,26 +534,26 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement(setupCategories);
         listModel.addElement(noCategories);
 
-        List<Integer> selections = new ArrayList<>();
+        final List<Integer> selections = new ArrayList<>();
         myNode.getPictureCollection().getCategoryKeySet().forEach(key -> {
-            final String category = myNode.getPictureCollection().getCategory(key);
-            final Category categoryObject = new Category(key, category);
+            final var category = myNode.getPictureCollection().getCategory(key);
+            final var categoryObject = new Category(key, category);
             listModel.addElement(categoryObject);
             if ((pictureInfo.getCategoryAssignments() != null) && (pictureInfo.getCategoryAssignments().contains(key))) {
                 selections.add(listModel.indexOf(categoryObject));
             }
         });
 
-        int[] selectionsArray = new int[selections.size()];
-        int j = 0;
-        for (Integer key : selections) {
+        final var selectionsArray = new int[selections.size()];
+        var j = 0;
+        for (final var key : selections) {
             selectionsArray[j] = (key);
             j++;
         }
         categoriesJList.setSelectedIndices(selectionsArray);
         categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
 
-        ExifInfo exifInfo = new ExifInfo(pictureInfo.getImageFile());
+        final var exifInfo = new ExifInfo(pictureInfo.getImageFile());
         exifInfo.decodeExifTags();
 
         sizeJLabel.setText(String.format("%s x %s", exifInfo.getExifWidth(), exifInfo.getExifHeight()));
@@ -659,10 +662,10 @@ public class PictureInfoEditor extends JFrame {
      * @return a string for the selected categories
      */
     private static String selectedJListCategoriesToString(final JList<Category> theList) {
-        final StringBuilder resultString = new StringBuilder();
+        final var resultString = new StringBuilder();
         if (!theList.isSelectionEmpty()) {
             final List<Category> selectedCategories = theList.getSelectedValuesList();
-            String comma = "";
+            var comma = "";
             for (final Category c : selectedCategories) {
                 if (!((c.equals(setupCategories)) || (c.equals(noCategories)))) {
                     resultString.append(comma).append(c.toString());
@@ -678,7 +681,7 @@ public class PictureInfoEditor extends JFrame {
      * if the URL is not a valid URL
      */
     private void setColorIfError() {
-        final File f = new File(highresLocationJTextField.getText());
+        final var f = new File(highresLocationJTextField.getText());
         if (Files.isReadable(f.toPath())) {
             highresLocationJTextField.setForeground(Color.black);
             highresErrorJLabel.setText("");
@@ -706,10 +709,10 @@ public class PictureInfoEditor extends JFrame {
      */
     private void doReparseDate() {
         try {
-            final URL url = new URL(highresLocationJTextField.getText());
-            final File file = new File(url.toURI());
-            final ExifInfo exifInfo = new ExifInfo(file);
-            final String timestamp = exifInfo.getCreateDateTime();
+            final var url = new URL(highresLocationJTextField.getText());
+            final var file = new File(url.toURI());
+            final var exifInfo = new ExifInfo(file);
+            final var timestamp = exifInfo.getCreateDateTime();
             creationTimeJTextField.setText(timestamp);
             parseTimestamp(timestamp);
 
@@ -804,7 +807,7 @@ public class PictureInfoEditor extends JFrame {
      * selected into the JTextField of the highres locations
      */
     private void chooseFile() {
-        final JFileChooser jFileChooser = new JFileChooser();
+        final var jFileChooser = new JFileChooser();
         jFileChooser.setFileFilter(new ImageFilter());
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -895,7 +898,7 @@ public class PictureInfoEditor extends JFrame {
 
         @Override
         public Object getNextValue() {
-            Object object = super.getNextValue();
+            var object = super.getNextValue();
             if (object == null) {
                 object = 0.0;
             }
@@ -904,7 +907,7 @@ public class PictureInfoEditor extends JFrame {
 
         @Override
         public Object getPreviousValue() {
-            Object object = super.getPreviousValue();
+            var object = super.getPreviousValue();
             if (object == null) {
                 object = 359.9;
             }
