@@ -181,8 +181,8 @@ public class CategroyAssignmentWindow {
         });
 
         final var transposedList = new TristateCheckBox[sortedCheckBoxList.size() + COLUMNS];
+        final var maxrows = (int) Math.ceil(sortedCheckBoxList.size() / ((double) COLUMNS));
         for (var i = 0; i < sortedCheckBoxList.size(); i++) {
-            int maxrows = (int) Math.ceil(sortedCheckBoxList.size() / ((double) COLUMNS));
             int col = i / maxrows;
             int row = i % maxrows;
             int pos = row * COLUMNS + col;
@@ -193,6 +193,9 @@ public class CategroyAssignmentWindow {
         for (var i = 0; i < transposedList.length; i++) {
             if (transposedList[i] != null) {
                 categoriesPanel.add(transposedList[i]);
+            } else {
+                // need to add a non-showing component to keep the alignment
+                categoriesPanel.add(new JPanel());
             }
         }
     }
