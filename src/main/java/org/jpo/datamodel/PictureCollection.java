@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import org.jpo.eventbus.CategoriesWereModified;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;
@@ -521,6 +522,7 @@ public class PictureCollection {
             final Integer maxKey = Collections.max(categories.keySet());
             final Integer nextKey = maxKey + 1;
             addCategory(nextKey, category);
+            JpoEventBus.getInstance().post(new CategoriesWereModified());
             return nextKey;
         }
     }
@@ -534,6 +536,7 @@ public class PictureCollection {
     public void renameCategory(final Integer key, final String category) {
         removeCategory(key);
         addCategory(key, category);
+        JpoEventBus.getInstance().post(new CategoriesWereModified());
     }
 
     /**
@@ -582,6 +585,7 @@ public class PictureCollection {
      */
     public void removeCategory(final Integer key) {
         categories.remove(key);
+        JpoEventBus.getInstance().post(new CategoriesWereModified());
     }
 
     /**

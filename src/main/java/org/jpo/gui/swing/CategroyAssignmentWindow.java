@@ -1,8 +1,10 @@
 package org.jpo.gui.swing;
 
+import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
+import org.jpo.eventbus.CategoriesWereModified;
 import org.jpo.eventbus.CategoryAssignmentWindowRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.OpenCategoryEditorRequest;
@@ -11,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,57 +56,12 @@ import java.util.logging.Logger;
  */
 public class CategroyAssignmentWindow {
 
-    private static final Logger LOGGER = Logger.getLogger(CategroyAssignmentWindow.class.getName());
     public static final String CATEGORY = "Category";
+    private static final Logger LOGGER = Logger.getLogger(CategroyAssignmentWindow.class.getName());
+    private static final int COLUMNS = 8;
     private final JFrame frame = new JFrame();
     private final JPanel categoriesPanel = new JPanel();
-    private static final int COLUMNS = 8;
-
-    public CategroyAssignmentWindow(final CategoryAssignmentWindowRequest request) {
-        EventQueue.invokeLater(() -> {
-            frame.setTitle(String.format("Category assignment for %d pictures", request.nodes().size()));
-
-            final var outerPanel = new JPanel();
-            outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
-            final var titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            final var title = new JLabel(String.format("%d Nodes selected", request.nodes().size()));
-            title.setFont(RobotoFont.getFontRobotoThin24());
-            titlePanel.add(title);
-            outerPanel.add(titlePanel);
-
-            categoriesPanel.setLayout(new MigLayout("wrap " + COLUMNS));
-
-            final var jscrollPanel = new JScrollPane(categoriesPanel);
-            outerPanel.add(jscrollPanel);
-
-            final var buttonPanel = new JPanel();
-            buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-            final var editCategoriesJButton = new JButton("Categories");
-            editCategoriesJButton.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
-            final var cancelJButton = new JButton("Cancel");
-            cancelJButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING)));
-            final var okJButton = new JButton("Save");
-            okJButton.addActionListener(e -> {
-                saveChanges(categoriesPanel, request);
-                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-            });
-            buttonPanel.add(editCategoriesJButton);
-            buttonPanel.add(cancelJButton);
-            buttonPanel.add(okJButton);
-            outerPanel.add(buttonPanel);
-
-            final Map<Integer, Integer> categoryUsageCount = analyseNodes(request);
-            populateCheckBoxes(categoryUsageCount, request.nodes().size(), categoriesPanel);
-
-
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.add(outerPanel);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
-    }
-
+    private final CategoryAssignmentWindowRequest request;
     private final KeyListener escapeKeyListener = new KeyListener() {
         @Override
         public void keyTyped(KeyEvent e) {
@@ -123,6 +81,93 @@ public class CategroyAssignmentWindow {
         }
     };
 
+    public CategroyAssignmentWindow(final CategoryAssignmentWindowRequest request) {
+        this.request = request;
+        EventQueue.invokeLater(() -> {
+            frame.setTitle(String.format("Category assignment for %d pictures", request.nodes().size()));
+
+            final var outerPanel = new JPanel();
+            outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+            final var titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+            final var title = new JLabel(String.format("%d Nodes selected", request.nodes().size()));
+            title.setFont(RobotoFont.getFontRobotoThin24());
+            titlePanel.add(title);
+            outerPanel.add(titlePanel);
+
+            categoriesPanel.setLayout(new MigLayout("wrap " + COLUMNS));
+
+            final var jscrollPanel = new JScrollPane(categoriesPanel);
+            outerPanel.add(jscrollPanel);
+
+            final var buttonPanel = new JPanel();
+            buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+            final var editCategoriesJButton = new JButton("Edit");
+            editCategoriesJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+            editCategoriesJButton.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
+            final var cancelJButton = new JButton("Cancel");
+            cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+            cancelJButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING)));
+            final var okJButton = new JButton("Save");
+            okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
+            okJButton.addActionListener(e -> {
+                saveChanges(categoriesPanel, request);
+                frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+            });
+            buttonPanel.add(editCategoriesJButton);
+            buttonPanel.add(cancelJButton);
+            buttonPanel.add(okJButton);
+            outerPanel.add(buttonPanel);
+
+            populate();
+
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            frame.add(outerPanel);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            JpoEventBus.getInstance().register(this);
+            frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(final WindowEvent e) {
+                    super.windowClosed(e);
+                    JpoEventBus.getInstance().unregister(CategroyAssignmentWindow.this);
+                }
+            });
+        });
+    }
+
+    private static void saveChanges(final JPanel categoriesPanel, final CategoryAssignmentWindowRequest request) {
+        for (final var component : categoriesPanel.getComponents()) {
+            if (component instanceof TristateCheckBox tristateCheckBox) {
+                final var category = (Map.Entry<Integer, String>) tristateCheckBox.getClientProperty(CATEGORY);
+                for (final var node : request.nodes()) {
+                    final var pictureInfo = (PictureInfo) node.getUserObject();
+                    if (tristateCheckBox.getSelection() == TristateCheckBox.TCheckBoxChosenState.UNSELECT) {
+                        pictureInfo.removeCategory(category.getKey());
+                    } else if (tristateCheckBox.getSelection() == TristateCheckBox.TCheckBoxChosenState.SELECT) {
+                        pictureInfo.addCategoryAssignment(category.getKey());
+                    }
+                }
+            }
+        }
+    }
+
+    @Subscribe
+    public void handleEvent(final CategoriesWereModified request) {
+        repopulate();
+    }
+
+    private void repopulate() {
+        categoriesPanel.removeAll();
+        populate();
+        categoriesPanel.revalidate();
+    }
+
+    private void populate() {
+        final Map<Integer, Integer> categoryUsageCount = analyseNodes(request);
+        populateCheckBoxes(categoryUsageCount, request.nodes().size(), categoriesPanel);
+    }
 
     private Map<Integer, Integer> analyseNodes(final CategoryAssignmentWindowRequest request) {
         final HashMap<Integer, Integer> categoryUsageCount = new HashMap<>();
@@ -141,21 +186,6 @@ public class CategroyAssignmentWindow {
             }
         }
         return categoryUsageCount;
-    }
-
-    private static void saveChanges(final JPanel categoriesPanel, final CategoryAssignmentWindowRequest request) {
-        for (final var component : categoriesPanel.getComponents()) {
-            final var tristateCheckBox = (TristateCheckBox) component;
-            final var category = (Map.Entry<Integer, String>) tristateCheckBox.getClientProperty(CATEGORY);
-            for (final var node : request.nodes()) {
-                final var pictureInfo = (PictureInfo) node.getUserObject();
-                if (tristateCheckBox.getSelection() == TristateCheckBox.TCheckBoxChosenState.UNSELECT) {
-                    pictureInfo.removeCategory(category.getKey());
-                } else if (tristateCheckBox.getSelection() == TristateCheckBox.TCheckBoxChosenState.SELECT) {
-                    pictureInfo.addCategoryAssignment(category.getKey());
-                }
-            }
-        }
     }
 
     private void populateCheckBoxes(final Map<Integer, Integer> categopryUsageCount, int nodes, final JPanel categoriesPanel) {
