@@ -205,7 +205,7 @@ class PictureFileChooserTest {
 
 
     private void clickJButton(final JButton btn) {
-        SwingUtilities.invokeLater(() -> btn.doClick());
+        SwingUtilities.invokeLater(btn::doClick);
     }
 
 }

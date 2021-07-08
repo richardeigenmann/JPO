@@ -675,13 +675,13 @@ class PicturePopupMenuTest {
                 groupNode.add(node2);
                 groupNode.add(node3);
                 groupNode.add(node4);
-                final var myNavigator = new FlatGroupNavigator(groupNode);
+                final var flatGroupNavigator = new FlatGroupNavigator(groupNode);
                 Settings.getPictureCollection().addToSelectedNodes(node1);
                 Settings.getPictureCollection().addToSelectedNodes(node2);
                 Settings.getPictureCollection().addToSelectedNodes(node3);
                 Settings.getPictureCollection().addToSelectedNodes(node4);
 
-                final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
+                final var picturePopupMenu = new PicturePopupMenu(flatGroupNavigator, 0);
                 assumeFalse(GraphicsEnvironment.isHeadless());
                 final var fileOperations = (JMenu) picturePopupMenu.getComponent(16);
                 assertEquals("File operations", fileOperations.getText());

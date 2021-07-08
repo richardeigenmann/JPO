@@ -131,8 +131,6 @@ public class MainWindow extends ResizableJFrame {
         statsScroller.getVerticalScrollBar().setUnitIncrement(20);
 
 
-        //setVisible(true);
-
         switch (Settings.getStartupSizeChoice()) {
             case 0 -> switchWindowMode(WindowSize.WINDOW_DECORATED_FULLSCREEN);
             case 1 -> switchWindowMode(WindowSize.WINDOW_DECORATED_PRIMARY);

@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 class ConsolidateGroupWorkerTest {
 
+    private static final String TEMP_IMAGE_FILENAME = "Image1.jpg";
     private static final String NIKON_D100_JPG = "exif-test-nikon-d100-1.jpg";
 
     /**
@@ -67,7 +68,7 @@ class ConsolidateGroupWorkerTest {
         try {
             final var tempSourceDirectory = Files.createTempDirectory("testNeedToMoveNonexistentPicture-Source").toFile();
             tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
+            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
             sourceImageFile.deleteOnExit();
             // Java File object exists but not on the disk
 
@@ -91,7 +92,7 @@ class ConsolidateGroupWorkerTest {
         try {
             final var tempSourceDirectory = Files.createTempDirectory("testNeedToMovePictureSameDirectory-Source").toFile();
             tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
+            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
             sourceImageFile.deleteOnExit();
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
@@ -122,7 +123,7 @@ class ConsolidateGroupWorkerTest {
         try {
             final var tempSourceDirectory = Files.createTempDirectory("testNeedToMovePictureNewDirectory-Source").toFile();
             tempSourceDirectory.deleteOnExit();
-            final var imageFile = new File(tempSourceDirectory, "Image1.jpg");
+            final var imageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
             imageFile.deleteOnExit();
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
@@ -222,7 +223,7 @@ class ConsolidateGroupWorkerTest {
         try {
             final var tempSourceDirectory = Files.createTempDirectory("testMovePictureSameDirectory").toFile();
             tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
+            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
             sourceImageFile.deleteOnExit();
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
@@ -258,7 +259,7 @@ class ConsolidateGroupWorkerTest {
         try {
             final var tempSourceDirectory = Files.createTempDirectory("testMovePictureNewDirectory").toFile();
             tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, "Image1.jpg");
+            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
             sourceImageFile.deleteOnExit();
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
