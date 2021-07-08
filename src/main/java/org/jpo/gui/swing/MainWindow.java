@@ -154,8 +154,8 @@ public class MainWindow extends ResizableJFrame {
         final var thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
         final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", eventBusViewerJPanel);
 
-        grid.add(0, 0, 0.2, 0.8, searches);
         grid.add(0, 0, 0.2, 0.8, tree);
+        grid.add(0, 0, 0.2, 0.8, searches);
         grid.add(0, 1, 0.2, 0.2, tagCloudDockable);
         grid.add(0, 1, 0.2, 0.2, statsDockable);
         if (Settings.isDebugMode()) {
