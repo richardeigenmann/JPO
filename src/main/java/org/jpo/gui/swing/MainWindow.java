@@ -1,6 +1,9 @@
 package org.jpo.gui.swing;
 
-import bibliothek.gui.dock.common.*;
+import bibliothek.gui.dock.common.CContentArea;
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.CGrid;
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.*;
@@ -8,7 +11,6 @@ import org.jpo.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -91,7 +93,6 @@ public class MainWindow extends ResizableJFrame {
     }
 
     private void initComponents() {
-
         Settings.setMainWindow(this);
         Settings.setAnchorFrame(this);
         JpoEventBus.getInstance().register(this);
@@ -107,7 +108,7 @@ public class MainWindow extends ResizableJFrame {
 
 
         try {
-            final String Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+            final var Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel(Windows);
         } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
             LOGGER.fine("Could not set Look and Feel");
@@ -116,21 +117,21 @@ public class MainWindow extends ResizableJFrame {
         setMinimumSize(Settings.jpoJFrameMinimumSize);
         setPreferredSize(Settings.getLastMainFrameCoordinates().getSize());
 
-        final ApplicationJMenuBar menuBar = new ApplicationJMenuBar();
+        final var menuBar = new ApplicationJMenuBar();
         setJMenuBar(menuBar);
 
         // Set Tooltipps to snappy mode
-        final ToolTipManager ttm = ToolTipManager.sharedInstance();
+        final var ttm = ToolTipManager.sharedInstance();
         ttm.setDismissDelay(1500);
         ttm.setInitialDelay(100);
 
-        final InfoPanelController infoPanelController = new InfoPanelController();
-        final JScrollPane statsScroller = new JScrollPane(infoPanelController.getInfoPanel());
+        final var infoPanelController = new InfoPanelController();
+        final var statsScroller = new JScrollPane(infoPanelController.getInfoPanel());
         statsScroller.setWheelScrollingEnabled(true);
         statsScroller.getVerticalScrollBar().setUnitIncrement(20);
 
-        pack();
-        setVisible(true);
+
+        //setVisible(true);
 
         switch (Settings.getStartupSizeChoice()) {
             case 0 -> switchWindowMode(WindowSize.WINDOW_DECORATED_FULLSCREEN);
@@ -148,41 +149,28 @@ public class MainWindow extends ResizableJFrame {
                 Settings.getJpoResources().getString("jpoTabbedPaneSearches"),
                 new QueriesJTreeController().getJComponent());
 
-        final JButton loadJButton = new JButton("Properties - Load");
-        loadJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new LoadDockablesPositionsRequest()));
-        final JButton saveJbutton = new JButton("Save");
-        saveJbutton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest()));
-        final JButton resetJbutton = new JButton("Reset");
-        resetJbutton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RestoreDockablesPositionsRequest()));
+        final var eventBusViewerJPanel = new EventBusViewer();
 
-        final JPanel propertiesJPanel = new JPanel();
-        propertiesJPanel.setLayout(new BoxLayout(propertiesJPanel, BoxLayout.Y_AXIS));
-        propertiesJPanel.add(loadJButton);
-        propertiesJPanel.add(saveJbutton);
-        propertiesJPanel.add(resetJbutton);
+        final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
+        final var statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
+        final var thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
+        final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", eventBusViewerJPanel);
 
-        SingleCDockable properties = new DefaultSingleCDockable("PropertiesId", "Properties", propertiesJPanel);
-        SingleCDockable tagDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
-        SingleCDockable statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
-        SingleCDockable thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
-
-        grid.add(0, 0, 0.2, 0.8, tree);
         grid.add(0, 0, 0.2, 0.8, searches);
-        grid.add(0, 1, 0.2, 0.2, tagDockable);
-        grid.add(0, 1, 0.2, 0.2, properties);
+        grid.add(0, 0, 0.2, 0.8, tree);
+        grid.add(0, 1, 0.2, 0.2, tagCloudDockable);
         grid.add(0, 1, 0.2, 0.2, statsDockable);
+        if (Settings.isDebugMode()) {
+            grid.add(0, 1, 0.2, 0.2, eventBusViewerDockable);
+        }
         grid.add(1, 0, .5, 2, thumbnailsDockable);
 
         final CContentArea content = control.getContentArea();
         content.deploy(grid);
 
-        thumbnailsDockable.setVisible(true);
-        tree.setVisible(true);
-        searches.setVisible(true);
-        tagDockable.setVisible(true);
-
         getContentPane().add(control.getContentArea());
 
+        pack();
         setVisible(true);
     }
 
@@ -254,7 +242,7 @@ public class MainWindow extends ResizableJFrame {
     public void handleLoadDockablesPositionsRequest(final LoadDockablesPositionsRequest request) {
         try {
             control.getResources().readPreferences();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             LOGGER.severe(ex.getMessage());
         }
     }

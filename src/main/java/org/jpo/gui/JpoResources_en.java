@@ -11,8 +11,8 @@ This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -95,7 +95,18 @@ public class JpoResources_en extends ListResourceBundle {
 
             // PictureViewer
             {"PictureViewerTitle", "JPO Picture Browser"},
-            {"PictureViewerKeycodes", "The following keyboard shortcuts can be used:\n" + "N: Next Image\n" + "P: Previous Image\n" + "I: Show Information on | off\n" + "<space>,<home>: Resize to fit\n" + "<left>,<right>,<up>,<down>: scroll image\n" + "<PgUp>: Zoom In\n" + "<PgDown>: Zoom Out\n" + "1: Zoom to 100%\n" + "F: Window size menu\n" + "M: Popup menu"},
+            {"PictureViewerKeycodes", """
+                The following keyboard shortcuts can be used:
+                N: Next Image
+                P: Previous Image
+                I: Show Information on | off
+                <space>,<home>: Resize to fit
+                <left>,<right>,<up>,<down>: scroll image
+                <PgUp>: Zoom In
+                <PgDown>: Zoom Out
+                1: Zoom to 100%
+                F: Window size menu
+                M: Popup menu"""},
             {"PictureViewerKeycodesTitle", "Keyboard Shortcuts"},
             {"NavigationPanel", "Navigation Tools"},
             {"fullScreenJButton.ToolTipText", "Full Screen"},
@@ -123,6 +134,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"autoLoadJLabelLabel", "Automatically load:"},
             {"wordCloudWordJLabel", "Max Word Cloud Words:"},
             {"checkForUpdatesJLabel", "Check for updates on startup:"},
+            {"debugModeJLabel", "Debug Mode:"},
             {"windowSizeChoicesJlabel", "When JPO starts size Window to:"},
             {"windowSizeChoicesMaximum", "Maximum"},
             {"pictureViewerJPanel", "Picture Viewer"},
@@ -166,6 +178,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"emailPasswordJLabel", "Password:"},
             {"emailShowPasswordButton", "Show Password"},
             {"cacheJPanel", "Cache"},
+            {"dockingFramesJPanel", "Frames"},
 
 
             // Settings

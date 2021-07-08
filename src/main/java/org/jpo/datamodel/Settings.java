@@ -1300,14 +1300,29 @@ public class Settings {
         Settings.showThumbOnFileChooser = showThumbOnFileChooser;
     }
 
+    /**
+     * Returns the default dimension for a button
+     *
+     * @return the default dimension for a button
+     */
     public static Dimension getDefaultButtonDimension() {
         return defaultButtonDimension;
     }
 
+    /**
+     * Returns the Google Maps API key that was remembered
+     *
+     * @return the remembered Google Maps API key
+     */
     public static String getDefaultGoogleMapsApiKey() {
         return defaultGoogleMapsApiKey;
     }
 
+    /**
+     * Remembers the Google Maps API key
+     *
+     * @param defaultGoogleMapsApiKey the key to remember
+     */
     public static void setDefaultGoogleMapsApiKey(String defaultGoogleMapsApiKey) {
         Settings.defaultGoogleMapsApiKey = defaultGoogleMapsApiKey;
     }
@@ -1318,7 +1333,7 @@ public class Settings {
      * @return the List of sort options
      */
     public static List<SortOption> getSortOptions() {
-        List<SortOption> sortOptions = new ArrayList<>();
+        final List<SortOption> sortOptions = new ArrayList<>();
         sortOptions.add(new SortOption("No Sorting", FieldCodes.NO_SORTING));
         sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByDescriptionJMenuItem"), FieldCodes.DESCRIPTION));
         sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByFilmReferenceJMenuItem"), FieldCodes.FILM_REFERENCE));
@@ -1329,6 +1344,11 @@ public class Settings {
         return sortOptions;
     }
 
+    /**
+     * Returns the selected color
+     *
+     * @return the selected color
+     */
     public static Color getSelectedColor() {
         return SELECTED_COLOR;
     }
@@ -1342,6 +1362,11 @@ public class Settings {
         return SELECTED_COLOR_TEXT;
     }
 
+    /**
+     * Returns the color to use for unselected text
+     *
+     * @return the color to use for unselected text
+     */
     public static Color getUnselectedColor() {
         return UNSELECTED_COLOR;
     }
@@ -1355,7 +1380,12 @@ public class Settings {
         return cameras;
     }
 
-    public static void setCameras(List<Camera> cameras) {
+    /**
+     * Remembers the cameras
+     *
+     * @param cameras the cameras to remember
+     */
+    public static void setCameras(final List<Camera> cameras) {
         Settings.cameras = cameras;
     }
 
@@ -1527,12 +1557,48 @@ public class Settings {
         Settings.googleUsername = googleUsername;
     }
 
+    /**
+     * Retruns the last used google password
+     *
+     * @return the last used google password
+     */
     public static String getGooglePassword() {
         return googlePassword;
     }
 
-    public static void setGooglePassword(String googlePassword) {
+    /**
+     * Remembers the Google password
+     *
+     * @param googlePassword the google password
+     */
+    public static void setGooglePassword(final String googlePassword) {
         Settings.googlePassword = googlePassword;
+    }
+
+    /**
+     * Whether JPO runs in dbug mode or not
+     */
+    private static boolean debugMode = false;
+
+    /**
+     * Returns if JPO is running in debug mode
+     *
+     * @return true if we are in debug mode
+     */
+    public static boolean isDebugMode() {
+        return debugMode;
+    }
+
+    /**
+     * Sets to whether JPO runs in Debug mode or not
+     *
+     * @param newMode the new mode.
+     */
+    public static void setDebugMode(final boolean newMode) {
+        if (debugMode != newMode) {
+            debugMode = newMode;
+            setUnsavedSettingChanges(true);
+        }
     }
 
     /**
@@ -1655,6 +1721,7 @@ public class Settings {
         showFilenamesOnThumbnailPanel = prefs.getBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
         snoozeVersionAlertsExpiryDateTime = LocalDateTime.ofEpochSecond(prefs.getLong("snoozeVersionAlertsExpiryDateTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), 0, ZoneOffset.UTC);
         ignoreVersionAlerts = prefs.getBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
+        debugMode = prefs.getBoolean("debugMode", debugMode);
 
         validateCopyLocations();
         validateSettings();
@@ -1837,6 +1904,7 @@ public class Settings {
         prefs.putBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
         prefs.putLong("snoozeVersionAlertsExpiryDateTime", snoozeVersionAlertsExpiryDateTime.toEpochSecond(ZoneOffset.UTC));
         prefs.putBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
+        prefs.putBoolean("debugMode", debugMode);
         unsavedSettingChanges = false;
     }
 

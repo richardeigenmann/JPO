@@ -141,6 +141,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"autoLoadJLabelLabel", "启动加载："},
             {"wordCloudWordJLabel", "Max Word Cloud Words:"},
             {"checkForUpdatesJLabel", "Check for updates on startup:"},
+            {"debugModeJLabel", "Debug Mode:"},
             {"windowSizeChoicesJlabel", "当JPO启动大小Window时："},
             {"windowSizeChoicesMaximum", "最大值"},
 
@@ -190,6 +191,8 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"emailPasswordJLabel", "密码："},
             {"emailShowPasswordButton", "显示密码"},
             {"cacheJPanel", "Cache"},
+            {"dockingFramesJPanel", "Frames"},
+
 
             // Settings
             {"thumbNoExistError", "缩略图文件夹不存在。\n请选择菜单编辑|配置来正确设置缩略图文件夹\n缩略图缓存功能已被禁用。"},

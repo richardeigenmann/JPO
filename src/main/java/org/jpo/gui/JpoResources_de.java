@@ -96,17 +96,18 @@ public class JpoResources_de extends ListResourceBundle {
 
             // PictureViewer
             {"PictureViewerTitle", "JPO Bilder Betrachter"},
-            {"PictureViewerKeycodes", "Die folgenden Tasten können benutzt werden:\n"
-                    + "N: Nächstes Bild\n"
-                    + "P: Vorhergehendes Bild\n"
-                    + "I: Informationen ein | aus\n"
-                    + "<space>,<home>: Auf Vollbild zoomen\n"
-                    + "<links>,<rechts>,<rauf>,<runter>: Bild in Pfeilrichtung verschieben\n"
-                    + "<PgUp>: Reinzoomen\n"
-                    + "<PgDown>: Rauszoomen\n"
-                    + "1: auf 100% zoomen\n"
-                    + "F: Fenstergrösse-Menu\n"
-                    + "M: Popup Menu"},
+            {"PictureViewerKeycodes", """
+                    Die folgenden Tasten können benutzt werden:
+                    N: Nächstes Bild
+                    P: Vorhergehendes Bild
+                    I: Informationen ein | aus
+                    <space>,<home>: Auf Vollbild zoomen
+                    <links>,<rechts>,<rauf>,<runter>: Bild in Pfeilrichtung verschieben
+                    <PgUp>: Reinzoomen
+                    <PgDown>: Rauszoomen
+                    1: auf 100% zoomen
+                    F: Fenstergrösse-Menu
+                    M: Popup Menu"""},
             {"PictureViewerKeycodesTitle", "Tastatur-Abkürzungen"},
             {"NavigationPanel", "Navigations Werkzeuge"},
             {"fullScreenJButton.ToolTipText", "Vollbild"},
@@ -135,6 +136,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"autoLoadJLabelLabel", "Automatisch laden:"},
             {"wordCloudWordJLabel", "Maximale Anzahl Wörter in der Wort-Wolke:"},
             {"checkForUpdatesJLabel", "Beim Start Updates suchen:"},
+            {"debugModeJLabel", "Debug Modus:"},
             {"windowSizeChoicesJlabel", "Fenstergrösse beim JPO Programmstart:"},
             {"windowSizeChoicesMaximum", "Maximum"},
 
@@ -184,6 +186,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"emailPasswordJLabel", "Password:"},
             {"emailShowPasswordButton", "Passwort zeigen"},
             {"cacheJPanel", "Cache"},
+            {"dockingFramesJPanel", "Fenster"},
 
             // Settings
             {"thumbNoExistError", "Das Verzeichnis füt die Verkleinerungen existiert nicht.\nBitte geben sie es unter Bearbeiten | Einstellungen ein.\nZwischenspeicherung von Verkleinerungen wurde deaktiviert."},

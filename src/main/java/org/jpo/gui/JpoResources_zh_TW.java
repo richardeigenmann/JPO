@@ -139,6 +139,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"autoLoadJLabelLabel", "啟動加載："},
             {"wordCloudWordJLabel", "Max Word Cloud Words:"},
             {"checkForUpdatesJLabel", "Check for updates on startup:"},
+            {"debugModeJLabel", "Debug Mode:"},
             {"windowSizeChoicesJlabel", "當JPO啟動大小Window時："},
             {"windowSizeChoicesMaximum", "最大值"},
 
@@ -188,6 +189,8 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"emailPasswordJLabel", "密碼："},
             {"emailShowPasswordButton", "顯示密碼"},
             {"cacheJPanel", "Cache"},
+            {"dockingFramesJPanel", "Frames"},
+
 
             // Settings
             {"thumbNoExistError", "縮略圖文件夾不存在。\n請選擇菜單編輯|配置來正确設置縮略圖文件夾\n縮略圖緩存功能已被禁用。"},
