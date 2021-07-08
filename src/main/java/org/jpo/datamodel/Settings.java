@@ -802,6 +802,11 @@ public class Settings {
         Settings.thumbnailSize = thumbnailSize;
     }
 
+    /**
+     * Returns the file to load automatically on startup
+     *
+     * @return the file to load on startup
+     */
     public static String getAutoLoad() {
         return autoLoad;
     }
@@ -837,6 +842,11 @@ public class Settings {
         Settings.unsavedSettingChanges = unsavedSettingChanges;
     }
 
+    /**
+     * returns the main frame of the application so that other windows can position themselves relative to it.
+     *
+     * @return the positon of the main frame
+     */
     public static JFrame getAnchorFrame() {
         return anchorFrame;
     }
@@ -849,6 +859,12 @@ public class Settings {
         return thumbnailCacheDirectory;
     }
 
+    /**
+     * Rtruns the maximum width or height the pictures may be scaled to. Intended to prevent the JVM blowing out
+     * of memory
+     *
+     * @return The maximum number of pixels an image may become wide or high
+     */
     public static int getMaximumPictureSize() {
         return maximumPictureSize;
     }
@@ -970,6 +986,11 @@ public class Settings {
         return defaultGenerateZipfile;
     }
 
+    /**
+     * Remembers if generate Zip file was ticked
+     *
+     * @param defaultGenerateZipfile the value to remember
+     */
     public static void setDefaultGenerateZipfile(final boolean defaultGenerateZipfile) {
         Settings.defaultGenerateZipfile = defaultGenerateZipfile;
     }
@@ -1063,10 +1084,20 @@ public class Settings {
         Settings.defaultHtmlMidresQuality = defaultHtmlMidresQuality;
     }
 
+    /**
+     * Whether to write a Robots.txt file
+     *
+     * @return whether to write a Robots.txt file
+     */
     public static boolean isWriteRobotsTxt() {
         return writeRobotsTxt;
     }
 
+    /**
+     * Remembers whether to write a robots.txt file
+     *
+     * @param writeRobotsTxt Remembers whether to write a robots.txt file
+     */
     public static void setWriteRobotsTxt(boolean writeRobotsTxt) {
         Settings.writeRobotsTxt = writeRobotsTxt;
     }
@@ -1287,6 +1318,11 @@ public class Settings {
         return SELECTED_COLOR;
     }
 
+    /**
+     * Returns the color to use for selected text
+     *
+     * @return the color to use for selected text
+     */
     public static Color getSelectedColorText() {
         return SELECTED_COLOR_TEXT;
     }
