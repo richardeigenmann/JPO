@@ -133,14 +133,14 @@ public class ThumbnailPanelTitle
         searchButton.setFont(FontAwesomeFont.getFontAwesomeSolid24());
         searchButton.addActionListener(e -> {
             searchField.setVisible(!searchField.isVisible());
-            Tools.checkEDT();
             searchField.getParent().validate();
             searchField.requestFocus();
+            searchField.selectAll();
         });
 
-        final BoxLayout bl = new BoxLayout(this, BoxLayout.X_AXIS);
+        final var boxLayout = new BoxLayout(this, BoxLayout.X_AXIS);
         setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        setLayout(bl);
+        setLayout(boxLayout);
         setBackground(Color.LIGHT_GRAY);
         add(Box.createRigidArea(new Dimension(5, 0)));
 
@@ -186,7 +186,7 @@ public class ThumbnailPanelTitle
 
         public NavigationButtonPanel() {
             super();
-            final BoxLayout boxLayout = new BoxLayout(this, BoxLayout.X_AXIS);
+            final var boxLayout = new BoxLayout(this, BoxLayout.X_AXIS);
             setLayout(boxLayout);
             setBackground(Color.LIGHT_GRAY);
 
