@@ -79,7 +79,6 @@ public class GroupPopupMenu extends JPopupMenu {
     private void initComponents() {
         add(getGroupShowJMenuItem());
         add(getGroupSlideshowJMenuItem());
-        add(getGroupFindJMenuItem());
         addSeparator();
         if (popupNode.getPictureCollection().getAllowEdits()) {
             add(getCategoryUsageJMenuItem());
@@ -118,12 +117,6 @@ public class GroupPopupMenu extends JPopupMenu {
             groupSlideshowJMenuItem.setEnabled(false);
         }
         return groupSlideshowJMenuItem;
-    }
-
-    private JMenuItem getGroupFindJMenuItem() {
-        final var groupFindJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupFindJMenuItemLabel"));
-        groupFindJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenSearchDialogRequest(popupNode)));
-        return groupFindJMenuItem;
     }
 
     private JMenuItem getCategoryUsageJMenuItem() {

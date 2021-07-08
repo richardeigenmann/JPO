@@ -287,7 +287,7 @@ public class ApplicationJMenuBar extends JMenuBar {
      */
     private void recentFilesChanged() {
         final Runnable runnable = () -> {
-            for (int i = 0; i < Settings.getRecentCollections().length; i++) {
+            for (var i = 0; i < Settings.getRecentCollections().length; i++) {
                 if (Settings.getRecentCollections()[i] != null) {
                     recentOpenedFileJMenuItem[i].setText((i + 1) + ": " + Settings.getRecentCollections()[i]);
                     recentOpenedFileJMenuItem[i].setVisible(true);
@@ -325,7 +325,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         fileOpenRecentJMenu.setMnemonic(KeyEvent.VK_R);
         fileJMenu.add(fileOpenRecentJMenu);
 
-        for (int i = 0; i < Settings.MAX_MEMORISE; i++) {
+        for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             recentOpenedFileJMenuItem[i] = new JMenuItem();
             final int index = i;  // the anonymous inner class needs a final variable
             recentOpenedFileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new OpenRecentCollectionRequest(index))));
@@ -351,11 +351,6 @@ public class ApplicationJMenuBar extends JMenuBar {
         //Build the Edit menu.
         editJMenu.setMnemonic(KeyEvent.VK_E);
         add(editJMenu);
-
-        editFindJMenuItem.setMnemonic(KeyEvent.VK_F);
-        editFindJMenuItem.setAccelerator(KeyStroke.getKeyStroke('F', InputEvent.CTRL_DOWN_MASK));
-        editFindJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenSearchDialogRequest(Settings.getPictureCollection().getRootNode())));
-        editJMenu.add(editFindJMenuItem);
 
         editCamerasJMenuItem.setMnemonic(KeyEvent.VK_D);
         editCamerasJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new EditCamerasRequest()));

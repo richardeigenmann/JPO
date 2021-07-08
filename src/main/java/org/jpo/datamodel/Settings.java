@@ -1083,6 +1083,11 @@ public class Settings {
         Settings.htmlFontColor = htmlFontColor;
     }
 
+    /**
+     * Returns the default quality for html lowres
+     *
+     * @return the default quality setting
+     */
     public static float getDefaultHtmlLowresQuality() {
         return defaultHtmlLowresQuality;
     }
@@ -1117,10 +1122,20 @@ public class Settings {
         Settings.writeRobotsTxt = writeRobotsTxt;
     }
 
+    /**
+     * Returns the default ftp server for the html upload
+     *
+     * @return the default ftp server
+     */
     public static String getDefaultHtmlFtpServer() {
         return defaultHtmlFtpServer;
     }
 
+    /**
+     * Remembers the default ftp server for the html upload
+     *
+     * @param defaultHtmlFtpServer the ftp server to remember
+     */
     public static void setDefaultHtmlFtpServer(String defaultHtmlFtpServer) {
         Settings.defaultHtmlFtpServer = defaultHtmlFtpServer;
     }

@@ -510,59 +510,6 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * When the app sees a OpenSearchDialog it will open the QueryJFrame
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public void handleEvent(final OpenSearchDialogRequest request) {
-        if (!(request.startNode().getUserObject() instanceof GroupInfo)) {
-            LOGGER.log(Level.INFO, "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: {0}", this);
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    "Method can only be invoked on GroupInfo nodes! Ignoring request. You are on node: " + this,
-                    GENERIC_ERROR,
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        final var findPanel = new FindJPanel();
-        final Object[] options = {"OK", "Cancel"};
-        int result = JOptionPane.showOptionDialog(
-                Settings.getAnchorFrame(),
-                findPanel,
-                Settings.getJpoResources().getString("searchDialogTitle"),
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null,
-                options,
-                null
-        );
-        if (result == JOptionPane.OK_OPTION) {
-
-            final var textQuery = new TextQuery(findPanel.getSearchArgument());
-            textQuery.setStartNode(request.startNode());
-
-            if (findPanel.getSearchByDate()) {
-                textQuery.setLowerDateRange(Tools.parseDate(findPanel.getLowerDate()));
-                textQuery.setUpperDateRange(Tools.parseDate(findPanel.getHigherDate()));
-
-                if ((textQuery.getLowerDateRange() != null) && (textQuery.getUpperDateRange() != null) && (textQuery.getLowerDateRange().compareTo(textQuery.getUpperDateRange()) > 0)) {
-                    JOptionPane.showMessageDialog(
-                            Settings.getAnchorFrame(),
-                            Settings.getJpoResources().getString("dateRangeError"),
-                            GENERIC_ERROR,
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-
-            Settings.getPictureCollection().addQueryToTreeModel(textQuery);
-            JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
-        }
-    }
-
-    /**
      * When the app sees a ShowCategoryUsageEditorRequest it will open the
      * CategoryUsageEditor for the supplied node
      *
