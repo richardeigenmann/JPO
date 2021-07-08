@@ -1220,18 +1220,38 @@ public class Settings {
         Settings.defaultHtmlSshPort = defaultHtmlSshPort;
     }
 
+    /**
+     * Returns the default user for ssh in the webpage publisher
+     *
+     * @return the default ssh user
+     */
     public static String getDefaultHtmlSshUser() {
         return defaultHtmlSshUser;
     }
 
+    /**
+     * Remembers the default ssh user
+     *
+     * @param defaultHtmlSshUser the ssh user to remember
+     */
     public static void setDefaultHtmlSshUser(String defaultHtmlSshUser) {
         Settings.defaultHtmlSshUser = defaultHtmlSshUser;
     }
 
+    /**
+     * Remembers the ssh authentication type
+     *
+     * @return the authentication type
+     */
     public static GenerateWebsiteRequest.SshAuthType getDefaultHtmlSshAuthType() {
         return defaultHtmlSshAuthType;
     }
 
+    /**
+     * Remembers the ssh authentication type
+     *
+     * @param defaultHtmlSshAuthType the ssh authentication type to remember
+     */
     public static void setDefaultHtmlSshAuthType(GenerateWebsiteRequest.SshAuthType defaultHtmlSshAuthType) {
         Settings.defaultHtmlSshAuthType = defaultHtmlSshAuthType;
     }
