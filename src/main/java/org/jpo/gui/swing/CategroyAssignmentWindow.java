@@ -7,6 +7,8 @@ import org.jpo.eventbus.CategoryAssignmentWindowRequest;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,6 +90,7 @@ public class CategroyAssignmentWindow {
             final Map<Integer, Integer> categoryUsageCount = analyseNodes(request);
             populateCheckBoxes(categoryUsageCount, request.nodes().size(), categoriesPanel);
 
+
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.add(outerPanel);
             frame.pack();
@@ -95,6 +98,26 @@ public class CategroyAssignmentWindow {
             frame.setVisible(true);
         });
     }
+
+    private final KeyListener escapeKeyListener = new KeyListener() {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // don't need
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            // don't need
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                frame.dispose();
+            }
+        }
+    };
+
 
     private Map<Integer, Integer> analyseNodes(final CategoryAssignmentWindowRequest request) {
         final HashMap<Integer, Integer> categoryUsageCount = new HashMap<>();
@@ -136,14 +159,17 @@ public class CategroyAssignmentWindow {
         pictureCollection.getSortedCategoryStream().forEach(category -> {
             if (categopryUsageCount.get(category.getKey()) == null) {
                 final var tristateCheckBox = new TristateCheckBox(category.getValue(), TristateCheckBox.TCheckBoxInitialState.UNSELECTED);
+                tristateCheckBox.addKeyListener(escapeKeyListener);
                 tristateCheckBox.putClientProperty(CATEGORY, category);
                 sortedCheckBoxList.add(tristateCheckBox);
             } else if (categopryUsageCount.get(category.getKey()) == nodes) {
                 final var tristateCheckBox = new TristateCheckBox(category.getValue(), TristateCheckBox.TCheckBoxInitialState.SELECTED);
+                tristateCheckBox.addKeyListener(escapeKeyListener);
                 tristateCheckBox.putClientProperty(CATEGORY, category);
                 sortedCheckBoxList.add(tristateCheckBox);
             } else {
                 final var tristateCheckBox = new TristateCheckBox(category.getValue(), TristateCheckBox.TCheckBoxInitialState.MIXED);
+                tristateCheckBox.addKeyListener(escapeKeyListener);
                 tristateCheckBox.putClientProperty(CATEGORY, category);
                 sortedCheckBoxList.add(tristateCheckBox);
             }

@@ -3,10 +3,14 @@ package org.jpo.gui;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.CategoryAssignmentWindowRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RemoveCategoryFromPictureInfoRequest;
 import org.jpo.eventbus.ShowQueryRequest;
-import org.jpo.gui.swing.*;
+import org.jpo.gui.swing.CategoryButton;
+import org.jpo.gui.swing.PicturePopupMenu;
+import org.jpo.gui.swing.RenameMenuItems;
+import org.jpo.gui.swing.ThumbnailDescriptionPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -375,7 +379,7 @@ public class ThumbnailDescriptionController
             if (referringNode.getUserObject() instanceof PictureInfo pi) {
                 pi.addPictureInfoChangeListener(this);
                 panel.getCategoryMenuPopupButton().addActionListener(e ->
-                        openCategoriesPopupMenu(panel.getCategoryMenuPopupButton(), 0, 0)
+                        JpoEventBus.getInstance().post(new CategoryAssignmentWindowRequest(Collections.singletonList(referringNode)))
                 );
 
             } else if (referringNode.getUserObject() instanceof GroupInfo gi) {
@@ -392,12 +396,6 @@ public class ThumbnailDescriptionController
         formatDescription();
         showSelectionStatus();
     }
-
-    private void openCategoriesPopupMenu(final Component component, final int x, final int y) {
-        final var menu = new CategoryPopupMenu(Collections.singletonList(referringNode));
-        menu.show(component, x, y);
-    }
-
 
     /**
      * here we get notified by the PictureInfo object that something has
