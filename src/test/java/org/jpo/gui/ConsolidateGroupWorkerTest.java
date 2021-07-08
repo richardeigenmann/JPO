@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -39,6 +39,7 @@ class ConsolidateGroupWorkerTest {
 
     private static final String TEMP_IMAGE_FILENAME = "Image1.jpg";
     private static final String NIKON_D100_JPG = "exif-test-nikon-d100-1.jpg";
+    private static final String UNEXPECTED_IOEXCEPTION = "Unexpected IOException: ";
 
     /**
      * Show that a null image file doesn't need to be moved.
@@ -56,7 +57,7 @@ class ConsolidateGroupWorkerTest {
                 // this is good
             }
         } catch (final IOException e) {
-            fail("Unexpected IOException: " + e.getMessage());
+            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
         }
     }
 
@@ -111,7 +112,7 @@ class ConsolidateGroupWorkerTest {
             // Consolidation of a PictureInfo to the same directory should return false as nothing was moved
             assertFalse(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempSourceDirectory));
         } catch (final IOException e) {
-            fail("Unexpected IOException: " + e.getMessage());
+            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
         }
     }
 
@@ -145,7 +146,7 @@ class ConsolidateGroupWorkerTest {
             // Consolidation of a PictureInfo to a new directory should succeed
             assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory));
         } catch (final IOException e) {
-            fail("Unexpected IOException: " + e.getMessage());
+            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
         }
 
     }
@@ -209,7 +210,7 @@ class ConsolidateGroupWorkerTest {
                 return;
             }
         } catch (IOException ex) {
-            fail("Unexpected IOException: " + ex.getMessage());
+            fail(UNEXPECTED_IOEXCEPTION + ex.getMessage());
         }
         fail("Consolidation of a PictureInfo with a \"null\" highres file should throw a NPE");
     }
@@ -245,7 +246,7 @@ class ConsolidateGroupWorkerTest {
             // The image File must be in the same place
             assertTrue(sourceImageFile.exists());
         } catch (final IOException e) {
-            fail("Unexpected IOException: " + e.getMessage());
+            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
         }
     }
 
@@ -337,7 +338,7 @@ class ConsolidateGroupWorkerTest {
             // Cleanup
             pictureInfo.getImageFile().deleteOnExit();
         } catch (final IOException e) {
-            fail("Unexpected IOException: " + e.getMessage());
+            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
         }
     }
 
