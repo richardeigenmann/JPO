@@ -18,13 +18,13 @@ import javax.swing.tree.TreeNode;
 import java.util.*;
 
 /*
- Copyright (C) 2009-2020  Richard Eigenmann.
+ Copyright (C) 2009-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -82,7 +82,7 @@ public class TagCloudController implements TagClickListener {
             return;
         }
 
-        final TextQuery textQuery = new TextQuery(weightedWord.getWord());
+        final var textQuery = new TextQuery(weightedWord.getWord());
         textQuery.setStartNode(nodeWordMapper.getRootNode());
         JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
     }
@@ -243,7 +243,7 @@ public class TagCloudController implements TagClickListener {
 
         private final SortableDefaultMutableTreeNode rootNode;
 
-        NodeWordMapper( SortableDefaultMutableTreeNode node ) {
+        NodeWordMapper(final SortableDefaultMutableTreeNode node) {
             this.rootNode = node;
             buildList();
         }
@@ -275,18 +275,18 @@ public class TagCloudController implements TagClickListener {
          * @param description The description of split
          */
         private static void splitAndAdd(final Map<String, Integer> wordCountMap, final String description) {
-            final String fixAprostropheS = description.replace("\'s", "");
-            final String noPunctuation = fixAprostropheS.replaceAll("[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "");
-            String noNumbers = noPunctuation.replaceAll("\\d", "");
+            final var fixAprostropheS = description.replace("\'s", "");
+            final var noPunctuation = fixAprostropheS.replaceAll("[\\.:!,\\'\\\";\\?\\(\\)\\[\\]#\\$\\*\\+<>\\/&=]", "");
+            var noNumbers = noPunctuation.replaceAll("\\d", "");
 
-            for (final String multiWordTerm : multiWordTerms) {
+            for (final var multiWordTerm : multiWordTerms) {
                 if (noNumbers.contains(multiWordTerm)) {
                     noNumbers = noNumbers.replace(multiWordTerm, "");
                     addWord(wordCountMap, multiWordTerm);
                 }
             }
 
-            for (final String s : noNumbers.split("[\\s_\\-]+")) {
+            for (final var s : noNumbers.split("[\\s_\\-]+")) {
                 if (!strikeWordsSet.contains(s)) {
                     addWord(wordCountMap, s);
                 }
