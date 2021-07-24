@@ -181,8 +181,7 @@ public class ThumbnailController
      */
     private boolean thumbnailIsInVisibleArea() {
         try {
-            if (getThumbnail().getParent().getParent().getParent() instanceof JViewport) {
-                final var viewport = (JViewport) getThumbnail().getParent().getParent().getParent();
+            if (getThumbnail().getParent().getParent().getParent() instanceof JViewport viewport) {
                 final var thumbnail = getThumbnail();
                 if (thumbnail != null) {
                     final var point = thumbnail.getLocation();
