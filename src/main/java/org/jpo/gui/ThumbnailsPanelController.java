@@ -233,8 +233,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
             @Override
             public void mousePressed(final MouseEvent e) {
-                if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator) {
-                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(((GroupNavigator) mySetOfNodes).getGroupNode(), e.getComponent(), e.getX(), e.getY()));
+                if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator groupNavigator) {
+                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(groupNavigator.getGroupNode(), e.getComponent(), e.getX(), e.getY()));
                     return;
                 }
 
@@ -457,8 +457,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             gi.removeGroupInfoChangeListener(myGroupInfoChangeListener);
         }
         myLastGroupNode = null;
-        if (newNodeNavigator instanceof GroupNavigator) {
-            myLastGroupNode = ((GroupNavigator) newNodeNavigator).getGroupNode();
+        if (newNodeNavigator instanceof GroupNavigator groupNavigator) {
+            myLastGroupNode = groupNavigator.getGroupNode();
             final var groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
             groupInfo.addGroupInfoChangeListener(myGroupInfoChangeListener);
         }
