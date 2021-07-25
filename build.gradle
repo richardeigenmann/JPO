@@ -86,10 +86,10 @@ repositories {
 }
 
 
-def jpoVersion = '0.15'
+def jpoVersion = '0.16'
 
 dependencies {
-    implementation 'org.apache.commons:commons-compress:1.20'
+    implementation 'org.apache.commons:commons-compress:1.21'
     implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
     implementation 'org.apache.commons:commons-jcs3:3.0'
     implementation 'org.apache.commons:commons-jcs3-core:3.0'
@@ -100,7 +100,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'commons-net:commons-net:3.8.0'
-    implementation 'commons-io:commons-io:2.10.0'
+    implementation 'commons-io:commons-io:2.11.0'
     implementation 'com.google.gdata:core:1.47.1'
 
     //implementation files('libs/gdata-maps-2.0.jar')
@@ -336,7 +336,7 @@ task uploadWindowsInstaller(type:Exec) {
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
     //commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-Installer-${jpoVersion}.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
     commandLine ('rsync', '-avP', "${buildDir}/jars/signed/Jpo-all.jar", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
-    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-0.15.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
+    commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-0.16.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
     commandLine ('rsync', '-avP', "${buildDir}/jars/signed/Jpo-all.jar", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/Jpo-all-${jpoVersion}.jar")
 }
 
@@ -413,7 +413,7 @@ then run
 --name JPO ^
 --description "Java Picture Organizer" ^
 --vendor "Richard Eigenmann" ^
---app-version 0.15 ^
+--app-version 0.16 ^
 --main-jar Jpo-all.jar ^
 --icon favicon.ico ^
 --java-options '--enable-preview' ^
@@ -422,7 +422,7 @@ then run
 --verbose ^
 --dest c:\Users\richa\Desktop
 
-Then move the JPO-0.15.exe file back to the source tree into
+Then move the JPO-0.16.exe file back to the source tree into
 build/executables
 
 Make sure the file web/jpo-version.json is up to date
