@@ -2,13 +2,13 @@ package org.jpo.gui;
 /*
  ThumbnailLayoutManger.java:  a Layout Manager for the Thumbnail pane
 
- Copyright (C) 2006 - 2020 Richard Eigenmann (for the modifications over the original I copied)
+ Copyright (C) 2006 - 2021 Richard Eigenmann (for the modifications over the original I copied)
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -23,7 +23,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * a Layout Manager for the Thumbnail pane
+ * A Layout Manager for the Thumbnail pane
  */
 public class ThumbnailLayoutManager implements LayoutManager {
 
@@ -183,31 +183,31 @@ public class ThumbnailLayoutManager implements LayoutManager {
     public void layoutContainer( final Container parent ) {
         synchronized ( parent.getTreeLock() ) {
             calculateCols();
-            final int columns = getCols();
+            final var columns = getCols();
 
-            int column = 0;
-            int rowBaseline = -getVerticalGutter();
-            int previousDescriptionRowHeight = 0;
-            for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
-                final int logicalThumbnail = i / 2;
-                if ( ( logicalThumbnail % columns ) == 0 ) {
-                    rowBaseline = rowBaseline + getHeightOfRow( parent, i, columns ) + previousDescriptionRowHeight + ( 2 * getVerticalGutter() );
+            var column = 0;
+            var rowBaseline = -getVerticalGutter();
+            var previousDescriptionRowHeight = 0;
+            for (var i = 0; i < parent.getComponentCount(); i += 2) {
+                final var logicalThumbnail = i / 2;
+                if ((logicalThumbnail % columns) == 0) {
+                    rowBaseline = rowBaseline + getHeightOfRow(parent, i, columns) + previousDescriptionRowHeight + (2 * getVerticalGutter());
                     previousDescriptionRowHeight = 0;
                     column = 0;
                 }
 
                 // coordinates for a Thumbnail
-                final int width = getThumbnailWidth();
-                int height = parent.getComponent(i).getPreferredSize().height;
-                final int x = (column * width) + ((1 + column) * getHorizontalGutter());
-                int y = rowBaseline - height;
-                parent.getComponent( i ).setBounds( x, y, width, height );
+                final var width = getThumbnailWidth();
+                var height = parent.getComponent(i).getPreferredSize().height;
+                final var x = (column * width) + ((1 + column) * getHorizontalGutter());
+                var y = rowBaseline - height;
+                parent.getComponent(i).setBounds(x, y, width, height);
 
                 // coordinates for the ThumbnailDescription
                 y = rowBaseline + getVerticalGutter();
-                height = parent.getComponent( i + 1 ).getPreferredSize().height;
-                previousDescriptionRowHeight = Math.max( previousDescriptionRowHeight, height );
-                parent.getComponent( i + 1 ).setBounds( x, y, width, height );
+                height = parent.getComponent(i + 1).getPreferredSize().height;
+                previousDescriptionRowHeight = Math.max(previousDescriptionRowHeight, height);
+                parent.getComponent(i + 1).setBounds(x, y, width, height);
 
                 column++;
             }

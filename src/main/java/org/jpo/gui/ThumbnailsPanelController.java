@@ -111,13 +111,13 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private int startIndex;
 
     /**
-     * An array that holds the 50 or so ThumbnailComponents that are being
+     * An array that holds the ThumbnailControllers that are being
      * displayed
      */
     private ThumbnailController[] thumbnailControllers;
 
     /**
-     * An array that holds the 50 or so ThumbnailDescriptionJPanels that are
+     * An array that holds ThumbnailDescriptionControllers that are
      * being displayed
      */
     private ThumbnailDescriptionController[] thumbnailDescriptionControllers;
@@ -131,7 +131,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private int initialisedMaxThumbnails = Integer.MIN_VALUE;
 
     /**
-     * Factor for the Thumbnails
+     * Scaling factor for the Thumbnails
      */
     private float thumbnailSizeFactor = 1;
 
@@ -146,6 +146,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * that is being selected.
      */
     private Point mousePressedPoint;
+
     /**
      * Remembers the last GroupInfo we picked so that we can attach a listener
      * to update the title if it changes
@@ -166,25 +167,21 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     }
 
     /**
-     * Initialises the components for the ThumbnailController Pane
+     * Initialises the components
      */
     private void init() {
-        Tools.checkEDT();
-
         thumbnailsPane.setLayout(thumbnailLayoutManager);
+        thumbnailsPane.setAlignmentY(JButton.TOP_ALIGNMENT);
 
         final var layeredPane = new JLayeredPane();
-
         layeredPane.setLayout(new OverlayLayout(layeredPane));
         layeredPane.add(thumbnailsPane, Integer.valueOf(1));
 
         final JPanel overlayPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
-
                 if (paintOverlay) {
                     super.paintComponent(g);
-
                     final var outerRect = new Rectangle(0, 0, thumbnailsPane.getWidth(), thumbnailsPane.getHeight());
                     g.setColor(DIMMED_COLOR);
                     g.fillRect(outerRect.x, outerRect.y, outerRect.width, overlayRectangle.y);
@@ -208,7 +205,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         //  little down or up arrow in the scrollbar
         thumbnailJScrollPane.getVerticalScrollBar().setUnitIncrement(80);
 
-
         thumbnailJScrollPane.setColumnHeaderView(titleJPanel);
         initThumbnailsArray();
 
@@ -230,21 +226,18 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailJScrollPane.setCorner(ScrollPaneConstants.UPPER_RIGHT_CORNER, whiteArea);
 
         thumbnailsPane.addMouseListener(new MouseInputAdapter() {
-
             @Override
             public void mousePressed(final MouseEvent e) {
                 if (e.isPopupTrigger() && mySetOfNodes instanceof GroupNavigator groupNavigator) {
                     JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(groupNavigator.getGroupNode(), e.getComponent(), e.getX(), e.getY()));
                     return;
                 }
-
                 mousePressedPoint = e.getPoint();
             }
 
             @Override
             public void mouseReleased(final MouseEvent e) {
                 handleMouseReleased(e);
-
             }
         });
 
