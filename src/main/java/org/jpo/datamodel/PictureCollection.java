@@ -594,13 +594,13 @@ public class PictureCollection {
      * @param key       The category to poll
      * @param startNode The node from which to start
      */
-    public void removeCategoryUsage(Object key,
-                                    SortableDefaultMutableTreeNode startNode) {
+    public void removeCategoryUsage(final Object key,
+                                    final SortableDefaultMutableTreeNode startNode) {
         final Enumeration<TreeNode> nodes = startNode.children();
         while (nodes.hasMoreElements()) {
-            SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (n.getUserObject() instanceof PictureInfo) {
-                ((PictureInfo) n.getUserObject()).removeCategory(key);
+            final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            if (n.getUserObject() instanceof PictureInfo pictureInfo) {
+                pictureInfo.removeCategory(key);
             }
             if (n.getChildCount() > 0) {
                 removeCategoryUsage(key, n);

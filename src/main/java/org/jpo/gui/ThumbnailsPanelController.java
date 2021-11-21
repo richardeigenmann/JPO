@@ -18,6 +18,8 @@ import java.awt.event.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.awt.Component.TOP_ALIGNMENT;
+
 /*
  Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -171,7 +173,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void init() {
         thumbnailsPane.setLayout(thumbnailLayoutManager);
-        thumbnailsPane.setAlignmentY(JButton.TOP_ALIGNMENT);
+        thumbnailsPane.setAlignmentY(TOP_ALIGNMENT);
 
         final var layeredPane = new JLayeredPane();
         layeredPane.setLayout(new OverlayLayout(layeredPane));
