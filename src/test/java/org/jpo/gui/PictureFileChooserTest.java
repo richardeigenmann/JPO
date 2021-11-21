@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,7 @@ class PictureFileChooserTest {
 
         SwingUtilities.invokeLater(() -> {
             final var sortableDefaultMutableTreeNode = new SortableDefaultMutableTreeNode();
+            Settings.setLocale(Locale.ENGLISH);
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(sortableDefaultMutableTreeNode);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
             // EDT blocks there
