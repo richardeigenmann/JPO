@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -518,10 +519,10 @@ class PicturePopupMenuTest {
 
     @Test
     void testCopy() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                assumeFalse(GraphicsEnvironment.isHeadless());
                 final var copyImage = (JMenu) picturePopupMenu.getComponent(14);
                 final var copyImageChooseTargetDir = copyImage.getItem(0);
                 final var copyImageToZipFile = copyImage.getItem(12);
@@ -663,17 +664,18 @@ class PicturePopupMenuTest {
 
     @Test
     void testFileRename4Files() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var node1 = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var node2 = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var node3 = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var node4 = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var groupInfo = new GroupInfo("GroupInfo");
                 final var groupNode = new SortableDefaultMutableTreeNode(groupInfo);
+                final var node1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
                 groupNode.add(node1);
+                final var node2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
                 groupNode.add(node2);
+                final var node3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
                 groupNode.add(node3);
+                final var node4 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
                 groupNode.add(node4);
                 final var flatGroupNavigator = new FlatGroupNavigator(groupNode);
                 Settings.getPictureCollection().addToSelectedNodes(node1);
@@ -681,8 +683,8 @@ class PicturePopupMenuTest {
                 Settings.getPictureCollection().addToSelectedNodes(node3);
                 Settings.getPictureCollection().addToSelectedNodes(node4);
 
+                Settings.setLocale(Locale.ENGLISH);
                 final var picturePopupMenu = new PicturePopupMenu(flatGroupNavigator, 0);
-                assumeFalse(GraphicsEnvironment.isHeadless());
                 final var fileOperations = (JMenu) picturePopupMenu.getComponent(16);
                 assertEquals("File operations", fileOperations.getText());
                 final var renameJMenu = (JMenu) fileOperations.getItem(3);
@@ -841,12 +843,12 @@ class PicturePopupMenuTest {
 
     @Test
     void testReplace2520() {
-        final var s = "/dir1/dir2/filename%2520extension%2520more.jpg";
-        final Optional<String> o = PicturePopupMenu.replace2520(s);
-        assert (o.isPresent());
+        final var string = "/dir1/dir2/filename%2520extension%2520more.jpg";
+        final Optional<String> optional = PicturePopupMenu.replace2520(string);
+        assert (optional.isPresent());
         final String expected = "/dir1/dir2/filename extension more.jpg";
-        LOGGER.log(Level.FINE, "Expected: {0} Actual: {1}", new Object[]{expected, o.get()});
-        assertEquals(expected, o.get());
+        LOGGER.log(Level.FINE, "Expected: {0} Actual: {1}", new Object[]{expected, optional.get()});
+        assertEquals(expected, optional.get());
     }
 
     @Test
