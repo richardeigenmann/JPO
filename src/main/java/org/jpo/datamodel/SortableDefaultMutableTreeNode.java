@@ -152,7 +152,7 @@ public class SortableDefaultMutableTreeNode
      * @return the usual compareTo value used for sorting.
      */
     @Override
-    public int compareTo(@NonNull SortableDefaultMutableTreeNode o) {
+    public int compareTo(final @NonNull SortableDefaultMutableTreeNode o) {
         final Object myObject = getUserObject();
         final Object otherObject = o.getUserObject();
 
@@ -177,7 +177,7 @@ public class SortableDefaultMutableTreeNode
         if ((myObject instanceof PictureInfo myPi) && (otherObject instanceof PictureInfo otherPi)) {
             return switch (sortField) {
                 case FILM_REFERENCE -> myPi.getFilmReference().compareTo(otherPi.getFilmReference());
-                case CREATION_TIME -> myPi.getCreationTime().compareTo(otherPi.getCreationTime());
+                case CREATION_TIME -> myPi.getCreationTimeAsDate().compareTo(otherPi.getCreationTimeAsDate());
                 case COMMENT -> myPi.getComment().compareTo(otherPi.getComment());
                 case PHOTOGRAPHER -> myPi.getPhotographer().compareTo(otherPi.getPhotographer());
                 case COPYRIGHT_HOLDER -> myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
@@ -417,7 +417,7 @@ public class SortableDefaultMutableTreeNode
         return ((List<?>) o).stream()
                 .filter(SortableDefaultMutableTreeNode.class::isInstance)
                 .map(SortableDefaultMutableTreeNode.class::cast)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
