@@ -354,13 +354,15 @@ public class SettingsDialog extends JDialog {
         final var userFunction1JLabel = new JLabel(Settings.getJpoResources().getString("userFunction1JLabel"));
         userFunctionsJPanel.add(userFunction1JLabel, "span, wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString("userFunctionNameJLabel")));
+        final String USER_FUNCTION_NAME_JLABEL = "userFunctionNameJLabel";
+        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_NAME_JLABEL)));
         userFunction1NameJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction1NameJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction1NameJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction1NameJTextField, "wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString("userFunctionCmdJLabel")));
+        final String USER_FUNCTION_CMD_JLABEL = "userFunctionCmdJLabel";
+        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_CMD_JLABEL)));
         userFunction1CmdJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction1CmdJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction1CmdJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
@@ -369,13 +371,13 @@ public class SettingsDialog extends JDialog {
         final var userFunction2JLabel = new JLabel(Settings.getJpoResources().getString("userFunction2JLabel"));
         userFunctionsJPanel.add(userFunction2JLabel, "span, wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString("userFunctionNameJLabel")));
+        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_NAME_JLABEL)));
         userFunction2NameJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction2NameJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction2NameJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction2NameJTextField, "wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString("userFunctionCmdJLabel")));
+        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_CMD_JLABEL)));
 
         userFunction2CmdJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction2CmdJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
@@ -385,13 +387,13 @@ public class SettingsDialog extends JDialog {
         final var userFunction3JLabel = new JLabel(Settings.getJpoResources().getString("userFunction3JLabel"));
         userFunctionsJPanel.add(userFunction3JLabel, "span, wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString("userFunctionNameJLabel")));
+        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_NAME_JLABEL)));
         userFunction3NameJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction3NameJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction3NameJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction3NameJTextField, "wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString("userFunctionCmdJLabel")));
+        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_CMD_JLABEL)));
         userFunction3CmdJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction3CmdJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction3CmdJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());

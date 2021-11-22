@@ -33,7 +33,7 @@ import java.util.zip.ZipOutputStream;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 
 /*
- * Copyright (C) 2002-2020 Richard Eigenmann.
+ * Copyright (C) 2002-2021 Richard Eigenmann.
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -57,6 +57,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     public static final String JPO_JS = "jpo.js";
     public static final String A_HREF = "<a href=\"";
+    private static final String END_TD = "</td>";
+    private static final String END_TR = "</tr>";
     static final Map<String, String> CHARACTER_TRANSLATION = new HashMap<>();
     /**
      * Defines a logger for this class
@@ -478,7 +480,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             writeLinkToZipFile(groupNode, lowresGroupWriter);
             writeLinkToParentGroup(groupNode, lowresGroupWriter);
 
-            lowresGroupWriter.write("</td></tr>\n<tr>");
+            lowresGroupWriter.write(END_TD + END_TR + "\n<tr>");
             lowresGroupWriter.newLine();
 
             final List<String> rowDescriptions = new ArrayList<>();
@@ -534,7 +536,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         out.write(A_HREF + lowresHtmlFiles.get(node.hashCode()).getName() + "\">"
                 + "<img src=\"" + lowresFiles.get(node.hashCode()).getName() + "\" width=\"350\" height=\"295\" /></a>");
 
-        out.write("</td>");
+        out.write(END_TD);
         out.newLine();
 
         // recursively call the method to output that group.
@@ -544,7 +546,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
 
     private void writeAndClearRowDescriptions(final BufferedWriter out, final List<String> rowDescriptions) throws IOException {
-        out.write("</tr>");
+        out.write(END_TD);
         out.newLine();
         out.write("<tr>");
         out.newLine();
@@ -552,18 +554,18 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         for (String description : rowDescriptions) {
             out.write("<td class=\"descriptionCell\">");
             out.write(StringEscapeUtils.escapeHtml4(description));
-            out.write("</td>");
+            out.write(END_TD);
             out.newLine();
         }
         rowDescriptions.clear();
-        out.write("</tr>");
+        out.write(END_TR);
         out.newLine();
     }
 
     private void writeGroupCellFooter(BufferedWriter out) throws IOException {
         out.write(String.format("%n<tr><td colspan=\"%d\">", request.getPicsPerRow()));
         out.write(Settings.getJpoResources().getString("LinkToJpo"));
-        out.write("</td></tr></table>");
+        out.write(END_TD + END_TR + "</table>");
         out.newLine();
         out.write("</body></html>");
     }
@@ -633,7 +635,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("<body onload=\"changetext(content[0])\">");
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<table>");
-            midresHtmlWriter.write("<tr><td colspan=\"2\"><h2>" + groupDescriptionHtml + "</h2></td></tr>");
+            midresHtmlWriter.write("<tr><td colspan=\"2\"><h2>" + groupDescriptionHtml + "</h2>" + END_TD + END_TR);
             midresHtmlWriter.newLine();
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<tr>");
@@ -644,12 +646,12 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<p>" + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write("</td>");
+            midresHtmlWriter.write(END_TD);
             midresHtmlWriter.newLine();
 
             final StringBuilder previewArray = writeRightColumnNavAndPreview(pictureNode, childNumber, highresFile, midresHtmlWriter);
 
-            midresHtmlWriter.write("</tr>");
+            midresHtmlWriter.write(END_TR);
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("</table>");
             midresHtmlWriter.newLine();
@@ -704,7 +706,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("</div></layer></ilayer>");
         }
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("</td>");
+        midresHtmlWriter.write(END_TD);
         midresHtmlWriter.newLine();
         return previewArray;
     }
@@ -759,7 +761,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             } else {
                 midresHtmlWriter.write("&nbsp;");
             }
-            midresHtmlWriter.write("</td>");
+            midresHtmlWriter.write(END_TD);
             midresHtmlWriter.newLine();
             writeEndTrIfNeeded(midresHtmlWriter, indexPerRow, i);
         }
@@ -771,9 +773,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private void writeLinkToNodeNumber(final SortableDefaultMutableTreeNode pictureNode, final BufferedWriter midresHtmlWriter, final int matrixWidth, final StringBuilder dhtmlArray, final int i) throws IOException {
         final SortableDefaultMutableTreeNode nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i);
 
-        if (nde.getUserObject() instanceof PictureInfo pi) {
+        if (nde.getUserObject() instanceof PictureInfo) {
             writePictureTableHyperlink(midresHtmlWriter, nde, matrixWidth, dhtmlArray, i);
-        } else if (nde.getUserObject() instanceof GroupInfo gi) {
+        } else if (nde.getUserObject() instanceof GroupInfo) {
             midresHtmlWriter.write(A_HREF + "jpo_" + nde.hashCode() + ".htm\">");
         }
         midresHtmlWriter.write(Integer.toString(i));
@@ -782,7 +784,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     private void writeEndTrIfNeeded(BufferedWriter midresHtmlWriter, int indexPerRow, int i) throws IOException {
         if ((i + 1) % indexPerRow == 0) {
-            midresHtmlWriter.write("</tr>");
+            midresHtmlWriter.write(END_TR);
             midresHtmlWriter.newLine();
         }
     }
@@ -899,7 +901,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 + " />"
                 + "</a>");
 
-        out.write("</td>");
+        out.write(END_TD);
         out.newLine();
     }
 

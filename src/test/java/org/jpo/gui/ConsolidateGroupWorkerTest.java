@@ -40,6 +40,7 @@ class ConsolidateGroupWorkerTest {
     private static final String TEMP_IMAGE_FILENAME = "Image1.jpg";
     private static final String NIKON_D100_JPG = "exif-test-nikon-d100-1.jpg";
     private static final String UNEXPECTED_IOEXCEPTION = "Unexpected IOException: ";
+    public static final String THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL = "The input stream of the image must not be null!";
 
     /**
      * Show that a null image file doesn't need to be moved.
@@ -98,7 +99,7 @@ class ConsolidateGroupWorkerTest {
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
                  final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, "The input stream of the image must not be null!");
+                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
                 fail("Failed to create test image file: " + ex.getMessage());
@@ -129,7 +130,7 @@ class ConsolidateGroupWorkerTest {
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
                  final var fileOutputStream = new FileOutputStream(imageFile)) {
-                Objects.requireNonNull(inputStream, "The input stream of the image must not be null!");
+                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
                 fail("Failed to create test image file: " + ex.getMessage());
@@ -169,7 +170,7 @@ class ConsolidateGroupWorkerTest {
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
                  final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, "The input stream of the image must not be null!");
+                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
                 fail("Failed to create test image file: " + ex.getMessage());
@@ -229,7 +230,7 @@ class ConsolidateGroupWorkerTest {
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
                  final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, "The input stream of the image must not be null!");
+                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
                 fail("Failed to create test image file in test testMovePictureSameDirectory: " + ex.getMessage());
@@ -265,7 +266,7 @@ class ConsolidateGroupWorkerTest {
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
                  final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, "The input stream of the image must not be null!");
+                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
                 fail("Failed to create test image file: " + ex.getMessage());
@@ -307,7 +308,7 @@ class ConsolidateGroupWorkerTest {
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
                  final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, "The input stream of the image must not be null!");
+                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
                 fail("Failed to create test image file: " + ex.getMessage());

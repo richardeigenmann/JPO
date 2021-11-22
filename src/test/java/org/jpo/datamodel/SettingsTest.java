@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -79,12 +79,13 @@ class SettingsTest {
     void testSetLocaleResourceBundleStrings() {
         Settings.setLocale(Locale.GERMAN);
         // Testing the German string
-        assertEquals("Neue Sammlung", Settings.getJpoResources().getString("FileNewJMenuItem"));
+        final String FILE_NEW_JMENU_ITEM = "FileNewJMenuItem";
+        assertEquals("Neue Sammlung", Settings.getJpoResources().getString(FILE_NEW_JMENU_ITEM));
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         // Testing the Simplified Chinese string
-        assertEquals("新建图片集", Settings.getJpoResources().getString("FileNewJMenuItem"));
+        assertEquals("新建图片集", Settings.getJpoResources().getString(FILE_NEW_JMENU_ITEM));
         Settings.setLocale(Locale.ENGLISH);
-        assertEquals("New Collection", Settings.getJpoResources().getString("FileNewJMenuItem"));
+        assertEquals("New Collection", Settings.getJpoResources().getString(FILE_NEW_JMENU_ITEM));
     }
 
     /**

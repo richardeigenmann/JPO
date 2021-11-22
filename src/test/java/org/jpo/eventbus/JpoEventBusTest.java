@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /*
  ConsolidateGroupWorkerTest.java: 
 
- Copyright (C) 2017-2017  Richard Eigenmann.
+ Copyright (C) 2017-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,16 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 
 /**
- *
  * @author Richard Eigenmann
  */
-public class JpoEventBusTest {
+class JpoEventBusTest {
 
     /**
      * Test Constructor
      */
     @Test
-    public void testConstructor() {
-        assertNotNull( JpoEventBus.getInstance() );
+    void testConstructor() {
+        assertNotNull(JpoEventBus.getInstance());
     }
 }

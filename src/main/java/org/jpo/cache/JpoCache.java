@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -113,26 +113,26 @@ public class JpoCache {
     }
 
     /**
-     * Loads the properties from the cache .ccf file in the bundle
+     * Loads the properties from the cache.ccf file in the bundle
      *
      * @return The properties object created from the ccf file
      */
     public static Properties loadProperties() {
         final String CACHE_DEFINITION_FILE = "cache.ccf";
         final URL ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
+        final Properties props = new Properties();
         if (ccfUrl == null) {
             LOGGER.log(Level.SEVERE, "Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
-            return null;
+            return props;
         } else {
             LOGGER.log(Level.FINE, "Cache definition file found at: {0}", ccfUrl);
         }
 
-        final Properties props = new Properties();
         try (final InputStream inStream = ccfUrl.openStream();) {
             props.load(inStream);
         } catch (final IOException e) {
             LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage());
-            return null;
+            return props;
         }
 
         LOGGER.log(Level.FINE, "setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", Settings.getThumbnailCacheDirectory());

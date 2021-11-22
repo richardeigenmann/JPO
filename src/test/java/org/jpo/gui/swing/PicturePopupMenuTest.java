@@ -50,6 +50,8 @@ class PicturePopupMenuTest {
      * Defines a LOGGER for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PicturePopupMenuTest.class.getName());
+    public static final String NOSUCHFILE_JPG = "nosuchfile.jpg";
+    public static final String MY_PICTURE = "My Picture";
 
     /*
      * Note these tests are burdened with reflection to get at the inner
@@ -59,7 +61,7 @@ class PicturePopupMenuTest {
      * make sure the details of the class are working properly.
      *
      */
-    private final PictureInfo myPictureInfo = new PictureInfo(new File("nosuchfile.jpg"), "My Picture");
+    private final PictureInfo myPictureInfo = new PictureInfo(new File(NOSUCHFILE_JPG), MY_PICTURE);
     private final SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
     private final SingleNodeNavigator myNavigator = new SingleNodeNavigator(myNode);
 
@@ -106,7 +108,7 @@ class PicturePopupMenuTest {
             SwingUtilities.invokeAndWait(() -> {
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var title = (JMenuItem) picturePopupMenu.getComponent(0);
-                assertEquals("My Picture", title.getText());
+                assertEquals(MY_PICTURE, title.getText());
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
@@ -669,13 +671,13 @@ class PicturePopupMenuTest {
             SwingUtilities.invokeAndWait(() -> {
                 final var groupInfo = new GroupInfo("GroupInfo");
                 final var groupNode = new SortableDefaultMutableTreeNode(groupInfo);
-                final var node1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
+                final var node1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File(NOSUCHFILE_JPG), MY_PICTURE));
                 groupNode.add(node1);
-                final var node2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
+                final var node2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File(NOSUCHFILE_JPG), MY_PICTURE));
                 groupNode.add(node2);
-                final var node3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
+                final var node3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File(NOSUCHFILE_JPG), MY_PICTURE));
                 groupNode.add(node3);
-                final var node4 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile.jpg"), "My Picture"));
+                final var node4 = new SortableDefaultMutableTreeNode(new PictureInfo(new File(NOSUCHFILE_JPG), MY_PICTURE));
                 groupNode.add(node4);
                 final var flatGroupNavigator = new FlatGroupNavigator(groupNode);
                 Settings.getPictureCollection().addToSelectedNodes(node1);
