@@ -12,7 +12,7 @@ plugins {
     id 'jacoco'
     //id 'eclipse'
     id 'idea'
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
 }
 
 java {
@@ -83,6 +83,9 @@ task openJavadocInBrowser {
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://mvnrepository.com/artifact/org.bidib.com.jidesoft/jide-common'
+    }
 }
 
 
@@ -156,10 +159,11 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.7.0'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.7.0'
     implementation group: 'org.json', name: 'json', version: '20210307'
-    implementation 'org.bidib.com.jidesoft:jide-common:3.7.12'
+    //implementation 'org.bidib.com.jidesoft:jide-common:3.7.12'
+    implementation 'com.jidesoft:jide-oss:3.6.18'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.0-M1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation 'org.assertj:assertj-core:3.21.0'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.1.1'
