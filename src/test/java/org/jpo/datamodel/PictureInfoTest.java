@@ -483,8 +483,9 @@ class PictureInfoTest {
     }
 
     @Test
-    void DateFunctions() {
+    void dateFunctions() {
         final PictureInfo pictureInfo = new PictureInfo();
+        System.setProperty("user.timezone", "Europe/Zurich");
         pictureInfo.setCreationTime("2021-10-02 at 14.43.23");
         assertEquals("2021-10-02 at 14.43.23", pictureInfo.getCreationTime());
         assertEquals(Tools.parseDate("2021-10-02 14:43:23"), pictureInfo.getCreationTimeAsDate());
