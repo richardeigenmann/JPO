@@ -11,7 +11,7 @@ import java.util.List;
 /*
  YearQuery.java:  The parameters for a search
 
- Copyright (C) 2014-2020  Richard Eigenmann.
+ Copyright (C) 2014-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -178,7 +178,7 @@ public class YearQuery implements Serializable, Query {
         SortableDefaultMutableTreeNode testNode;
         searchResults = new ArrayList<>();
 
-        for (Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
+        for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
             testNode = (SortableDefaultMutableTreeNode) e.nextElement();
             if (isMatch(testNode)) {
                 searchResults.add(testNode);
@@ -202,17 +202,17 @@ public class YearQuery implements Serializable, Query {
      * @param n the Node which is to be tested.
      * @return true if the node matches the query, false if not.
      */
-    public boolean isMatch( SortableDefaultMutableTreeNode n ) {
+    public boolean isMatch(final SortableDefaultMutableTreeNode n) {
         Object nodeObject = n.getUserObject();
-        if ( !( nodeObject instanceof PictureInfo ) ) {
-            // it's not a pictureinfo node so it can't be a batch.
+        if (!(nodeObject instanceof PictureInfo)) {
+            // it's not a pictureInfo node so it can't be a match.
             return false;
         }
 
-        PictureInfo pi = (PictureInfo) nodeObject;
+        final PictureInfo pictureInfo = (PictureInfo) nodeObject;
 
         boolean match = true;
-        Calendar testNodeDate = pi.getCreationTimeAsDate();
+        Calendar testNodeDate = pictureInfo.getCreationTimeAsDate();
         if ( lowerDateRange != null ) {
             // test for the lower date range
             if ( testNodeDate == null ) {

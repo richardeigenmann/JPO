@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Richard Eigenmann
  */
-public class ResourceBundleTest {
+class ResourceBundleTest {
 
     private ResourceBundle jpoResources1;
     private ResourceBundle jpoResources2;
@@ -25,15 +25,15 @@ public class ResourceBundleTest {
      * Set up for each test
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         try {
-            jpoResources1 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.ENGLISH );
-            jpoResources2 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.GERMAN );
-            jpoResources3 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.SIMPLIFIED_CHINESE );
-            jpoResources4 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.TRADITIONAL_CHINESE );
+            jpoResources1 = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Locale.ENGLISH);
+            jpoResources2 = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Locale.GERMAN);
+            jpoResources3 = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Locale.SIMPLIFIED_CHINESE);
+            jpoResources4 = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Locale.TRADITIONAL_CHINESE);
 
-        } catch ( MissingResourceException x ) {
-            fail( "Resource Bundles could not be found." );
+        } catch (MissingResourceException x) {
+            fail("Resource Bundles could not be found.");
         }
     }
 
@@ -41,99 +41,99 @@ public class ResourceBundleTest {
      * test that the resource bundles can be found
      */
     @Test
-    public void testResourceBundlesFound() {
+    void testResourceBundlesFound() {
         // Testing English bundle found
-        assertNotNull( jpoResources1 );
+        assertNotNull(jpoResources1);
         // Testing German bundle found
-        assertNotNull( jpoResources2 );
+        assertNotNull(jpoResources2);
         // Testing SimplifiedChinese bundle found
-        assertNotNull( jpoResources3 );
+        assertNotNull(jpoResources3);
         // Testing TraditionalChinese bundle found
-        assertNotNull( jpoResources4 );
+        assertNotNull(jpoResources4);
     }
 
     /**
      * Test that the English bundle can be found
      */
     @Test
-    public void testResourceLocale1() {
+    void testResourceLocale1() {
         // Testing English bundle locale
-        assertEquals( Locale.ENGLISH, jpoResources1.getLocale() );
+        assertEquals(Locale.ENGLISH, jpoResources1.getLocale());
     }
 
     /**
      * test that the German bundle can be found
      */
     @Test
-    public void testResourceLocale2() {
+    void testResourceLocale2() {
         // Testing German bundle locale
-        assertEquals( Locale.GERMAN, jpoResources2.getLocale() );
+        assertEquals(Locale.GERMAN, jpoResources2.getLocale());
     }
 
     /**
      * test that the Simplified Chinese bundle can be found
      */
     @Test
-    public void testResourceLocale3() {
+    void testResourceLocale3() {
         // Testing SimplifiedChinese bundle locale
-        assertEquals( Locale.SIMPLIFIED_CHINESE, jpoResources3.getLocale() );
+        assertEquals(Locale.SIMPLIFIED_CHINESE, jpoResources3.getLocale());
     }
 
     /**
      * test that the Traditional Chinese bundle can be found
      */
     @Test
-    public void testResourceLocale4() {
+    void testResourceLocale4() {
         // Testing TraditionalChinese bundle locale
-        assertEquals( Locale.TRADITIONAL_CHINESE, jpoResources4.getLocale() );
+        assertEquals(Locale.TRADITIONAL_CHINESE, jpoResources4.getLocale());
     }
 
     /**
      * Test retrieval from English bundle
      */
     @Test
-    public void testRetrieveResourceLocale1() {
+    void testRetrieveResourceLocale1() {
         // Testing English bundle locale
-        assertEquals(  "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
+        assertEquals("New Collection", jpoResources1.getString("FileNewJMenuItem"));
     }
 
     /**
      * Test retrieval from German bundle
      */
     @Test
-    public void testRetrieveResourceLocale2() {
+    void testRetrieveResourceLocale2() {
         // Testing German bundle locale
-        assertEquals( "Neue Sammlung", jpoResources2.getString( "FileNewJMenuItem" ) );
+        assertEquals("Neue Sammlung", jpoResources2.getString("FileNewJMenuItem"));
     }
 
     /**
      * test that the Simplified Chinese bundle can be found
      */
     @Test
-    public void testRetrieveResourceLocale3() {
+    void testRetrieveResourceLocale3() {
         // Testing Simplified Chinese bundle locale
-        assertEquals(  "新建图片集", jpoResources3.getString( "FileNewJMenuItem" ) );
+        assertEquals("新建图片集", jpoResources3.getString("FileNewJMenuItem"));
     }
 
     /**
      * test that the Traditional Chinese bundle can be found
      */
     @Test
-    public void testRetrieveResourceLocale4() {
+    void testRetrieveResourceLocale4() {
         // Testing Traditional Chinese bundle locale
-        assertEquals( "新建圖片集", jpoResources4.getString( "FileNewJMenuItem" ) );
+        assertEquals("新建圖片集", jpoResources4.getString("FileNewJMenuItem"));
     }
 
     /**
      * Test for change of locale
      */
     @Test
-    public void testChangeLocale() {
-        assertEquals( "New Collection", jpoResources1.getString( "FileNewJMenuItem" ) );
-        jpoResources1 = ResourceBundle.getBundle( "org.jpo.gui.JpoResources", Locale.GERMAN );
-        assertEquals( "Neue Sammlung", jpoResources1.getString( "FileNewJMenuItem" ) );
+    void testChangeLocale() {
+        assertEquals("New Collection", jpoResources1.getString("FileNewJMenuItem"));
+        jpoResources1 = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Locale.GERMAN);
+        assertEquals("Neue Sammlung", jpoResources1.getString("FileNewJMenuItem"));
         // Testing verifying that the changed bundle is now German
-        assertEquals( Locale.GERMAN, jpoResources1.getLocale() );
+        assertEquals(Locale.GERMAN, jpoResources1.getLocale());
     }
 
 }

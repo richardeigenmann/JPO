@@ -8,67 +8,67 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ListNavigatorTest {
+class ListNavigatorTest {
 
     @Test
-    public void getTitle() {
-        ListNavigator n = new ListNavigator();
-        assertNotNull(n);
-        assertEquals("",n.getTitle());
+    void getTitle() {
+        final ListNavigator listNavigator = new ListNavigator();
+        assertNotNull(listNavigator);
+        assertEquals("", listNavigator.getTitle());
     }
 
     @Test
-    public void getNumberOfNodes() {
-        ListNavigator n = new ListNavigator();
-        assertNotNull(n);
-        assertEquals(0,n.getNumberOfNodes());
+    void getNumberOfNodes() {
+        final ListNavigator listNavigator = new ListNavigator();
+        assertNotNull(listNavigator);
+        assertEquals(0, listNavigator.getNumberOfNodes());
     }
 
 
     @Test
-    public void addNodeTest() {
-        ListNavigator n = new ListNavigator();
-        SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-        n.add(node);
-        assertEquals(1,n.getNumberOfNodes());
-        SortableDefaultMutableTreeNode extractedNode = n.getNode(0);
+    void addNodeTest() {
+        final ListNavigator listNavigator = new ListNavigator();
+        final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+        listNavigator.add(node);
+        assertEquals(1, listNavigator.getNumberOfNodes());
+        SortableDefaultMutableTreeNode extractedNode = listNavigator.getNode(0);
         assertEquals(node, extractedNode);
     }
 
     @Test
-    public void clear() {
-        ListNavigator n = new ListNavigator();
-        SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-        n.add(node);
-        assertEquals(1,n.getNumberOfNodes());
-        n.clear();
-        assertEquals(0,n.getNumberOfNodes());
+    void clear() {
+        final ListNavigator listNavigator = new ListNavigator();
+        final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+        listNavigator.add(node);
+        assertEquals(1, listNavigator.getNumberOfNodes());
+        listNavigator.clear();
+        assertEquals(0, listNavigator.getNumberOfNodes());
     }
 
     @Test
-    public void addListTest() {
-        List<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>();
-        SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
-        SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
+    void addListTest() {
+        final List<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>();
+        final SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
+        final SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
+        nodesList.add(node1);
+        nodesList.add(node2);
+        final ListNavigator listNavigator = new ListNavigator();
+        listNavigator.add(nodesList);
+        assertEquals(2, listNavigator.getNumberOfNodes());
+    }
+
+    @Test
+    void removeNodeTest() {
+        final List<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>();
+        final SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
+        final SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
         nodesList.add(node1);
         nodesList.add(node2);
         ListNavigator listNavigator = new ListNavigator();
         listNavigator.add(nodesList);
-        assertEquals(2,listNavigator.getNumberOfNodes());
-    }
-
-    @Test
-    public void removeNodeTest() {
-        List<SortableDefaultMutableTreeNode> nodesList = new ArrayList<>();
-        SortableDefaultMutableTreeNode node1 = new SortableDefaultMutableTreeNode();
-        SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
-        nodesList.add(node1);
-        nodesList.add(node2);
-        ListNavigator listNavigator = new ListNavigator();
-        listNavigator.add(nodesList);
-        assertEquals(2,listNavigator.getNumberOfNodes());
+        assertEquals(2, listNavigator.getNumberOfNodes());
         listNavigator.removeNode(node1);
-        assertEquals(1,listNavigator.getNumberOfNodes());
+        assertEquals(1, listNavigator.getNumberOfNodes());
         assertEquals(node2, listNavigator.getNode(0));
 
     }
