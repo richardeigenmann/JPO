@@ -41,6 +41,7 @@ class ConsolidateGroupWorkerTest {
     private static final String NIKON_D100_JPG = "exif-test-nikon-d100-1.jpg";
     private static final String UNEXPECTED_IOEXCEPTION = "Unexpected IOException: ";
     public static final String THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL = "The input stream of the image must not be null!";
+    public static final String FAILED_TO_CREATE_TEST_IMAGE_FILE = "Failed to create test image file: ";
 
     /**
      * Show that a null image file doesn't need to be moved.
@@ -102,7 +103,7 @@ class ConsolidateGroupWorkerTest {
                 Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
-                fail("Failed to create test image file: " + ex.getMessage());
+                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
             }
             // test that is really exists
             assertTrue(sourceImageFile.canRead());
@@ -133,7 +134,7 @@ class ConsolidateGroupWorkerTest {
                 Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
-                fail("Failed to create test image file: " + ex.getMessage());
+                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
             }
             // test that is really exists
             assertTrue(imageFile.canRead());
@@ -173,7 +174,7 @@ class ConsolidateGroupWorkerTest {
                 Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
-                fail("Failed to create test image file: " + ex.getMessage());
+                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
             }
             assertTrue(sourceImageFile.setReadOnly());
             assertTrue(sourceImageFile.canRead());
@@ -269,7 +270,7 @@ class ConsolidateGroupWorkerTest {
                 Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
-                fail("Failed to create test image file: " + ex.getMessage());
+                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
             }
             // test that is really exists. The image File must exist and be readable
             assertTrue(sourceImageFile.canRead());
@@ -311,7 +312,7 @@ class ConsolidateGroupWorkerTest {
                 Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
                 IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
             } catch (final IOException ex) {
-                fail("Failed to create test image file: " + ex.getMessage());
+                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
             }
             assertTrue(sourceImageFile.setReadOnly());
             assertTrue(sourceImageFile.canRead());

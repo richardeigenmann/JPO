@@ -59,6 +59,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     public static final String A_HREF = "<a href=\"";
     private static final String END_TD = "</td>";
     private static final String END_TR = "</tr>";
+    private static final String END_TABLE = "</table>";
+    private static final String NBSP = "&nbsp;";
     static final Map<String, String> CHARACTER_TRANSLATION = new HashMap<>();
     /**
      * Defines a logger for this class
@@ -565,7 +567,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private void writeGroupCellFooter(BufferedWriter out) throws IOException {
         out.write(String.format("%n<tr><td colspan=\"%d\">", request.getPicsPerRow()));
         out.write(Settings.getJpoResources().getString("LinkToJpo"));
-        out.write(END_TD + END_TR + "</table>");
+        out.write(END_TD + END_TR + END_TABLE);
         out.newLine();
         out.write("</body></html>");
     }
@@ -653,7 +655,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             midresHtmlWriter.write(END_TR);
             midresHtmlWriter.newLine();
-            midresHtmlWriter.write("</table>");
+            midresHtmlWriter.write(END_TABLE);
             midresHtmlWriter.newLine();
 
             if (request.isGenerateMouseover()) {
@@ -759,13 +761,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             if (i < childCount) {
                 writeLinkToNodeNumber(pictureNode, midresHtmlWriter, matrixWidth, dhtmlArray, i);
             } else {
-                midresHtmlWriter.write("&nbsp;");
+                midresHtmlWriter.write(NBSP);
             }
             midresHtmlWriter.write(END_TD);
             midresHtmlWriter.newLine();
             writeEndTrIfNeeded(midresHtmlWriter, indexPerRow, i);
         }
-        midresHtmlWriter.write("</table>");
+        midresHtmlWriter.write(END_TABLE);
         midresHtmlWriter.newLine();
         return dhtmlArray;
     }
@@ -970,20 +972,20 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     private void writeMidresLinks(final SortableDefaultMutableTreeNode pictureNode, final File highresFile, final BufferedWriter midresHtmlWriter) throws IOException {
         writeHyperlink(midresHtmlWriter, lowresHtmlFiles.get(pictureNode.getParent().hashCode()).getName() + "#" + StringEscapeUtils.escapeHtml4(lowresFiles.get(pictureNode.hashCode()).getName()), "Up");
-        midresHtmlWriter.write("&nbsp;");
+        midresHtmlWriter.write(NBSP);
         midresHtmlWriter.newLine();
         if (pictureNode != pictureNode.getParent().getFirstChild()) {
             writeHyperlink(midresHtmlWriter, midresHtmlFiles.get(pictureNode.getPreviousSibling().hashCode()).getName(), "Previous");
-            midresHtmlWriter.write("&nbsp;");
+            midresHtmlWriter.write(NBSP);
         }
         if (request.isLinkToHighres()) {
             final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
             writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), "Highres");
-            midresHtmlWriter.write("&nbsp;");
+            midresHtmlWriter.write(NBSP);
         } else if (request.isExportHighres()) {
             // Link to Highres in target directory
             writeHyperlink(midresHtmlWriter, highresFile.getName(), "Highres");
-            midresHtmlWriter.write("&nbsp;");
+            midresHtmlWriter.write(NBSP);
         }
         if (pictureNode != pictureNode.getParent().getLastChild()) {
             writeHyperlink(midresHtmlWriter, midresHtmlFiles.get(pictureNode.getNextSibling().hashCode()).getName(), "Next");
