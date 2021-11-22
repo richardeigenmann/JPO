@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE collection SYSTEM "file:./collection.dtd">
+<collection collection_name="New Collection" collection_created="Mar 28, 2021" collection_protected="No">
+    <group group_name="Work1">
+        <picture>
+            <description><![CDATA[Image01]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image01.png</file_URL>
+            <checksum>2153284423</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image02]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image02.png</file_URL>
+            <checksum>3877878679</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image03]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image03.png</file_URL>
+            <checksum>1991185818</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image04]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image04.png</file_URL>
+            <checksum>1274913444</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image05]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image05.png</file_URL>
+            <checksum>4059859042</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image06]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image06.png</file_URL>
+            <checksum>3728323301</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image07]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image07.png</file_URL>
+            <checksum>445463803</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+        <picture>
+            <description><![CDATA[Image08]]></description>
+            <file_URL>file:/richi/Src/Jpo/src/test/TestCollection/Work1/Image08.png</file_URL>
+            <checksum>1136966956</checksum>
+            <LATLNG>0.000000x0.000000</LATLNG>
+        </picture>
+    </group>
+
+    <categories>
+    </categories>
+</collection>
