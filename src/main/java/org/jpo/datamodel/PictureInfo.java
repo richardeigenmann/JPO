@@ -178,6 +178,21 @@ public class PictureInfo implements Serializable {
     }
 
     /**
+     * Returns the creationTime as a formatted String. If parsing doens't work it returns an empty string
+     *
+     * @return the creation time as a formatted string
+     */
+    public String getFormattedCreationTimeForTimestamp() {
+        String formattedDate = "";
+        final Calendar dateTime = getCreationTimeAsDate();
+        if (dateTime != null) {
+            formattedDate = String.format("%tc", dateTime);
+        }
+        return formattedDate;
+    }
+
+
+    /**
      * returns the description of the image in the default <code>toString</code>
      * method.
      *
