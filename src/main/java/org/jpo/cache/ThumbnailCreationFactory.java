@@ -14,13 +14,13 @@ import java.util.logging.Logger;
 /*
  ThumbnailCreationFactory.java:  A factory that creates thumbnails
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -28,11 +28,11 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- * Implementations of this class become a Thread that poll the
+ * Implementations of this class should run on a thread which polls the
  * {@link ThumbnailCreationQueue} for new {@link ThumbnailQueueRequest} and
  * process them.
- *
  */
 public class ThumbnailCreationFactory implements Runnable {
 
