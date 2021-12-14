@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /*
  ExifInfoTest.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2013-2020  Richard Eigenmann.
+ Copyright (C) 2013-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,7 +54,7 @@ public class ExifInfoTest {
         assertEquals("", exifInfo.getExifWidth());
         assertEquals( "", exifInfo.getFocalLength());
         assertEquals( "", exifInfo.getIso());
-        assertEquals( ZERO, exifInfo.getLatLng().getX());
+        assertEquals(ZERO, exifInfo.getLatLng().getX());
         assertEquals(ZERO, exifInfo.getLatLng().getY());
         assertEquals("", exifInfo.getLens());
         assertEquals("", exifInfo.getShutterSpeed());
