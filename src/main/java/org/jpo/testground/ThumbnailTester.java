@@ -1,0 +1,178 @@
+package org.jpo.testground;
+
+
+/*
+ Copyright (C) 2020-2021 Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
+
+import net.miginfocom.swing.MigLayout;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SingleNodeNavigator;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.StartThumbnailCreationFactoryRequest;
+import org.jpo.gui.ApplicationEventHandler;
+import org.jpo.gui.ThumbnailController;
+import org.jpo.gui.swing.Thumbnail;
+import org.jpo.gui.swing.ThumbnailPanelTitle;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * A little GUI to experiment with the ThumbnailDescriptions
+ */
+public class ThumbnailTester {
+
+    /**
+     * An entry point for standalone screen size testing.
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Settings.loadSettings();
+        new ApplicationEventHandler();
+        JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest());
+        try {
+            SwingUtilities.invokeAndWait(ThumbnailTester::new
+            );
+        } catch (InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(ThumbnailTester.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Constructor for the test window
+     */
+    public ThumbnailTester() {
+        final var thumbnailController = new ThumbnailController(new Thumbnail(), 350);
+
+        final var SAMSUNG_S4_IMAGE = "testimage.jpg";
+        File imageFile = new File("nofile");
+        try {
+            imageFile = new File(ThumbnailTester.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        final var pictureInfo = new PictureInfo(imageFile, "Image");
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var singleNodeNavigator = new SingleNodeNavigator(node);
+        thumbnailController.setNode(singleNodeNavigator, 0);
+
+
+        final var jPanel = new JPanel();
+        jPanel.setLayout(new BorderLayout());
+        jPanel.setPreferredSize(new Dimension(600, 500));
+
+        final var frame = new JFrame("ThumbnailTester");
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+
+        final var buttonPanel = new JPanel();
+        buttonPanel.setLayout(new MigLayout());
+        final var showDecoratedButton = new JButton("Decorate");
+        showDecoratedButton.addActionListener((ActionEvent e) -> thumbnailController.setDecorateThumbnails(true));
+        buttonPanel.add(showDecoratedButton);
+
+        final var showUndecoratedButton = new JButton("Undecorate");
+        showUndecoratedButton.addActionListener((ActionEvent e) -> thumbnailController.setDecorateThumbnails(false));
+        buttonPanel.add(showUndecoratedButton, "wrap");
+
+        final var showSelectedButton = new JButton("Selected");
+        showSelectedButton.addActionListener((ActionEvent e) -> Settings.getPictureCollection().addToSelectedNodes(node));
+        buttonPanel.add(showSelectedButton);
+
+        final var showUnselectedButton = new JButton("Unselected");
+        showUnselectedButton.addActionListener((ActionEvent e) -> Settings.getPictureCollection().clearSelection());
+        buttonPanel.add(showUnselectedButton, "wrap");
+
+        final var showAsOfflineButton = new JButton("Offline");
+        showAsOfflineButton.addActionListener((ActionEvent e) -> thumbnailController.getThumbnail().drawOfflineIcon(true));
+        buttonPanel.add(showAsOfflineButton);
+
+        final var showAsOnlineButton = new JButton("Online");
+        showAsOnlineButton.addActionListener((ActionEvent e) -> thumbnailController.getThumbnail().drawOfflineIcon(false));
+        buttonPanel.add(showAsOnlineButton, "wrap");
+
+
+        final var showMailSelectedButton = new JButton("Mail Selected");
+        showMailSelectedButton.addActionListener((ActionEvent e) -> {
+            Settings.getPictureCollection().addToMailSelection(node);
+            thumbnailController.determineMailSelectionStatus();
+        });
+        buttonPanel.add(showMailSelectedButton);
+
+        final var showMailUnselectedButton = new JButton("Mail Unselected");
+        showMailUnselectedButton.addActionListener((ActionEvent e) -> {
+            Settings.getPictureCollection().clearMailSelection();
+            thumbnailController.determineMailSelectionStatus();
+        });
+        buttonPanel.add(showMailUnselectedButton, "wrap");
+
+        /**
+         *  The largest size for the thumbnail slider
+         */
+        final var THUMBNAILSIZE_SLIDER_MIN = 5;
+
+        /**
+         *  The smallest size for the thumbnail slider
+         */
+        final var THUMBNAILSIZE_SLIDER_MAX = 20;
+
+        /**
+         *  The starting position for the thumbnail slider
+         */
+        final var THUMBNAILSIZE_SLIDER_INIT = 20;
+
+        final var resizeJSlider = new JSlider(SwingConstants.HORIZONTAL,
+                THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
+        resizeJSlider.setSnapToTicks(false);
+        resizeJSlider.setMaximumSize(new Dimension(150, 40));
+        resizeJSlider.setMajorTickSpacing(4);
+        resizeJSlider.setMinorTickSpacing(2);
+        resizeJSlider.setPaintTicks(true);
+        resizeJSlider.setPaintLabels(false);
+        resizeJSlider.addChangeListener((ChangeEvent e) -> {
+            JSlider source = (JSlider) e.getSource();
+            float thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
+            thumbnailController.setFactor(thumbnailSizeFactor);
+            thumbnailController.getThumbnail().revalidate();
+        });
+        buttonPanel.add(resizeJSlider, "spanx 2");
+
+
+        jPanel.add(buttonPanel, BorderLayout.NORTH);
+
+        final var centerPanel = new JPanel();
+        centerPanel.add(thumbnailController.getThumbnail());
+        jPanel.add(centerPanel, BorderLayout.CENTER);
+
+        frame.getContentPane().add(jPanel, BorderLayout.CENTER);
+        frame.pack();
+        frame.setVisible(true);
+
+
+    }
+}
