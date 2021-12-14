@@ -1,7 +1,5 @@
 package org.jpo.gui.swing;
 
-import org.jpo.testground.PlayWithFontAwesome;
-
 import java.awt.*;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -43,7 +41,7 @@ public class RobotoFont {
     private static Font fontRobotoThin18;
 
     static {
-        try (final var regular = PlayWithFontAwesome.class.getResourceAsStream("/Roboto-Thin.ttf")) {
+        try (final var regular = RobotoFont.class.getResourceAsStream("/Roboto-Thin.ttf")) {
             final var baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, regular);
             fontRobotoThin24 = baseFontRegular.deriveFont(Font.PLAIN, 24f);
             fontRobotoThin18 = baseFontRegular.deriveFont(Font.PLAIN, 18f);
