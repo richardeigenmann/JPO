@@ -118,10 +118,6 @@ public class Settings {
      */
     public static final String JPO_VERSION_URL = JPO_URL + "/jpo-version.json";
     /**
-     * The title for error dialogs
-     */
-    private static final String SETTINGS_ERROR = Settings.jpoResources.getString("settingsError");
-    /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(Settings.class.getName());
@@ -1820,6 +1816,7 @@ public class Settings {
             maxThumbnails = DEFAULT_MAX_THUMBNAILS;
         }
 
+        final String SETTINGS_ERROR = Settings.jpoResources.getString("settingsError");
         if (writeLog) {
             if (logfile.exists()) {
                 if (!logfile.canWrite()) {
