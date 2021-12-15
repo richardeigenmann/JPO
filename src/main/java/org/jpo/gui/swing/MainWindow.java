@@ -129,6 +129,8 @@ public class MainWindow extends ResizableJFrame {
         final var statsScroller = new JScrollPane(infoPanelController.getInfoPanel());
         statsScroller.setWheelScrollingEnabled(true);
         statsScroller.getVerticalScrollBar().setUnitIncrement(20);
+        final var mapPanel = new JPanel();
+        mapPanel.add(new JLabel("Map"));
 
 
         switch (Settings.getStartupSizeChoice()) {
@@ -151,6 +153,7 @@ public class MainWindow extends ResizableJFrame {
 
         final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
         final var statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
+        final var mapsDockable = new DefaultSingleCDockable("MapId", "Map", mapPanel);
         final var thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
         final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", eventBusViewerJPanel);
 
@@ -158,6 +161,7 @@ public class MainWindow extends ResizableJFrame {
         grid.add(0, 0, 0.2, 0.8, searches);
         grid.add(0, 1, 0.2, 0.2, tagCloudDockable);
         grid.add(0, 1, 0.2, 0.2, statsDockable);
+        grid.add(0, 1, 0.2, 0.2, mapsDockable);
         if (Settings.isDebugMode()) {
             grid.add(0, 1, 0.2, 0.2, eventBusViewerDockable);
         }

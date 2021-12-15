@@ -13,13 +13,13 @@ import java.awt.event.ActionEvent;
 /*
  InfoPanelController.java:  The Controller for the Info Panel
 
- Copyright (C) 2009-2020  Richard Eigenmann.
+ Copyright (C) 2009-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -42,16 +42,14 @@ public class InfoPanelController {
 
     private final NodeStatisticsController nodeStatisticsController = new NodeStatisticsController();
     /**
-     * A millisecond delay for the polling of the thumbnailController queue and
-     * memory status
+     * Delay between polls.
      */
-    private static final int DELAY = 5000; //milliseconds
+    private static final int DELAY_MS = 5000; //milliseconds
 
     /**
-     * A timer to fire off the refresh of the Thumbnail Queue display. Is only
-     * alive if the InfoPanel is showing the statistics panel.
+     * A timer to fire off the refresh of the info display.
      */
-    private final Timer statsUpdateTimer = new Timer( DELAY, ( ActionEvent ae ) -> nodeStatisticsController.updateStats());
+    private final Timer statsUpdateTimer = new Timer(DELAY_MS, (ActionEvent ae) -> nodeStatisticsController.updateStats());
 
     /**
      * Returns the InfoPanel Widget

@@ -12,13 +12,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -209,14 +209,14 @@ public class NodeStatistics {
             return 0;
         }
 
-        if (startNode.getUserObject() instanceof Query) {
-            return ((Query) startNode.getUserObject()).getNumberOfResults();
+        if (startNode.getUserObject() instanceof Query query) {
+            return query.getNumberOfResults();
         }
 
         int count = 0;
         Object nextElement;
         final Enumeration<? extends TreeNode> nodes = startNode.children();
-        while ( nodes.hasMoreElements() ) {
+        while (nodes.hasMoreElements()) {
             nextElement = nodes.nextElement();
             if (nextElement instanceof DefaultMutableTreeNode node) {
                 if (node.getUserObject() instanceof PictureInfo) {
