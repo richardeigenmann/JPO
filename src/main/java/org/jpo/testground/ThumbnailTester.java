@@ -27,8 +27,7 @@ import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.StartThumbnailCreationFactoryRequest;
 import org.jpo.gui.ApplicationEventHandler;
 import org.jpo.gui.ThumbnailController;
-import org.jpo.gui.swing.Thumbnail;
-import org.jpo.gui.swing.ThumbnailPanelTitle;
+import org.jpo.gui.swing.ResizeSlider;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -67,7 +66,7 @@ public class ThumbnailTester {
      * Constructor for the test window
      */
     public ThumbnailTester() {
-        final var thumbnailController = new ThumbnailController(new Thumbnail(), 350);
+        final var thumbnailController = new ThumbnailController(350);
 
         final var SAMSUNG_S4_IMAGE = "testimage.jpg";
         File imageFile = new File("nofile");
@@ -77,6 +76,7 @@ public class ThumbnailTester {
             e.printStackTrace();
         }
         final var pictureInfo = new PictureInfo(imageFile, "Image");
+        pictureInfo.setCreationTime("2099-01-01 16:30:00");
         final var node = new SortableDefaultMutableTreeNode(pictureInfo);
         final var singleNodeNavigator = new SingleNodeNavigator(node);
         thumbnailController.setNode(singleNodeNavigator, 0);
@@ -116,7 +116,6 @@ public class ThumbnailTester {
         showAsOnlineButton.addActionListener((ActionEvent e) -> thumbnailController.getThumbnail().drawOfflineIcon(false));
         buttonPanel.add(showAsOnlineButton, "wrap");
 
-
         final var showMailSelectedButton = new JButton("Mail Selected");
         showMailSelectedButton.addActionListener((ActionEvent e) -> {
             Settings.getPictureCollection().addToMailSelection(node);
@@ -131,32 +130,24 @@ public class ThumbnailTester {
         });
         buttonPanel.add(showMailUnselectedButton, "wrap");
 
-        /**
-         *  The largest size for the thumbnail slider
-         */
-        final var THUMBNAILSIZE_SLIDER_MIN = 5;
+        final var showTimestamp = new JButton("Show Timestamp");
+        showTimestamp.addActionListener((ActionEvent e) -> {
+            thumbnailController.getThumbnail().setTimestamp(pictureInfo.getFormattedCreationTimeForTimestamp());
+            thumbnailController.getThumbnail().repaint();
+        });
+        buttonPanel.add(showTimestamp);
 
-        /**
-         *  The smallest size for the thumbnail slider
-         */
-        final var THUMBNAILSIZE_SLIDER_MAX = 20;
+        final var hideTimestamp = new JButton("Hide Timestamp");
+        hideTimestamp.addActionListener((ActionEvent e) -> {
+            thumbnailController.getThumbnail().setTimestamp("");
+            thumbnailController.getThumbnail().repaint();
+        });
+        buttonPanel.add(hideTimestamp, "wrap");
 
-        /**
-         *  The starting position for the thumbnail slider
-         */
-        final var THUMBNAILSIZE_SLIDER_INIT = 20;
-
-        final var resizeJSlider = new JSlider(SwingConstants.HORIZONTAL,
-                THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
-        resizeJSlider.setSnapToTicks(false);
-        resizeJSlider.setMaximumSize(new Dimension(150, 40));
-        resizeJSlider.setMajorTickSpacing(4);
-        resizeJSlider.setMinorTickSpacing(2);
-        resizeJSlider.setPaintTicks(true);
-        resizeJSlider.setPaintLabels(false);
+        final var resizeJSlider = new ResizeSlider();
         resizeJSlider.addChangeListener((ChangeEvent e) -> {
             JSlider source = (JSlider) e.getSource();
-            float thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
+            float thumbnailSizeFactor = (float) source.getValue() / ResizeSlider.THUMBNAILSIZE_SLIDER_MAX;
             thumbnailController.setFactor(thumbnailSizeFactor);
             thumbnailController.getThumbnail().revalidate();
         });

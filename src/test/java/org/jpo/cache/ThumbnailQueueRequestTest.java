@@ -2,7 +2,6 @@ package org.jpo.cache;
 
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ThumbnailController;
-import org.jpo.gui.swing.Thumbnail;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -15,17 +14,17 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 /**
  * @author Richard Eigenmann
  */
-public class ThumbnailQueueRequestTest {
+class ThumbnailQueueRequestTest {
 
     @Test
-    public void increasePriorityToTest() {
+    void increasePriorityToTest() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                ThumbnailController controller = new ThumbnailController(new Thumbnail(), 350);
+                ThumbnailController controller = new ThumbnailController(350);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 ThumbnailQueueRequest tqr = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOWEST_PRIORITY, new Dimension(350, 350));
-                assertEquals( QUEUE_PRIORITY.LOWEST_PRIORITY, tqr.priority);
+                assertEquals(QUEUE_PRIORITY.LOWEST_PRIORITY, tqr.priority);
                 tqr.increasePriorityTo(QUEUE_PRIORITY.LOW_PRIORITY);
                 assertEquals(QUEUE_PRIORITY.LOW_PRIORITY, tqr.priority);
                 tqr.increasePriorityTo(QUEUE_PRIORITY.MEDIUM_PRIORITY);
@@ -42,11 +41,11 @@ public class ThumbnailQueueRequestTest {
     }
 
     @Test
-    public void compareToTest() {
+    void compareToTest() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                ThumbnailController controller = new ThumbnailController(new Thumbnail(), 350);
+                ThumbnailController controller = new ThumbnailController(350);
                 SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 ThumbnailQueueRequest lowestPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOWEST_PRIORITY, new Dimension(350, 350));
                 ThumbnailQueueRequest lowPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension(350, 350));
@@ -72,24 +71,24 @@ public class ThumbnailQueueRequestTest {
     }
 
     @Test
-    public void equalsTest() {
+    void equalsTest() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                ThumbnailController controller = new ThumbnailController(new Thumbnail(), 350);
-                SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-                ThumbnailQueueRequest lowestPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOWEST_PRIORITY, new Dimension(350, 350));
-                ThumbnailQueueRequest lowPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension(350, 350));
-                ThumbnailQueueRequest mediumPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension(350, 350));
-                ThumbnailQueueRequest highPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.HIGH_PRIORITY, new Dimension(350, 350));
-                assertFalse(highPriorityRequest.equals(mediumPriorityRequest));
-                assertFalse(mediumPriorityRequest.equals(lowPriorityRequest));
-                assertFalse(lowPriorityRequest.equals(lowestPriorityRequest));
-                assertFalse(lowestPriorityRequest.equals(lowPriorityRequest));
-                assertFalse(lowPriorityRequest.equals(mediumPriorityRequest));
-                assertFalse(mediumPriorityRequest.equals(highPriorityRequest));
+                final ThumbnailController controller = new ThumbnailController(350);
+                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+                final ThumbnailQueueRequest lowestPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOWEST_PRIORITY, new Dimension(350, 350));
+                final ThumbnailQueueRequest lowPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.LOW_PRIORITY, new Dimension(350, 350));
+                final ThumbnailQueueRequest mediumPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.MEDIUM_PRIORITY, new Dimension(350, 350));
+                final ThumbnailQueueRequest highPriorityRequest = new ThumbnailQueueRequest(controller, node, QUEUE_PRIORITY.HIGH_PRIORITY, new Dimension(350, 350));
+                assertNotEquals(mediumPriorityRequest, highPriorityRequest);
+                assertNotEquals(lowPriorityRequest, mediumPriorityRequest);
+                assertNotEquals(lowestPriorityRequest, lowPriorityRequest);
+                assertNotEquals(lowPriorityRequest, lowestPriorityRequest);
+                assertNotEquals(mediumPriorityRequest, lowPriorityRequest);
+                assertNotEquals(highPriorityRequest, mediumPriorityRequest);
             });
-        } catch (InterruptedException | InvocationTargetException ex) {
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }

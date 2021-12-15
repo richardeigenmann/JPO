@@ -6,7 +6,7 @@ import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupPopUpMenuRequest;
 import org.jpo.eventbus.ShowGroupRequest;
 import org.jpo.eventbus.ShowQueryRequest;
-import org.jpo.gui.swing.Thumbnail;
+import org.jpo.gui.swing.ResizeSlider;
 import org.jpo.gui.swing.ThumbnailPanelTitle;
 
 import javax.swing.*;
@@ -144,6 +144,12 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     private Boolean showFilenamesState = Settings.isShowFilenamesOnThumbnailPanel();
 
     /**
+     * Whether to show timestamps or not.
+     * defining this a Boolean instead of boolean to create an object so that it can be passed by reference to the Thumbnails
+     */
+    private Boolean showTimestampState = Settings.isShowTimestampsOnThumbnailPanel();
+
+    /**
      * Point where the mouse was pressed so that we can figure out the rectangle
      * that is being selected.
      */
@@ -215,12 +221,13 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         titleJPanel.getNavigationButtonPanel().getPreviousThumbnailsPageButton().addActionListener((ActionEvent e) -> goToPreviousPage());
         titleJPanel.getNavigationButtonPanel().getNextThumbnailsPageButton().addActionListener((ActionEvent e) -> goToNextPage());
         titleJPanel.getNavigationButtonPanel().getLastThumbnailsPageButton().addActionListener((ActionEvent e) -> goToLastPage());
-        titleJPanel.getShowFienamesButton().addActionListener((ActionEvent e) -> showFilenamesButtonClicked());
+        titleJPanel.getShowFilenamesButton().addActionListener((ActionEvent e) -> showFilenamesButtonClicked());
+        titleJPanel.getShowTimestampButton().addActionListener((ActionEvent e) -> showTimestampButtonClicked());
         titleJPanel.getSearchField().addActionListener((ActionEvent e) -> doSearch(titleJPanel.getSearchField().getText()));
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
             final JSlider source = (JSlider) e.getSource();
-            thumbnailSizeFactor = ((float) source.getValue()) / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
+            thumbnailSizeFactor = ((float) source.getValue()) / ResizeSlider.THUMBNAILSIZE_SLIDER_MAX;
             resizeAllThumbnails(thumbnailSizeFactor);
         });
 
@@ -341,6 +348,17 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         Settings.setShowFilenamesOnThumbnailPanel(showFilenamesState);
         for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
+        }
+    }
+
+    /**
+     * If the show filenames button was clicked, flip the state and show or hide the filenames.
+     */
+    private void showTimestampButtonClicked() {
+        showTimestampState = !showTimestampState;
+        Settings.setShowTimestampsOnThumbnailPanel(showTimestampState);
+        for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
+            thumbnailControllers[i].setShowTimestamp(showTimestampState);
         }
     }
 
@@ -520,7 +538,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.removeAll();
         initialisedMaxThumbnails = Settings.getMaxThumbnails();
         for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
-            thumbnailControllers[i] = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
+            thumbnailControllers[i] = new ThumbnailController(Settings.getThumbnailSize());
+            thumbnailControllers[i].setShowTimestamp(showTimestampState);
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);
             thumbnailsPane.add(thumbnailControllers[i].getThumbnail());

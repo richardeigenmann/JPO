@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.Settings;
-import org.jpo.gui.swing.Thumbnail;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -43,18 +42,15 @@ public class ThumbnailControllerTest {
     }
 
     @Test
-    public void testConstructor() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testConstructor() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                final Thumbnail thumbnail = new Thumbnail();
-                assertNotNull( thumbnail );
-
-                final ThumbnailController thumbnailController = new ThumbnailController( thumbnail, 350 );
-                assertNotNull( thumbnailController );
-            } );
-        } catch ( final InterruptedException | InvocationTargetException ex ) {
-            Logger.getLogger( ThumbnailControllerTest.class.getName() ).log( Level.SEVERE, null, ex );
+            SwingUtilities.invokeAndWait(() -> {
+                final ThumbnailController thumbnailController = new ThumbnailController(350);
+                assertNotNull(thumbnailController);
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(ThumbnailControllerTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
         }
     }

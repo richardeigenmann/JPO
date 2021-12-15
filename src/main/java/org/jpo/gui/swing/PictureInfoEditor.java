@@ -79,7 +79,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The Thumbnail Controller for the thumbnail being shown
      */
-    private final transient ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
+    private final transient ThumbnailController thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
 
     /**
      * The description of the picture

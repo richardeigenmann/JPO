@@ -14,13 +14,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2010-2020  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2021  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 
 /**
- * This class extends a JComponent showing and ImageIcon. The ImageIcon can be
+ * This class extends a JComponent showing an ImageIcon. The ImageIcon can be
  * scaled down with the {@link #setFactor} method.
  */
 public class Thumbnail extends JComponent {
@@ -55,6 +55,7 @@ public class Thumbnail extends JComponent {
         setVisible(false);
         setOpaque(false);
         setBackground(Settings.getUnselectedColor());
+        setFont(RobotoFont.getFontRobotoThin12());
     }
 
     /**
@@ -203,67 +204,41 @@ public class Thumbnail extends JComponent {
      */
     private transient ImageObserver imgOb;
 
+    private static ImageIcon getResourceFromClassLoader(final String resource) {
+        final URL resourceURL = Thumbnail.class.getClassLoader().getResource(resource);
+        if (resourceURL == null) {
+            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", resource);
+            return null;
+        } else {
+            return new ImageIcon(resourceURL);
+        }
+    }
+
     /**
      * This icon indicates that the thumbnail creation is sitting on the queue.
      */
-    private static final ImageIcon QUEUE_ICON;
-
-    static {
-        final String QUEUE_ICON_FILE = "queued_thumbnail.gif";
-        final URL resource = Thumbnail.class.getClassLoader().getResource(QUEUE_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", QUEUE_ICON_FILE);
-            QUEUE_ICON = null;
-        } else {
-            QUEUE_ICON = new ImageIcon(resource);
-        }
-    }
+    private static final ImageIcon QUEUE_ICON = getResourceFromClassLoader("queued_thumbnail.gif");
 
     @TestOnly
     ImageIcon getQueueIcon() {
         return QUEUE_ICON;
     }
 
-
     /**
      * This icon shows a large yellow folder.
      */
-    private static final ImageIcon LARGE_FOLDER_ICON;
-
-    static {
-        final String LARGE_FOLDER_ICON_FILE = "icon_folder_large.jpg";
-        final URL resource = Thumbnail.class.getClassLoader().getResource(LARGE_FOLDER_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", LARGE_FOLDER_ICON_FILE);
-            LARGE_FOLDER_ICON = null;
-        } else {
-            LARGE_FOLDER_ICON = new ImageIcon(resource);
-        }
-    }
-
+    private static final ImageIcon LARGE_FOLDER_ICON = getResourceFromClassLoader("icon_folder_large.jpg");
 
     @TestOnly
     ImageIcon getLargeFolderIcon() {
         return LARGE_FOLDER_ICON;
     }
 
-
     /**
      * The icon to superimpose on the picture if the highres picture is not
      * available
      */
-    private static final ImageIcon OFFLINE_ICON;
-
-    static {
-        final String OFFLINE_ICON_FILE = "icon_offline.gif";
-        final URL resource = Thumbnail.class.getClassLoader().getResource(OFFLINE_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", OFFLINE_ICON_FILE);
-            OFFLINE_ICON = null;
-        } else {
-            OFFLINE_ICON = new ImageIcon(resource);
-        }
-    }
+    private static final ImageIcon OFFLINE_ICON = getResourceFromClassLoader("icon_offline.gif");
 
     @TestOnly
     ImageIcon getOfflineIcon() {
@@ -273,40 +248,17 @@ public class Thumbnail extends JComponent {
     /**
      * The mail icon to superimpose on the picture
      */
-    private static final ImageIcon MAIL_ICON;
-
-    static {
-        final String MAIL_ICON_FILE = "icon_mail.gif";
-        final URL resource = Thumbnail.class.getClassLoader().getResource(MAIL_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", MAIL_ICON_FILE);
-            MAIL_ICON = null;
-        } else {
-            MAIL_ICON = new ImageIcon(resource);
-        }
-    }
+    private static final ImageIcon MAIL_ICON = getResourceFromClassLoader("icon_mail.gif");
 
     @TestOnly
     ImageIcon getMailIcon() {
         return MAIL_ICON;
     }
 
-
     /**
      * The mail icon to superimpose on the picture
      */
-    private static final ImageIcon SELECTED_ICON;
-
-    static {
-        final String SELECTED_ICON_FILE = "icon_selected.gif";
-        final URL resource = Thumbnail.class.getClassLoader().getResource(SELECTED_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", SELECTED_ICON_FILE);
-            SELECTED_ICON = null;
-        } else {
-            SELECTED_ICON = new ImageIcon(resource);
-        }
-    }
+    private static final ImageIcon SELECTED_ICON = getResourceFromClassLoader("icon_selected.gif");
 
     @TestOnly
     ImageIcon getSelectedIcon() {
@@ -390,6 +342,24 @@ public class Thumbnail extends JComponent {
         }
     }
 
+
+    /**
+     * Set the timestamp string to the supplied String. To suppress
+     * the timestamp set it to the empty String ""
+     *
+     * @param timestamp the new timestamp string.
+     */
+    public void setTimestamp(final String timestamp) {
+        this.timestamp = timestamp;
+        repaint();
+    }
+
+    private String timestamp = "";
+
+    private Point getCoordsForTimestamp(final int width, final int height) {
+        return new Point(width - 176, height - 14);
+    }
+
     /**
      * we are overriding the default paintComponent method, grabbing the
      * Graphics handle and doing our own drawing here. Essentially this method
@@ -442,6 +412,9 @@ public class Thumbnail extends JComponent {
                 int additionalOffset = drawOfflineIcon ? 40 : 0;
                 g2d.drawImage(MAIL_ICON.getImage(), xOffset + 10 + additionalOffset, yOffset + 10, MAIL_ICON.getImageObserver());
             }
+            g2d.setColor(new Color(230, 112, 9));
+            final var timeStampCoords = getCoordsForTimestamp(windowWidth, windowHeight);
+            g2d.drawString(timestamp, timeStampCoords.x, timeStampCoords.y);
         } else {
             // paint a black square
             graphics.setClip(0, 0, windowWidth, windowHeight);
@@ -449,4 +422,6 @@ public class Thumbnail extends JComponent {
             graphics.fillRect(0, 0, windowWidth, windowHeight);
         }
     }
+
+
 }

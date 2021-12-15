@@ -5,7 +5,6 @@ import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.swing.Thumbnail;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,8 +19,8 @@ import java.awt.event.WindowEvent;
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -110,7 +109,7 @@ public class GroupInfoEditor {
         nodeStatisticsController.updateStats(editNode);
         tabbedPane.addTab("Statistics", nodeStatisticsController.getJComponent());
 
-        final ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), Settings.getThumbnailSize());
+        final ThumbnailController thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
         thumbnailController.setNode(new SingleNodeNavigator(editNode), 0);
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 

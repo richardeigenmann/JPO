@@ -48,11 +48,17 @@ public class ThumbnailPanelTitle
      *
      * @return The Button that should toggle whether to show filenames
      */
-    public JButton getShowFienamesButton() {
-        return showFienamesButton;
+    public JButton getShowFilenamesButton() {
+        return showFilenamesButton;
     }
 
-    private final JButton showFienamesButton = new JButton("\uf1c9");
+    private final JButton showFilenamesButton = new JButton("\uf1c9");
+
+    public JButton getShowTimestampButton() {
+        return showTimestampButton;
+    }
+
+    private final JButton showTimestampButton = new JButton("\uf073");
 
     public JTextField getSearchField() {
         return searchField;
@@ -78,20 +84,7 @@ public class ThumbnailPanelTitle
         return title.getText();
     }
 
-    /**
-     *  The largest size for the thumbnail slider
-     */
-    private static final int THUMBNAILSIZE_SLIDER_MIN = 5;
 
-    /**
-     * The smallest size for the thumbnail slider
-     */
-    public static final int THUMBNAILSIZE_SLIDER_MAX = 20;
-
-    /**
-     * The starting position for the thumbnail slider
-     */
-    private static final int THUMBNAILSIZE_SLIDER_INIT = 20;
 
     /**
      * The panel with the navigation buttons
@@ -105,10 +98,9 @@ public class ThumbnailPanelTitle
     /**
      * Slider to control the size of the thumbnails
      */
-    private final JSlider resizeJSlider = new JSlider(SwingConstants.HORIZONTAL,
-            THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);
+    private final ResizeSlider resizeJSlider = new ResizeSlider();
 
-    public void addResizeChangeListener(ChangeListener cl) {
+    public void addResizeChangeListener(final ChangeListener cl) {
         resizeJSlider.addChangeListener(cl);
     }
 
@@ -116,20 +108,17 @@ public class ThumbnailPanelTitle
      * Sets up the components. Must be on the EDT.
      */
     private void initComponents() {
-        resizeJSlider.setSnapToTicks(false);
-        resizeJSlider.setMaximumSize(new Dimension(150, 40));
-        resizeJSlider.setMajorTickSpacing(4);
-        resizeJSlider.setMinorTickSpacing(2);
-        resizeJSlider.setPaintTicks(true);
-        resizeJSlider.setPaintLabels(false);
-
-        showFienamesButton.setFont(FontAwesomeFont.getFontAwesomeRegular24());
+        showFilenamesButton.setFont(FontAwesomeFont.getFontAwesomeRegular24());
+        showFilenamesButton.setToolTipText("Show or Hide the filenames");
+        showTimestampButton.setFont(FontAwesomeFont.getFontAwesomeRegular24());
+        showTimestampButton.setToolTipText("Show or Hide the timestamps");
 
         searchField.setMinimumSize(new Dimension(100, 25));
         searchField.setMaximumSize(new Dimension(250, 25));
         hideSearchField();
 
         searchButton.setFont(FontAwesomeFont.getFontAwesomeSolid24());
+        searchButton.setToolTipText("Click to enter search text.");
         searchButton.addActionListener(e -> {
             searchField.setVisible(!searchField.isVisible());
             searchField.getParent().validate();
@@ -143,7 +132,6 @@ public class ThumbnailPanelTitle
         setBackground(Color.LIGHT_GRAY);
         add(Box.createRigidArea(new Dimension(5, 0)));
 
-
         add(navigationButtonPanel);
 
         lblPage.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
@@ -153,7 +141,8 @@ public class ThumbnailPanelTitle
         add(Box.createHorizontalGlue());
         add(searchField);
         add(searchButton);
-        add(showFienamesButton);
+        add(showTimestampButton);
+        add(showFilenamesButton);
 
         title.setFont(Settings.getTitleFont());
     }

@@ -21,8 +21,8 @@ package org.jpo.testground;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
 import org.jpo.gui.swing.CategoryButton;
+import org.jpo.gui.swing.ResizeSlider;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
-import org.jpo.gui.swing.ThumbnailPanelTitle;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -142,7 +142,7 @@ public class ThumbnailDescriptionTester {
         resizeJSlider.setPaintLabels(false);
         resizeJSlider.addChangeListener((ChangeEvent e) -> {
             JSlider source = (JSlider) e.getSource();
-            float thumbnailSizeFactor = (float) source.getValue() / ThumbnailPanelTitle.THUMBNAILSIZE_SLIDER_MAX;
+            float thumbnailSizeFactor = (float) source.getValue() / ResizeSlider.THUMBNAILSIZE_SLIDER_MAX;
             panel.setThumbnailSizeFactor(thumbnailSizeFactor);
             panel.setTextAreaSize();
         });

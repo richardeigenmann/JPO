@@ -39,12 +39,16 @@ public class RobotoFont {
 
     private static Font fontRobotoThin24;
     private static Font fontRobotoThin18;
+    private static Font fontRobotoThin12;
+    private static Font fontRobotoThin10;
 
     static {
         try (final var regular = RobotoFont.class.getResourceAsStream("/Roboto-Thin.ttf")) {
             final var baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, regular);
             fontRobotoThin24 = baseFontRegular.deriveFont(Font.PLAIN, 24f);
             fontRobotoThin18 = baseFontRegular.deriveFont(Font.PLAIN, 18f);
+            fontRobotoThin12 = baseFontRegular.deriveFont(Font.PLAIN, 12f);
+            fontRobotoThin10 = baseFontRegular.deriveFont(Font.PLAIN, 10f);
         } catch (final IOException | FontFormatException e) {
             LOGGER.log(Level.SEVERE, "Could not load FontAwesome font. Exception: {0}", e.getMessage());
         }
@@ -68,6 +72,24 @@ public class RobotoFont {
      */
     public static Font getFontRobotoThin18() {
         return fontRobotoThin18;
+    }
+
+    /**
+     * Returns the static instance of the 18 size Font Roboto-Thin
+     *
+     * @return The Java Font object
+     */
+    public static Font getFontRobotoThin12() {
+        return fontRobotoThin12;
+    }
+
+    /**
+     * Returns the static instance of the 18 size Font Roboto-Thin
+     *
+     * @return The Java Font object
+     */
+    public static Font getFontRobotoThin10() {
+        return fontRobotoThin10;
     }
 
 }

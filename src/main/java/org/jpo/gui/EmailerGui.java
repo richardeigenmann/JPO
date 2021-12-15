@@ -4,7 +4,6 @@ import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.ListNavigator;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.swing.Thumbnail;
 import org.jpo.gui.swing.WholeNumberField;
 
 import javax.mail.internet.AddressException;
@@ -20,13 +19,13 @@ import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2004-2020  Richard Eigenmann.
+ Copyright (C) 2004-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -34,12 +33,13 @@ import java.util.Objects;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * EmailerGui.java: Creates a GUI to edit the categories of the collection
- *
- *
  */
 public class EmailerGui extends JFrame {
+
+    private static final String GENERIC_ERROR_TITLE = Settings.getJpoResources().getString("genericError");
 
     /**
      * Internal array that holds the nodes to be send by email.
@@ -58,7 +58,7 @@ public class EmailerGui extends JFrame {
         if (emailSelected.isEmpty()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("emailNoNodes"),
-                    Settings.getJpoResources().getString("genericError"),
+                    GENERIC_ERROR_TITLE,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -67,7 +67,7 @@ public class EmailerGui extends JFrame {
         if ("".equals(Settings.getEmailServer())) { //perhaps make this a better test of the server
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     Settings.getJpoResources().getString("emailNoServer"),
-                    Settings.getJpoResources().getString("genericError"),
+                    GENERIC_ERROR_TITLE,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -196,15 +196,15 @@ public class EmailerGui extends JFrame {
 
         jPanel.add(new JLabel(Settings.getJpoResources().getString("emailSizesJLabel")), "");
 
-        JComboBox<String> sizesJComboBox = new JComboBox<>();
+        final JComboBox<String> sizesJComboBox = new JComboBox<>();
         sizesJComboBox.addItem(Settings.getJpoResources().getString("emailSize1"));
         sizesJComboBox.addItem(Settings.getJpoResources().getString("emailSize2"));
         sizesJComboBox.addItem(Settings.getJpoResources().getString("emailSize3"));
         sizesJComboBox.addItem(Settings.getJpoResources().getString("emailSize4"));
         sizesJComboBox.addItem(Settings.getJpoResources().getString("emailSize5"));
         sizesJComboBox.addActionListener((ActionEvent e) -> {
-            final JComboBox cb = (JComboBox) e.getSource();
-            String cbSelection = (String) cb.getSelectedItem();
+            final var cb = (JComboBox<String>) e.getSource();
+            final String cbSelection = (String) cb.getSelectedItem();
             if (Objects.requireNonNull(cbSelection).equals(Settings.getJpoResources().getString("emailSize1"))) {
                 imageWidthWholeNumberField.setText("350");
                 imageHeightWholeNumberField.setText("300");
@@ -237,8 +237,8 @@ public class EmailerGui extends JFrame {
         sizesJComboBox.setMaximumSize(Settings.getFilenameFieldMaximumSize());
         jPanel.add(sizesJComboBox, "wrap");
 
-        JPanel scaleSizeJPanel = new JPanel();
-        FlowLayout fl = new FlowLayout();
+        final JPanel scaleSizeJPanel = new JPanel();
+        final FlowLayout fl = new FlowLayout();
         fl.setAlignment(FlowLayout.LEADING);
         fl.setHgap(0);
         scaleSizeJPanel.setLayout(fl);
@@ -246,8 +246,8 @@ public class EmailerGui extends JFrame {
         scaleSizeJPanel.setMinimumSize(new Dimension(450, 25));
         scaleSizeJPanel.setMaximumSize(new Dimension(1000, 25));
 
-        scalePicturesJCheckBox.addItemListener(( ItemEvent e ) -> {
-            if ( e.getStateChange() == ItemEvent.DESELECTED ) {
+        scalePicturesJCheckBox.addItemListener((ItemEvent e) -> {
+            if (e.getStateChange() == ItemEvent.DESELECTED) {
                 imageWidthWholeNumberField.setEnabled(false);
                 imageHeightWholeNumberField.setEnabled(false);
             } else if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -342,20 +342,20 @@ public class EmailerGui extends JFrame {
      * loads the thumbnails into the preview panel
      */
     private void loadThumbnails() {
-        int thumbnailSize = Settings.getThumbnailSize();
-        int desiredSize = 140;
-        float factor = desiredSize / (float) thumbnailSize;
-        ListNavigator listNavigator = new ListNavigator();
+        final int thumbnailSize = Settings.getThumbnailSize();
+        final int desiredSize = 140;
+        final float factor = desiredSize / (float) thumbnailSize;
+        final ListNavigator listNavigator = new ListNavigator();
 
-        for ( int i = 0; i < emailSelected.size(); i++ ) {
-            listNavigator.add( emailSelected.get( i ) );
-            ThumbnailController thumbnailController = new ThumbnailController(new Thumbnail(), thumbnailSize );
-            thumbnailController.setNode( listNavigator, i );
-            thumbnailController.setDecorateThumbnails( false );
+        for (int i = 0; i < emailSelected.size(); i++) {
+            listNavigator.add(emailSelected.get(i));
+            ThumbnailController thumbnailController = new ThumbnailController(thumbnailSize);
+            thumbnailController.setNode(listNavigator, i);
+            thumbnailController.setDecorateThumbnails(false);
             thumbnailController.determineMailSelectionStatus();
-            thumbnailController.setFactor( factor );
-            imagesJPanel.add( thumbnailController.getThumbnail() );
-            thumbnailController.getThumbnail().setVisible( true );
+            thumbnailController.setFactor(factor);
+            imagesJPanel.add(thumbnailController.getThumbnail());
+            thumbnailController.getThumbnail().setVisible(true);
         }
         imagesJPanel.revalidate();
     }
@@ -367,29 +367,29 @@ public class EmailerGui extends JFrame {
         if (emailSelected.isEmpty()) {
             JOptionPane.showMessageDialog(this,
                     Settings.getJpoResources().getString("noNodesSelected"),
-                    Settings.getJpoResources().getString("genericError"),
+                    GENERIC_ERROR_TITLE,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         InternetAddress senderAddress;
         try {
-            senderAddress = new InternetAddress( Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString() );
-        } catch ( AddressException x ) {
+            senderAddress = new InternetAddress(Objects.requireNonNull(fromJComboBox.getSelectedItem()).toString());
+        } catch (final AddressException x) {
             JOptionPane.showMessageDialog(this,
                     x.getLocalizedMessage(),
-                    Settings.getJpoResources().getString("genericError"),
+                    GENERIC_ERROR_TITLE,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         InternetAddress destinationAddress;
         try {
-            destinationAddress = new InternetAddress( Objects.requireNonNull(toJComboBox.getSelectedItem()).toString() );
-        } catch ( AddressException x ) {
+            destinationAddress = new InternetAddress(Objects.requireNonNull(toJComboBox.getSelectedItem()).toString());
+        } catch (final AddressException x) {
             JOptionPane.showMessageDialog(this,
                     x.getLocalizedMessage(),
-                    Settings.getJpoResources().getString("genericError"),
+                    GENERIC_ERROR_TITLE,
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -397,7 +397,7 @@ public class EmailerGui extends JFrame {
         boolean scaleImages = scalePicturesJCheckBox.isSelected();
         boolean sendOriginal = sendOriginalsJCheckBox.isSelected();
 
-        Dimension scaleSize = new Dimension( imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue() );
+        final Dimension scaleSize = new Dimension(imageWidthWholeNumberField.getValue(), imageWidthWholeNumberField.getValue());
 
         putSettings(); // placed here so that we don't store addresses that fail in the AddressExceptions
         new Emailer( emailSelected, senderAddress, destinationAddress, subjectJTextField.getText(), messageJTextArea.getText(), scaleImages, scaleSize, sendOriginal );

@@ -157,6 +157,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"thumbnailSizeLabel", "Grösse der Verkleinerungen:"},
             {"thumbnailFastScale", "Geschwindigkeit statt Qualität beim verkleinern"},
             {"thumbnailShowFilenamesJCheckBox", "Dateinamen in der Uebersicht anzeigen"},
+            {"thumbnailShowTimestampsJCheckBox", "Aufnahmezeit in Vorschau anzeigen"},
             {"zapThumbnails", "Alle Verkleinerungen löschen"},
             {"thumbnailsDeleted", " Verkleinerungen gelöscht"},
 

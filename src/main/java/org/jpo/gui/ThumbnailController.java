@@ -49,13 +49,12 @@ public class ThumbnailController
     private static final Logger LOGGER = Logger.getLogger(ThumbnailController.class.getName());
 
     /**
-     * Creates a new ThumbnailController object.
+     * Constructor
      *
-     * @param thumbnail     The thumbnail to manage
      * @param thumbnailSize The size in which the thumbnail is to be created
      */
-    public ThumbnailController(final Thumbnail thumbnail, final int thumbnailSize) {
-        myThumbnail = thumbnail;
+    public ThumbnailController(final int thumbnailSize) {
+        myThumbnail = new Thumbnail();
         myThumbnail.setThumbnailSize(thumbnailSize);
         myThumbnail.addMouseListener(new ThumbnailMouseAdapter());
 
@@ -109,7 +108,7 @@ public class ThumbnailController
     }
 
     /**
-     * Returns to the caller whether the ThumbnailController is already showing
+     * Returns to the caller whether the ThumbnailController is already linked to
      * the node.
      *
      * @param nodeNavigator The NodeNavigatorInterface from which the node is
@@ -166,7 +165,7 @@ public class ThumbnailController
             if ( thumbnailIsInVisibleArea() ) {
                 priority = QUEUE_PRIORITY.HIGH_PRIORITY;
             } else {
-                 priority = QUEUE_PRIORITY.MEDIUM_PRIORITY;
+                priority = QUEUE_PRIORITY.MEDIUM_PRIORITY;
             }
             myThumbnailQueueRequest = requestThumbnailCreation(priority);
         }
@@ -174,6 +173,25 @@ public class ThumbnailController
         showSelectionStatus();
         determineMailSelectionStatus();
         drawOfflineIcon(myNode);
+        showTimestamp();
+    }
+
+    /**
+     * Shows the timestamp if the node is populated, showTimestamp is true and we are showing a picture
+     */
+    private void showTimestamp() {
+        if (myNode != null && showTimestamp && myNode.getUserObject() instanceof PictureInfo pictureInfo) {
+            myThumbnail.setTimestamp(pictureInfo.getFormattedCreationTimeForTimestamp());
+        } else {
+            myThumbnail.setTimestamp("");
+        }
+    }
+
+    private boolean showTimestamp = true;
+
+    public void setShowTimestamp(final boolean show) {
+        this.showTimestamp = show;
+        showTimestamp();
     }
 
     /**
@@ -426,7 +444,6 @@ public class ThumbnailController
         } else {
             myThumbnail.setUnSelected();
         }
-
     }
 
     /**

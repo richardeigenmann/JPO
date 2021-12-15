@@ -153,6 +153,7 @@ public class JpoResources_en extends ListResourceBundle {
             {"thumbnailSizeLabel", "Thumbnail Size:"},
             {"thumbnailFastScale", "Tick for Speed over Quality when scaling"},
             {"thumbnailShowFilenamesJCheckBox", "Show Filenames in Panel"},
+            {"thumbnailShowTimestampsJCheckBox", "Show Timestamps in Thumbnails"},
             {"zapThumbnails", "Delete all Thumbnails"},
             {"thumbnailsDeleted", " Thumbnails deleted"},
             {"autoLoadChooserTitle", "Choose File to automatically load"},

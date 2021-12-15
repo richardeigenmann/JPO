@@ -122,6 +122,10 @@ public class SettingsDialog extends JDialog {
      */
     private final JCheckBox thumbnailShowFilenamesJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailShowFilenamesJCheckBox"));
     /**
+     * tickbox that indicates whether to show the timestamps or not
+     */
+    private final JCheckBox thumbnailShowTimestampsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailShowTimestampsJCheckBox"));
+    /**
      * Text Filed that holds the first user Function
      */
     private final JTextField userFunction1NameJTextField = new JTextField();
@@ -343,7 +347,8 @@ public class SettingsDialog extends JDialog {
         thumbnailsJPanel.add(jpgQualityJSlider, "span, grow, wrap");
 
         thumbnailsJPanel.add(thumbnailFastScaleJCheckBox, "wrap");
-        thumbnailsJPanel.add(thumbnailShowFilenamesJCheckBox);
+        thumbnailsJPanel.add(thumbnailShowFilenamesJCheckBox, "wrap");
+        thumbnailsJPanel.add(thumbnailShowTimestampsJCheckBox);
         return thumbnailsJPanel;
     }
 
@@ -618,6 +623,7 @@ public class SettingsDialog extends JDialog {
         jpgQualityJSlider.setValue((int) (Settings.getDefaultHtmlLowresQuality() * 100));
         thumbnailFastScaleJCheckBox.setSelected(Settings.isThumbnailFastScale());
         thumbnailShowFilenamesJCheckBox.setSelected(Settings.isShowFilenamesOnThumbnailPanel());
+        thumbnailShowTimestampsJCheckBox.setSelected(Settings.isShowTimestampsOnThumbnailPanel());
 
         userFunction1NameJTextField.setText(Settings.getUserFunctionNames()[0]);
         userFunction2NameJTextField.setText(Settings.getUserFunctionNames()[1]);
@@ -681,6 +687,7 @@ public class SettingsDialog extends JDialog {
         Settings.setDefaultHtmlLowresQuality(((float) jpgQualityJSlider.getValue()) / 100);
         Settings.setThumbnailFastScale(thumbnailFastScaleJCheckBox.isSelected());
         Settings.setShowFilenamesOnThumbnailPanel(thumbnailShowFilenamesJCheckBox.isSelected());
+        Settings.setShowTimestampsOnThumbnailPanel(thumbnailShowTimestampsJCheckBox.isSelected());
 
         Settings.getUserFunctionNames()[0] = userFunction1NameJTextField.getText();
         Settings.getUserFunctionNames()[1] = userFunction2NameJTextField.getText();

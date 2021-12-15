@@ -13,10 +13,10 @@ public class PlayWithFontAwesome {
     public PlayWithFontAwesome() {
         EventQueue.invokeLater(() -> {
 
-            JLabel labelRegular = new JLabel("\uf146\uf057\uf0fe\uf1c9");
+            JLabel labelRegular = new JLabel("\uf146\uf057\uf0fe\uf1c9\uf073");
             labelRegular.setFont(FontAwesomeFont.getFontAwesomeRegular24());
 
-            JLabel labelSolid = new JLabel("\uf146\uf057\uf0fe\uf002\uf1c9");
+            JLabel labelSolid = new JLabel("\uf146\uf057\uf0fe\uf002\uf1c9\uf133");
             labelSolid.setFont(FontAwesomeFont.getFontAwesomeSolid24());
 
             JPanel panel = new JPanel();

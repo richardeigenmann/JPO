@@ -118,6 +118,10 @@ public class Settings {
      */
     public static final String JPO_VERSION_URL = JPO_URL + "/jpo-version.json";
     /**
+     * The title for error dialogs
+     */
+    private static final String SETTINGS_ERROR = Settings.jpoResources.getString("settingsError");
+    /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(Settings.class.getName());
@@ -544,9 +548,13 @@ public class Settings {
      */
     private static boolean thumbnailFastScale = true;
     /**
-     * true when thumbnails are supposed to scale fast
+     * true when Filenames are supposed to show on the Thumbnail Panel
      */
     private static boolean showFilenamesOnThumbnailPanel = false;
+    /**
+     * true when Timestamps are supposed to show on the Thumbnail Panel
+     */
+    private static boolean showTimestampsOnThumbnailPanel = false;
     /**
      * true when the pictureViewer is supposed to scale fast
      */
@@ -1314,16 +1322,16 @@ public class Settings {
     }
 
     /**
-     * returns if thumbnails should be rendered faster instead of better quality
+     * returns if filenames should be shown on the Thumbnail Pane
      *
-     * @return true if speed is desired
+     * @return true if filenames should be shown
      */
     public static boolean isShowFilenamesOnThumbnailPanel() {
         return showFilenamesOnThumbnailPanel;
     }
 
     /**
-     * Stores the default choice for fast scaling
+     * Stores whether filenames should be shown on the Thumbnail pane
      *
      * @param showFilenamesOnThumbnailPanel the new value
      */
@@ -1331,7 +1339,29 @@ public class Settings {
         if (Settings.showFilenamesOnThumbnailPanel != showFilenamesOnThumbnailPanel) {
             Settings.showFilenamesOnThumbnailPanel = showFilenamesOnThumbnailPanel;
             Settings.unsavedSettingChanges = true;
-            LOGGER.log(Level.INFO, "Changed the setting and marked Settings as unsaved");
+            LOGGER.log(Level.INFO, "Changed the showFilenamesOnThumbnailPanel setting and marked Settings as unsaved");
+        }
+    }
+
+    /**
+     * returns if timestamps should be shown on the Thumbails in the Thumbnails Panel
+     *
+     * @return true if timestamps should be shown
+     */
+    public static boolean isShowTimestampsOnThumbnailPanel() {
+        return showTimestampsOnThumbnailPanel;
+    }
+
+    /**
+     * Stores the default choice for fast scaling
+     *
+     * @param showTimestampsOnThumbnailPanel the new value
+     */
+    public static void setShowTimestampsOnThumbnailPanel(boolean showTimestampsOnThumbnailPanel) {
+        if (Settings.showTimestampsOnThumbnailPanel != showTimestampsOnThumbnailPanel) {
+            Settings.showTimestampsOnThumbnailPanel = showTimestampsOnThumbnailPanel;
+            Settings.unsavedSettingChanges = true;
+            LOGGER.log(Level.INFO, "Changed the showTimestampsOnThumbnailPanel setting to {0} and marked Settings as unsaved", Settings.showTimestampsOnThumbnailPanel);
         }
     }
 
@@ -1770,6 +1800,7 @@ public class Settings {
         googleUsername = prefs.get(GOOGLE_USERNAME, "");
         googlePassword = prefs.get(GOOGLE_PASSWORD, "");
         showFilenamesOnThumbnailPanel = prefs.getBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
+        showTimestampsOnThumbnailPanel = prefs.getBoolean("showTimestampsOnThumbnailPanel", showTimestampsOnThumbnailPanel);
         snoozeVersionAlertsExpiryDateTime = LocalDateTime.ofEpochSecond(prefs.getLong("snoozeVersionAlertsExpiryDateTime", LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), 0, ZoneOffset.UTC);
         ignoreVersionAlerts = prefs.getBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
         debugMode = prefs.getBoolean("debugMode", debugMode);
@@ -1794,14 +1825,14 @@ public class Settings {
                 if (!logfile.canWrite()) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             Settings.jpoResources.getString("logFileCanWriteError"),
-                            Settings.jpoResources.getString("settingsError"),
+                            SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
                 if (!logfile.isFile()) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             Settings.jpoResources.getString("logFileIsFileError"),
-                            Settings.jpoResources.getString("settingsError"),
+                            SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
@@ -1811,13 +1842,13 @@ public class Settings {
                     // the parent of root dir is null
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             Settings.jpoResources.getString("logFileIsFileError"),
-                            Settings.jpoResources.getString("settingsError"),
+                            SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 } else if (!testFileParent.canWrite()) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
                             Settings.jpoResources.getString("logFileCanWriteError"),
-                            Settings.jpoResources.getString("settingsError"),
+                            SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
@@ -1953,6 +1984,7 @@ public class Settings {
             prefs.put(GOOGLE_PASSWORD, "");
         }
         prefs.putBoolean("showFilenamesOnThumbnailPanel", showFilenamesOnThumbnailPanel);
+        prefs.putBoolean("showTimestampsOnThumbnailPanel", showTimestampsOnThumbnailPanel);
         prefs.putLong("snoozeVersionAlertsExpiryDateTime", snoozeVersionAlertsExpiryDateTime.toEpochSecond(ZoneOffset.UTC));
         prefs.putBoolean("ignoreVersionAlerts", ignoreVersionAlerts);
         prefs.putBoolean("debugMode", debugMode);

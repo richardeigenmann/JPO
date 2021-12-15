@@ -161,7 +161,8 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"maxThumbnailsLabelText", "每页显示缩略图个数"},
             {"thumbnailSizeLabel", "缩略图尺寸"},
             {"thumbnailFastScale", "缩略图播放速度"},
-            {"thumbnailShowFilenamesJCheckBox", "Show Filenames in Panel"},
+            {"thumbnailShowFilenamesJCheckBox", "在面板中显示文件名"},
+            {"thumbnailShowTimestampsJCheckBox", "在缩略图中显示时间戳"},
             {"zapThumbnails", "删除所有缩略图"},
             {"thumbnailsDeleted", "缩略图已经删除"},
 
