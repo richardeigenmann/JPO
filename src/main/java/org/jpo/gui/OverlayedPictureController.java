@@ -231,12 +231,13 @@ public class OverlayedPictureController extends PictureController implements Sca
      */
     @Override
     public void scalableStatusChange(final ScalablePicture.ScalablePictureStatus pictureStatusCode,
-                                     String pictureStatusMessage) {
+                                     final String pictureStatusMessage) {
         LOGGER.log(Level.FINE, "Got a status change: {0}", pictureStatusMessage);
 
+        String message = pictureStatusMessage;
         if (pictureStatusCode == SCALABLE_PICTURE_READY) {
             LOGGER.fine("READY status");
-            pictureStatusMessage = Settings.getJpoResources().getString("PicturePaneReadyStatus");
+            message = Settings.getJpoResources().getString("PicturePaneReadyStatus");
             if (isCenterWhenScaled()) {
                 LOGGER.fine("centering image");
                 centerImage();
@@ -247,7 +248,7 @@ public class OverlayedPictureController extends PictureController implements Sca
 
         synchronized ( picturePaneListeners ) {
             for ( ScalablePictureListener scalablePictureListener : picturePaneListeners ) {
-                scalablePictureListener.scalableStatusChange( pictureStatusCode, pictureStatusMessage );
+                scalablePictureListener.scalableStatusChange(pictureStatusCode, message);
             }
         }
     }
