@@ -29,26 +29,26 @@ hopes you will find it useful and enjoys feedback.
 
 ### Features
 
-* Quickly Organize digital images into collections and groups </li>
-* Creates web pages from your collection </li>
-* Download pictures from Camera with the ability to load only the new ones</li>
-* Send rescaled images and originals via email</li>
-* View pictures as a slide show </li>
-* Simple zoom-in and zoom-out with left / right mouse buttons</li>
-* Rotation on the fly without modifying the original image</li>
-* Browse image thumbnails </li>
-* Automatically advancing slide shows</li>
-* Captures metadata and has search features</li>
-* Displays EXIF and IPTC metadata</li>
-* Export to directory facility to share via e-mail or CD-ROM </li>
-* Open XML data structures </li>
-* Pure Java, no native libraries</li>
-* Runs on Windows, Linux and Mac OS, anywhere Java runs</li>
-* Can call up outside applications</li>
-* Leaves your pictures where they are</li>
-* Can move pictures to new locations to tidy up</li>
-* Doesn't modify your original pictures</li>
-* Open source license</li>
+* Quickly Organize digital images into collections and groups
+* Creates web pages from your collection
+* Download pictures from Camera with the ability to load only the new ones
+* Send rescaled images and originals via email
+* View pictures as a slide show
+* Simple zoom-in and zoom-out with left / right mouse buttons
+* Rotation on the fly without modifying the original image
+* Browse image thumbnails
+* Automatically advancing slide shows
+* Captures metadata and has search features
+* Displays EXIF and IPTC metadata
+* Export to directory facility to share via e-mail or CD-ROM
+* Open XML data structures
+* Pure Java, no native libraries
+* Runs on Windows, Linux and Mac OS, anywhere Java runs
+* Can call up outside applications
+* Leaves your pictures where they are
+* Can move pictures to new locations to tidy up
+* Doesn't modify your original pictures
+* Open source license
 
 ## Installing JPO on Windows 10
 
@@ -103,7 +103,7 @@ flatpak remove org.richinet.jpo
 ## Developing JPO with IntelliJ IDEA
 
 * Ensure you have IntelliJ IDEA set up: https://www.jetbrains.com/idea/
-* Have you got a JDK later than 8 (i.e. with Modules)? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html) for instance 13.0.1?
+* Have you got a JDK 16 or later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 On the Welcome screen click on `Check out from Version Control`
 
@@ -121,7 +121,8 @@ To run the project go to the Gradle Tasks Window click `JPO > build > run`.
 
 Ensure you have Netbeans set up:
 
-* Have you downloaded a JDK? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html) for instance 13.0.1?
+* Have you downloaded JDK 16 or
+  later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * Have you installed Netbeans does it start up? <https://netbeans.org> Like Version 11.2?
 * Have you got Gradle installed? <https://gradle.org/install> Use SDKMan for Linux, follow the "Installing manually" for Windows
 
