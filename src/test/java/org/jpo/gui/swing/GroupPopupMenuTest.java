@@ -102,11 +102,13 @@ class GroupPopupMenuTest {
                     assertEquals(myGroupInfo, verifyGroupInfo);
                 } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                     Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+                    fail("Should not have hit the catch statement");
                 }
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
+            fail("Should not have hit the catch statement");
         }
 
     }
@@ -139,6 +141,7 @@ class GroupPopupMenuTest {
         } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
+            fail("Should not have hit the catch statement");
         }
     }
 }
