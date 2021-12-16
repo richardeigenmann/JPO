@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
 
     <h2>Changelog</h2>
@@ -427,4 +427,4 @@
     <p>Last update to this page: 24 March 2016<br>
         Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
 <h1>JPO Privacy statement</h1>
 
@@ -25,4 +25,4 @@ your email correspondence like any other.</p>
 Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

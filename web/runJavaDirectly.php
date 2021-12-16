@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
     <h1>Java Local Installation</h1>
     <p>First download the jar file and save it in your program directory:<br>
@@ -20,4 +20,4 @@
     <p>Last update to this page: 21 Feb 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

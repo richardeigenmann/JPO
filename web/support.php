@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 
 <div class="container">
     <h1>Pictures with Umlauts don't load on Linux</h1>
@@ -34,4 +34,4 @@
     <p>Last update to this page: 14 Jan 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

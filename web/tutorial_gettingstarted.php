@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
     <h1>Tutorial: Your first use of the Application:<br>
         Create a new collection, add pictures and organise them</h1>
@@ -161,4 +161,5 @@ source code. This keeps you up to date with the latest enhancements.</p>
 <hr>
 <p>Last update to this page: 3 Dec 2018<br>
     Copyright 2009-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
-</div>    <?php include("page-end.php"); ?>
+</div>
+<?php include 'page-end.php'; ?>

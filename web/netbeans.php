@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
     <h2>Developing JPO with Netbeans</h2>
 
@@ -24,4 +24,4 @@
     <p>Last update to this page: 22 Nov 2019<br>
         Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

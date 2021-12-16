@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
     <h1>Tutorial: Order prints from a lab</h1>
     <h3>Objective:</h3>
@@ -19,4 +19,4 @@
 <p>Last update to this page: 22 Mar 2014<br>
     Copyright 2009-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

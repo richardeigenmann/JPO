@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 
 <div class="container">
     <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -124,4 +124,4 @@
     <p>Last update to this page: 15 Feb 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

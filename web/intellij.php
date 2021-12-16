@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
     <h2>Developing JPO with IntelliJ IDEA</h2>
 
@@ -25,4 +25,4 @@
     <p>Last update to this page: 8 Dec 2018<br>
         Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>

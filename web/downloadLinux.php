@@ -1,4 +1,4 @@
-<?php include("page-start.php"); ?>
+<?php include 'page-start.php'; ?>
 <div class="container">
     <h1>Installing JPO on Linux</h1>
 
@@ -26,4 +26,4 @@ flatpak run io.sourceforge.j-po
     <p>Last update to this page: 21 Feb 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include("page-end.php"); ?>
+<?php include 'page-end.php'; ?>
