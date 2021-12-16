@@ -1550,18 +1550,38 @@ public class Settings {
         return emailPassword;
     }
 
-    public static void setEmailPassword(String emailPassword) {
+    /**
+     * sets the emailPassword setting
+     *
+     * @param emailPassword the email password to remember
+     */
+    public static void setEmailPassword(final String emailPassword) {
         Settings.emailPassword = emailPassword;
     }
 
+    /**
+     * returns if images should be scaled in emails sent by JPO
+     *
+     * @return true if images should be scaled in emails sent by JPO
+     */
     public static boolean isEmailScaleImages() {
         return emailScaleImages;
     }
 
-    public static void setEmailScaleImages(boolean emailScaleImages) {
+    /**
+     * remember if email images should be scaled
+     *
+     * @param emailScaleImages whether email images should be scaled
+     */
+    public static void setEmailScaleImages(final boolean emailScaleImages) {
         Settings.emailScaleImages = emailScaleImages;
     }
 
+    /**
+     * returns the maximum dimension of images being sent in an email
+     *
+     * @return the maximum dimension of an image being sent in an email
+     */
     public static Dimension getEmailDimensions() {
         return emailDimensions;
     }
