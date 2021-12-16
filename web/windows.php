@@ -31,7 +31,7 @@
         <p>Confirm "You have checked out and IntelliJ IDEA project file... Open it."</p>
         <p>Note that the code was checked out to <code>c:\Users\User\IdeaProjects\JPO</code> if you didn't change anything.</p>
 
-        <p>Open Settings and Add SDK for JDK15. File > Project Structure > Project SDK > New > C:\Program Files\jdk-15</p>
+        <p>Open Settings and Add SDK for JDK16. File > Project Structure > Project SDK > New > C:\Program Files\jdk-16</p>
         <p>The Gradle build system installs itself. Also you want to allow OpenJDK to have access to the Networks</p>
         <p>On the right margin you have a tab "Gradle" which gives you access to the tasks"</p>
         <p>Pick JPO > Tasks > build > build and it should download dependencies,
@@ -43,7 +43,7 @@
         <p>Run the Gradle Jpo > Tasks > build > signjar task which will create the build/libs/Jpo-all.jar file</p>
         <p>Next run the jpackage command from the command line:<p>
         <code>
-        "c:\Program Files (x86)\jdk-15.0.1\bin\jpackage" ^
+        "c:\Program Files (x86)\jdk-16.0.2\bin\jpackage" ^
         --type exe ^
         --input . ^
         --name JPO ^
@@ -62,7 +62,7 @@
 
 
     <hr>
-    <p>Last update to this page: 10 Jan 2021<br>
+    <p>Last update to this page: 17 Dec 2021<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>
