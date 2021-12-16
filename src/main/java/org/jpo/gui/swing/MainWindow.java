@@ -60,11 +60,13 @@ public class MainWindow extends ResizableJFrame {
      * The grid to which all components are added
      */
     private final transient CGrid grid;
+
     /**
      * A handle to the Collection Tree so that we can ask it to move to the
      * front.
      */
     private transient DefaultSingleCDockable tree;
+
     /**
      * A handle to the Searches Tree so that we can ask it to move to the front.
      */
@@ -129,9 +131,8 @@ public class MainWindow extends ResizableJFrame {
         final var statsScroller = new JScrollPane(infoPanelController.getInfoPanel());
         statsScroller.setWheelScrollingEnabled(true);
         statsScroller.getVerticalScrollBar().setUnitIncrement(20);
-        final var mapPanel = new JPanel();
-        mapPanel.add(new JLabel("Map"));
 
+        final var mapWindow = new MapWindow();
 
         switch (Settings.getStartupSizeChoice()) {
             case 0 -> switchWindowMode(WindowSize.WINDOW_DECORATED_FULLSCREEN);
@@ -153,7 +154,7 @@ public class MainWindow extends ResizableJFrame {
 
         final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
         final var statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
-        final var mapsDockable = new DefaultSingleCDockable("MapId", "Map", mapPanel);
+        final var mapsDockable = new DefaultSingleCDockable("MapId", "Map", mapWindow.getJComponent());
         final var thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
         final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", eventBusViewerJPanel);
 
@@ -174,6 +175,7 @@ public class MainWindow extends ResizableJFrame {
 
         pack();
         setVisible(true);
+        mapWindow.setDefaultView();
     }
 
     /**

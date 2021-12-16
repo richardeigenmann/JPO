@@ -23,13 +23,13 @@ import java.util.Set;
 import static java.awt.Cursor.CROSSHAIR_CURSOR;
 
 /*
-Copyright (C) 2017-2019  Richard Eigenmann.
+Copyright (C) 2017-2021  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed 
-in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-without even the implied warranty of MERCHANTABILITY or FITNESS 
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -51,31 +51,24 @@ public class MapViewer {
     private static final int THREAD_POOL_SIZE = 8;
 
     /**
-     * Default Zoom
-     */
-    private static final int DEFAULT_ZOOM = 7;
-
-    /**
      * Constructs the controller which creates the Component and wires up the
      * mouse listeners to it.
      */
     public MapViewer() {
         // Create a TileFactoryInfo for OpenStreetMap
-        TileFactoryInfo info = new OSMTileFactoryInfo();
-        DefaultTileFactory tileFactory = new DefaultTileFactory( info );
-        jxMapViewer.setTileFactory( tileFactory );
+        final TileFactoryInfo info = new OSMTileFactoryInfo();
+        final DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        jxMapViewer.setTileFactory(tileFactory);
 
         // Setup local file cache
-        File cacheDir = new File( System.getProperty( "java.io.tmpdir" ) + File.separator + ".jxmapviewer2" );
+        final File cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + ".jxmapviewer2");
         tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
 
 
         tileFactory.setThreadPoolSize(THREAD_POOL_SIZE);
 
-        jxMapViewer.setZoom(DEFAULT_ZOOM);
-
         // Add interactions
-        MouseInputListener mouseInputListener = new PanMouseInputListener( jxMapViewer );
+        final MouseInputListener mouseInputListener = new PanMouseInputListener(jxMapViewer);
         jxMapViewer.addMouseListener( mouseInputListener );
         jxMapViewer.addMouseMotionListener( mouseInputListener );
         jxMapViewer.addMouseListener( new CenterMapListener( jxMapViewer ) );
@@ -84,17 +77,17 @@ public class MapViewer {
         jxMapViewer.setCursor( new Cursor( CROSSHAIR_CURSOR ) );
 
         // Create waypoints from the geo-positions
-        Set<Waypoint> waypoints = new HashSet<>();
+        final Set<Waypoint> waypoints = new HashSet<>();
         waypoints.add( defaultWaypoint );
 
         // Create a waypoint painter that takes all the waypoints
-        WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+        final WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints( waypoints );
 
-        List<Painter<JXMapViewer>> painters = new ArrayList<>();
+        final List<Painter<JXMapViewer>> painters = new ArrayList<>();
         painters.add( waypointPainter );
 
-        CompoundPainter<JXMapViewer> painter = new CompoundPainter<>( painters );
+        final CompoundPainter<JXMapViewer> painter = new CompoundPainter<>(painters);
         jxMapViewer.setOverlayPainter( painter );
     }
 
@@ -112,12 +105,13 @@ public class MapViewer {
     /**
      * Places a marker on the map at the X and Y latitude and longitude and moves the
      * map to show it in the middle.
+     *
      * @param latLng the latitude as X and longitude as Y
      */
-    public void setMarker( Point2D.Double latLng ) {
-        GeoPosition location = new GeoPosition( latLng.getX(), latLng.getY() );
-        defaultWaypoint.setPosition( location );
-        jxMapViewer.setAddressLocation( location );
+    public void setMarker(final Point2D.Double latLng) {
+        final GeoPosition location = new GeoPosition(latLng.getX(), latLng.getY());
+        defaultWaypoint.setPosition(location);
+        jxMapViewer.setAddressLocation(location);
     }
 
 }
