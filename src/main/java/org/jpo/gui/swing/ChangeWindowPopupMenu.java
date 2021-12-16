@@ -10,13 +10,13 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
 
 /*
  GroupPopupMenu.java: popup menu for groups
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -144,31 +144,31 @@ public class ChangeWindowPopupMenu extends JPopupMenu
     public void actionPerformed( final ActionEvent actionEvent ) {
         // Group popup menu				
 
-        if ( actionEvent.getSource() == fullScreenJMenuItem ) {
+        if (fullScreenJMenuItem.equals(actionEvent.getSource())) {
             caller.switchWindowMode(WINDOW_UNDECORATED_FULLSCREEN);
-        } else if ( actionEvent.getSource() == leftWindowJMenuItem ) {
+        } else if (leftWindowJMenuItem.equals(actionEvent.getSource())) {
             caller.switchWindowMode(WINDOW_UNDECORATED_LEFT);
-        } else if ( actionEvent.getSource() == rightWindowJMenuItem ) {
+        } else if (rightWindowJMenuItem.equals(actionEvent.getSource())) {
             caller.switchWindowMode(WINDOW_UNDECORATED_RIGHT);
-        } else if ( actionEvent.getSource() == topLeftWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_TOP_LEFT );
-        } else if ( actionEvent.getSource() == topRightWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_TOP_RIGHT );
-        } else if ( actionEvent.getSource() == bottomLeftWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_BOTTOM_LEFT );
-        } else if ( actionEvent.getSource() == bottomRightWindowJMenuItem ) {
-            caller.switchWindowMode( WINDOW_BOTTOM_RIGHT );
-        } else if ( actionEvent.getSource() == defaultWindowJMenuItem ) {
+        } else if (topLeftWindowJMenuItem.equals(actionEvent.getSource())) {
+            caller.switchWindowMode(WINDOW_TOP_LEFT);
+        } else if (topRightWindowJMenuItem.equals(actionEvent.getSource())) {
+            caller.switchWindowMode(WINDOW_TOP_RIGHT);
+        } else if (bottomLeftWindowJMenuItem.equals(actionEvent.getSource())) {
+            caller.switchWindowMode(WINDOW_BOTTOM_LEFT);
+        } else if (bottomRightWindowJMenuItem.equals(actionEvent.getSource())) {
+            caller.switchWindowMode(WINDOW_BOTTOM_RIGHT);
+        } else if (defaultWindowJMenuItem.equals(actionEvent.getSource())) {
             caller.switchWindowMode(WINDOW_CUSTOM_SIZE);
-        } else if ( actionEvent.getSource() == windowDecorationsJMenuItem ) {
-            caller.showWindowDecorations( true );
-        } else if ( actionEvent.getSource() == windowNoDecorationsJMenuItem ) {
-            caller.showWindowDecorations( false );
+        } else if (windowDecorationsJMenuItem.equals(actionEvent.getSource())) {
+            caller.showWindowDecorations(true);
+        } else if (windowNoDecorationsJMenuItem.equals(actionEvent.getSource())) {
+            caller.showWindowDecorations(false);
         } else {
-            JOptionPane.showMessageDialog( null,
+            JOptionPane.showMessageDialog(null,
                     "Unknown event",
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE );
+                    Settings.getJpoResources().getString("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
         }
 
     }
