@@ -18,7 +18,7 @@ blocks:
             - ps aux | grep Xvfb
             - export DISPLAY=:97
             #- curl https://download.java.net/openjdk/jdk16/ri/openjdk-16+36_linux-x64_bin.tar.gz | tar xz -C ~/
-            - export JAVA_HOME=/home/semaphore/jdk-17
+            #- export JAVA_HOME=/home/semaphore/jdk-17
             - cd ~/JPO
             - ./gradlew compileTestJava
             #- ./gradlew check buildWindowsExecutable buildWindowsInstaller
