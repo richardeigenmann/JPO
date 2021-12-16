@@ -6,12 +6,14 @@ import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 public class ScreenHelperTest {
 
 
     @Test
     public void testGetNumberOfScreenDevices() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final int screens = ScreenHelper.getNumberOfScreenDevices();
         if (GraphicsEnvironment.isHeadless()) {
             assertEquals(screens, 0);
@@ -22,6 +24,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testIsXinerama() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         ScreenHelper.isXinerama();
         // not much we can test here as each machine will be different
         // but at least the code executes without a crash
@@ -29,6 +32,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetXineramaScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle bounds = ScreenHelper.getXineramaScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -39,6 +43,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetPrimaryScreen() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle primaryScreenBounds = ScreenHelper.getPrimaryScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -53,6 +58,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetSecondaryScreen() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle secondaryScreenBounds = ScreenHelper.getSecondaryScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -67,6 +73,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetLeftScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle leftScreenBounds = ScreenHelper.getLeftScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -81,6 +88,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetRightScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle rightScreenBounds = ScreenHelper.getRightScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -95,6 +103,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetTopLeftScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle topLeftScreenBounds = ScreenHelper.getTopLeftScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -109,6 +118,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetTopRightScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle topRightScreenBounds = ScreenHelper.getTopRightScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -123,6 +133,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetBottomLeftScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle bottomLeftScreenBounds = ScreenHelper.getBottomLeftScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -137,6 +148,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testGetBottomRightScreenBounds() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle bottomRightScreenBounds = ScreenHelper.getBottomRightScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
             // arbitrary but if you have a screen, would it not be wider than 200 pixels?
@@ -151,6 +163,7 @@ public class ScreenHelperTest {
 
     @Test
     public void testExplainGraphicsEnvironment() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         final StringBuilder stringBuilder = ScreenHelper.explainGraphicsEnvironment();
         assertTrue(stringBuilder.length() > 200);
     }
