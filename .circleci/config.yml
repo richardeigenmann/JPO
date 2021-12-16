@@ -2,14 +2,17 @@
 #
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
+version: 2.1
+
 orbs:
   gradle: circleci/gradle@2.2.0
-version: 2.1
+
 jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/openjdk:15.0.1-jdk-buster
+      # from https://hub.docker.com/r/cimg/openjdk
+      - image: docker pull cimg/openjdk:16.0.2
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
