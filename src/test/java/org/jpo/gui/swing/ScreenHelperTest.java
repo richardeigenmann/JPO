@@ -8,22 +8,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-public class ScreenHelperTest {
+class ScreenHelperTest {
 
 
     @Test
-    public void testGetNumberOfScreenDevices() {
+    void testGetNumberOfScreenDevices() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final int screens = ScreenHelper.getNumberOfScreenDevices();
         if (GraphicsEnvironment.isHeadless()) {
-            assertEquals(screens, 0);
+            assertEquals(0, screens);
         } else {
             assertTrue(screens >= 1);
         }
     }
 
     @Test
-    public void testIsXinerama() {
+    void testIsXinerama() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         ScreenHelper.isXinerama();
         // not much we can test here as each machine will be different
@@ -31,7 +31,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetXineramaScreenBounds() {
+    void testGetXineramaScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle bounds = ScreenHelper.getXineramaScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -42,7 +42,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetPrimaryScreen() {
+    void testGetPrimaryScreen() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle primaryScreenBounds = ScreenHelper.getPrimaryScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -57,7 +57,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetSecondaryScreen() {
+    void testGetSecondaryScreen() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle secondaryScreenBounds = ScreenHelper.getSecondaryScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -72,7 +72,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetLeftScreenBounds() {
+    void testGetLeftScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle leftScreenBounds = ScreenHelper.getLeftScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -87,7 +87,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetRightScreenBounds() {
+    void testGetRightScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle rightScreenBounds = ScreenHelper.getRightScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -102,7 +102,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetTopLeftScreenBounds() {
+    void testGetTopLeftScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle topLeftScreenBounds = ScreenHelper.getTopLeftScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -117,7 +117,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetTopRightScreenBounds() {
+    void testGetTopRightScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle topRightScreenBounds = ScreenHelper.getTopRightScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -132,7 +132,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetBottomLeftScreenBounds() {
+    void testGetBottomLeftScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle bottomLeftScreenBounds = ScreenHelper.getBottomLeftScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -147,7 +147,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testGetBottomRightScreenBounds() {
+    void testGetBottomRightScreenBounds() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final Rectangle bottomRightScreenBounds = ScreenHelper.getBottomRightScreenBounds();
         if (!GraphicsEnvironment.isHeadless()) {
@@ -162,7 +162,7 @@ public class ScreenHelperTest {
     }
 
     @Test
-    public void testExplainGraphicsEnvironment() {
+    void testExplainGraphicsEnvironment() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final StringBuilder stringBuilder = ScreenHelper.explainGraphicsEnvironment();
         assertTrue(stringBuilder.length() > 200);
