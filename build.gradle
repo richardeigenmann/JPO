@@ -410,7 +410,7 @@ cd to a directory like Desktop\build
 copy the build/libs/Jpo-all.jar file there and the web/favicon.ico
 then run
 
-"c:\Program Files (x86)\jdk-16.0.1\bin\jpackage" ^
+"c:\Program Files (x86)\jdk-17.0.1\bin\jpackage" ^
 --type exe ^
 --input . ^
 --name JPO ^

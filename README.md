@@ -103,7 +103,7 @@ flatpak remove org.richinet.jpo
 ## Developing JPO with IntelliJ IDEA
 
 * Ensure you have IntelliJ IDEA set up: https://www.jetbrains.com/idea/
-* Have you got a JDK 16 or later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
+* Have you got a JDK 17 or later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 On the Welcome screen click on `Check out from Version Control`
 
@@ -121,7 +121,7 @@ To run the project go to the Gradle Tasks Window click `JPO > build > run`.
 
 Ensure you have Netbeans set up:
 
-* Have you downloaded JDK 16 or
+* Have you downloaded JDK 17 or
   later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * Have you installed Netbeans does it start up? <https://netbeans.org> Like Version 11.2?
 * Have you got Gradle installed? <https://gradle.org/install> Use SDKMan for Linux, follow the "Installing manually" for Windows

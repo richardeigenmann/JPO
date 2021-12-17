@@ -13,7 +13,7 @@
     <h3>Set up the Development Environment</h3>
         <p>Download and install Git from: <a href="https://git-scm.com/download">https://git-scm.com/download</a></p>
         <p>Download and install IntelliJ IDEA Community Edition: <a href="https://www.jetbrains.com/idea/download/#section=windows">https://www.jetbrains.com/idea/download/#section=windows</a></p>
-        <p>Download and install OpenJDK 15: <a href="http://jdk.java.net/15/">http://jdk.java.net/15/</a> Open the zip
+        <p>Download and install OpenJDK 17: <a href="http://jdk.java.net/15/">http://jdk.java.net/17/</a> Open the zip
         and extract the files to c:\Program Files\</p>
         <p>Download and install Wix: <a href="https://wixtoolset.org/releases/">https://wixtoolset.org/releases/</a>
         Wix helps jpackage create a Windows installer file</p>
@@ -31,7 +31,7 @@
         <p>Confirm "You have checked out and IntelliJ IDEA project file... Open it."</p>
         <p>Note that the code was checked out to <code>c:\Users\User\IdeaProjects\JPO</code> if you didn't change anything.</p>
 
-        <p>Open Settings and Add SDK for JDK16. File > Project Structure > Project SDK > New > C:\Program Files\jdk-16</p>
+        <p>Open Settings and Add SDK for JDK17. File > Project Structure > Project SDK > New > C:\Program Files\jdk-17</p>
         <p>The Gradle build system installs itself. Also you want to allow OpenJDK to have access to the Networks</p>
         <p>On the right margin you have a tab "Gradle" which gives you access to the tasks"</p>
         <p>Pick JPO > Tasks > build > build and it should download dependencies,
@@ -43,13 +43,13 @@
         <p>Run the Gradle Jpo > Tasks > build > signjar task which will create the build/libs/Jpo-all.jar file</p>
         <p>Next run the jpackage command from the command line:<p>
         <code>
-        "c:\Program Files (x86)\jdk-16.0.2\bin\jpackage" ^
+        "c:\Program Files (x86)\jdk-17.0.1\bin\jpackage" ^
         --type exe ^
         --input . ^
         --name JPO ^
         --description "Java Picture Organizer" ^
         --vendor "Richard Eigenmann" ^
-        --app-version 0.14 ^
+        --app-version 0.16 ^
         --main-jar build/libs/Jpo-all.jar ^
         --icon web/favicon.ico ^
         --java-options '--enable-preview' ^

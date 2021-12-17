@@ -4,7 +4,7 @@
 
     <p>Ensure you have Netbeans set up:</p>
     <ul>
-        <li>Have you downloaded JDK 16? <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SDK</a></li>
+        <li>Have you downloaded JDK 17? <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle Java SDK</a></li>
         <li>Have you installed Netbeans does it start up? <a href="https://netbeans.org/">https://netbeans.org/</a> Like Version 11.2?</li>
         <li>Have you got Gradle installed? <a href="https://gradle.org/install">https://gradle.org/install</a> Use SDKMan for Linux, follow the "Installing manually" for Windows</li>
     </ul>
@@ -21,7 +21,7 @@
     <p>To run the application, expand the JPO project in the left panel and click on the green build.gradle item. In the Navigator panel underneath the various Gradle tasks will appear. Click on Build > run to launch the app.</p>
 
     <hr>
-    <p>Last update to this page: 22 Nov 2019<br>
+    <p>Last update to this page: 17 Dec 2021<br>
         Copyright 2003-2019 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>
