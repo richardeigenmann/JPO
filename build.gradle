@@ -194,8 +194,8 @@ test {
         exceptionFormat "full"
     }
     reports {
-        junitXml.enabled = false
-        html.enabled = true
+        junitXml.required = false
+        html.required = true
     }
 }
 
