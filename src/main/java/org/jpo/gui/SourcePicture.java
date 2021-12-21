@@ -32,13 +32,13 @@ import static org.jpo.gui.SourcePicture.SourcePictureStatus.*;
 /*
  SourcePicture.java:  class that can load a picture from a URL
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -266,7 +266,7 @@ public class SourcePicture {
         reader.setInput(iis);
         BufferedImage bufferedImage = null;
         try {
-            bufferedImage = correctTypeOfImage(reader.read(0));
+            bufferedImage = fixTypeOfImage(reader.read(0));
         } catch (final OutOfMemoryError e) {
             LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
             setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
@@ -279,12 +279,12 @@ public class SourcePicture {
     }
 
     /**
-     * checks that the supplied BufferedImage is of TYPE_3BYTE_BGR. Modifies the input parameter to a
-     * BufferedImage of the desired type.
+     * Checks that the supplied BufferedImage is of TYPE_3BYTE_BGR. If it isn't it creates a new image of that type
+     * and copies the picture to that type.
      *
      * @param bufferedImage The BufferedImage to potentially modify.
      */
-    private BufferedImage correctTypeOfImage(final BufferedImage bufferedImage) {
+    private BufferedImage fixTypeOfImage(final BufferedImage bufferedImage) {
         if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
             return bufferedImage;
         } else {
@@ -319,7 +319,7 @@ public class SourcePicture {
 
     /**
      * Returns a reader for the Image
-     * TODO: can throw a java.util.NoSuchElementException --> What should we do then?
+     * Can throw a java.util.NoSuchElementException if there is no available reader.
      */
     public static ImageReader getImageIOReader(final ImageInputStream iis) {
         final Iterator<ImageReader> readerIterator = ImageIO.getImageReaders(iis);

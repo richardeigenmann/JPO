@@ -49,7 +49,7 @@
         --name JPO ^
         --description "Java Picture Organizer" ^
         --vendor "Richard Eigenmann" ^
-        --app-version 0.16 ^
+        --app-version 0.17 ^
         --main-jar build/libs/Jpo-all.jar ^
         --icon web/favicon.ico ^
         --java-options '--enable-preview' ^

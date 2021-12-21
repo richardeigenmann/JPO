@@ -16,8 +16,8 @@ plugins {
 }
 
 java {
-    //sourceCompatibility = JavaVersion.VERSION_16
-    //targetCompatibility = JavaVersion.VERSION_16
+    //sourceCompatibility = JavaVersion.VERSION_17
+    //targetCompatibility = JavaVersion.VERSION_17
     withJavadocJar()
 }
 
@@ -54,7 +54,7 @@ test {
 javadoc {
     options.encoding = "UTF-8"
     options.addBooleanOption('-enable-preview', true)
-    options.addStringOption('-release', '16')
+    options.addStringOption('-release', '17')
     // gradle doesn't copy the doc-files images!
     // this option is ignored
     options.docFilesSubDirs = true
@@ -89,7 +89,7 @@ repositories {
 }
 
 
-def jpoVersion = '0.16'
+def jpoVersion = '0.17'
 
 dependencies {
     implementation 'org.apache.commons:commons-compress:1.21'
@@ -417,7 +417,7 @@ then run
 --name JPO ^
 --description "Java Picture Organizer" ^
 --vendor "Richard Eigenmann" ^
---app-version 0.16 ^
+--app-version 0.17 ^
 --main-jar Jpo-all.jar ^
 --icon favicon.ico ^
 --java-options '--enable-preview' ^
@@ -426,7 +426,7 @@ then run
 --verbose ^
 --dest c:\Users\richa\Desktop
 
-Then move the JPO-0.16.exe file back to the source tree into
+Then move the JPO-0.17.exe file back to the source tree into
 build/executables
 
 Make sure the file web/jpo-version.json is up to date
