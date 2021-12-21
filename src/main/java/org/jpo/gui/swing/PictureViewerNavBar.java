@@ -9,13 +9,13 @@ import java.awt.event.KeyEvent;
 import java.util.Objects;
 
 /*
- Copyright (C) 2002-2020 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2021 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -43,10 +43,14 @@ public class PictureViewerNavBar extends JToolBar {
 
     /**
      * Button to move to the next image.
-     *
      */
     private final LeftRightButton nextJButton = new LeftRightButton();
 
+    /**
+     * Returns a next button
+     *
+     * @return the next button
+     */
     public JButton getNextJButton() {
         return nextJButton;
     }
@@ -54,11 +58,11 @@ public class PictureViewerNavBar extends JToolBar {
     /**
      * A button for the rotation to the left
      */
-    public final JButton rotateLeftJButton = new NavBarButton( new ImageIcon(Objects.requireNonNull(PictureViewerNavBar.class.getClassLoader().getResource("icon_RotCCDown.gif"))) );
+    public final JButton rotateLeftJButton = new NavBarButton(new ImageIcon(Objects.requireNonNull(PictureViewerNavBar.class.getClassLoader().getResource("icon_RotCCDown.gif"))));
     /**
      * A button for the rotation to the right
      */
-    public final JButton rotateRightJButton = new NavBarButton( new ImageIcon(Objects.requireNonNull(PictureViewerNavBar.class.getClassLoader().getResource("icon_RotCWDown.gif"))) );
+    public final JButton rotateRightJButton = new NavBarButton(new ImageIcon(Objects.requireNonNull(PictureViewerNavBar.class.getClassLoader().getResource("icon_RotCWDown.gif"))));
 
     /**
      * A button to zoom in with
@@ -179,28 +183,46 @@ public class PictureViewerNavBar extends JToolBar {
         speedSlider.setVisible(false);
     }
 
+    /**
+     * Sets the next button to have the HAS_RIGHT style
+     */
     public void setNextButtonHasRight() {
-        nextJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_RIGHT );
+        nextJButton.setDecoration(LeftRightButton.BUTTON_STATE.HAS_RIGHT);
     }
 
+    /**
+     * Sets the next button to have the HAS_NEXT style
+     */
     public void setNextButtonHasNext() {
-        nextJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_NEXT );
+        nextJButton.setDecoration(LeftRightButton.BUTTON_STATE.HAS_NEXT);
     }
 
+    /**
+     * Sets the next button to have the END style
+     */
     public void setNextButtonEnd() {
-        nextJButton.setDecoration( LeftRightButton.BUTTON_STATE.END );
+        nextJButton.setDecoration(LeftRightButton.BUTTON_STATE.END);
     }
 
+    /**
+     * Sets the left button to HAS_LEFT style
+     */
     public void setPreviousButtonHasLeft() {
-        previousJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_LEFT );
+        previousJButton.setDecoration(LeftRightButton.BUTTON_STATE.HAS_LEFT);
     }
 
+    /**
+     * Sets the left button to the HAS_PREVIOUS style
+     */
     public void setPreviousButtonHasPrevious() {
-        previousJButton.setDecoration( LeftRightButton.BUTTON_STATE.HAS_PREVIOUS );
+        previousJButton.setDecoration(LeftRightButton.BUTTON_STATE.HAS_PREVIOUS);
     }
 
+    /**
+     * Sets the left button to the BEGINNING style
+     */
     public void setPreviousButtonBeginning() {
-        previousJButton.setDecoration( LeftRightButton.BUTTON_STATE.BEGINNING );
+        previousJButton.setDecoration(LeftRightButton.BUTTON_STATE.BEGINNING);
     }
 
 }

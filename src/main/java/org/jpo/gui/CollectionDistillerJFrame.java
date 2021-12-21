@@ -73,7 +73,7 @@ public class CollectionDistillerJFrame extends JFrame {
         initComponents();
     }
 
-    public void initComponents() {
+    private void initComponents() {
         setSize(FRAME_SIZE);
         setLocationRelativeTo(Settings.getAnchorFrame());
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

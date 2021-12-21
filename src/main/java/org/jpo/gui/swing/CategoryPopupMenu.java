@@ -31,6 +31,11 @@ import java.util.List;
  * Creates a JPopupMenu with entries for all the categories
  */
 public class CategoryPopupMenu extends JidePopupMenu {
+    /**
+     * Creates the popup menu with entries for all categories
+     *
+     * @param referringNodes The node for which to create the popup menu for
+     */
     public CategoryPopupMenu(final List<SortableDefaultMutableTreeNode> referringNodes) {
         super(Settings.getJpoResources().getString("CategoryPopupMenu"));
         CategoryPopupMenu.addMenuItems(this, referringNodes);

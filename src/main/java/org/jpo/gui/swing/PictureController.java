@@ -48,12 +48,22 @@ public class PictureController extends JComponent {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( PictureController.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(PictureController.class.getName());
 
+    /**
+     * returns whether the picture should be centered when scaled
+     *
+     * @return true if the picture should be centered when scaled
+     */
     public boolean isCenterWhenScaled() {
         return centerWhenScaled;
     }
 
+    /**
+     * Remembers whether the picture should be centered when scaled
+     *
+     * @param centerWhenScaled whether the picture should be centered when scaled
+     */
     public void setCenterWhenScaled(final boolean centerWhenScaled) {
         this.centerWhenScaled = centerWhenScaled;
     }
@@ -163,10 +173,12 @@ public class PictureController extends JComponent {
         centerWhenScaled = true;
     }
 
-    /////////////////////////
-    // Zooming Methods     //
-    /////////////////////////
 
+    /**
+     * Deals with a Zoom request by changing the doom factor
+     *
+     * @param request The request
+     */
     public void handleZoomRequest(final PictureControllerZoomRequest request) {
         switch (request.zoom()) {
             case IN:

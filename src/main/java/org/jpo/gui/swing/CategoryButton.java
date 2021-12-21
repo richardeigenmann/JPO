@@ -30,6 +30,11 @@ public class CategoryButton extends JPanel {
 
     final JButton categoryLabel;
 
+    /**
+     * Constructs the category button.
+     *
+     * @param categoryDescription The description of the category
+     */
     public CategoryButton(final String categoryDescription) {
 
         categoryLabel = new JButton(categoryDescription) {
@@ -64,10 +69,20 @@ public class CategoryButton extends JPanel {
         this.revalidate(); // makes the JScrollPanel reevaluate it's size so it grows
     }
 
+    /**
+     * Connects a RemovalListener to the button so that it can find out that the user clicked the remove icon
+     *
+     * @param actionListener the Listener for the event
+     */
     public void addRemovalListener(final ActionListener actionListener) {
         removeButton.addActionListener(actionListener);
     }
 
+    /**
+     * Connects a Listener to handle the click events ont he button
+     *
+     * @param actionListener The Listener to handle the click events on the button.
+     */
     public void addClickListener(final ActionListener actionListener) {
         categoryLabel.addActionListener(actionListener);
     }

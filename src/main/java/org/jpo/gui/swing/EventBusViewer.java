@@ -37,11 +37,14 @@ public class EventBusViewer extends JPanel {
 
     private final JTextArea textArea = new JTextArea();
 
+    /**
+     * Constructs the EventViewer panel and connects to the EventBus
+     */
     public EventBusViewer() {
         setLayout(new BorderLayout());
         add(new JScrollPane(textArea), BorderLayout.CENTER);
         JpoEventBus.getInstance().register(this);
-        DefaultCaret caret = (DefaultCaret) textArea.getCaret();
+        final DefaultCaret caret = (DefaultCaret) textArea.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
     }
 
@@ -56,6 +59,11 @@ public class EventBusViewer extends JPanel {
         textArea.append(s[s.length - 1]);
     }
 
+    /**
+     * Handles the FileLoadRequest
+     *
+     * @param request the request
+     */
     @Subscribe
     public void handleEvent(final FileLoadRequest request) {
         logTimeAndClass(request);
@@ -63,6 +71,11 @@ public class EventBusViewer extends JPanel {
         textArea.append(System.lineSeparator());
     }
 
+    /**
+     * Handles the UpdateApplicationTitleRequest by loggin the title
+     *
+     * @param request the request to log
+     */
     @Subscribe
     public void handleEvent(final UpdateApplicationTitleRequest request) {
         logTimeAndClass(request);
@@ -70,6 +83,11 @@ public class EventBusViewer extends JPanel {
         textArea.append(System.lineSeparator());
     }
 
+    /**
+     * Handles the ShowGroupRequest by logging the node in the request
+     *
+     * @param request the Request
+     */
     @Subscribe
     public void handleEvent(final ShowGroupRequest request) {
         logTimeAndClass(request);
@@ -77,6 +95,11 @@ public class EventBusViewer extends JPanel {
         textArea.append(System.lineSeparator());
     }
 
+    /**
+     * Handles all the other events by logging them.
+     *
+     * @param request The request
+     */
     @Subscribe
     public void handleEvent(final Object request) {
         if (request instanceof FileLoadRequest

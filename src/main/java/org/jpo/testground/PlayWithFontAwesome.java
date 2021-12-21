@@ -10,6 +10,9 @@ import java.awt.*;
  */
 public class PlayWithFontAwesome {
 
+    /**
+     * Constructs a little GUI showing some "characters" from FontAwesome
+     */
     public PlayWithFontAwesome() {
         EventQueue.invokeLater(() -> {
 
@@ -33,6 +36,11 @@ public class PlayWithFontAwesome {
         });
     }
 
+    /**
+     * Makes this class directly runnable
+     *
+     * @param args Standard Java
+     */
     public static void main(String[] args) {
         new PlayWithFontAwesome();
     }

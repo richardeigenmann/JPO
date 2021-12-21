@@ -756,6 +756,9 @@ public class PictureInfoEditor extends JFrame {
         }
     }
 
+    /**
+     * Don't use: accessor to the private saveFieldData function for unit tests.
+     */
     @TestOnly
     public void callSaveFieldData() {
         saveFieldData();

@@ -10,13 +10,13 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2017-2020, Richard Eigenmann, Zürich
+ Copyright (C) 2017-2021, Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 /**
  * Brings up an Auto Advance Dialog and sends off an new request if successful.
- * 
+ *
  * Note that if the request's parentComponent is a ComponentMock then the actual
  * modal dialog is skipped.
  *
@@ -36,6 +36,11 @@ public class AutoAdvanceDialog {
 
     private final ShowAutoAdvanceDialogRequest request;
 
+    /**
+     * Constructs an AutoAdvance dialog for the supplied node in the request
+     *
+     * @param request the request with the node for the AutoAdvanceDialog
+     */
     public AutoAdvanceDialog(final ShowAutoAdvanceDialogRequest request) {
         this.request = request;
         doAutoAdvanceDialog();
@@ -44,7 +49,7 @@ public class AutoAdvanceDialog {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( AutoAdvanceDialog.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(AutoAdvanceDialog.class.getName());
 
     /**
      * method that brings up a dialog box and asks the user how he would like

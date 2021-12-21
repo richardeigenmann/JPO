@@ -1,13 +1,13 @@
 package org.jpo.gui.swing;
 
 /*
- Copyright (C) 2017 - 2020 Richard Eigenmann.
+ Copyright (C) 2017 - 2021 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -24,8 +24,13 @@ import java.util.logging.Logger;
  */
 public class EdtViolationException extends RuntimeException {
 
-    private static final Logger LOGGER = Logger.getLogger( EdtViolationException.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(EdtViolationException.class.getName());
 
+    /**
+     * Constructs an EdtViolationException with the supplied Error message
+     *
+     * @param exception the message to add to the Exception
+     */
     public EdtViolationException(final String exception) {
         super(exception);
         LOGGER.log(Level.SEVERE, "Java Swing EDT violation: {0}", exception);

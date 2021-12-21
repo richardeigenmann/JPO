@@ -16,13 +16,13 @@ import java.util.logging.Logger;
 /*
  CameraDownloadWizardData.java:  holds the data being shown in the Camera download wizard
 
- Copyright (C) 2007 - 2020  Richard Eigenmann.
+ Copyright (C) 2007 - 2021  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -272,10 +272,20 @@ public class CameraDownloadWizardData {
         return sortCode;
     }
 
+    /**
+     * Returns the target directory for the download
+     *
+     * @return the target directory
+     */
     public File getTargetDir() {
         return targetDir;
     }
 
+    /**
+     * Remembers the target directory for the download
+     *
+     * @param targetDir the target directory
+     */
     public void setTargetDir(final File targetDir) {
         this.targetDir = targetDir;
     }

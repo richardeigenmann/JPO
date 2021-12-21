@@ -19,6 +19,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A controller to manage a map winndow in the info panel. It listens to the eventBus and updates the map
+ * and the Waypoints autonomously when it hears about a new Group or a new Query being selected.
+ */
 public class MapWindow {
 
     /**
@@ -33,18 +37,24 @@ public class MapWindow {
     final MapViewer mapViewer = new MapViewer();
     final JPanel mapPanel = new JPanel();
 
+    /**
+     * Constructs the new MapWindow component.
+     */
     public MapWindow() {
         mapPanel.setLayout(new BorderLayout());
         mapPanel.add(mapViewer.getJXMapViewer(), BorderLayout.CENTER);
         JpoEventBus.getInstance().register(this);
     }
 
+    /**
+     * Sets the map back to the default view.
+     */
     public void setDefaultView() {
         mapViewer.getJXMapViewer().zoomToBestFit(new HashSet<>(track), 0.8);
     }
 
     /**
-     * Returns the JComponent to attach to SWING
+     * Returns the JComponent to attach to SWING components
      *
      * @return the JComponent showing the map
      */

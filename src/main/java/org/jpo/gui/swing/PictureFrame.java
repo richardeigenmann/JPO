@@ -196,11 +196,19 @@ public class PictureFrame {
         myJFrame.switchWindowMode(newMode);
     }
 
+    /**
+     * Gets rid of the frame.
+     */
     public void getRid() {
         Settings.setLastViewerCoordinates(myJFrame.getBounds());
         myJFrame.dispose();
     }
 
+    /**
+     * Returns the resizeable frame object
+     *
+     * @return the fram object
+     */
     public ResizableJFrame getResizableJFrame() {
         return myJFrame;
     }
@@ -223,6 +231,9 @@ public class PictureFrame {
         loadJProgressBar.setValue(value);
     }
 
+    /**
+     * moves the info display to the next panel and requests focus into the window
+     */
     public void cycleInfoDisplay() {
         pictureController.cycleInfoDisplay();
         pictureController.requestFocusInWindow();

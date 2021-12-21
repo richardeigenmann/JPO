@@ -39,7 +39,9 @@ public class ResizeSlider extends JSlider {
      */
     private static final int THUMBNAILSIZE_SLIDER_INIT = 20;
 
-
+    /**
+     * Returns a styled JSlider
+     */
     public ResizeSlider() {
         super(SwingConstants.HORIZONTAL,
                 THUMBNAILSIZE_SLIDER_MIN, THUMBNAILSIZE_SLIDER_MAX, THUMBNAILSIZE_SLIDER_INIT);

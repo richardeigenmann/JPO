@@ -153,6 +153,11 @@ public class CategroyAssignmentWindow {
         }
     }
 
+    /**
+     * Reacts to the CategoriesWereModified event
+     *
+     * @param request the request
+     */
     @Subscribe
     public void handleEvent(final CategoriesWereModified request) {
         repopulate();

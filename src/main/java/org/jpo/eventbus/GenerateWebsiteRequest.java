@@ -7,13 +7,13 @@ import java.awt.*;
 import java.io.File;
 
 /*
- Copyright (C) 2008-2020, Richard Eigenmann, Zürich
+ Copyright (C) 2008-2021, Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -203,6 +203,7 @@ public class GenerateWebsiteRequest {
     public void setScalingSteps(int scalingSteps) {
         this.scalingSteps = scalingSteps;
     }
+
     /**
      * The compression rate passed to the jpg compressor 0 - 1. A value of 0
      * means maximum compression and crap quality, 1 means best quality minimal
@@ -210,6 +211,11 @@ public class GenerateWebsiteRequest {
      */
     private float lowresJpgQuality;
 
+    /**
+     * Returns the lowres jpg quality factor
+     *
+     * @return the lowres jpg quality factor
+     */
     public float getLowresJpgQuality() {
         return lowresJpgQuality;
     }
@@ -217,8 +223,8 @@ public class GenerateWebsiteRequest {
     /**
      * Same as
      *
-     * @see #getLowresJpgQuality() but returned as int and multiplied by 100
      * @return the lowres quality number
+     * @see #getLowresJpgQuality() but returned as int and multiplied by 100
      */
     public int getLowresJpgQualityPercent() {
         return (int) ( getLowresJpgQuality() * 100 );
@@ -556,10 +562,20 @@ public class GenerateWebsiteRequest {
         this.sshKeyFile = sshKeyFile;
     }
 
+    /**
+     * Returns the memorised Google Maps API key
+     *
+     * @return the Google Maps API key
+     */
     public String getGoogleMapsApiKey() {
         return googleMapsApiKey;
     }
 
+    /**
+     * Rememebrs the Google Maps API key
+     *
+     * @param googleMapsApiKey the key to remember
+     */
     public void setGoogleMapsApiKey(String googleMapsApiKey) {
         this.googleMapsApiKey = googleMapsApiKey;
     }

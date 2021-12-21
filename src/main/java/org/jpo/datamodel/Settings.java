@@ -826,6 +826,11 @@ public class Settings {
         autoLoad = "";
     }
 
+    /**
+     * Returns an array of recently used collections
+     *
+     * @return the array of recently used collections
+     */
     public static String[] getRecentCollections() {
         return recentCollections;
     }
@@ -1039,18 +1044,38 @@ public class Settings {
 
     }
 
+    /**
+     * Returns the default width for a midres picture
+     *
+     * @return the default width
+     */
     public static int getDefaultHtmlMidresWidth() {
         return defaultHtmlMidresWidth;
     }
 
+    /**
+     * Remembers the default width for a midred picture
+     *
+     * @param defaultHtmlMidresWidth the widthto remember
+     */
     public static void setDefaultHtmlMidresWidth(final int defaultHtmlMidresWidth) {
         Settings.defaultHtmlMidresWidth = defaultHtmlMidresWidth;
     }
 
+    /**
+     * Returns the default height for a midres picture
+     *
+     * @return the default height
+     */
     public static int getDefaultHtmlMidresHeight() {
         return defaultHtmlMidresHeight;
     }
 
+    /**
+     * Remembers the default height for a midred picture
+     *
+     * @param defaultHtmlMidresHeight the height to remember
+     */
     public static void setDefaultHtmlMidresHeight(final int defaultHtmlMidresHeight) {
         Settings.defaultHtmlMidresHeight = defaultHtmlMidresHeight;
     }
@@ -1100,6 +1125,11 @@ public class Settings {
         Settings.defaultHtmlLowresQuality = defaultHtmlLowresQuality;
     }
 
+    /**
+     * Returns the default midres quality for html
+     *
+     * @return the default midres quality
+     */
     public static float getDefaultHtmlMidresQuality() {
         return defaultHtmlMidresQuality;
     }

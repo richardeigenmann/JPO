@@ -71,7 +71,13 @@ public class ApplicationEventHandler {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandler.class.getName());
+    /**
+     * Title for error dialogs
+     */
     private static final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
+    /**
+     * Title for Info Boxes
+     */
     public static final String GENERIC_INFO = Settings.getJpoResources().getString("genericInfo");
 
     /**
@@ -114,6 +120,12 @@ public class ApplicationEventHandler {
         }
     }
 
+    /**
+     * Handles the request to rename the picture indicated by a node. The new name
+     * is chosed by {Tools.inventFilename}
+     *
+     * @param node the node whose picture needs a new filename.
+     */
     public static void renameOnePictureRequest(@NonNull final SortableDefaultMutableTreeNode node) {
         final PictureInfo pi = (PictureInfo) node.getUserObject();
 
@@ -1342,20 +1354,26 @@ public class ApplicationEventHandler {
 
         if (option == 0) {
             for (final SortableDefaultMutableTreeNode selectedNode : request.nodes()) {
-                        try {
-                            deleteNodeAndFile(selectedNode);
-                        } catch (final IOException e) {
-                            LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{selectedNode, e.getMessage()});
-                            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                                    Settings.getJpoResources().getString("fileDeleteError") + selectedNode.toString(),
-                                    GENERIC_ERROR,
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
+                try {
+                    deleteNodeAndFile(selectedNode);
+                } catch (final IOException e) {
+                    LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{selectedNode, e.getMessage()});
+                    JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                            Settings.getJpoResources().getString("fileDeleteError") + selectedNode.toString(),
+                            GENERIC_ERROR,
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
             Settings.getPictureCollection().clearSelection();
         }
     }
 
+    /**
+     * Don't use: public accessor to private deleteNodeAndFileTest method for unit tests.
+     *
+     * @param node the node to test
+     * @throws IOException can throw
+     */
     @TestOnly
     public static void deleteNodeAndFileTest(final SortableDefaultMutableTreeNode node) throws IOException {
         deleteNodeAndFile(node);
@@ -1374,8 +1392,8 @@ public class ApplicationEventHandler {
     private String getFilenames(final Collection<SortableDefaultMutableTreeNode> nodes) {
         final var sb = new StringBuilder();
         for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
-            if (selectedNode.getUserObject() instanceof PictureInfo) {
-                sb.append(((PictureInfo) selectedNode.getUserObject()).getImageLocation() + "\n");
+            if (selectedNode.getUserObject() instanceof PictureInfo pictureInfo) {
+                sb.append(pictureInfo.getImageLocation() + "\n");
             }
         }
         return sb.toString();

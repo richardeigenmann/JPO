@@ -274,6 +274,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
     }
 
+    /**
+     * Don't use: accessor to the private closeViewer function for unit tests.
+     */
     @TestOnly
     public void closeViewerTest() {
         closeViewer();
@@ -307,6 +310,11 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
     }
 
+    /**
+     * Don't use: accessor to the private getCurrentNode method for unit tests.
+     *
+     * @return the curent node
+     */
     @TestOnly
     public SortableDefaultMutableTreeNode getCurrentNodeTest() {
         return getCurrentNode();
