@@ -175,7 +175,7 @@ public class PicturePopupMenu extends JPopupMenu {
         add(getShowMapMenuItem());
         add(getOpenFolderJMenuItem());
         add(getNavigateMenuItem());
-        add(getShowCategoryUsageJMenuItemMenuItem());
+        //add(getShowCategoryUsageJMenuItemMenuItem());
         add(getPictureMailSelectJMenuItem());
         add(getPictureMailUnSelectJMenuItem());
         add(getPictureMailUnselectAllJMenuItem());
@@ -245,27 +245,6 @@ public class PicturePopupMenu extends JPopupMenu {
             navigateMenuItem.add(navigateTargetRoute);
         }
         return navigateMenuItem;
-    }
-
-    private JMenuItem getShowCategoryUsageJMenuItemMenuItem() {
-        final var showCategoryUsageJMenuItemMenuItem = new JMenuItem(Settings.getJpoResources().getString("categoryUsageJMenuItem"));
-        showCategoryUsageJMenuItemMenuItem.addActionListener((ActionEvent e) -> {
-            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
-                final HashSet<SortableDefaultMutableTreeNode> hashSet = new HashSet<>();
-                hashSet.add(popupNode);
-                JpoEventBus.getInstance().post(new ShowCategoryUsageEditorRequest(hashSet));
-            } else if (!Settings.getPictureCollection().isSelected(popupNode)) {
-                Settings.getPictureCollection().clearSelection();
-                final HashSet<SortableDefaultMutableTreeNode> hashSet = new HashSet<>();
-                hashSet.add(popupNode);
-                JpoEventBus.getInstance().post(new ShowCategoryUsageEditorRequest(hashSet));
-            } else {
-                final HashSet<SortableDefaultMutableTreeNode> hashSet = new HashSet<>(Settings.getPictureCollection().getSelection());
-                JpoEventBus.getInstance().post(new ShowCategoryUsageEditorRequest(hashSet));
-
-            }
-        });
-        return showCategoryUsageJMenuItemMenuItem;
     }
 
 

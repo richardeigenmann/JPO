@@ -63,20 +63,19 @@ class GroupPopupMenuTest {
                 myGroupPopupMenu = new GroupPopupMenu(myNode);
                 showGroup = (JMenuItem) myGroupPopupMenu.getComponent(0);
                 showPictures = (JMenuItem) myGroupPopupMenu.getComponent(1);
-                categories = (JMenuItem) myGroupPopupMenu.getComponent(3);
-                refreshIcon = (JMenuItem) myGroupPopupMenu.getComponent(4);
-                editAsTable = (JMenuItem) myGroupPopupMenu.getComponent(6);
-                add = (JMenuItem) myGroupPopupMenu.getComponent(8);
-                move = (JMenuItem) myGroupPopupMenu.getComponent(9);
-                removeNode = (JMenuItem) myGroupPopupMenu.getComponent(10);
-                consolidate = (JMenuItem) myGroupPopupMenu.getComponent(12);
-                sortBy = (JMenuItem) myGroupPopupMenu.getComponent(14);
-                selectAllForEmailing = (JMenuItem) myGroupPopupMenu.getComponent(16);
-                generateWebsite = (JMenuItem) myGroupPopupMenu.getComponent(17);
-                exportToCollection = (JMenuItem) myGroupPopupMenu.getComponent(18);
-                exportToFlatFile = (JMenuItem) myGroupPopupMenu.getComponent(19);
-                exportToPicasa = (JMenuItem) myGroupPopupMenu.getComponent(20);
-                properties = (JMenuItem) myGroupPopupMenu.getComponent(22);
+                refreshIcon = (JMenuItem) myGroupPopupMenu.getComponent(3);
+                editAsTable = (JMenuItem) myGroupPopupMenu.getComponent(5);
+                add = (JMenuItem) myGroupPopupMenu.getComponent(7);
+                move = (JMenuItem) myGroupPopupMenu.getComponent(8);
+                removeNode = (JMenuItem) myGroupPopupMenu.getComponent(9);
+                consolidate = (JMenuItem) myGroupPopupMenu.getComponent(11);
+                sortBy = (JMenuItem) myGroupPopupMenu.getComponent(13);
+                selectAllForEmailing = (JMenuItem) myGroupPopupMenu.getComponent(15);
+                generateWebsite = (JMenuItem) myGroupPopupMenu.getComponent(16);
+                exportToCollection = (JMenuItem) myGroupPopupMenu.getComponent(17);
+                exportToFlatFile = (JMenuItem) myGroupPopupMenu.getComponent(18);
+                exportToPicasa = (JMenuItem) myGroupPopupMenu.getComponent(19);
+                properties = (JMenuItem) myGroupPopupMenu.getComponent(21);
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -110,20 +109,42 @@ class GroupPopupMenuTest {
             Thread.currentThread().interrupt();
             fail("Should not have hit the catch statement");
         }
-
     }
 
-    /**
-     * Get the children
-     */
+
+    @Test
+    void testGetChildrenShowGroup() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals("Show Group", showGroup.getText());
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.currentThread().interrupt();
+            fail("Should not have hit the catch statement");
+        }
+    }
+
+    @Test
+    void testGetChildrenShowPictures() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                assertEquals("Show Pictures", showPictures.getText());
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
+            Thread.currentThread().interrupt();
+            fail("Should not have hit the catch statement");
+        }
+    }
+
     @Test
     void testGetChildren() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                assertEquals("Show Group", showGroup.getText());
-                assertEquals("Show Pictures", showPictures.getText());
-                assertEquals("Categories", categories.getText());
                 assertEquals("Refresh Icon", refreshIcon.getText());
                 assertEquals("Edit as Table", editAsTable.getText());
                 assertEquals("Add", add.getText());

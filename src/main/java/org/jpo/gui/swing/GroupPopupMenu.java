@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /*
@@ -81,7 +80,6 @@ public class GroupPopupMenu extends JPopupMenu {
         add(getGroupSlideshowJMenuItem());
         addSeparator();
         if (popupNode.getPictureCollection().getAllowEdits()) {
-            add(getCategoryUsageJMenuItem());
             add(getGroupRefreshJMenuItem());
             addSeparator();
             add(getGroupTableJMenuItem());
@@ -117,16 +115,6 @@ public class GroupPopupMenu extends JPopupMenu {
             groupSlideshowJMenuItem.setEnabled(false);
         }
         return groupSlideshowJMenuItem;
-    }
-
-    private JMenuItem getCategoryUsageJMenuItem() {
-        final var categoryUsageJMenuItem = new JMenuItem(Settings.getJpoResources().getString("categoryUsageJMenuItem"));
-        categoryUsageJMenuItem.addActionListener((ActionEvent e) -> {
-            final HashSet<SortableDefaultMutableTreeNode> hs = new HashSet<>();
-            hs.add(popupNode);
-            JpoEventBus.getInstance().post(new ShowCategoryUsageEditorRequest(hs));
-        });
-        return categoryUsageJMenuItem;
     }
 
     private JMenuItem getGroupRefreshJMenuItem() {

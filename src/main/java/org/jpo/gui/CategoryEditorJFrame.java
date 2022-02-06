@@ -251,7 +251,7 @@ public class CategoryEditorJFrame
     /**
      * method that closes the frame and gets rid of it
      */
-    private void getRid() {
+    public void getRid() {
         setVisible(false);
         dispose();
     }

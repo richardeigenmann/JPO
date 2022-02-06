@@ -17,6 +17,21 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+/*
+ Copyright (C) 2022  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
 
 /**
  * Tests for the PictureInfoEditor
@@ -31,19 +46,20 @@ public class PictureInfoEditorTest {
     }
 
     @Test
-    public void testConstructor() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testConstructor() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final PictureInfo pictureInfo = new PictureInfo();
                 final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
                 final URL imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
                 pictureInfo.setImageLocation(new File(imageUrl.getFile()));
 
-                final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode( pictureInfo );
-                PictureInfoEditor pictureInfoEditor = new PictureInfoEditor(n);
+                final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode(pictureInfo);
+                final PictureInfoEditor pictureInfoEditor = new PictureInfoEditor(n);
                 assertNotNull( pictureInfoEditor );
                 ThumbnailCreationQueue.clear(); // the created request confuses other tests
+                pictureInfoEditor.getRid();
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( "This test didn't work. Exception: " + ex.getMessage() );
@@ -53,10 +69,10 @@ public class PictureInfoEditorTest {
 
 
     @Test
-    public void testFileNameCorruption() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testFileNameCorruption() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final PictureInfo pictureInfo = new PictureInfo();
                 final String JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
                 final URL imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
@@ -73,6 +89,7 @@ public class PictureInfoEditorTest {
                 // Expectation is that after saving without changing file stays the same
                 assertEquals( imageFile, pictureInfo.getImageFile());
                 ThumbnailCreationQueue.clear();  // the created request confuses other tests
+                pictureInfoEditor.getRid();
             } );
         } catch ( InterruptedException | InvocationTargetException ex ) {
             fail( ex.getMessage() );

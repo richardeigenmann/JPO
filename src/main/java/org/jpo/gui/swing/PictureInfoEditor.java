@@ -36,7 +36,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2021  Richard Eigenmann.
+ Copyright (C) 2002-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -694,7 +694,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * Close the editor window and release all listeners.
      */
-    private void getRid() {
+    public void getRid() {
         if (myNode.getPictureCollection().getTreeModel() != null) {
             myNode.getPictureCollection().getTreeModel().removeTreeModelListener(myTreeModelListener);
         }

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2019,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2022,  Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,7 +49,8 @@ public class PictureFrameTest {
         try {
             SwingUtilities.invokeAndWait( () -> {
                 final PictureFrame pictureFrame = new PictureFrame();
-                assertNotNull( pictureFrame );
+                assertNotNull(pictureFrame);
+                pictureFrame.getRid();
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {
             fail( "Failed to create a PictureFrame" );

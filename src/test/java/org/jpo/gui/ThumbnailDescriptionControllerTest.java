@@ -14,6 +14,21 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+/*
+ Copyright (C) 2022  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
 
 public class ThumbnailDescriptionControllerTest {
 
@@ -23,14 +38,14 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testConstructor() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testConstructor() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 assertNotNull(panel);
-            } );
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
@@ -38,26 +53,26 @@ public class ThumbnailDescriptionControllerTest {
 
 
     @Test
-    public void testSetNodeEmpty() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testSetNodeEmpty() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 assertEquals("Error", panel.getDescription());
-            } );
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }
 
     @Test
-    public void testSetNodePictureInfo() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testSetNodePictureInfo() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
                 final PictureInfo pictureInfo = new PictureInfo();
                 final String pictureInfoDescription = "A PictureInfo description";
@@ -73,17 +88,17 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testSetNodeGroupInfo() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testSetNodeGroupInfo() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
                 final String groupDescription = "A GroupInfo description";
                 final GroupInfo groupInfo = new GroupInfo(groupDescription);
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
                 controller.setNode(node);
                 assertEquals(groupDescription, controller.getDescription());
-            } );
+            });
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
@@ -91,32 +106,32 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testSetNodeNull() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testSetNodeNull() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
                 panel.setNode(node);
                 panel.setNode(null);
                 assertEquals("No node for this position.", panel.getDescription());
-            } );
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }
 
     @Test
-    public void testSetNodeNull2() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testSetNodeNull2() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 panel.setNode(null);
                 assertEquals("", panel.getDescription());
-            } );
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
@@ -124,10 +139,10 @@ public class ThumbnailDescriptionControllerTest {
 
 
     @Test
-    public void testSetNodeChangeListener() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testSetNodeChangeListener() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 // First attach a pictureInfo
                 PictureInfo pictureInfo = new PictureInfo();
@@ -152,13 +167,13 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testNodeListenerWorks() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testNodeListenerWorks() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
                 final PictureInfo pictureInfo = new PictureInfo();
-                final String pictureInfoDescription ="A PictureInfo description";
+                final String pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
                 final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
                 panel.setNode(node);
@@ -175,10 +190,10 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testNodeListenerWorksElaborate() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testNodeListenerWorksElaborate() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 // set up a Picture collection and bind it to the Settings
                 final PictureCollection pc = new PictureCollection();
                 Settings.setPictureCollection(pc);
@@ -213,11 +228,11 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testNodeListenerOnRename() {
+    void testNodeListenerOnRename() {
         // test to fix the bug that on File Rename the file location is not updated
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
                 final PictureInfo pictureInfo = new PictureInfo();
                 final String ORIGINAL_FILENAME = "gaga.jpg";
@@ -239,26 +254,26 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testCorrectTextPopupMenuNoSpecialChars() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testCorrectTextPopupMenuNoSpecialChars() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITHOUT_SPECIAL_CHARS = "No special chars in this string";
                 Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITHOUT_SPECIAL_CHARS, area);
                 assertTrue(!optional.isPresent());
-            } );
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }
 
     @Test
-    public void testCorrectTextPopupMenuUnderscore() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testCorrectTextPopupMenuUnderscore() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNDERSCORE = "Text_with_underscores";
                 final String EXPECTED_RESULT = "Text with underscores";
@@ -279,10 +294,10 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testCorrectTextPopupMenuUnicodeSpace() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testCorrectTextPopupMenuUnicodeSpace() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNICODE_SPACE = "Text%20with%20unicode%20spaces";
                 final String EXPECTED_RESULT = "Text with unicode spaces";
@@ -303,10 +318,10 @@ public class ThumbnailDescriptionControllerTest {
     }
 
     @Test
-    public void testCorrectTextPopupMenuUnicodeSpaceAndUnderscores() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testCorrectTextPopupMenuUnicodeSpaceAndUnderscores() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final JTextArea area = new JTextArea();
                 final String STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES = "Text%20with%20unicode%20spaces_and_underscores";
                 final String EXPECTED_RESULT = "Text with unicode spaces and underscores";

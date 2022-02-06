@@ -29,8 +29,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- *
  * @author Richard Eigenmann
  */
 public class CollectionJTreeControllerTest {

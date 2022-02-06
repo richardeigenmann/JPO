@@ -28,6 +28,7 @@ public class SettingsDialogTest {
             SwingUtilities.invokeAndWait(() -> {
                 final SettingsDialog jDialog = new SettingsDialog(false);
                 assertNotNull(jDialog);
+                jDialog.getRid();
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());

@@ -522,17 +522,6 @@ public class ApplicationEventHandler {
     }
 
     /**
-     * When the app sees a ShowCategoryUsageEditorRequest it will open the
-     * CategoryUsageEditor for the supplied node
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public void handleEvent(final ShowCategoryUsageEditorRequest request) {
-        JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "This dialog was removed. Use AssignCategories instead");
-    }
-
-    /**
      * When the app sees a CategoryAssignmentWindowRequest it will open the
      * CategoryAssignmentWindowRequest for the supplied nodes
      *

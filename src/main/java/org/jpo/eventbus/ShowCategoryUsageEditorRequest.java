@@ -28,5 +28,6 @@ import java.util.Set;
  * @param nodes The nodes
  * @author Richard Eigenmann
  */
+@Deprecated
 public record ShowCategoryUsageEditorRequest(@NotNull Set<SortableDefaultMutableTreeNode> nodes) {
 }

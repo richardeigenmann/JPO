@@ -16,15 +16,13 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- ThumbnailsPanelControllerTest.java:  Tests for the ThumbnailsPanelController
-
- Copyright (C) 2014-2017  Richard Eigenmann.
+ Copyright (C) 2014-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -34,6 +32,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 
 /**
+ * ThumbnailsPanelControllerTest.java:  Tests for the ThumbnailsPanelController
  *
  * @author Richard Eigenmann
  */
@@ -50,30 +49,30 @@ public class ThumbnailsPanelControllerTest {
     private static final Logger LOGGER = Logger.getLogger( ThumbnailsPanelControllerTest.class.getName() );
 
     @Test
-    public void testConstructor() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testConstructor() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
                 assertNotNull(thumbnailsPanelController);
-            } );
-        } catch (final InterruptedException | InvocationTargetException ex  ) {
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }
 
     @Test
-    public void testGetMouseRectangle() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testGetMouseRectangle() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
+            SwingUtilities.invokeAndWait(() -> {
                 try {
                     final ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
-                    final Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField( "mousePressedPoint" );
-                    mousePressedPoint.setAccessible( true );
-                    final Point topLeft = new Point( 50, 200 );
-                    mousePressedPoint.set( thumbnailsPanelController, topLeft );
+                    final Field mousePressedPoint = thumbnailsPanelController.getClass().getDeclaredField("mousePressedPoint");
+                    mousePressedPoint.setAccessible(true);
+                    final Point topLeft = new Point(50, 200);
+                    mousePressedPoint.set(thumbnailsPanelController, topLeft );
 
                     final Method getMouseRectangle = thumbnailsPanelController.getClass().getDeclaredMethod( "getMouseRectangle", Point.class );
                     getMouseRectangle.setAccessible( true );
