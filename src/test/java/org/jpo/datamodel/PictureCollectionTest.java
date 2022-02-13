@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2021  Richard Eigenmann.
+ Copyright (C) 2017-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -375,10 +375,34 @@ class PictureCollectionTest {
 
     }
 
-    private int nodesChanged;  // default is 0
-    private int nodesInserted;
-    private int nodesRemoved;
-    private int nodeStructureChanged;
+
+    private class CountingTreeModelListener implements TreeModelListener {
+        private int nodesChanged;  // default is 0
+        private int nodesInserted;
+        private int nodesRemoved;
+        private int nodeStructureChanged;
+
+        @Override
+        public void treeNodesChanged(TreeModelEvent e) {
+            nodesChanged++;
+        }
+
+        @Override
+        public void treeNodesInserted(TreeModelEvent e) {
+            nodesInserted++;
+        }
+
+        @Override
+        public void treeNodesRemoved(TreeModelEvent e) {
+            nodesRemoved++;
+        }
+
+        @Override
+        public void treeStructureChanged(TreeModelEvent e) {
+            nodeStructureChanged++;
+        }
+    }
+
 
     /**
      * In this test we want to see whether a change to an attribute in the
@@ -387,163 +411,67 @@ class PictureCollectionTest {
     @Test
     void testChangeNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        nodesChanged = 0;
-        nodesInserted = 0;
-        nodesRemoved = 0;
-        nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
 
-            @Override
-            public void treeNodesChanged(TreeModelEvent e) {
-                nodesChanged++;
-            }
-
-            @Override
-            public void treeNodesInserted( TreeModelEvent e ) {
-                nodesInserted++;
-            }
-
-            @Override
-            public void treeNodesRemoved( TreeModelEvent e ) {
-                nodesRemoved++;
-            }
-
-            @Override
-            public void treeStructureChanged( TreeModelEvent e ) {
-                nodeStructureChanged++;
-            }
-        } );
-
-        Settings.setPictureCollection( pictureCollection );
-        assertEquals( 0, nodesChanged);
-        pi1.setDescription( "Changed Description" );
+        Settings.setPictureCollection(pictureCollection);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
+        pi1.setDescription("Changed Description");
         // After updating the description we should have 1 node changed
-        await().until(() -> nodesChanged == 1);
+        await().until(() -> countingTreeModelListener.nodesChanged == 1);
         // No nodes should have been inserted
-        assertEquals(  0, nodesInserted);
+        assertEquals(0, countingTreeModelListener.nodesInserted);
         // No nodes should have been removed
-        assertEquals( 0, nodesRemoved);
+        assertEquals(0, countingTreeModelListener.nodesRemoved);
         // No nodes structure change should have been notified
-        assertEquals( 0, nodeStructureChanged);
+        assertEquals(0, countingTreeModelListener.nodeStructureChanged);
     }
 
 
     @Test
     void testInsertNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        nodesChanged = 0;
-        nodesInserted = 0;
-        nodesRemoved = 0;
-        nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
 
-            @Override
-            public void treeNodesChanged(TreeModelEvent e) {
-                nodesChanged++;
-            }
-
-            @Override
-            public void treeNodesInserted( TreeModelEvent e ) {
-                nodesInserted++;
-            }
-
-            @Override
-            public void treeNodesRemoved( TreeModelEvent e ) {
-                nodesRemoved++;
-            }
-
-            @Override
-            public void treeStructureChanged( TreeModelEvent e ) {
-                nodeStructureChanged++;
-            }
-        } );
-
-        Settings.setPictureCollection( pictureCollection );
-        assertEquals( 0, nodesChanged);
+        Settings.setPictureCollection(pictureCollection);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
         SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode();
         group1.add(newNode);
-        await().until(() -> nodesInserted == 1);
-        assertEquals(0, nodesChanged);
-        assertEquals( 0, nodesRemoved);
-        assertEquals( 0, nodeStructureChanged);
+        await().until(() -> countingTreeModelListener.nodesInserted == 1);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
+        assertEquals(0, countingTreeModelListener.nodesRemoved);
+        assertEquals(0, countingTreeModelListener.nodeStructureChanged);
     }
 
     @Test
     void testRemoveNodesNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        nodesChanged = 0;
-        nodesInserted = 0;
-        nodesRemoved = 0;
-        nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
 
-            @Override
-            public void treeNodesChanged(TreeModelEvent e) {
-                nodesChanged++;
-            }
-
-            @Override
-            public void treeNodesInserted( TreeModelEvent e ) {
-                nodesInserted++;
-            }
-
-            @Override
-            public void treeNodesRemoved( TreeModelEvent e ) {
-                nodesRemoved++;
-            }
-
-            @Override
-            public void treeStructureChanged( TreeModelEvent e ) {
-                nodeStructureChanged++;
-            }
-        } );
-
-        Settings.setPictureCollection( pictureCollection );
-        assertEquals( 0, nodesChanged);
+        Settings.setPictureCollection(pictureCollection);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
         group1.deleteNode();
-        await().until(() -> nodesRemoved == 1);
-        assertEquals(0, nodesChanged);
-        assertEquals(  0, nodesInserted);
-        assertEquals( 0, nodeStructureChanged);
+        await().until(() -> countingTreeModelListener.nodesRemoved == 1);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
+        assertEquals(0, countingTreeModelListener.nodesInserted);
+        assertEquals(0, countingTreeModelListener.nodeStructureChanged);
     }
 
     @Test
     void testStructureChangedNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        nodesChanged = 0;
-        nodesInserted = 0;
-        nodesRemoved = 0;
-        nodeStructureChanged = 0;
-        pictureCollection.getTreeModel().addTreeModelListener(new TreeModelListener() {
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
 
-            @Override
-            public void treeNodesChanged(TreeModelEvent e) {
-                nodesChanged++;
-            }
-
-            @Override
-            public void treeNodesInserted( TreeModelEvent e ) {
-                nodesInserted++;
-            }
-
-            @Override
-            public void treeNodesRemoved( TreeModelEvent e ) {
-                nodesRemoved++;
-            }
-
-            @Override
-            public void treeStructureChanged( TreeModelEvent e ) {
-                nodeStructureChanged++;
-            }
-        } );
-
-        Settings.setPictureCollection( pictureCollection );
-        assertEquals( 0, nodesChanged);
+        Settings.setPictureCollection(pictureCollection);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
         GuiActionRunner.execute(() -> pictureCollection.getRootNode().sortChildren(Settings.FieldCodes.DESCRIPTION));
-        await().until(() -> nodeStructureChanged == 1);
-        assertEquals(0, nodesChanged);
-        assertEquals(  0, nodesInserted);
-        assertEquals( 0, nodesRemoved);
+        await().until(() -> countingTreeModelListener.nodeStructureChanged == 1);
+        assertEquals(0, countingTreeModelListener.nodesChanged);
+        assertEquals(0, countingTreeModelListener.nodesInserted);
+        assertEquals(0, countingTreeModelListener.nodesRemoved);
     }
 
 
