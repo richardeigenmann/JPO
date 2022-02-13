@@ -15,9 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
@@ -27,13 +25,13 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2014 - 2021 Richard Eigenmann.
+ Copyright (C) 2014 - 2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY,
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -118,27 +116,27 @@ public class JpoCache {
      * @return The properties object created from the ccf file
      */
     public static Properties loadProperties() {
-        final String CACHE_DEFINITION_FILE = "cache.ccf";
-        final URL ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
-        final Properties props = new Properties();
+        final var CACHE_DEFINITION_FILE = "cache.ccf";
+        final var ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
+        final var properties = new Properties();
         if (ccfUrl == null) {
             LOGGER.log(Level.SEVERE, "Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
-            return props;
+            return properties;
         } else {
             LOGGER.log(Level.FINE, "Cache definition file found at: {0}", ccfUrl);
         }
 
-        try (final InputStream inStream = ccfUrl.openStream();) {
-            props.load(inStream);
+        try (final var inStream = ccfUrl.openStream();) {
+            properties.load(inStream);
         } catch (final IOException e) {
             LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage());
-            return props;
+            return properties;
         }
 
         LOGGER.log(Level.FINE, "setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", Settings.getThumbnailCacheDirectory());
-        props.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.getThumbnailCacheDirectory());
+        properties.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.getThumbnailCacheDirectory());
 
-        return props;
+        return properties;
     }
 
     /**
@@ -147,7 +145,7 @@ public class JpoCache {
     public static void shutdown() {
         try {
             CompositeCacheManager.getInstance().shutDown();
-        } catch (CacheException ex) {
+        } catch (final CacheException ex) {
             Logger.getLogger(JpoCache.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -161,11 +159,11 @@ public class JpoCache {
      */
     public static ImageBytes getHighresImageBytes(final File file) throws IOException {
         LOGGER.log(Level.INFO, "Hitting cache for file {0}", file);
-        ImageBytes imageBytes = highresMemoryCache.get(file);
+        var imageBytes = highresMemoryCache.get(file);
         if (imageBytes != null) {
             imageBytes.setRetrievedFromCache(true);
             try {
-                final FileTime lastModification = (Files.getLastModifiedTime(file.toPath()));
+                final var lastModification = (Files.getLastModifiedTime(file.toPath()));
                 if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
                     imageBytes = getHighresImageBytesFromFile(file);
                 }
@@ -187,7 +185,7 @@ public class JpoCache {
      */
     private static ImageBytes getHighresImageBytesFromFile(final File file) throws IOException {
         LOGGER.log(Level.FINE, "Loading file from disk file {0}", file);
-        final ImageBytes imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
+        final var imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
         imageBytes.setRetrievedFromCache(false);
         imageBytes.setLastModification(Files.getLastModifiedTime(file.toPath()));
         storeInHighresCache(file, imageBytes);
@@ -218,13 +216,13 @@ public class JpoCache {
      * @return The ImageBytes of the thumbnail
      */
     public static ImageBytes getThumbnailImageBytes(final File file, final double rotation, final Dimension maxSize) {
-        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxSize.width, maxSize.height);
-        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
+        final var key = String.format("%s-%fdeg-w:%dpx-h:%dpx", file, rotation, maxSize.width, maxSize.height);
+        var imageBytes = thumbnailMemoryAndDiskCache.get(key);
         if (imageBytes != null) {
             imageBytes.setRetrievedFromCache(true);
-            final Path imagePath = Paths.get(file.toURI());
+            final var imagePath = Paths.get(file.toURI());
             try {
-                final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+                final var lastModification = (Files.getLastModifiedTime(imagePath));
                 if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
                     imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxSize);
                 }
@@ -249,7 +247,7 @@ public class JpoCache {
      * @return the thumbnail
      */
     private static ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final Dimension maxSize) {
-        final ImageBytes imageBytes = createThumbnail(imageFile, rotation, maxSize);
+        final var imageBytes = createThumbnail(imageFile, rotation, maxSize);
         try {
             thumbnailMemoryAndDiskCache.put(key, imageBytes);
         } catch (CacheException ex) {
@@ -268,7 +266,7 @@ public class JpoCache {
      */
     private static ImageBytes createThumbnail(final File file, final double rotation, final Dimension maxSize) {
         // create a new thumbnail from the highres
-        final ScalablePicture scalablePicture = new ScalablePicture();
+        final var scalablePicture = new ScalablePicture();
         if (Settings.isThumbnailFastScale()) {
             scalablePicture.setFastScale();
         } else {
@@ -285,13 +283,13 @@ public class JpoCache {
         if (scalablePicture.getScaledPicture() == null) {
             return null;
         }
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final var bos = new ByteArrayOutputStream();
         scalablePicture.writeScaledJpg(bos);
-        final ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
+        final var imageBytes = new ImageBytes(bos.toByteArray());
         imageBytes.setRetrievedFromCache(false);
 
         try {
-            final Path imagePath = Paths.get(file.toURI());
+            final var imagePath = Paths.get(file.toURI());
             imageBytes.setLastModification(Files.getLastModifiedTime(imagePath));
 
         } catch (final IOException ex) {
@@ -311,31 +309,31 @@ public class JpoCache {
      * @throws IOException if something went wrong
      */
     public static ImageBytes getGroupThumbnailImageBytes(final List<SortableDefaultMutableTreeNode> childPictureNodes) throws IOException {
-        final int leftMargin = 15;
-        final int margin = 10;
-        final int topMargin = 65;
-        final int horizontalPics = (groupThumbnailDimension.width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
-        final int verticalPics = (groupThumbnailDimension.height - topMargin) / (Settings.miniThumbnailSize.height + margin);
-        final int numberOfPics = horizontalPics * verticalPics;
+        final var leftMargin = 15;
+        final var margin = 10;
+        final var topMargin = 65;
+        final var horizontalPics = (groupThumbnailDimension.width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+        final var verticalPics = (groupThumbnailDimension.height - topMargin) / (Settings.miniThumbnailSize.height + margin);
+        final var numberOfPics = horizontalPics * verticalPics;
 
-        final StringBuilder sb = new StringBuilder("Group-");
+        final var sb = new StringBuilder("Group-");
         for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
-            final PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+            final var pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
             sb.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
         }
 
-        final String key = sb.toString();
-        ImageBytes imageBytes = thumbnailMemoryAndDiskCache.get(key);
+        final var key = sb.toString();
+        var imageBytes = thumbnailMemoryAndDiskCache.get(key);
 
         if (imageBytes != null) {
             try {
                 final FileTime thumbnailLastModification = imageBytes.getLastModification();
 
-                boolean thumbnailNeedsRefresh = false;
-                for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
-                    final PictureInfo pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
-                    final Path imagePath = Paths.get(pictureInfo.getImageURIOrNull());
-                    final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+                var thumbnailNeedsRefresh = false;
+                for (var i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
+                    final var pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+                    final var imagePath = Paths.get(pictureInfo.getImageURIOrNull());
+                    final var lastModification = (Files.getLastModifiedTime(imagePath));
                     if (lastModification.compareTo(thumbnailLastModification) > 0) {
                         thumbnailNeedsRefresh = true;
                         break;
@@ -370,30 +368,30 @@ public class JpoCache {
             final int numberOfPics,
             final List<SortableDefaultMutableTreeNode> childPictureNodes)
             throws IOException {
-        final BufferedImage groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
-        final Graphics2D groupThumbnailGraphics = groupThumbnail.createGraphics();
+        final var groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
+        final var groupThumbnailGraphics = groupThumbnail.createGraphics();
 
-        int leftMargin = 15;
-        int margin = 10;
-        int topMargin = 65;
-        int horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+        var leftMargin = 15;
+        var margin = 10;
+        var topMargin = 65;
+        var horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
 
-        final ScalablePicture scalablePicture = new ScalablePicture();
-        FileTime mostRecentPictureModification = FileTime.fromMillis(0);
-        for (int picsProcessed = 0; (picsProcessed < numberOfPics) && (picsProcessed < childPictureNodes.size()); picsProcessed++) {
-            final PictureInfo pi = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
+        final var scalablePicture = new ScalablePicture();
+        var mostRecentPictureModification = FileTime.fromMillis(0);
+        for (var picsProcessed = 0; (picsProcessed < numberOfPics) && (picsProcessed < childPictureNodes.size()); picsProcessed++) {
+            final var pictureInfo = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
 
-            final Path imagePath = Paths.get(pi.getImageURIOrNull());
-            final FileTime lastModification = (Files.getLastModifiedTime(imagePath));
+            final var imagePath = Paths.get(pictureInfo.getImageURIOrNull());
+            final var lastModification = (Files.getLastModifiedTime(imagePath));
             if (lastModification.compareTo(mostRecentPictureModification) > 0) {
                 mostRecentPictureModification = lastModification;
             }
 
-            int x = margin + ((picsProcessed % horizontalPics) * (Settings.miniThumbnailSize.width + margin));
-            final int yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
-            int y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
+            var x = margin + ((picsProcessed % horizontalPics) * (Settings.miniThumbnailSize.width + margin));
+            final var yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
+            var y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
 
-            scalablePicture.loadPictureImd(pi.getImageFile(), pi.getRotation());
+            scalablePicture.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
 
             scalablePicture.setScaleSize(Settings.miniThumbnailSize);
             scalablePicture.scalePicture();
@@ -403,9 +401,9 @@ public class JpoCache {
             groupThumbnailGraphics.drawImage(scalablePicture.getScaledPicture(), x, y, null);
         }
 
-        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ScalablePicture.writeJpg(bos, groupThumbnail, 0.8f);
-        final ImageBytes imageBytes = new ImageBytes(bos.toByteArray());
+        final var byteArrayOutputStream = new ByteArrayOutputStream();
+        ScalablePicture.writeJpg(byteArrayOutputStream, groupThumbnail, 0.8f);
+        final var imageBytes = new ImageBytes(byteArrayOutputStream.toByteArray());
 
         imageBytes.setLastModification(mostRecentPictureModification);
         imageBytes.setRetrievedFromCache(false);

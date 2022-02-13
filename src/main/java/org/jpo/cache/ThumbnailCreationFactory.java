@@ -117,18 +117,19 @@ public class ThumbnailCreationFactory implements Runnable {
      *                ThumbnailController
      */
     private static void processQueueRequest(final ThumbnailQueueRequest request) {
-        final Object userObject = request.getNode().getUserObject();
+        final var userObject = request.getNode().getUserObject();
         if (userObject == null) {
-            LOGGER.severe("Queue request for a null Could not find PictureInfo. Aborting.");
+            LOGGER.log(Level.SEVERE, "Queue request for a null Could not find PictureInfo. Aborting. {0}", request);
             return;
         }
 
         try {
             if (userObject instanceof PictureInfo pictureInfo) {
-                final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
+                final var imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
                         pictureInfo.getRotation(),
                         request.getSize());
                 if (imageBytes == null) {
+                    LOGGER.log(Level.INFO, "Cache returned a null instead of image bytes for request {0} Setting BROKEN_THUMBNAIL_PICTURE", pictureInfo);
                     request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 } else {
                     request.setIcon(new ImageIcon(imageBytes.getBytes()));
@@ -136,7 +137,7 @@ public class ThumbnailCreationFactory implements Runnable {
             } else if (userObject instanceof GroupInfo) {
                 final List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes(false);
 
-                final ImageBytes imageBytes = JpoCache.getGroupThumbnailImageBytes(childPictureNodes);
+                final var imageBytes = JpoCache.getGroupThumbnailImageBytes(childPictureNodes);
                 if (imageBytes == null) {
                     request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 } else {
