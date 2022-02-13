@@ -31,13 +31,12 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 
 /**
- *
  * @author Richard Eigenmann
  */
-public class ThumbnailTest {
+class ThumbnailTest {
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
@@ -45,17 +44,17 @@ public class ThumbnailTest {
      * Test constructor
      */
     @Test
-    public void testImageInitialisation() {
-        assumeFalse( GraphicsEnvironment.isHeadless() );
+    void testImageInitialisation() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                final Thumbnail thumbnail = new Thumbnail( );
-                assertNotNull( thumbnail );
+            SwingUtilities.invokeAndWait(() -> {
+                final Thumbnail thumbnail = new Thumbnail();
+                assertNotNull(thumbnail);
 
-                assertNotNull( thumbnail.getSelectedIcon());
-                assertNotNull( thumbnail.getMailIcon());
-                assertNotNull( thumbnail.getOfflineIcon());
-                assertNotNull( thumbnail.getLargeFolderIcon());
+                assertNotNull(thumbnail.getSelectedIcon());
+                assertNotNull(thumbnail.getMailIcon());
+                assertNotNull(thumbnail.getOfflineIcon());
+                assertNotNull(thumbnail.getLargeFolderIcon());
                 assertNotNull( thumbnail.getQueueIcon());
             } );
         } catch ( final InterruptedException | InvocationTargetException ex ) {

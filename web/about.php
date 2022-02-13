@@ -16,6 +16,7 @@
         <li><strong>JSON in Java [package org.json]</strong> for JSON parser <a href="https://github.com/stleary/JSON-java">https://github.com/stleary/JSON-java</a></li>
         <li><strong>Awaitility</strong> for asynchroneous testing <a href="https://github.com/awaitility/awaitility/wiki/Getting_started">https://github.com/awaitility/awaitility/wiki/Getting_started</a></li>
         <li><strong>Jidesoft</strong> for the JIDE Common Layer (Open Source Project) which I use for the JidePopupMenu which overflows nicely<a href="http://www.jidesoft.com/products/oss.htm">http://www.jidesoft.com/products/oss.htm</a></li>
+        <li><strong>simple icon</strong> for the movie and document icons<a href="http://simpleicon.com/movie-1.html">http://simpleicon.com/movie-1.html</a> <a href="http://simpleicon.com/license-agreement/">license</a></li>
         <li><strong>Sandra Keller</strong> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
     </ul>
 
@@ -37,7 +38,7 @@
     <p>Download stats <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/stats/timeline?dates=2019-12-01%20to%202020-03-01&period=monthly">Sourceforge</a></p>
 
     <hr>
-    <p>Last update to this page: 11 February 2021<br>
+    <p>Last update to this page: 13 February 2022<br>
         Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

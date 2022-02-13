@@ -480,11 +480,11 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleEvent(final StartDoublePanelSlideshowRequest request) {
         Tools.checkEDT();
-        final SortableDefaultMutableTreeNode rootNode = request.node();
         final var p1 = new PictureViewer();
         p1.switchWindowMode(WINDOW_UNDECORATED_LEFT);
         final var p2 = new PictureViewer();
         p2.switchWindowMode(WINDOW_UNDECORATED_RIGHT);
+        final var rootNode = request.node();
         final var rb1 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
         final var rb2 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
         p1.showNode(rb1, 0);
@@ -505,13 +505,16 @@ public class ApplicationEventHandler {
         final var node = request.nodeNavigator().getNode(request.currentIndex());
         final var pictureInfo = (PictureInfo) node.getUserObject();
         final var file = pictureInfo.getImageFile();
-        if (!ImageIO.jvmHasReader(file)) {
-            LOGGER.log(Level.SEVERE, "Can't find a JVM reader for file: {0}", file);
+        if ((MimeTypes.isADocument(file)) || (MimeTypes.isAMovie(file))) {
             try {
                 Desktop.getDesktop().open(file);
             } catch (final IOException e) {
                 LOGGER.log(Level.SEVERE, "Could not open file {0} with a default application: {1}", new Object[]{file, e.getMessage()});
             }
+            return;
+        }
+        if (!ImageIO.jvmHasReader(file)) {
+            LOGGER.log(Level.SEVERE, "Can't find a JVM reader for file: {0}", file);
             return;
         }
         SwingUtilities.invokeLater(() -> {

@@ -1,12 +1,12 @@
 package org.jpo.cache;
 
 import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.MimeTypes;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,15 +48,50 @@ public class ThumbnailCreationFactory implements Runnable {
     private static final ImageIcon BROKEN_THUMBNAIL_PICTURE;
 
     static {
-        final String BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
-        final URL resource = ThumbnailCreationFactory.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
-        if ( resource == null ) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", BROKEN_THUMBNAIL_PICTURE_FILE );
+        final var BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
+        final var resource = ThumbnailCreationFactory.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
+        if (resource == null) {
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", BROKEN_THUMBNAIL_PICTURE_FILE);
             BROKEN_THUMBNAIL_PICTURE = null;
         } else {
-            BROKEN_THUMBNAIL_PICTURE = new ImageIcon( resource );
+            BROKEN_THUMBNAIL_PICTURE = new ImageIcon(resource);
         }
     }
+
+    /**
+     * An icon that indicates a broken image used when there is a problem
+     * rendering the correct thumbnail.
+     */
+    private static final ImageIcon MOVIE_ICON;
+
+    static {
+        final var MOVIE_ICON_FILE = "icon_movie.png";
+        final var resource = ThumbnailCreationFactory.class.getClassLoader().getResource(MOVIE_ICON_FILE);
+        if (resource == null) {
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", MOVIE_ICON_FILE);
+            MOVIE_ICON = null;
+        } else {
+            MOVIE_ICON = new ImageIcon(resource);
+        }
+    }
+
+    /**
+     * An icon that indicates a broken image used when there is a problem
+     * rendering the correct thumbnail.
+     */
+    private static final ImageIcon DOCUMENT_ICON;
+
+    static {
+        final var DOCUMENT_ICON_FILE = "icon_document.png";
+        final var resource = ThumbnailCreationFactory.class.getClassLoader().getResource(DOCUMENT_ICON_FILE);
+        if (resource == null) {
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", DOCUMENT_ICON_FILE);
+            DOCUMENT_ICON = null;
+        } else {
+            DOCUMENT_ICON = new ImageIcon(resource);
+        }
+    }
+
 
     /**
      * Flag to indicate that the thread should die.
@@ -76,7 +111,7 @@ public class ThumbnailCreationFactory implements Runnable {
      */
     public ThumbnailCreationFactory(final int pollingInterval) {
         this.pollingInterval = pollingInterval;
-        final Thread thread = new Thread(this, "ThumbnailCreationFactory");
+        final var thread = new Thread(this, "ThumbnailCreationFactory");
         thread.setPriority(Thread.MIN_PRIORITY);
         thread.start();
     }
@@ -88,7 +123,7 @@ public class ThumbnailCreationFactory implements Runnable {
     @Override
     public void run() {
         while ( !endThread ) {
-            final ThumbnailQueueRequest request = ThumbnailCreationQueue.QUEUE.poll();
+            final var request = ThumbnailCreationQueue.QUEUE.poll();
             if ( request == null ) {
                 try {
                     Thread.sleep(pollingInterval);
@@ -125,14 +160,20 @@ public class ThumbnailCreationFactory implements Runnable {
 
         try {
             if (userObject instanceof PictureInfo pictureInfo) {
-                final var imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
-                        pictureInfo.getRotation(),
-                        request.getSize());
-                if (imageBytes == null) {
-                    LOGGER.log(Level.INFO, "Cache returned a null instead of image bytes for request {0} Setting BROKEN_THUMBNAIL_PICTURE", pictureInfo);
-                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
+                if (MimeTypes.isAMovie(pictureInfo.getImageFile())) {
+                    request.setIcon(MOVIE_ICON);
+                } else if (MimeTypes.isADocument(pictureInfo.getImageFile())) {
+                    request.setIcon(DOCUMENT_ICON);
                 } else {
-                    request.setIcon(new ImageIcon(imageBytes.getBytes()));
+                    final var imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
+                            pictureInfo.getRotation(),
+                            request.getSize());
+                    if (imageBytes == null) {
+                        LOGGER.log(Level.INFO, "Cache returned a null instead of image bytes for request {0} Setting BROKEN_THUMBNAIL_PICTURE", pictureInfo);
+                        request.setIcon(BROKEN_THUMBNAIL_PICTURE);
+                    } else {
+                        request.setIcon(new ImageIcon(imageBytes.getBytes()));
+                    }
                 }
             } else if (userObject instanceof GroupInfo) {
                 final List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes(false);
