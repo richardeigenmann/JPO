@@ -6,15 +6,11 @@ import org.jpo.eventbus.AddFlatFileRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
 import javax.swing.*;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,7 +61,7 @@ public class FlatFileReader {
 
                 if (!testFile.canRead()) {
                     LOGGER.log(Level.INFO, "Can''t read file: {0}", line);
-                } else if (jvmHasReader(testFile)) {
+                } else if (ImageIO.jvmHasReader(testFile)) {
 
                     LOGGER.log(Level.INFO, "adding file to node: {0}", line);
                     final SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(
@@ -99,18 +95,5 @@ public class FlatFileReader {
         return testFile;
     }
 
-    private static boolean jvmHasReader(final File testFile) {
-        try (final FileInputStream fis = new FileInputStream(testFile);
-             final ImageInputStream iis = ImageIO.createImageInputStream(fis)) {
-            final Iterator<ImageReader> i = ImageIO.getImageReaders(iis);
-            if (i.hasNext()) {
-                LOGGER.log(Level.INFO, "I do have a reader for file: {0}", testFile);
-                return true;
-            }
-        } catch (final IOException ex) {
-            LOGGER.info(ex.getLocalizedMessage());
-        }
-        return false;
-    }
 
 }

@@ -6,6 +6,7 @@ import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
 import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.PictureAdderRequest;
 import org.jpo.gui.swing.CategoryJScrollPane;
 
 import javax.swing.*;
@@ -71,9 +72,7 @@ public class PictureFileChooser
 
             Settings.setShowThumbOnFileChooser(showThumbnailJCheckBox.isSelected());
 
-            // ToDo: This must be fired off from the Event handler!
-            var pictureAdder = new PictureAdder(request.node(), chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories());
-            pictureAdder.execute();
+            JpoEventBus.getInstance().post(new PictureAdderRequest(request.node(), chosenFiles, newOnlyJCheckBox.isSelected(), recurseJCheckBox.isSelected(), retainDirectoriesJCheckBox.isSelected(), categoryJScrollPane.getSelectedCategories()));
         }
     }
 

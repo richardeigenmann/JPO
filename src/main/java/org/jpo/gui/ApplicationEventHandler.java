@@ -43,7 +43,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_LE
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_RIGHT;
 
 /*
- Copyright (C) 2014-2021  Richard Eigenmann.
+ Copyright (C) 2014-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -206,7 +206,6 @@ public class ApplicationEventHandler {
         }
     }
 
-
     /**
      * Moves the pictures of the supplied nodes to the target directory
      *
@@ -353,6 +352,17 @@ public class ApplicationEventHandler {
     }
 
     /**
+     * Add (picture) files to the supplied node
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleEvent(final PictureAdderRequest request) {
+        var pictureAdder = new PictureAdder(request);
+        pictureAdder.execute();
+    }
+
+    /**
      * Opens the MainWindow on the EDT thread by constructing a {@link MainWindow}. We then fire a
      * {@link LoadDockablesPositionsRequest}. We connect the picture collection with the {@link MainAppModelListener}
      *
@@ -492,6 +502,18 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleEvent(final ShowPictureRequest request) {
+        final var node = request.nodeNavigator().getNode(request.currentIndex());
+        final var pictureInfo = (PictureInfo) node.getUserObject();
+        final var file = pictureInfo.getImageFile();
+        if (!ImageIO.jvmHasReader(file)) {
+            LOGGER.log(Level.SEVERE, "Can't find a JVM reader for file: {0}", file);
+            try {
+                Desktop.getDesktop().open(file);
+            } catch (final IOException e) {
+                LOGGER.log(Level.SEVERE, "Could not open file {0} with a default application: {1}", new Object[]{file, e.getMessage()});
+            }
+            return;
+        }
         SwingUtilities.invokeLater(() -> {
             final var pictureViewer = new PictureViewer();
             pictureViewer.showNode(request.nodeNavigator(), request.currentIndex());

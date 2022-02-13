@@ -19,7 +19,7 @@ import static java.util.Objects.isNull;
 /*
  PicturePopupMenu.java:  a popup menu for pictures
 
- Copyright (C) 2002 - 2021  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -175,7 +175,6 @@ public class PicturePopupMenu extends JPopupMenu {
         add(getShowMapMenuItem());
         add(getOpenFolderJMenuItem());
         add(getNavigateMenuItem());
-        //add(getShowCategoryUsageJMenuItemMenuItem());
         add(getPictureMailSelectJMenuItem());
         add(getPictureMailUnSelectJMenuItem());
         add(getPictureMailUnselectAllJMenuItem());

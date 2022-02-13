@@ -9,7 +9,6 @@ import org.jpo.datamodel.Tools;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.event.IIOReadProgressListener;
-import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,7 +30,7 @@ import static org.jpo.gui.SourcePicture.SourcePictureStatus.*;
 /*
  SourcePicture.java:  class that can load a picture from a URL
 
- Copyright (C) 2002 - 2021  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -130,7 +128,7 @@ public class SourcePicture {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(SourcePicture.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SourcePictureStatus.class.getName());
 
     /**
      * Loads the picture indicated by the file to this SourcePicture on the current thread.
@@ -246,7 +244,7 @@ public class SourcePicture {
         // We have the bytes from the image that came from the cache or the disk
         // now create a BufferedImage from that
         try (final ByteArrayInputStream bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
-            final ImageReader reader = getImageIOReader(iis);
+            final ImageReader reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
             if (reader == null) {
                 LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
                 setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));
@@ -299,32 +297,6 @@ public class SourcePicture {
         }
     }
 
-
-    /**
-     * This method checks whether the JVM has an image reader for the supplied
-     * File.
-     *
-     * @param file The file to be checked
-     * @return true if the JVM has a reader false if not.
-     */
-    public static boolean jvmHasReader(final File file) {
-        try (final FileImageInputStream testStream = new FileImageInputStream(file)) {
-            return ImageIO.getImageReaders(testStream).hasNext();
-        } catch (final IOException x) {
-            LOGGER.log(Level.INFO, x.getLocalizedMessage());
-            return false;
-        }
-    }
-
-
-    /**
-     * Returns a reader for the Image
-     * Can throw a java.util.NoSuchElementException if there is no available reader.
-     */
-    public static ImageReader getImageIOReader(final ImageInputStream iis) {
-        final Iterator<ImageReader> readerIterator = ImageIO.getImageReaders(iis);
-        return readerIterator.next();
-    }
 
     /**
      * this method can be invoked to flag the current reader to stop at a convenient moment

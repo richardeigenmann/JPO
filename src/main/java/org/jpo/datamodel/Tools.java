@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.gui.SourcePicture;
 import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;
@@ -25,7 +24,7 @@ import java.util.zip.Adler32;
 
 
 /*
- Copyright (C) 2002-2021  Richard Eigenmann.
+ Copyright (C) 2002-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -131,7 +130,11 @@ public class Tools {
                 if (hasPictures(file)) {
                     return true;
                 }
-            } else if (SourcePicture.jvmHasReader(file)) {
+            } else if (ImageIO.jvmHasReader(file)) {
+                return true;
+            } else if (MimeTypes.isADocument(file)) {
+                return true;
+            } else if (MimeTypes.isAMovie(file)) {
                 return true;
             }
         }

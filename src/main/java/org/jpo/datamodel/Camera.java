@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import org.jpo.gui.InterruptSemaphore;
 import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ProgressListener;
-import org.jpo.gui.SourcePicture;
 
 import java.io.File;
 import java.io.Serializable;
@@ -347,8 +346,8 @@ public class Camera implements Serializable {
     private Collection<File> getNewPicturesLoop(File[] files, Collection<File> newFiles) {
         for ( File f : files ) {
             if ( !f.isDirectory() ) {
-                if ( SourcePicture.jvmHasReader( f ) && !inOldImage( f ) ) {
-                    newFiles.add( f );
+                if (ImageIO.jvmHasReader(f) && !inOldImage(f)) {
+                    newFiles.add(f);
                 }
             } else {
                 getNewPicturesLoop(Objects.requireNonNull(f.listFiles()), newFiles );

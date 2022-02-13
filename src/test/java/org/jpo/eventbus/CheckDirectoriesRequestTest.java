@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /*
- Copyright (C) 2017  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,7 +31,7 @@ public class CheckDirectoriesRequestTest {
      */
     @Test
     public void testConstructor() {
-        CheckDirectoriesRequest checkDirectoriesRequest = new CheckDirectoriesRequest();
+        final var checkDirectoriesRequest = new CheckDirectoriesRequest();
         assertNotNull(checkDirectoriesRequest);
     }
 

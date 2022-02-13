@@ -5,7 +5,6 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.gui.JpoTransferable;
-import org.jpo.gui.SourcePicture;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -59,6 +58,13 @@ public class SortableDefaultMutableTreeNode
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(SortableDefaultMutableTreeNode.class.getName());
+    /**
+     * This field records the field by which the group is to be sorted. This is
+     * not very elegant as a second sort could run at the same time and clobber
+     * this global variable. But that's not very likely on a single user app
+     * like this.
+     */
+    private static FieldCodes sortField;
 
     /**
      * Constructor for a new node.
@@ -92,6 +98,184 @@ public class SortableDefaultMutableTreeNode
     private SortableDefaultMutableTreeNode(final Object userObject) {
         super();
         setUserObject(userObject);
+    }
+
+    /**
+     * Checks if the DropTargetDropEvent is suitable. Presently we can only deal
+     * with local transfers of JpoTransferables
+     *
+     * @param event The drop event
+     * @return true if acceptable, false if not
+     */
+    public static boolean isExecuteDropOk(final DropTargetDropEvent event) {
+        if (!event.isLocalTransfer()) {
+            LOGGER.info("The drop is not a local Transfer. These are not supported. Aborting drop.");
+            event.rejectDrop();
+            event.dropComplete(false);
+            return false;
+        } else {
+            LOGGER.info("The drop is a local Transfer.");
+        }
+
+        if (!event.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor)) {
+            LOGGER.info("The drop doesn't have a JpoTransferable.jpoNodeFlavor. Drop rejected.");
+            event.rejectDrop();
+            event.dropComplete(false);
+            return false;
+        } else {
+            LOGGER.info("The drop is for a JpoTransferable.jpoNodeFlavor");
+        }
+
+        int actionType = event.getDropAction();
+        if ((actionType == DnDConstants.ACTION_MOVE) || (actionType == DnDConstants.ACTION_COPY)) {
+            event.acceptDrop(actionType);   // crucial Step!
+        } else {
+            LOGGER.info("The event has an odd Action Type. Drop rejected.");
+            event.rejectDrop();
+            event.dropComplete(false);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Extract the transferable nodes from the drop event
+     *
+     * @param event the drop event
+     * @return a list of the transferable nodes
+     * @throws UnsupportedFlavorException when a bad transferable is received
+     * @throws IOException                when an IO error occurs
+     */
+    @NotNull
+    public static List<SortableDefaultMutableTreeNode> extractTransferableNodes(final DropTargetDropEvent event)
+            throws UnsupportedFlavorException, IOException {
+        final Transferable t = event.getTransferable();
+        final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
+        return ((List<?>) o).stream()
+                .filter(SortableDefaultMutableTreeNode.class::isInstance)
+                .map(SortableDefaultMutableTreeNode.class::cast)
+                .toList();
+    }
+
+    /**
+     * This method memorizes the group associated with the supplied node in the
+     * Settings object. If the supplied node is not a group it's parent which
+     * must be a group is memorised.
+     *
+     * @param node the node to memorize
+     */
+    public static void memorizeGroupOfDropLocation(final SortableDefaultMutableTreeNode node) {
+        if (node.getUserObject() instanceof GroupInfo) {
+            Settings.memorizeGroupOfDropLocation(node);
+        } else {
+            final SortableDefaultMutableTreeNode parent = node.getParent();
+            if ((parent != null) && (parent.getUserObject() instanceof GroupInfo)) {
+                Settings.memorizeGroupOfDropLocation(parent);
+            } else {
+                LOGGER.info("Failed to find the group of the drop location. Not memorizing in settings.");
+            }
+        }
+    }
+
+    private static void dropGroupOnGroup(final DropTargetDropEvent dropEvent, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode) {
+        LOGGER.log(Level.INFO, "Dropping Group node {0} onto Group node {1}", new Object[]{sourceNode, targetNode});
+        if (!targetNode.isRoot()) {
+            final GroupDropPopupMenu groupDropPopupMenu = new GroupDropPopupMenu(dropEvent, sourceNode, targetNode);
+            groupDropPopupMenu.show(dropEvent.getDropTargetContext().getDropTarget().getComponent(), dropEvent.getLocation().x, dropEvent.getLocation().y);
+        } else {
+            // Group was dropped on the root node --> add at first place.
+            sourceNode.removeFromParent();
+            targetNode.insert(sourceNode, 0);
+            dropEvent.dropComplete(true);
+
+        }
+    }
+
+    private static void dropPictureOnPicture(final DropTargetDropEvent event, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode) {
+        // a picture is being dropped onto a picture and should be inserted before the target node
+        final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
+        if (event.getDropAction() == DnDConstants.ACTION_MOVE) {
+            LOGGER.log(Level.INFO, "Moving Picture node {0} before Picture node {1}", new Object[]{sourceNode, targetNode});
+            sourceNode.removeFromParent();
+            int indexPosition = parentNode.getIndex(targetNode);
+            parentNode.insert(sourceNode, indexPosition);
+        } else {
+            LOGGER.log(Level.INFO, "Copying Picture node {0} before Picture node {1}", new Object[]{sourceNode, targetNode});
+            final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(((PictureInfo) sourceNode.getUserObject()).getClone());
+            int indexPosition = parentNode.getIndex(targetNode);
+            parentNode.insert(newNode, indexPosition);
+        }
+        event.dropComplete(true);
+    }
+
+    private static void dropPictureOnGroup(final DropTargetDropEvent event, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode) {
+        // a picture is being dropped onto a group; add it at the end
+        if (event.getDropAction() == DnDConstants.ACTION_MOVE) {
+            LOGGER.log(Level.INFO, "Moving Picture node {0} onto last position in Group node {1}", new Object[]{sourceNode, targetNode});
+            sourceNode.moveToLastChild(targetNode);
+        } else {
+            LOGGER.log(Level.INFO, "Cloning Picture node {0} onto last position in Group node {1}", new Object[]{sourceNode, targetNode});
+            SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(((PictureInfo) sourceNode.getUserObject()).getClone());
+            targetNode.add(newNode);
+        }
+        event.dropComplete(true);
+    }
+
+    /**
+     * Copy any file from sourceFile source File to sourceFile target File
+     * location.
+     *
+     * @param sourceFile the source file location
+     * @param targetFile the target file location
+     * @return The crc of the copied picture.
+     */
+    public static long copyPicture(final File sourceFile, final File targetFile) {
+        LOGGER.log(Level.FINE, "Copying file {0} to file {1}", new Object[]{sourceFile, targetFile});
+        try (
+                final InputStream in = new FileInputStream(sourceFile);
+                final OutputStream out = new FileOutputStream(targetFile)) {
+
+            final BufferedInputStream bin = new BufferedInputStream(in);
+            final BufferedOutputStream bout = new BufferedOutputStream(out);
+
+            return copyBufferedStream(bin, bout);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    Settings.getAnchorFrame(),
+                    Settings.getJpoResources().getString("copyPictureError1")
+                            + sourceFile.toString()
+                            + Settings.getJpoResources().getString("copyPictureError2")
+                            + targetFile.toString()
+                            + Settings.getJpoResources().getString("copyPictureError3")
+                            + e.getMessage(),
+                    Settings.getJpoResources().getString(GENERIC_ERROR),
+                    JOptionPane.ERROR_MESSAGE);
+            return Long.MIN_VALUE;
+        }
+    }
+
+    /**
+     * This method returns whether the supplied node is a descendant of the
+     * deletions that have been detected in the TreeModelListener delivered
+     * TreeModelEvent.
+     *
+     * @param affectedNode The node to check whether it is or is a descendant of
+     *                     the deleted node.
+     * @param e            the TreeModelEvent that was detected
+     * @return true if successful, false if not
+     */
+    public static boolean wasNodeDeleted(
+            final SortableDefaultMutableTreeNode affectedNode, final TreeModelEvent e) {
+        TreePath removedChild;
+        final TreePath currentNodeTreePath = new TreePath(affectedNode.getPath());
+        final Object[] children = e.getChildren();
+        for (final Object child : children) {
+            removedChild = new TreePath(child);
+            if (removedChild.isDescendant(currentNodeTreePath)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -135,14 +319,6 @@ public class SortableDefaultMutableTreeNode
         LOGGER.log(Level.FINE, "Sending node structure changed event on node {0} after sort", this);
         getPictureCollection().sendNodeStructureChanged(this);
     }
-
-    /**
-     * This field records the field by which the group is to be sorted. This is
-     * not very elegant as a second sort could run at the same time and clobber
-     * this global variable. But that's not very likely on a single user app
-     * like this.
-     */
-    private static FieldCodes sortField;
 
     /**
      * Overridden method to allow sorting of nodes. It uses the static global
@@ -202,7 +378,6 @@ public class SortableDefaultMutableTreeNode
     public int hashCode() {
         return super.hashCode();
     }
-
 
     /**
      * Returns the first node with a picture before the current one in the tree.
@@ -364,83 +539,6 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Checks if the DropTargetDropEvent is suitable. Presently we can only deal
-     * with local transfers of JpoTransferables
-     *
-     * @param event The drop event
-     * @return true if acceptable, false if not
-     */
-    public static boolean isExecuteDropOk(final DropTargetDropEvent event) {
-        if (!event.isLocalTransfer()) {
-            LOGGER.info("The drop is not a local Transfer. These are not supported. Aborting drop.");
-            event.rejectDrop();
-            event.dropComplete(false);
-            return false;
-        } else {
-            LOGGER.info("The drop is a local Transfer.");
-        }
-
-        if (!event.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor)) {
-            LOGGER.info("The drop doesn't have a JpoTransferable.jpoNodeFlavor. Drop rejected.");
-            event.rejectDrop();
-            event.dropComplete(false);
-            return false;
-        } else {
-            LOGGER.info("The drop is for a JpoTransferable.jpoNodeFlavor");
-        }
-
-        int actionType = event.getDropAction();
-        if ((actionType == DnDConstants.ACTION_MOVE) || (actionType == DnDConstants.ACTION_COPY)) {
-            event.acceptDrop(actionType);   // crucial Step!
-        } else {
-            LOGGER.info("The event has an odd Action Type. Drop rejected.");
-            event.rejectDrop();
-            event.dropComplete(false);
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Extract the transferable nodes from the drop event
-     *
-     * @param event the drop event
-     * @return a list of the transferable nodes
-     * @throws UnsupportedFlavorException when a bad transferable is received
-     * @throws IOException                when an IO error occurs
-     */
-    @NotNull
-    public static List<SortableDefaultMutableTreeNode> extractTransferableNodes(final DropTargetDropEvent event)
-            throws UnsupportedFlavorException, IOException {
-        final Transferable t = event.getTransferable();
-        final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
-        return ((List<?>) o).stream()
-                .filter(SortableDefaultMutableTreeNode.class::isInstance)
-                .map(SortableDefaultMutableTreeNode.class::cast)
-                .toList();
-    }
-
-    /**
-     * This method memorizes the group associated with the supplied node in the
-     * Settings object. If the supplied node is not a group it's parent which
-     * must be a group is memorised.
-     *
-     * @param node the node to memorize
-     */
-    public static void memorizeGroupOfDropLocation(final SortableDefaultMutableTreeNode node) {
-        if (node.getUserObject() instanceof GroupInfo) {
-            Settings.memorizeGroupOfDropLocation(node);
-        } else {
-            final SortableDefaultMutableTreeNode parent = node.getParent();
-            if ((parent != null) && (parent.getUserObject() instanceof GroupInfo)) {
-                Settings.memorizeGroupOfDropLocation(parent);
-            } else {
-                LOGGER.info("Failed to find the group of the drop location. Not memorizing in settings.");
-            }
-        }
-    }
-
-    /**
      * This method is called by the drop method of the DragTarget to do the
      * move. It deals with the intricacies of the drop event and handles all the
      * moving, cloning and positioning that is required.
@@ -499,50 +597,6 @@ public class SortableDefaultMutableTreeNode
 
     }
 
-    private static void dropGroupOnGroup(final DropTargetDropEvent dropEvent, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode) {
-        LOGGER.log(Level.INFO, "Dropping Group node {0} onto Group node {1}", new Object[]{sourceNode, targetNode});
-        if (!targetNode.isRoot()) {
-            final GroupDropPopupMenu groupDropPopupMenu = new GroupDropPopupMenu(dropEvent, sourceNode, targetNode);
-            groupDropPopupMenu.show(dropEvent.getDropTargetContext().getDropTarget().getComponent(), dropEvent.getLocation().x, dropEvent.getLocation().y);
-        } else {
-            // Group was dropped on the root node --> add at first place.
-            sourceNode.removeFromParent();
-            targetNode.insert(sourceNode, 0);
-            dropEvent.dropComplete(true);
-
-        }
-    }
-
-    private static void dropPictureOnPicture(final DropTargetDropEvent event, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode) {
-        // a picture is being dropped onto a picture and should be inserted before the target node
-        final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
-        if (event.getDropAction() == DnDConstants.ACTION_MOVE) {
-            LOGGER.log(Level.INFO, "Moving Picture node {0} before Picture node {1}", new Object[]{sourceNode, targetNode});
-            sourceNode.removeFromParent();
-            int indexPosition = parentNode.getIndex(targetNode);
-            parentNode.insert(sourceNode, indexPosition);
-        } else {
-            LOGGER.log(Level.INFO, "Copying Picture node {0} before Picture node {1}", new Object[]{sourceNode, targetNode});
-            final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(((PictureInfo) sourceNode.getUserObject()).getClone());
-            int indexPosition = parentNode.getIndex(targetNode);
-            parentNode.insert(newNode, indexPosition);
-        }
-        event.dropComplete(true);
-    }
-
-    private static void dropPictureOnGroup(final DropTargetDropEvent event, final SortableDefaultMutableTreeNode sourceNode, final SortableDefaultMutableTreeNode targetNode) {
-        // a picture is being dropped onto a group; add it at the end
-        if (event.getDropAction() == DnDConstants.ACTION_MOVE) {
-            LOGGER.log(Level.INFO, "Moving Picture node {0} onto last position in Group node {1}", new Object[]{sourceNode, targetNode});
-            sourceNode.moveToLastChild(targetNode);
-        } else {
-            LOGGER.log(Level.INFO, "Cloning Picture node {0} onto last position in Group node {1}", new Object[]{sourceNode, targetNode});
-            SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(((PictureInfo) sourceNode.getUserObject()).getClone());
-            targetNode.add(newNode);
-        }
-        event.dropComplete(true);
-    }
-
     /**
      * This is where the Nodes in the tree find out about changes in the
      * PictureInfo object
@@ -559,84 +613,6 @@ public class SortableDefaultMutableTreeNode
     public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
         LOGGER.log(Level.INFO, "The SDMTN {0} received a GroupInfoChangeEvent {1}", new Object[]{this, groupInfoChangeEvent});
         getPictureCollection().sendNodeChanged(this);
-    }
-
-    /**
-     * This inner class creates a popup menu for group drop events to find out
-     * whether to drop into before or after the drop node.
-     */
-    static class GroupDropPopupMenu
-            extends JPopupMenu {
-
-        /**
-         * This inner class creates a popup menu for group drop events to find
-         * out whether to drop into before or after the drop node.
-         *
-         * @param event      The event
-         * @param sourceNode the source node
-         * @param targetNode the target node
-         */
-        private GroupDropPopupMenu(final DropTargetDropEvent event,
-                                   final SortableDefaultMutableTreeNode sourceNode,
-                                   final SortableDefaultMutableTreeNode targetNode) {
-
-            // menu item that allows the user to edit the group description
-            final JMenuItem dropBefore = new JMenuItem(Settings.getJpoResources().getString("GDPMdropBefore"));
-            dropBefore.addActionListener((ActionEvent e) -> {
-                final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
-                sourceNode.removeFromParent();
-                int currentIndex = parentNode.getIndex(targetNode);
-                parentNode.insert(sourceNode, currentIndex);
-                event.dropComplete(true);
-                targetNode.getPictureCollection().setUnsavedUpdates();
-            });
-            super.add(dropBefore);
-
-            // menu item that allows the user to edit the group description
-            final JMenuItem dropAfter = new JMenuItem(Settings.getJpoResources().getString("GDPMdropAfter"));
-            dropAfter.addActionListener((ActionEvent e) -> {
-                final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
-                sourceNode.removeFromParent();
-                int currentIndex = parentNode.getIndex(targetNode);
-                parentNode.insert(sourceNode, currentIndex + 1);
-                event.dropComplete(true);
-                targetNode.getPictureCollection().setUnsavedUpdates();
-            });
-            super.add(dropAfter);
-
-            // menu item that allows the user to edit the group description
-            final JMenuItem dropIntoFirst = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoFirst"));
-            dropIntoFirst.addActionListener((ActionEvent e) -> {
-                synchronized (targetNode.getRoot()) {
-                    sourceNode.removeFromParent();
-                    targetNode.insert(sourceNode, 0);
-                }
-                event.dropComplete(true);
-                targetNode.getPictureCollection().setUnsavedUpdates();
-            });
-            super.add(dropIntoFirst);
-
-            // menu item that allows the user to edit the group description
-            final JMenuItem dropIntoLast = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoLast"));
-            dropIntoLast.addActionListener((ActionEvent e) -> {
-                synchronized (targetNode.getRoot()) {
-                    sourceNode.removeFromParent();
-                    int childCount = targetNode.getChildCount();
-                    targetNode.insert(sourceNode, childCount);
-                }
-                event.dropComplete(true);
-                targetNode.getPictureCollection().setUnsavedUpdates();
-            });
-            super.add(dropIntoLast);
-
-            // menu item that allows the user to edit the group description
-            final JMenuItem dropCancel = new JMenuItem(Settings.getJpoResources().getString("GDPMdropCancel"));
-            dropCancel.addActionListener((ActionEvent e) -> {
-                LOGGER.info("cancel drop");
-                event.dropComplete(false);
-            });
-            super.add(dropCancel);
-        }
     }
 
     /**
@@ -775,7 +751,6 @@ public class SortableDefaultMutableTreeNode
             getPictureCollection().sendNodesWereInserted(this, new int[]{index});
         }
     }
-
 
     /**
      * When this method is invoked on a node it is moved to the first child
@@ -1015,40 +990,6 @@ public class SortableDefaultMutableTreeNode
         return super.getAllowsChildren();
     }
 
-
-    /**
-     * Copy any file from sourceFile source File to sourceFile target File
-     * location.
-     *
-     * @param sourceFile the source file location
-     * @param targetFile the target file location
-     * @return The crc of the copied picture.
-     */
-    public static long copyPicture(final File sourceFile, final File targetFile) {
-        LOGGER.log(Level.FINE, "Copying file {0} to file {1}", new Object[]{sourceFile, targetFile});
-        try (
-                final InputStream in = new FileInputStream(sourceFile);
-                final OutputStream out = new FileOutputStream(targetFile)) {
-
-            final BufferedInputStream bin = new BufferedInputStream(in);
-            final BufferedOutputStream bout = new BufferedOutputStream(out);
-
-            return copyBufferedStream(bin, bout);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("copyPictureError1")
-                            + sourceFile.toString()
-                            + Settings.getJpoResources().getString("copyPictureError2")
-                            + targetFile.toString()
-                            + Settings.getJpoResources().getString("copyPictureError3")
-                            + e.getMessage(),
-                    Settings.getJpoResources().getString(GENERIC_ERROR),
-                    JOptionPane.ERROR_MESSAGE);
-            return Long.MIN_VALUE;
-        }
-    }
-
     /**
      * Copies the pictures from the source File collection into the target node while updating a supplied progress bar
      *
@@ -1097,7 +1038,7 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean addSinglePicture(final File addFile, final boolean newOnly,
                                     final Collection<Integer> selectedCategories) {
-        LOGGER.log(Level.FINE, "Adding File: {0}, NewOnly: {1} to node {2}", new Object[]{addFile, newOnly, this});
+        LOGGER.log(Level.INFO, "Adding File: {0}, NewOnly: {1} to node {2}", new Object[]{addFile, newOnly, this});
         if (newOnly && getPictureCollection().isInCollection(addFile)) {
             return false; // only add pics not in the collection already
         } else {
@@ -1109,60 +1050,38 @@ public class SortableDefaultMutableTreeNode
      * this method adds a new Picture to the current node if the JVM has a
      * reader for it.
      *
-     * @param addFile            the file that should be added
-     * @param categoryAssignment Can be null
+     * @param file                the file that should be added
+     * @param categoryAssignments Can be null
      * @return true if the picture was valid, false if not.
      */
-    public boolean addPicture(final File addFile, final Collection<Integer> categoryAssignment) {
-        LOGGER.log(Level.FINE, "Adding file {0} to the node {1}", new Object[]{addFile, this});
-        final PictureInfo newPictureInfo = new PictureInfo();
+    public boolean addPicture(final File file, final Collection<Integer> categoryAssignments) {
+        LOGGER.log(Level.INFO, "Adding file {0} to the node {1}", new Object[]{file, this});
 
-        if (!SourcePicture.jvmHasReader(addFile)) {
-            LOGGER.log(Level.FINE, "Not adding file {0} because the Java Virtual Machine has not got a reader for the file.", addFile);
-            return false; // don't add if there is no reader.
+        if (ImageIO.jvmHasReader(file)
+                || MimeTypes.isAPicture(file)
+                || MimeTypes.isADocument(file)
+                || MimeTypes.isAMovie(file)) {
+            final var newPictureInfo = new PictureInfo();
+            newPictureInfo.setImageLocation(file);
+            newPictureInfo.setDescription(FilenameUtils.getBaseName(file.getName()));
+            newPictureInfo.setChecksum(Tools.calculateChecksum(file));
+            newPictureInfo.setSha256();
+            newPictureInfo.setCategoryAssignment(categoryAssignments);
+            ExifInfo exifInfo = new ExifInfo(newPictureInfo.getImageFile());
+            exifInfo.decodeExifTags();
+            newPictureInfo.setCreationTime(exifInfo.getCreateDateTime());
+            newPictureInfo.setLatLng(exifInfo.getLatLng());
+            newPictureInfo.setRotation(exifInfo.getRotation());
+            final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(newPictureInfo);
+
+            this.add(newNode);
+            getPictureCollection().setUnsavedUpdates();
+
+            return true;
+        } else {
+            LOGGER.log(Level.INFO, "Not adding file {0} because the Java Virtual Machine has not got a reader for the file.", file);
+            return false;
         }
-        newPictureInfo.setImageLocation(addFile);
-        newPictureInfo.setDescription(FilenameUtils.getBaseName(addFile.getName()));
-        newPictureInfo.setChecksum(Tools.calculateChecksum(addFile));
-        if (categoryAssignment != null) {
-            newPictureInfo.setCategoryAssignment(categoryAssignment);
-        }
-        final SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode(newPictureInfo);
-
-        this.add(newNode);
-        getPictureCollection().setUnsavedUpdates();
-
-        ExifInfo exifInfo = new ExifInfo(newPictureInfo.getImageFile());
-        exifInfo.decodeExifTags();
-        newPictureInfo.setCreationTime(exifInfo.getCreateDateTime());
-        newPictureInfo.setLatLng(exifInfo.getLatLng());
-        newPictureInfo.setRotation(exifInfo.getRotation());
-
-        return true;
-    }
-
-    /**
-     * This method returns whether the supplied node is a descendant of the
-     * deletions that have been detected in the TreeModelListener delivered
-     * TreeModelEvent.
-     *
-     * @param affectedNode The node to check whether it is or is a descendant of
-     *                     the deleted node.
-     * @param e            the TreeModelEvent that was detected
-     * @return true if successful, false if not
-     */
-    public static boolean wasNodeDeleted(
-            final SortableDefaultMutableTreeNode affectedNode, final TreeModelEvent e) {
-        TreePath removedChild;
-        final TreePath currentNodeTreePath = new TreePath(affectedNode.getPath());
-        final Object[] children = e.getChildren();
-        for (final Object child : children) {
-            removedChild = new TreePath(child);
-            if (removedChild.isDescendant(currentNodeTreePath)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -1173,6 +1092,84 @@ public class SortableDefaultMutableTreeNode
     @Override
     public SortableDefaultMutableTreeNode getRoot() {
         return (SortableDefaultMutableTreeNode) super.getRoot();
+    }
+
+    /**
+     * This inner class creates a popup menu for group drop events to find out
+     * whether to drop into before or after the drop node.
+     */
+    static class GroupDropPopupMenu
+            extends JPopupMenu {
+
+        /**
+         * This inner class creates a popup menu for group drop events to find
+         * out whether to drop into before or after the drop node.
+         *
+         * @param event      The event
+         * @param sourceNode the source node
+         * @param targetNode the target node
+         */
+        private GroupDropPopupMenu(final DropTargetDropEvent event,
+                                   final SortableDefaultMutableTreeNode sourceNode,
+                                   final SortableDefaultMutableTreeNode targetNode) {
+
+            // menu item that allows the user to edit the group description
+            final JMenuItem dropBefore = new JMenuItem(Settings.getJpoResources().getString("GDPMdropBefore"));
+            dropBefore.addActionListener((ActionEvent e) -> {
+                final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
+                sourceNode.removeFromParent();
+                int currentIndex = parentNode.getIndex(targetNode);
+                parentNode.insert(sourceNode, currentIndex);
+                event.dropComplete(true);
+                targetNode.getPictureCollection().setUnsavedUpdates();
+            });
+            super.add(dropBefore);
+
+            // menu item that allows the user to edit the group description
+            final JMenuItem dropAfter = new JMenuItem(Settings.getJpoResources().getString("GDPMdropAfter"));
+            dropAfter.addActionListener((ActionEvent e) -> {
+                final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
+                sourceNode.removeFromParent();
+                int currentIndex = parentNode.getIndex(targetNode);
+                parentNode.insert(sourceNode, currentIndex + 1);
+                event.dropComplete(true);
+                targetNode.getPictureCollection().setUnsavedUpdates();
+            });
+            super.add(dropAfter);
+
+            // menu item that allows the user to edit the group description
+            final JMenuItem dropIntoFirst = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoFirst"));
+            dropIntoFirst.addActionListener((ActionEvent e) -> {
+                synchronized (targetNode.getRoot()) {
+                    sourceNode.removeFromParent();
+                    targetNode.insert(sourceNode, 0);
+                }
+                event.dropComplete(true);
+                targetNode.getPictureCollection().setUnsavedUpdates();
+            });
+            super.add(dropIntoFirst);
+
+            // menu item that allows the user to edit the group description
+            final JMenuItem dropIntoLast = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoLast"));
+            dropIntoLast.addActionListener((ActionEvent e) -> {
+                synchronized (targetNode.getRoot()) {
+                    sourceNode.removeFromParent();
+                    int childCount = targetNode.getChildCount();
+                    targetNode.insert(sourceNode, childCount);
+                }
+                event.dropComplete(true);
+                targetNode.getPictureCollection().setUnsavedUpdates();
+            });
+            super.add(dropIntoLast);
+
+            // menu item that allows the user to edit the group description
+            final JMenuItem dropCancel = new JMenuItem(Settings.getJpoResources().getString("GDPMdropCancel"));
+            dropCancel.addActionListener((ActionEvent e) -> {
+                LOGGER.info("cancel drop");
+                event.dropComplete(false);
+            });
+            super.add(dropCancel);
+        }
     }
 
 }

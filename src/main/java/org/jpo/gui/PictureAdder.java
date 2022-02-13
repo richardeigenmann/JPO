@@ -4,10 +4,10 @@ import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.PictureAdderRequest;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,14 +15,13 @@ import java.util.logging.Logger;
 /*
 PictureAdder.java:  A Class which brings up a progress bar and adds pictures to the specified node.
 
-
-Copyright (C) 2009-2020  Richard Eigenmann.
+Copyright (C) 2009-2022  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details. You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
@@ -42,59 +41,26 @@ public class PictureAdder
     /**
      * Constructor
      *
-     * @param startNode          The node on which to add the pictures
-     * @param chosenFiles        The array of Files to add
-     * @param newOnly            indicates whether to check if the picture is already in the collection
-     * @param recurseDirectories indicates whether to scan down into directories for more pictures.
-     * @param retainDirectories  indicates whether to preserve the directory structure.
-     * @param selectedCategories The categories to give the pictures
+     * @param request The request to fulfill
      */
-    public PictureAdder(final SortableDefaultMutableTreeNode startNode,
-                        final File[] chosenFiles, final boolean newOnly, final boolean recurseDirectories,
-                        final boolean retainDirectories, final Collection<Integer> selectedCategories) {
-
-        this.startNode = startNode;
-        this.chosenFiles = chosenFiles;
-        this.newOnly = newOnly;
-        this.recurseDirectories = recurseDirectories;
-        this.retainDirectories = retainDirectories;
-        this.selectedCategories = selectedCategories;
-
-        LOGGER.log(Level.FINE, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{startNode, chosenFiles.length, newOnly, recurseDirectories, retainDirectories});
-
-        progGui = new ProgressGui(Tools.countFiles(chosenFiles),
+    public PictureAdder(final PictureAdderRequest request) {
+        this.request = request;
+        LOGGER.log(Level.FINE, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{request.startNode(), request.chosenFiles().length, request.newOnly(), request.recurseDirectories(), request.retainDirectories()});
+        progGui = new ProgressGui(Tools.countFiles(request.chosenFiles()),
                 Settings.getJpoResources().getString("PictureAdderProgressDialogTitle"),
                 Settings.getJpoResources().getString("picturesAdded"));
         Settings.getPictureCollection().setSendModelUpdates(false);
-
-
     }
 
     /**
-     * The files selected by the filechooser
+     * The picture add request
      */
-    private final File[] chosenFiles;
-
-    /**
-     * The node into which to add pictures
-     */
-    private final SortableDefaultMutableTreeNode startNode;
+    private final PictureAdderRequest request;
 
     /**
      * A Progress Gui with a cancel button.
      */
     private final ProgressGui progGui;
-
-    /**
-     * newOnly indicates whether to check if the picture is already in the collection
-     */
-    private final boolean newOnly;
-
-    private final boolean recurseDirectories;
-
-    private final boolean retainDirectories;
-
-    private final Collection<Integer> selectedCategories;
 
 
     /**
@@ -107,15 +73,19 @@ public class PictureAdder
     @Override
     public Integer doInBackground() {
         // add all the files from the array as nodes to the start node.
-        for (int i = 0; (i < chosenFiles.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-            final File addFile = chosenFiles[i];
-            LOGGER.log(Level.INFO, "File {0} of {1}: {2}", new Object[]{i + 1, chosenFiles.length, addFile});
+        //for (int i = 0; (i < request.chosenFiles().length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
+        //final var addFile = request.chosenFiles()[i];
+        for (final var addFile : request.chosenFiles()) {
+            if (progGui.getInterruptSemaphore().getShouldInterrupt()) {
+                break;
+            }
+            LOGGER.log(Level.INFO, "Considering file: {0}", addFile);
             if (!addFile.isDirectory()) {
-                addPicture(startNode, addFile);
+                addPicture(request.startNode(), addFile);
             } else {
                 // the file is a directory
                 if (Tools.hasPictures(addFile)) {
-                    addDirectory(startNode, addFile);
+                    addDirectory(request.startNode(), addFile);
                 } else {
                     LOGGER.log(Level.FINE, "No pictures in directory: {0}", addFile);
                 }
@@ -137,7 +107,7 @@ public class PictureAdder
      */
     private void addDirectory(final SortableDefaultMutableTreeNode parentNode, final File dir) {
         final SortableDefaultMutableTreeNode directoryNode;
-        if (retainDirectories) {
+        if (request.retainDirectories()) {
             directoryNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
             parentNode.add(directoryNode);
             Settings.getPictureCollection().setUnsavedUpdates();
@@ -148,7 +118,7 @@ public class PictureAdder
         final File[] fileArray = dir.listFiles();
         if (fileArray != null) {
             for (int i = 0; (i < fileArray.length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-                if (fileArray[i].isDirectory() && recurseDirectories && Tools.hasPictures(fileArray[i])) {
+                if (fileArray[i].isDirectory() && request.recurseDirectories() && Tools.hasPictures(fileArray[i])) {
                     addDirectory(directoryNode, fileArray[i]);
                 } else {
                     addPicture(directoryNode, fileArray[i]);
@@ -158,8 +128,8 @@ public class PictureAdder
         removeEmptyDirectoryNode(directoryNode);
     }
 
-    private void addPicture(SortableDefaultMutableTreeNode directoryNode, File file) {
-        if (directoryNode.addSinglePicture(file, newOnly, selectedCategories)) {
+    private void addPicture(final SortableDefaultMutableTreeNode groupNode, final File file) {
+        if (groupNode.addSinglePicture(file, request.newOnly(), request.selectedCategories())) {
             publish(1);
         } else {
             publish(-1);
@@ -168,7 +138,7 @@ public class PictureAdder
 
     private void removeEmptyDirectoryNode(final SortableDefaultMutableTreeNode directoryNode) {
         // it can happen that we end up adding no pictures and could be returning a new empty group
-        if (retainDirectories && (directoryNode.getChildCount() == 0)) {
+        if (request.retainDirectories() && (directoryNode.getChildCount() == 0)) {
             directoryNode.deleteNode();
         }
     }
@@ -197,7 +167,7 @@ public class PictureAdder
     @Override
     protected void done() {
         Settings.getPictureCollection().setSendModelUpdates(true);
-        Settings.getPictureCollection().sendNodeStructureChanged(startNode);
+        Settings.getPictureCollection().sendNodeStructureChanged(request.startNode());
         progGui.switchToDoneMode();
     }
 
