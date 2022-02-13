@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2021  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -167,7 +167,7 @@ public class ThumbnailController
             } else {
                 priority = QUEUE_PRIORITY.MEDIUM_PRIORITY;
             }
-            myThumbnailQueueRequest = requestThumbnailCreation(priority);
+            myThumbnailQueueRequest = requestThumbnailCreation(node, priority);
         }
 
         showSelectionStatus();
@@ -268,10 +268,10 @@ public class ThumbnailController
      *                 the queue
      * @return the request
      */
-    private ThumbnailQueueRequest requestThumbnailCreation(final QUEUE_PRIORITY priority) {
+    private ThumbnailQueueRequest requestThumbnailCreation(final SortableDefaultMutableTreeNode node, final QUEUE_PRIORITY priority) {
         myThumbnail.setQueueIcon();
-        return ThumbnailCreationQueue.requestThumbnailCreation(
-                this, myNode, priority, getMaximumUnscaledSize());
+        final var thumbnailQueueRequest = new ThumbnailQueueRequest(this, node, priority, getMaximumUnscaledSize());
+        return ThumbnailCreationQueue.requestThumbnailCreation(thumbnailQueueRequest);
     }
 
 
@@ -402,7 +402,7 @@ public class ThumbnailController
         @Override
         public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
             if (pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged()) {
-                requestThumbnailCreation(QUEUE_PRIORITY.HIGH_PRIORITY);
+                requestThumbnailCreation(myNode, QUEUE_PRIORITY.HIGH_PRIORITY);
             } else if (pictureInfoChangeEvent.getWasSelected()) {
                 myThumbnail.setSelected();
             } else if (pictureInfoChangeEvent.getWasUnselected()) {
@@ -410,7 +410,7 @@ public class ThumbnailController
             } else if ((pictureInfoChangeEvent.getWasMailSelected()) || (pictureInfoChangeEvent.getWasMailUnselected())) {
                 determineMailSelectionStatus();
             } else if (pictureInfoChangeEvent.getRotationChanged()) {
-                requestThumbnailCreation(QUEUE_PRIORITY.HIGH_PRIORITY);
+                requestThumbnailCreation(myNode, QUEUE_PRIORITY.HIGH_PRIORITY);
             }
         }
     }

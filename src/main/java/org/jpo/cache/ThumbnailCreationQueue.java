@@ -1,21 +1,19 @@
 package org.jpo.cache;
 
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.awt.*;
 import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 
 
 /*
- Copyright (C) 2003-2021  Richard Eigenmann.
+ Copyright (C) 2003-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -46,36 +44,25 @@ public class ThumbnailCreationQueue {
      * request comes in with a higher priority. If the new request forces a
      * rebuild of the image this is also updated in the request.
      *
-     *
-     * @param    callbackHandler    The ThumbnailQueueRequestCallbackHandler which is
-     * to be notified when done
-     * @param node The node for which to extract a thumbnail
-     * @param priority The priority with which the request is to be treated on
-     * the queue
-     * @param size the maximum size to extract
+     * @param newThumbnailQueueRequest the request to put on the queue
      * @return true if the request was added to the queue, false if the request
      * already existed.
      */
-    public static ThumbnailQueueRequest requestThumbnailCreation(
-            final ThumbnailQueueRequestCallbackHandler callbackHandler,
-            final SortableDefaultMutableTreeNode node,
-            final QUEUE_PRIORITY priority,
-            final Dimension size) {
-        final ThumbnailQueueRequest newThumbnailQueueRequest = new ThumbnailQueueRequest(callbackHandler, node, priority, size);
+    public static ThumbnailQueueRequest requestThumbnailCreation(final ThumbnailQueueRequest newThumbnailQueueRequest) {
 
-        final ThumbnailQueueRequest requestFoundOnQueue = findThumbnailQueueRequest(callbackHandler);
+        final var requestFoundOnQueue = findThumbnailQueueRequest(newThumbnailQueueRequest.callbackHandler);
         if (requestFoundOnQueue == null) {
             QUEUE.add(newThumbnailQueueRequest);
             return newThumbnailQueueRequest;
-        } else if ((requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != callbackHandler)
-                || (requestFoundOnQueue.getNode() != node)
-                || (requestFoundOnQueue.getSize() != size)) {
+        } else if ((requestFoundOnQueue.getThumbnailQueueRequestCallbackHandler() != newThumbnailQueueRequest.callbackHandler)
+                || (requestFoundOnQueue.getNode() != newThumbnailQueueRequest.node)
+                || (requestFoundOnQueue.getSize() != newThumbnailQueueRequest.size)) {
             requestFoundOnQueue.cancel();
             removeFromQueue(requestFoundOnQueue);
             QUEUE.add(newThumbnailQueueRequest);
             return newThumbnailQueueRequest;
         } else {
-            requestFoundOnQueue.increasePriorityTo(priority);
+            requestFoundOnQueue.increasePriorityTo(newThumbnailQueueRequest.priority);
             return requestFoundOnQueue;
         }
     }

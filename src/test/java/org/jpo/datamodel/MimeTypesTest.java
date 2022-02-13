@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +26,9 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 */
 
 class MimeTypesTest {
+
+    private static Logger LOGGER = Logger.getLogger(MimeTypesTest.class.getName());
+
     @Test
     void testGetMimeType() {
         assertEquals("null", MimeTypes.getMimeType(new File("")));
@@ -222,6 +227,7 @@ class MimeTypesTest {
         try {
             final var image = "sgi.sgi";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
+            LOGGER.log(Level.INFO, "File: {0} isAPicture: {1}", new Object[]{imageFile, MimeTypes.isAPicture(imageFile)});
             assert (MimeTypes.isAPicture(imageFile));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());

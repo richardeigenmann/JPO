@@ -106,10 +106,6 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'com.google.gdata:core:1.47.1'
 
-    //implementation files('libs/gdata-maps-2.0.jar')
-    //implementation files('libs/gdata-media-1.0.jar')
-    //implementation files('libs/gdata-photos-2.0.jar')
-
     implementation 'com.google.guava:guava:31.0.1-jre'
     implementation 'javax.mail:javax.mail-api:1.6.2'
     implementation 'com.jcraft:jsch:0.1.55'

@@ -1,5 +1,6 @@
 package org.jpo.gui.swing;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
@@ -64,12 +65,9 @@ public class Thumbnail extends JComponent {
      *
      * @param icon The ImageIcon that should be displayed
      */
-    public void setImageIcon(final ImageIcon icon) {
-        LOGGER.log(Level.FINE, "Setting image on thumbnail {0}", hashCode());
+    public void setImageIcon(@NotNull final ImageIcon icon) {
+        LOGGER.log(Level.INFO, "Setting image on thumbnail {0}", hashCode());
         final Runnable runnable = () -> {
-            if (icon == null) {
-                return;
-            }
             img = icon.getImage();
             if (img == null) {
                 return;
