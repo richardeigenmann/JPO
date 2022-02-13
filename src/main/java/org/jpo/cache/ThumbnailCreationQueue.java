@@ -2,7 +2,6 @@ package org.jpo.cache;
 
 import org.jetbrains.annotations.TestOnly;
 
-import java.util.Iterator;
 import java.util.concurrent.PriorityBlockingQueue;
 
 
@@ -105,10 +104,10 @@ public class ThumbnailCreationQueue {
     @TestOnly
     protected static ThumbnailQueueRequest findThumbnailQueueRequest(
             final ThumbnailQueueRequestCallbackHandler callbackHandler ) {
-        for (final Iterator<ThumbnailQueueRequest> i = QUEUE.iterator(); i.hasNext(); ) {
-            final ThumbnailQueueRequest test = i.next();
-            if ((callbackHandler != null) && (test.getThumbnailQueueRequestCallbackHandler().equals(callbackHandler))) {
-                return test;
+        for (final var i = QUEUE.iterator(); i.hasNext(); ) {
+            final var thumbnailQueueRequest = i.next();
+            if ((callbackHandler != null) && (thumbnailQueueRequest.getThumbnailQueueRequestCallbackHandler().equals(callbackHandler))) {
+                return thumbnailQueueRequest;
             }
         }
         return null;
