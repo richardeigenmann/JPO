@@ -15,7 +15,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -128,7 +127,7 @@ public class SourcePicture {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(SourcePictureStatus.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(SourcePicture.class.getName());
 
     /**
      * Loads the picture indicated by the file to this SourcePicture on the current thread.
@@ -243,8 +242,8 @@ public class SourcePicture {
     private BufferedImage convertImageBytesToBufferedImage(final ImageBytes imageBytes) {
         // We have the bytes from the image that came from the cache or the disk
         // now create a BufferedImage from that
-        try (final ByteArrayInputStream bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
-            final ImageReader reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+        try (final var bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
+            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
             if (reader == null) {
                 LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
                 setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));

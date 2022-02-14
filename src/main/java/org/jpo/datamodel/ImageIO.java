@@ -28,6 +28,10 @@ public class ImageIO {
 
     private static final Logger LOGGER = Logger.getLogger(ImageIO.class.getName());
 
+    private ImageIO() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * This method checks whether the JVM has an image reader for the supplied
      * File.

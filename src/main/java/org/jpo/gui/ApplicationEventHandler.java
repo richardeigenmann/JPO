@@ -479,7 +479,6 @@ public class ApplicationEventHandler {
      */
     @Subscribe
     public void handleEvent(final StartDoublePanelSlideshowRequest request) {
-        Tools.checkEDT();
         final var p1 = new PictureViewer();
         p1.switchWindowMode(WINDOW_UNDECORATED_LEFT);
         final var p2 = new PictureViewer();
@@ -514,7 +513,7 @@ public class ApplicationEventHandler {
             return;
         }
         if (!ImageIO.jvmHasReader(file)) {
-            LOGGER.log(Level.SEVERE, "Can't find a JVM reader for file: {0}", file);
+            LOGGER.log(Level.SEVERE, "Can''t find a JVM reader for file: {0}", file);
             return;
         }
         SwingUtilities.invokeLater(() -> {
@@ -1533,7 +1532,17 @@ public class ApplicationEventHandler {
     @Subscribe
     public void handleEvent(final OpenHelpAboutFrameRequest request) {
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                Settings.getJpoResources().getString("HelpAboutText") + Settings.getJpoResources().getString("HelpAboutUser") + System.getProperty("user.name") + "\n" + Settings.getJpoResources().getString("HelpAboutOs") + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n" + Settings.getJpoResources().getString("HelpAboutJvm") + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n" + Settings.getJpoResources().getString("HelpAboutJvmMemory") + Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0) + " MB\n" + Settings.getJpoResources().getString("HelpAboutJvmFreeMemory") + Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0) + " MB\n");
+                Settings.getJpoResources().getString("HelpAboutText")
+                        + Settings.getJpoResources().getString("HelpAboutUser") + System.getProperty("user.name") + "\n"
+                        + Settings.getJpoResources().getString("HelpAboutOs") + System.getProperty("os.name")
+                        + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n"
+                        + Settings.getJpoResources().getString("HelpAboutJvm")
+                        + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n"
+                        + Settings.getJpoResources().getString("HelpAboutJvmMemory")
+                        + Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0) + " MB\n"
+                        + Settings.getJpoResources().getString("HelpAboutJvmFreeMemory")
+                        + Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0) + " MB\n"
+                        + "Cores: " + Runtime.getRuntime().availableProcessors() + "\n");
 
         // while we're at it dump the stuff to the log
         LOGGER.info("HelpAboutWindow: Help About showed the following information");
@@ -1542,6 +1551,7 @@ public class ApplicationEventHandler {
         LOGGER.log(Level.INFO, "Java: {0}", System.getProperty("java.version"));
         LOGGER.log(Level.INFO, "Max Memory: {0} MB", Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0));
         LOGGER.log(Level.INFO, "Free Memory: {0} MB", Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0));
+        LOGGER.log(Level.INFO, "Cores: {0}", Runtime.getRuntime().availableProcessors());
     }
 
     /**

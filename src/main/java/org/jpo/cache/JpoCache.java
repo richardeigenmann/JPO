@@ -265,6 +265,9 @@ public class JpoCache {
      * @return the thumbnail
      */
     private static ImageBytes createThumbnail(final File file, final double rotation, final Dimension maxSize) {
+        if (!org.jpo.datamodel.ImageIO.jvmHasReader(file)) {
+            return null;
+        }
         // create a new thumbnail from the highres
         final var scalablePicture = new ScalablePicture();
         if (Settings.isThumbnailFastScale()) {
@@ -283,9 +286,9 @@ public class JpoCache {
         if (scalablePicture.getScaledPicture() == null) {
             return null;
         }
-        final var bos = new ByteArrayOutputStream();
-        scalablePicture.writeScaledJpg(bos);
-        final var imageBytes = new ImageBytes(bos.toByteArray());
+        final var byteArrayOutputStream = new ByteArrayOutputStream();
+        scalablePicture.writeScaledJpg(byteArrayOutputStream);
+        final var imageBytes = new ImageBytes(byteArrayOutputStream.toByteArray());
         imageBytes.setRetrievedFromCache(false);
 
         try {

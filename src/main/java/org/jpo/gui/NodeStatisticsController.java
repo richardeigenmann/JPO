@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 /*
 NodeStatisticsController.java: a controller that makes the NodeStatisticsPanel show interesting stats
 
-Copyright (C) 2002 - 2021  Richard Eigenmann.
+Copyright (C) 2002 - 2022  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -93,12 +93,24 @@ public class NodeStatisticsController {
                 nodeStatisticsBean.setNumberOfPictures(nodeStatistics.getNumberOfPicturesString());
                 nodeStatisticsBean.setSizeOfPictures(nodeStatistics.getSizeOfPicturesString());
 
-                if (Settings.isWriteLog()) {
+                if (Settings.isDebugMode()) {
                     nodeStatisticsBean.setFreeMemory(Tools.freeMemory());
                     nodeStatisticsBean.setQueueCount(Settings.getJpoResources().getString("queCountJLabel") + ThumbnailCreationQueue.size());
                     nodeStatisticsBean.setSelectedCount(String.format("Selected: %d", Settings.getPictureCollection().getSelection().size()));
+                    nodeStatisticsBean.setThumbnailCreationFactoryCount(String.format("ThumbnailCreationFactoryThreads: %d", countThreadsOfClass("ThumbnailCreationFactory")));
                 }
                 return "done";
+            }
+
+            private int countThreadsOfClass(final String className) {
+                final Thread[] tarray = new Thread[Thread.activeCount()];
+                Thread.enumerate(tarray);
+                var count = 0;
+                for (final var t : tarray) {
+                    if (className.equals(t.getName()))
+                        count++;
+                }
+                return count;
             }
 
             @Override

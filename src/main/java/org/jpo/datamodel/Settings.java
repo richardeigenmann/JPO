@@ -1703,7 +1703,7 @@ public class Settings {
     }
 
     /**
-     * Whether JPO runs in dbug mode or not
+     * Whether JPO runs in debug mode or not
      */
     private static boolean debugMode = false;
 

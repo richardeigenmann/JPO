@@ -3,13 +3,13 @@ package org.jpo.datamodel;
 /*
  NodeStatisticsBean.java: A class that holds the stats of the NodeStatistics
 
- Copyright (C) 2002 - 2014  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -142,6 +142,8 @@ public class NodeStatisticsBean {
     public void setQueueCount( String queueCount ) {
         this.queueCount = queueCount;
     }
+
+
     private String selectedCount = "";
 
     /**
@@ -158,8 +160,17 @@ public class NodeStatisticsBean {
      *
      * @param selectedCount the number of selected nodes
      */
-    public void setSelectedCount( String selectedCount ) {
+    public void setSelectedCount(String selectedCount) {
         this.selectedCount = selectedCount;
     }
 
+    private String thumbnailCreationFactoryCount;
+
+    public String getThumbnailCreationFactoryCount() {
+        return thumbnailCreationFactoryCount;
+    }
+
+    public void setThumbnailCreationFactoryCount(final String thumbnailCreationFactoryCount) {
+        this.thumbnailCreationFactoryCount = thumbnailCreationFactoryCount;
+    }
 }
