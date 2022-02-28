@@ -371,6 +371,7 @@ public class JpoCache {
             final int numberOfPics,
             final List<SortableDefaultMutableTreeNode> childPictureNodes)
             throws IOException {
+        // start with a folder icon
         final var groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
         final var groupThumbnailGraphics = groupThumbnail.createGraphics();
 
@@ -379,7 +380,7 @@ public class JpoCache {
         var topMargin = 65;
         var horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
 
-        final var scalablePicture = new ScalablePicture();
+
         var mostRecentPictureModification = FileTime.fromMillis(0);
         for (var picsProcessed = 0; (picsProcessed < numberOfPics) && (picsProcessed < childPictureNodes.size()); picsProcessed++) {
             final var pictureInfo = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
@@ -394,6 +395,11 @@ public class JpoCache {
             final var yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
             var y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
 
+            if (!org.jpo.datamodel.ImageIO.jvmHasReader(pictureInfo.getImageFile())) {
+                continue;
+            }
+
+            final var scalablePicture = new ScalablePicture();
             scalablePicture.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
 
             scalablePicture.setScaleSize(Settings.miniThumbnailSize);

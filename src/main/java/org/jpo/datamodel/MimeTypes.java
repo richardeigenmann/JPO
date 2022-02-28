@@ -60,7 +60,7 @@ public class MimeTypes {
 
     public static boolean isAMovie(final File file) {
         var mimeType = getMimeType(file);
-        return mimeType.startsWith("video/") || "application/x-troff-msvideo".equals(mimeType);
+        return mimeType.startsWith("video/") || "application/x-troff-msvideo".equals(mimeType) || "application/x-matroska".equals(mimeType);
     }
 
     public static boolean isAPicture(final File file) {
