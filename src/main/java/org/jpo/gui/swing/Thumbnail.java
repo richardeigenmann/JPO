@@ -60,13 +60,12 @@ public class Thumbnail extends JComponent {
     }
 
     /**
-     * sets the image the Thumbnail should show If we are not on the EDT this is
-     * submitted to the EDT.
+     * sets the image the Thumbnail. If we are not on the EDT this is submitted to the EDT.
      *
      * @param icon The ImageIcon that should be displayed
      */
     public void setImageIcon(@NotNull final ImageIcon icon) {
-        LOGGER.log(Level.INFO, "Setting image on thumbnail {0}", hashCode());
+        LOGGER.log(Level.INFO, "Setting image on thumbnail hashCode: {0}", hashCode());
         final Runnable runnable = () -> {
             img = icon.getImage();
             if (img == null) {

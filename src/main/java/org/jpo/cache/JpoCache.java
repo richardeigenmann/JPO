@@ -319,9 +319,16 @@ public class JpoCache {
         final var verticalPics = (groupThumbnailDimension.height - topMargin) / (Settings.miniThumbnailSize.height + margin);
         final var numberOfPics = horizontalPics * verticalPics;
 
+        final List<PictureInfo> usablePictures = childPictureNodes
+                .stream()
+                .map(node -> (PictureInfo) node.getUserObject())
+                .filter(pictureInfo -> org.jpo.datamodel.ImageIO.jvmHasReader(pictureInfo.getImageFile()))
+                .limit(numberOfPics)
+                .toList();
+
         final var sb = new StringBuilder("Group-");
-        for (int i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
-            final var pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+
+        for (final var pictureInfo : usablePictures) {
             sb.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
         }
 
@@ -333,8 +340,7 @@ public class JpoCache {
                 final FileTime thumbnailLastModification = imageBytes.getLastModification();
 
                 var thumbnailNeedsRefresh = false;
-                for (var i = 0; (i < numberOfPics) && (i < childPictureNodes.size()); i++) {
-                    final var pictureInfo = (PictureInfo) childPictureNodes.get(i).getUserObject();
+                for (final var pictureInfo : usablePictures) {
                     final var imagePath = Paths.get(pictureInfo.getImageURIOrNull());
                     final var lastModification = (Files.getLastModifiedTime(imagePath));
                     if (lastModification.compareTo(thumbnailLastModification) > 0) {
@@ -342,15 +348,16 @@ public class JpoCache {
                         break;
                     }
                 }
+
                 if (thumbnailNeedsRefresh) {
-                    imageBytes = createGroupThumbnailAndStoreInCache(key, numberOfPics, childPictureNodes);
+                    imageBytes = createGroupThumbnailAndStoreInCache(key, usablePictures);
 
                 }
             } catch (final IOException ex) {
                 throw (ex);
             }
         } else {
-            imageBytes = createGroupThumbnailAndStoreInCache(key, numberOfPics, childPictureNodes);
+            imageBytes = createGroupThumbnailAndStoreInCache(key, usablePictures);
         }
         return imageBytes;
     }
@@ -359,18 +366,15 @@ public class JpoCache {
      * Create a Group ThumbnailController by loading the nodes component images
      * and creating a folder icon with embedded images
      *
-     * @param key               The key for the image in the cache
-     * @param numberOfPics      the number of pictures to include
-     * @param childPictureNodes The nodes from which to create the mini
-     *                          thumbnails
+     * @param key            The key for the image in the cache
+     * @param usablePictures The nodes from which to create the mini thumbnails
      * @return the image
      * @throws IOException when things go wrong
      */
     private static ImageBytes createGroupThumbnailAndStoreInCache(
             final String key,
-            final int numberOfPics,
-            final List<SortableDefaultMutableTreeNode> childPictureNodes)
-            throws IOException {
+            final List<PictureInfo> usablePictures)
+    throws IOException {
         // start with a folder icon
         final var groupThumbnail = ImageIO.read(new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")));
         final var groupThumbnailGraphics = groupThumbnail.createGraphics();
@@ -380,10 +384,9 @@ public class JpoCache {
         var topMargin = 65;
         var horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
 
-
         var mostRecentPictureModification = FileTime.fromMillis(0);
-        for (var picsProcessed = 0; (picsProcessed < numberOfPics) && (picsProcessed < childPictureNodes.size()); picsProcessed++) {
-            final var pictureInfo = (PictureInfo) childPictureNodes.get(picsProcessed).getUserObject();
+        var picsProcessed = 0;
+        for (final var pictureInfo : usablePictures) {
 
             final var imagePath = Paths.get(pictureInfo.getImageURIOrNull());
             final var lastModification = (Files.getLastModifiedTime(imagePath));
@@ -397,6 +400,9 @@ public class JpoCache {
 
             if (!org.jpo.datamodel.ImageIO.jvmHasReader(pictureInfo.getImageFile())) {
                 continue;
+            } else {
+                LOGGER.log(Level.INFO, "We hava a reader for file: {0} it is class {1}",
+                        new Object[]{pictureInfo.getImageFile(), org.jpo.datamodel.ImageIO.getImageIOReader(ImageIO.createImageInputStream(new FileInputStream(pictureInfo.getImageFile()))).getClass()});
             }
 
             final var scalablePicture = new ScalablePicture();
@@ -408,6 +414,8 @@ public class JpoCache {
             y += Settings.miniThumbnailSize.height - scalablePicture.getScaledHeight();
 
             groupThumbnailGraphics.drawImage(scalablePicture.getScaledPicture(), x, y, null);
+
+            picsProcessed++;
         }
 
         final var byteArrayOutputStream = new ByteArrayOutputStream();

@@ -1,9 +1,6 @@
 package org.jpo.cache;
 
-import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.MimeTypes;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.*;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -164,6 +161,8 @@ public class ThumbnailCreationFactory implements Runnable {
                     request.setIcon(MOVIE_ICON);
                 } else if (MimeTypes.isADocument(pictureInfo.getImageFile())) {
                     request.setIcon(DOCUMENT_ICON);
+                } else if (!ImageIO.jvmHasReader(pictureInfo.getImageFile())) {
+                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
                 } else {
                     final var imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
                             pictureInfo.getRotation(),

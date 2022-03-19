@@ -242,7 +242,8 @@ public class SourcePicture {
     private BufferedImage convertImageBytesToBufferedImage(final ImageBytes imageBytes) {
         // We have the bytes from the image that came from the cache or the disk
         // now create a BufferedImage from that
-        try (final var bis = imageBytes.getByteArrayInputStream(); final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
+        try (final var bis = imageBytes.getByteArrayInputStream();
+             final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
             final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
             if (reader == null) {
                 LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);

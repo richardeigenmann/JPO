@@ -40,6 +40,10 @@ public class ImageIO {
      * @return true if the JVM has a reader false if not.
      */
     public static boolean jvmHasReader(final File file) {
+        if (!MimeTypes.isAPicture(file)) {
+            LOGGER.log(Level.INFO, "File {0} ist not a picture according the MimeType {1}", new Object[]{file, MimeTypes.getMimeType(file)});
+            return false;
+        }
         try (final var testStream = new FileImageInputStream(file)) {
             return javax.imageio.ImageIO.getImageReaders(testStream).hasNext();
         } catch (final IOException x) {

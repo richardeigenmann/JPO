@@ -32,13 +32,13 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.*;
 /*
  ScalablePicture.java:  class that can load and save images
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -193,13 +193,10 @@ public class ScalablePicture
     }
 
     /**
-     * Synchronous method to load the image. It should only be called by
-     * something which is a thread itself such as the HtmlDistillerThread. Since
-     * this intended for large batch operations this bypasses the cache. There
-     * are no status updates
+     * Loads the image on the current thread. Doesn'tsend status updates.
      *
-     * @param imageFile The Url of the image to be loaded
-     * @param rotation The angle by which it is to be rotated upon loading.
+     * @param imageFile The image File to be loaded
+     * @param rotation  The angle by which it is to be rotated upon loading.
      */
     public void loadPictureImd( final File imageFile, final double rotation ) {
         if ( sourcePicture != null ) {
@@ -248,8 +245,7 @@ public class ScalablePicture
                 setStatus( SCALABLE_PICTURE_ERROR, statusMessage );
                 sourcePicture.removeListener( this );
                 break;
-            case SOURCE_PICTURE_LOADING:
-            case SOURCE_PICTURE_ROTATING:
+            case SOURCE_PICTURE_LOADING, SOURCE_PICTURE_ROTATING:
                 setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
                 break;
             case SOURCE_PICTURE_READY:
