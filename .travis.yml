@@ -10,7 +10,7 @@ before_install:
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest
     | jq -r .assets[0].browser_download_url)
   - wget https://services.gradle.org/distributions/gradle-7.4.2-bin.zip
-  - unzip -qq gradle-7.3.2-bin.zip
+  - unzip -qq gradle-7.4.2-bin.zip
   - export GRADLE_HOME=$PWD/gradle-7.4,2
   - export PATH=$GRADLE_HOME/bin:$PATH
   - gradle -v
