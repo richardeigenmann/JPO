@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -250,6 +252,7 @@ class ImageIOTest {
 
     @Test
     void testHasTgaImageReader() {
+        assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var TGA_IMAGE_FILE = "tga.tga";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
         try {
@@ -350,6 +353,7 @@ class ImageIOTest {
 
     @Test
     void testHasGifImageReader() {
+        assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var GIF_IMAGE_FILE = "gif.gif";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(GIF_IMAGE_FILE));
         try {
@@ -375,6 +379,7 @@ class ImageIOTest {
 
     @Test
     void testHasIffImageReader() {
+        assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var IFF_IMAGE_FILE = "AmigaAmiga.iff";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(IFF_IMAGE_FILE));
         try {
@@ -426,6 +431,7 @@ class ImageIOTest {
 
     @Test
     void testHasPctImageReader() {
+        assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var PICT_IMAGE_FILE = "food.pct";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PICT_IMAGE_FILE));
         try {
