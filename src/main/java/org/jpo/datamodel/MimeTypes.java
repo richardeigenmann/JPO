@@ -42,6 +42,14 @@ public class MimeTypes {
      */
     public static String getMimeType(final File file) {
         try {
+            if (!file.exists()) {
+                LOGGER.log(Level.SEVERE, "File {0} doesnt exist!", file);
+                return "null";
+            } else if (!file.canRead()) {
+                LOGGER.log(Level.SEVERE, "File {0} cant be read!", file);
+                return "null";
+            }
+
             var mimeType = Files.probeContentType(file.toPath());
             LOGGER.log(Level.INFO, "File {0} is mime-type: {1}", new Object[]{file, mimeType});
             return mimeType != null ? mimeType : "null";
