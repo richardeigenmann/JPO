@@ -251,6 +251,7 @@ class ImageIOTest {
     }
 
     @Test
+    @Disabled("Doesn't work with Travis")
     void testHasTgaImageReader() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var TGA_IMAGE_FILE = "tga.tga";
@@ -352,6 +353,7 @@ class ImageIOTest {
     }
 
     @Test
+    @Disabled("Doesn't work with Travis")
     void testHasGifImageReader() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var GIF_IMAGE_FILE = "gif.gif";
@@ -378,6 +380,7 @@ class ImageIOTest {
     }
 
     @Test
+    @Disabled("Doesn't work with Travis")
     void testHasIffImageReader() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var IFF_IMAGE_FILE = "AmigaAmiga.iff";
@@ -430,6 +433,7 @@ class ImageIOTest {
     }
 
     @Test
+    @Disabled("Doesn't work with Travis")
     void testHasPctImageReader() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // Doesn't work on Travis
         final var PICT_IMAGE_FILE = "food.pct";
