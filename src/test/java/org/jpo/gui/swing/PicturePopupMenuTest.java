@@ -172,6 +172,7 @@ class PicturePopupMenuTest {
      * Test clicking showMap
      */
     @Test
+    @Disabled("Doesn't work in Travis")
     void testOpenFolder() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
