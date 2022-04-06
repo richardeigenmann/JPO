@@ -45,11 +45,17 @@ public class ImageIO {
             return false;
         }
         try (final var testStream = new FileImageInputStream(file)) {
-            return javax.imageio.ImageIO.getImageReaders(testStream).hasNext();
+            final ImageReader reader = javax.imageio.ImageIO.getImageReaders(testStream).next();
+            if (reader != null) {
+                LOGGER.log(Level.INFO, "File {0} has a picture mime type and ImageIO has a reader for it. Class is {1}", new Object[]{file, reader.getClass()});
+                return true;
+            } else {
+                LOGGER.log(Level.INFO, "Cant find an ImageIO reader for file {0}", file);
+            }
         } catch (final IOException x) {
-            LOGGER.log(Level.INFO, x.getLocalizedMessage());
-            return false;
+            LOGGER.log(Level.INFO, x.getMessage());
         }
+        return false;
     }
 
     /**
