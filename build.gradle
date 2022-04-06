@@ -16,6 +16,9 @@ plugins {
 
 java {
     withJavadocJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 tasks.withType(JavaCompile).all {
@@ -258,7 +261,7 @@ task run(type: JavaExec) {
     description 'Runs JPO from the shadowJar'
     dependsOn shadowJar
     classpath = files( 'build/libs/Jpo-all.jar' )
-    main = 'org.jpo.Main'
+    mainClass = 'org.jpo.Main'
 }
 
 test.onlyIf { !project.hasProperty('skipTests') }
@@ -280,8 +283,8 @@ jacoco {
 jacocoTestReport {
     group 'verification'
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 

@@ -13,10 +13,8 @@ nbproject
 .idea
 out
 Jpo.iml
-.project
 bin
 .settings
-cache.properties
 .vscode
 build-dir
 repo

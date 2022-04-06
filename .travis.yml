@@ -9,11 +9,14 @@ before_install:
   - sudo apt-get install jq
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest
     | jq -r .assets[0].browser_download_url)
-  - wget https://services.gradle.org/distributions/gradle-7.4.2-bin.zip
-  - unzip -qq gradle-7.4.2-bin.zip
-  - export GRADLE_HOME=$PWD/gradle-7.4,2
+  #- wget https://services.gradle.org/distributions/gradle-7.4.2-bin.zip
+  #- unzip -qq gradle-7.4.2-bin.zip
+  #- export GRADLE_HOME=$PWD/gradle-7.4,2
   - export PATH=$GRADLE_HOME/bin:$PATH
-  - gradle -v
+  #- gradle -v
+  - ./gradlew -v
+  - java --version
+  - javac --version
 install:
   - npm install
 after_success:
@@ -31,7 +34,8 @@ cache:
     - '$HOME/.sonar/cache'
 
 script:
-  - gradle --info check
+  #- gradle --info check
+  - ./gradlew --info check
   - sonar-scanner
 git:
   depth: false
