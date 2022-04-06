@@ -2,7 +2,7 @@ language: java
 os: linux
 dist: focal
 jdk: openjdk17
-#node_js: 'node'
+node_js: 'node'
 services:
   - xvfb
 before_install:
@@ -14,11 +14,11 @@ before_install:
   #- export GRADLE_HOME=$PWD/gradle-7.4,2
   - export PATH=$GRADLE_HOME/bin:$PATH
   #- gradle -v
-  - ./gradlew -v
-  - java --version
-  - javac --version
-install:
-  - npm install
+  #- ./gradlew -v
+  #- java --version
+  #- javac --version
+  #install:
+  #- npm install
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter
