@@ -32,7 +32,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.*;
@@ -71,6 +70,7 @@ public class ApplicationEventHandler {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(ApplicationEventHandler.class.getName());
+
     /**
      * Title for error dialogs
      */
@@ -246,60 +246,7 @@ public class ApplicationEventHandler {
     }
 
 
-    /**
-     * This method fires up a user function if it can. User functions are only
-     * valid on PictureInfo nodes.
-     *
-     * @param userFunction The user function to be executed in the array
-     *                     Settings.userFunctionCmd
-     * @param myObject     The PictureInfo upon which the user function should be
-     *                     executed.
-     */
-    private static void runUserFunction(final int userFunction, final PictureInfo myObject) {
-        if ((userFunction < 0) || (userFunction >= Settings.MAX_USER_FUNCTIONS)) {
-            LOGGER.info("Error: called with an out of bounds index");
-            return;
-        }
-        String command = Settings.getUserFunctionCmd()[userFunction];
-        if ((command == null) || (command.length() == 0)) {
-            LOGGER.log(Level.INFO, "Command {0} is not properly defined", Integer.toString(userFunction));
-            return;
-        }
 
-        final var filename = (myObject).getImageFile().toString();
-        command = command.replace("%f", filename);
-
-        final String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
-        command = command.replace("%e", escapedFilename);
-
-        try {
-            final var pictureURL = myObject.getImageFile().toURI().toURL();
-            command = command.replace("%u", pictureURL.toString());
-        } catch (final MalformedURLException x) {
-            LOGGER.log(Level.SEVERE, "Could not substitute %u with the URL: {0}", x.getMessage());
-            return;
-        }
-
-
-        LOGGER.log(Level.INFO, "Command to run is: {0}", command);
-        try {
-            // Had big issues here because the simple exec (String) calls a StringTokenizer
-            // which messes up the filename parameters
-            int blank = command.indexOf(' ');
-            if (blank > -1) {
-                final var cmdarray = new String[2];
-                cmdarray[0] = command.substring(0, blank);
-                cmdarray[1] = command.substring(blank + 1);
-                Runtime.getRuntime().exec(cmdarray);
-            } else {
-                final var cmdarray = new String[1];
-                cmdarray[0] = command;
-                Runtime.getRuntime().exec(cmdarray);
-            }
-        } catch (final IOException x) {
-            LOGGER.log(Level.INFO, "Runtime.exec collapsed with and IOException: {0}", x.getMessage());
-        }
-    }
 
     /**
      * Handles the application startup by posting an {@link OpenMainWindowRequest},
@@ -339,6 +286,9 @@ public class ApplicationEventHandler {
             JpoEventBus.getInstance().post(new StartNewCollectionRequest());
         }
         JpoEventBus.getInstance().post(new CheckForUpdatesRequest(false));
+
+        // plug in the event handlers
+        new RunUserFunctionHandler();
     }
 
     /**
@@ -1730,20 +1680,7 @@ public class ApplicationEventHandler {
 
     }
 
-    /**
-     * Handles the RunUserFunctionRequest request
-     *
-     * @param request The request
-     */
-    @Subscribe
-    public void handleEvent(final RunUserFunctionRequest request) {
-        try {
-            runUserFunction(request.userFunctionIndex(), request.pictureInfo());
-        } catch (ClassCastException | NullPointerException x) {
-            LOGGER.severe(x.getMessage());
-        }
 
-    }
 
     /**
      * Handles the RemoveOldLowresThumbnailsRequest request

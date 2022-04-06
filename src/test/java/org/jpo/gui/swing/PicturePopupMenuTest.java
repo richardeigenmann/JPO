@@ -336,6 +336,13 @@ class PicturePopupMenuTest {
         }
     }
 
+    /**
+     * Not happy with this test as it clicks on the user function and that may have been loaded by the settings
+     * object which then actually runs the user function. We just want to test that the event is propagated
+     * correctly. So I am setting the user functions to "". Hopefully we aren't concurrently running a test
+     * that is writing the settings back to the local properties.
+     * #BRITTLE
+     */
     @Test
     void testUserFunctions() {
         assumeFalse(GraphicsEnvironment.isHeadless());
@@ -350,6 +357,9 @@ class PicturePopupMenuTest {
                 final var userFunction1 = userFunction.getItem(1);
                 final var userFunction2 = userFunction.getItem(2);
                 assertEquals("User Function", userFunction.getText());
+                Settings.getUserFunctionCmd()[0] = "";
+                Settings.getUserFunctionCmd()[1] = "";
+                Settings.getUserFunctionCmd()[2] = "";
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
                     @Subscribe
