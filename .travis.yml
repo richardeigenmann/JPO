@@ -2,7 +2,7 @@ language: java
 os: linux
 dist: focal
 jdk: openjdk17
-node_js: 'node'
+#node_js: 'node'
 services:
   - xvfb
 before_install:
@@ -36,6 +36,13 @@ cache:
 script:
   #- gradle --info check
   - ./gradlew --info check
-  - sonar-scanner
+  #- sonar-scanner
 git:
   depth: false
+
+jobs:
+  - language: node_js
+    node_js: node
+    script:
+      - node -e "console.log('Hi from NodeJS!')"
+      - sonar-scanner
