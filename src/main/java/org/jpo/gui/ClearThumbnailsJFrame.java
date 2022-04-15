@@ -36,19 +36,19 @@ import java.util.logging.Logger;
  *
  * @author Richard Eigenmann
  */
-class ClearThumbnailsJFrame extends JFrame {
+public class ClearThumbnailsJFrame extends JFrame {
 
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ClearThumbnailsJFrame.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(ClearThumbnailsJFrame.class.getName());
 
     /**
      * Creates new form ClearThumbnailsJFrame
      *
      * @param lowresUrls The lowres Urls
      */
-    ClearThumbnailsJFrame(final StringBuilder lowresUrls) {
+    public ClearThumbnailsJFrame(final StringBuilder lowresUrls) {
         initComponents();
         setLocationRelativeTo(Settings.getAnchorFrame());
         this.lowresUrls.setText(lowresUrls.toString());

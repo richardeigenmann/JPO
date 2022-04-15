@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017 -2021 Richard Eigenmann.
+ Copyright (C) 2017 -2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,14 +16,16 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jpo.gui.ApplicationStartupHandler;
+
 /**
  * This request indicates that the application should start up and initialise itself.
  * Typically the ApplicationEventHandler listens to the requests and takes the necessary
  * steps to start up the application.
  *
  * @author Richard Eigenmann
- * @see org.jpo.gui.ApplicationEventHandler
- * @see org.jpo.gui.ApplicationEventHandler#handleEvent(ApplicationStartupRequest)
+ * @see ApplicationStartupHandler
+ * @see ApplicationStartupHandler#handleEvent(ApplicationStartupRequest)
  */
 public class ApplicationStartupRequest {
 }

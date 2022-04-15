@@ -25,7 +25,7 @@ import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.StartThumbnailCreationFactoryRequest;
-import org.jpo.gui.ApplicationEventHandler;
+import org.jpo.gui.ApplicationStartupHandler;
 import org.jpo.gui.ThumbnailController;
 import org.jpo.gui.swing.ResizeSlider;
 
@@ -51,7 +51,7 @@ public class ThumbnailTester {
      */
     public static void main(String[] args) {
         Settings.loadSettings();
-        new ApplicationEventHandler();
+        new ApplicationStartupHandler();
         JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest());
         try {
             SwingUtilities.invokeAndWait(ThumbnailTester::new

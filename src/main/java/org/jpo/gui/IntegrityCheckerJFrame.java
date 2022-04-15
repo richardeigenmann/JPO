@@ -59,7 +59,7 @@ public class IntegrityCheckerJFrame
      *
      * @param startNode The node from which to start
      */
-    IntegrityCheckerJFrame(final SortableDefaultMutableTreeNode startNode) {
+    public IntegrityCheckerJFrame(final SortableDefaultMutableTreeNode startNode) {
         this.startNode = startNode;
 
         // set up widgets

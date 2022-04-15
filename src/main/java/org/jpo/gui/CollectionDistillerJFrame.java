@@ -67,7 +67,7 @@ public class CollectionDistillerJFrame extends JFrame {
      * @param request The request with the details
      *                on.
      */
-    CollectionDistillerJFrame(final ExportGroupToNewCollectionRequest request) {
+    public CollectionDistillerJFrame(final ExportGroupToNewCollectionRequest request) {
         super(Settings.getJpoResources().getString("CollectionDistillerJFrameFrameHeading"));
         this.request = request;
         initComponents();

@@ -4,6 +4,7 @@ package org.jpo.gui;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.DeleteNodeFileHandler;
 import org.jpo.eventbus.JpoEventBus;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +44,7 @@ class ApplicationEventHandlerTest {
      */
     @Test
     void testConstructor() {
-        final ApplicationEventHandler aeh = new ApplicationEventHandler();
+        final ApplicationStartupHandler aeh = new ApplicationStartupHandler();
         assertNotNull(aeh);
         assertNotNull(JpoEventBus.getInstance());
     }
@@ -92,7 +93,7 @@ class ApplicationEventHandlerTest {
             assertEquals(pi2, rootNode.getChildAt(1));
             assert (picture2.exists());
 
-            ApplicationEventHandler.deleteNodeAndFileTest(pi2);
+            DeleteNodeFileHandler.deleteNodeAndFileTest(pi2);
 
             //    Now the node and the file must be gone
             assertEquals(pi1, rootNode.getChildAt(0));

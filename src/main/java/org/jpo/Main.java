@@ -1,9 +1,8 @@
 package org.jpo;
 
 import org.jpo.datamodel.Settings;
-import org.jpo.eventbus.ApplicationStartupRequest;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.gui.ApplicationEventHandler;
+import org.jpo.eventbus.*;
+import org.jpo.gui.ApplicationStartupHandler;
 
 import javax.swing.*;
 
@@ -34,10 +33,11 @@ import javax.swing.*;
  */
 public class Main {
 
-   /**
+    /**
      * The method verifies that the user has the correct Java Virtual Machine (&gt;
-     * 1.7.0) and then creates a new {@link ApplicationEventHandler} object which
+     * 1.7.0) and then creates a new {@link ApplicationStartupHandler} object which
      * it asks to post a {@link ApplicationStartupRequest} to.
+     *
      * @return true is good, false if bad
      */
     private static boolean verifyJavaVersion() {
@@ -117,8 +117,8 @@ public class Main {
         } else {
             System.out.println("No missing classes identified.");
         }
-        new ApplicationEventHandler();
-        JpoEventBus.getInstance().post( new ApplicationStartupRequest() );
+        registerEventHandlers();
+        JpoEventBus.getInstance().post(new ApplicationStartupRequest() );
     }
 
     /**
@@ -137,4 +137,85 @@ public class Main {
             missingClasses.append(className).append(" (from ").append(libraryName).append(")\n");
         }
     }
+
+
+    private static void registerEventHandlers() {
+        JpoEventBus.getInstance().register(new ApplicationStartupHandler());
+        JpoEventBus.getInstance().register(new RunUserFunctionHandler());
+        JpoEventBus.getInstance().register(new StartThumbnailCreationFactoryHandler());
+        JpoEventBus.getInstance().register(new MoveToDirHandler());
+        JpoEventBus.getInstance().register(new RenameFileHandler());
+        JpoEventBus.getInstance().register(new RenamePictureHandler());
+        JpoEventBus.getInstance().register(new MoveToNewLocationHandler());
+        JpoEventBus.getInstance().register(new PictureAdderHandler());
+        JpoEventBus.getInstance().register(new OpenMainWindowHandler());
+        JpoEventBus.getInstance().register(new FindDuplicatesHandler());
+        JpoEventBus.getInstance().register(new CheckIntegrityHandler());
+        JpoEventBus.getInstance().register(new EditSettingsHandler());
+        JpoEventBus.getInstance().register(new EditCamerasHandler());
+        JpoEventBus.getInstance().register(new SendEmailHandler());
+        JpoEventBus.getInstance().register(new ShutdownApplicationHandler());
+        JpoEventBus.getInstance().register(new CheckDirectoriesHandler());
+        JpoEventBus.getInstance().register(new StartDoublePanelSlideshowHandler());
+        JpoEventBus.getInstance().register(new ShowPictureHandler());
+        JpoEventBus.getInstance().register(new ShowPictureInfoEditorHandler());
+        JpoEventBus.getInstance().register(new ShowGroupInfoEditorHandler());
+        JpoEventBus.getInstance().register(new CategoryAssignmentWindowHandler());
+        JpoEventBus.getInstance().register(new ShowAutoAdvanceDialogHandler());
+        JpoEventBus.getInstance().register(new ChooseAndAddCollectionHandler());
+        JpoEventBus.getInstance().register(new ShowGroupAsTableHandler());
+        JpoEventBus.getInstance().register(new FileLoadDialogHandler());
+        JpoEventBus.getInstance().register(new FileLoadHandler());
+        JpoEventBus.getInstance().register(new StartNewCollectionHandler());
+        JpoEventBus.getInstance().register(new FileSaveHandler());
+        JpoEventBus.getInstance().register(new FileSaveAsHandler());
+        JpoEventBus.getInstance().register(new AfterFileSaveHandler());
+        JpoEventBus.getInstance().register(new AddCollectionToGroupHandler());
+        JpoEventBus.getInstance().register(new SortGroupHandler());
+        JpoEventBus.getInstance().register(new AddEmptyGroupHandler());
+        JpoEventBus.getInstance().register(new ExportGroupToHtmlHandler());
+        JpoEventBus.getInstance().register(new GenerateWebsiteHandler());
+        JpoEventBus.getInstance().register(new ExportGroupToFlatFileHandler());
+        JpoEventBus.getInstance().register(new ExportGroupToNewCollectionHandler());
+        JpoEventBus.getInstance().register(new ExportGroupToCollectionHandler());
+        JpoEventBus.getInstance().register(new ExportGroupToPicasaHandler());
+        JpoEventBus.getInstance().register(new AddGroupToEmailSelectionHandler());
+        JpoEventBus.getInstance().register(new AddPictureNodesToEmailSelectionHandler());
+        JpoEventBus.getInstance().register(new RemovePictureNodesFromEmailSelectionHandler());
+        JpoEventBus.getInstance().register(new ClearEmailSelectionHandler());
+        JpoEventBus.getInstance().register(new ConsolidateGroupDialogHandler());
+        JpoEventBus.getInstance().register(new ConsolidateGroupHandler());
+        JpoEventBus.getInstance().register(new CopyToNewLocationHandler());
+        JpoEventBus.getInstance().register(new CopyToDirHandler());
+        JpoEventBus.getInstance().register(new CopyToNewZipfileHandler());
+        JpoEventBus.getInstance().register(new CopyToZipfileHandler());
+        JpoEventBus.getInstance().register(new CopyImageToClipboardHandler());
+        JpoEventBus.getInstance().register(new CopyPathToClipboardHandler());
+        JpoEventBus.getInstance().register(new MoveNodeHandler());
+        JpoEventBus.getInstance().register(new RemoveNodeHandler());
+        JpoEventBus.getInstance().register(new DeleteNodeFileHandler());
+        JpoEventBus.getInstance().register(new OpenRecentCollectionHandler());
+        JpoEventBus.getInstance().register(new ChooseAndAddPicturesToGroupHandler());
+        JpoEventBus.getInstance().register(new PictureControllerZoomHandler());
+        JpoEventBus.getInstance().register(new ChooseAndAddFlatfileHandler());
+        JpoEventBus.getInstance().register(new AddFlatFileRequestHandler());
+        JpoEventBus.getInstance().register(new OpenLicenceFrameHandler());
+        JpoEventBus.getInstance().register(new OpenHelpAboutFrameHandler());
+        JpoEventBus.getInstance().register(new OpenPrivacyFrameHandler());
+        JpoEventBus.getInstance().register(new StartCameraWatchDaemonHandler());
+        JpoEventBus.getInstance().register(new UnsavedUpdatesDialogHandler());
+        JpoEventBus.getInstance().register(new RefreshThumbnailHandler());
+        JpoEventBus.getInstance().register(new RotatePictureHandler());
+        JpoEventBus.getInstance().register(new SetPictureRotationHandler());
+        JpoEventBus.getInstance().register(new OpenCategoryEditorHandler());
+        JpoEventBus.getInstance().register(new ShowGroupPopUpMenuHandler());
+        JpoEventBus.getInstance().register(new ShowPicturePopUpMenuHandler());
+        JpoEventBus.getInstance().register(new RemoveOldLowresThumbnailsHandler());
+        JpoEventBus.getInstance().register(new OpenFileExplorerHandler());
+        JpoEventBus.getInstance().register(new RemoveCategoryFromPictureInfoHandler());
+        JpoEventBus.getInstance().register(new AddCategoriesToPictureNodesHandler());
+        JpoEventBus.getInstance().register(new CheckForUpdatesHandler());
+    }
+
+
 }

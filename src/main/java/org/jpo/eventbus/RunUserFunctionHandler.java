@@ -27,10 +27,6 @@ import java.util.logging.Logger;
 
 public class RunUserFunctionHandler {
 
-    public RunUserFunctionHandler() {
-        JpoEventBus.getInstance().register(this);
-    }
-
     /**
      * Defines a logger for this class
      */

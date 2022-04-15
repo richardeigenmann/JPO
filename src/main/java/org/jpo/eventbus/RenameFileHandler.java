@@ -1,0 +1,57 @@
+package org.jpo.eventbus;
+
+/*
+ Copyright (C) 2022  Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
+import com.google.common.eventbus.Subscribe;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jpo.datamodel.PictureInfo;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class RenameFileHandler {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(RenameFileHandler.class.getName());
+
+    /**
+     * Bring up a Dialog where the user can input a new name for a file and
+     * rename it. If the target file already exists and would overwrite the existing file
+     * A new name is suggested that the user can accept or abort the rename.
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleEvent(@NonNull final RenameFileRequest request) {
+        final PictureInfo pictureInfo = (PictureInfo) request.node().getUserObject();
+        LOGGER.log(Level.INFO, "Renaming node {0} ({1} to new filename: {2}", new Object[]{request.node(), pictureInfo.getImageFile().getPath(), request.newFileName()});
+        final var imageFile = pictureInfo.getImageFile();
+        final String newName = request.newFileName();
+        final var newFile = new File(imageFile.getParentFile(), newName);
+        if (imageFile.renameTo(newFile)) {
+            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile, newName});
+            pictureInfo.setImageLocation(newFile);
+            request.node().getPictureCollection().setUnsavedUpdates();
+        } else {
+            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile, newName});
+        }
+
+    }
+}
