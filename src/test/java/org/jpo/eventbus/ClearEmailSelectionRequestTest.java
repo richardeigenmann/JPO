@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2020-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -37,10 +37,10 @@ public class ClearEmailSelectionRequestTest {
      */
     @Test
     public void testReceivingEvent() {
-        ClearEmailSelectionRequestTest.EventBusSubscriber myEventBusSubscriber = new ClearEmailSelectionRequestTest.EventBusSubscriber();
+        final var myEventBusSubscriber = new ClearEmailSelectionRequestTest.EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
-        ClearEmailSelectionRequest newRequest = new ClearEmailSelectionRequest();
+        final var newRequest = new ClearEmailSelectionRequest();
         jpoEventBus.post( newRequest );
         // After firing a ClearEmailSelectionRequest we expect it to be received by the listener
         assertEquals(                 receivedEvent, newRequest );

@@ -23,7 +23,26 @@ import java.util.List;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class RemovePictureNodesFromEmailSelectionHandler {
+/**
+ * Adds the picture nodes in the supplied request to the email selection
+ */
+public class EmailSelectionHandler {
+
+    /**
+     * Adds the picture nodes in the supplied request to the email selection
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleEvent(final AddPictureNodesToEmailSelectionRequest request) {
+        final List<SortableDefaultMutableTreeNode> nodesList = request.nodesList();
+        for (final SortableDefaultMutableTreeNode n : nodesList) {
+            if (n.getUserObject() instanceof PictureInfo) {
+                Settings.getPictureCollection().addToMailSelection(n);
+            }
+        }
+    }
+
     /**
      * Removes the picture nodes in the supplied request from the email
      * selection
@@ -40,4 +59,13 @@ public class RemovePictureNodesFromEmailSelectionHandler {
         }
     }
 
+    /**
+     * Clears the email selection
+     *
+     * @param request the request
+     */
+    @Subscribe
+    public void handleEvent(final ClearEmailSelectionRequest request) {
+        Settings.getPictureCollection().clearMailSelection();
+    }
 }

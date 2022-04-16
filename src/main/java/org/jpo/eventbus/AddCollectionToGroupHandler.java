@@ -28,6 +28,9 @@ import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Adds a collection to a group node
+ */
 public class AddCollectionToGroupHandler {
 
     /**

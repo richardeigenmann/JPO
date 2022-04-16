@@ -24,6 +24,9 @@ import java.util.Enumeration;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Adds the pictures in the supplied group to the email selection
+ */
 public class AddGroupToEmailSelectionHandler {
     /**
      * Adds the pictures in the supplied group to the email selection

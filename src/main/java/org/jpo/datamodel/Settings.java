@@ -1088,6 +1088,11 @@ public class Settings {
         Settings.defaultHtmlPictureNaming = defaultHtmlPictureNaming;
     }
 
+    /**
+     * returns the html ouput target that was last used
+     *
+     * @return
+     */
     public static GenerateWebsiteRequest.OutputTarget getDefaultHtmlOutputTarget() {
         return defaultHtmlOutputTarget;
     }

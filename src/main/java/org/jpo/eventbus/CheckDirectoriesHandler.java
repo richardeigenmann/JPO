@@ -20,6 +20,9 @@ import org.jpo.gui.ReconcileJFrame;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Opens the Reconcile window to check for missing pictures
+ */
 public class CheckDirectoriesHandler {
     /**
      * Creates a {@link ReconcileJFrame} which lets the user specify a directory

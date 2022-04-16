@@ -180,9 +180,7 @@ public class Main {
         JpoEventBus.getInstance().register(new ExportGroupToCollectionHandler());
         JpoEventBus.getInstance().register(new ExportGroupToPicasaHandler());
         JpoEventBus.getInstance().register(new AddGroupToEmailSelectionHandler());
-        JpoEventBus.getInstance().register(new AddPictureNodesToEmailSelectionHandler());
-        JpoEventBus.getInstance().register(new RemovePictureNodesFromEmailSelectionHandler());
-        JpoEventBus.getInstance().register(new ClearEmailSelectionHandler());
+        JpoEventBus.getInstance().register(new EmailSelectionHandler());
         JpoEventBus.getInstance().register(new ConsolidateGroupDialogHandler());
         JpoEventBus.getInstance().register(new ConsolidateGroupHandler());
         JpoEventBus.getInstance().register(new CopyToNewLocationHandler());
@@ -212,8 +210,7 @@ public class Main {
         JpoEventBus.getInstance().register(new ShowPicturePopUpMenuHandler());
         JpoEventBus.getInstance().register(new RemoveOldLowresThumbnailsHandler());
         JpoEventBus.getInstance().register(new OpenFileExplorerHandler());
-        JpoEventBus.getInstance().register(new RemoveCategoryFromPictureInfoHandler());
-        JpoEventBus.getInstance().register(new AddCategoriesToPictureNodesHandler());
+        JpoEventBus.getInstance().register(new PictureCategoryHandler());
         JpoEventBus.getInstance().register(new CheckForUpdatesHandler());
     }
 

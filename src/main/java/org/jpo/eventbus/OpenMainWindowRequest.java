@@ -15,13 +15,11 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.jpo.gui.ApplicationStartupHandler;
-
 /**
  * This request indicates that the app wants to open the MainWindow
  *
  * @author Richard Eigenmann
- * @see ApplicationStartupHandler#handleEvent(OpenMainWindowRequest)
+ * @see OpenMainWindowHandler
  */
 public class OpenMainWindowRequest {
 }

@@ -24,6 +24,9 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Adds an empty group to the indicated group node
+ */
 public class AddEmptyGroupHandler {
 
     /**
@@ -34,6 +37,8 @@ public class AddEmptyGroupHandler {
     /**
      * when the App sees an AddEmptyGroup request it will sort the group by the
      * criteria
+     * TODO: is this a lying comment?
+     * TODO: why does this check for GroupInfo, moan and then proceed anyway?
      *
      * @param request The node on which the request was made
      */

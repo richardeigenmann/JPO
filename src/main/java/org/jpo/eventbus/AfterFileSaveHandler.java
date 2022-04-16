@@ -22,6 +22,10 @@ import java.io.File;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Brings up the dialog after a file save and allows the saved collection to
+ * be set as the default start up collection.
+ */
 public class AfterFileSaveHandler {
     /**
      * Brings up the dialog after a file save and allows the saved collection to

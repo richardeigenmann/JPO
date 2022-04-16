@@ -2,10 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-
-import java.util.List;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -23,20 +20,32 @@ import java.util.List;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class AddPictureNodesToEmailSelectionHandler {
-
+/**
+ * Handles the requests to add and remove categories from picture nodes
+ */
+public class PictureCategoryHandler {
     /**
-     * Adds the picture nodes in the supplied request to the email selection
+     * Handles the AddCategoriesToPictureNodesRequest request
      *
-     * @param request the request
+     * @param request The request
      */
     @Subscribe
-    public void handleEvent(final AddPictureNodesToEmailSelectionRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodesList = request.nodesList();
-        for (final SortableDefaultMutableTreeNode n : nodesList) {
-            if (n.getUserObject() instanceof PictureInfo) {
-                Settings.getPictureCollection().addToMailSelection(n);
+    public void handleEvent(final AddCategoriesToPictureNodesRequest request) {
+        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+            if (node.getUserObject() instanceof PictureInfo pi) {
+                pi.addCategoryAssignment(request.category());
             }
         }
     }
+
+    /**
+     * Handles the RemoveCategoryFromPictureInfoRequest request
+     *
+     * @param request The request
+     */
+    @Subscribe
+    public void handleEvent(final RemoveCategoryFromPictureInfoRequest request) {
+        request.pictureInfo().removeCategory(request.category());
+    }
+
 }

@@ -19,6 +19,9 @@ import org.jpo.gui.swing.CategroyAssignmentWindow;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Opens the Category Assignment window to pick categories for the indicated nodes.
+ */
 public class CategoryAssignmentWindowHandler {
     /**
      * When the app sees a CategoryAssignmentWindowRequest it will open the
