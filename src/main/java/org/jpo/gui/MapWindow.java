@@ -90,14 +90,7 @@ public class MapWindow {
         final var waypoints = new HashSet<Waypoint>();
         final var geoPositions = new HashSet<GeoPosition>();
         for (var node : event.node().getChildPictureNodes(false)) {
-            final var latLng = ((PictureInfo) node.getUserObject()).getLatLng();
-            LOGGER.log(Level.INFO, "LatLang: {0}", latLng);
-            // Create waypoints from the geo-positions
-            if (latLng.x != 0.0 && latLng.y != 0.0) {
-                final var geoPostion = new GeoPosition(latLng.x, latLng.y);
-                waypoints.add(new DefaultWaypoint(geoPostion));
-                geoPositions.add(geoPostion);
-            }
+            addWaypointForPicture(((PictureInfo) node.getUserObject()), waypoints, geoPositions);
         }
 
         final Runnable runnable = () -> {
@@ -121,6 +114,17 @@ public class MapWindow {
         }
     }
 
+    private static void addWaypointForPicture(final PictureInfo node, final HashSet<Waypoint> waypoints, final HashSet<GeoPosition> geoPositions) {
+        final var latLng = node.getLatLng();
+        LOGGER.log(Level.INFO, "LatLang: {0}", latLng);
+        // Create waypoints from the geo-positions
+        if (latLng.x != 0.0 && latLng.y != 0.0) {
+            final var geoPostion = new GeoPosition(latLng.x, latLng.y);
+            waypoints.add(new DefaultWaypoint(geoPostion));
+            geoPositions.add(geoPostion);
+        }
+    }
+
     /**
      * Handles the ShowQueryRequest by showing the query results
      *
@@ -133,19 +137,12 @@ public class MapWindow {
         final var geoPositions = new HashSet<GeoPosition>();
         for (var i = 0; i < event.query().getNumberOfResults(); i++) {
             if (event.query().getIndex(i).getUserObject() instanceof PictureInfo pictureInfo) {
-                final var latLng = pictureInfo.getLatLng();
-                LOGGER.log(Level.INFO, "LatLang: {0}", latLng);
-                // Create waypoints from the geo-positions
-                if (latLng.x != 0.0 && latLng.y != 0.0) {
-                    final var geoPostion = new GeoPosition(latLng.x, latLng.y);
-                    waypoints.add(new DefaultWaypoint(geoPostion));
-                    geoPositions.add(geoPostion);
-                }
+                addWaypointForPicture(pictureInfo, waypoints, geoPositions);
             }
         }
 
         final Runnable runnable = () -> {
-            WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+            final var waypointPainter = new WaypointPainter<>();
             waypointPainter.setWaypoints(waypoints);
             mapViewer.getJXMapViewer().setOverlayPainter(waypointPainter);
             if (geoPositions.size() > 1) {

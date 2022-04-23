@@ -2,7 +2,6 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
-import org.jpo.gui.ApplicationStartupHandler;
 
 import javax.swing.*;
 import java.util.logging.Level;
@@ -30,7 +29,7 @@ public class OpenHelpAboutFrameHandler {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(ApplicationStartupHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(OpenHelpAboutFrameHandler.class.getName());
 
 
     /**
