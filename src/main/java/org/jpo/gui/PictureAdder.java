@@ -72,9 +72,6 @@ public class PictureAdder
      */
     @Override
     public Integer doInBackground() {
-        // add all the files from the array as nodes to the start node.
-        //for (int i = 0; (i < request.chosenFiles().length) && (!progGui.getInterruptSemaphore().getShouldInterrupt()); i++) {
-        //final var addFile = request.chosenFiles()[i];
         for (final var addFile : request.chosenFiles()) {
             if (progGui.getInterruptSemaphore().getShouldInterrupt()) {
                 break;
