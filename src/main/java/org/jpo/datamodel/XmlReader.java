@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 /*
  XmlReader.java:  class that reads the xml file
 
- Copyright (C) 2002 - 2021  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,13 +56,13 @@ public class XmlReader {
      *                    read.
      */
     public static void read(final InputStream inputStream, final SortableDefaultMutableTreeNode startNode) {
-        final BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        final var bufferedInputStream = new BufferedInputStream(inputStream);
 
-        final StringBuilder lowresUrls = new StringBuilder();
+        final var lowresUrls = new StringBuilder();
 
 
-        final SAXParserFactory factory = SAXParserFactory.newInstance();
-        factory.setValidating(true);
+        final var factory = SAXParserFactory.newInstance();
+        factory.setValidating(false);
         SAXParser saxParser;
         try {
             saxParser = factory.newSAXParser();
@@ -73,7 +73,7 @@ public class XmlReader {
             return;
         }
 
-        final LabelFrame loadProgressGui = new LabelFrame(Settings.getJpoResources().getString("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
+        final var loadProgressGui = new LabelFrame(Settings.getJpoResources().getString("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
         try {
             saxParser.parse(bufferedInputStream, new SaxEventHandler(startNode, loadProgressGui, lowresUrls));
         } catch (final SAXParseException spe) {
