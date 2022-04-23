@@ -1111,10 +1111,20 @@ public class Settings {
         Settings.defaultHtmlOutputTarget = defaultHtmlOutputTarget;
     }
 
+    /**
+     * returns the default html background color
+     *
+     * @return the default background color
+     */
     public static Color getHtmlBackgroundColor() {
         return htmlBackgroundColor;
     }
 
+    /**
+     * Remembers the default html background color
+     *
+     * @param htmlBackgroundColor the color to remember
+     */
     public static void setHtmlBackgroundColor(Color htmlBackgroundColor) {
         Settings.htmlBackgroundColor = htmlBackgroundColor;
     }

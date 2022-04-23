@@ -47,8 +47,8 @@ public class RefreshThumbnailHandler {
                 return;
             }
             LOGGER.log(Level.FINE, "refreshing the thumbnail on the node {0}%nAbout to create the thumbnail", this);
-            final var t = new ThumbnailController(Settings.getThumbnailSize());
-            t.setNode(new SingleNodeNavigator(node), 0);
+            final var thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
+            thumbnailController.setNode(new SingleNodeNavigator(node), 0);
         }
     }
 }

@@ -7,7 +7,6 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.ApplicationStartupHandler;
 
 import javax.swing.*;
 import java.io.File;
@@ -15,7 +14,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +38,7 @@ public class CopyToZipfileHandler {
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger(ApplicationStartupHandler.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CopyToZipfileHandler.class.getName());
 
     /**
      * Title for Info Boxes
@@ -67,13 +65,13 @@ public class CopyToZipfileHandler {
                 // copy the old entries over
                 try (
                         final var oldZipFile = new ZipFile(request.targetZipfile())) {
-                    final Enumeration<ZipArchiveEntry> entries = oldZipFile.getEntries();
+                    final var entries = oldZipFile.getEntries();
                     while (entries.hasMoreElements()) {
-                        final ZipArchiveEntry e = entries.nextElement();
-                        LOGGER.log(Level.INFO, "streamCopy: {0}", e.getName());
-                        zipArchiveOutputStream.putArchiveEntry(e);
-                        if (!e.isDirectory()) {
-                            oldZipFile.getInputStream(e).transferTo(zipArchiveOutputStream);
+                        final var entry = entries.nextElement();
+                        LOGGER.log(Level.INFO, "streamCopy: {0}", entry.getName());
+                        zipArchiveOutputStream.putArchiveEntry(entry);
+                        if (!entry.isDirectory()) {
+                            oldZipFile.getInputStream(entry).transferTo(zipArchiveOutputStream);
                         }
                         zipArchiveOutputStream.closeArchiveEntry();
                     }
@@ -115,7 +113,7 @@ public class CopyToZipfileHandler {
             final Collection<SortableDefaultMutableTreeNode> nodes)
             throws IOException {
         var picsCopied = 0;
-        for (final SortableDefaultMutableTreeNode node : nodes) {
+        for (final var node : nodes) {
             if (node.getUserObject() instanceof PictureInfo pi) {
                 final var sourceFile = pi.getImageFile();
                 LOGGER.log(Level.INFO, "Processing file {0}", sourceFile);
