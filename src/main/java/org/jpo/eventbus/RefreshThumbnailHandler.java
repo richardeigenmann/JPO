@@ -3,7 +3,6 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SingleNodeNavigator;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ThumbnailController;
 
 import java.util.logging.Level;
@@ -42,7 +41,7 @@ public class RefreshThumbnailHandler {
      */
     @Subscribe
     public void handleEvent(final RefreshThumbnailRequest request) {
-        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+        for (final var node : request.nodes()) {
             if (node.isRoot()) {
                 LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
                 return;

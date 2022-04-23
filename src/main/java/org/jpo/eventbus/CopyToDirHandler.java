@@ -5,7 +5,6 @@ import org.apache.commons.io.FileUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
@@ -48,7 +47,7 @@ public class CopyToDirHandler {
     public void handleEvent(final CopyToDirRequest request) {
 
         var picsCopied = 0;
-        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+        for (final var node : request.nodes()) {
             if (node.getUserObject() instanceof PictureInfo pictureInfo) {
                 if (copyPicture(pictureInfo, request.targetDirectory())) {
                     picsCopied++;
@@ -85,6 +84,7 @@ public class CopyToDirHandler {
         final var targetFile = Tools.inventFilename(targetDirectory, originalFile.getName());
         try {
             FileUtils.copyFile(originalFile, targetFile);
+            return true;
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     "IOException: " + e.getMessage(),
@@ -92,8 +92,6 @@ public class CopyToDirHandler {
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        return true;
     }
-
 
 }

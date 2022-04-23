@@ -3,9 +3,6 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-
-import java.util.List;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -35,10 +32,10 @@ public class EmailSelectionHandler {
      */
     @Subscribe
     public void handleEvent(final AddPictureNodesToEmailSelectionRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodesList = request.nodesList();
-        for (final SortableDefaultMutableTreeNode n : nodesList) {
-            if (n.getUserObject() instanceof PictureInfo) {
-                Settings.getPictureCollection().addToMailSelection(n);
+        final var nodesList = request.nodesList();
+        for (final var node : nodesList) {
+            if (node.getUserObject() instanceof PictureInfo) {
+                Settings.getPictureCollection().addToMailSelection(node);
             }
         }
     }
@@ -51,10 +48,10 @@ public class EmailSelectionHandler {
      */
     @Subscribe
     public void handleEvent(final RemovePictureNodesFromEmailSelectionRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodesList = request.nodesList();
-        for (final SortableDefaultMutableTreeNode n : nodesList) {
-            if (n.getUserObject() instanceof PictureInfo) {
-                Settings.getPictureCollection().removeFromMailSelection(n);
+        final var nodesList = request.nodesList();
+        for (final var node : nodesList) {
+            if (node.getUserObject() instanceof PictureInfo) {
+                Settings.getPictureCollection().removeFromMailSelection(node);
             }
         }
     }

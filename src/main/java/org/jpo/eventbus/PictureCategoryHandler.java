@@ -2,7 +2,6 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -31,7 +30,7 @@ public class PictureCategoryHandler {
      */
     @Subscribe
     public void handleEvent(final AddCategoriesToPictureNodesRequest request) {
-        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+        for (final var node : request.nodes()) {
             if (node.getUserObject() instanceof PictureInfo pi) {
                 pi.addCategoryAssignment(request.category());
             }

@@ -1072,7 +1072,7 @@ public class Settings {
     }
 
     /**
-     * Remembers the default height for a midred picture
+     * Remembers the default height for a midres picture
      *
      * @param defaultHtmlMidresHeight the height to remember
      */
@@ -1080,10 +1080,20 @@ public class Settings {
         Settings.defaultHtmlMidresHeight = defaultHtmlMidresHeight;
     }
 
+    /**
+     * Default Html Picture naming
+     *
+     * @return the default
+     */
     public static GenerateWebsiteRequest.PictureNamingType getDefaultHtmlPictureNaming() {
         return defaultHtmlPictureNaming;
     }
 
+    /**
+     * Remembers Default Html Picture naming
+     *
+     * @param defaultHtmlPictureNaming the new default
+     */
     public static void setDefaultHtmlPictureNaming(GenerateWebsiteRequest.PictureNamingType defaultHtmlPictureNaming) {
         Settings.defaultHtmlPictureNaming = defaultHtmlPictureNaming;
     }
