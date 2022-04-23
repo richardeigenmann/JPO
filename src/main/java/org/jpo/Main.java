@@ -70,9 +70,6 @@ public class Main {
             System.exit(1);
         }
 
-        // somewhat rabid way of allowing the application access to the local filesystem. RE 13. Nov 2007
-        System.setSecurityManager(null);
-
         System.out.println("\nJPO version " + Settings.JPO_VERSION + "\n"
                 + "Copyright (C) 2000-2021 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
