@@ -264,7 +264,7 @@ public class Emailer
                 }
 
                 if ( sendOriginal ) {
-                    // create the message part fro the original image
+                    // create the message part for the original image
                     originalPictureMimeBodyPart = new MimeBodyPart();
                     highresFile = pi.getImageFile();
                     // attach the file to the message

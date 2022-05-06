@@ -1,11 +1,10 @@
 package org.jpo.datamodel;
 
-import com.drew.lang.annotations.NotNull;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import org.apache.commons.text.StringEscapeUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.Point2D;
 import java.io.*;
@@ -360,7 +359,7 @@ public class PictureInfo implements Serializable {
      *
      * @param file The new file of the picture.
      */
-    public synchronized void setImageLocation(@NonNull final File file) {
+    public synchronized void setImageLocation(@NotNull final File file) {
         Objects.requireNonNull(file);
         imageFile = file;
         sendImageLocationChangedEvent();

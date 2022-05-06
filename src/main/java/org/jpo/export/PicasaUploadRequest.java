@@ -1,6 +1,6 @@
 package org.jpo.export;
 
-import com.google.gdata.client.photos.PicasawebService;
+//import com.google.gdata.client.photos.PicasawebService;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
@@ -111,7 +111,7 @@ public class PicasaUploadRequest {
     /** 
      * The Picasa Web Service
      */
-    public final PicasawebService picasaWebService = new PicasawebService ( "org.richinet.dyndns-org.jpo-1" );
+    //public final PicasawebService picasaWebService = new PicasawebService ( "org.richinet.dyndns-org.jpo-1" );
     
     /**
      * The URL of the album

@@ -1,6 +1,6 @@
 package org.jpo.export;
 
-import com.google.gdata.util.AuthenticationException;
+//import com.google.gdata.util.AuthenticationException;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
@@ -103,10 +103,11 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
                 }
                 myRequest.setUsername(userNameJTextField.getText());
                 myRequest.setPassword(new String(passwordJPasswordField.getPassword()));
-                myRequest.picasaWebService.setUserCredentials(myRequest.getUsername(), myRequest.getPassword());
+                //myRequest.picasaWebService.setUserCredentials(myRequest.getUsername(), myRequest.getPassword());
                 setCanGoNext(true);
                 errorJTextArea.setText("Successfully logged into Picasa.");
-            } catch (final AuthenticationException ex) {
+            } //catch (final AuthenticationException ex) {
+            catch (Exception ex) {
                 LOGGER.severe(ex.getMessage());
                 errorJTextArea.setText(ex.getMessage());
                 setCanGoNext(false);

@@ -1,7 +1,6 @@
 package org.jpo.datamodel;
 
 import org.apache.commons.io.FilenameUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.gui.JpoTransferable;
@@ -328,7 +327,7 @@ public class SortableDefaultMutableTreeNode
      * @return the usual compareTo value used for sorting.
      */
     @Override
-    public int compareTo(final @NonNull SortableDefaultMutableTreeNode o) {
+    public int compareTo(final @NotNull SortableDefaultMutableTreeNode o) {
         final Object myObject = getUserObject();
         final Object otherObject = o.getUserObject();
 

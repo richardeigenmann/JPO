@@ -1,17 +1,16 @@
 package org.jpo.export;
 
-import com.google.gdata.data.PlainTextConstruct;
-import com.google.gdata.data.media.MediaFileSource;
-import com.google.gdata.data.photos.AlbumEntry;
-import com.google.gdata.data.photos.PhotoEntry;
-import com.google.gdata.util.ServiceException;
+//import com.google.gdata.data.PlainTextConstruct;
+//import com.google.gdata.data.media.MediaFileSource;
+//import com.google.gdata.data.photos.AlbumEntry;
+//import com.google.gdata.data.photos.PhotoEntry;
+//import com.google.gdata.util.ServiceException;
+
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.logging.Level;
@@ -102,7 +101,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
      */
     public boolean createAlbum( GroupInfo groupInfo ) {
         LOGGER.info( "Creating Album" );
-        final AlbumEntry myAlbum = new AlbumEntry();
+/*        final AlbumEntry myAlbum = new AlbumEntry();
         myAlbum.setTitle( new PlainTextConstruct( groupInfo.getGroupName() ) );
         myAlbum.setDescription( new PlainTextConstruct( groupInfo.getGroupName() ) );
         AlbumEntry insertedEntry;
@@ -135,6 +134,8 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
             return false;
         }
         LOGGER.log(Level.INFO, "AlbumId: {0}", albumUrl);
+
+ */
         return true;
     }
 
@@ -145,6 +146,7 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
      */
     public void postPicture(final PictureInfo pictureInfo) {
         LOGGER.log(Level.INFO, "Posting Picture: {0}", pictureInfo.getDescription());
+        /*
         final PhotoEntry myPhoto = new PhotoEntry();
         myPhoto.setTitle(new PlainTextConstruct(pictureInfo.getDescription()));
         myPhoto.setDescription(new PlainTextConstruct(pictureInfo.getDescription()));
@@ -157,5 +159,6 @@ public class PicasaUploaderWorker extends SwingWorker<Boolean, Integer> {
         } catch (final IOException | ServiceException ex) {
             LOGGER.severe(ex.getMessage());
         }
+         */
     }
 }
