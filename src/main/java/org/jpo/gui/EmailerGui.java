@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2004-2021  Richard Eigenmann.
+ Copyright (C) 2004-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -143,18 +143,19 @@ public class EmailerGui extends JFrame {
     private void initComponents() {
         setTitle(Settings.getJpoResources().getString("EmailerJFrame"));
         final JPanel jPanel = new JPanel();
-        jPanel.setLayout( new MigLayout() );
+        jPanel.setLayout(new MigLayout());
 
         final JLabel imagesCountJLabel
                 = new JLabel(Settings.getJpoResources().getString("imagesCountJLabel") + emailSelected.size());
-        jPanel.add( imagesCountJLabel, "spanx 2, wrap" );
+        final String spanx2wrap = "spanx 2, wrap";
+        jPanel.add(imagesCountJLabel, spanx2wrap);
 
 
         imagesJPanel.setLayout(new MigLayout());
         imagesJScrollPane.setMinimumSize(new Dimension(300, 170));
         imagesJScrollPane.setPreferredSize(new Dimension(600, 170));
 
-        jPanel.add(imagesJScrollPane, "spanx 2, wrap");
+        jPanel.add(imagesJScrollPane, spanx2wrap);
 
         jPanel.add(new JLabel(Settings.getJpoResources().getString("fromJLabel")), "");
 
@@ -271,9 +272,9 @@ public class EmailerGui extends JFrame {
         imageHeightWholeNumberField.setVisible(true);
         scaleSizeJPanel.add(imageHeightWholeNumberField);
 
-        jPanel.add(scaleSizeJPanel, "spanx 2, wrap");
+        jPanel.add(scaleSizeJPanel, spanx2wrap);
 
-        jPanel.add(sendOriginalsJCheckBox, "spanx 2, wrap");
+        jPanel.add(sendOriginalsJCheckBox, spanx2wrap);
 
         final JPanel buttonJPanel = new JPanel();
         final JButton emailJButton = new JButton(Settings.getJpoResources().getString("emailJButton"));

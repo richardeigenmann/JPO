@@ -24,6 +24,9 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Handles the request to rename a file
+ */
 public class RenameFileHandler {
 
     /**

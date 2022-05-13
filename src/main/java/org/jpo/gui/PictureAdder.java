@@ -45,7 +45,7 @@ public class PictureAdder
      */
     public PictureAdder(final PictureAdderRequest request) {
         this.request = request;
-        LOGGER.log(Level.FINE, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{request.startNode(), request.chosenFiles().length, request.newOnly(), request.recurseDirectories(), request.retainDirectories()});
+        LOGGER.log(Level.INFO, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{request.startNode(), request.chosenFiles().length, request.newOnly(), request.recurseDirectories(), request.retainDirectories()});
         progGui = new ProgressGui(Tools.countFiles(request.chosenFiles()),
                 Settings.getJpoResources().getString("PictureAdderProgressDialogTitle"),
                 Settings.getJpoResources().getString("picturesAdded"));
@@ -76,7 +76,7 @@ public class PictureAdder
             if (progGui.getInterruptSemaphore().getShouldInterrupt()) {
                 break;
             }
-            LOGGER.log(Level.INFO, "Considering file: {0}", addFile);
+            LOGGER.log(Level.INFO, "Requested file: {0}", addFile);
             if (!addFile.isDirectory()) {
                 addPicture(request.startNode(), addFile);
             } else {
@@ -103,6 +103,7 @@ public class PictureAdder
      * @param dir        the directory to add
      */
     private void addDirectory(final SortableDefaultMutableTreeNode parentNode, final File dir) {
+        LOGGER.log(Level.INFO, "Adding Directory {0} to node {1}", new Object[]{dir, parentNode});
         final SortableDefaultMutableTreeNode directoryNode;
         if (request.retainDirectories()) {
             directoryNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
@@ -126,6 +127,7 @@ public class PictureAdder
     }
 
     private void addPicture(final SortableDefaultMutableTreeNode groupNode, final File file) {
+        LOGGER.log(Level.INFO, "Adding Picture {0} to node {1}", new Object[]{file, groupNode});
         if (groupNode.addSinglePicture(file, request.newOnly(), request.selectedCategories())) {
             publish(1);
         } else {

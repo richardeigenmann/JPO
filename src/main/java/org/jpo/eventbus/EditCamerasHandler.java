@@ -19,7 +19,9 @@ import org.jpo.gui.CamerasEditor;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
+/**
+ * Handles the request to edit the camera
+ */
 public class EditCamerasHandler {
     /**
      * Opens up the Camera Editor GUI. See {@link CamerasEditor}

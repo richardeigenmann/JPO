@@ -1039,6 +1039,7 @@ public class SortableDefaultMutableTreeNode
                                     final Collection<Integer> selectedCategories) {
         LOGGER.log(Level.INFO, "Adding File: {0}, NewOnly: {1} to node {2}", new Object[]{addFile, newOnly, this});
         if (newOnly && getPictureCollection().isInCollection(addFile)) {
+            LOGGER.log(Level.INFO, "Rejecting file {0} because it already exists in the collection", addFile);
             return false; // only add pics not in the collection already
         } else {
             return addPicture(addFile, selectedCategories);
@@ -1055,11 +1056,21 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean addPicture(final File file, final Collection<Integer> categoryAssignments) {
         LOGGER.log(Level.INFO, "Adding file {0} to the node {1}", new Object[]{file, this});
+        LOGGER.log(Level.INFO, "Is this logging?");
+        LOGGER.log(Level.INFO, "ImageIO.jvmHasReader(file): {0}", ImageIO.jvmHasReader(file));
+        LOGGER.log(Level.INFO, "Is this logging? 1");
+        LOGGER.log(Level.INFO, "MimeTypes.isAPicture(file) {0}", MimeTypes.isAPicture(file));
+        LOGGER.log(Level.INFO, "Is this logging? 2");
+        LOGGER.log(Level.INFO, "MimeTypes.isADocument(file) {0}", MimeTypes.isADocument(file));
+        LOGGER.log(Level.INFO, "Is this logging? 3");
+        LOGGER.log(Level.INFO, "MimeTypes.isAMovie(file) {0}", MimeTypes.isAMovie(file));
+        LOGGER.log(Level.INFO, "And this?");
 
         if (ImageIO.jvmHasReader(file)
                 || MimeTypes.isAPicture(file)
                 || MimeTypes.isADocument(file)
                 || MimeTypes.isAMovie(file)) {
+            LOGGER.log(Level.INFO, "File {0} has a reader or a picture mime type or is a document or is a movie so it will be added", file);
             final var newPictureInfo = new PictureInfo();
             newPictureInfo.setImageLocation(file);
             newPictureInfo.setDescription(FilenameUtils.getBaseName(file.getName()));

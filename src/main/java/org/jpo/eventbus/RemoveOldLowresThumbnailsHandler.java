@@ -21,6 +21,9 @@ import javax.swing.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Handles the RemoveOldLowresThumbnailsRequest request
+ */
 public class RemoveOldLowresThumbnailsHandler {
     /**
      * Handles the RemoveOldLowresThumbnailsRequest request

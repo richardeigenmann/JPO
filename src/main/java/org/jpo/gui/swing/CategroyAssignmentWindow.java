@@ -56,6 +56,9 @@ import java.util.logging.Logger;
  */
 public class CategroyAssignmentWindow {
 
+    /**
+     * The category
+     */
     public static final String CATEGORY = "Category";
     private static final Logger LOGGER = Logger.getLogger(CategroyAssignmentWindow.class.getName());
     private static final int COLUMNS = 8;

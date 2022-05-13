@@ -40,12 +40,15 @@ public class ImageIO {
      * @return true if the JVM has a reader false if not.
      */
     public static boolean jvmHasReader(final File file) {
+        LOGGER.log(Level.INFO, "checking jvmHasReader for file {0}", file);
         if (!MimeTypes.isAPicture(file)) {
             LOGGER.log(Level.INFO, "File {0} ist not a picture according the MimeType {1}", new Object[]{file, MimeTypes.getMimeType(file)});
             return false;
         }
         try (final var testStream = new FileImageInputStream(file)) {
+            LOGGER.log(Level.INFO, "Created input stream from file {0}", file);
             final ImageReader reader = javax.imageio.ImageIO.getImageReaders(testStream).next();
+            LOGGER.log(Level.INFO, "After getting an ImageReader");
             if (reader != null) {
                 LOGGER.log(Level.INFO, "File {0} has a picture mime type and ImageIO has a reader for it. Class is {1}", new Object[]{file, reader.getClass()});
                 return true;
@@ -53,7 +56,10 @@ public class ImageIO {
                 LOGGER.log(Level.INFO, "Cant find an ImageIO reader for file {0}", file);
             }
         } catch (final IOException x) {
-            LOGGER.log(Level.INFO, x.getMessage());
+            LOGGER.log(Level.INFO, "IOException testing file {0}: {1}", new Object[]{file, x.getMessage()});
+        } catch (final Exception e) {
+            LOGGER.log(Level.INFO, "An unexpected error was caught: {0}", e.getMessage());
+            Thread.dumpStack();
         }
         return false;
     }

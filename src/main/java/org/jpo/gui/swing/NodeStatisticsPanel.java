@@ -5,8 +5,6 @@ import org.jpo.datamodel.NodeStatisticsBean;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /*
@@ -33,11 +31,6 @@ import java.util.logging.Logger;
  * @author Richard Eigenmann
  */
 public class NodeStatisticsPanel extends JPanel {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(NodeStatisticsPanel.class.getName());
 
     /**
      * Number of Nodes in the tree including the current node
@@ -105,7 +98,6 @@ public class NodeStatisticsPanel extends JPanel {
         collectionGroupsLabel.setText(nodeStatisticsBean.getNumberOfGroups());
         collectionPicturesLabel.setText(nodeStatisticsBean.getNumberOfPictures());
         collectionSizeJLabel.setText(nodeStatisticsBean.getSizeOfPictures());
-        LOGGER.log(Level.INFO, "Debug mode: {0}", Settings.isDebugMode());
         if (Settings.isDebugMode()) {
             freeMemoryJLabel.setText(nodeStatisticsBean.getFreeMemory());
             freeMemoryJLabel.setVisible(true);

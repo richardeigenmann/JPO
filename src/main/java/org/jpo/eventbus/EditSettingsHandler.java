@@ -19,6 +19,9 @@ import org.jpo.gui.SettingsDialog;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Handles the request to edit Settings
+ */
 public class EditSettingsHandler {
     /**
      * Creates a {@link SettingsDialog} where the user can edit Application wide

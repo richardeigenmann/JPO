@@ -185,7 +185,7 @@ public class CollectionJTreeController {
             return transferableNodes;
         }
 
-        private void memorizeGroupOfDropLocation(SortableDefaultMutableTreeNode targetNode) {
+        private void memorizeGroupOfDropLocation(final SortableDefaultMutableTreeNode targetNode) {
             SortableDefaultMutableTreeNode groupOfDropLocation;
             if (targetNode.getUserObject() instanceof GroupInfo) {
                 groupOfDropLocation = targetNode;
