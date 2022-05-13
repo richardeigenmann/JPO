@@ -8,5 +8,9 @@ module Jpo {
     requires com.miglayout.swing;
     requires com.google.common;
     requires org.apache.commons.text;
+    requires java.mail;
+    requires org.apache.commons.compress;
+    requires org.checkerframework.checker.qual;
+    requires jwizz;
 }
 
