@@ -456,23 +456,23 @@ class SortableDefaultMutableTreeNodeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
 
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final GroupInfo gA = new GroupInfo("A");
-                final GroupInfo gB = new GroupInfo("B");
-                final GroupInfo gC = new GroupInfo("C");
-                final GroupInfo gD = new GroupInfo("D");
-                final GroupInfo gE = new GroupInfo("E");
-                root.add(new SortableDefaultMutableTreeNode(gD));
-                root.add(new SortableDefaultMutableTreeNode(gE));
-                root.add(new SortableDefaultMutableTreeNode(gC));
-                root.add(new SortableDefaultMutableTreeNode(gB));
-                root.add(new SortableDefaultMutableTreeNode(gA));
-                root.sortChildren(Settings.FieldCodes.CREATION_TIME);
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                final var rootNode = new SortableDefaultMutableTreeNode();
+                final var groupInfoA = new GroupInfo("A");
+                final var groupInfoB = new GroupInfo("B");
+                final var groupInfoC = new GroupInfo("C");
+                final var groupInfoD = new GroupInfo("D");
+                final var groupInfoE = new GroupInfo("E");
+                rootNode.add(new SortableDefaultMutableTreeNode(groupInfoD));
+                rootNode.add(new SortableDefaultMutableTreeNode(groupInfoE));
+                rootNode.add(new SortableDefaultMutableTreeNode(groupInfoC));
+                rootNode.add(new SortableDefaultMutableTreeNode(groupInfoB));
+                rootNode.add(new SortableDefaultMutableTreeNode(groupInfoA));
+                rootNode.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                assertEquals("A", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(0)).getUserObject().toString());
+                assertEquals("B", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(1)).getUserObject().toString());
+                assertEquals("C", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(2)).getUserObject().toString());
+                assertEquals("D", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(3)).getUserObject().toString());
+                assertEquals("E", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(4)).getUserObject().toString());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -746,5 +746,4 @@ class SortableDefaultMutableTreeNodeTest {
             Thread.currentThread().interrupt();
         }
     }
-
 }

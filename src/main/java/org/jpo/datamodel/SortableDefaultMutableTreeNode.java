@@ -26,7 +26,7 @@ import static org.jpo.datamodel.Tools.copyBufferedStream;
 
 
 /*
- Copyright (C) 2003 - 2021  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2022  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,20 +50,13 @@ import static org.jpo.datamodel.Tools.copyBufferedStream;
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
-        implements Comparable<SortableDefaultMutableTreeNode>, PictureInfoChangeListener, GroupInfoChangeListener {
+        implements PictureInfoChangeListener, GroupInfoChangeListener {
 
     public static final String GENERIC_ERROR = "genericError";
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(SortableDefaultMutableTreeNode.class.getName());
-    /**
-     * This field records the field by which the group is to be sorted. This is
-     * not very elegant as a second sort could run at the same time and clobber
-     * this global variable. But that's not very likely on a single user app
-     * like this.
-     */
-    private static FieldCodes sortField;
 
     /**
      * Constructor for a new node.
@@ -293,76 +286,47 @@ public class SortableDefaultMutableTreeNode
      */
     public void sortChildren(final FieldCodes sortCriteria) {
         Tools.checkEDT();  // because of removeAllChildren
-        synchronized (this.getRoot()) {
-            int childCount = getChildCount();
-            final SortableDefaultMutableTreeNode[] childNodes = new SortableDefaultMutableTreeNode[childCount];
-            for (int i = 0; i < childCount; i++) {
-                childNodes[i] = (SortableDefaultMutableTreeNode) getChildAt(i);
-            }
-
-            // sort the array
-            sortField = sortCriteria;
-            Arrays.sort(childNodes);
-
-            //Remove all children from the node
-            getPictureCollection().setSendModelUpdates(false);
-            removeAllChildren();
-            for (final SortableDefaultMutableTreeNode childNode : childNodes) {
-                add(childNode);
-            }
-        }
+        getPictureCollection().setSendModelUpdates(false);
+        Collections.sort(this.children, new SortableDefaultMutableTreeNodeComparator(sortCriteria));
         getPictureCollection().setUnsavedUpdates();
         getPictureCollection().setSendModelUpdates(true);
-
-        // tell the collection that the structure changed
-        LOGGER.log(Level.FINE, "Sending node structure changed event on node {0} after sort", this);
         getPictureCollection().sendNodeStructureChanged(this);
     }
 
-    /**
-     * Overridden method to allow sorting of nodes. It uses the static global
-     * variable sortfield to figure out what to compare on.
-     *
-     * @param o the object to compare to
-     * @return the usual compareTo value used for sorting.
-     */
-    @Override
-    public int compareTo(final @NotNull SortableDefaultMutableTreeNode o) {
-        final Object myObject = getUserObject();
-        final Object otherObject = o.getUserObject();
 
-        if ((myObject instanceof GroupInfo myGi) && (otherObject instanceof GroupInfo otherGi) && (sortField == FieldCodes.DESCRIPTION)) {
-            return (myGi.getGroupName().compareTo(otherGi.getGroupName()));
+    private class SortableDefaultMutableTreeNodeComparator implements Comparator<TreeNode> {
+        SortableDefaultMutableTreeNodeComparator(Settings.FieldCodes sortField) {
+            mySortField = sortField;
         }
 
-        if ((myObject instanceof GroupInfo myGi) && (otherObject instanceof PictureInfo pi) && (sortField == FieldCodes.DESCRIPTION)) {
-            return (myGi.getGroupName().compareTo(pi.getDescription()));
-        }
+        final Settings.FieldCodes mySortField;
 
-        if ((myObject instanceof PictureInfo pi) && (otherObject instanceof GroupInfo gi) && (sortField == FieldCodes.DESCRIPTION)) {
-            return (pi.getDescription().compareTo(gi.getGroupName()));
-        }
+        @Override
+        public int compare(final TreeNode o1, final TreeNode o2) {
+            if (o1 instanceof SortableDefaultMutableTreeNode node1 && o2 instanceof SortableDefaultMutableTreeNode node2) {
+                final Object myObject = node1.getUserObject();
+                final Object otherObject = node2.getUserObject();
 
-        if ((myObject instanceof GroupInfo) || (otherObject instanceof GroupInfo)) {
-            // we can't compare Groups against the other types of field other than the description.
+                if ((myObject instanceof GroupInfo myGroupInfo) && (otherObject instanceof GroupInfo otherGroupInfo)) {
+                    return myGroupInfo.compareTo(otherGroupInfo);
+                }
+                if ((myObject instanceof PictureInfo myPictureInfo) && (otherObject instanceof PictureInfo otherPictureInfo)) {
+                    return myPictureInfo.compareTo(otherPictureInfo, mySortField);
+                }
+
+                if ((myObject instanceof GroupInfo myGi) && (otherObject instanceof PictureInfo pi) && (mySortField == FieldCodes.DESCRIPTION)) {
+                    return (myGi.getGroupName().compareTo(pi.getDescription()));
+                }
+
+                if ((myObject instanceof PictureInfo pi) && (otherObject instanceof GroupInfo gi) && (mySortField == FieldCodes.DESCRIPTION)) {
+                    return (pi.getDescription().compareTo(gi.getGroupName()));
+                }
+            }
+            LOGGER.severe("Comparing something strange.");
             return 0;
         }
 
-        // at this point there can only two PictureInfo Objects
-        if ((myObject instanceof PictureInfo myPi) && (otherObject instanceof PictureInfo otherPi)) {
-            return switch (sortField) {
-                case FILM_REFERENCE -> myPi.getFilmReference().compareTo(otherPi.getFilmReference());
-                case CREATION_TIME -> myPi.getCreationTimeAsDate().compareTo(otherPi.getCreationTimeAsDate());
-                case COMMENT -> myPi.getComment().compareTo(otherPi.getComment());
-                case PHOTOGRAPHER -> myPi.getPhotographer().compareTo(otherPi.getPhotographer());
-                case COPYRIGHT_HOLDER -> myPi.getCopyrightHolder().compareTo(otherPi.getCopyrightHolder());
-                default -> myPi.getDescription().compareTo(otherPi.getDescription());
-            };
-        } else {
-            LOGGER.severe("We are not supposed to hit this else branch!");
-            Thread.dumpStack();
-            return 0;
-        }
+
     }
 
     @Override
@@ -507,12 +471,12 @@ public class SortableDefaultMutableTreeNode
     public void setUserObject(final Object userObject) {
         removeOldListener(getUserObject());
         if (userObject instanceof String s) {
-            // this gets called when the JTree is being edited with F2
+            // this gets called when the JTree is being edited with F2 keystroke
             final Object obj = getUserObject();
-            if (obj instanceof GroupInfo gi) {
-                gi.setGroupName(s);
-            } else if (obj instanceof PictureInfo pi) {
-                pi.setDescription(s);
+            if (obj instanceof GroupInfo groupInfo) {
+                groupInfo.setGroupName(s);
+            } else if (obj instanceof PictureInfo pictureInfo) {
+                pictureInfo.setDescription(s);
             }
         } else if (userObject instanceof PictureInfo pictureInfo) {
             pictureInfo.addPictureInfoChangeListener(this);
@@ -604,13 +568,11 @@ public class SortableDefaultMutableTreeNode
      */
     @Override
     public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
-        LOGGER.log(Level.FINE, "The SDMTN {0} received a PictureInfoChangeEvent {1}", new Object[]{this, pictureInfoChangeEvent});
         getPictureCollection().sendNodeChanged(this);
     }
 
     @Override
     public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
-        LOGGER.log(Level.INFO, "The SDMTN {0} received a GroupInfoChangeEvent {1}", new Object[]{this, groupInfoChangeEvent});
         getPictureCollection().sendNodeChanged(this);
     }
 
@@ -1055,17 +1017,6 @@ public class SortableDefaultMutableTreeNode
      * @return true if the picture was valid, false if not.
      */
     public boolean addPicture(final File file, final Collection<Integer> categoryAssignments) {
-        LOGGER.log(Level.INFO, "Adding file {0} to the node {1}", new Object[]{file, this});
-        LOGGER.log(Level.INFO, "Is this logging?");
-        LOGGER.log(Level.INFO, "ImageIO.jvmHasReader(file): {0}", ImageIO.jvmHasReader(file));
-        LOGGER.log(Level.INFO, "Is this logging? 1");
-        LOGGER.log(Level.INFO, "MimeTypes.isAPicture(file) {0}", MimeTypes.isAPicture(file));
-        LOGGER.log(Level.INFO, "Is this logging? 2");
-        LOGGER.log(Level.INFO, "MimeTypes.isADocument(file) {0}", MimeTypes.isADocument(file));
-        LOGGER.log(Level.INFO, "Is this logging? 3");
-        LOGGER.log(Level.INFO, "MimeTypes.isAMovie(file) {0}", MimeTypes.isAMovie(file));
-        LOGGER.log(Level.INFO, "And this?");
-
         if (ImageIO.jvmHasReader(file)
                 || MimeTypes.isAPicture(file)
                 || MimeTypes.isADocument(file)

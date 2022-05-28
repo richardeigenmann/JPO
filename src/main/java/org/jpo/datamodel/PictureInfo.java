@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2021  Richard Eigenmann.
+ Copyright (C) 2002-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -1260,4 +1260,23 @@ public class PictureInfo implements Serializable {
                 || (getComment().toUpperCase().contains(uppercaseSearchString))
                 || (getCopyrightHolder().toUpperCase().contains(uppercaseSearchString));
     }
+
+    /**
+     * Defines how PictureInfo objects compare themselves
+     *
+     * @param otherPictureInfo The other GroupInfo object
+     * @param sortField        which attribute to use in the comparison
+     * @return negative number if this is less then other Zero if same or positive numper if other is less than this
+     */
+    public int compareTo(final @NotNull PictureInfo otherPictureInfo, final Settings.FieldCodes sortField) {
+        return switch (sortField) {
+            case FILM_REFERENCE -> this.getFilmReference().compareTo(otherPictureInfo.getFilmReference());
+            case CREATION_TIME -> this.getCreationTimeAsDate().compareTo(otherPictureInfo.getCreationTimeAsDate());
+            case COMMENT -> this.getComment().compareTo(otherPictureInfo.getComment());
+            case PHOTOGRAPHER -> this.getPhotographer().compareTo(otherPictureInfo.getPhotographer());
+            case COPYRIGHT_HOLDER -> this.getCopyrightHolder().compareTo(otherPictureInfo.getCopyrightHolder());
+            default -> this.getDescription().compareTo(otherPictureInfo.getDescription());
+        };
+    }
+
 }

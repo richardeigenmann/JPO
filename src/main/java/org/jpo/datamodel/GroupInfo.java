@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 /*
  GroupInfo.java:  definitions for the group objects
 
- Copyright (C) 2002 - 2021 Richard Eigenmann.
+ Copyright (C) 2002 - 2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -245,6 +246,19 @@ public class GroupInfo implements Serializable {
      * @return a clone of the current PictureInfo object.
      */
     public GroupInfo getClone() {
-        return new GroupInfo( this.getGroupName() );
+        return new GroupInfo(this.getGroupName());
     }
+
+
+    /**
+     * Defines how GroupInfo objects compare themselves
+     *
+     * @param otherGroupInfo The other GroupInfo object
+     * @return negative number if this is less then other Zero if same or positive numper if other is less than this
+     */
+    public int compareTo(final @NotNull GroupInfo otherGroupInfo) {
+        return (this.getGroupName().compareTo(otherGroupInfo.getGroupName()));
+    }
+
+
 }
