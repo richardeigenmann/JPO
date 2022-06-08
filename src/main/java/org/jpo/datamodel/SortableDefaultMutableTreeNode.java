@@ -1164,7 +1164,7 @@ public class SortableDefaultMutableTreeNode
      * @param path0 The first path
      * @param path1 The second path
      * @return The common path
-     * @link <a href="https://stackoverflow.com/questions/54595752/find-the-longest-path-common-to-two-paths-in-java">find-the-longest-path-common-to-two-paths-in-java</a>
+     * See <a href="https://stackoverflow.com/questions/54595752/find-the-longest-path-common-to-two-paths-in-java">find-the-longest-path-common-to-two-paths-in-java</a>
      */
     public static Path commonPath(Path path0, Path path1) {
         if (path0.equals(path1)) {

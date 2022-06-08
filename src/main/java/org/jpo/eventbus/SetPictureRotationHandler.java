@@ -23,6 +23,9 @@ import java.util.List;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Sets the picture rotation
+ */
 public class SetPictureRotationHandler {
     /**
      * Handles the SetPictureRotationRequest request by setting the rotation and

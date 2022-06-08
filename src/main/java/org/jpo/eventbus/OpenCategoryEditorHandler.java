@@ -19,6 +19,9 @@ import org.jpo.gui.CategoryEditorJFrame;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Handles the OpenCategoryEditorRequest request
+ */
 public class OpenCategoryEditorHandler {
     /**
      * Handles the OpenCategoryEditorRequest request

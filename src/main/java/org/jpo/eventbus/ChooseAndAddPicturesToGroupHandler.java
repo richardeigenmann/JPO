@@ -19,6 +19,9 @@ import org.jpo.gui.PictureFileChooser;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Brings up a chooser to pick files and add them to the group.
+ */
 public class ChooseAndAddPicturesToGroupHandler {
     /**
      * Brings up a chooser to pick files and add them to the group.

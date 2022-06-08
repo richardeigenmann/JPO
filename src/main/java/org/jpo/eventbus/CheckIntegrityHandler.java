@@ -20,9 +20,12 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 import org.jpo.gui.IntegrityCheckerJFrame;
 
+/**
+ * Creates an IntegrityChecker that does its magic on the collection.
+ */
 public class CheckIntegrityHandler {
     /**
-     * Creates an IntegrityChecker that does it's magic on the collection.
+     * Creates an IntegrityChecker that does its magic on the collection.
      *
      * @param request The request
      */

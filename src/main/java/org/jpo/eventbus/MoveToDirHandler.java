@@ -29,7 +29,9 @@ import static org.jpo.gui.ApplicationStartupHandler.GENERIC_INFO;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
+/**
+ * Moves the pictures of the supplied nodes to the target directory
+ */
 public class MoveToDirHandler {
 
     /**

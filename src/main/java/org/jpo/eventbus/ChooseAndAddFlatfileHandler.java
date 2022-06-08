@@ -21,6 +21,9 @@ import javax.swing.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Brings up a chooser to pick a flat file and add them to the group.
+ */
 public class ChooseAndAddFlatfileHandler {
     /**
      * Brings up a chooser to pick a flat file and add them to the group.

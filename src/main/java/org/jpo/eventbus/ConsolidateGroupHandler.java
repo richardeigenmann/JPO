@@ -22,6 +22,9 @@ import org.jpo.gui.ProgressGui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Consolidates the files
+ */
 public class ConsolidateGroupHandler {
     /**
      * Consolidates the files

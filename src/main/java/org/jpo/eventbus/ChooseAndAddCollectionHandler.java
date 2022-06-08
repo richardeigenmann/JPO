@@ -20,9 +20,12 @@ import static org.jpo.gui.swing.Filechoosers.chooseXmlFile;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Facilitates adding a collection to the current one
+ */
 public class ChooseAndAddCollectionHandler {
     /**
-     * When the app sees a ChooseAndAddCollectionRequest it will open the a
+     * When the app sees a ChooseAndAddCollectionRequest it will open a
      * chooser dialog and will add the collection to the supplied node
      *
      * @param request the request

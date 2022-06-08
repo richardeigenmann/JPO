@@ -19,6 +19,9 @@ import org.jpo.gui.ConsolidateGroupController;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Opens the consolidate group dialog
+ */
 public class ConsolidateGroupDialogHandler {
     /**
      * Opens the consolidate group dialog

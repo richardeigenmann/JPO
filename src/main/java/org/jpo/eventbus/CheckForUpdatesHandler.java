@@ -22,6 +22,9 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Listens to the CheckForUpdatesRequest and fulfills it if the conditions are met
+ */
 public class CheckForUpdatesHandler {
     /**
      * Defines a logger for this class

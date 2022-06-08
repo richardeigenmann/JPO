@@ -19,6 +19,9 @@ import org.jpo.gui.LicenseWindow;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Opens the License window
+ */
 public class OpenLicenceFrameHandler {
     /**
      * Opens the License window

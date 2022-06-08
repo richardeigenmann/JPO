@@ -1101,7 +1101,7 @@ public class Settings {
     /**
      * returns the html ouput target that was last used
      *
-     * @return
+     * @return the html output target
      */
     public static GenerateWebsiteRequest.OutputTarget getDefaultHtmlOutputTarget() {
         return defaultHtmlOutputTarget;
@@ -1346,6 +1346,11 @@ public class Settings {
         Settings.defaultHtmlSshTargetDir = defaultHtmlSshTargetDir;
     }
 
+    /**
+     * Retruns the default ssh key file
+     *
+     * @return the default ssh key file
+     */
     public static String getDefaultHtmlSshKeyFile() {
         return defaultHtmlSshKeyFile;
     }
@@ -1533,6 +1538,11 @@ public class Settings {
         Settings.logfile = logfile;
     }
 
+    /**
+     * Returns the remembered email recipients
+     *
+     * @return the email recipients
+     */
     public static SortedSet<Object> getEmailRecipients() {
         return emailRecipients;
     }
