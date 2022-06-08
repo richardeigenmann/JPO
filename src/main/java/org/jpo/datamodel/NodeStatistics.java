@@ -7,7 +7,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -272,10 +271,9 @@ public class NodeStatistics {
         } else if (startNode.getUserObject() instanceof PictureInfo pi) {
             size = sizeOfPictureInfo(pi);
         } else if (startNode instanceof SortableDefaultMutableTreeNode node && startNode.getUserObject() instanceof GroupInfo) {
-            final List<SortableDefaultMutableTreeNode> pictureNodes = node.getChildPictureNodes(true);
-            for (final SortableDefaultMutableTreeNode nde : pictureNodes) {
-                size += sizeOfPictureInfo((PictureInfo) nde.getUserObject() );
-            }
+            size = node.getChildPictureNodesDFS()
+                    .mapToLong(nde -> sizeOfPictureInfo((PictureInfo) nde.getUserObject()))
+                    .sum();
         }
         return size;
     }

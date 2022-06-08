@@ -12,5 +12,6 @@ module Jpo {
     requires org.apache.commons.compress;
     requires org.checkerframework.checker.qual;
     requires jwizz;
+    requires jxmapviewer2;
 }
 

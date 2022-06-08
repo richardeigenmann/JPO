@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.jpo.datamodel.Tools.copyBufferedStream;
 
@@ -440,6 +441,19 @@ public class SortableDefaultMutableTreeNode
         }
         return pictureNodes;
     }
+
+    /**
+     * This method collects all pictures under the current node and returns them
+     * as an Array List..
+     *
+     * @return A List of child nodes that hold a picture
+     */
+    public Stream<SortableDefaultMutableTreeNode> getChildPictureNodesDFS() {
+        return Collections.list(this.depthFirstEnumeration()).stream()
+                .filter(node -> node.isLeaf() && (((DefaultMutableTreeNode) node).getUserObject() instanceof PictureInfo))
+                .map(SortableDefaultMutableTreeNode.class::cast);
+    }
+
 
     /**
      * A convenience method to tell if the current node has at least one picture
