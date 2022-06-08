@@ -1166,23 +1166,23 @@ public class SortableDefaultMutableTreeNode
      * @return The common path
      * See <a href="https://stackoverflow.com/questions/54595752/find-the-longest-path-common-to-two-paths-in-java">find-the-longest-path-common-to-two-paths-in-java</a>
      */
-    public static Path commonPath(Path path0, Path path1) {
+    public static Path commonPath(final Path path0, Path path1) {
         if (path0.equals(path1)) {
             return path0;
         }
 
-        path0 = path0.normalize();
-        path1 = path1.normalize();
-        int minCount = Math.min(path0.getNameCount(), path1.getNameCount());
+        final var normalizedPath0 = path0.normalize();
+        final var normalizedPath1 = path1.normalize();
+        int minCount = Math.min(normalizedPath0.getNameCount(), normalizedPath1.getNameCount());
         for (int i = minCount; i > 0; i--) {
-            Path sp0 = path0.subpath(0, i);
-            if (sp0.equals(path1.subpath(0, i))) {
-                String root = Objects.toString(path0.getRoot(), "");
+            Path sp0 = normalizedPath0.subpath(0, i);
+            if (sp0.equals(normalizedPath1.subpath(0, i))) {
+                String root = Objects.toString(normalizedPath0.getRoot(), "");
                 return Paths.get(root, sp0.toString());
             }
         }
 
-        return path0.getRoot();
+        return normalizedPath0.getRoot();
     }
 
 }
