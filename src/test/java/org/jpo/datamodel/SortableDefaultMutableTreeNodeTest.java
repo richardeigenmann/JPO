@@ -399,7 +399,7 @@ class SortableDefaultMutableTreeNodeTest {
      */
     @Test
     void testGetChildPictureNodes() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
+        //assumeFalse(GraphicsEnvironment.isHeadless());
         final List<SortableDefaultMutableTreeNode> allPicturesFromRoot = rootNode.getChildPictureNodes(true);
         assertEquals(5, allPicturesFromRoot.size());
         assertEquals(0, rootNode.getChildPictureNodes(false).size());
