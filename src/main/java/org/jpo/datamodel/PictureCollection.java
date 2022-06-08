@@ -989,4 +989,5 @@ public class PictureCollection {
     public int countSelectedNodes() {
         return selection.size();
     }
+
 }

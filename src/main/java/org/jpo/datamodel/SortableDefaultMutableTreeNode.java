@@ -17,6 +17,8 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -1145,6 +1147,42 @@ public class SortableDefaultMutableTreeNode
             });
             super.add(dropCancel);
         }
+    }
+
+    public Path getCommonPath() {
+        final var firstNode = getChildPictureNodesDFS().findFirst();
+        if (!firstNode.isPresent()) return null;
+        final var firstPath = ((PictureInfo) firstNode.get().getUserObject()).getImageFile().toPath();
+        return getChildPictureNodesDFS()
+                .map(node -> ((PictureInfo) node.getUserObject()).getImageFile().toPath())
+                .reduce(firstPath, SortableDefaultMutableTreeNode::commonPath);
+    }
+
+    /**
+     * Finds the common path between two input paths
+     *
+     * @param path0 The first path
+     * @param path1 The second path
+     * @return The common path
+     * @link <a href="https://stackoverflow.com/questions/54595752/find-the-longest-path-common-to-two-paths-in-java">find-the-longest-path-common-to-two-paths-in-java</a>
+     */
+    public static Path commonPath(Path path0, Path path1) {
+        if (path0.equals(path1)) {
+            return path0;
+        }
+
+        path0 = path0.normalize();
+        path1 = path1.normalize();
+        int minCount = Math.min(path0.getNameCount(), path1.getNameCount());
+        for (int i = minCount; i > 0; i--) {
+            Path sp0 = path0.subpath(0, i);
+            if (sp0.equals(path1.subpath(0, i))) {
+                String root = Objects.toString(path0.getRoot(), "");
+                return Paths.get(root, sp0.toString());
+            }
+        }
+
+        return path0.getRoot();
     }
 
 }

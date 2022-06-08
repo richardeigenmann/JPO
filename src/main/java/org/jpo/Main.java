@@ -10,13 +10,13 @@ import javax.swing.*;
 /*
  org.jpo.Main.java:  starting point for the JPO application
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY-
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -71,7 +71,7 @@ public class Main {
         }
 
         System.out.println("\nJPO version " + Settings.JPO_VERSION + "\n"
-                + "Copyright (C) 2000-2021 Richard Eigenmann,\nZurich, Switzerland\n"
+                + "Copyright (C) 2000-2022 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"
@@ -209,6 +209,7 @@ public class Main {
         JpoEventBus.getInstance().register(new OpenFileExplorerHandler());
         JpoEventBus.getInstance().register(new PictureCategoryHandler());
         JpoEventBus.getInstance().register(new CheckForUpdatesHandler());
+        JpoEventBus.getInstance().register(new FindBasedirHandler());
     }
 
 

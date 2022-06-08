@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -754,4 +755,58 @@ class SortableDefaultMutableTreeNodeTest {
             Thread.currentThread().interrupt();
         }
     }
+
+    @Test
+    void testCommon() {
+        assertEquals(Paths.get("/a/b"), SortableDefaultMutableTreeNode.commonPath(Paths.get("/a/b/c"), Paths.get("/a/b/d")));
+        assertEquals(Paths.get("/a"), SortableDefaultMutableTreeNode.commonPath(Paths.get("/a/"), Paths.get("/a/b/d")));
+        assertEquals(Paths.get("/"), SortableDefaultMutableTreeNode.commonPath(Paths.get("/f/b/c"), Paths.get("/a/b/d")));
+        assertEquals(Paths.get("/a/b/c"), SortableDefaultMutableTreeNode.commonPath(Paths.get("/a/b/c/d/e"), Paths.get("/a/b/f/../c/g")));
+        assertEquals(Paths.get("C:/Winnt"), SortableDefaultMutableTreeNode.commonPath(Paths.get("C:/Winnt/System32"), Paths.get("C:/Winnt/System64")));
+    }
+
+    @Test
+    void testGetCommonPath() {
+        final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
+        final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir3"), "P1"));
+        g1.add(p1);
+        final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir4"), "P2"));
+        g1.add(p2);
+        final var p3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir5"), "P3"));
+        g1.add(p3);
+        assertEquals(Paths.get("/dir1/dir2"), g1.getCommonPath());
+    }
+
+    @Test
+    void testGetCommonPathTwo() {
+        final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
+        final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir3"), "P1"));
+        g1.add(p1);
+        final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir4/dir5/dir6"), "P2"));
+        g1.add(p2);
+        assertEquals(Paths.get("/"), g1.getCommonPath());
+    }
+
+
+    @Test
+    void testGetCommonPathWinMatch() {
+        final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
+        final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("C:/dir1/dir2/dir3"), "P1"));
+        g1.add(p1);
+        final var p3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("C:/dir1/dir2/dir4"), "P3"));
+        g1.add(p3);
+        assertEquals(Paths.get("C:/dir1/dir2"), g1.getCommonPath());
+    }
+
+
+    @Test
+    void testGetCommonPathWin() {
+        final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
+        final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("C:/dir1/dir2/dir3"), "P1"));
+        g1.add(p1);
+        final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("D:/dir1/dir2/dir4"), "P2"));
+        g1.add(p2);
+        assertNull(g1.getCommonPath());
+    }
+
 }
