@@ -17,7 +17,7 @@ class PictureAdderRequestTest {
         final var files = new File[]{file};
         final var emptyCollection = new ArrayList<Integer>();
         try {
-            final var pictureAdderRequest = new PictureAdderRequest(node, files, true, false, false, emptyCollection);
+            new PictureAdderRequest(node, files, true, false, false, emptyCollection);
         } catch (IllegalArgumentException ex) {
             // expected
             return;
@@ -33,7 +33,7 @@ class PictureAdderRequestTest {
         final var files = new File[]{file};
         final var emptyCollection = new ArrayList<Integer>();
         try {
-            final var pictureAdderRequest = new PictureAdderRequest(node, files, true, false, false, emptyCollection);
+            new PictureAdderRequest(node, files, true, false, false, emptyCollection);
         } catch (IllegalArgumentException ex) {
             fail("Wasn't supposed to hit the exception: " + ex.getMessage());
         }
