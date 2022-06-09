@@ -17,10 +17,10 @@ package org.jpo.eventbus;
  */
 
 /**
- * This request indicates that the application should start up a new ThumbnailCreationFactory
+ * This request indicates that the application should start up a new ThumbnailCreationDaemon
  *
  * @author Richard Eigenmann
- * @see StartThumbnailCreationFactoryHandler
+ * @see StartThumbnailCreationDaemonHandler
  */
-public class StartThumbnailCreationFactoryRequest {
+public class StartThumbnailCreationDaemonRequest {
 }

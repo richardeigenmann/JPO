@@ -326,7 +326,7 @@ public class ApplicationJMenuBar extends JMenuBar {
             add(editCategoriesJMenuItem);
 
             startThumbnailCreationThreadJMenuItem.setMnemonic(KeyEvent.VK_T);
-            startThumbnailCreationThreadJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest()));
+            startThumbnailCreationThreadJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new StartThumbnailCreationDaemonRequest()));
             add(startThumbnailCreationThreadJMenuItem);
 
             final var findBaseDirJMenuItem = new JMenuItem("Find Basedir");

@@ -65,7 +65,7 @@ public class Thumbnail extends JComponent {
      * @param icon The ImageIcon that should be displayed
      */
     public void setImageIcon(@NotNull final ImageIcon icon) {
-        LOGGER.log(Level.INFO, "Setting image on thumbnail hashCode: {0}", hashCode());
+        LOGGER.log(Level.FINE, "Setting image on thumbnail hashCode: {0}", hashCode());
         final Runnable runnable = () -> {
             img = icon.getImage();
             if (img == null) {

@@ -27,16 +27,20 @@ import java.util.logging.Logger;
  */
 
 /**
- * Implementations of this class should run on a thread which polls the
+ * Instantiated objects of this class sit on their thread, polling the
+ * ThumbnailCreationQueue for new thumbnail creation requests. If a new
+ * request is found it is pulled off the queue and the daemon goes to work
+ * creating the thumbnail image. Using notification the GUI can then
+ * learn about a created Thumbnail and can redraw the picture.
  * {@link ThumbnailCreationQueue} for new {@link ThumbnailQueueRequest} and
  * process them.
  */
-public class ThumbnailCreationFactory implements Runnable {
+public class ThumbnailCreationDaemon implements Runnable {
 
     /**
      * Defines a logger for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( ThumbnailCreationFactory.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailCreationDaemon.class.getName());
 
     /**
      * An icon that indicates a broken image used when there is a problem
@@ -46,7 +50,7 @@ public class ThumbnailCreationFactory implements Runnable {
 
     static {
         final var BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
-        final var resource = ThumbnailCreationFactory.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
+        final var resource = ThumbnailCreationDaemon.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", BROKEN_THUMBNAIL_PICTURE_FILE);
             BROKEN_THUMBNAIL_PICTURE = null;
@@ -63,7 +67,7 @@ public class ThumbnailCreationFactory implements Runnable {
 
     static {
         final var MOVIE_ICON_FILE = "icon_movie.png";
-        final var resource = ThumbnailCreationFactory.class.getClassLoader().getResource(MOVIE_ICON_FILE);
+        final var resource = ThumbnailCreationDaemon.class.getClassLoader().getResource(MOVIE_ICON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", MOVIE_ICON_FILE);
             MOVIE_ICON = null;
@@ -80,7 +84,7 @@ public class ThumbnailCreationFactory implements Runnable {
 
     static {
         final var DOCUMENT_ICON_FILE = "icon_document.png";
-        final var resource = ThumbnailCreationFactory.class.getClassLoader().getResource(DOCUMENT_ICON_FILE);
+        final var resource = ThumbnailCreationDaemon.class.getClassLoader().getResource(DOCUMENT_ICON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", DOCUMENT_ICON_FILE);
             DOCUMENT_ICON = null;
@@ -106,11 +110,8 @@ public class ThumbnailCreationFactory implements Runnable {
      *
      * @param pollingInterval The polling interval in milliseconds
      */
-    public ThumbnailCreationFactory(final int pollingInterval) {
+    public ThumbnailCreationDaemon(final int pollingInterval) {
         this.pollingInterval = pollingInterval;
-        final var thread = new Thread(this, "ThumbnailCreationFactory");
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
     }
 
     /**

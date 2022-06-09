@@ -139,7 +139,7 @@ public class Main {
     private static void registerEventHandlers() {
         JpoEventBus.getInstance().register(new ApplicationStartupHandler());
         JpoEventBus.getInstance().register(new RunUserFunctionHandler());
-        JpoEventBus.getInstance().register(new StartThumbnailCreationFactoryHandler());
+        JpoEventBus.getInstance().register(new StartThumbnailCreationDaemonHandler());
         JpoEventBus.getInstance().register(new MoveToDirHandler());
         JpoEventBus.getInstance().register(new RenameFileHandler());
         JpoEventBus.getInstance().register(new RenamePictureHandler());
@@ -210,6 +210,7 @@ public class Main {
         JpoEventBus.getInstance().register(new PictureCategoryHandler());
         JpoEventBus.getInstance().register(new CheckForUpdatesHandler());
         JpoEventBus.getInstance().register(new FindBasedirHandler());
+        JpoEventBus.getInstance().register(new StartThumbnailCreationDaemonWatchDogHandler());
     }
 
 

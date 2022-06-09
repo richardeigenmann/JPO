@@ -1,8 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.cache.ThumbnailCreationFactory;
-import org.jpo.datamodel.Settings;
+import org.jpo.cache.ThumbnailCreationExecutor;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -20,15 +19,18 @@ import org.jpo.datamodel.Settings;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class StartThumbnailCreationFactoryHandler {
+/**
+ * Start a ThumbnailCreationDaemon
+ */
+public class StartThumbnailCreationDaemonHandler {
 
     /**
-     * Start a ThumbnailCreationFactory
+     * Start a ThumbnailCreationDaemon
      *
      * @param request the request
      */
     @Subscribe
-    public void handleEvent(final StartThumbnailCreationFactoryRequest request) {
-        new ThumbnailCreationFactory(Settings.THUMBNAIL_CREATION_THREAD_POLLING_TIME);
+    public void handleEvent(final StartThumbnailCreationDaemonRequest request) {
+        ThumbnailCreationExecutor.getInstance().spawnThumbnailCreationDaemon();
     }
 }

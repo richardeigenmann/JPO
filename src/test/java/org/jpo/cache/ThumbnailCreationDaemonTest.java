@@ -11,22 +11,21 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
- *
  * @author Richard Eigenmann
  */
-public class ThumbnailCreationFactoryTest {
+public class ThumbnailCreationDaemonTest {
 
     @Test
-    public void thumbnailCreationFactoryTest() {
+    public void thumbnailCreationDaemonTest() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait( () -> {
-                ThumbnailCreationFactory tcf = new ThumbnailCreationFactory( 500 );
-                assertNotNull( tcf );
+            SwingUtilities.invokeAndWait(() -> {
+                final var tcf = new ThumbnailCreationDaemon(500);
+                assertNotNull(tcf);
                 tcf.endThread();
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( ex.getMessage() );
+            });
+        } catch (InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
             Thread.currentThread().interrupt();
         }
     }

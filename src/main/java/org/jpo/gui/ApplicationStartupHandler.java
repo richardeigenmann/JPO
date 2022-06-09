@@ -24,6 +24,8 @@ import java.util.logging.Logger;
  */
 
 /**
+ * Handles application startup
+ *
  * @author Richard Eigenmann
  */
 @SuppressWarnings("UnstableApiUsage")
@@ -43,13 +45,13 @@ public class ApplicationStartupHandler {
     /**
      * Handles the application startup by posting an {@link OpenMainWindowRequest},
      * starting the {@link StartCameraWatchDaemonRequest}, starting the
-     * {@link StartThumbnailCreationFactoryRequest}. If an autoLoad is defined in the Settings it
+     * {@link StartThumbnailCreationDaemonRequest}. If an autoLoad is defined in the Settings it
      * will load that or start a new collection with {@link StartNewCollectionRequest}.
      *
      * @param request the startup request
      * @see OpenMainWindowRequest
      * @see StartCameraWatchDaemonRequest
-     * @see StartThumbnailCreationFactoryRequest
+     * @see StartThumbnailCreationDaemonRequest
      * @see FileLoadRequest
      * @see StartNewCollectionRequest
      */
@@ -62,9 +64,7 @@ public class ApplicationStartupHandler {
         JpoEventBus.getInstance().post(new OpenMainWindowRequest());
         JpoEventBus.getInstance().post(new StartCameraWatchDaemonRequest());
 
-        for (var i = 1; i <= Settings.NUMBER_OF_THUMBNAIL_CREATION_THREADS; i++) {
-            JpoEventBus.getInstance().post(new StartThumbnailCreationFactoryRequest());
-        }
+        JpoEventBus.getInstance().post(new StartThumbnailCreationDaemonWatchDogRequest());
 
         if ((Settings.getAutoLoad() != null) && (Settings.getAutoLoad().length() > 0)) {
             final var xmlFile = new File(Settings.getAutoLoad());

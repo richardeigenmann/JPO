@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.jpo.cache.ThumbnailCreationExecutor;
 import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.datamodel.NodeStatistics;
 import org.jpo.datamodel.NodeStatisticsBean;
@@ -97,20 +98,9 @@ public class NodeStatisticsController {
                     nodeStatisticsBean.setFreeMemory(Tools.freeMemory());
                     nodeStatisticsBean.setQueueCount(Settings.getJpoResources().getString("queCountJLabel") + ThumbnailCreationQueue.size());
                     nodeStatisticsBean.setSelectedCount(String.format("Selected: %d", Settings.getPictureCollection().getSelection().size()));
-                    nodeStatisticsBean.setThumbnailCreationFactoryCount(String.format("ThumbnailCreationFactoryThreads: %d", countThreadsOfClass("ThumbnailCreationFactory")));
+                    nodeStatisticsBean.setThumbnailCreationFactoryCount(String.format("ThumbnailCreationFactoryThreads: %d", ThumbnailCreationExecutor.getInstance().getLiveDaemonsCount()));
                 }
                 return "done";
-            }
-
-            private int countThreadsOfClass(final String className) {
-                final Thread[] tarray = new Thread[Thread.activeCount()];
-                Thread.enumerate(tarray);
-                var count = 0;
-                for (final var t : tarray) {
-                    if (className.equals(t.getName()))
-                        count++;
-                }
-                return count;
             }
 
             @Override

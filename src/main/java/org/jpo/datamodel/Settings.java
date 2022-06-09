@@ -2414,10 +2414,20 @@ public class Settings {
 
     /**
      * Returns the expiry DateTime before which the version alerts shall not be shown.
+     *
      * @return The timestamp before which alerts shall not be shown
      */
     public static LocalDateTime getSnoozeVersionAlertsExpiryDateTime() {
         return snoozeVersionAlertsExpiryDateTime;
+    }
+
+    /**
+     * Returns the number of threads JPO should spawn to create thumbnails concurrently
+     *
+     * @return The number of threads to spawn
+     */
+    public static int getDefaultThumbnailCreationThreads() {
+        return 6;
     }
 
 
