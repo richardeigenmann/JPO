@@ -1,6 +1,7 @@
 package org.jpo.eventbus;
 
 import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
@@ -23,7 +24,7 @@ import java.util.Collection;
  */
 
 /**
- * @param startNode          The node on which to add the pictures
+ * @param startNode          The node on which to add the pictures. It must be a node with a GroupInfo object
  * @param chosenFiles        The array of Files to add
  * @param newOnly            indicates whether to check if the picture is already in the collection
  * @param recurseDirectories indicates whether to scan down into directories for more pictures.
@@ -37,4 +38,9 @@ public record PictureAdderRequest(
         @NotNull boolean recurseDirectories,
         @NotNull boolean retainDirectories,
         @NotNull Collection<Integer> selectedCategories) {
+
+    public PictureAdderRequest {
+        if (!(startNode.getUserObject() instanceof GroupInfo))
+            throw new IllegalArgumentException("The startNode must have a GroupInfo userObject");
+    }
 }
