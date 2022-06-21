@@ -2448,6 +2448,7 @@ public class Settings {
         ROTATION,
         LATLNG,
         CHECKSUM,
+        SHA256,
         CATEGORIES,
         CATEGORY,
         CATEGORY_DESCRIPTION,

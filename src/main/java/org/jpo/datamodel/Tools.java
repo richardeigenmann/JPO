@@ -243,51 +243,6 @@ public class Tools {
     }
 
 
-    /**
-     * Returns a checksum out of the contents of the the supplied File
-     *
-     * @param file The file to checksum
-     * @return returns the checksum as a Long or Long.MIN_VALUE to indicate
-     * failure.
-     */
-    public static long calculateChecksum(final File file) {
-        long checksum;
-        try {
-            checksum = calculateChecksum(new BufferedInputStream(new FileInputStream(file)));
-        } catch (FileNotFoundException x) {
-            checksum = Long.MIN_VALUE;
-        }
-        return checksum;
-    }
-
-    /**
-     * Returns a checksum from the supplied input stream using Adler32 crc.
-     * Originally taken from: Java ist auch eine Insel (2. Aufl.) von Christian
-     * Ullenboom Programmieren für die Java 2-Plattform inputStream der Version
-     * 1.4
-     *
-     * @param inputStream The InputStream to read
-     * @return returns the checksum as a Long or Long.MIN_VALUE to indicate
-     * failure.
-     */
-    public static long calculateChecksum(final InputStream inputStream) {
-        warnOnEDT();
-        final Adler32 crc = new Adler32();
-        int blockLen;
-
-        try {
-            while ((blockLen = inputStream.available()) > 0) {
-                byte[] ba = new byte[blockLen];
-                int read = inputStream.read(ba);
-                crc.update(ba, 0, read);
-            }
-            return crc.getValue();
-        } catch (IOException x) {
-            LOGGER.log(Level.INFO, "Tools.calculateChecksum trapped an IOException. Aborting. Reason:\n{0}", x.getMessage());
-            return Long.MIN_VALUE;
-        }
-
-    }
 
     /**
      * returns the current date and time formatted per the formatting string.

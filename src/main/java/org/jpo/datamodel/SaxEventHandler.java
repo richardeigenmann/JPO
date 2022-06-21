@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.Settings.FieldCodes.*;
 
 /*
- Copyright (C) 2017-2021  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -126,6 +126,8 @@ public class SaxEventHandler extends DefaultHandler {
             currentField = LATLNG;
         } else if ("checksum".equals(qName)) {
             currentField = CHECKSUM;
+        } else if ("sha256".equals(qName)) {
+            currentField = SHA256;
         } else if ("categoryAssignment".equals(qName) && attrs != null && attrs.getValue(INDEX) != null) {
             ((PictureInfo) currentPicture.getUserObject()).addCategoryAssignment(attrs.getValue(INDEX));
         } else if ("categories".equals(qName)) {
@@ -177,9 +179,6 @@ public class SaxEventHandler extends DefaultHandler {
                 case "LATLNG":
                     ( (PictureInfo) currentPicture.getUserObject() ).parseLatLng();
                     break;
-                case "checksum":
-                    ( (PictureInfo) currentPicture.getUserObject() ).parseChecksum();
-                    break;
                 case "categoryDescription":
                     currentGroup.getPictureCollection().addCategory( Integer.parseInt( temporaryCategoryIndex ), temporaryCategory );
                     temporaryCategory = "";
@@ -202,22 +201,25 @@ public class SaxEventHandler extends DefaultHandler {
      */
     @Override
     public void characters(final char[] buf, final int offset, final int len ) {
-        final String s = new String(buf, offset, len);
+        final var readString = new String(buf, offset, len);
         switch (currentField) {
-            case DESCRIPTION -> ((PictureInfo) currentPicture.getUserObject()).appendToDescription(s);
-            case FILE_URL -> ((PictureInfo) currentPicture.getUserObject()).appendToImageLocation(s);
-            case FILE_LOWRES_URL -> lowresUrls.append(s);
-            case FILM_REFERENCE -> ((PictureInfo) currentPicture.getUserObject()).appendToFilmReference(s);
-            case CREATION_TIME -> ((PictureInfo) currentPicture.getUserObject()).appendToCreationTime(s);
-            case COMMENT -> ((PictureInfo) currentPicture.getUserObject()).appendToComment(s);
-            case PHOTOGRAPHER -> ((PictureInfo) currentPicture.getUserObject()).appendToPhotographer(s);
-            case COPYRIGHT_HOLDER -> ((PictureInfo) currentPicture.getUserObject()).appendToCopyrightHolder(s);
-            case ROTATION -> ((PictureInfo) currentPicture.getUserObject()).appendToRotation(s);
-            case LATLNG -> ((PictureInfo) currentPicture.getUserObject()).appendToLatLng(s);
-            case CHECKSUM -> ((PictureInfo) currentPicture.getUserObject()).appendToChecksum(s);
-            case CATEGORIES -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORIES: {0}", s);
-            case CATEGORY -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORY: {0}", s);
-            case CATEGORY_DESCRIPTION -> temporaryCategory = temporaryCategory.concat(s);
+            case DESCRIPTION -> ((PictureInfo) currentPicture.getUserObject()).appendToDescription(readString);
+            case FILE_URL -> ((PictureInfo) currentPicture.getUserObject()).appendToImageLocation(readString);
+            case FILE_LOWRES_URL -> lowresUrls.append(readString);
+            case FILM_REFERENCE -> ((PictureInfo) currentPicture.getUserObject()).appendToFilmReference(readString);
+            case CREATION_TIME -> ((PictureInfo) currentPicture.getUserObject()).appendToCreationTime(readString);
+            case COMMENT -> ((PictureInfo) currentPicture.getUserObject()).appendToComment(readString);
+            case PHOTOGRAPHER -> ((PictureInfo) currentPicture.getUserObject()).appendToPhotographer(readString);
+            case COPYRIGHT_HOLDER -> ((PictureInfo) currentPicture.getUserObject()).appendToCopyrightHolder(readString);
+            case ROTATION -> ((PictureInfo) currentPicture.getUserObject()).appendToRotation(readString);
+            case LATLNG -> ((PictureInfo) currentPicture.getUserObject()).appendToLatLng(readString);
+            case SHA256 -> ((PictureInfo) currentPicture.getUserObject()).appendToSha256(readString);
+            case CATEGORIES -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORIES: {0}", readString);
+            case CATEGORY -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORY: {0}", readString);
+            case CATEGORY_DESCRIPTION -> {
+                final var temporaryCategory1 = temporaryCategory;
+                temporaryCategory = temporaryCategory1.concat(readString);
+            }
             default -> LOGGER.log(Level.SEVERE, "Don''t recognize currentField: {0}", currentField);
         }
     }

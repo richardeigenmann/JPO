@@ -725,17 +725,17 @@ public class PictureCollection {
      * This method returns true if the indicated checksum is already a member of
      * the collection. Otherwise it returns false.
      *
-     * @param checksum The checksum of the picture to check for
+     * @param sha256 The checksum of the picture to check for
      * @return true if found, false if not
      */
-    public boolean isInCollection(final long checksum) {
-        final Enumeration<TreeNode> e = getRootNode().preorderEnumeration();
-        while (e.hasMoreElements()) {
-            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) e.nextElement();
-            final Object nodeObject = node.getUserObject();
-            if (nodeObject instanceof PictureInfo pi) {
+    public boolean isInCollection(final long sha256) {
+        final var enumeration = getRootNode().preorderEnumeration();
+        while (enumeration.hasMoreElements()) {
+            final var node = (SortableDefaultMutableTreeNode) enumeration.nextElement();
+            final var nodeObject = node.getUserObject();
+            if (nodeObject instanceof PictureInfo pictureInfo) {
                 LOGGER.log(Level.FINE, "Checking: {0}", ((PictureInfo) nodeObject).getImageFile());
-                if (pi.getChecksum() == checksum) {
+                if (pictureInfo.getSha256().equals(sha256)) {
                     LOGGER.log(Level.FINE, "Found a match on: {0}", ((PictureInfo) nodeObject).getDescription());
                     return true;
                 }

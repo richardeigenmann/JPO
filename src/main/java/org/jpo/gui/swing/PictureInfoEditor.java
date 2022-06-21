@@ -108,15 +108,9 @@ public class PictureInfoEditor extends JFrame {
     private final JLabel highresErrorJLabel = new JLabel("");
 
     /**
-     * Label to display the checksum of the image file. Gets updated so it's
-     * here.
-     */
-    private final JLabel checksumJLabel = new JLabel();
-
-    /**
      * Label to display the SHA-256 fileHash of the image file
      */
-    private final JLabel fileHashJLabel = new JLabel();
+    private final JTextField sha256JTextField = new JTextField();
 
     /**
      * Label to display the file Size of the image file
@@ -421,19 +415,31 @@ public class PictureInfoEditor extends JFrame {
         fileTab.add(highresLocationJButton, "wrap");
         fileTab.add(highresErrorJLabel, SPAN_2_WRAP);
 
+        fileTab.add(new JLabel(Settings.getJpoResources().getString("fileHashJLabel")), "wrap");
+        sha256JTextField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                // no action
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                saveSha256();
+            }
+        });
+        fileTab.add(sha256JTextField, "spanx, growx, wrap");
+
         final var refreshChecksumJButton = new JButton(Settings.getJpoResources().getString("checksumJButton"));
         refreshChecksumJButton.setPreferredSize(new Dimension(80, 25));
         refreshChecksumJButton.setMinimumSize(new Dimension(80, 25));
         refreshChecksumJButton.setMaximumSize(new Dimension(80, 25));
         refreshChecksumJButton.addActionListener((ActionEvent e) -> new Thread(
                 () -> {
+                    LOGGER.log(Level.INFO, "Refreshing sha256 for image {0}", pictureInfo);
                     pictureInfo.setSha256();
-                    pictureInfo.calculateChecksum();
                 }
         ).start());
 
-        fileTab.add(checksumJLabel, "wrap");
-        fileTab.add(fileHashJLabel, "wrap");
         fileTab.add(refreshChecksumJButton, "wrap");
 
         fileTab.add(fileSizeJLabel);
@@ -519,8 +525,7 @@ public class PictureInfoEditor extends JFrame {
     private void loadData() {
         setDescription();
         setHighresLocation();
-        setChecksum();
-        setFileHash();
+        setSha256();
         setCreationTime();
         setFilmReference();
         setRotation();
@@ -570,17 +575,15 @@ public class PictureInfoEditor extends JFrame {
      * Picture Metadata
      */
     private final transient PictureInfoChangeListener myPictureInfoChangeListener = e -> {
+        LOGGER.log(Level.INFO, "Got a PictureInfoChangeEvent");
         if (e.getDescriptionChanged()) {
             setDescription();
         }
         if (e.getHighresLocationChanged()) {
             setHighresLocation();
         }
-        if (e.getChecksumChanged()) {
-            setChecksum();
-        }
-        if (e.getFileHashChanged()) {
-            setFileHash();
+        if (e.getSha256Changed()) {
+            setSha256();
         }
         if (e.getCreationTimeChanged()) {
             setCreationTime();
@@ -636,12 +639,12 @@ public class PictureInfoEditor extends JFrame {
         parsedCreationTimeJLabel.setText(pictureInfo.getFormattedCreationTime());
     }
 
-    private void setFileHash() {
-        fileHashJLabel.setText(Settings.getJpoResources().getString("fileHashJLabel") + pictureInfo.getFileHashAsString());
+    private void setSha256() {
+        sha256JTextField.setText(pictureInfo.getSha256());
     }
 
-    private void setChecksum() {
-        checksumJLabel.setText(Settings.getJpoResources().getString("checksumJLabel") + pictureInfo.getChecksumAsString());
+    private void saveSha256() {
+        pictureInfo.setSha256(sha256JTextField.getText());
     }
 
     private void setHighresLocation() {
@@ -738,6 +741,7 @@ public class PictureInfoEditor extends JFrame {
         pictureInfo.setDescription(descriptionJTextArea.getText());
         pictureInfo.setCreationTime(creationTimeJTextField.getText());
         pictureInfo.setImageLocation(new File(highresLocationJTextField.getText()));
+        pictureInfo.setSha256(sha256JTextField.getText());
         pictureInfo.setComment(commentJTextField.getText());
         pictureInfo.setPhotographer(photographerJTextField.getText());
         pictureInfo.setFilmReference(filmReferenceJTextField.getText());

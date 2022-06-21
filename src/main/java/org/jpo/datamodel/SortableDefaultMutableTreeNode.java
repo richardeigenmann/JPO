@@ -1041,7 +1041,6 @@ public class SortableDefaultMutableTreeNode
             final var newPictureInfo = new PictureInfo();
             newPictureInfo.setImageLocation(file);
             newPictureInfo.setDescription(FilenameUtils.getBaseName(file.getName()));
-            newPictureInfo.setChecksum(Tools.calculateChecksum(file));
             newPictureInfo.setSha256();
             newPictureInfo.setCategoryAssignment(categoryAssignments);
             ExifInfo exifInfo = new ExifInfo(newPictureInfo.getImageFile());

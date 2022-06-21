@@ -19,13 +19,13 @@ import java.util.logging.Logger;
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
- Copyright (C) 2002 - 2019  Richard Eigenmann.
+ Copyright (C) 2002 - 2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -57,20 +57,20 @@ public class TableJFrame extends JFrame {
      */
     public TableJFrame( SortableDefaultMutableTreeNode groupNode ) {
         this.groupNode = groupNode;
-        setTitle( ( (GroupInfo) groupNode.getUserObject() ).getGroupName() );
+        setTitle(((GroupInfo) groupNode.getUserObject()).getGroupName());
 
-        final MyTableModel myModel = new MyTableModel();
-        final TableSorter sorter = new TableSorter( myModel );
-        final JTable table = new JTable( sorter );
-        table.setCellSelectionEnabled( true );
+        final var myModel = new MyTableModel();
+        final var sorter = new TableSorter(myModel);
+        final var table = new JTable(sorter);
+        table.setCellSelectionEnabled(true);
 
-        sorter.addMouseListenerToHeaderInTable( table );
-        table.setPreferredScrollableViewportSize( new Dimension( 1000, 700 ) );
+        sorter.addMouseListenerToHeaderInTable(table);
+        table.setPreferredScrollableViewportSize(new Dimension(1000, 700));
 
-        final JScrollPane scrollPane = new JScrollPane( table );
-        getContentPane().add( scrollPane, BorderLayout.CENTER );
+        final var scrollPane = new JScrollPane(table);
+        getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        addWindowListener( new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing( WindowEvent e ) {
                 setVisible( false );
@@ -101,15 +101,17 @@ public class TableJFrame extends JFrame {
 
     private class MyTableModel extends AbstractTableModel {
 
-        private final String[] columnNames = { "Nr.",
-            "Description",
-            "Highres Location",
-            "Film Reference",
-            "Creation Time",
-            "Comment",
-            "Photographer",
-            "Copyright Holder",
-            "Latitude x Longitude" };
+        private final String[] columnNames = {"Nr.",
+                "Description",
+                "Highres Location",
+                "Film Reference",
+                "Creation Time",
+                "Comment",
+                "Photographer",
+                "Copyright Holder",
+                "Latitude x Longitude",
+                "SHA-256"
+        };
 
         @Override
         public int getColumnCount() {
@@ -141,15 +143,15 @@ public class TableJFrame extends JFrame {
          */
         @Override
         public boolean isCellEditable( int row, int col ) {
-            if ( col == 0 ) {
+            if (col == 0) {
                 return false; // don't bother with expensive lookups when it's the index
             }
-            SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
-            Object userObject = queryNode.getUserObject();
-            if ( userObject instanceof PictureInfo ) {
+            var queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt(row);
+            var userObject = queryNode.getUserObject();
+            if (userObject instanceof PictureInfo) {
                 return true;
             } else {
-                return ( col < 2 );  // if col = 1 edit if col > 1 don't edit
+                return (col < 2);  // if col = 1 edit if col > 1 don't edit
             }
         }
 
@@ -159,13 +161,13 @@ public class TableJFrame extends JFrame {
          */
         @Override
         public Object getValueAt( final int row, final int col ) {
-            if ( col == 0 ) {
+            if (col == 0) {
                 return row + 1; // index
             }
-            final SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
-            final Object userObject = queryNode.getUserObject();
-            if ( userObject instanceof PictureInfo pi ) {
-                switch ( col ) {
+            final var queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt(row);
+            final var userObject = queryNode.getUserObject();
+            if (userObject instanceof PictureInfo pi) {
+                switch (col) {
                     case 1:
                         return pi.getDescription();
                     case 2:
@@ -182,6 +184,8 @@ public class TableJFrame extends JFrame {
                         return pi.getCopyrightHolder();
                     case 8:
                         return pi.getLatLngString();
+                    case 9:
+                        return pi.getSha256();
                     default:
                         return "Unknown Column: " + col;
                 }
@@ -200,37 +204,40 @@ public class TableJFrame extends JFrame {
          */
         @Override
         public void setValueAt( final Object value, final int row, final int col ) {
-            final SortableDefaultMutableTreeNode queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt( row );
-            final Object userObject = queryNode.getUserObject();
-            final String newString = value.toString();
-            if ( userObject instanceof PictureInfo pi) {
-                switch ( col ) {
+            final var queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt(row);
+            final var userObject = queryNode.getUserObject();
+            final var newString = value.toString();
+            if (userObject instanceof PictureInfo pi) {
+                switch (col) {
                     case 1:
-                        pi.setDescription( newString );
+                        pi.setDescription(newString);
                         break;
                     case 2:
-                        pi.setImageLocation( new File( newString ) );
+                        pi.setImageLocation(new File(newString));
                         break;
                     case 3:
-                        pi.setFilmReference( newString );
+                        pi.setFilmReference(newString);
                         break;
                     case 4:
                         pi.setCreationTime( newString );
                         break;
                     case 5:
-                        pi.setComment( newString );
+                        pi.setComment(newString);
                         break;
                     case 6:
-                        pi.setPhotographer( newString );
+                        pi.setPhotographer(newString);
                         break;
                     case 7:
-                        pi.setCopyrightHolder( newString );
+                        pi.setCopyrightHolder(newString);
                         break;
                     case 8:
-                        pi.setLatLng( newString );
+                        pi.setLatLng(newString);
+                        break;
+                    case 9:
+                        pi.setSha256(newString);
                         break;
                     default:
-                        LOGGER.log( Level.INFO, "Bad column: {0}", Integer.toString( col ));
+                        LOGGER.log(Level.INFO, "Bad column: {0}", Integer.toString(col));
                         break;
                 }
             } else {

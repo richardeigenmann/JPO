@@ -1,9 +1,7 @@
 package org.jpo.datamodel;
 
-import com.google.common.hash.HashCode;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017 - 2022 Richard Eigenmann.
@@ -263,7 +260,7 @@ class PictureInfoTest {
         pictureInfo.setLatLng("22.67x33.89");
         pictureInfo.setCopyrightHolder("Sandra Keller <<&>'\">");
         pictureInfo.addCategoryAssignment("1");
-        pictureInfo.setChecksum(1234);
+        pictureInfo.setSha256("1234");
 
         final StringWriter stringWriter = new StringWriter();
         try (final BufferedWriter bufferedWriter = new BufferedWriter(stringWriter)) {
@@ -280,7 +277,7 @@ class PictureInfoTest {
                 + "\t<file_URL>"
                 + Objects.requireNonNull(jpgResource).toString()
                 + "</file_URL>\n"
-                + "\t<checksum>1234</checksum>\n"
+                + "\t<sha256>1234</sha256>\n"
                 + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>\n"
                 + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>\n"
                 + "\t<film_reference>Reference &lt;&lt;&amp;&gt;&apos;&quot;&gt;</film_reference>\n"
@@ -295,43 +292,18 @@ class PictureInfoTest {
 
 
     @Test
-    void testChecksum() {
+    void testSha256() {
         final PictureInfo pictureInfo = new PictureInfo();
-        pictureInfo.setChecksum(123456789);
-        assertEquals(123456789, pictureInfo.getChecksum());
-        assertEquals("123456789", pictureInfo.getChecksumAsString());
-
-        pictureInfo.setChecksum(Long.MIN_VALUE);
-        assertEquals(Long.MIN_VALUE, pictureInfo.getChecksum());
-        assertEquals("N/A", pictureInfo.getChecksumAsString());
-    }
-
-    @Test
-    void testCalculateChecksum() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        final URL image = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
-        try {
-            final PictureInfo pictureInfo = new PictureInfo(new File(image.toURI()), "Sample Picture");
-            assertEquals("N/A", pictureInfo.getChecksumAsString());
-            final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
-            pictureInfo.addPictureInfoChangeListener(listener);
-            pictureInfo.calculateChecksum();
-            assertEquals("778423829", pictureInfo.getChecksumAsString());
-            assertEquals(1, listener.events.size());
-            assertTrue(listener.events.get(0).getChecksumChanged());
-            pictureInfo.removePictureInfoChangeListener(listener);
-        } catch (final URISyntaxException e) {
-            fail(e.getMessage());
-        }
-
+        pictureInfo.setSha256("123456789");
+        assertEquals("123456789", pictureInfo.getSha256());
     }
 
     @Test
     void calculateSha256() {
-        final URL url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
+        final var url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
-            final PictureInfo pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
-            final HashCode hashCode = pictureInfo.calculateSha256();
+            final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
+            final var hashCode = pictureInfo.calculateSha256();
             assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", hashCode.toString().toUpperCase());
 
         } catch (final URISyntaxException | IOException e) {
@@ -340,19 +312,18 @@ class PictureInfoTest {
     }
 
     @Test
-    void getSetFileHash() {
-        final URL url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
+    void getSetSha256() {
+        final var url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
-            final PictureInfo pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
-            final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+            final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
+            final var listener = new TestPictureInfoChangeListener();
             pictureInfo.addPictureInfoChangeListener(listener);
-            assertNull(pictureInfo.getFileHash());
+            assertEquals("", pictureInfo.getSha256());
             assertEquals(0, listener.events.size());
-            assertEquals("N/A", pictureInfo.getFileHashAsString());
             pictureInfo.setSha256();
-            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", pictureInfo.getFileHashAsString());
+            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", pictureInfo.getSha256());
             assertEquals(1, listener.events.size());
-            assertTrue(listener.events.get(0).getFileHashChanged());
+            assertTrue(listener.events.get(0).getSha256Changed());
 
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
@@ -361,32 +332,32 @@ class PictureInfoTest {
 
     @Test
     void getSetFileHashBadFile() {
-        final PictureInfo pictureInfo = new PictureInfo(new File("NoSuchFile.txt"), "Sample Picture");
-        final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        final var pictureInfo = new PictureInfo(new File("NoSuchFile.txt"), "Sample Picture");
+        final var listener = new TestPictureInfoChangeListener();
         pictureInfo.addPictureInfoChangeListener(listener);
-        assertNull(pictureInfo.getFileHash());
+        assertEquals("", pictureInfo.getSha256());
         pictureInfo.setSha256();
-        assertEquals(0, listener.events.size());
-        assertEquals("N/A", pictureInfo.getFileHashAsString());
+        assertEquals(1, listener.events.size());
+        assertEquals("", pictureInfo.getSha256());
     }
 
     @Test
     void getSetFileHashGoodToBadFile() {
-        final URL url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
+        final var url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
-            final PictureInfo pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
-            final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+            final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
+            final var listener = new TestPictureInfoChangeListener();
             pictureInfo.addPictureInfoChangeListener(listener);
-            assertNull(pictureInfo.getFileHash());
+            assertEquals("", pictureInfo.getSha256());
             pictureInfo.setSha256();
             assertEquals(1, listener.events.size());
-            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", pictureInfo.getFileHashAsString());
+            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", pictureInfo.getSha256());
             pictureInfo.setImageLocation(new File("NoSuchFile.txt"));
             assertEquals(2, listener.events.size());
             pictureInfo.setSha256();
             assertEquals(3, listener.events.size());
-            assertEquals("N/A", pictureInfo.getFileHashAsString());
-            assertTrue(listener.events.get(2).getFileHashChanged());
+            assertEquals("", pictureInfo.getSha256());
+            assertTrue(listener.events.get(2).getSha256Changed());
 
         } catch (final URISyntaxException e) {
             fail(e.getMessage());

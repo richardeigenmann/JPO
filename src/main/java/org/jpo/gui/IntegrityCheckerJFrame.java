@@ -1,32 +1,26 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.logging.Logger;
 
 
 /*
  IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
 
- Copyright (C) 2002-2020  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2022  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -118,47 +112,10 @@ public class IntegrityCheckerJFrame
      *
      */
     private void correctChecksums() {
-        checksumWorker = new CorrectChecksumSwingWorker();
+        checksumWorker = new CorrectSha256SwingWorker(startNode);
         checksumWorker.execute();
     }
-    
-    private transient CorrectChecksumSwingWorker checksumWorker;
 
-    private class CorrectChecksumSwingWorker extends SwingWorker<Integer, String> {
-
-        @Override
-        protected Integer doInBackground() {
-            int nodesProcessed = 0;
-            int corrections = 0;
-            for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements() && (!isCancelled()); ) {
-                nodesProcessed++;
-                if (nodesProcessed % 1000 == 0) {
-                    publish(String.format("%d nodes processed%n", nodesProcessed));
-                }
-                final SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-                if ((testNode.getUserObject() instanceof PictureInfo pi)) {
-                    final File imageFile = pi.getImageFile();
-                    if (imageFile != null) {
-                        long newChecksum = Tools.calculateChecksum(imageFile);
-                        long oldChecksum = pi.getChecksum();
-                        if (oldChecksum != newChecksum) {
-                            corrections++;
-                            pi.setChecksum(newChecksum);
-                            String logMessage = String.format("Corrected checksum of node %s from %d to %d%n", pi.getDescription(), oldChecksum, newChecksum);
-                            publish(logMessage);
-                            LOGGER.severe(logMessage);
-                        }
-                    }
-                }
-            }
-            publish( String.format( "Corrected %d checksums in %d nodes.%n", corrections, nodesProcessed ) );
-            return corrections;
-        }
-
-        @Override
-        protected void process(final List<String> chunks) {
-            chunks.forEach(resultJTextArea::append);
-        }
-    }
+    private transient CorrectSha256SwingWorker checksumWorker;
 
 }

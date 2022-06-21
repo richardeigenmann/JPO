@@ -119,12 +119,14 @@ public class PictureInfoChangeEvent {
     /**
      *  indicates whether the checksum was changed.
      */
+    @Deprecated
     private boolean checksumChanged;  // default is false
 
 
     /**
      *  sets the event to reflect that the checksum changed
      **/
+    @Deprecated
     public void setChecksumChanged() {
         checksumChanged = true;
     }
@@ -135,34 +137,33 @@ public class PictureInfoChangeEvent {
      *
      * @return true if the checksum was changed
      */
+    @Deprecated
     public boolean getChecksumChanged() {
         return checksumChanged;
     }
 
     /**
-     *  indicates that the fileHqsh was changed.
+     * indicates that the sha256 was changed.
      */
-    private boolean fileHashChanged;  // default is false
+    private boolean sha256Changed;  // default is false
 
 
     /**
-     *  sets the event to reflect that the fileHash changed
+     *  sets the event to reflect that the sha256 changed
      **/
-    public void setFileHashChanged() {
-        fileHashChanged = true;
+    public void setSha256Changed() {
+        sha256Changed = true;
     }
 
 
     /**
-     *  returns whether the fileHash was changed
+     *  returns whether the sha256 was changed
      *
-     * @return true if the fileHash was changed
+     * @return true if the sha256 was changed
      */
-    public boolean getFileHashChanged() {
-        return fileHashChanged;
+    public boolean getSha256Changed() {
+        return sha256Changed;
     }
-
-
 
 
     /**

@@ -211,6 +211,7 @@ public class Main {
         JpoEventBus.getInstance().register(new CheckForUpdatesHandler());
         JpoEventBus.getInstance().register(new FindBasedirHandler());
         JpoEventBus.getInstance().register(new StartThumbnailCreationDaemonWatchDogHandler());
+        JpoEventBus.getInstance().register(new StartHashCodeScannerHandler());
     }
 
 

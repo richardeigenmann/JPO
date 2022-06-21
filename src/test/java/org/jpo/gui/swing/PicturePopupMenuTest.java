@@ -172,7 +172,7 @@ class PicturePopupMenuTest {
      * Test clicking showMap
      */
     @Test
-    @Disabled("Doesn't work in Travis")
+    //@Disabled("Doesn't work in Travis")
     void testOpenFolder() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
@@ -524,7 +524,7 @@ class PicturePopupMenuTest {
     }
 
     @Test
-    @Disabled
+        //@Disabled
     void testCopy() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
@@ -688,7 +688,7 @@ class PicturePopupMenuTest {
     }
 
     @Test
-    @Disabled
+        //@Disabled ("Concurrency Issue on Event Bus? But Swing is Single Threaded...")
     void testFileRename4Files() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {

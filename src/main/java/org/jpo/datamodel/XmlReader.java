@@ -96,7 +96,6 @@ public class XmlReader {
         if ( lowresUrls.length() > 1 ) {
             LOGGER.log(Level.FINE, "lowresUrls length is {0}", lowresUrls.length());
             JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls));
-
         }
     }
 

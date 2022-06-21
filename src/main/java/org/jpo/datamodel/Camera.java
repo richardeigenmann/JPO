@@ -1,23 +1,27 @@
 package org.jpo.datamodel;
 
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import org.jpo.gui.InterruptSemaphore;
 import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ProgressListener;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -117,14 +121,14 @@ public class Camera implements Serializable {
      * This HashMap records the old images held on the camera so that we can
      * determine which pictures are new.
      */
-    private Map<File, Long> oldImage = new HashMap<>();
+    private Map<File, String> oldImage = new HashMap<>();
 
     /**
      * The old images held on the camera
      *
      * @return the old images held on the camera
      */
-    public Map<File, Long> getOldImage() {
+    public Map<File, String> getOldImage() {
         return oldImage;
     }
 
@@ -133,7 +137,7 @@ public class Camera implements Serializable {
      *
      * @param oldImage the old images on the camera
      */
-    public void setOldImage( Map<File, Long> oldImage ) {
+    public void setOldImage(Map<File, String> oldImage) {
         this.oldImage = oldImage;
     }
 
@@ -141,7 +145,7 @@ public class Camera implements Serializable {
      * This HashMap is used temporarily when getting new pictures. It should be
      * empty unless pictures are being loaded.
      */
-    private final HashMap<File, Long> newImage = new HashMap<>();
+    private final HashMap<File, String> newImage = new HashMap<>();
 
     /**
      * toString method that returns the description of the camera
@@ -156,22 +160,22 @@ public class Camera implements Serializable {
     /**
      * stores the checksum and file in the provided HashMap
      *
-     * @param hm The HashMap in which to store the picture
-     * @param f the file to store
-     * @param checksum the file's checksum
+     * @param hm     The HashMap in which to store the picture
+     * @param f      the file to store
+     * @param sha256 the file's checksum
      */
-    private static void storePicture(Map<File, Long> hm, File f, long checksum) {
-        hm.put( f, checksum );
+    private static void storePicture(Map<File, String> hm, File f, String sha256) {
+        hm.put(f, sha256);
     }
 
     /**
      * stores the checksum and file in the newImage HashMap
      *
-     * @param f The file
-     * @param checksum The checksum
+     * @param f      The file
+     * @param sha256 The checksum
      */
-    public void storePictureNewImage(final File f, final long checksum) {
-        storePicture(newImage, f, checksum);
+    public void storePictureNewImage(final File f, final String sha256) {
+        storePicture(newImage, f, sha256);
     }
 
     /**
@@ -179,11 +183,11 @@ public class Camera implements Serializable {
      * it determines whether to check by checksum or file based on the
      * useChecksum and useFilename flags.
      *
-     * @param checksum The checksum
+     * @param sha256 The checksum
      * @return true if the image was known before based on the checksum
      */
-    public boolean inOldImage(final long checksum) {
-        return getOldImage().containsValue(checksum);
+    public boolean inOldImage(final String sha256) {
+        return getOldImage().containsValue(sha256);
     }
 
     /**
@@ -205,9 +209,14 @@ public class Camera implements Serializable {
      * @param f the file
      */
     public void copyToNewImage(final File f) {
-        final Long checksumLong = getOldImage().get(f);
-        if (checksumLong != null) {
-            storePictureNewImage(f, checksumLong);
+        HashCode hash;
+        try {
+            hash = Files.asByteSource(f).hash(Hashing.sha256());
+        } catch (IOException e) {
+            hash = null;
+        }
+        if (hash != null) {
+            storePictureNewImage(f, hash.toString().toUpperCase());
         }
     }
 
@@ -303,11 +312,16 @@ public class Camera implements Serializable {
             if ( interrupter.getShouldInterrupt() ) {
                 break;
             }
-            if ( !f.isDirectory() ) {
-                long checksum = Tools.calculateChecksum( f );
+            if ( !f.isDirectory()) {
+                HashCode hash = null;
+                try {
+                    hash = Files.asByteSource(f).hash(Hashing.sha256());
+                } catch (IOException e) {
+                    //
+                }
                 storePicture(
-                        getOldImage(), f, checksum );
-                if ( progressListener != null ) {
+                        getOldImage(), f, hash.toString().toUpperCase());
+                if (progressListener != null) {
                     progressListener.progressIncrement();
                 }
             } else {

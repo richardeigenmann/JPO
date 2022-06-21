@@ -1,6 +1,5 @@
 package org.jpo.datamodel;
 
-import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import org.apache.commons.text.StringEscapeUtils;
@@ -73,18 +72,10 @@ public class PictureInfo implements Serializable {
 
     //----------------------------------------
     /**
-     * the value of the checksum of the image file
-     */
-    private long checksum = Long.MIN_VALUE;
-    /**
      * the hash code of the contents of the file. We use SHA-256 here in 2020.
      */
-    private transient HashCode fileHash = null;
-    /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String checksumString = "";
+    private String sha256 = "";
+
     /**
      * The film reference of the image.
      */
@@ -229,8 +220,8 @@ public class PictureInfo implements Serializable {
             out.newLine();
         }
 
-        if (checksum > Long.MIN_VALUE) {
-            out.write("\t<checksum>" + checksum + "</checksum>");
+        if ((!sha256.equals("")) && (!sha256.equals("N/A"))) {
+            out.write("\t<sha256>" + sha256 + "</sha256>");
             out.newLine();
         }
 
@@ -422,76 +413,16 @@ public class PictureInfo implements Serializable {
     }
 
     /**
-     * Returns the value of the checksum or Long.MIN_VALUE if it is not set.
-     *
-     * @return the Checksum
-     */
-    public synchronized long getChecksum() {
-        return checksum;
-    }
-
-    /**
-     * allows the checksum to be set
-     *
-     * @param newValue the new value
-     */
-    public synchronized void setChecksum(final long newValue) {
-        checksum = newValue;
-        sendChecksumChangedEvent();
-    }
-
-    /**
      * Returns the SHA-256 of the contents of the file
      *
      * @return the SHA-256 of the image file or null if not calculated
      */
-    public synchronized HashCode getFileHash() {
-        return fileHash;
-    }
-
-    /**
-     * Returns the SHA-256 of the contents of the file as a String
-     *
-     * @return the SHA-256 of the image file or "N/A" if not available
-     */
-    public synchronized String getFileHashAsString() {
-        if (fileHash != null) {
-            return fileHash.toString().toUpperCase();
-        } else {
-            return "N/A";
-        }
+    public synchronized String getSha256() {
+        return sha256;
     }
 
     //----------------------------------------
 
-    /**
-     * returns the value of the checksum or the text "N/A" if not defined.
-     *
-     * @return the checksum
-     */
-    public synchronized String getChecksumAsString() {
-        if (checksum != Long.MIN_VALUE) {
-            return Long.toString(checksum);
-        } else {
-            return "N/A";
-        }
-    }
-
-    /**
-     * calculates the Adler32 checksum of the current picture and sets the checksum and sends a PictureInfoChangedEvent
-     */
-    public synchronized void calculateChecksum() {
-        try (
-                final InputStream in = new FileInputStream(getImageFile());
-                final BufferedInputStream bin = new BufferedInputStream(in)
-        ) {
-            checksum = Tools.calculateChecksum(bin);
-            LOGGER.log(Level.FINE, "Checksum is: {0}", Long.toString(checksum));
-            sendChecksumChangedEvent();
-        } catch (IOException e) {
-            LOGGER.severe("Failed to calculate Adler32 checksum. Exception reads: " + e.getMessage());
-        }
-    }
 
     /**
      * calculates the SHA-256 hash of the picture.
@@ -499,42 +430,38 @@ public class PictureInfo implements Serializable {
      * @return returns a HashCode object containing the SHA256 of the Image File
      * @throws IOException if the underlying library encounters and {@link IOException}
      */
-    public HashCode calculateSha256() throws IOException {
-        final HashCode hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
-        LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{getImageFile(), hash.toString().toUpperCase()});
-        return hash;
+    public String calculateSha256() throws IOException {
+        final var hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
+        if (hash != null) {
+            LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{getImageFile(), hash.toString().toUpperCase()});
+            return hash.toString().toUpperCase();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * calculates the SHA-256 hash of the picture and saves it to the sha256 member
+     * variable. If the value changes it sends a PictureInfoChangedEvent
+     */
+    public void setSha256() {
+        try {
+            setSha256(calculateSha256());
+        } catch (final IOException e) {
+            LOGGER.severe("Could not create SHA-256 code: " + e.getMessage());
+            sha256 = "";
+            sendSha256ChangedEvent();
+        }
     }
 
     /**
      * calculates the SHA-256 hash of the picture and saves it to the fileHash member
      * variable. If the value changes it sends a PictureInfoChangedEvent
      */
-    public synchronized void setSha256() {
-        try {
-            final HashCode newHash = calculateSha256();
-            if (fileHash != newHash) {
-                fileHash = newHash;
-                sendFileHashChangedEvent();
-            }
-        } catch (final IOException e) {
-            LOGGER.severe("Could not create SHA-256 code: " + e.getMessage());
-            if (fileHash != null) {
-                fileHash = null;
-                sendFileHashChangedEvent();
-            }
-        }
-    }
-
-    /**
-     * Creates a PictureChangedEvent and sends it to inform listening objects
-     * that the checksum was updated.
-     */
-    private void sendChecksumChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setChecksumChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+    public synchronized void setSha256(final String newSha256) {
+        if ((sha256 == null) || (!sha256.equals(newSha256))) {
+            sha256 = newSha256;
+            sendSha256ChangedEvent();
         }
     }
 
@@ -542,41 +469,27 @@ public class PictureInfo implements Serializable {
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the fileHash was updated.
      */
-    private void sendFileHashChangedEvent() {
+    private void sendSha256ChangedEvent() {
         if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setFileHashChanged();
-            sendPictureInfoChangedEvent(pce);
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setSha256Changed();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
             Settings.getPictureCollection().setUnsavedUpdates();
         }
     }
 
     /**
-     * Appends the text fragment to the checksum field.
+     * Appends the text fragment to the sha256 field.
      *
      * @param s Text fragment
      */
-    public synchronized void appendToChecksum(final String s) {
+    public synchronized void appendToSha256(final String s) {
         if (s.length() > 0) {
-            checksumString = checksumString.concat(s);
-            sendChecksumChangedEvent();
+            sha256 = sha256.concat(s);
+            sendSha256ChangedEvent();
         }
     }
 
-    /**
-     * Converts the temporary checksumString to the checksum long.
-     */
-    public synchronized void parseChecksum() {
-        try {
-            LOGGER.log(Level.FINE, "PictureInfo.parseChecksum: {0}", checksumString);
-            checksum = Long.parseLong(checksumString);
-            checksumString = "";
-        } catch (NumberFormatException x) {
-            LOGGER.log(Level.INFO, "PictureInfo.parseChecksum: invalid checksum: {0} on picture: {1} --> Set to MIN", new Object[]{checksumString, getImageFile().getName()});
-            checksum = Long.MIN_VALUE;
-        }
-        sendChecksumChangedEvent();
-    }
 
     //----------------------------------------
 
