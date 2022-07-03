@@ -13,5 +13,6 @@ module Jpo {
     requires org.checkerframework.checker.qual;
     requires jwizz;
     requires jxmapviewer2;
+    requires org.json;
 }
 

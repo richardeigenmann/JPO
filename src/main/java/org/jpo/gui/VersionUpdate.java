@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import static java.awt.event.ItemEvent.SELECTED;
 
 /*
- Copyright (C) 2021  Richard Eigenmann.
+ Copyright (C) 2021-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,7 +54,7 @@ public class VersionUpdate {
      */
     public VersionUpdate() {
         try {
-            final String latestVersion = getLatestJpoVersion();
+            final var latestVersion = getLatestJpoVersion();
             if (Float.valueOf(latestVersion) > Float.valueOf(Settings.JPO_VERSION)) {
                 EventQueue.invokeLater(() -> showOutOfDateDialog(latestVersion));
             }
@@ -71,7 +71,7 @@ public class VersionUpdate {
      * @throws IOException if something went wrong.
      */
     private static String readFromURL(final String requestURL) throws IOException {
-        try (final Scanner scanner = new Scanner(new URL(requestURL).openStream(),
+        try (final var scanner = new Scanner(new URL(requestURL).openStream(),
                 StandardCharsets.UTF_8.toString())) {
             scanner.useDelimiter("\\A");
             return scanner.hasNext() ? scanner.next() : "";
@@ -85,9 +85,9 @@ public class VersionUpdate {
      * @throws IOException If something went wrong
      */
     private static String getLatestJpoVersion() throws IOException {
-        final String jsonData = readFromURL(Settings.JPO_VERSION_URL);
+        final var jsonData = readFromURL(Settings.JPO_VERSION_URL);
         LOGGER.log(Level.INFO, jsonData);
-        final JSONObject obj = new JSONObject(jsonData);
+        final var obj = new JSONObject(jsonData);
         return obj.getString("currentVersion");
     }
 
@@ -109,10 +109,10 @@ public class VersionUpdate {
     }
 
     private void showOutOfDateDialog(final String latestVersion) {
-        final String outdatedMessage = String.format(
+        final var outdatedMessage = String.format(
                 Settings.getJpoResources().getString("VersionUpdate.outdatedMessage"),
                 Settings.JPO_VERSION, latestVersion, Settings.JPO_DOWNLOAD_URL, Settings.JPO_DOWNLOAD_URL);
-        final JEditorPane ep = new JEditorPane("text/html", outdatedMessage);
+        final var ep = new JEditorPane("text/html", outdatedMessage);
 
         ep.addHyperlinkListener(e -> {
             if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
@@ -121,13 +121,13 @@ public class VersionUpdate {
         ep.setEditable(false);
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
-        final JCheckBox snoozeJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.snoozeJCheckBox"));
+        final var snoozeJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.snoozeJCheckBox"));
 
         ep.setFont(snoozeJCheckBox.getFont());
 
         snoozeJCheckBox.addItemListener(snoozeListener -> {
-            final LocalDateTime now = LocalDateTime.now();
-            final LocalDateTime fornight = now.plusDays(14);
+            final var now = LocalDateTime.now();
+            final var fornight = now.plusDays(14);
             if (snoozeListener.getStateChange() == SELECTED) {
                 Settings.setSnoozeVersionAlertsExpiryDateTime(fornight);
             } else {
@@ -137,10 +137,10 @@ public class VersionUpdate {
 
         snoozeJCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        final JCheckBox neverShowJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.neverShowJCheckBox"));
+        final var neverShowJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.neverShowJCheckBox"));
         neverShowJCheckBox.addItemListener(neverShowListener -> Settings.setIgnoreVersionAlerts(neverShowListener.getStateChange() == SELECTED));
 
-        final JPanel content = new JPanel();
+        final var content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         ep.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.add(ep);
