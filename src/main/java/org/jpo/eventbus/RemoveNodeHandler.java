@@ -3,8 +3,6 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.List;
-
 /*
  Copyright (C) 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -23,18 +21,14 @@ import java.util.List;
 
 public class RemoveNodeHandler {
     /**
-     * Removes the supplied node from it's parent
+     * Removes the nodes in the request the parent. The Nodes notify the listeners
+     * about the structure change.
      *
-     * @param request The request
+     * @param request The request to remove nodes
      */
     @Subscribe
     public void handleEvent(final RemoveNodeRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodesToRemove = request.nodes();
-        final SortableDefaultMutableTreeNode firstParentNode = nodesToRemove.get(0).getParent();
-        for (SortableDefaultMutableTreeNode deleteNode : nodesToRemove) {
-            deleteNode.deleteNode();
-        }
-        JpoEventBus.getInstance().post(new ShowGroupRequest(firstParentNode));
+        request.nodes().forEach(SortableDefaultMutableTreeNode::deleteNode);
     }
 
 }

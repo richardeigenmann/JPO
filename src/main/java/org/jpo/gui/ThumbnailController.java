@@ -108,8 +108,8 @@ public class ThumbnailController
     }
 
     /**
-     * Returns to the caller whether the ThumbnailController is already linked to
-     * the node.
+     * Returns to the caller whether this ThumbnailController is already linked to
+     * the specified node.
      *
      * @param nodeNavigator The NodeNavigatorInterface from which the node is
      *                      coming
@@ -401,7 +401,7 @@ public class ThumbnailController
          */
         @Override
         public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
-            if (pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getChecksumChanged() || pictureInfoChangeEvent.getThumbnailChanged()) {
+            if (pictureInfoChangeEvent.getHighresLocationChanged() || pictureInfoChangeEvent.getSha256Changed() || pictureInfoChangeEvent.getThumbnailChanged()) {
                 requestThumbnailCreation(myNode, QUEUE_PRIORITY.HIGH_PRIORITY);
             } else if (pictureInfoChangeEvent.getWasSelected()) {
                 myThumbnail.setSelected();

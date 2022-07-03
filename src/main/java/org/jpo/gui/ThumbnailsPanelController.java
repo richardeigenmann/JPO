@@ -2,10 +2,7 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.*;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.ShowGroupPopUpMenuRequest;
-import org.jpo.eventbus.ShowGroupRequest;
-import org.jpo.eventbus.ShowQueryRequest;
+import org.jpo.eventbus.*;
 import org.jpo.gui.swing.ResizeSlider;
 import org.jpo.gui.swing.ThumbnailPanelTitle;
 
@@ -457,8 +454,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * @param newNodeNavigator The Interface with the collection of nodes
      */
     private void show(final NodeNavigatorInterface newNodeNavigator) {
-        Tools.checkEDT();
-
         if (this.mySetOfNodes != null) {
             this.mySetOfNodes.removeNodeNavigatorListener(this);
         }
@@ -477,9 +472,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         }
 
         Settings.getPictureCollection().clearSelection();
-        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
-        startIndex = 0;
-        nodeLayoutChanged();
+        goToFirstPage();
     }
 
     /**
@@ -487,7 +480,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void goToFirstPage() {
         startIndex = 0;
-        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
+        scrollToTop();
         nodeLayoutChanged();
         setButtonStatus();
     }
@@ -500,7 +493,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         if (startIndex < 0) {
             startIndex = 0;
         }
-        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
+        scrollToTop();
         nodeLayoutChanged();
         setButtonStatus();
     }
@@ -510,7 +503,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     private void goToNextPage() {
         startIndex += Settings.getMaxThumbnails();
-        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
+        scrollToTop();
         nodeLayoutChanged();
         setButtonStatus();
     }
@@ -522,9 +515,13 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         final var last = mySetOfNodes.getNumberOfNodes();
         final var tgtPage = last / Settings.getMaxThumbnails();
         startIndex = tgtPage * Settings.getMaxThumbnails();
-        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
+        scrollToTop();
         nodeLayoutChanged();
         setButtonStatus();
+    }
+
+    private void scrollToTop() {
+        thumbnailJScrollPane.getVerticalScrollBar().setValue(0);
     }
 
     /**
@@ -555,7 +552,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     @Override
     public void nodeLayoutChanged() {
-        LOGGER.log(Level.INFO, "Handling nodeLayoutChanged");
         updateTitle();
 
         if (initialisedMaxThumbnails != Settings.getMaxThumbnails()) {
@@ -579,9 +575,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * Sets the text in the title for displaying page count information
      */
     private void setPageStats() {
-        Tools.checkEDT();
-        final int total = mySetOfNodes.getNumberOfNodes();
-        final int lastOnPage = Math.min(startIndex + Settings.getMaxThumbnails(), total);
+        final var total = mySetOfNodes.getNumberOfNodes();
+        final var lastOnPage = Math.min(startIndex + Settings.getMaxThumbnails(), total);
         titleJPanel.lblPage.setText(String.format("Thumbnails %d to %d of %d", startIndex + 1, lastOnPage, total));
     }
 
@@ -590,7 +585,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * it is on the EDT)
      */
     private void updateTitle() {
-        LOGGER.log(Level.FINE, "setting title to: {0}", mySetOfNodes.getTitle());
         titleJPanel.setTitle(mySetOfNodes.getTitle());
     }
 
@@ -599,7 +593,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * visible or not
      */
     private void setButtonStatus() {
-        Tools.checkEDT();
         if (startIndex == 0) {
             titleJPanel.getNavigationButtonPanel().getFirstThumbnailsPageButton().setEnabled(false);
             titleJPanel.getNavigationButtonPanel().getPreviousThumbnailsPageButton().setEnabled(false);
