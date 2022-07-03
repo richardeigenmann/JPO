@@ -116,7 +116,7 @@ public class MapWindow {
 
     private static void addWaypointForPicture(final PictureInfo node, final HashSet<Waypoint> waypoints, final HashSet<GeoPosition> geoPositions) {
         final var latLng = node.getLatLng();
-        LOGGER.log(Level.INFO, "LatLang: {0}", latLng);
+        LOGGER.log(Level.FINE, "LatLang: {0}", latLng);
         // Create waypoints from the geo-positions
         if (latLng.x != 0.0 && latLng.y != 0.0) {
             final var geoPostion = new GeoPosition(latLng.x, latLng.y);

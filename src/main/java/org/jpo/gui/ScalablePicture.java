@@ -204,9 +204,9 @@ public class ScalablePicture
         }
         sourcePicture = new SourcePicture();
         scaleAfterLoad = false;
-        LOGGER.log(Level.INFO, "About to load image: {0}", imageFile);
+        LOGGER.log(Level.FINE, "About to load image: {0}", imageFile);
         sourcePicture.loadPicture(imageFile, rotation);
-        LOGGER.log(Level.INFO, "Finished loading image: {0}", imageFile);
+        LOGGER.log(Level.FINE, "Finished loading image: {0}", imageFile);
     }
 
     /**

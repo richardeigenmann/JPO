@@ -51,7 +51,7 @@ public class MimeTypes {
             }
 
             var mimeType = Files.probeContentType(file.toPath());
-            LOGGER.log(Level.INFO, "File {0} is mime-type: {1}", new Object[]{file, mimeType});
+            LOGGER.log(Level.FINE, "File {0} is mime-type: {1}", new Object[]{file, mimeType});
             return mimeType != null ? mimeType : "null";
         } catch (final IOException e) {
             LOGGER.log(Level.WARNING, "Failed to probeContentType of file {0} Exception was: {1}", new Object[]{file, e.getMessage()});

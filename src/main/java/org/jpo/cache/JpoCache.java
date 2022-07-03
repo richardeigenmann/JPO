@@ -158,7 +158,7 @@ public class JpoCache {
      * @throws IOException if something went wrong
      */
     public static ImageBytes getHighresImageBytes(final File file) throws IOException {
-        LOGGER.log(Level.INFO, "Hitting cache for file {0}", file);
+        LOGGER.log(Level.FINE, "Hitting cache for file {0}", file);
         var imageBytes = highresMemoryCache.get(file);
         if (imageBytes != null) {
             imageBytes.setRetrievedFromCache(true);
@@ -173,7 +173,7 @@ public class JpoCache {
         } else {
             imageBytes = getHighresImageBytesFromFile(file);
         }
-        LOGGER.log(Level.INFO, "Returning {0} bytes from file {1} loaded from cache: {2}", new Object[]{imageBytes.getBytes().length, file, imageBytes.isRetrievedFromCache()});
+        LOGGER.log(Level.FINE, "Returning {0} bytes from file {1} loaded from cache: {2}", new Object[]{imageBytes.getBytes().length, file, imageBytes.isRetrievedFromCache()});
         return imageBytes;
     }
 

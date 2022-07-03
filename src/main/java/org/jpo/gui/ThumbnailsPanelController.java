@@ -226,7 +226,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         titleJPanel.getSearchField().addActionListener((ActionEvent e) -> doSearch(titleJPanel.getSearchField().getText()));
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
-            final JSlider source = (JSlider) e.getSource();
+            final var source = (JSlider) e.getSource();
             thumbnailSizeFactor = ((float) source.getValue()) / ResizeSlider.THUMBNAILSIZE_SLIDER_MAX;
             resizeAllThumbnails(thumbnailSizeFactor);
         });
@@ -312,16 +312,16 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
         // I wonder why they don't put the following two lines into the SWING library but
         // let you work out this binary math on your own from the unhelpful description?
-        final boolean ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
-        final boolean shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
+        final var ctrlpressed = (e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK;
+        final var shiftpressed = (e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK) == InputEvent.SHIFT_DOWN_MASK;
 
         if (!(ctrlpressed || shiftpressed)) {
             Settings.getPictureCollection().clearSelection();
         }
 
         final var thumbnailRectangle = new Rectangle();
-        for (final ThumbnailController thumbnailController : thumbnailControllers) {
-            final SortableDefaultMutableTreeNode node = thumbnailController.getNode();
+        for (final var thumbnailController : thumbnailControllers) {
+            final var node = thumbnailController.getNode();
             if (node == null) {
                 continue;
             }
@@ -555,7 +555,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     @Override
     public void nodeLayoutChanged() {
-        Tools.checkEDT();
+        LOGGER.log(Level.INFO, "Handling nodeLayoutChanged");
         updateTitle();
 
         if (initialisedMaxThumbnails != Settings.getMaxThumbnails()) {

@@ -183,9 +183,9 @@ public class SourcePicture {
         loadTime = 0;
         ImageBytes imageBytes;
         try {
-            LOGGER.log(Level.INFO, "Asking highres cache for image {0}", imageFile);
+            LOGGER.log(Level.FINE, "Asking highres cache for image {0}", imageFile);
             imageBytes = JpoCache.getHighresImageBytes(imageFile);
-            LOGGER.log(Level.INFO, "Image loaded from cache: {0} Bytes: {1}", new Object[]{imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
+            LOGGER.log(Level.FINE, "Image loaded from cache: {0} Bytes: {1}", new Object[]{imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "IOException loading {0}: {1}", new Object[]{imageFile, e.getMessage()});
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
