@@ -1,21 +1,12 @@
 module org.jpo {
+    exports org.jpo;
     requires java.desktop;
     requires java.logging;
     requires java.prefs;
-    requires org.tagcloud;
-    requires org.apache.commons.io;
-    requires org.jetbrains.annotations;
     requires com.miglayout.swing;
-    requires com.google.common;
-    requires org.apache.commons.text;
-    requires java.mail;
+    requires org.tagcloud;
     requires org.apache.commons.compress;
-    requires org.checkerframework.checker.qual;
-    requires jwizz;
-    requires jxmapviewer2;
-    requires org.json;
-    //requires javax.cache.spi;
-
-    exports org.jpo;
+    requires commons.jcs3.core;
+    requires commons.jcs3.jcache;
 }
 
