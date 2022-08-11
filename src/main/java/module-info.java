@@ -1,4 +1,4 @@
-module Jpo {
+module org.jpo {
     requires java.desktop;
     requires java.logging;
     requires java.prefs;
@@ -14,5 +14,8 @@ module Jpo {
     requires jwizz;
     requires jxmapviewer2;
     requires org.json;
+    //requires javax.cache.spi;
+
+    exports org.jpo;
 }
 

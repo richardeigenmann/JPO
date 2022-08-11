@@ -81,8 +81,8 @@ public class JpoCache {
 
     static {
         LOGGER.info("Creating JpoCache");
-        final CompositeCacheManager ccm = CompositeCacheManager.getUnconfiguredInstance();
-        final Properties props = loadProperties();
+        final var ccm = CompositeCacheManager.getUnconfiguredInstance();
+        final var props = loadProperties();
         ccm.configure(props);
 
         try {
