@@ -8,5 +8,9 @@ module org.jpo {
     requires org.apache.commons.compress;
     requires commons.jcs3.core;
     requires commons.jcs3.jcache;
+    requires org.apache.commons.io;
+    requires org.jetbrains.annotations;
+    requires com.google.common;
+    requires org.apache.commons.text;
 }
 

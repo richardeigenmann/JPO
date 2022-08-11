@@ -30,5 +30,12 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.9'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'commons-net:commons-net:3.8.0'
-
+    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation 'com.google.gdata:core:1.47.1'
+    implementation 'com.google.guava:guava:31.1-jre'
 }
+
+compileJava {
+    options.encoding = "UTF-8"
+    options.compilerArgs += ['--enable-preview']
+ }
