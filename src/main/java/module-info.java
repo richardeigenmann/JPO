@@ -1,5 +1,12 @@
 module org.jpo {
     exports org.jpo;
+    exports org.jpo.gui;
+    exports org.jpo.eventbus;
+    exports org.jpo.gui.swing;
+
+    opens org.jpo.gui;
+    opens org.jpo;
+
     requires java.desktop;
     requires java.logging;
     requires java.prefs;
@@ -12,5 +19,6 @@ module org.jpo {
     requires org.jetbrains.annotations;
     requires com.google.common;
     requires org.apache.commons.text;
+    //requires org.apache.batik.bridge.RhinoInterpreterFactory;
 }
 
