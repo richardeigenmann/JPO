@@ -87,6 +87,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    testImplementation(platform('org.junit:junit-bom:5.9.0'))
     testImplementation 'org.assertj:assertj-core:3.23.1'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.2.0'
@@ -103,15 +104,15 @@ test {
     // this tells the tests that we don't have a graphical environment TravisCI, SemaphoreCI etc need this.
     // systemProperty 'java.awt.headless', 'false'
     // copy the Gradle JVM properties down to the test JVM so that SemaphoreCI can ignore the tests that don't work in the headless environment
-    systemProperties = System.getProperties()
+    //systemProperties = System.getProperties()
 
     useJUnitPlatform()
-    testLogging {
+    /"testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
     reports {
         junitXml.required = false
         html.required = true
-    }
+    }"/
 }
