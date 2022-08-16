@@ -7,6 +7,7 @@ module org.jpo {
     opens org.jpo;
     opens org.jpo.gui;
     opens org.jpo.eventbus;
+    opens org.jpo.gui.swing;
 
     requires java.desktop;
     requires java.logging;
