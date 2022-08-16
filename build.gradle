@@ -4,8 +4,10 @@ plugins {
     id "com.github.ben-manes.versions" version "0.42.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
     id 'org.beryx.jlink' version '2.25.0'
-    id "org.javamodularity.moduleplugin" version "1.8.9"
+    id "org.javamodularity.moduleplugin" version "1.8.12"
 }
+
+// modularity.inferModulePath.set(false)
 
 repositories {
     mavenCentral()
@@ -107,12 +109,18 @@ test {
     systemProperties = System.getProperties()
 
     useJUnitPlatform()
-    /"testLogging {
+
+    moduleOptions {
+        runOnClasspath = true
+    }
+
+    testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
     reports {
         junitXml.required = false
         html.required = true
-    }"/
+    }
 }
+
