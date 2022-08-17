@@ -21,6 +21,8 @@ module org.jpo {
     requires org.jetbrains.annotations;
     requires com.google.common;
     requires org.apache.commons.text;
+    requires jsch;
+    requires org.apache.commons.net;
     //requires javax.cache;
     //requires org.apache.batik.bridge.RhinoInterpreterFactory;
 }

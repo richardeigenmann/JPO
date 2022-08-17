@@ -3,6 +3,7 @@ package org.jpo.datamodel;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -333,7 +334,7 @@ public class ExifInfoTest {
     public void testExifInfoSonyD700() {
         final String SONY_D700_IMAGE = "exif-test-sony-d700.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SONY_D700_IMAGE).toURI()));
+            ExifInfo exifInfo = new ExifInfo(new File(ClassLoader.getSystemResources(SONY_D700_IMAGE).nextElement().toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/2.4", exifInfo.getAperture());
             assertEquals("1/32 sec", exifInfo.getShutterSpeed());
@@ -347,7 +348,7 @@ public class ExifInfoTest {
             assertEquals(ZERO, exifInfo.getLatLng().getY());
             assertEquals("", exifInfo.getLens());
             assertEquals(0, exifInfo.getRotation());
-        } catch (URISyntaxException e) {
+        } catch (URISyntaxException | IOException e) {
             fail(e.getMessage());
         }
     }

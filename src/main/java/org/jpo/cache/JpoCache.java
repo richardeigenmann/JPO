@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
@@ -117,13 +118,15 @@ public class JpoCache {
      */
     public static Properties loadProperties() {
         final var CACHE_DEFINITION_FILE = "cache.ccf";
-        final var ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
+        //final var ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
+        final URL ccfUrl;
         final var properties = new Properties();
-        if (ccfUrl == null) {
+        try {
+            ccfUrl = ClassLoader.getSystemResources(CACHE_DEFINITION_FILE).nextElement();
+            LOGGER.log(Level.FINE, "Cache definition file found at: {0}", ccfUrl);
+        } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
             return properties;
-        } else {
-            LOGGER.log(Level.FINE, "Cache definition file found at: {0}", ccfUrl);
         }
 
         try (final var inStream = ccfUrl.openStream();) {

@@ -16,7 +16,6 @@ import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ScalablePicture;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -33,7 +32,7 @@ import java.util.zip.ZipOutputStream;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 
 /*
- * Copyright (C) 2002-2021 Richard Eigenmann.
+ * Copyright (C) 2002-2022 Richard Eigenmann.
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -183,8 +182,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         return returnString;
     }
 
-    private static int checkAck(final InputStream in) throws IOException {
-        int b = in.read();
+    private static int checkAck(final InputStream inputStream) throws IOException {
+        int b = inputStream.read();
         // b may be 0 for success,
         //          1 for error,
         //          2 for fatal error,
@@ -200,7 +199,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final StringBuilder sb = new StringBuilder();
             int c;
             do {
-                c = in.read();
+                c = inputStream.read();
                 sb.append((char) c);
             } while (c != '\n');
             if (b == 1) { // error
@@ -250,14 +249,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param websiteMemberFiles A reference to the list of files where we shall add our entry.
      */
     public static void writeFileFromJar(final String file, final File targetDirectory, final List<File> websiteMemberFiles) {
-        final File targetFile = new File(targetDirectory, file);
+        final var targetFile = new File(targetDirectory, file);
         websiteMemberFiles.add(targetFile);
         try (
-                final InputStream in = Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource(file)).openStream();
-                final FileOutputStream outStream = new FileOutputStream(targetFile);
-                final BufferedInputStream bin = new BufferedInputStream(in);
-                final BufferedOutputStream bout = new BufferedOutputStream(outStream)) {
-            bin.transferTo(bout);
+                final var inputStream = Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource(file)).openStream();
+                final var outSfileOutputStreamream = new FileOutputStream(targetFile);
+                final var bufferedInputStream = new BufferedInputStream(inputStream);
+                final var bufferedOutputStream = new BufferedOutputStream(outSfileOutputStreamream)) {
+            bufferedInputStream.transferTo(bufferedOutputStream);
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
@@ -274,14 +273,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private static void writeFolderIcon(final GenerateWebsiteRequest request, final List<File> websiteMemberFiles) throws IOException {
-        final File folderIconFile = new File(request.getTargetDirectory(), FOLDER_ICON);
+        final var folderIconFile = new File(request.getTargetDirectory(), FOLDER_ICON);
         try (
-                final InputStream inStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource(FOLDER_ICON)).openStream();
-                final FileOutputStream outStream = new FileOutputStream(folderIconFile);
-                final BufferedInputStream bin = new BufferedInputStream(inStream);
-                final BufferedOutputStream bout = new BufferedOutputStream(outStream);) {
+                final var inputStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource(FOLDER_ICON)).openStream();
+                final var fileOutputStream = new FileOutputStream(folderIconFile);
+                final var bufferedInputStream = new BufferedInputStream(inputStream);
+                final var bufferedOutputStream = new BufferedOutputStream(fileOutputStream);) {
             websiteMemberFiles.add(folderIconFile);
-            bin.transferTo(bout);
+            bufferedInputStream.transferTo(bufferedOutputStream);
         } catch (final IOException e) {
             throw (e);
         }
@@ -304,14 +303,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         LOGGER.log(Level.INFO, "Generating Zipfile for node {0}, sequentialStartNumber: {1}",
                 new Object[]{request.getCellspacing(), request.getSequentialStartNumber()});
         try (
-                final FileOutputStream destination
+                final var fileOutputStream
                         = new FileOutputStream(new File(request.getTargetDirectory(), request.getDownloadZipFileName()));
-                final BufferedOutputStream bout = new BufferedOutputStream(destination);
-                final ZipOutputStream zipFile = new ZipOutputStream(bout);) {
-            int picWroteCounter = request.getSequentialStartNumber();
-            for (final SortableDefaultMutableTreeNode p : request.getStartNode().getChildPictureNodes(true)) {
-                final PictureInfo pictureInfo = (PictureInfo) p.getUserObject();
-                addZipFileEntry(request, zipFile, picWroteCounter, p, pictureInfo);
+                final var bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+                final var zipOutputStream = new ZipOutputStream(bufferedOutputStream);) {
+            var picWroteCounter = request.getSequentialStartNumber();
+            for (final var sortableDefaultMutableTreeNode : request.getStartNode().getChildPictureNodes(true)) {
+                final var pictureInfo = (PictureInfo) sortableDefaultMutableTreeNode.getUserObject();
+                addZipFileEntry(request, zipOutputStream, picWroteCounter, sortableDefaultMutableTreeNode, pictureInfo);
                 picWroteCounter++;
             }
         } catch (final IOException x) {
@@ -322,14 +321,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     private static void addZipFileEntry(final GenerateWebsiteRequest request, final ZipOutputStream zipFile, final int picWroteCounter, final SortableDefaultMutableTreeNode p, final PictureInfo pictureInfo) {
         try (
-                final InputStream in = new FileInputStream(pictureInfo.getImageFile());
-                final BufferedInputStream bin = new BufferedInputStream(in)) {
+                final var fileInputStream = new FileInputStream(pictureInfo.getImageFile());
+                final var bufferedInputStream = new BufferedInputStream(fileInputStream)) {
 
-            final File highresFile = getOutputImageFile(request, pictureInfo, "_h.", picWroteCounter, true);
-            final ZipEntry entry = new ZipEntry(highresFile.getName());
-            LOGGER.log(Level.INFO, "Adding to zipfile: {0}", highresFile);
-            zipFile.putNextEntry(entry);
-            bin.transferTo(zipFile);
+            final var outputImageFile = getOutputImageFile(request, pictureInfo, "_h.", picWroteCounter, true);
+            final var zipEntry = new ZipEntry(outputImageFile.getName());
+            LOGGER.log(Level.INFO, "Adding to zipfile: {0}", outputImageFile);
+            zipFile.putNextEntry(zipEntry);
+            bufferedInputStream.transferTo(zipFile);
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "Could not create zipfile entry for {0}\n{1}", new Object[]{p, e});
         }
@@ -387,24 +386,24 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @param request The request
      */
     private void assignFilenames(final GenerateWebsiteRequest request) {
-        final Enumeration<TreeNode> e = request.getStartNode().breadthFirstEnumeration();
-        while (e.hasMoreElements()) {
-            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) e.nextElement();
-            if (node.getUserObject() instanceof PictureInfo pictureInfo) {
-                lowresFiles.put(node.hashCode(), getOutputImageFile(request, pictureInfo, "_l.", picsWroteCounter, true));
-                midresFiles.put(node.hashCode(), getOutputImageFile(request, pictureInfo, "_m.", picsWroteCounter, true));
-                highresFiles.put(node.hashCode(), getOutputImageFile(request, pictureInfo, "_h.", picsWroteCounter, true));
-                midresHtmlFiles.put(node.hashCode(), getOutputImageFile(request, pictureInfo, ".htm", picsWroteCounter, false));
+        final var treeNodeEnumeration = request.getStartNode().breadthFirstEnumeration();
+        while (treeNodeEnumeration.hasMoreElements()) {
+            final var sortableDefaultMutableTreeNode = (SortableDefaultMutableTreeNode) treeNodeEnumeration.nextElement();
+            if (sortableDefaultMutableTreeNode.getUserObject() instanceof PictureInfo pictureInfo) {
+                lowresFiles.put(sortableDefaultMutableTreeNode.hashCode(), getOutputImageFile(request, pictureInfo, "_l.", picsWroteCounter, true));
+                midresFiles.put(sortableDefaultMutableTreeNode.hashCode(), getOutputImageFile(request, pictureInfo, "_m.", picsWroteCounter, true));
+                highresFiles.put(sortableDefaultMutableTreeNode.hashCode(), getOutputImageFile(request, pictureInfo, "_h.", picsWroteCounter, true));
+                midresHtmlFiles.put(sortableDefaultMutableTreeNode.hashCode(), getOutputImageFile(request, pictureInfo, ".htm", picsWroteCounter, false));
                 picsWroteCounter++;
             } else {
-                if (node == request.getStartNode()) {
-                    lowresHtmlFiles.put(node.hashCode(), new File(request.getTargetDirectory(), INDEX_PAGE));
-                    midresHtmlFiles.put(node.hashCode(), new File(request.getTargetDirectory(), INDEX_PAGE));
+                if (sortableDefaultMutableTreeNode == request.getStartNode()) {
+                    lowresHtmlFiles.put(sortableDefaultMutableTreeNode.hashCode(), new File(request.getTargetDirectory(), INDEX_PAGE));
+                    midresHtmlFiles.put(sortableDefaultMutableTreeNode.hashCode(), new File(request.getTargetDirectory(), INDEX_PAGE));
                 } else {
-                    lowresHtmlFiles.put(node.hashCode(), new File(request.getTargetDirectory(), "jpo_" + node.hashCode() + ".htm"));
-                    midresHtmlFiles.put(node.hashCode(), new File(request.getTargetDirectory(), "jpo_" + node.hashCode() + ".htm"));
+                    lowresHtmlFiles.put(sortableDefaultMutableTreeNode.hashCode(), new File(request.getTargetDirectory(), "jpo_" + sortableDefaultMutableTreeNode.hashCode() + ".htm"));
+                    midresHtmlFiles.put(sortableDefaultMutableTreeNode.hashCode(), new File(request.getTargetDirectory(), "jpo_" + sortableDefaultMutableTreeNode.hashCode() + ".htm"));
                 }
-                lowresFiles.put(node.hashCode(), new File(request.getTargetDirectory(), FOLDER_ICON));
+                lowresFiles.put(sortableDefaultMutableTreeNode.hashCode(), new File(request.getTargetDirectory(), FOLDER_ICON));
             }
         }
     }
@@ -450,7 +449,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         progressGui.switchToDoneMode();
         if (request.isOpenWebsiteAfterRendering()) {
             try {
-                final File indexPage = new File(request.getTargetDirectory(), INDEX_PAGE);
+                final var indexPage = new File(request.getTargetDirectory(), INDEX_PAGE);
                 Desktop.getDesktop().browse(indexPage.toURI());
             } catch (final IOException ex) {
                 LOGGER.severe(ex.getLocalizedMessage());
@@ -471,11 +470,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         try {
             publish(String.format("Processing Group: %s", groupNode.toString()));
 
-            final File lowresGroupFile = lowresHtmlFiles.get(groupNode.hashCode());
+            final var lowresGroupFile = lowresHtmlFiles.get(groupNode.hashCode());
             websiteMemberFiles.add(lowresGroupFile);
 
-            final BufferedWriter lowresGroupWriter = new BufferedWriter(new FileWriter(lowresGroupFile));
-            final String title = ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml();
+            final var lowresGroupWriter = new BufferedWriter(new FileWriter(lowresGroupFile));
+            final var title = ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml();
 
             writeHtmlHeader(lowresGroupWriter, title);
             startGroupTable(groupNode, lowresGroupWriter, request);
@@ -486,8 +485,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             lowresGroupWriter.newLine();
 
             final List<String> rowDescriptions = new ArrayList<>();
-            for (int i = 0; i < groupNode.getChildCount(); i++) {
-                final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) groupNode.getChildAt(i);
+            for (var i = 0; i < groupNode.getChildCount(); i++) {
+                final var node = (SortableDefaultMutableTreeNode) groupNode.getChildAt(i);
                 rowDescriptions.add(writeLowresCell(lowresGroupWriter, node, i));
                 if ((rowDescriptions.size() % request.getPicsPerRow() == 0) || (i == groupNode.getChildCount() - 1)) {
                     // if we have a full fow of descriptions or if we are processing the last child
@@ -516,13 +515,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             writeLowresGroupCell(lowresGroupWriter, node);
             return gi.getGroupName();
         } else {
-            final PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            final var pictureInfo = (PictureInfo) node.getUserObject();
             publish(String.format("Processing picture node: %s", pictureInfo.toString()));
             LOGGER.log(Level.INFO, "Loading: {0}", pictureInfo.getImageFile());
             final ScalablePicture scp = loadScalablePicture(pictureInfo);
 
             writeLowres(lowresGroupWriter, node, scp, websiteMemberFiles);
-            final Dimension midresDimension = writeScaledPicture(midresFiles.get(node.hashCode()), request.getMidresDimension(), request.getMidresJpgQuality(), scp, websiteMemberFiles);
+            final var midresDimension = writeScaledPicture(midresFiles.get(node.hashCode()), request.getMidresDimension(), request.getMidresJpgQuality(), scp, websiteMemberFiles);
             writeHighresPicture(request, node, scp, websiteMemberFiles);
 
             if (request.isGenerateMidresHtml()) {
@@ -625,12 +624,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void writeMidres(final SortableDefaultMutableTreeNode pictureNode, final int childNumber, final Dimension midresDimension) throws IOException {
-        final File highresFile = highresFiles.get(pictureNode.hashCode());
-        final File midresHtmlFile = midresHtmlFiles.get(pictureNode.hashCode());
+        final var highresFile = highresFiles.get(pictureNode.hashCode());
+        final var midresHtmlFile = midresHtmlFiles.get(pictureNode.hashCode());
         websiteMemberFiles.add(midresHtmlFile);
-        try (
-                final BufferedWriter midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile))) {
-            final String groupDescriptionHtml
+        try ( final var midresHtmlWriter = new BufferedWriter(new FileWriter(midresHtmlFile)) ) {
+            final var groupDescriptionHtml
                     = StringEscapeUtils.escapeHtml4(pictureNode.getParent().getUserObject().toString());
 
             writeMidresPageHeader(midresHtmlWriter, groupDescriptionHtml);
@@ -643,7 +641,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write("<tr>");
 
             midresHtmlWriter.write("<td class=\"midresPictureCell\">");
-            final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
+            final var pictureInfo = (PictureInfo) pictureNode.getUserObject();
             writeMidresImgTag(pictureNode, midresHtmlWriter, midresDimension);
             midresHtmlWriter.newLine();
             midresHtmlWriter.write("<p>" + StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
@@ -651,7 +649,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             midresHtmlWriter.write(END_TD);
             midresHtmlWriter.newLine();
 
-            final StringBuilder previewArray = writeRightColumnNavAndPreview(pictureNode, childNumber, highresFile, midresHtmlWriter);
+            final var previewArray = writeRightColumnNavAndPreview(pictureNode, childNumber, highresFile, midresHtmlWriter);
 
             midresHtmlWriter.write(END_TR);
             midresHtmlWriter.newLine();
@@ -667,6 +665,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             }
 
             midresHtmlWriter.write("</body></html>");
+            midresHtmlWriter.flush();
         }
     }
 
@@ -751,7 +750,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         final int endIndex = getEndIndex(startIndex, childCount, indexPerRow);
 
 
-        for (int i = startIndex; i < endIndex; i++) {
+        for (var i = startIndex; i < endIndex; i++) {
             writeTrIfNeeded(midresHtmlWriter, indexPerRow, i);
             midresHtmlWriter.write("<td class=\"numberPickCell");
             if (i == childNumber) {
@@ -773,12 +772,12 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void writeLinkToNodeNumber(final SortableDefaultMutableTreeNode pictureNode, final BufferedWriter midresHtmlWriter, final int matrixWidth, final StringBuilder dhtmlArray, final int i) throws IOException {
-        final SortableDefaultMutableTreeNode nde = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i);
+        final var sortableDefaultMutableTreeNode = (SortableDefaultMutableTreeNode) pictureNode.getParent().getChildAt(i);
 
-        if (nde.getUserObject() instanceof PictureInfo) {
-            writePictureTableHyperlink(midresHtmlWriter, nde, matrixWidth, dhtmlArray, i);
-        } else if (nde.getUserObject() instanceof GroupInfo) {
-            midresHtmlWriter.write(A_HREF + "jpo_" + nde.hashCode() + ".htm\">");
+        if (sortableDefaultMutableTreeNode.getUserObject() instanceof PictureInfo) {
+            writePictureTableHyperlink(midresHtmlWriter, sortableDefaultMutableTreeNode, matrixWidth, dhtmlArray, i);
+        } else if (sortableDefaultMutableTreeNode.getUserObject() instanceof GroupInfo) {
+            midresHtmlWriter.write(A_HREF + "jpo_" + sortableDefaultMutableTreeNode.hashCode() + ".htm\">");
         }
         midresHtmlWriter.write(Integer.toString(i));
         midresHtmlWriter.write("</a>");
@@ -800,7 +799,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     public static int getStartIndex(int childNumber, int indexPerRow) {
         final int indexBeforeCurrent = 15;
-        int startIndex = (int) Math.floor((childNumber - indexBeforeCurrent) / (double) indexPerRow) * indexPerRow;
+        var startIndex = (int) Math.floor((childNumber - indexBeforeCurrent) / (double) indexPerRow) * indexPerRow;
         if (startIndex < 0) {
             startIndex = 0;
         }
@@ -808,7 +807,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     public static int getEndIndex(final int startIndex, final int childCount, final int indexPerRow) {
-        final int numbersToShow = 35;
+        final var numbersToShow = 35;
         int endIndex = startIndex + numbersToShow;
         if (endIndex > childCount) {
             endIndex = ((childCount + indexPerRow) / indexPerRow) * indexPerRow;
@@ -818,16 +817,16 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
 
     private void writePictureTableHyperlink(final BufferedWriter midresHtmlWriter, final SortableDefaultMutableTreeNode node, final int matrixWidth, final StringBuilder dhtmlArray, final int i) throws IOException {
-        final String nodeUrl = midresHtmlFiles.get(node.hashCode()).getName();
+        final var nodeUrl = midresHtmlFiles.get(node.hashCode()).getName();
         midresHtmlWriter.write(A_HREF + nodeUrl + "\"");
-        final PictureInfo pi = (PictureInfo) node.getUserObject();
-        final String htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4((pi.getDescription().replace("\'", "\\\\'")));
+        final var pictureInfo = (PictureInfo) node.getUserObject();
+        final var htmlFriendlyDescription2 = StringEscapeUtils.escapeHtml4((pictureInfo.getDescription().replace("\'", "\\\\'")));
         if (request.isGenerateMouseover()) {
             midresHtmlWriter.write(String.format(" onmouseover=\"changetext(content[%d])\" onmouseout=\"changetext(content[0])\">", i));
             dhtmlArray.append(String.format("content[%d]='", i));
 
             dhtmlArray.append(String.format("<p>Picture %d/%d:</p>", i, node.getChildCount()));
-            final String lowresFn = lowresFiles.get(node.hashCode()).getName();
+            final var lowresFn = lowresFiles.get(node.hashCode()).getName();
             dhtmlArray.append(String.format("<p><img src=\"%s\" width=%d alt=\"Thumbnail\"></p>", lowresFn, matrixWidth - 10));
             dhtmlArray.append("<p><i>").append(htmlFriendlyDescription2).append("</i></p>'\n");
         } else {
@@ -910,8 +909,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private void writeHighresPicture(final GenerateWebsiteRequest request, final SortableDefaultMutableTreeNode node, final ScalablePicture scp, final List<File> websiteMemberFiles) throws IOException {
         // copy the picture to the target directory
         if (request.isExportHighres()) {
-            final File highresFile = highresFiles.get(node.hashCode());
-            final PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            final var highresFile = highresFiles.get(node.hashCode());
+            final var pictureInfo = (PictureInfo) node.getUserObject();
             if (request.isRotateHighres() && (pictureInfo.getRotation() != 0)) {
                 LOGGER.log(Level.FINE, "Copying and rotating picture {0} to {1}", new Object[]{pictureInfo.getImageLocation(), highresFile});
                 scp.setScaleFactor(1);
@@ -927,13 +926,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     @NotNull
     private ScalablePicture loadScalablePicture(final PictureInfo pictureInfo) throws IOException {
-        final ScalablePicture scp = new ScalablePicture();
-        scp.setQualityScale();
-        scp.setScaleSteps(request.getScalingSteps());
-        scp.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
+        final var scalablePicture = new ScalablePicture();
+        scalablePicture.setQualityScale();
+        scalablePicture.setScaleSteps(request.getScalingSteps());
+        scalablePicture.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
 
         LOGGER.log(Level.INFO, "Done Loading: {0}", pictureInfo.getImageLocation());
-        if (scp.getStatusCode() == SCALABLE_PICTURE_ERROR) {
+        if (scalablePicture.getStatusCode() == SCALABLE_PICTURE_ERROR) {
             LOGGER.log(Level.SEVERE, "Problem reading image {0} using ThumbnailPicture instead", pictureInfo.getImageLocation());
             File file;
             try {
@@ -941,14 +940,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             } catch (final URISyntaxException e) {
                 throw new IOException("Could not load the broken_thumbnail.gif resource: " + e.getMessage());
             }
-            scp.loadPictureImd(file, 0f);
+            scalablePicture.loadPictureImd(file, 0f);
         }
-        return scp;
+        return scalablePicture;
     }
 
     @NotNull
     private StringBuilder startDhtmlArray(final int childNumber, final int childCount, final PictureInfo pictureInfo, final String htmlFriendlyDescription) {
-        final StringBuilder dhtmlArray = new StringBuilder(String.format("content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription));
+        final var dhtmlArray = new StringBuilder(String.format("content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription));
         if (pictureInfo.getCreationTime().length() > 0) {
             dhtmlArray.append("<p><strong>Date:</strong><br>").append(pictureInfo.getCreationTime().replace("\'", "\\\\'")).append("</p>");
         }
@@ -1019,15 +1018,15 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     @NotNull
     public static Session getSshSession(final JSch jsch, final GenerateWebsiteRequest request) throws JSchException {
         LOGGER.log(Level.INFO, "Setting up session for user: {0} server: {1} port: {2} and connecting...", new Object[]{request.getSshUser(), request.getSshServer(), request.getSshPort()});
-        final Session session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
+        final var session = jsch.getSession(request.getSshUser(), request.getSshServer(), request.getSshPort());
         if (request.getSshAuthType().equals(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD)) {
             session.setPassword(request.getSshPassword());
         } else {
             jsch.addIdentity(request.getSshKeyFile());
         }
-        final Properties config = new Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
+        final var properties = new Properties();
+        properties.put("StrictHostKeyChecking", "no");
+        session.setConfig(properties);
         session.connect();
         return session;
     }
@@ -1042,13 +1041,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         ((ChannelExec) channel).setCommand(command);
 
         try (
-                // get I/O streams for remote scp
-                final OutputStream out = channel.getOutputStream();
-                final InputStream in = channel.getInputStream()) {
+            // get I/O streams for remote scp
+            final OutputStream outputStream = channel.getOutputStream();
+            final InputStream inputStream = channel.getInputStream()) {
             LOGGER.info("Connecting Channel...");
             channel.connect();
 
-            if (checkAck(in) != 0) {
+            if (checkAck(inputStream) != 0) {
                 LOGGER.info("No Ack 1");
             }
 
@@ -1057,9 +1056,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             // but it is not accessible with JavaAPI ;-<
             command += (" " + (file.lastModified() / 1000) + " 0\n");
             LOGGER.log(Level.INFO, "Command: {0}", command);
-            out.write(command.getBytes());
-            out.flush();
-            if (checkAck(in) != 0) {
+            outputStream.write(command.getBytes());
+            outputStream.flush();
+            if (checkAck(inputStream) != 0) {
                 LOGGER.info("No Ack 2");
             }
 
@@ -1069,32 +1068,32 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             command += file.getName();
             command += "\n";
             LOGGER.log(Level.INFO, "Command: {0}", command);
-            out.write(command.getBytes());
-            out.flush();
-            if (checkAck(in) != 0) {
+            outputStream.write(command.getBytes());
+            outputStream.flush();
+            if (checkAck(inputStream) != 0) {
                 LOGGER.info("No Ack 3");
             }
 
             // send a content of lfile
             try (
-                    final FileInputStream fis = new FileInputStream(file)) {
+                final FileInputStream fileInputStream = new FileInputStream(file)) {
                 final byte[] buf = new byte[1024];
                 while (true) {
                     LOGGER.log(Level.INFO, "Sending bytes: {0}", buf.length);
-                    int len = fis.read(buf, 0, buf.length);
+                    int len = fileInputStream.read(buf, 0, buf.length);
                     if (len <= 0) {
                         break;
                     }
-                    out.write(buf, 0, len);
+                    outputStream.write(buf, 0, len);
                 }
 
                 LOGGER.info("Sending \0");
                 // send '\0'
                 buf[0] = 0;
-                out.write(buf, 0, 1);
-                out.flush();
+                outputStream.write(buf, 0, 1);
+                outputStream.flush();
             }
-            if (checkAck(in) != 0) {
+            if (checkAck(inputStream) != 0) {
                 LOGGER.info("No Ack 4");
             }
 

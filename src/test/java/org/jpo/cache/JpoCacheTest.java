@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2021  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,17 +49,17 @@ class JpoCacheTest {
     private static final long LENGHT_FILE_2 = IMAGE_FILE_2.length();
 
     static {
-        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number ob bytes, 21599 (actual: {1})", new Object[]{IMAGE_FILE_1, LENGHT_FILE_1});
+        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number of bytes, 21599 (actual: {1})", new Object[]{IMAGE_FILE_1, LENGHT_FILE_1});
         assertEquals(21599, LENGHT_FILE_1);
-        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number ob bytes, 2354328 (actual: {1})", new Object[]{IMAGE_FILE_2, LENGHT_FILE_2});
+        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number of bytes, 2354328 (actual: {1})", new Object[]{IMAGE_FILE_2, LENGHT_FILE_2});
         assertEquals(2354328, LENGHT_FILE_2);
     }
 
-    private static File getFileFromResouces(final String filename) {
+    private static File getFileFromResouces(final String resourceName) {
         try {
-            return new File(JpoCacheTest.class.getClassLoader().getResource(filename).toURI());
-        } catch (URISyntaxException e) {
-            LOGGER.log(Level.SEVERE, "Could not retrieve test resource image {0}", filename);
+            return new File(ClassLoader.getSystemResources(resourceName).nextElement().toURI());
+        } catch (final URISyntaxException | IOException e) {
+            LOGGER.log(Level.SEVERE, "Could not retrieve resource {0}. Exception: {1}", new Object[]{resourceName, e.getMessage()});
             return null;
         }
     }
@@ -103,16 +103,16 @@ class JpoCacheTest {
             JpoCache.removeFromHighresCache(tempFile);
             final var imageBytes = JpoCache.getHighresImageBytes(tempFile);
             LOGGER.log(Level.INFO,
-                    "asserting that the tempFile {0} was not retrieved from cache (actual: {1}) and has 21599 bytes ({2})",
-                    new Object[]{tempFile, imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
+                    "asserting that the tempFile {0} was not retrieved from cache (isRetrievedFromCache: {1}) and has {2} bytes ({3})",
+                    new Object[]{tempFile, imageBytes.isRetrievedFromCache(), LENGHT_FILE_1, imageBytes.getBytes().length});
             assertEquals(LENGHT_FILE_1, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
 
             com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
             // some test runs fail. The overwrite may not have happened. Trying to force a sync. Maybe that helps?
             final var dummyFileToForceASync = new File("DummyFileToForceASync");
-            try (final var fos = new FileOutputStream(dummyFileToForceASync)) {
-                fos.getFD().sync();
+            try (final var fileOutputStream = new FileOutputStream(dummyFileToForceASync)) {
+                fileOutputStream.getFD().sync();
             }
             Files.delete(dummyFileToForceASync.toPath());
 
