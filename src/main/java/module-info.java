@@ -4,10 +4,10 @@ module org.jpo {
     exports org.jpo.eventbus;
     exports org.jpo.gui.swing;
 
-//    opens org.jpo;
-//    opens org.jpo.gui;
-//    opens org.jpo.eventbus;
-//    opens org.jpo.gui.swing;
+    opens org.jpo to com.google.common;
+    opens org.jpo.gui to com.google.common;
+    opens org.jpo.eventbus to com.google.common;
+    opens org.jpo.gui.swing to com.google.common;
 
     requires java.desktop;
     requires java.logging;
