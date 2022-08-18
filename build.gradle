@@ -9,6 +9,8 @@ plugins {
     id 'jacoco'
 }
 
+
+
 version = 0.17
 group = 'org.jpo'
 
@@ -200,6 +202,34 @@ task openJavadocInBrowser {
     }
 }
 
+import org.gradle.internal.os.OperatingSystem
+jlink {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    launcher{
+        name = 'JPO'
+        jvmArgs = []
+    }
+    jpackage {
+        OperatingSystem os = OperatingSystem.current();
+
+        println "*** Building on ${os.familyName} / ${os.name} / ${os.version} / ${System.getProperty("os.arch")}."
+        println "*** Building on ${os.toString()}."
+
+        outputDir = 'my-packaging'
+        imageName = 'JPO'
+        skipInstaller = false
+        installerName = 'jpo'
+        vendor = "Richard Eigenmann (project owner)"
+        icon = 'src/docsrc/JPO-Logo_v2.png'
+        if (os.isLinux()) {
+            installerOptions = ['--linux-shortcut', '--install-dir', '/usr']
+        } else if (os.isWindows()) {
+            imageOptions = ['--win-console']
+            installerOptions = ['--win-console', '--win-menu', '--win-shortcut']
+        }
+
+    }
+}
 
 task uploadWebsitePages(type:Exec) {
     group 'website'
@@ -240,6 +270,25 @@ task uploadWindowsInstaller(type: Exec) {
     //commandLine ('rsync', '-avP', "${buildDir}/executables/JPO-Installer-${jpoVersion}.exe", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
     commandLine('rsync', '-v', '--no-perms', "${buildDir}/executables/JPO-${version}.exe", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/JPO-${version}.exe")
 }
+
+task uploadRpmInstaller(type: Exec) {
+    group 'website'
+    description 'Publishes the JPO rpm installer bundle'
+    dependsOn jpackage
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo-${version}-1.x86_64.rpm", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/jpo-${version}-1.x86_64.rpm")
+}
+
+task uploadDebInstaller(type: Exec) {
+    group 'website'
+    description 'Publishes the JPO Debian installer bundle'
+    dependsOn jpackage
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo_${version}-1_amd64.deb", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/jpo_${version}-1_amd64.deb")
+}
+
 
 task uploadJar1(type: Exec) {
     group 'website'

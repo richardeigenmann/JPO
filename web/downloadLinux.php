@@ -2,6 +2,30 @@
 <div class="container">
     <h1>Installing JPO on Linux</h1>
 
+    <h2>RPM based systems</h2>
+
+    <pre>
+# install the rpm
+sudo rpm -Uhv https://sourceforge.net/projects/j-po/files/jpo-0.17-1.x86_64.rpm
+
+# run the program from /usr/bin/JPO
+JPO
+</pre>
+
+
+    <h2>Debian like systems</h2>
+
+    <pre>
+# install the deb
+wget https://sourceforge.net/projects/j-po/files/jpo_0.17-1_amd64.deb
+su -
+dpkg -i jpo_0.17-1_amd64.deb
+
+# run the program from /usr/bin/JPO
+JPO
+</pre>
+
+
     <p>You can run JPO with Flatpak. First you need to install Flatpak for your distro.</p>
     <p>Next you install JPO with flatpack:</p>
     <pre>
