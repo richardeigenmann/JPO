@@ -1,0 +1,14 @@
+"c:\Program Files (x86)\jdk-17.0.1\bin\jpackage" ^
+--type exe ^
+--input . ^
+--name JPO ^
+--description "Java Picture Organizer" ^
+--vendor "Richard Eigenmann" ^
+--app-version 0.17 ^
+--main-jar Jpo-all.jar ^
+--icon jpoicon.ico ^
+--java-options '--enable-preview' ^
+--win-shortcut ^
+--win-menu ^
+--verbose ^
+--dest c:\Users\richa\Desktop
