@@ -277,7 +277,7 @@ task uploadRpmInstaller(type: Exec) {
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo-${version}-1.x86_64.rpm", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/jpo-${version}-1.x86_64.rpm")
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo-${version}-1.x86_64.rpm", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
 }
 
 task uploadDebInstaller(type: Exec) {
@@ -286,7 +286,7 @@ task uploadDebInstaller(type: Exec) {
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo_${version}-1_amd64.deb", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/jpo_${version}-1_amd64.deb")
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo_${version}_amd64.deb", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
 }
 
 task uploadMsiInstaller(type: Exec) {
@@ -295,7 +295,7 @@ task uploadMsiInstaller(type: Exec) {
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo_${version}-1_msi.exe", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/jpo_${version}-1_msi.exe")
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo-${version}.msi", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
 }
 
 task uploadJar1(type: Exec) {
