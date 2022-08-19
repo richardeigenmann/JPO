@@ -23,7 +23,7 @@ import java.util.Set;
 import static java.awt.Cursor.CROSSHAIR_CURSOR;
 
 /*
-Copyright (C) 2017-2021  Richard Eigenmann.
+Copyright (C) 2017-2022  Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -109,7 +109,7 @@ public class MapViewer {
      * @param latLng the latitude as X and longitude as Y
      */
     public void setMarker(final Point2D.Double latLng) {
-        final GeoPosition location = new GeoPosition(latLng.getX(), latLng.getY());
+        final var location = new GeoPosition(latLng.getX(), latLng.getY());
         defaultWaypoint.setPosition(location);
         jxMapViewer.setAddressLocation(location);
     }

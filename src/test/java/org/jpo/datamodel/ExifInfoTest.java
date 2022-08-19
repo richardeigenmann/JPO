@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 /*
  ExifInfoTest.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2013-2021  Richard Eigenmann.
+ Copyright (C) 2013-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -46,7 +46,7 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoNull() {
-        ExifInfo exifInfo = new ExifInfo(null);
+        var exifInfo = new ExifInfo(null);
         exifInfo.decodeExifTags();
         assertEquals("", exifInfo.getAperture());
         assertEquals( "", exifInfo.getCamera());
@@ -67,9 +67,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoD100() {
-        final String NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
+        final var NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(NIKON_D100_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(NIKON_D100_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/11.0", exifInfo.getAperture());
             assertEquals("NIKON D100", exifInfo.getCamera());
@@ -94,9 +94,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4() {
-        final String SAMSUNG_S4_IMAGE = "exif-test-samsung-s4.jpg";
+        final var SAMSUNG_S4_IMAGE = "exif-test-samsung-s4.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/2.2", exifInfo.getAperture());
             assertEquals("GT-I9505", exifInfo.getCamera());
@@ -121,9 +121,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4Loc() {
-        final String SAMSUNG_S4_LOC_IMAGE = "exif-test-samsung-s4-loc.jpg";
+        final var SAMSUNG_S4_LOC_IMAGE = "exif-test-samsung-s4-loc.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_LOC_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_LOC_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals( "f/2.2", exifInfo.getAperture());
             assertEquals("GT-I9505", exifInfo.getCamera());
@@ -148,9 +148,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4Rot0() {
-        final String SAMSUNG_S4_ROT0_IMAGE = "exif-test-samsung-s4-rotation-0.jpg";
+        final var SAMSUNG_S4_ROT0_IMAGE = "exif-test-samsung-s4-rotation-0.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT0_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT0_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("", exifInfo.getAperture());
             assertEquals("GT-I9505", exifInfo.getCamera());
@@ -175,9 +175,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotLeft() {
-        final String SAMSUNG_S4_ROT_LEFT_IMAGE = "exif-test-samsung-s4-rotation-left.jpg";
+        final var SAMSUNG_S4_ROT_LEFT_IMAGE = "exif-test-samsung-s4-rotation-left.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_LEFT_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_LEFT_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("", exifInfo.getAperture());
             assertEquals("GT-I9505", exifInfo.getCamera());
@@ -202,9 +202,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotRight() {
-        final String SAMSUNG_S4_ROT_RIGHT_IMAGE = "exif-test-samsung-s4-rotation-right.jpg";
+        final var SAMSUNG_S4_ROT_RIGHT_IMAGE = "exif-test-samsung-s4-rotation-right.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_RIGHT_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_RIGHT_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("", exifInfo.getAperture());
             assertEquals("GT-I9505", exifInfo.getCamera());
@@ -229,9 +229,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoS4RotUpsideDown() {
-        final String SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE = "exif-test-samsung-s4-upside-down.jpg";
+        final var SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE = "exif-test-samsung-s4-upside-down.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SAMSUNG_S4_ROT_UPSIDEDOWN_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("", exifInfo.getAperture());
             assertEquals("GT-I9505", exifInfo.getCamera());
@@ -255,9 +255,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoEos350d() {
-        final String CANON_EOS350D_IMAGE = "exif-test-canon-eos-350d.jpg";
+        final var CANON_EOS350D_IMAGE = "exif-test-canon-eos-350d.jpg";
         try {
-            final ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS350D_IMAGE).toURI()));
+            final var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS350D_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/20.0", exifInfo.getAperture());
             assertEquals("1/200 sec", exifInfo.getShutterSpeed());
@@ -280,9 +280,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoCanonEos60D() {
-        final String CANON_EOS60D_IMAGE = "exif-test-canon-eos-60d.jpg";
+        final var CANON_EOS60D_IMAGE = "exif-test-canon-eos-60d.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS60D_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS60D_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/11.3", exifInfo.getAperture());
             assertEquals("1/511 sec", exifInfo.getShutterSpeed());
@@ -306,9 +306,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoCybershot1() {
-        final String CANON_CYBERSHOT1_IMAGE = "exif-test-sony-cybershot-1.jpg";
+        final var CANON_CYBERSHOT1_IMAGE = "exif-test-sony-cybershot-1.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_CYBERSHOT1_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(CANON_CYBERSHOT1_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/4.0", exifInfo.getAperture());
             assertEquals("1/480 sec", exifInfo.getShutterSpeed());
@@ -332,9 +332,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoSonyD700() {
-        final String SONY_D700_IMAGE = "exif-test-sony-d700.jpg";
+        final var SONY_D700_IMAGE = "exif-test-sony-d700.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ClassLoader.getSystemResources(SONY_D700_IMAGE).nextElement().toURI()));
+            var exifInfo = new ExifInfo(new File(ClassLoader.getSystemResources(SONY_D700_IMAGE).nextElement().toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/2.4", exifInfo.getAperture());
             assertEquals("1/32 sec", exifInfo.getShutterSpeed());
@@ -358,9 +358,9 @@ public class ExifInfoTest {
      */
     @Test
     public void testExifInfoSonyP200() {
-        final String SONY_P200_IMAGE = "exif-test-sony-P200.jpg";
+        final var SONY_P200_IMAGE = "exif-test-sony-P200.jpg";
         try {
-            ExifInfo exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SONY_P200_IMAGE).toURI()));
+            var exifInfo = new ExifInfo(new File(ExifInfoTest.class.getClassLoader().getResource(SONY_P200_IMAGE).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/5.6", exifInfo.getAperture());
             assertEquals("1/400 sec", exifInfo.getShutterSpeed());

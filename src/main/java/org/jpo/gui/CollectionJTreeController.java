@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2002 - 2021 Richard Eigenmann, Zurich, Switzerland This
+ * Copyright (C) 2002 - 2022 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -96,11 +96,11 @@ public class CollectionJTreeController {
      * @param node The node
      */
     private void expandAndScroll(final SortableDefaultMutableTreeNode node) {
-        final var tp = new TreePath(node.getPath());
+        final var treePath = new TreePath(node.getPath());
         final Runnable r = () -> {
-            collectionJTree.expandPath(tp);
-            collectionJTree.scrollPathToVisible(tp);
-            collectionJTree.setSelectionPath(tp);
+            collectionJTree.expandPath(treePath);
+            collectionJTree.scrollPathToVisible(treePath);
+            collectionJTree.setSelectionPath(treePath);
         };
         if (SwingUtilities.isEventDispatchThread()) {
             r.run();
@@ -110,7 +110,7 @@ public class CollectionJTreeController {
     }
 
     private static boolean ancestorViolationCheck(final SortableDefaultMutableTreeNode targetNode, final List<SortableDefaultMutableTreeNode> transferableNodes) {
-        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
+        for (final var sourceNode : transferableNodes) {
             if (targetNode.isNodeAncestor(sourceNode)) {
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                         Settings.getJpoResources().getString("moveNodeError"),
@@ -212,7 +212,7 @@ public class CollectionJTreeController {
         @Override
         @SuppressWarnings({"unchecked"})
         public boolean importData(final TransferSupport support) {
-            final int actionType = support.getDropAction();
+            final var actionType = support.getDropAction();
             if (!((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE))) {
                 LOGGER.log(Level.INFO, "The event has an odd Action Type: {0}. Drop rejected. Copy is {1}, Move is {2}", new Object[]{actionType, TransferHandler.COPY, TransferHandler.MOVE});
                 return false;
@@ -283,8 +283,8 @@ public class CollectionJTreeController {
             if (collectionJTree.getRowForLocation(mouseEvent.getX(), mouseEvent.getY()) == -1) {
                 return null;
             }
-            final TreePath curPath = collectionJTree.getPathForLocation(mouseEvent.getX(), mouseEvent.getY());
-            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
+            final var curPath = collectionJTree.getPathForLocation(mouseEvent.getX(), mouseEvent.getY());
+            final var node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(curPath).getLastPathComponent();
             final var userObject = node.getUserObject();
             var toolTip = "";
             if (userObject instanceof GroupInfo groupInfo) {

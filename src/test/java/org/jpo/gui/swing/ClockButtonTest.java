@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2021,  Richard Eigenmann, Zürich
+ Copyright (C) 2017-2022 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +47,7 @@ class ClockButtonTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ClockButton clockButton = new ClockButton();
+                final var clockButton = new ClockButton();
                 assertNotNull(clockButton);
 
                 assertNotNull(clockButton.getClockIconOn());

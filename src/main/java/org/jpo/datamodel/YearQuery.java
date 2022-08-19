@@ -1,17 +1,15 @@
 package org.jpo.datamodel;
 
-import javax.swing.tree.TreeNode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Enumeration;
 import java.util.List;
 
 
 /*
  YearQuery.java:  The parameters for a search
 
- Copyright (C) 2014-2021  Richard Eigenmann.
+ Copyright (C) 2014-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -178,8 +176,8 @@ public class YearQuery implements Serializable, Query {
         SortableDefaultMutableTreeNode testNode;
         searchResults = new ArrayList<>();
 
-        for (final Enumeration<TreeNode> e = startNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
-            testNode = (SortableDefaultMutableTreeNode) e.nextElement();
+        for (final var enumeration = startNode.breadthFirstEnumeration(); enumeration.hasMoreElements(); ) {
+            testNode = (SortableDefaultMutableTreeNode) enumeration.nextElement();
             if (isMatch(testNode)) {
                 searchResults.add(testNode);
             }
@@ -203,15 +201,15 @@ public class YearQuery implements Serializable, Query {
      * @return true if the node matches the query, false if not.
      */
     public boolean isMatch(final SortableDefaultMutableTreeNode n) {
-        Object nodeObject = n.getUserObject();
+        var nodeObject = n.getUserObject();
         if (!(nodeObject instanceof PictureInfo)) {
             // it's not a pictureInfo node so it can't be a match.
             return false;
         }
 
-        final PictureInfo pictureInfo = (PictureInfo) nodeObject;
+        final var pictureInfo = (PictureInfo) nodeObject;
 
-        boolean match = true;
+        var match = true;
         Calendar testNodeDate = pictureInfo.getCreationTimeAsDate();
         if ( lowerDateRange != null ) {
             // test for the lower date range

@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 /*
- Copyright (C) 2017-2021  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -37,8 +37,8 @@ public record RenamePictureRequest(@NonNull Collection<SortableDefaultMutableTre
      */
     public RenamePictureRequest {
         Objects.requireNonNull(nodes);
-        for (final SortableDefaultMutableTreeNode n : nodes) {
-            if (!(n.getUserObject() instanceof PictureInfo)) {
+        for (final var node : nodes) {
+            if (!(node.getUserObject() instanceof PictureInfo)) {
                 throw new NotPictureInfoException("The node must be of type PictureInfo");
             }
         }

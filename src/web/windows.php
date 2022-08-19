@@ -13,7 +13,7 @@
     <h3>Set up the Development Environment</h3>
         <p>Download and install Git from: <a href="https://git-scm.com/download">https://git-scm.com/download</a></p>
         <p>Download and install IntelliJ IDEA Community Edition: <a href="https://www.jetbrains.com/idea/download/#section=windows">https://www.jetbrains.com/idea/download/#section=windows</a></p>
-        <p>Download and install OpenJDK 17: <a href="http://jdk.java.net/15/">http://jdk.java.net/17/</a> Open the zip
+        <p>Download and install OpenJDK 18: <a href="http://jdk.java.net/15/">http://jdk.java.net/18/</a> Open the zip
         and extract the files to c:\Program Files\</p>
         <p>Download and install Wix: <a href="https://wixtoolset.org/releases/">https://wixtoolset.org/releases/</a>
         Wix helps jpackage create a Windows installer file</p>
@@ -43,13 +43,13 @@
         <p>Run the Gradle Jpo > Tasks > build > signjar task which will create the build/libs/Jpo-all.jar file</p>
         <p>Next run the jpackage command from the command line:<p>
         <code>
-        "c:\Program Files (x86)\jdk-17.0.1\bin\jpackage" ^
+        "c:\Program Files (x86)\jdk-18.0.1\bin\jpackage" ^
         --type exe ^
         --input . ^
         --name JPO ^
         --description "Java Picture Organizer" ^
         --vendor "Richard Eigenmann" ^
-        --app-version 0.17 ^
+        --app-version 0.18 ^
         --main-jar build/libs/Jpo-all.jar ^
         --icon web/favicon.ico ^
         --java-options '--enable-preview' ^
@@ -63,6 +63,6 @@
 
     <hr>
     <p>Last update to this page: 17 Dec 2021<br>
-        Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

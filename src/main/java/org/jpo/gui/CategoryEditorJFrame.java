@@ -2,21 +2,22 @@ package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.datamodel.*;
+import org.jpo.datamodel.Category;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Enumeration;
 import java.util.logging.Logger;
 
 /*
  CategoryEditorJFrame.java:  creates a GUI to allow the user to specify his search
 
- Copyright (C) 2002 - 2021  Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -66,22 +67,22 @@ public class CategoryEditorJFrame
             }
         });
 
-        final JPanel jPanel = new JPanel();
+        final var jPanel = new JPanel();
         jPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         jPanel.setLayout(new MigLayout(""));
 
         final JList<Category> categoriesJList = getCategoriesJList();
 
-        final JScrollPane listJScrollPane = new JScrollPane(categoriesJList);
+        final var listJScrollPane = new JScrollPane(categoriesJList);
         listJScrollPane.setPreferredSize(new Dimension(250, 370));
         listJScrollPane.setMinimumSize(new Dimension(200, 50));
         jPanel.add(listJScrollPane, "push, grow");
 
 
-        final JPanel rightColumn = new JPanel();
+        final var rightColumn = new JPanel();
         rightColumn.setLayout(new MigLayout());
 
-        final JLabel categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
+        final var categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
         categoryJLabel.setHorizontalAlignment(SwingConstants.LEFT);
         rightColumn.add(categoryJLabel, "wrap");
 
@@ -90,13 +91,13 @@ public class CategoryEditorJFrame
         categoryJTextField.setMaximumSize(new Dimension(600, 25));
         rightColumn.add(categoryJTextField, "wrap");
 
-        final JButton addCategoryJButton = getAddCategoryJButton();
+        final var addCategoryJButton = getAddCategoryJButton();
         rightColumn.add(addCategoryJButton, "wrap");
-        final JButton deleteCategoryJButton = getDeleteCategoryJButton(categoriesJList);
+        final var deleteCategoryJButton = getDeleteCategoryJButton(categoriesJList);
         rightColumn.add(deleteCategoryJButton, "wrap");
-        final JButton renameCategoryJButton = getRenameCategoryJButton(categoriesJList);
+        final var renameCategoryJButton = getRenameCategoryJButton(categoriesJList);
         rightColumn.add(renameCategoryJButton, "wrap");
-        final JButton doneJButton = getDoneJButton();
+        final var doneJButton = getDoneJButton();
         rightColumn.add(doneJButton, "wrap");
 
         jPanel.add(rightColumn, "aligny top, wrap");
@@ -110,7 +111,7 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getRenameCategoryJButton(final JList<Category> categoriesJList) {
-        final JButton renameCategoryJButton = new JButton(Settings.getJpoResources().getString("renameCategoryJButton"));
+        final var renameCategoryJButton = new JButton(Settings.getJpoResources().getString("renameCategoryJButton"));
         renameCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         renameCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         renameCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
@@ -133,12 +134,12 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getDeleteCategoryJButton(final JList<Category> categoriesJList) {
-        final JButton deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
+        final var deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
         deleteCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         deleteCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         deleteCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
         deleteCategoryJButton.addActionListener((ActionEvent evt) -> {
-            int index = categoriesJList.getSelectedIndex();
+            var index = categoriesJList.getSelectedIndex();
             if (index < 0) {
                 return; // nothing selected
             } // nothing selected
@@ -172,8 +173,8 @@ public class CategoryEditorJFrame
      */
     private static int countCategoryUsage(final Integer key,
                                           final SortableDefaultMutableTreeNode startNode) {
-        final Enumeration<TreeNode> nodes = startNode.children();
-        int count = 0;
+        final var nodes = startNode.children();
+        var count = 0;
         while (nodes.hasMoreElements()) {
             final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
             if (n.getUserObject() instanceof PictureInfo pi
@@ -189,12 +190,12 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getAddCategoryJButton() {
-        final JButton addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
+        final var addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
         addCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         addCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         addCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
         addCategoryJButton.addActionListener((ActionEvent evt) -> {
-            final String category = categoryJTextField.getText();
+            final var category = categoryJTextField.getText();
             if (category.length() > 0) {
                 final Integer key = Settings.getPictureCollection().addCategory(category);
                 final Category categoryObject = new Category(key, category);
@@ -207,7 +208,7 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getDoneJButton() {
-        final JButton doneJButton = new JButton(Settings.getJpoResources().getString("doneJButton"));
+        final var doneJButton = new JButton(Settings.getJpoResources().getString("doneJButton"));
         doneJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         doneJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         doneJButton.setMaximumSize(MAX_BUTTON_SIZE);
@@ -236,11 +237,8 @@ public class CategoryEditorJFrame
         });
 
         Settings.getPictureCollection().
-
                 getSortedCategoryStream().
-
                 forEach(categoryEntry ->
-
                 {
                     final Category category = new Category(categoryEntry.getKey(), categoryEntry.getValue());
                     categoriesListModel.addElement(category);

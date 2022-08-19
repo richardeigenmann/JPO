@@ -10,14 +10,13 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 /*
- Copyright (C) 2017-2021  Richard Eigenmann.
+ Copyright (C) 2017-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,8 +43,8 @@ class ApplicationEventHandlerTest {
      */
     @Test
     void testConstructor() {
-        final ApplicationStartupHandler aeh = new ApplicationStartupHandler();
-        assertNotNull(aeh);
+        final var applicationStartupHandler = new ApplicationStartupHandler();
+        assertNotNull(applicationStartupHandler);
         assertNotNull(JpoEventBus.getInstance());
     }
 
@@ -54,37 +53,37 @@ class ApplicationEventHandlerTest {
     void testDeleteNodeAndFile() {
         try {
             // Create a collection
-            final Path tempDir = Files.createTempDirectory("testDeleteNodeAndFile");
+            final var tempDir = Files.createTempDirectory("testDeleteNodeAndFile");
 
-            final SortableDefaultMutableTreeNode rootNode = new SortableDefaultMutableTreeNode();
+            final var rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
 
-            final File picture1 = new File(tempDir.toFile(), "picture1.jpg");
-            try (final BufferedInputStream bin1 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
-                 final BufferedOutputStream bout1 = new BufferedOutputStream(new FileOutputStream(picture1));) {
+            final var picture1 = new File(tempDir.toFile(), "picture1.jpg");
+            try (final var bin1 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
+                 final var bout1 = new BufferedOutputStream(new FileOutputStream(picture1));) {
                 bin1.transferTo(bout1);
             }
-            final File picture2 = new File(tempDir.toFile(), "picture2.jpg");
-            try (final BufferedInputStream bin2 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
-                 final BufferedOutputStream bout2 = new BufferedOutputStream(new FileOutputStream(picture2));) {
+            final var picture2 = new File(tempDir.toFile(), "picture2.jpg");
+            try (final var bin2 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
+                 final var bout2 = new BufferedOutputStream(new FileOutputStream(picture2));) {
                 bin2.transferTo(bout2);
             }
-            final File picture3 = new File(tempDir.toFile(), "picture3.jpg");
-            try (final BufferedInputStream bin3 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
-                 final BufferedOutputStream bout3 = new BufferedOutputStream(new FileOutputStream(picture3));) {
+            final var picture3 = new File(tempDir.toFile(), "picture3.jpg");
+            try (final var bin3 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
+                 final var bout3 = new BufferedOutputStream(new FileOutputStream(picture3));) {
                 bin3.transferTo(bout3);
             }
 
-            final SortableDefaultMutableTreeNode pi1 = new SortableDefaultMutableTreeNode();
-            final PictureInfo pictureInfo1 = new PictureInfo(picture1, "Image 1");
+            final var pi1 = new SortableDefaultMutableTreeNode();
+            final var pictureInfo1 = new PictureInfo(picture1, "Image 1");
             pi1.setUserObject(pictureInfo1);
             rootNode.add(pi1);
-            final SortableDefaultMutableTreeNode pi2 = new SortableDefaultMutableTreeNode();
-            final PictureInfo pictureInfo2 = new PictureInfo(picture2, "Image 2");
+            final var pi2 = new SortableDefaultMutableTreeNode();
+            final var pictureInfo2 = new PictureInfo(picture2, "Image 2");
             pi2.setUserObject(pictureInfo2);
             rootNode.add(pi2);
-            final SortableDefaultMutableTreeNode pi3 = new SortableDefaultMutableTreeNode();
-            final PictureInfo pictureInfo3 = new PictureInfo(picture3, "Image 3");
+            final var pi3 = new SortableDefaultMutableTreeNode();
+            final var pictureInfo3 = new PictureInfo(picture3, "Image 3");
             pi3.setUserObject(pictureInfo3);
             rootNode.add(pi3);
 

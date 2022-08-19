@@ -14,11 +14,10 @@ import org.tagcloud.WeightedWord;
 import org.tagcloud.WeightedWordInterface;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
 import java.util.*;
 
 /*
- Copyright (C) 2009-2021  Richard Eigenmann.
+ Copyright (C) 2009-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -260,7 +259,7 @@ public class TagCloudController implements TagClickListener {
          * Zips through the nodes and builds the word to node set map.
          */
         private void buildList() {
-            final Enumeration<TreeNode> nodes = rootNode.breadthFirstEnumeration();
+            final var nodes = rootNode.breadthFirstEnumeration();
             while ( nodes.hasMoreElements() ) {
                 if (((SortableDefaultMutableTreeNode) nodes.nextElement()).getUserObject() instanceof PictureInfo pi) {
                     splitAndAdd(wordCountMap, pi.getDescription());

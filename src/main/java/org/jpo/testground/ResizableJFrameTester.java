@@ -18,7 +18,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
 
 
 /*
- Copyright (C) 2002-2021  Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,38 +44,38 @@ public class ResizableJFrameTester {
      */
     public ResizableJFrameTester() {
 
-        final JPanel bluePanel = new JPanel();
+        final var bluePanel = new JPanel();
         bluePanel.setBackground(Color.CYAN);
         bluePanel.setMaximumSize(new Dimension(200, 200));
         bluePanel.setPreferredSize(new Dimension(250, 250));
 
-        final ResizableJFrame resizableJFrame = new ResizableJFrame("Blue Window");
+        final var resizableJFrame = new ResizableJFrame("Blue Window");
         resizableJFrame.getContentPane().add(bluePanel);
         resizableJFrame.pack();
         resizableJFrame.switchWindowMode(WINDOW_BOTTOM_RIGHT);
         resizableJFrame.setVisible(true);
         resizableJFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-        final JPanel buttonPanel = new JPanel();
-        final JButton fullScreen = new JButton("FullScreen");
+        final var buttonPanel = new JPanel();
+        final var fullScreen = new JButton("FullScreen");
         fullScreen.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_UNDECORATED_FULLSCREEN));
         buttonPanel.add(fullScreen);
 
-        final JButton custom1Button = new JButton("Custom 1");
+        final var custom1Button = new JButton("Custom 1");
         custom1Button.addActionListener((ActionEvent e) -> {
             resizableJFrame.switchWindowMode(WINDOW_CUSTOM_SIZE);
             resizableJFrame.setBounds(new Rectangle(400, 200, 500, 400));
         });
         buttonPanel.add(custom1Button);
 
-        final JButton custom2Button = new JButton("Custom 2");
+        final var custom2Button = new JButton("Custom 2");
         custom2Button.addActionListener((ActionEvent e) -> {
             resizableJFrame.switchWindowMode(WINDOW_CUSTOM_SIZE);
             resizableJFrame.setBounds(new Rectangle(480, 270, 400, 300));
         });
         buttonPanel.add(custom2Button);
 
-        final JButton custom3Button = new JButton("Custom 3");
+        final var custom3Button = new JButton("Custom 3");
         custom3Button.addActionListener((ActionEvent e) -> {
             resizableJFrame.switchWindowMode(WINDOW_CUSTOM_SIZE);
             resizableJFrame.setBounds(new Rectangle(670, 600, 470, 450));
@@ -83,59 +83,59 @@ public class ResizableJFrameTester {
         buttonPanel.add(custom3Button);
 
 
-        final JButton leftSize = new JButton("Left");
+        final var leftSize = new JButton("Left");
         leftSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_UNDECORATED_LEFT));
         buttonPanel.add(leftSize);
 
-        final JButton topLeftSize = new JButton("Top Left");
+        final var topLeftSize = new JButton("Top Left");
         topLeftSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_TOP_LEFT));
         buttonPanel.add(topLeftSize);
 
-        final JButton bottomLeftSize = new JButton("Bottom Left");
+        final var bottomLeftSize = new JButton("Bottom Left");
         bottomLeftSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_BOTTOM_LEFT));
         buttonPanel.add(bottomLeftSize);
 
-        final JButton rightSize = new JButton("Right");
+        final var rightSize = new JButton("Right");
         rightSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_UNDECORATED_RIGHT));
         buttonPanel.add(rightSize);
 
-        final JButton topRightSize = new JButton("Top Right");
+        final var topRightSize = new JButton("Top Right");
         topRightSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_TOP_RIGHT));
         buttonPanel.add(topRightSize);
 
-        final JButton bottomRightSize = new JButton("Bottom Right");
+        final var bottomRightSize = new JButton("Bottom Right");
         bottomRightSize.addActionListener((ActionEvent e) -> resizableJFrame.switchWindowMode(WINDOW_BOTTOM_RIGHT));
         buttonPanel.add(bottomRightSize);
 
-        final JButton decorateButton = new JButton("Decorate");
+        final var decorateButton = new JButton("Decorate");
         decorateButton.addActionListener((ActionEvent e) -> resizableJFrame.showWindowDecorations(true));
         buttonPanel.add(decorateButton);
 
-        final JButton undecorateButton = new JButton("Undecorate");
+        final var undecorateButton = new JButton("Undecorate");
         undecorateButton.addActionListener((ActionEvent e) -> resizableJFrame.showWindowDecorations(false));
         buttonPanel.add(undecorateButton);
 
-        final JTextArea jta = new JTextArea(20, 80);
+        final var jta = new JTextArea(20, 80);
         jta.setCaret(new NonFocussedCaret());
         jta.setText(ScreenHelper.explainGraphicsEnvironment().toString());
 
-        final JButton refresh = new JButton("Refresh");
+        final var refresh = new JButton("Refresh");
         refresh.addActionListener((ActionEvent e) -> jta.setText(ScreenHelper.explainGraphicsEnvironment().toString()));
         buttonPanel.add(refresh);
 
 
-        final JPanel p = new JPanel();
-        p.setLayout(new BorderLayout());
-        p.add(buttonPanel, BorderLayout.NORTH);
+        final var panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+        panel.add(buttonPanel, BorderLayout.NORTH);
 
-        final JScrollPane jsp = new JScrollPane(jta);
-        p.add(jsp, BorderLayout.CENTER);
+        final var jScrollPane = new JScrollPane(jta);
+        panel.add(jScrollPane, BorderLayout.CENTER);
 
 
-        final JFrame controlFrame = new JFrame("ResizableJFrameTest");
+        final var controlFrame = new JFrame("ResizableJFrameTest");
         controlFrame.setAlwaysOnTop(true);
         controlFrame.setLayout(new BorderLayout());
-        controlFrame.add("Center", p);
+        controlFrame.add("Center", panel);
         controlFrame.pack();
         controlFrame.setVisible(true);
         controlFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);

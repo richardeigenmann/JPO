@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
- Copyright (C) 2020-2021  Richard Eigenmann.
+ Copyright (C) 2020-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,7 +44,7 @@ public class ShutdownApplicationRequestTest {
         final ShutdownApplicationRequestTest.EventBusSubscriber myEventBusSubscriber = new ShutdownApplicationRequestTest.EventBusSubscriber();
         jpoEventBus.register(myEventBusSubscriber);
 
-        final ShutdownApplicationRequest newRequest = new ShutdownApplicationRequest();
+        final var newRequest = new ShutdownApplicationRequest();
         jpoEventBus.post(newRequest);
         // After firing a CloseApplicationRequest we expect it to be received by the listener
         assertEquals(receivedEvent, newRequest);

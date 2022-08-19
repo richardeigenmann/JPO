@@ -10,12 +10,11 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2010-2021  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2022 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -166,7 +165,7 @@ public class Thumbnail extends JComponent {
      */
     @Override
     public Dimension getPreferredSize() {
-        int height = 0;
+        var height = 0;
         if (isVisible()) {
             height = (int) (thumbnailHeight * thumbnailScaleFactor);
         }
@@ -202,7 +201,7 @@ public class Thumbnail extends JComponent {
     private transient ImageObserver imgOb;
 
     private static ImageIcon getResourceFromClassLoader(final String resource) {
-        final URL resourceURL = Thumbnail.class.getClassLoader().getResource(resource);
+        final var resourceURL = Thumbnail.class.getClassLoader().getResource(resource);
         if (resourceURL == null) {
             LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", resource);
             return null;
@@ -372,11 +371,11 @@ public class Thumbnail extends JComponent {
             LOGGER.severe("Not running on EDT!");
         }
 
-        final int windowWidth = getSize().width;
-        final int windowHeight = getSize().height;
+        final var windowWidth = getSize().width;
+        final var windowHeight = getSize().height;
 
         if (img != null) {
-            final Graphics2D g2d = (Graphics2D) graphics;
+            final var g2d = (Graphics2D) graphics;
 
             final int focusPointX = (int) (img.getWidth(imgOb) * thumbnailScaleFactor / 2);
             final int focusPointY = (int) (img.getHeight(imgOb) * thumbnailScaleFactor / 2);
@@ -392,8 +391,8 @@ public class Thumbnail extends JComponent {
                     clipBounds.width,
                     clipBounds.height);
 
-            final AffineTransform af1 = AffineTransform.getTranslateInstance(xOffset, yOffset);
-            final AffineTransform af2 = AffineTransform.getScaleInstance(thumbnailScaleFactor, thumbnailScaleFactor);
+            final var af1 = AffineTransform.getTranslateInstance(xOffset, yOffset);
+            final var af2 = AffineTransform.getScaleInstance(thumbnailScaleFactor, thumbnailScaleFactor);
             af2.concatenate(af1);
 
             g2d.drawImage(img, af2, imgOb);

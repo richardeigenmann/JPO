@@ -2,7 +2,7 @@ package org.jpo.gui;
 /*
  ThumbnailLayoutManger.java:  a Layout Manager for the Thumbnail pane
 
- Copyright (C) 2006 - 2021 Richard Eigenmann (for the modifications over the original I copied)
+ Copyright (C) 2006-2022 Richard Eigenmann (for the modifications over the original I copied)
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -74,11 +74,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
     public Dimension preferredLayoutSize( final Container parent ) {
         synchronized ( parent.getTreeLock() ) {
             calculateCols();
-            final int columns = getCols();
-            final int width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
+            final var columns = getCols();
+            final var width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
             int height = 0;
 
-            for ( int i = 0; i < parent.getComponentCount(); i += 2 ) {
+            for ( var i = 0; i < parent.getComponentCount(); i += 2 ) {
                 final int logicalThumbnail = i / 2;
                 if ( ( logicalThumbnail % columns ) == 0 ) {
                     final int rowComponentHeight = getHeightOfRow(parent, i, columns) // Thumbnails

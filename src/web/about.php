@@ -39,6 +39,6 @@
 
     <hr>
     <p>Last update to this page: 13 February 2022<br>
-        Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

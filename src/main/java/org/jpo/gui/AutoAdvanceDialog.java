@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2017-2021, Richard Eigenmann, Zürich
+ Copyright (C) 2017-2022, Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,22 +56,22 @@ public class AutoAdvanceDialog {
      * auto advance to work
      */
     private void doAutoAdvanceDialog() {
-        final JRadioButton randomAdvanceJRadioButton = new JRadioButton(Settings.getJpoResources().getString("randomAdvanceJRadioButtonLabel"));
-        final JRadioButton sequentialAdvanceJRadioButton = new JRadioButton(Settings.getJpoResources().getString("sequentialAdvanceJRadioButtonLabel"));
-        final ButtonGroup advanceButtonGroup = new ButtonGroup();
+        final var randomAdvanceJRadioButton = new JRadioButton(Settings.getJpoResources().getString("randomAdvanceJRadioButtonLabel"));
+        final var sequentialAdvanceJRadioButton = new JRadioButton(Settings.getJpoResources().getString("sequentialAdvanceJRadioButtonLabel"));
+        final var advanceButtonGroup = new ButtonGroup();
         advanceButtonGroup.add(randomAdvanceJRadioButton);
         advanceButtonGroup.add(sequentialAdvanceJRadioButton);
         randomAdvanceJRadioButton.setSelected(true);
 
-        final JRadioButton restrictToGroupJRadioButton = new JRadioButton(Settings.getJpoResources().getString("restrictToGroupJRadioButtonLabel"));
-        final JRadioButton useAllPicturesJRadioButton = new JRadioButton(Settings.getJpoResources().getString("useAllPicturesJRadioButtonLabel"));
-        final ButtonGroup cycleButtonGroup = new ButtonGroup();
+        final var restrictToGroupJRadioButton = new JRadioButton(Settings.getJpoResources().getString("restrictToGroupJRadioButtonLabel"));
+        final var useAllPicturesJRadioButton = new JRadioButton(Settings.getJpoResources().getString("useAllPicturesJRadioButtonLabel"));
+        final var cycleButtonGroup = new ButtonGroup();
         cycleButtonGroup.add(restrictToGroupJRadioButton);
         cycleButtonGroup.add(useAllPicturesJRadioButton);
         useAllPicturesJRadioButton.setSelected(true);
 
-        final JLabel timerSecondsJLabel = new JLabel(Settings.getJpoResources().getString("timerSecondsJLabelLabel"));
-        final WholeNumberField timerSecondsField = new WholeNumberField(4, 3);
+        final var timerSecondsJLabel = new JLabel(Settings.getJpoResources().getString("timerSecondsJLabelLabel"));
+        final var timerSecondsField = new WholeNumberField(4, 3);
         timerSecondsField.setPreferredSize(new Dimension(50, 20));
         timerSecondsField.setMaximumSize(new Dimension(50, 20));
         final Object[] objects = {randomAdvanceJRadioButton,
@@ -82,8 +82,8 @@ public class AutoAdvanceDialog {
                 timerSecondsField
         };
 
-        final Component parentComponent = request.parentComponent();
-        int selectedValue = showDialog(parentComponent, objects);
+        final var parentComponent = request.parentComponent();
+        var selectedValue = showDialog(parentComponent, objects);
 
         try {
             NodeNavigator mySetOfNodes;

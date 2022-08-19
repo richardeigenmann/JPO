@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2021 Richard Eigenmann -->
+<!-- Copyright 2021-2022 Richard Eigenmann -->
 <!-- see https://www.freedesktop.org/software/appstream/docs/ -->
 
 <component>
@@ -49,7 +49,7 @@
 
 
     <releases>
-        <release version="0.14" date="2021-02-20">
+        <release version="0.18" date="2022-08-20">
         </release>
     </releases>
 

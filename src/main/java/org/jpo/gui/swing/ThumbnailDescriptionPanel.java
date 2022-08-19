@@ -3,7 +3,7 @@ package org.jpo.gui.swing;
 /*
  ThumbnailDescriptionPanel.java:  a Swing view for the descriptions of a thumbnail
 
- Copyright (C) 2020-2021  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2020-2022  Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -79,7 +79,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         @Override
         public Dimension getMaximumSize() {
             // clamp the maximum width to the scaled tumbnail width
-            final Dimension superMaximumSize = super.getMaximumSize();
+            final var superMaximumSize = super.getMaximumSize();
             superMaximumSize.width = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
             return superMaximumSize;
         }
@@ -296,9 +296,9 @@ public class ThumbnailDescriptionPanel extends JPanel {
      */
     public void setTextAreaSize() {
         final Runnable runnable = () -> {
-            int targetWidth = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
-            int descriptionTargetHeight = getTargetHeight(getPictureDescriptionJSP());
-            final Dimension scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
+            var targetWidth = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
+            var descriptionTargetHeight = getTargetHeight(getPictureDescriptionJSP());
+            final var scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
             if ((descriptionTargetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {
                 getPictureDescriptionJSP().setPreferredSize(new Dimension(targetWidth, descriptionTargetHeight));
                 getPictureDescriptionJSP().setMaximumSize(new Dimension(targetWidth, 250));

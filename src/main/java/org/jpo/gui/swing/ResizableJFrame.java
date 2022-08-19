@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002 - 2021  Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -122,7 +122,7 @@ public class ResizableJFrame
      *                {@link WindowSize#WINDOW_CUSTOM_SIZE} need to be indicated.
      */
     public void switchWindowMode(final WindowSize newMode) {
-        boolean newDecoration = switch (newMode) {
+        var newDecoration = switch (newMode) {
             case WINDOW_UNDECORATED_FULLSCREEN, WINDOW_UNDECORATED_LEFT, WINDOW_UNDECORATED_RIGHT -> false;
             default -> true;
         };
@@ -195,7 +195,7 @@ public class ResizableJFrame
     public void showWindowDecorations( boolean newDecoration ) {
         if ( decorateWindow != newDecoration ) {
             decorateWindow = newDecoration;
-            final Rectangle myBounds = getBounds();
+            final var myBounds = getBounds();
             dispose();
             setUndecorated( !decorateWindow );
             myBounds.setBounds( myBounds );

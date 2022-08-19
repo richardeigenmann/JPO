@@ -17,7 +17,7 @@ import java.io.File;
 
 
 /*
- Copyright (C) 2002, 2021 Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -65,7 +65,7 @@ public class PictureFileChooser
         initComponents();
 
         if (jFileChooser.showOpenDialog(Settings.getAnchorFrame()) == JFileChooser.APPROVE_OPTION) {
-            final File[] chosenFiles = jFileChooser.getSelectedFiles();
+            final var chosenFiles = jFileChooser.getSelectedFiles();
             Settings.memorizeDefaultSourceLocation(jFileChooser.getCurrentDirectory().getPath());
             Settings.memorizeCopyLocation(jFileChooser.getCurrentDirectory().getPath());
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());

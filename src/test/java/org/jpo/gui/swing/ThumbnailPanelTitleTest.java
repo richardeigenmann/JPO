@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 /*
  ThumbnailsPanelControllerTest.java:  Tests for the ThumbnailsPanelController
 
- Copyright (C) 2019-2021  Richard Eigenmann.
+ Copyright (C) 2019-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,10 +62,10 @@ public class ThumbnailPanelTitleTest {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
-                final ThumbnailPanelTitle thumbnailPanelTitle = new ThumbnailPanelTitle();
+                final var thumbnailPanelTitle = new ThumbnailPanelTitle();
                 assertNotNull(thumbnailPanelTitle);
 
-                final String TITLE = "This is a title";
+                final var TITLE = "This is a title";
                 thumbnailPanelTitle.setTitle(TITLE);
                 assertEquals(TITLE, thumbnailPanelTitle.getTitle());
             } );

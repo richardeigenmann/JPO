@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 /*
  ConsolidateGroupWorkerTest.java: 
 
- Copyright (C) 2016-2021  Richard Eigenmann.
+ Copyright (C) 2016-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -48,7 +48,7 @@ class ConsolidateGroupWorkerTest {
      */
     @Test
     void testNeedToMovePictureNull() {
-        final PictureInfo pictureInfo = new PictureInfo();
+        final var pictureInfo = new PictureInfo();
         try {
             final var tempTargetDirectory = Files.createTempDirectory("testNeedToMovePictureNull").toFile();
             tempTargetDirectory.deleteOnExit();
@@ -164,9 +164,9 @@ class ConsolidateGroupWorkerTest {
         // This test doesn't work on CI platforms where the user is root as root can always write to a file
         assumeFalse(System.getProperty("user.name").equals("root"));
         try {
-            final File tempSourceDirectory = Files.createTempDirectory("testNeedToMoveReadonlyPicture-Source").toFile();
+            final var tempSourceDirectory = Files.createTempDirectory("testNeedToMoveReadonlyPicture-Source").toFile();
             tempSourceDirectory.deleteOnExit();
-            final File sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");
+            final var sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");
             sourceImageFile.deleteOnExit();
 
             try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
@@ -182,7 +182,7 @@ class ConsolidateGroupWorkerTest {
             final var pictureInfo = new PictureInfo();
             pictureInfo.setImageLocation(sourceImageFile);
 
-            final File tempTargetDirectory = new File(tempSourceDirectory, "subdir");
+            final var tempTargetDirectory = new File(tempSourceDirectory, "subdir");
 
             // Consolidation of a readonly PictureInfo to a new directory should return true
             assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory));
@@ -200,11 +200,11 @@ class ConsolidateGroupWorkerTest {
     @Test
     void testMovePictureNull() {
         try {
-            final File tempTargetDirectory = Files.createTempDirectory("testMovePictureNull").toFile();
+            final var tempTargetDirectory = Files.createTempDirectory("testMovePictureNull").toFile();
             tempTargetDirectory.deleteOnExit();
 
             try {
-                final boolean returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory);
+                final var returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory);
                 // Consolidation of a PictureInfo with a \"null\" highres file should return false
                 assertFalse(returnCode);
             } catch (final NullPointerException ex) {

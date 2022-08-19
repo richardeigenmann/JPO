@@ -1,8 +1,6 @@
 package org.jpo.datamodel;
 
-import javax.swing.tree.TreeNode;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,7 +8,7 @@ import java.util.logging.Logger;
 /*
  CategoryQuery.java:  A type of query for Categories
 
- Copyright (C) 2006-2021  Richard Eigenmann.
+ Copyright (C) 2006-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -129,15 +127,15 @@ public class CategoryQuery implements Query {
     private static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
             final Integer key, final SortableDefaultMutableTreeNode startNode) {
         final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
-        final Enumeration<TreeNode> nodes = startNode.children();
+        final var nodes = startNode.children();
         while (nodes.hasMoreElements()) {
-            final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (n.getUserObject() instanceof PictureInfo pi
+            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            if (node.getUserObject() instanceof PictureInfo pi
                     && pi.containsCategory(key)) {
-                resultList.add(n);
+                resultList.add(node);
             }
-            if (n.getChildCount() > 0) {
-                resultList.addAll(getCategoryUsageNodes(key, n));
+            if (node.getChildCount() > 0) {
+                resultList.addAll(getCategoryUsageNodes(key, node));
             }
         }
         return resultList;

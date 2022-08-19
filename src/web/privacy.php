@@ -22,7 +22,7 @@ your email correspondence like any other.</p>
 
 <hr>
 <p>Last update to this page: 14 Jan 2021<br>
-Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
 <?php include 'page-end.php'; ?>

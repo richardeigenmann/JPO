@@ -10,7 +10,7 @@ import java.util.logging.Logger;
  FlatGroupNavigator.java:  an implementation of the NodeNavigator for 
  browsing all the pictures of a group sequentially.
 
- Copyright (C) 2006-2021 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2022 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -109,10 +109,10 @@ public class FlatGroupNavigator
             LOGGER.log(Level.INFO, "Investigating a remove event: {0}", e);
 
             // Problem here is that if the current node was removed we are no longer on the node that was removed
-            final TreePath currentNodeTreePath = new TreePath(groupNode.getPath());
+            final var currentNodeTreePath = new TreePath(groupNode.getPath());
             LOGGER.log(Level.INFO, "The current group node has this path: {0}", currentNodeTreePath);
 
-            for (final Object child : e.getChildren()) {
+            for (final var child : e.getChildren()) {
                 final TreePath removedChild = new TreePath(child);
                 LOGGER.log(Level.INFO, "Deleted child [{0}] has path: {1}", new Object[]{child, removedChild});
 
@@ -123,7 +123,7 @@ public class FlatGroupNavigator
                     return; // no point in continuing the loop; the group is gone.
                 }
 
-                final TreePath parentOfRemoved = e.getTreePath();
+                final var parentOfRemoved = e.getTreePath();
                 if (currentNodeTreePath.equals(parentOfRemoved)) {
                     int[] childIndices = e.getChildIndices();
                     int myNodeCount = getNumberOfNodes();

@@ -22,7 +22,7 @@ import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE
 
 
 /*
- Copyright (C) 2002 - 2021  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2022 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -87,7 +87,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     }
 
     private void attachListeners() {
-        final OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
+        final var pictureJPanel = pictureFrame.getPictureController();
         addStatusListener(pictureJPanel);
 
         pictureFrame.getResizableJFrame().addWindowListener(new WindowAdapter() {
@@ -152,7 +152,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
              */
             @Override
             public void keyPressed(KeyEvent keyEvent) {
-                final int k = keyEvent.getKeyCode();
+                final var k = keyEvent.getKeyCode();
                 if ((k == KeyEvent.VK_I)) {
                     pictureFrame.cycleInfoDisplay();
                     keyEvent.consume();

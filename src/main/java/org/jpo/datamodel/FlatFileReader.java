@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2017 - 2021 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2017-2022 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation;
  * either version 2 of the License, or any later version. This program is
@@ -56,8 +56,8 @@ public class FlatFileReader {
 
         try (final BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(request.flatfile()), StandardCharsets.UTF_8))) {
             while (in.ready()) {
-                final String line = in.readLine();
-                final File testFile = getFile(line);
+                final var line = in.readLine();
+                final var testFile = getFile(line);
 
                 if (!testFile.canRead()) {
                     LOGGER.log(Level.INFO, "Can''t read file: {0}", line);

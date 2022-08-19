@@ -11,7 +11,7 @@ plugins {
 
 
 
-version = 0.17
+version = 0.18
 group = 'org.jpo'
 
 repositories {
@@ -171,7 +171,7 @@ javadoc.onlyIf { !project.hasProperty('skipJavadoc') }
 javadoc {
     options.encoding = "UTF-8"
     options.addBooleanOption('-enable-preview', true)
-    options.addStringOption('-release', '17')
+    options.addStringOption('-release', '18')
     // gradle doesn't copy the doc-files images!
     // this option is ignored
     options.docFilesSubDirs = true
@@ -225,7 +225,7 @@ jlink {
             installerOptions = ['--linux-shortcut', '--install-dir', '/usr']
         } else if (os.isWindows()) {
             imageOptions = ['--win-console']
-            installerOptions = ['--win-menu', '--win-shortcut']
+            installerOptions = []
         }
 
     }

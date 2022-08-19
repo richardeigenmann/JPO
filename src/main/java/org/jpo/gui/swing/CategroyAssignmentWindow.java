@@ -23,7 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2021 Richard Eigenmann.
+ Copyright (C) 2021-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -178,12 +178,12 @@ public class CategroyAssignmentWindow {
     }
 
     private Map<Integer, Integer> analyseNodes(final CategoryAssignmentWindowRequest request) {
-        final HashMap<Integer, Integer> categoryUsageCount = new HashMap<>();
+        final Map<Integer, Integer> categoryUsageCount = new HashMap<>();
         for (final var node : request.nodes()) {
             if (node.getUserObject() instanceof PictureInfo pi) {
                 LOGGER.log(Level.FINE, "Analysing Node {0}", pi);
                 for (var categoryCode : pi.getCategoryAssignments()) {
-                    var count = categoryUsageCount.get(categoryCode);
+                    Integer count = (Integer) categoryUsageCount.get(categoryCode);
                     if (count == null) {
                         count = Integer.valueOf(1);
                     } else {

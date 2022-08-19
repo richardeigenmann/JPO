@@ -13,7 +13,7 @@ import java.awt.event.ActionEvent;
 /*
  InfoPanelController.java:  The Controller for the Info Panel
 
- Copyright (C) 2009-2021  Richard Eigenmann.
+ Copyright (C) 2009-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

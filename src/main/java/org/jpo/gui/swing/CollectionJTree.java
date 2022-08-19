@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /*
 CollectionJTree.java:  class that creates a JTree for the collection
 
-Copyright (C) 2002 - 2021  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2022  Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -58,7 +58,7 @@ public class CollectionJTree
         setEditable(true);
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        final DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
+        final var renderer = new DefaultTreeCellRenderer() {
 
             /**
              *  Overridden method that sets the icon in the JTree to either a
@@ -79,7 +79,7 @@ public class CollectionJTree
                     boolean leaf,
                     int row,
                     boolean hasFocus) {
-                final Object userObject = ((DefaultMutableTreeNode) value).getUserObject();
+                final var userObject = ((DefaultMutableTreeNode) value).getUserObject();
                 super.getTreeCellRendererComponent(
                         tree, value, sel,
                         expanded, leaf, row,
@@ -133,8 +133,8 @@ public class CollectionJTree
     private static final String CLASSLOADER_COULD_NOT_FIND_THE_FILE_0 = "Classloader could not find the file: {0}";
 
     static {
-        final String CLOSED_FOLDER_ICON_FILE = "icon_folder_closed.gif";
-        final URL resource = CollectionJTree.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
+        final var CLOSED_FOLDER_ICON_FILE = "icon_folder_closed.gif";
+        final var resource = CollectionJTree.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, CLOSED_FOLDER_ICON_FILE);
             CLOSED_FOLDER_ICON = null;
@@ -154,7 +154,7 @@ public class CollectionJTree
     private static final ImageIcon OPEN_FOLDER_ICON;
 
     static {
-        final String OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
+        final var OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
         final URL resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, OPEN_FOLDER_ICON_FILE);
@@ -174,8 +174,8 @@ public class CollectionJTree
      */
     private static final ImageIcon PICTURE_ICON;
     static {
-        final String PICTURE_ICON_FILE = "icon_picture.gif";
-        final URL resource = CollectionJTree.class.getClassLoader().getResource(PICTURE_ICON_FILE);
+        final var PICTURE_ICON_FILE = "icon_picture.gif";
+        final var resource = CollectionJTree.class.getClassLoader().getResource(PICTURE_ICON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, PICTURE_ICON_FILE);
             PICTURE_ICON = null;

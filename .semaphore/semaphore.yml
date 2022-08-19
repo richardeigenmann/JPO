@@ -10,7 +10,7 @@ blocks:
       jobs:
         - name: Build
           commands:
-            - sem-version java 17
+            - sem-version java 18
             - checkout
             - sudo apt update
             - sudo apt install -y xvfb nsis

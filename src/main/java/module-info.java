@@ -23,6 +23,10 @@ module org.jpo {
     requires org.apache.commons.text;
     requires jsch;
     requires org.apache.commons.net;
+    requires org.checkerframework.checker.qual;
+    requires jxmapviewer2;
+    requires docking.frames.common;
+    requires jide.oss;
     //requires javax.cache;
     //requires org.apache.batik.bridge.RhinoInterpreterFactory;
 }

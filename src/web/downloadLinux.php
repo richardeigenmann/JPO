@@ -6,7 +6,7 @@
 
     <pre>
 # install the rpm
-sudo rpm -Uhv https://sourceforge.net/projects/j-po/files/jpo-0.17-1.x86_64.rpm
+sudo rpm -Uhv https://sourceforge.net/projects/j-po/files/jpo-0.18-1.x86_64.rpm
 
 # run the program from /usr/bin/JPO
 JPO
@@ -17,9 +17,9 @@ JPO
 
     <pre>
 # install the deb
-wget https://sourceforge.net/projects/j-po/files/jpo_0.17-1_amd64.deb
+wget https://sourceforge.net/projects/j-po/files/jpo_0.18-1_amd64.deb
 su -
-dpkg -i jpo_0.17-1_amd64.deb
+dpkg -i jpo_0.18-1_amd64.deb
 
 # run the program from /usr/bin/JPO
 JPO
@@ -48,6 +48,6 @@ flatpak run io.sourceforge.j-po
 
     <hr>
     <p>Last update to this page: 21 Feb 2021<br>
-        Copyright 2003-2021 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

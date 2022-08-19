@@ -6,7 +6,7 @@ import java.awt.*;
 /*
 ScreenHelper.java:  class that helps with screen size logic
 
-Copyright (C) 2006-2021  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006-2022 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -51,12 +51,12 @@ public class ScreenHelper {
         if (getNumberOfScreenDevices() < 2) {
             return false;
         }
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice[] gs = ge.getScreenDevices();
-        for (final GraphicsDevice g : gs) {
-            final GraphicsDevice gd = g;
-            final GraphicsConfiguration gc = gd.getDefaultConfiguration();
-            final Rectangle r = gc.getBounds();
+        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var gs = ge.getScreenDevices();
+        for (final var g : gs) {
+            final var gd = g;
+            final var gc = gd.getDefaultConfiguration();
+            final var r = gc.getBounds();
             if ((r.x != 0) || (r.y != 0)) {
                 return true;
             }
@@ -75,12 +75,12 @@ public class ScreenHelper {
      *  @return   A rectangle with the coordinates of the desktop.
      */
     public static Rectangle getXineramaScreenBounds() {
-        Rectangle virtualBounds = new Rectangle();
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice[] gs = ge.getScreenDevices();
-        for (final GraphicsDevice gd : gs) {
-            final GraphicsConfiguration[] gc = gd.getConfigurations();
-            for (final GraphicsConfiguration gc1 : gc) {
+        var virtualBounds = new Rectangle();
+        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var gs = ge.getScreenDevices();
+        for (final var gd : gs) {
+            final var gc = gd.getConfigurations();
+            for (final var gc1 : gc) {
                 virtualBounds = virtualBounds.union(gc1.getBounds());
             }
         }
@@ -94,8 +94,8 @@ public class ScreenHelper {
      * @return The bounds of the primary screen
      */
     public static Rectangle getPrimaryScreenBounds() {
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice gd = ge.getDefaultScreenDevice();
+        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var gd = ge.getDefaultScreenDevice();
         return gd.getDefaultConfiguration().getBounds();
     }
 
@@ -105,8 +105,8 @@ public class ScreenHelper {
      * @return the Graphics Configuration of the secondary screen
      */
     private static GraphicsConfiguration getSecondaryScreenGraphicsConfiguration() {
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice[] gd = ge.getScreenDevices();
+        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var gd = ge.getScreenDevices();
         if (gd.length > 1) {
             return gd[1].getDefaultConfiguration();
         } else {
@@ -151,13 +151,13 @@ public class ScreenHelper {
      */
     public static Rectangle getLeftScreenBounds() {
         if ( isXinerama() ) {
-            final Rectangle xsb = getXineramaScreenBounds();
+            final var xsb = getXineramaScreenBounds();
             return new Rectangle( xsb.x, xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
         } else {
             if ( getNumberOfScreenDevices() > 1 ) {
                 return getPrimaryScreenBounds();
             } else {
-                final Rectangle bounds = getPrimaryScreenBounds();
+                final var bounds = getPrimaryScreenBounds();
                 return new Rectangle( bounds.x, bounds.y, ( bounds.width / 2 ), bounds.height );
             }
         }
@@ -173,14 +173,14 @@ public class ScreenHelper {
      */
     public static Rectangle getRightScreenBounds() {
         if ( isXinerama() ) {
-            final Rectangle xsb = getXineramaScreenBounds();
+            final var xsb = getXineramaScreenBounds();
             return new Rectangle( xsb.x + ( xsb.width / getNumberOfScreenDevices() * ( getNumberOfScreenDevices() - 1 ) ),
                     xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
         } else {
             if ( getNumberOfScreenDevices() > 1 ) {
                 return getSecondaryScreenGraphicsConfiguration().getBounds();
             } else {
-                final Rectangle bounds = getPrimaryScreenBounds();
+                final var bounds = getPrimaryScreenBounds();
                 return new Rectangle( bounds.x + ( bounds.width / 2 ), bounds.y, ( bounds.width / 2 ), bounds.height );
             }
         }
@@ -192,7 +192,7 @@ public class ScreenHelper {
      * @return the bounds for the top left window
      */
     public static Rectangle getTopLeftScreenBounds() {
-        final Rectangle bounds = getLeftScreenBounds();
+        final var bounds = getLeftScreenBounds();
         bounds.height = ( bounds.height / 2 );
         return bounds;
     }
@@ -203,7 +203,7 @@ public class ScreenHelper {
      * @return the bounds for the bottom left window
      */
     public static Rectangle getBottomLeftScreenBounds() {
-        final Rectangle bounds = getLeftScreenBounds();
+        final var bounds = getLeftScreenBounds();
         bounds.height = ( bounds.height / 2 );
         bounds.y += bounds.height;
         return bounds;
@@ -215,7 +215,7 @@ public class ScreenHelper {
      * @return the bounds for the top right window
      */
     public static Rectangle getTopRightScreenBounds() {
-        final Rectangle bounds = getRightScreenBounds();
+        final var bounds = getRightScreenBounds();
         bounds.height = ( bounds.height / 2 );
         return bounds;
     }
@@ -226,7 +226,7 @@ public class ScreenHelper {
      * @return the bounds for the bottom right window
      */
     public static Rectangle getBottomRightScreenBounds() {
-        final Rectangle bounds = getRightScreenBounds();
+        final var bounds = getRightScreenBounds();
         bounds.height = ( bounds.height / 2 );
         bounds.y += bounds.height;
         return bounds;
@@ -258,7 +258,7 @@ public class ScreenHelper {
             sbadd("HEADLESS: The GraphicsEnvironment is reporting it is not headless. How reassuring.");
         }
 
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         sbadd("                  The LocalGraphicsEnvironment is reporting " +
                 ((ge.isHeadlessInstance()) ? "no Display, Keyboard and Mound can be supported in this environment"
                         : "it is not headless. How reassuring."));
@@ -303,7 +303,7 @@ public class ScreenHelper {
      * @param graphicsDevice GraphicsDevice
      */
     private static void explainGraphicsDevice(final GraphicsDevice graphicsDevice) {
-        final String id = graphicsDevice.getIDstring();
+        final var id = graphicsDevice.getIDstring();
         sbadd("================== Device: " + id);
         if (graphicsDevice.isFullScreenSupported()) {
             sbadd("FullScreenexclusive mode is supported");
@@ -318,8 +318,8 @@ public class ScreenHelper {
         sbadd("AvailableAcceleratedMemory: " + graphicsDevice.getAvailableAcceleratedMemory());
         explainDisplayMode(id, graphicsDevice.getDisplayMode());
 
-        final DisplayMode[] dm = graphicsDevice.getDisplayModes();
-        for (int i = 0; i < dm.length; i++) {
+        final var dm = graphicsDevice.getDisplayModes();
+        for (var i = 0; i < dm.length; i++) {
             explainDisplayMode(id + " possibleMode [" + i + "]", dm[i]);
         }
 
@@ -351,7 +351,7 @@ public class ScreenHelper {
      */
     public static void explainGraphicsConfiguration(final String id,
                                                     final GraphicsConfiguration gc) {
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
+        final var toolkit = Toolkit.getDefaultToolkit();
         sbadd("Graphicsconfiguration for Device: " + id + " Bounds: " + gc.getBounds() + " Insets: " + toolkit.getScreenInsets(gc));
     }
 }

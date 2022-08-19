@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*
- Copyright (C) 2017-2021  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -42,24 +42,24 @@ class ImageBytesTest {
     @Test
     void testSerializable() {
         byte[] sourceBytes = "Any String you want".getBytes();
-        final ImageBytes ib = new ImageBytes(sourceBytes);
+        final ImageBytes imageBytes1 = new ImageBytes(sourceBytes);
         try {
-            final File tempFile = File.createTempFile("testSerializable", ".jpg");
-            try (final FileOutputStream file = new FileOutputStream(tempFile);
-                 final ObjectOutputStream out = new ObjectOutputStream(file);
+            final var tempFile = File.createTempFile("testSerializable", ".jpg");
+            try (final var fileOutputStream = new FileOutputStream(tempFile);
+                 final var objectOutputStream = new ObjectOutputStream(fileOutputStream);
             ) {
-                out.writeObject(ib);
+                objectOutputStream.writeObject(imageBytes1);
             } catch (final IOException e) {
                 Files.delete(tempFile.toPath());
                 fail(e.getMessage());
             }
 
-            try (final FileInputStream file = new FileInputStream(tempFile);
-                 final ObjectInputStream in = new ObjectInputStream(file);
+            try (final var fileInputStream = new FileInputStream(tempFile);
+                 final var objectInputStream = new ObjectInputStream(fileInputStream);
             ) {
                 // Method for deserialization of object
-                final ImageBytes ib2 = (ImageBytes) in.readObject();
-                assertArrayEquals(ib.getBytes(), ib2.getBytes());
+                final var imageBytes = (ImageBytes) objectInputStream.readObject();
+                assertArrayEquals(imageBytes1.getBytes(), imageBytes.getBytes());
             } catch (final IOException | ClassNotFoundException ex) {
                 fail(ex.getMessage());
             } finally {
