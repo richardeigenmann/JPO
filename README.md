@@ -50,7 +50,7 @@ hopes you will find it useful and enjoys feedback.
 * Doesn't modify your original pictures
 * Open source license
 
-## Installing JPO on Windows 10
+## Installing JPO on Windows 10 & 11
 
 Visit the SourceForge.net download page by clicking this green button. Note that the download starts directly after 5
 seconds. Install the application like any other windows application. You can remove it just like any other windows
