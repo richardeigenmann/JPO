@@ -127,7 +127,7 @@ public class GroupPopupMenu extends JPopupMenu {
                 actionNodes.add(popupNode);
             }
 
-            JpoEventBus.getInstance().post(new RefreshThumbnailRequest(actionNodes, QUEUE_PRIORITY.HIGH_PRIORITY));
+            JpoEventBus.getInstance().post(new RefreshThumbnailRequest(actionNodes, false, QUEUE_PRIORITY.HIGH_PRIORITY));
         });
 
         return groupRefreshJMenuItem;
@@ -200,22 +200,22 @@ public class GroupPopupMenu extends JPopupMenu {
 
         //menu item that allows move to top op list
         final var moveGroupToTopJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupToTopJMenuItem"));
-        moveGroupToTopJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeToTopRequest(popupNode)));
+        moveGroupToTopJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeToTopRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupToTopJMenuItem);
 
         // menu item that allows move up in the list
         final var moveGroupUpJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupUpJMenuItem"));
-        moveGroupUpJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeUpRequest(popupNode)));
+        moveGroupUpJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeUpRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupUpJMenuItem);
 
         //menu item that allows move up in the list
         final var moveGroupDownJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupDownJMenuItem"));
-        moveGroupDownJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeDownRequest(popupNode)));
+        moveGroupDownJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeDownRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupDownJMenuItem);
 
         // menu item that allows move to top op list
         final var moveGroupToBottomJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupToBottomJMenuItem"));
-        moveGroupToBottomJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(popupNode)));
+        moveGroupToBottomJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupToBottomJMenuItem);
         //menu item that allows indenting the group
         final var indentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("indentJMenuItem"));

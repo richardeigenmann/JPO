@@ -3,6 +3,7 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SingleNodeNavigator;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ThumbnailController;
 
 import java.util.logging.Level;
@@ -41,14 +42,25 @@ public class RefreshThumbnailHandler {
      */
     @Subscribe
     public void handleEvent(final RefreshThumbnailRequest request) {
-        for (final var node : request.nodes()) {
-            if (node.isRoot()) {
-                LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
-                return;
-            }
-            LOGGER.log(Level.FINE, "refreshing the thumbnail on the node {0}%nAbout to create the thumbnail", this);
-            final var thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
-            thumbnailController.setNode(new SingleNodeNavigator(node), 0);
+        request.nodes().stream().forEach(this::refrehThumbnail);
+        if (request.includeParents()) {
+            request
+                    .nodes()
+                    .stream()
+                    .map(e -> e.getParent())
+                    .distinct()
+                    .forEach(this::refrehThumbnail);
         }
+    }
+
+    private boolean refrehThumbnail(SortableDefaultMutableTreeNode node) {
+        if (node.isRoot()) {
+            LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
+            return true;
+        }
+        LOGGER.log(Level.FINE, "refreshing the thumbnail on the node {0}%nAbout to create the thumbnail", this);
+        final var thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
+        thumbnailController.setNode(new SingleNodeNavigator(node), 0);
+        return false;
     }
 }

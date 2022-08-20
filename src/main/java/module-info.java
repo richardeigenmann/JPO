@@ -27,6 +27,13 @@ module org.jpo {
     requires jxmapviewer2;
     requires docking.frames.common;
     requires jide.oss;
+    requires mail;
+    requires jsr305;
+    requires metadata.extractor;
+    requires org.apache.commons.lang3;
+    requires jwizz;
+    requires activation;
+    requires org.json;
     //requires javax.cache;
     //requires org.apache.batik.bridge.RhinoInterpreterFactory;
 }

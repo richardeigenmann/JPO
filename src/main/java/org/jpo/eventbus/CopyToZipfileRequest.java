@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 
 /*
  Copyright (C) 2017-2020  Richard Eigenmann.
@@ -30,5 +30,5 @@ import java.util.List;
  * @param targetZipfile the target zipfile
  * @author Richard Eigenmann
  */
-public record CopyToZipfileRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes, @NotNull File targetZipfile) {
+public record CopyToZipfileRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes, @NotNull File targetZipfile) {
 }

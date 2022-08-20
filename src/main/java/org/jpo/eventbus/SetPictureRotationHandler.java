@@ -2,10 +2,6 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -35,12 +31,14 @@ public class SetPictureRotationHandler {
      */
     @Subscribe
     public void handleEvent(final SetPictureRotationRequest request) {
-        final var pictureInfo = (PictureInfo) request.node().getUserObject();
-        pictureInfo.setRotation(request.angle());
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(request.node());
-        nodes.add(request.node().getParent());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, request.priority()));
+        request
+                .nodes()
+                .stream()
+                .filter(e -> e.getUserObject() instanceof PictureInfo)
+                .forEach(e -> {
+                    ((PictureInfo) e.getUserObject()).setRotation(((request.angle())));
+                });
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, request.priority()));
     }
 
 }

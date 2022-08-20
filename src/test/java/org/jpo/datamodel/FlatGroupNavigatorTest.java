@@ -12,9 +12,9 @@ public class FlatGroupNavigatorTest {
     @Test
     public void testFlatGroupNavigator() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final String GROUP_INFO = "GroupInfo";
-        final SortableDefaultMutableTreeNode n = new SortableDefaultMutableTreeNode(new GroupInfo(GROUP_INFO));
-        final FlatGroupNavigator navigator = new FlatGroupNavigator(n);
+        final var GROUP_INFO = "GroupInfo";
+        final var node = new SortableDefaultMutableTreeNode(new GroupInfo(GROUP_INFO));
+        final var navigator = new FlatGroupNavigator(node);
         assertEquals(GROUP_INFO, navigator.getTitle());
     }
 }

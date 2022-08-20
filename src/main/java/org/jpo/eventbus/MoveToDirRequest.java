@@ -4,10 +4,10 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 
 /*
- Copyright (C) 2018-2020 Richard Eigenmann.
+ Copyright (C) 2018-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,5 +29,5 @@ import java.util.List;
  * @param targetLocation The target directory
  * @author Richard Eigenmann
  */
-public record MoveToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation) {
+public record MoveToDirRequest(@NonNull Collection<SortableDefaultMutableTreeNode> nodes, @NonNull File targetLocation) {
 }

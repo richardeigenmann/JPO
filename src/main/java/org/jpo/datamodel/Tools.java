@@ -236,9 +236,7 @@ public class Tools {
                         Settings.getJpoResources().getString("genericError"),
                         JOptionPane.ERROR_MESSAGE)
         );
-
-        System.runFinalization();
-        LOGGER.info("JPO has now run a garbage collection and finalization.");
+        LOGGER.info("JPO has now run a garbage collection.");
         Tools.freeMem();
     }
 

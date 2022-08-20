@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.List;
+import java.util.Collection;
 
 /*
  Copyright (C) 2017-2022 Richard Eigenmann.
@@ -30,6 +30,6 @@ import java.util.List;
  * @param priority The priority for the creation queue
  * @author Richard Eigenmann
  */
-public record RefreshThumbnailRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes,
+public record RefreshThumbnailRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes, boolean includeParents,
                                       @NotNull QUEUE_PRIORITY priority) {
 }

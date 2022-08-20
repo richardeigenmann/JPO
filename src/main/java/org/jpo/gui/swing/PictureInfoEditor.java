@@ -801,7 +801,7 @@ public class PictureInfoEditor extends JFrame {
     private void saveRotation() {
         JpoEventBus.getInstance().post(
                 new SetPictureRotationRequest(
-                        myNode,
+                        List.of(myNode),
                         (double) angleModel.getValue(),
                         QUEUE_PRIORITY.HIGH_PRIORITY
                 )

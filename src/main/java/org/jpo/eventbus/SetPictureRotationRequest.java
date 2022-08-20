@@ -4,8 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
+import java.util.Collection;
+
 /*
- Copyright (C) 2017 - 2020  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,11 +27,11 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
  * The receiver of this request is supposed to rotate the picture to the 0
  * rotation angle
  *
- * @param node     The node to rename
+ * @param nodes     The node to rename
  * @param angle    the angle
  * @param priority The queue priority
  * @author Richard Eigenmann
  */
-public record SetPictureRotationRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull double angle,
+public record SetPictureRotationRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes, @NotNull double angle,
                                         @NotNull QUEUE_PRIORITY priority) {
 }

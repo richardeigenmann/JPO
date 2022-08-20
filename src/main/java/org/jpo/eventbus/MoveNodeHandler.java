@@ -2,10 +2,6 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -31,11 +27,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveNodeToTopRequest request) {
-        final SortableDefaultMutableTreeNode popupNode = request.node();
-        popupNode.moveNodeToTop();
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(popupNode.getParent());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        for( final var node : request.node()) {
+            node.moveNodeToTop();
+        }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.node(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -45,11 +40,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveNodeUpRequest request) {
-        final SortableDefaultMutableTreeNode popupNode = request.node();
-        popupNode.moveNodeUp();
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(popupNode.getParent());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        for( final var node : request.node()) {
+            node.moveNodeUp();
+        }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.node(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
 
@@ -60,11 +54,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveNodeDownRequest request) {
-        final SortableDefaultMutableTreeNode popupNode = request.node();
-        popupNode.moveNodeDown();
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(popupNode.getParent());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        for( final var node : request.node()) {
+            node.moveNodeDown();
+        }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.node(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -74,11 +67,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveNodeToBottomRequest request) {
-        final SortableDefaultMutableTreeNode popupNode = request.node();
-        popupNode.moveNodeToBottom();
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(popupNode.getParent());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        for( final var node : request.nodes()) {
+            node.moveNodeToBottom();
+        }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -88,10 +80,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveIndentRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodes = request.nodes();
-        for (SortableDefaultMutableTreeNode node : nodes) {
+        for( final var node : request.nodes()) {
             node.indentNode();
         }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -101,10 +93,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveOutdentRequest request) {
-        final List<SortableDefaultMutableTreeNode> nodes = request.nodes();
-        for (SortableDefaultMutableTreeNode node : nodes) {
+        for( final var node : request.nodes()) {
             node.outdentNode();
         }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
     /**
@@ -114,11 +106,10 @@ public class MoveNodeHandler {
      */
     @Subscribe
     public void handleEvent(final MoveNodeToNodeRequest request) {
-        final List<SortableDefaultMutableTreeNode> movingNodes = request.movingNodes();
-        final SortableDefaultMutableTreeNode targetGroup = request.targetNode();
-        for (final SortableDefaultMutableTreeNode movingNode : movingNodes) {
-            movingNode.moveToLastChild(targetGroup);
+        for( final var node : request.nodes()) {
+            node.moveToLastChild(request.targetNode());
         }
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
 }

@@ -6,7 +6,6 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,9 +80,7 @@ public class CameraDownloadWorker
                 progressBar);
         LOGGER.log(Level.FINE, "Sorting node {0} by code {1}", new Object[]{dataModel.getTargetNode(), dataModel.getSortCode()});
         dataModel.getTargetNode().sortChildren(dataModel.getSortCode());
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(dataModel.getTargetNode());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.LOWEST_PRIORITY));
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(List.of(dataModel.getTargetNode()), true, QUEUE_PRIORITY.LOWEST_PRIORITY));
 
         final InterruptSemaphore interrupter = new InterruptSemaphore();
         dataModel.getCamera().buildOldImage(this, interrupter);

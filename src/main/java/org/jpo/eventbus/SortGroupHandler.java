@@ -2,14 +2,11 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,12 +29,8 @@ public class SortGroupHandler {
      */
     @Subscribe
     public void handleEvent(final SortGroupRequest request) {
-        final SortableDefaultMutableTreeNode popupNode = request.node();
-        final Settings.FieldCodes sortCriteria = request.sortCriteria();
-        popupNode.sortChildren(sortCriteria);
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(popupNode);
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, QUEUE_PRIORITY.MEDIUM_PRIORITY));
+        request.node().sortChildren(request.sortCriteria());
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(List.of(request.node()), false, QUEUE_PRIORITY.MEDIUM_PRIORITY));
     }
 
 }

@@ -3,10 +3,10 @@ package org.jpo.eventbus;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.List;
+import java.util.Collection;
 
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2020-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,10 +25,10 @@ import java.util.List;
  * Request to indicate that the user would like move the supplied nodes as last
  * child on the target node
  *
- * @param movingNodes The nodes to move
+ * @param nodes The nodes to move
  * @param targetNode  the target node to which to add the node
  * @author Richard Eigenmann
  */
-public record MoveNodeToNodeRequest(@NotNull List<SortableDefaultMutableTreeNode> movingNodes,
+public record MoveNodeToNodeRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes,
                                     @NotNull SortableDefaultMutableTreeNode targetNode) {
 }

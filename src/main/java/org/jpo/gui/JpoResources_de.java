@@ -354,11 +354,12 @@ public class JpoResources_de extends ListResourceBundle {
 
             // PicturePopupMenu
             {"pictureShowJMenuItemLabel", "Bild anzeigen"},
-            {"mapShowJMenuItemLabel", "Show Map"},
             {"pictureEditJMenuItemLabel", "Eigenschaften"},
             {"copyImageJMenuLabel", "Bild Kopieren"},
             {"copyToNewLocationJMenuItem", "Zielverzeichnis auswählen"},
             {"copyToNewZipfileJMenuItem", "in eine Zip Datei"},
+            {"copyToClipboard", "Bild in Zwischenablage kopieren"},
+            {"copyPathToClipboard", "Dateipfad in Zwischenablege kopieren"},
             {"copyToNewLocationSuccess", "%d von %d Bildern kopiert"},
             {"moveToNewLocationSuccess", "%d von %d Bildern verschoben"},
             {"FileOperations", "Datei Operationen"},

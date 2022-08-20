@@ -3,10 +3,10 @@ package org.jpo.eventbus;
 import com.drew.lang.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.List;
+import java.util.Collection;
 
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -27,5 +27,5 @@ import java.util.List;
  * @param nodes The nodes to indent
  * @author Richard Eigenmann
  */
-public record MoveIndentRequest(@NotNull List<SortableDefaultMutableTreeNode> nodes) {
+public record MoveIndentRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes) {
 }

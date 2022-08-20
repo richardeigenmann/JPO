@@ -3,8 +3,10 @@ package org.jpo.eventbus;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
+import java.util.Collection;
+
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2020-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,5 +28,5 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
  * @param node The node for which the user would like the dialog to be done
  * @author Richard Eigenmann
  */
-public record MoveNodeUpRequest(@NotNull SortableDefaultMutableTreeNode node) {
+public record MoveNodeUpRequest(@NotNull Collection<SortableDefaultMutableTreeNode> node) {
 }

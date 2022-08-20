@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /*
@@ -27,6 +28,10 @@ import java.util.List;
  */
 public class ListNavigator
         extends NodeNavigator {
+
+    public ListNavigator(Collection<SortableDefaultMutableTreeNode> nodes) {
+        add(nodes);
+    }
 
     /**
      * Returns the title of the node set
@@ -81,7 +86,7 @@ public class ListNavigator
      *
      * @param nodes a node to add to the allPictures List
      */
-    public void add(List<SortableDefaultMutableTreeNode> nodes) {
+    public void add(Collection<SortableDefaultMutableTreeNode> nodes) {
         allPictures.addAll(nodes);
     }
 

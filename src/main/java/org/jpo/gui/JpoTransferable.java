@@ -5,9 +5,9 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.datatransfer.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -46,14 +46,14 @@ public class JpoTransferable
      *
      * @param transferableNodes The nodes to be transferred
      */
-    public JpoTransferable(final List<SortableDefaultMutableTreeNode> transferableNodes) {
+    public JpoTransferable(final Collection<SortableDefaultMutableTreeNode> transferableNodes) {
         this.transferableNodes = transferableNodes;
     }
 
     /**
      * The nodes being transferred
      */
-    private final List<SortableDefaultMutableTreeNode> transferableNodes;
+    private final Collection<SortableDefaultMutableTreeNode> transferableNodes;
 
     /**
      * Definition of the data flavor as a org.jpo internal object
@@ -76,12 +76,12 @@ public class JpoTransferable
      * @return a well formated description of the supported transferables
      */
     private static String flavorsToString() {
-        final StringBuilder sb = new StringBuilder(String.format("%d Transferable flavors supported: ", flavors.length));
+        final var stringBuilder = new StringBuilder(String.format("%d Transferable flavors supported: ", flavors.length));
 
-        for (DataFlavor flavor : flavors) {
-            sb.append(flavor.toString()).append(", ");
+        for (final var flavor : flavors) {
+            stringBuilder.append(flavor.toString()).append(", ");
         }
-        return (sb.toString());
+        return (stringBuilder.toString());
 
     }
 
@@ -143,10 +143,10 @@ public class JpoTransferable
      * @return the transfer data as a String
      */
     private Object getStringTransferData() {
-        final StringBuilder filenames = new StringBuilder();
-        for (final SortableDefaultMutableTreeNode node : transferableNodes) {
-            if (node.getUserObject() instanceof PictureInfo pi) {
-                filenames.append("\"").append(pi.getImageFile()).append("\", ");
+        final var filenames = new StringBuilder();
+        for (final var node : transferableNodes) {
+            if (node.getUserObject() instanceof PictureInfo pictureInfo) {
+                filenames.append("\"").append(pictureInfo.getImageFile()).append("\", ");
             }
         }
         LOGGER.log(Level.INFO, "Returning the following String as stringFlavor: {0}", filenames);
@@ -159,11 +159,11 @@ public class JpoTransferable
      * @return the transferable as a List
      */
     private Object getJavaFileListTransferable() {
-        final List<File> fileList = new ArrayList<>();
+        final var fileList = new ArrayList<>();
         for (final Object transferableNode : transferableNodes) {
-            if ((transferableNode instanceof SortableDefaultMutableTreeNode n)
-                    && (n.getUserObject() instanceof PictureInfo pi)) {
-                fileList.add(pi.getImageFile());
+            if ((transferableNode instanceof SortableDefaultMutableTreeNode node)
+                    && (node.getUserObject() instanceof PictureInfo pictureInfo)) {
+                fileList.add(pictureInfo.getImageFile());
             }
         }
         LOGGER.log(Level.INFO, "Returning {0} files in a list", fileList.size());
@@ -179,9 +179,9 @@ public class JpoTransferable
         final List<Object> imageList = new ArrayList<>();
         for (final Object transferableNode : transferableNodes) {
             if ((transferableNode instanceof SortableDefaultMutableTreeNode node)
-                    && (node.getUserObject() instanceof PictureInfo pi)) {
-                final SourcePicture sourcePicture = new SourcePicture();
-                sourcePicture.loadPicture(pi.getImageFile(), pi.getRotation());
+                    && (node.getUserObject() instanceof PictureInfo pictureInfo)) {
+                final var sourcePicture = new SourcePicture();
+                sourcePicture.loadPicture(pictureInfo.getImageFile(), pictureInfo.getRotation());
                 imageList.add(sourcePicture.getSourceBufferedImage());
             }
         }

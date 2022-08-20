@@ -1,10 +1,12 @@
 package org.jpo.eventbus;
 
 import org.jetbrains.annotations.NotNull;
-import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+
+import java.util.Collection;
 
 /*
- Copyright (C) 2017 - 2022  Richard Eigenmann.
+ Copyright (C) 2017-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,8 +25,8 @@ import org.jpo.datamodel.PictureInfo;
  * Requests a user function to be run
  *
  * @param userFunctionIndex The user function to run
- * @param pictureInfo       the picture against which we want to run the user function
+ * @param nodes the pictures against which we want to run the user function
  * @author Richard Eigenmann
  */
-public record RunUserFunctionRequest(@NotNull int userFunctionIndex, @NotNull PictureInfo pictureInfo) {
+public record RunUserFunctionRequest(@NotNull int userFunctionIndex, @NotNull Collection<SortableDefaultMutableTreeNode> nodes) {
 }

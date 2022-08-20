@@ -41,8 +41,11 @@ public class RunUserFunctionHandler {
     @Subscribe
     public void handleEvent(final RunUserFunctionRequest request) {
         try {
-            LOGGER.log(Level.INFO, "Handling User Function {0} on PictureInfo {1}", new Object[]{request.userFunctionIndex(), request.pictureInfo()});
-            runUserFunction(request.userFunctionIndex(), request.pictureInfo());
+            request
+                    .nodes()
+                    .stream()
+                    .filter(e -> e.getUserObject() instanceof PictureInfo )
+                    .forEach(e -> runUserFunction(request.userFunctionIndex(), ((PictureInfo) e.getUserObject())));
         } catch (ClassCastException | NullPointerException x) {
             LOGGER.severe(x.getMessage());
         }

@@ -349,12 +349,13 @@ public class JpoResources_en extends ListResourceBundle {
 
             // PicturePopupMenu
             {"pictureShowJMenuItemLabel", "Show Picture"},
-            {"mapShowJMenuItemLabel", "Show Map"},
             {"pictureEditJMenuItemLabel", "Properties"},
             {"copyImageJMenuLabel", "Copy Image"},
             {"copyToNewLocationJMenuItem", "choose target directory"},
             {"copyToNewZipfileJMenuItem", "to zip file"},
             {"copyToNewLocationSuccess", "%d of %d pictures copied"},
+            {"copyToClipboard", "Copy Image to Clipboard"},
+            {"copyPathToClipboard", "Copy Image Path to Clipboard"},
             {"moveToNewLocationSuccess", "%d of %d pictures moved"},
             {"FileOperations", "File operations"},
             {"fileMoveJMenu", "Move File"},

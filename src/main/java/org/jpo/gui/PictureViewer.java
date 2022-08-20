@@ -13,6 +13,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -109,12 +110,12 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         addKeyListener(pictureJPanel);
 
         pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener((ActionEvent e) -> {
-            JpoEventBus.getInstance().post(new RotatePictureRequest(getCurrentNode(), 270, QUEUE_PRIORITY.HIGH_PRIORITY));
+            JpoEventBus.getInstance().post(new RotatePicturesRequest(List.of(getCurrentNode()), 270, QUEUE_PRIORITY.HIGH_PRIORITY));
             pictureFrame.getPictureController().requestFocusInWindow();
         });
 
         pictureFrame.getPictureViewerNavBar().rotateRightJButton.addActionListener((ActionEvent e) -> {
-            JpoEventBus.getInstance().post(new RotatePictureRequest(getCurrentNode(), 90, QUEUE_PRIORITY.HIGH_PRIORITY));
+            JpoEventBus.getInstance().post(new RotatePicturesRequest(List.of(getCurrentNode()), 90, QUEUE_PRIORITY.HIGH_PRIORITY));
             pictureFrame.getPictureController().requestFocusInWindow();
         });
 

@@ -12,14 +12,14 @@ class ListNavigatorTest {
 
     @Test
     void getTitle() {
-        final ListNavigator listNavigator = new ListNavigator();
+        final ListNavigator listNavigator = new ListNavigator(List.of());
         assertNotNull(listNavigator);
         assertEquals("", listNavigator.getTitle());
     }
 
     @Test
     void getNumberOfNodes() {
-        final ListNavigator listNavigator = new ListNavigator();
+        final ListNavigator listNavigator = new ListNavigator(List.of());
         assertNotNull(listNavigator);
         assertEquals(0, listNavigator.getNumberOfNodes());
     }
@@ -27,7 +27,7 @@ class ListNavigatorTest {
 
     @Test
     void addNodeTest() {
-        final ListNavigator listNavigator = new ListNavigator();
+        final ListNavigator listNavigator = new ListNavigator(List.of());
         final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
         listNavigator.add(node);
         assertEquals(1, listNavigator.getNumberOfNodes());
@@ -37,7 +37,7 @@ class ListNavigatorTest {
 
     @Test
     void clear() {
-        final ListNavigator listNavigator = new ListNavigator();
+        final ListNavigator listNavigator = new ListNavigator(List.of());
         final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
         listNavigator.add(node);
         assertEquals(1, listNavigator.getNumberOfNodes());
@@ -52,7 +52,7 @@ class ListNavigatorTest {
         final SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
         nodesList.add(node1);
         nodesList.add(node2);
-        final ListNavigator listNavigator = new ListNavigator();
+        final ListNavigator listNavigator = new ListNavigator(List.of());
         listNavigator.add(nodesList);
         assertEquals(2, listNavigator.getNumberOfNodes());
     }
@@ -64,7 +64,7 @@ class ListNavigatorTest {
         final SortableDefaultMutableTreeNode node2 = new SortableDefaultMutableTreeNode();
         nodesList.add(node1);
         nodesList.add(node2);
-        ListNavigator listNavigator = new ListNavigator();
+        ListNavigator listNavigator = new ListNavigator(List.of());
         listNavigator.add(nodesList);
         assertEquals(2, listNavigator.getNumberOfNodes());
         listNavigator.removeNode(node1);

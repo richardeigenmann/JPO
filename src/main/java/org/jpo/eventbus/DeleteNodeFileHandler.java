@@ -51,19 +51,21 @@ public class DeleteNodeFileHandler {
      */
     @Subscribe
     public void handleEvent(final DeleteNodeFileRequest request) {
-        try {
-            if (!(request.node().getUserObject() instanceof PictureInfo pi)) {
-                return;
-            } else {
-                if (pi.getImageFile() == null) {
-                    return;
-                }
-            }
-        } catch (final NullPointerException ex) {
-            return;
-        }
+        request
+                .nodes()
+                .stream()
+                .filter(e -> e.getUserObject() instanceof PictureInfo)
+                .forEach(e -> deletePictureInfo( e ));
+    }
 
-        final var highresFile = ((PictureInfo) request.node().getUserObject()).getImageFile();
+    /**
+     * Deletes the file and the node
+     *
+     * @param node the node to delete
+     */
+    void deletePictureInfo(final SortableDefaultMutableTreeNode node) {
+        var pictureInfo = (PictureInfo) node.getUserObject();
+        final var highresFile = pictureInfo.getImageFile();
         final int option = JOptionPane.showConfirmDialog(
                 Settings.getAnchorFrame(),
                 Settings.getJpoResources().getString("FileDeleteLabel") + highresFile + "\n" + Settings.getJpoResources().getString("areYouSure"),
@@ -72,7 +74,7 @@ public class DeleteNodeFileHandler {
 
         if (option == 0 && highresFile.exists()) {
             try {
-                deleteNodeAndFile(request.node());
+                deleteNodeAndFile(node);
             } catch (IOException e) {
                 LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});
                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

@@ -12,9 +12,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -68,8 +68,7 @@ class PicturePopupMenuTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 try {
-                    final Field popupNodeField;
-                    popupNodeField = PicturePopupMenu.class.getDeclaredField("popupNode");
+                    final var popupNodeField = PicturePopupMenu.class.getDeclaredField("popupNode");
                     popupNodeField.setAccessible(true);
                     final var myPictureInfo = new PictureInfo(new File("nosuchfile-testRememberingPopupNode.jpg"), MY_PICTURE);
                     final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
@@ -137,40 +136,6 @@ class PicturePopupMenuTest {
         }
     }
 
-    /**
-     * Test clicking showMap
-     */
-    @Test
-    void testShowMap() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testShowMap.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
-                final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var showMap = (JMenuItem) picturePopupMenu.getComponent(3);
-                assertEquals("Show Map", showMap.getText());
-                final int[] eventsReceived = {0};
-                JpoEventBus.getInstance().register(new Object() {
-                    @Subscribe
-                    public void handleRequest(ShowPictureOnMapRequest request) {
-                        eventsReceived[0]++;
-                    }
-                });
-                assertEquals(0, eventsReceived[0]);
-                showMap.doClick();
-                assertEquals(1, eventsReceived[0]);
-            });
-        } catch (final InterruptedException | InvocationTargetException ex) {
-            fail(ex.getMessage());
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    /**
-     * Test clicking showMap
-     */
     @Test
     //@Disabled("Doesn't work in Travis")
     void testOpenFolder() {
@@ -402,7 +367,7 @@ class PicturePopupMenuTest {
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
                     @Subscribe
-                    public void handleRotatePictureRequestRequest(RotatePictureRequest request) {
+                    public void handleRotatePictureRequestRequest(RotatePicturesRequest request) {
                         eventsReceived[0]++;
                     }
 
@@ -933,5 +898,74 @@ class PicturePopupMenuTest {
         assertFalse(o.isPresent());
     }
 
+    @Test
+    void testGetNodesToActOnWithNoSeclection() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                Settings.getPictureCollection().clearSelection();
+                final var pictureInfo = new PictureInfo();
+                final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var navigator = new SingleNodeNavigator(pictureNode);
+                final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
+                final var actionNodes = picturePopupMenu.getNodesToActOn();
+                assertEquals(1, actionNodes.size());
+                assert(actionNodes.contains(pictureNode));
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testGetNodesToActOnPartOfSeclection() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                Settings.getPictureCollection().clearSelection();
+                final var pictureInfo1 = new PictureInfo();
+                final var pictureNode1 = new SortableDefaultMutableTreeNode(pictureInfo1);
+                final var pictureInfo2 = new PictureInfo();
+                final var pictureNode2 = new SortableDefaultMutableTreeNode(pictureInfo2);
+                final var navigator = new ListNavigator(List.of(pictureNode1, pictureNode2));
+                Settings.getPictureCollection().addToSelectedNodes(pictureNode1);
+                Settings.getPictureCollection().addToSelectedNodes(pictureNode2);
+                final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
+                final var actionNodes = picturePopupMenu.getNodesToActOn();
+                assertEquals(2, actionNodes.size());
+                assert(actionNodes.contains(pictureNode1));
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testGetNodesToActOnNotPartOfSeclection() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                Settings.getPictureCollection().clearSelection();
+                final var pictureInfo1 = new PictureInfo();
+                final var pictureNode1 = new SortableDefaultMutableTreeNode(pictureInfo1);
+                final var pictureInfo2 = new PictureInfo();
+                final var pictureNode2 = new SortableDefaultMutableTreeNode(pictureInfo2);
+                final var pictureInfo3 = new PictureInfo();
+                final var pictureNode3 = new SortableDefaultMutableTreeNode(pictureInfo2);
+                final var navigator = new ListNavigator(List.of(pictureNode1, pictureNode2, pictureNode3));
+                Settings.getPictureCollection().addToSelectedNodes(pictureNode1);
+                Settings.getPictureCollection().addToSelectedNodes(pictureNode2);
+                final var picturePopupMenu = new PicturePopupMenu(navigator, 2);
+                final var actionNodes = picturePopupMenu.getNodesToActOn();
+                assertEquals(1, actionNodes.size());
+                assert(actionNodes.contains(pictureNode3));
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
 
 }

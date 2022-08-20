@@ -3,8 +3,10 @@ package org.jpo.eventbus;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
+import java.util.Collection;
+
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2020-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -22,8 +24,8 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 /**
  * Request to indicate that the user would like move the supplied node to the last position in the group
  *
- * @param node The node for which the user would like the dialog to be done
+ * @param nodes The node for which the user would like the dialog to be done
  * @author Richard Eigenmann
  */
-public record MoveNodeToBottomRequest(@NotNull SortableDefaultMutableTreeNode node) {
+public record MoveNodeToBottomRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes) {
 }

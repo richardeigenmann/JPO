@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2004-2022  Richard Eigenmann.
+ Copyright (C) 2004-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -346,10 +346,9 @@ public class EmailerGui extends JFrame {
         final int thumbnailSize = Settings.getThumbnailSize();
         final int desiredSize = 140;
         final float factor = desiredSize / (float) thumbnailSize;
-        final ListNavigator listNavigator = new ListNavigator();
+        final ListNavigator listNavigator = new ListNavigator(emailSelected);
 
         for (int i = 0; i < emailSelected.size(); i++) {
-            listNavigator.add(emailSelected.get(i));
             ThumbnailController thumbnailController = new ThumbnailController(thumbnailSize);
             thumbnailController.setNode(listNavigator, i);
             thumbnailController.setDecorateThumbnails(false);

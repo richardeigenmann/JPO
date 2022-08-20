@@ -20,7 +20,7 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Request to indicate that the user would like to copy the pictures in the
@@ -30,7 +30,7 @@ import java.util.List;
  * @param targetDirectory The target directory. It must exist and it must be writable.
  * @author Richard Eigenmann
  */
-public record CopyToDirRequest(@NonNull List<SortableDefaultMutableTreeNode> nodes, @NonNull File targetDirectory) {
+public record CopyToDirRequest(@NonNull Collection<SortableDefaultMutableTreeNode> nodes, @NonNull File targetDirectory) {
     /**
      * Constructor to validate the that target Directory is writable and that is is a directory
      *

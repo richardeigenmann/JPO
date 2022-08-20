@@ -3,16 +3,16 @@ package org.jpo.eventbus;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.List;
+import java.util.Collection;
 
 /*
- Copyright (C) 2017 -2020 Richard Eigenmann.
+ Copyright (C) 2017-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -28,5 +28,5 @@ import java.util.List;
  * @param nodesList The nodes to add
  * @author Richard Eigenmann
  */
-public record AddPictureNodesToEmailSelectionRequest(@NotNull List<SortableDefaultMutableTreeNode> nodesList) {
+public record AddPictureNodesToEmailSelectionRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodesList) {
 }

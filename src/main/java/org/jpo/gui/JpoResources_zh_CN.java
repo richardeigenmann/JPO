@@ -360,13 +360,14 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 
             // PicturePopupMenu
             {"pictureShowJMenuItemLabel", "显示图片"},
-            {"mapShowJMenuItemLabel", "Show Map"},
             {"pictureEditJMenuItemLabel", "属性"},
             {"copyImageJMenuLabel", "复制图片"},
             {"copyToNewLocationJMenuItem", "选择复制的文件夹位置"},
             {"moveToNewLocationSuccess", "%d of %d pictures moved"},
             {"copyToNewZipfileJMenuItem", "压缩文件"},
             {"copyToNewLocationSuccess", "复制％d张照片的％d"},
+            {"copyToClipboard", "Copy Image to Clipboard"},
+            {"copyPathToClipboard", "Copy Image Path to Clipboard"},
             {"FileOperations", "文件操作"},
             {"fileMoveJMenu", "移动文件"},
             {"moveToNewLocationJMenuItem", "选择复制的文件夹位置"},

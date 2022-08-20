@@ -2,10 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 /*
@@ -39,14 +36,15 @@ public class RotatePictureHandler {
      * @param request The request
      */
     @Subscribe
-    public void handleEvent(final RotatePictureRequest request) {
-        final var pictureInfo = (PictureInfo) request.node().getUserObject();
-        pictureInfo.rotate(request.angle());
-        LOGGER.info("Changed the rotation");
-        final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>();
-        nodes.add(request.node());
-        nodes.add(request.node().getParent());
-        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(nodes, request.priority()));
+    public void handleEvent(final RotatePicturesRequest request) {
+        request
+                .nodes()
+                .stream()
+                .filter(e -> e.getUserObject() instanceof PictureInfo)
+                .forEach(e -> {
+                    ((PictureInfo) e.getUserObject()).rotate((request.angle()));
+                });
+        JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, request.priority()));
     }
 
 }
