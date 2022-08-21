@@ -5,7 +5,6 @@ import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -151,7 +150,7 @@ class PicturePopupMenuTest {
                     tempFile.deleteOnExit();
                     pictureInfo.setImageLocation(tempFile);
 
-                    final var openFolder = (JMenuItem) picturePopupMenu.getComponent(4);
+                    final var openFolder = (JMenuItem) picturePopupMenu.getComponent(13);
                     assertEquals("Open Folder", openFolder.getText());
                     final int[] eventsReceived = {0};
                     JpoEventBus.getInstance().register(new Object() {
@@ -191,7 +190,7 @@ class PicturePopupMenuTest {
 
                     final var navigator = new SingleNodeNavigator(pictureNode);
                     final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
-                    final var navigateTo = (JMenu) picturePopupMenu.getComponent(5);
+                    final var navigateTo = (JMenu) picturePopupMenu.getComponent(3);
                     final var navigateTo0 = navigateTo.getItem(0);
                     assertNotNull(navigateTo0);
                     assertEquals("Navigate to", navigateTo.getText());
@@ -227,7 +226,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var selectForEmail = (JMenuItem) picturePopupMenu.getComponent(6);
+                final var selectForEmail = (JMenuItem) picturePopupMenu.getComponent(5);
                 assertEquals("Select for email", selectForEmail.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
@@ -255,7 +254,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var unselectForEmail = (JMenuItem) picturePopupMenu.getComponent(7);
+                final var unselectForEmail = (JMenuItem) picturePopupMenu.getComponent(6);
                 assertEquals("Unselect for email", unselectForEmail.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
@@ -283,7 +282,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var clearEmailSelection = (JMenuItem) picturePopupMenu.getComponent(8);
+                final var clearEmailSelection = (JMenuItem) picturePopupMenu.getComponent(7);
                 assertEquals("Clear email selection", clearEmailSelection.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
@@ -318,7 +317,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var userFunction = (JMenu) picturePopupMenu.getComponent(9);
+                final var userFunction = (JMenu) picturePopupMenu.getComponent(8);
                 final var userFunction0 = userFunction.getItem(0);
                 final var userFunction1 = userFunction.getItem(1);
                 final var userFunction2 = userFunction.getItem(2);
@@ -354,7 +353,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var rotation = (JMenu) picturePopupMenu.getComponent(10);
+                final var rotation = (JMenu) picturePopupMenu.getComponent(9);
                 final var rotate90 = rotation.getItem(0);
                 final var rotate180 = rotation.getItem(1);
                 final var rotate270 = rotation.getItem(2);
@@ -399,7 +398,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var refreshThumbnail = (JMenuItem) picturePopupMenu.getComponent(11);
+                final var refreshThumbnail = (JMenuItem) picturePopupMenu.getComponent(10);
                 assertEquals("Refresh Thumbnail", refreshThumbnail.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
@@ -427,7 +426,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var move = (JMenu) picturePopupMenu.getComponent(12);
+                final var move = (JMenu) picturePopupMenu.getComponent(11);
                 final var moveToTop = move.getItem(Settings.getMaxDropnodes() + 1);
                 final var moveUp = move.getItem(Settings.getMaxDropnodes() + 2);
                 final var moveDown = move.getItem(Settings.getMaxDropnodes() + 3);
@@ -498,7 +497,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var copyImage = (JMenu) picturePopupMenu.getComponent(13);
+                final var copyImage = (JMenu) picturePopupMenu.getComponent(12);
                 final var copyImageChooseTargetDir = copyImage.getItem(0);
                 final var copyImageToZipFile = copyImage.getItem(12);
                 assertEquals("Copy Image", copyImage.getText());
@@ -536,7 +535,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var copyImage = (JMenu) picturePopupMenu.getComponent(13);
+                final var copyImage = (JMenu) picturePopupMenu.getComponent(12);
                 final var copyToClipboard = copyImage.getItem(13);
                 assertEquals("Copy Image", copyImage.getText());
                 assertEquals("Copy Image to Clipboard", copyToClipboard.getText());
@@ -558,7 +557,6 @@ class PicturePopupMenuTest {
     }
 
     @Test
-    @Disabled
     void testRemoveNode() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
@@ -587,7 +585,6 @@ class PicturePopupMenuTest {
     }
 
     @Test
-    @Disabled
     void testMoveToNewLocation() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
@@ -620,7 +617,6 @@ class PicturePopupMenuTest {
     }
 
     @Test
-    @Disabled
     void testFileRename() {
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -701,7 +697,6 @@ class PicturePopupMenuTest {
 
 
     @Test
-    @Disabled
     void testFileDelete() {
         try {
             SwingUtilities.invokeAndWait(() -> {
@@ -767,7 +762,7 @@ class PicturePopupMenuTest {
                 final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
                 final var myNavigator = new SingleNodeNavigator(myNode);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
-                final var properties = (JMenuItem) picturePopupMenu.getComponent(17);
+                final var properties = (JMenuItem) picturePopupMenu.getComponent(19);
                 assertEquals("Properties", properties.getText());
                 final int[] eventsReceived = {0};
                 JpoEventBus.getInstance().register(new Object() {
@@ -802,7 +797,7 @@ class PicturePopupMenuTest {
                     final var parentNode = new SortableDefaultMutableTreeNode(new GroupInfo("Parent Group"));
                     parentNode.add(pictureNode);
 
-                    final var consolidateHere = (JMenuItem) picturePopupMenu.getComponent(18);
+                    final var consolidateHere = (JMenuItem) picturePopupMenu.getComponent(17);
                     assertEquals("Consolidate Here", consolidateHere.getText());
                     final int[] eventsReceived = {0};
                     JpoEventBus.getInstance().register(new Object() {
