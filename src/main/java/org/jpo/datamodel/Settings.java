@@ -254,6 +254,7 @@ public class Settings {
      * constant
      */
     private static final String GOOGLE_PASSWORD = "googlePassword";
+    public static final int DEFAULT_THUMBNAIL_CREATION_THREADS = 6;
     /**
      * The most recently used directory for Add Pictures command
      */
@@ -2339,10 +2340,11 @@ public class Settings {
      * home directory
      */
     public static File getDefaultSourceLocation() {
-        LOGGER.log(Level.INFO, "Most recent source location: {0}", defaultSourceLocation);
-        final var sourceLocationFile = new File(defaultSourceLocation);
-        if (sourceLocationFile.exists()) {
-            return sourceLocationFile;
+        if (defaultSourceLocation.length() > 0) {
+            final var sourceLocationFile = new File(defaultSourceLocation);
+            if (sourceLocationFile.exists()) {
+                return sourceLocationFile;
+            }
         }
         return new File(System.getProperty("user.dir"));
     }
@@ -2427,7 +2429,7 @@ public class Settings {
      * @return The number of threads to spawn
      */
     public static int getDefaultThumbnailCreationThreads() {
-        return 6;
+        return DEFAULT_THUMBNAIL_CREATION_THREADS;
     }
 
 
