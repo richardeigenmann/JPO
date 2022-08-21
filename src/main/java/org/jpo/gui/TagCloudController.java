@@ -1,10 +1,7 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.TextQuery;
+import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
 import org.jpo.eventbus.ShowQueryRequest;
@@ -71,6 +68,19 @@ public class TagCloudController implements TagClickListener {
     public void handleGroupSelectionEvent( final ShowGroupRequest event ) {
         SwingUtilities.invokeLater( () -> {
             nodeWordMapper = new NodeWordMapper(event.node());
+            tagCloud.setWordsList(nodeWordMapper.getWeightedWords());
+        } );
+    }
+
+    /**
+     * Handles the ShowQueryRequest by updating the display
+     *
+     * @param event the ShowQueryRequest
+     */
+    @Subscribe
+    public void handleShowQueryRequest(final ShowQueryRequest event) {
+        SwingUtilities.invokeLater( () -> {
+            nodeWordMapper = new NodeWordMapper(event);
             tagCloud.setWordsList(nodeWordMapper.getWeightedWords());
         } );
     }
@@ -247,6 +257,11 @@ public class TagCloudController implements TagClickListener {
             buildList();
         }
 
+        NodeWordMapper(final ShowQueryRequest event) {
+            this.rootNode = Settings.getPictureCollection().getRootNode();
+            buildListQuery(event.query());
+        }
+
         public List<WeightedWordInterface> getWeightedWords() {
             return weightedWordList;
         }
@@ -263,6 +278,15 @@ public class TagCloudController implements TagClickListener {
             while ( nodes.hasMoreElements() ) {
                 if (((SortableDefaultMutableTreeNode) nodes.nextElement()).getUserObject() instanceof PictureInfo pi) {
                     splitAndAdd(wordCountMap, pi.getDescription());
+                }
+            }
+            wordCountMap.keySet().forEach(key -> weightedWordList.add(new WeightedWord(key, wordCountMap.get(key))));
+        }
+
+        private void buildListQuery(final Query query) {
+            for (var i = 0; i < query.getNumberOfResults(); i++) {
+                if (query.getIndex(i).getUserObject() instanceof PictureInfo pictureInfo) {
+                    splitAndAdd(wordCountMap, pictureInfo.getDescription());
                 }
             }
             wordCountMap.keySet().forEach(key -> weightedWordList.add(new WeightedWord(key, wordCountMap.get(key))));
