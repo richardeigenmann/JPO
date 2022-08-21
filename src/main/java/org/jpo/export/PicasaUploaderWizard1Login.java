@@ -1,6 +1,5 @@
 package org.jpo.export;
 
-//import com.google.gdata.util.AuthenticationException;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;

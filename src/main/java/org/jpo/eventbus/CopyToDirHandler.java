@@ -90,8 +90,8 @@ public class CopyToDirHandler {
                     "IOException: " + e.getMessage(),
                     Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
-            return false;
         }
+        return false;
     }
 
 }

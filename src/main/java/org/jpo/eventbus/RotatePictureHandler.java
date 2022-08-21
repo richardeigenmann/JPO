@@ -41,9 +41,7 @@ public class RotatePictureHandler {
                 .nodes()
                 .stream()
                 .filter(e -> e.getUserObject() instanceof PictureInfo)
-                .forEach(e -> {
-                    ((PictureInfo) e.getUserObject()).rotate((request.angle()));
-                });
+                .forEach(e -> ((PictureInfo) e.getUserObject()).rotate((request.angle())));
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, request.priority()));
     }
 

@@ -183,7 +183,7 @@ public class CategroyAssignmentWindow {
             if (node.getUserObject() instanceof PictureInfo pi) {
                 LOGGER.log(Level.FINE, "Analysing Node {0}", pi);
                 for (var categoryCode : pi.getCategoryAssignments()) {
-                    Integer count = (Integer) categoryUsageCount.get(categoryCode);
+                    Integer count = categoryUsageCount.get(categoryCode);
                     if (count == null) {
                         count = Integer.valueOf(1);
                     } else {

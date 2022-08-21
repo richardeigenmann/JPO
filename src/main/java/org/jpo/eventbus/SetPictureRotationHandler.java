@@ -35,9 +35,7 @@ public class SetPictureRotationHandler {
                 .nodes()
                 .stream()
                 .filter(e -> e.getUserObject() instanceof PictureInfo)
-                .forEach(e -> {
-                    ((PictureInfo) e.getUserObject()).setRotation(((request.angle())));
-                });
+                .forEach(e -> ((PictureInfo) e.getUserObject()).setRotation(request.angle()));
         JpoEventBus.getInstance().post(new RefreshThumbnailRequest(request.nodes(), true, request.priority()));
     }
 

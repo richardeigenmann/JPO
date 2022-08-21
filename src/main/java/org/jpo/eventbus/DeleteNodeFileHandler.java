@@ -55,7 +55,7 @@ public class DeleteNodeFileHandler {
                 .nodes()
                 .stream()
                 .filter(e -> e.getUserObject() instanceof PictureInfo)
-                .forEach(e -> deletePictureInfo( e ));
+                .forEach(this::deletePictureInfo);
     }
 
     /**

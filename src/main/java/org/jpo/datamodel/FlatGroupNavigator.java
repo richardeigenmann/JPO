@@ -48,13 +48,6 @@ public class FlatGroupNavigator
         Settings.getPictureCollection().getTreeModel().addTreeModelListener(new MyTreeModelListener());
     }
 
-    /**
-     * Builds the list of nodes from the group.
-     */
-    private void buildFromScratch() {
-        clear();
-        add(groupNode.getChildPictureNodes(true));
-    }
 
     /**
      * A reference to the group for which this FlatGroupNavigator was created.
@@ -134,6 +127,15 @@ public class FlatGroupNavigator
                 }
             }
         }
+
+        /**
+         * Builds the list of nodes from the group.
+         */
+        private void buildFromScratch() {
+            clear();
+            add(groupNode.getChildPictureNodes(true));
+        }
+
 
         /**
          * We are notified here if the structure changed

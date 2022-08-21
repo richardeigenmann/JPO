@@ -47,7 +47,7 @@ public class RefreshThumbnailHandler {
             request
                     .nodes()
                     .stream()
-                    .map(e -> e.getParent())
+                    .map(SortableDefaultMutableTreeNode::getParent)
                     .distinct()
                     .forEach(this::refrehThumbnail);
         }

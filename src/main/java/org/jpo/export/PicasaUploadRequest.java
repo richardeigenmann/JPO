@@ -1,10 +1,9 @@
 package org.jpo.export;
 
-//import com.google.gdata.client.photos.PicasawebService;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 /*
- * Copyright (C) 2012-2019 RichardEigenmann.
+ * Copyright (C) 2012-2022 RichardEigenmann.
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or any later
@@ -108,11 +107,7 @@ public class PicasaUploadRequest {
         this.interrupt = interrupt;
     }
     
-    /** 
-     * The Picasa Web Service
-     */
-    //public final PicasawebService picasaWebService = new PicasawebService ( "org.richinet.dyndns-org.jpo-1" );
-    
+
     /**
      * The URL of the album
      */
