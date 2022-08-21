@@ -252,7 +252,7 @@ public class SourcePicture {
             }
             return readFromReaderWithProgressListener(iis, reader);
         } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "IOException while converting {0} bytes to a BufferedImage", imageBytes.getBytes().length);
+            LOGGER.log(Level.SEVERE, "IOException while converting {0} bytes to a BufferedImage: {1}", new Object[]{imageBytes.getBytes().length,e.getMessage()});
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
             return null;
         }

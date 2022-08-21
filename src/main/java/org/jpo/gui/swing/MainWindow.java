@@ -108,7 +108,6 @@ public class MainWindow extends ResizableJFrame {
             }
         });
 
-
         try {
             final var Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel(Windows);

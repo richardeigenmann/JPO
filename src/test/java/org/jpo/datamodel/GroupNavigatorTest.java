@@ -40,10 +40,8 @@ public class GroupNavigatorTest {
      */
     @BeforeEach
     public void testSetNode() {
-        final GroupNavigator gn = new GroupNavigator();
-        gn.setNode( groupNode2 );
-        // After setNode the Navigator should return the new node
-        assertEquals( groupNode2, gn.getGroupNode() );
+        final var groupNavigator = new GroupNavigator(groupNode2);
+        assertEquals( groupNode2, groupNavigator.getGroupNode() );
     }
 
     /**
@@ -51,9 +49,8 @@ public class GroupNavigatorTest {
      */
     @Test
     public void testGetTitle() {
-        final GroupNavigator gn = new GroupNavigator();
-        gn.setNode( groupNode );
-        assertEquals( "Group1", gn.getTitle() );
+        final var groupNavigator = new GroupNavigator(groupNode);
+        assertEquals( "Group1", groupNavigator.getTitle() );
     }
 
     /**
@@ -61,12 +58,11 @@ public class GroupNavigatorTest {
      */
     @Test
     public void testGetNumberOfNodes() {
-        final GroupNavigator gn = new GroupNavigator();
-        gn.setNode( groupNode );
-        assertEquals(  0, gn.getNumberOfNodes() );
+        final var groupNavigator = new GroupNavigator(groupNode);
+        assertEquals(  0, groupNavigator.getNumberOfNodes() );
         groupNode.add( pictureNode1 );
         groupNode.add( pictureNode2 );
-        assertEquals( 2, gn.getNumberOfNodes() );
+        assertEquals( 2, groupNavigator.getNumberOfNodes() );
         try {
             SwingUtilities.invokeAndWait(groupNode::removeAllChildren);
         } catch ( InterruptedException | InvocationTargetException ex ) {
@@ -75,7 +71,7 @@ public class GroupNavigatorTest {
         }
 
         // After removing all children we expect to have 0 nodes
-        assertEquals( 0, gn.getNumberOfNodes() );
+        assertEquals( 0, groupNavigator.getNumberOfNodes() );
     }
 
 }

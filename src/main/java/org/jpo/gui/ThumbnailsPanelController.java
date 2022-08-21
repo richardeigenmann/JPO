@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 import static java.awt.Component.TOP_ALIGNMENT;
 
 /*
- Copyright (C) 2002 - 2022  Richard Eigenmann.
+ Copyright (C) 2002-2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -220,6 +220,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         titleJPanel.getNavigationButtonPanel().getLastThumbnailsPageButton().addActionListener((ActionEvent e) -> goToLastPage());
         titleJPanel.getShowFilenamesButton().addActionListener((ActionEvent e) -> showFilenamesButtonClicked());
         titleJPanel.getShowTimestampButton().addActionListener((ActionEvent e) -> showTimestampButtonClicked());
+        titleJPanel.getPadlockButton().addActionListener((ActionEvent e) -> padlockButtonClicked());
+        titleJPanel.getSearchButton().addActionListener(e -> searchButtonClicked());
         titleJPanel.getSearchField().addActionListener((ActionEvent e) -> doSearch(titleJPanel.getSearchField().getText()));
 
         titleJPanel.addResizeChangeListener((ChangeEvent e) -> {
@@ -337,6 +339,22 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
     }
 
+    private void searchButtonClicked() {
+        if ( ! titleJPanel.getSearchField().isVisible()) {
+            titleJPanel.getSearchField().setVisible(true);
+            titleJPanel.getSearchButton().getParent().validate();
+            titleJPanel.getSearchField().requestFocus();
+            titleJPanel.getSearchField().selectAll();
+        } else {
+            if (titleJPanel.getSearchField().getText().length() > 0) {
+                doSearch(titleJPanel.getSearchField().getText());
+            } else {
+                titleJPanel.getSearchField().setVisible(false);
+                titleJPanel.getSearchButton().getParent().validate();
+            }
+        }
+    }
+
     /**
      * If the show filenames button was clicked, flip the state and show or hide the filenames.
      */
@@ -357,6 +375,17 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
             thumbnailControllers[i].setShowTimestamp(showTimestampState);
         }
+    }
+
+    private void padlockButtonClicked() {
+        LOGGER.log(Level.INFO,"padlock button was clicked");
+        final var allowEdits = Settings.getPictureCollection().getAllowEdits();
+        final var newState = ! allowEdits;
+        Settings.getPictureCollection().setAllowEdits( newState );
+    }
+
+    private void updatePadlockButton() {
+        titleJPanel.setPadlockButtonState( ! Settings.getPictureCollection().getAllowEdits() );
     }
 
     public void resizeAllThumbnails(final float thumbnailSizeFactor) {
@@ -424,11 +453,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      */
     @Subscribe
     public void handleShowGroupRequest(final ShowGroupRequest event) {
-        final Runnable runnable = () -> {
-            final var groupNavigator = new GroupNavigator();
-            groupNavigator.setNode(event.node());
-            show(groupNavigator);
-        };
+        final Runnable runnable = () -> show(new GroupNavigator(event.node()));
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
         } else {
@@ -454,6 +479,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * @param newNodeNavigator The Interface with the collection of nodes
      */
     private void show(final NodeNavigatorInterface newNodeNavigator) {
+        Tools.checkEDT();
         if (this.mySetOfNodes != null) {
             this.mySetOfNodes.removeNodeNavigatorListener(this);
         }
@@ -461,8 +487,8 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         newNodeNavigator.addNodeNavigatorListener(this);
 
         if (myLastGroupNode != null) {
-            final var gi = (GroupInfo) myLastGroupNode.getUserObject();
-            gi.removeGroupInfoChangeListener(myGroupInfoChangeListener);
+            final var groupInfo = (GroupInfo) myLastGroupNode.getUserObject();
+            groupInfo.removeGroupInfoChangeListener(myGroupInfoChangeListener);
         }
         myLastGroupNode = null;
         if (newNodeNavigator instanceof GroupNavigator groupNavigator) {
@@ -473,6 +499,11 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
 
         Settings.getPictureCollection().clearSelection();
         goToFirstPage();
+    }
+
+    @Subscribe
+    public void handleCollectionLockNotification(CollectionLockNotification event) {
+        updatePadlockButton();
     }
 
     /**

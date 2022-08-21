@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /*
  GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.
 
- Copyright (C) 2002-2022  Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,6 +41,10 @@ public class GroupNavigator extends NodeNavigator {
      */
     private SortableDefaultMutableTreeNode myNode;
 
+    public GroupNavigator(final SortableDefaultMutableTreeNode groupNode) {
+        setNode(groupNode);
+    }
+
     /**
      * call this method to specify the node that this GroupNavigator should
      * refer to. The node is validated that it's payload is of type GroupInfo.
@@ -48,7 +52,7 @@ public class GroupNavigator extends NodeNavigator {
      * @param node The SortableDefaultMutableTreeNode that refers to the Group
      *             that should be displayed.
      */
-    public void setNode(final SortableDefaultMutableTreeNode node) {
+    private void setNode(final SortableDefaultMutableTreeNode node) {
         // deregister from prior TreeModelListener (could be that the new group is from a different tree)
         if (myNode != null) {
             myNode.getPictureCollection().getTreeModel().removeTreeModelListener(myTreeModelListener);

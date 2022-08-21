@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
 /*
  ApplicationJMenuBar.java:  main menu for the application
 
- Copyright (C) 2002 -2022 Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -101,6 +101,15 @@ public class ApplicationJMenuBar extends JMenuBar {
             recentFilesChanged();
         }
 
+        @Subscribe
+        public void handleCollectionLockNotification(final CollectionLockNotification event) {
+            setMenuVisibility();
+        }
+
+        private void setMenuVisibility() {
+            fileAddJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+        }
+
         public FileJMenu() {
             setMnemonic(KeyEvent.VK_F);
 
@@ -146,6 +155,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
             setMenuTexts();
             recentFilesChanged();
+            setMenuVisibility();
             JpoEventBus.getInstance().register(this);
         }
 
@@ -194,6 +204,12 @@ public class ApplicationJMenuBar extends JMenuBar {
          * Menu item that allows the user to set up his cameras.
          */
         private final JMenuItem editCamerasJMenuItem = new JMenuItem();
+
+        /**
+         * Menu item that allows the user to turn on or off the edit Mode
+         */
+        private final JMenuItem editModeJMenuItem = new JMenuItem();
+
         /**
          * Menu item that allows the user to change the application settings.
          */
@@ -204,16 +220,34 @@ public class ApplicationJMenuBar extends JMenuBar {
             setMenuTexts();
         }
 
+        @Subscribe
+        public void handleCollectionLockNotification(final CollectionLockNotification event) {
+            setMenuVisibility();
+            if (Settings.getPictureCollection().getAllowEdits() ) {
+                editModeJMenuItem.setText("Disable Editing");
+            } else {
+                editModeJMenuItem.setText("Enable Editing");
+            }
+        }
+
+        private void setMenuVisibility() {
+            editCamerasJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+        }
+
         public EditJMenu() {
             setMnemonic(KeyEvent.VK_E);
             editCamerasJMenuItem.setMnemonic(KeyEvent.VK_D);
             editCamerasJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new EditCamerasRequest()));
             add(editCamerasJMenuItem);
 
+            editModeJMenuItem.addActionListener((ActionEvent e) -> Settings.getPictureCollection().setAllowEdits(! Settings.getPictureCollection().getAllowEdits()));
+            add(editModeJMenuItem);
+
             editSettingsJMenuItem.setMnemonic(KeyEvent.VK_S);
             editSettingsJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new EditSettingsRequest()));
             add(editSettingsJMenuItem);
             setMenuTexts();
+            setMenuVisibility();
 
             JpoEventBus.getInstance().register(this);
         }
@@ -307,6 +341,12 @@ public class ApplicationJMenuBar extends JMenuBar {
         public void handleLocaleChangedEvent(final LocaleChangedEvent event) {
             setMenuTexts();
         }
+
+        @Subscribe
+        public void handleCollectionLockNotification(final CollectionLockNotification event) {
+            setVisible( Settings.getPictureCollection().getAllowEdits() );
+        }
+
 
         public ExtrasJMenu() {
             setMnemonic(KeyEvent.VK_X);

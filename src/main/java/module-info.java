@@ -3,6 +3,7 @@ module org.jpo {
     exports org.jpo.gui;
     exports org.jpo.eventbus;
     exports org.jpo.gui.swing;
+    exports org.jpo.testground;
 
     opens org.jpo to com.google.common;
     opens org.jpo.gui to com.google.common;

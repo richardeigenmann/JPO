@@ -1,9 +1,6 @@
 package org.jpo.datamodel;
 
-import org.jpo.eventbus.CategoriesWereModified;
-import org.jpo.eventbus.ExportGroupToCollectionRequest;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.RecentCollectionsChangedEvent;
+import org.jpo.eventbus.*;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -145,6 +142,7 @@ public class PictureCollection {
         XmlReader.read(is, node);
         node.getPictureCollection().setSendModelUpdates(true);
         node.getPictureCollection().sendNodeStructureChanged(node);
+        JpoEventBus.getInstance().post(new CollectionLockNotification());
     }
 
     /**
@@ -347,10 +345,13 @@ public class PictureCollection {
     /**
      * sets the allow edit allowedEdits of this collection
      *
-     * @param allowedEdits pass true to allow edits, false to forbid
+     * @param newAllowEdits pass true to allow edits, false to forbid
      */
-    public void setAllowEdits(final boolean allowedEdits) {
-        allowEdits = allowedEdits;
+    public void setAllowEdits(final boolean newAllowEdits) {
+        if ( allowEdits != newAllowEdits ) {
+            allowEdits = newAllowEdits;
+            JpoEventBus.getInstance().post(new CollectionLockNotification());
+        }
     }
 
     /**

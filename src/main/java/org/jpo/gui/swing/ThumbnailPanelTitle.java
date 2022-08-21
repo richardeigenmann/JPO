@@ -64,10 +64,19 @@ public class ThumbnailPanelTitle
         return searchField;
     }
 
+    private final JButton padlockButton = new JButton();
+
+    public JButton getPadlockButton() {
+        return padlockButton;
+    }
+
+
     private final JTextField searchField = new JTextField("", 20);
 
     private final JButton searchButton = new JButton("\uf002");
-
+    public JButton getSearchButton() {
+        return searchButton;
+    }
 
     /**
      * JLabel for holding the thumbnail counts
@@ -112,6 +121,8 @@ public class ThumbnailPanelTitle
         showFilenamesButton.setToolTipText("Show or Hide the filenames");
         showTimestampButton.setFont(FontAwesomeFont.getFontAwesomeRegular24());
         showTimestampButton.setToolTipText("Show or Hide the timestamps");
+        padlockButton.setFont(FontAwesomeFont.getFontAwesomeSolid24());
+        padlockButton.setToolTipText("Enable or prevent edit of the collection");
 
         searchField.setMinimumSize(new Dimension(100, 25));
         searchField.setMaximumSize(new Dimension(250, 25));
@@ -119,12 +130,6 @@ public class ThumbnailPanelTitle
 
         searchButton.setFont(FontAwesomeFont.getFontAwesomeSolid24());
         searchButton.setToolTipText("Click to enter search text.");
-        searchButton.addActionListener(e -> {
-            searchField.setVisible(!searchField.isVisible());
-            searchField.getParent().validate();
-            searchField.requestFocus();
-            searchField.selectAll();
-        });
 
         final var boxLayout = new BoxLayout(this, BoxLayout.X_AXIS);
         setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
@@ -143,9 +148,12 @@ public class ThumbnailPanelTitle
         add(searchButton);
         add(showTimestampButton);
         add(showFilenamesButton);
+        add(padlockButton);
 
         title.setFont(Settings.getTitleFont());
     }
+
+
 
     public class NavigationButtonPanel extends JPanel {
 
@@ -256,5 +264,11 @@ public class ThumbnailPanelTitle
         } else {
             runnable.run();
         }
+    }
+
+    public void setPadlockButtonState(boolean locked) {
+        final String LOCKED_PADLOCK = "\uf023";
+        final String UNLOCKED_PADLOCK = "\uf3c1";
+        padlockButton.setText( locked ? LOCKED_PADLOCK : UNLOCKED_PADLOCK);
     }
 }
