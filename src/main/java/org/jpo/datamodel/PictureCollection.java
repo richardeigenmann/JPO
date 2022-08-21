@@ -729,7 +729,7 @@ public class PictureCollection {
      * @param sha256 The checksum of the picture to check for
      * @return true if found, false if not
      */
-    public boolean isInCollection(final long sha256) {
+    public boolean isInCollection(final String sha256) {
         final var enumeration = getRootNode().preorderEnumeration();
         while (enumeration.hasMoreElements()) {
             final var node = (SortableDefaultMutableTreeNode) enumeration.nextElement();

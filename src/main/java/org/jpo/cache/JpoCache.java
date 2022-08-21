@@ -118,7 +118,6 @@ public class JpoCache {
      */
     public static Properties loadProperties() {
         final var CACHE_DEFINITION_FILE = "cache.ccf";
-        //final var ccfUrl = JpoCache.class.getClassLoader().getResource(CACHE_DEFINITION_FILE);
         final URL ccfUrl;
         final var properties = new Properties();
         try {

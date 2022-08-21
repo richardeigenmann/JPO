@@ -1,7 +1,7 @@
 package org.jpo.datamodel;
 
 /*
-Copyright (C) 2002-2022  Richard Eigenmann.
+Copyright (C) 2002-2022 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -56,9 +56,9 @@ public class PictureInfoChangeEvent {
      */
     @Override
     public String toString() {
-        return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, checksumChanged: %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, latLngChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
+        return String.format( "PictureInfoChangeEvent from PictureInfo %s, descriptionChanged: %b, highresLocationChanged %b, thumbnailChanged %b, creationTimeChanged %b, filmReferenceChanged: %b, rotationChanged %b, commentChanged: %b, photographerChanged: %b, copyrightHolderChanged: %b, latLngChanged: %b, categoryAssignmentsChanged: %b, wasSelected: %b, wasUnselected: %b, wasMailSelected: %b, wasMailUnselected: %b",
                 pictureInfo.toString(), getDescriptionChanged(), getHighresLocationChanged(),
-                getChecksumChanged(), getThumbnailChanged(),
+                getThumbnailChanged(),
                 getCreationTimeChanged(), getFilmReferenceChanged(),
                 getRotationChanged(), getCommentChanged(), getPhotographerChanged(),
                 getCopyrightHolderChanged(), getLatLngChanged(),
@@ -116,31 +116,6 @@ public class PictureInfoChangeEvent {
     }
 
 //-----------------
-    /**
-     *  indicates whether the checksum was changed.
-     */
-    @Deprecated
-    private boolean checksumChanged;  // default is false
-
-
-    /**
-     *  sets the event to reflect that the checksum changed
-     **/
-    @Deprecated
-    public void setChecksumChanged() {
-        checksumChanged = true;
-    }
-
-
-    /**
-     *  returns whether the checksum was changed
-     *
-     * @return true if the checksum was changed
-     */
-    @Deprecated
-    public boolean getChecksumChanged() {
-        return checksumChanged;
-    }
 
     /**
      * indicates that the sha256 was changed.

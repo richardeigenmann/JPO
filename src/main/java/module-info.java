@@ -35,7 +35,5 @@ module org.jpo {
     requires jwizz;
     requires activation;
     requires org.json;
-    //requires javax.cache;
-    //requires org.apache.batik.bridge.RhinoInterpreterFactory;
 }
 

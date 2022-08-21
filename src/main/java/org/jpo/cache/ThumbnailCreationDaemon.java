@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 /*
  ThumbnailCreationFactory.java:  A factory that creates thumbnails
 
- Copyright (C) 2002 - 2022  Richard Eigenmann.
+ Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,14 +49,7 @@ public class ThumbnailCreationDaemon implements Runnable {
     private static final ImageIcon BROKEN_THUMBNAIL_PICTURE;
 
     static {
-        final var BROKEN_THUMBNAIL_PICTURE_FILE = "broken_thumbnail.gif";
-        final var resource = ThumbnailCreationDaemon.class.getClassLoader().getResource(BROKEN_THUMBNAIL_PICTURE_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", BROKEN_THUMBNAIL_PICTURE_FILE);
-            BROKEN_THUMBNAIL_PICTURE = null;
-        } else {
-            BROKEN_THUMBNAIL_PICTURE = new ImageIcon(resource);
-        }
+        BROKEN_THUMBNAIL_PICTURE = getResource( "broken_thumbnail.gif" );
     }
 
     /**
@@ -66,14 +59,7 @@ public class ThumbnailCreationDaemon implements Runnable {
     private static final ImageIcon MOVIE_ICON;
 
     static {
-        final var MOVIE_ICON_FILE = "icon_movie.png";
-        final var resource = ThumbnailCreationDaemon.class.getClassLoader().getResource(MOVIE_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", MOVIE_ICON_FILE);
-            MOVIE_ICON = null;
-        } else {
-            MOVIE_ICON = new ImageIcon(resource);
-        }
+        MOVIE_ICON = getResource("icon_movie.png");
     }
 
     /**
@@ -83,16 +69,18 @@ public class ThumbnailCreationDaemon implements Runnable {
     private static final ImageIcon DOCUMENT_ICON;
 
     static {
-        final var DOCUMENT_ICON_FILE = "icon_document.png";
-        final var resource = ThumbnailCreationDaemon.class.getClassLoader().getResource(DOCUMENT_ICON_FILE);
-        if (resource == null) {
-            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", DOCUMENT_ICON_FILE);
-            DOCUMENT_ICON = null;
-        } else {
-            DOCUMENT_ICON = new ImageIcon(resource);
-        }
+        DOCUMENT_ICON = getResource("icon_document.png");
     }
 
+    static ImageIcon getResource(final String resource) {
+        final var resourceURL = ThumbnailCreationDaemon.class.getClassLoader().getResource(resource);
+        if (resourceURL == null) {
+            LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", resource);
+            return null;
+        } else {
+            return new ImageIcon(resource);
+        }
+    }
 
     /**
      * Flag to indicate that the thread should die.
