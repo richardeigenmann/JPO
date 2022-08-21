@@ -3,8 +3,6 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
 
-import java.util.logging.Logger;
-
 /*
  Copyright (C) 2022  Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -25,11 +23,6 @@ import java.util.logging.Logger;
  * Handles the RotatePictureRequest request
  */
 public class RotatePictureHandler {
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(RotatePictureHandler.class.getName());
-
     /**
      * Handles the RotatePictureRequest request
      *

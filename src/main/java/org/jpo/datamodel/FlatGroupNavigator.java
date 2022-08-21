@@ -61,8 +61,8 @@ public class FlatGroupNavigator
      */
     @Override
     public String getTitle() {
-        if ((groupNode != null) && (groupNode.getUserObject() instanceof GroupInfo)) {
-            return ((GroupInfo) groupNode.getUserObject()).getGroupName();
+        if ((groupNode != null) && (groupNode.getUserObject() instanceof GroupInfo groupInfo)) {
+            return groupInfo.getGroupName();
         } else {
             return "No title available";
         }
