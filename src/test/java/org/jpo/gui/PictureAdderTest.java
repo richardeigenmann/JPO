@@ -100,7 +100,7 @@ class PictureAdderTest {
                 assertNotNull(pictureAdder);
                 await()
 
-                        .atMost(Durations.ONE_SECOND)
+                        .atMost(Durations.TEN_SECONDS)
                         .with()
                         .pollInterval(Durations.ONE_HUNDRED_MILLISECONDS)
                         .until(new Callable<Boolean>() {
@@ -135,7 +135,7 @@ class PictureAdderTest {
                 assertNotNull(pictureAdder);
                 await()
 
-                        .atMost(Durations.ONE_SECOND)
+                        .atMost(Durations.ONE_MINUTE)
                         .with()
                         .pollInterval(Durations.ONE_HUNDRED_MILLISECONDS)
                         .until(new Callable<Boolean>() {

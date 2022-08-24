@@ -110,6 +110,7 @@ test {
     // systemProperty 'java.awt.headless', 'false'
     // copy the Gradle JVM properties down to the test JVM so that SemaphoreCI can ignore the tests that don't work in the headless environment
     systemProperties = System.getProperties()
+    maxParallelForks = 8
 
     useJUnitPlatform()
 
