@@ -60,6 +60,10 @@ public class SourcePicture {
      */
     private File imageFile;
 
+    /**
+     * the hash code of the image
+     */
+    private String sha256;
 
     /**
      * States of the source picture
@@ -136,10 +140,11 @@ public class SourcePicture {
      * @param file     The file with the image
      * @param rotation Image rotation
      */
-    public void loadPicture(final File file, final double rotation) {
+    public void loadPicture(final String sha256, final File file, final double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(file);
         }
+        this.sha256 = sha256;
         this.imageFile = file;
         this.rotation = rotation;
         loadPicture();
@@ -154,11 +159,11 @@ public class SourcePicture {
      * @param priority  The Thread priority for this thread.
      * @param rotation  The rotation 0-360 to be used on this picture
      */
-    public void loadPictureInThread(final File imageFile, final int priority, final double rotation) {
+    public void loadPictureInThread(final String sha256, final File imageFile, final int priority, final double rotation) {
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(imageFile);
         }
-
+        this.sha256 = sha256;
         this.imageFile = imageFile;
         this.rotation = rotation;
         final Thread t = new Thread("SourcePicture.loadPictureInThread") {
@@ -184,7 +189,7 @@ public class SourcePicture {
         ImageBytes imageBytes;
         try {
             LOGGER.log(Level.FINE, "Asking highres cache for image {0}", imageFile);
-            imageBytes = JpoCache.getHighresImageBytes(imageFile);
+            imageBytes = JpoCache.getHighresImageBytes(sha256, imageFile);
             LOGGER.log(Level.FINE, "Image loaded from cache: {0} Bytes: {1}", new Object[]{imageBytes.isRetrievedFromCache(), imageBytes.getBytes().length});
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "IOException loading {0}: {1}", new Object[]{imageFile, e.getMessage()});

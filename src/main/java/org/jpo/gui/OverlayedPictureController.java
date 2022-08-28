@@ -156,13 +156,13 @@ public class OverlayedPictureController extends PictureController implements Sca
      * @param description The description of the picture
      * @param rotation    The rotation that should be applied
      */
-    public void setPicture(final File file, final String description,
+    public void setPicture(final String sha256, final File file, final String description,
                            final double rotation) {
         scalablePicture.stopLoadingExcept(file);
 
         setCenterWhenScaled(true);
         scalablePicture.setScaleSize(getSize());
-        scalablePicture.loadAndScalePictureInThread(file, Thread.MAX_PRIORITY, rotation);
+        scalablePicture.loadAndScalePictureInThread(sha256, file, Thread.MAX_PRIORITY, rotation);
 
         legend = description;
         exifInfo = new ExifInfo(file);

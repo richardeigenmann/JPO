@@ -929,7 +929,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         final var scalablePicture = new ScalablePicture();
         scalablePicture.setQualityScale();
         scalablePicture.setScaleSteps(request.getScalingSteps());
-        scalablePicture.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
+        scalablePicture.loadPictureImd(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getRotation());
 
         LOGGER.log(Level.INFO, "Done Loading: {0}", pictureInfo.getImageLocation());
         if (scalablePicture.getStatusCode() == SCALABLE_PICTURE_ERROR) {
@@ -940,7 +940,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             } catch (final URISyntaxException e) {
                 throw new IOException("Could not load the broken_thumbnail.gif resource: " + e.getMessage());
             }
-            scalablePicture.loadPictureImd(file, 0f);
+            scalablePicture.loadPictureImd(pictureInfo.getSha256(), file, 0f);
         }
         return scalablePicture;
     }

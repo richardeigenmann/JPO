@@ -397,7 +397,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private void setPicture(final PictureInfo pictureInfo) {
         LOGGER.log(Level.FINE, "Set picture to PictureInfo: {0}", pictureInfo);
-        pictureFrame.getPictureController().setPicture(pictureInfo.getImageFile(), pictureInfo.getDescription(), pictureInfo.getRotation());
+        pictureFrame.getPictureController().setPicture(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getDescription(), pictureInfo.getRotation());
     }
 
     /**

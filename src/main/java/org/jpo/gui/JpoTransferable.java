@@ -177,11 +177,10 @@ public class JpoTransferable
      */
     private Object getImageTransferable() {
         final List<Object> imageList = new ArrayList<>();
-        for (final Object transferableNode : transferableNodes) {
-            if ((transferableNode instanceof SortableDefaultMutableTreeNode node)
-                    && (node.getUserObject() instanceof PictureInfo pictureInfo)) {
+        for (final var transferableNode : transferableNodes) {
+            if ((transferableNode.getUserObject() instanceof PictureInfo pictureInfo)) {
                 final var sourcePicture = new SourcePicture();
-                sourcePicture.loadPicture(pictureInfo.getImageFile(), pictureInfo.getRotation());
+                sourcePicture.loadPicture(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getRotation());
                 imageList.add(sourcePicture.getSourceBufferedImage());
             }
         }

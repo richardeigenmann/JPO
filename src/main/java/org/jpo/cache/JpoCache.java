@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2014 - 2022 Richard Eigenmann.
+ Copyright (C) 2014-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -77,7 +77,7 @@ public class JpoCache {
         }
     }
 
-    private static CacheAccess<File, ImageBytes> highresMemoryCache;
+    private static CacheAccess<String, ImageBytes> highresMemoryCache;
     private static CacheAccess<String, ImageBytes> thumbnailMemoryAndDiskCache;
 
     static {
@@ -158,7 +158,8 @@ public class JpoCache {
      * @param file The file of the image
      * @return and ImageBytes object
      * @throws IOException if something went wrong
-     */
+     *
+    @Deprecated
     public static ImageBytes getHighresImageBytes(final File file) throws IOException {
         LOGGER.log(Level.FINE, "Hitting cache for file {0}", file);
         var imageBytes = highresMemoryCache.get(file);
@@ -177,6 +178,25 @@ public class JpoCache {
         }
         LOGGER.log(Level.FINE, "Returning {0} bytes from file {1} loaded from cache: {2}", new Object[]{imageBytes.getBytes().length, file, imageBytes.isRetrievedFromCache()});
         return imageBytes;
+    }*/
+
+    /**
+     * Returns the highres image bytes from the cache or disk
+     *
+     * @param file The file of the image
+     * @return and ImageBytes object
+     * @throws IOException if something went wrong
+     */
+    public static ImageBytes getHighresImageBytes(final String sha256, final File file) throws IOException {
+        LOGGER.log(Level.FINE, "Hitting cache for sha256 {0}", sha256);
+        var imageBytes = highresMemoryCache.get(sha256);
+        if (imageBytes != null) {
+            imageBytes.setRetrievedFromCache(true);
+        } else {
+            imageBytes = getHighresImageBytesFromFile(sha256, file);
+        }
+        LOGGER.log(Level.FINE, "Returning {0} bytes from file {1} loaded from cache: {2}", new Object[]{imageBytes.getBytes().length, file, imageBytes.isRetrievedFromCache()});
+        return imageBytes;
     }
 
     /**
@@ -185,12 +205,12 @@ public class JpoCache {
      * @param file
      * @return
      */
-    private static ImageBytes getHighresImageBytesFromFile(final File file) throws IOException {
+    private static ImageBytes getHighresImageBytesFromFile(final String sha256, final File file) throws IOException {
         LOGGER.log(Level.FINE, "Loading file from disk file {0}", file);
         final var imageBytes = new ImageBytes(IOUtils.toByteArray(new BufferedInputStream(new FileInputStream(file))));
         imageBytes.setRetrievedFromCache(false);
         imageBytes.setLastModification(Files.getLastModifiedTime(file.toPath()));
-        storeInHighresCache(file, imageBytes);
+        storeInHighresCache(sha256, imageBytes);
         return imageBytes;
     }
 
@@ -199,10 +219,25 @@ public class JpoCache {
      *
      * @param file       The file that was loaded
      * @param imageBytes the ImageBytes object to store
-     */
+     *
+    @Deprecated
     private static void storeInHighresCache(final File file, final ImageBytes imageBytes) {
         try {
             highresMemoryCache.put(file, imageBytes);
+        } catch (final NullPointerException | CacheException ex) {
+            LOGGER.severe(ex.getLocalizedMessage());
+        }
+    }*/
+
+    /**
+     * Stores the highres imageBytes object into the highres cache
+     *
+     * @param sha256       The sha256 of the file that was loaded
+     * @param imageBytes the ImageBytes object to store
+     */
+    private static void storeInHighresCache(final String sha256, final ImageBytes imageBytes) {
+        try {
+            highresMemoryCache.put(sha256, imageBytes);
         } catch (final NullPointerException | CacheException ex) {
             LOGGER.severe(ex.getLocalizedMessage());
         }
@@ -249,7 +284,7 @@ public class JpoCache {
      * @return the thumbnail
      */
     private static ImageBytes createThumbnailAndStoreInCache(final String key, final File imageFile, final double rotation, final Dimension maxSize) {
-        final var imageBytes = createThumbnail(imageFile, rotation, maxSize);
+        final var imageBytes = createThumbnail(key, imageFile, rotation, maxSize);
         try {
             thumbnailMemoryAndDiskCache.put(key, imageBytes);
         } catch (CacheException ex) {
@@ -266,7 +301,7 @@ public class JpoCache {
      * @param maxSize the maximum size
      * @return the thumbnail
      */
-    private static ImageBytes createThumbnail(final File file, final double rotation, final Dimension maxSize) {
+    private static ImageBytes createThumbnail(final String sha256, final File file, final double rotation, final Dimension maxSize) {
         if (!org.jpo.datamodel.ImageIO.jvmHasReader(file)) {
             return null;
         }
@@ -278,7 +313,7 @@ public class JpoCache {
             scalablePicture.setQualityScale();
         }
         scalablePicture.setScaleSize(maxSize);
-        scalablePicture.loadPictureImd(file, rotation);
+        scalablePicture.loadPictureImd(sha256, file, rotation);
         if (scalablePicture.getSourcePicture() == null) {
             return null;
         }
@@ -408,7 +443,7 @@ public class JpoCache {
             }
 
             final var scalablePicture = new ScalablePicture();
-            scalablePicture.loadPictureImd(pictureInfo.getImageFile(), pictureInfo.getRotation());
+            scalablePicture.loadPictureImd(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getRotation());
 
             scalablePicture.setScaleSize(Settings.miniThumbnailSize);
             scalablePicture.scalePicture();
@@ -490,11 +525,11 @@ public class JpoCache {
     /**
      * Accessor to the cache to facilitate unit tests.
      *
-     * @param key the entry to remove
+     * @param sha256 the entry to remove
      */
     @TestOnly
-    public static void removeFromHighresCache(final File key) {
-        highresMemoryCache.remove(key);
+    public static void removeFromHighresCache(final String sha256) {
+        highresMemoryCache.remove(sha256);
     }
 
 }

@@ -249,7 +249,7 @@ public class Emailer
 
                 if ( scaleImages ) {
                     LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerLoading"), pi.getImageFile()});
-                    scalablePicture.loadPictureImd(pi.getImageFile(), pi.getRotation());
+                    scalablePicture.loadPictureImd(pi.getSha256(), pi.getImageFile(), pi.getRotation());
                     LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerScaling"), pi.getImageFile()});
                     scalablePicture.scalePicture();
                     baos = new ByteArrayOutputStream();

@@ -179,7 +179,7 @@ public class ScalablePicture
      * @param rotation	The rotation 0-360 that the image should be put through
      * after loading.
      */
-    public void loadAndScalePictureInThread( final File file, final int priority, final double rotation ) {
+    public void loadAndScalePictureInThread( final String sha256, final File file, final int priority, final double rotation ) {
         this.imageFile = file;
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
@@ -188,7 +188,7 @@ public class ScalablePicture
         sourcePicture.addListener(this);
         setStatus(SCALABLE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
         scaleAfterLoad = true;
-        sourcePicture.loadPictureInThread( file, priority, rotation );
+        sourcePicture.loadPictureInThread( sha256, file, priority, rotation );
         // when the thread is done it sends a sourceStatusChange message to us
     }
 
@@ -198,14 +198,14 @@ public class ScalablePicture
      * @param imageFile The image File to be loaded
      * @param rotation  The angle by which it is to be rotated upon loading.
      */
-    public void loadPictureImd( final File imageFile, final double rotation ) {
+    public void loadPictureImd( final String sha256, final File imageFile, final double rotation ) {
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
         sourcePicture = new SourcePicture();
         scaleAfterLoad = false;
         LOGGER.log(Level.FINE, "About to load image: {0}", imageFile);
-        sourcePicture.loadPicture(imageFile, rotation);
+        sourcePicture.loadPicture(sha256, imageFile, rotation);
         LOGGER.log(Level.FINE, "Finished loading image: {0}", imageFile);
     }
 
