@@ -266,6 +266,14 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoriesJSP.revalidate();
     }
 
+    public void setCategoryLockMode() {
+        for ( Component c : categoriesJPanel.getComponents() ) {
+            if (c instanceof CategoryButton categoryButton) {
+                categoryButton.setRemoveButtonVisibility();
+            }
+        }
+    }
+
     @TestOnly
     public void removeFirstCategory() {
         categoriesJPanel.remove(0);

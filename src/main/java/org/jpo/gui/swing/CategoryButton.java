@@ -1,9 +1,6 @@
 package org.jpo.gui.swing;
 
-import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
-import org.jpo.eventbus.CollectionLockNotification;
-import org.jpo.eventbus.JpoEventBus;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -73,7 +70,6 @@ public class CategoryButton extends JPanel {
         setRemoveButtonVisibility();
         this.add(removeButton);
         this.revalidate(); // makes the JScrollPanel reevaluate it's size so it grows
-        JpoEventBus.getInstance().register(this);
     }
 
     /**
@@ -94,12 +90,7 @@ public class CategoryButton extends JPanel {
         categoryLabel.addActionListener(actionListener);
     }
 
-    @Subscribe
-    public void handleCollectionLockNotification(CollectionLockNotification event) {
-        setRemoveButtonVisibility();
-    }
-
-    private void setRemoveButtonVisibility() {
+    public void setRemoveButtonVisibility() {
         removeButton.setVisible(Settings.getPictureCollection().getAllowEdits());
     }
 }

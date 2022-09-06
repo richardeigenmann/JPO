@@ -1,12 +1,10 @@
 package org.jpo.gui;
 
+import com.google.common.eventbus.Subscribe;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
-import org.jpo.eventbus.CategoryAssignmentWindowRequest;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.RemoveCategoryFromPictureInfoRequest;
-import org.jpo.eventbus.ShowQueryRequest;
+import org.jpo.eventbus.*;
 import org.jpo.gui.swing.CategoryButton;
 import org.jpo.gui.swing.PicturePopupMenu;
 import org.jpo.gui.swing.RenameMenuItems;
@@ -172,7 +170,12 @@ public class ThumbnailDescriptionController
         );
 
         setVisible(false);
+        JpoEventBus.getInstance().register(this);
+    }
 
+    @Subscribe
+    public void handleCollectionLockNotification(final CollectionLockNotification event) {
+        panel.setCategoryLockMode();
     }
 
     /**
