@@ -19,10 +19,13 @@ package org.jpo.gui.swing;
  */
 
 
+import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.eventbus.CollectionLockNotification;
+import org.jpo.eventbus.JpoEventBus;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -147,6 +150,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoryMenuPopupButton.setContentAreaFilled(false);
         categoryMenuPopupButton.setFocusPainted(false);
         categoryMenuPopupButton.setOpaque(false);
+        JpoEventBus.getInstance().register(this);
 
         // this is a bit of a cludge to get the JTextArea to grow in height as text is
         // being entered. Annoyingly the getPreferredSize of the JTextArea doesn't immediately
@@ -335,5 +339,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     }
 
-
+    @Subscribe
+    public void handleCollectionLockNotification(CollectionLockNotification event) {
+        categoryMenuPopupButton.setVisible(Settings.getPictureCollection().getAllowEdits());
+    }
 }
