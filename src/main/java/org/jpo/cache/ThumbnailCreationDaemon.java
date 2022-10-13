@@ -3,6 +3,7 @@ package org.jpo.cache;
 import org.jpo.datamodel.*;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -78,7 +79,7 @@ public class ThumbnailCreationDaemon implements Runnable {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", resource);
             return null;
         } else {
-            return new ImageIcon(resource);
+            return new ImageIcon(resourceURL);
         }
     }
 
@@ -146,32 +147,9 @@ public class ThumbnailCreationDaemon implements Runnable {
 
         try {
             if (userObject instanceof PictureInfo pictureInfo) {
-                if (MimeTypes.isAMovie(pictureInfo.getImageFile())) {
-                    request.setIcon(MOVIE_ICON);
-                } else if (MimeTypes.isADocument(pictureInfo.getImageFile())) {
-                    request.setIcon(DOCUMENT_ICON);
-                } else if (!ImageIO.jvmHasReader(pictureInfo.getImageFile())) {
-                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
-                } else {
-                    final var imageBytes = JpoCache.getThumbnailImageBytes(pictureInfo.getImageFile(),
-                            pictureInfo.getRotation(),
-                            request.getSize());
-                    if (imageBytes == null) {
-                        LOGGER.log(Level.INFO, "Cache returned a null instead of image bytes for request {0} Setting BROKEN_THUMBNAIL_PICTURE", pictureInfo);
-                        request.setIcon(BROKEN_THUMBNAIL_PICTURE);
-                    } else {
-                        request.setIcon(new ImageIcon(imageBytes.getBytes()));
-                    }
-                }
+                processPictureInfoRequest(request, pictureInfo);
             } else if (userObject instanceof GroupInfo) {
-                final List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes(false);
-
-                final var imageBytes = JpoCache.getGroupThumbnailImageBytes(childPictureNodes);
-                if (imageBytes == null) {
-                    request.setIcon(BROKEN_THUMBNAIL_PICTURE);
-                } else {
-                    request.setIcon(new ImageIcon(imageBytes.getBytes()));
-                }
+                processGroupInfoRequest(request);
             } else {
                 request.setIcon(BROKEN_THUMBNAIL_PICTURE);
             }
@@ -180,6 +158,40 @@ public class ThumbnailCreationDaemon implements Runnable {
             request.setIcon(BROKEN_THUMBNAIL_PICTURE);
         }
         request.notifyCallbackHandler();
+    }
+
+    private static void processGroupInfoRequest(final ThumbnailQueueRequest request) throws IOException {
+        final List<SortableDefaultMutableTreeNode> childPictureNodes = request.getNode().getChildPictureNodes(false);
+
+        final var imageBytes = JpoCache.getGroupThumbnailImageBytes(childPictureNodes);
+        if (imageBytes == null) {
+            request.setIcon(BROKEN_THUMBNAIL_PICTURE);
+        } else {
+            request.setIcon(new ImageIcon(imageBytes.getBytes()));
+        }
+    }
+
+    private static void processPictureInfoRequest(final ThumbnailQueueRequest request, final PictureInfo pictureInfo) {
+        final File imageFile = pictureInfo.getImageFile();
+        if (! imageFile.exists() || ! imageFile.canRead() ) {
+            request.setIcon(BROKEN_THUMBNAIL_PICTURE);
+        } else if (MimeTypes.isAMovie(imageFile)) {
+            request.setIcon(MOVIE_ICON);
+        } else if (MimeTypes.isADocument(imageFile)) {
+            request.setIcon(DOCUMENT_ICON);
+        } else if (!ImageIO.jvmHasReader(imageFile)) {
+            request.setIcon(BROKEN_THUMBNAIL_PICTURE);
+        } else {
+            final var imageBytes = JpoCache.getThumbnailImageBytes(imageFile,
+                    pictureInfo.getRotation(),
+                    request.getSize());
+            if (imageBytes == null) {
+                LOGGER.log(Level.INFO, "Cache returned a null instead of image bytes for request {0}. Setting BROKEN_THUMBNAIL_PICTURE", pictureInfo);
+                request.setIcon(BROKEN_THUMBNAIL_PICTURE);
+            } else {
+                request.setIcon(new ImageIcon(imageBytes.getBytes()));
+            }
+        }
     }
 
 }

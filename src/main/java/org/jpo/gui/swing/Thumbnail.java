@@ -200,7 +200,7 @@ public class Thumbnail extends JComponent {
      */
     private transient ImageObserver imgOb;
 
-    private static ImageIcon getResourceFromClassLoader(final String resource) {
+    private static ImageIcon getResource(final String resource) {
         final var resourceURL = Thumbnail.class.getClassLoader().getResource(resource);
         if (resourceURL == null) {
             LOGGER.log(Level.SEVERE, "Classloader failed to load file: {0}", resource);
@@ -213,7 +213,7 @@ public class Thumbnail extends JComponent {
     /**
      * This icon indicates that the thumbnail creation is sitting on the queue.
      */
-    private static final ImageIcon QUEUE_ICON = getResourceFromClassLoader("queued_thumbnail.gif");
+    private static final ImageIcon QUEUE_ICON = getResource("queued_thumbnail.gif");
 
     @TestOnly
     ImageIcon getQueueIcon() {
@@ -223,7 +223,7 @@ public class Thumbnail extends JComponent {
     /**
      * This icon shows a large yellow folder.
      */
-    private static final ImageIcon LARGE_FOLDER_ICON = getResourceFromClassLoader("icon_folder_large.jpg");
+    private static final ImageIcon LARGE_FOLDER_ICON = getResource("icon_folder_large.jpg");
 
     @TestOnly
     ImageIcon getLargeFolderIcon() {
@@ -234,7 +234,7 @@ public class Thumbnail extends JComponent {
      * The icon to superimpose on the picture if the highres picture is not
      * available
      */
-    private static final ImageIcon OFFLINE_ICON = getResourceFromClassLoader("icon_offline.gif");
+    private static final ImageIcon OFFLINE_ICON = getResource("icon_offline.gif");
 
     @TestOnly
     ImageIcon getOfflineIcon() {
@@ -244,7 +244,7 @@ public class Thumbnail extends JComponent {
     /**
      * The mail icon to superimpose on the picture
      */
-    private static final ImageIcon MAIL_ICON = getResourceFromClassLoader("icon_mail.gif");
+    private static final ImageIcon MAIL_ICON = getResource("icon_mail.gif");
 
     @TestOnly
     ImageIcon getMailIcon() {
@@ -254,7 +254,7 @@ public class Thumbnail extends JComponent {
     /**
      * The mail icon to superimpose on the picture
      */
-    private static final ImageIcon SELECTED_ICON = getResourceFromClassLoader("icon_selected.gif");
+    private static final ImageIcon SELECTED_ICON = getResource("icon_selected.gif");
 
     @TestOnly
     ImageIcon getSelectedIcon() {
