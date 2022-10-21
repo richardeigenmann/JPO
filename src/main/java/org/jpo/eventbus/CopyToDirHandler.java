@@ -84,14 +84,14 @@ public class CopyToDirHandler {
         final var targetFile = Tools.inventFilename(targetDirectory, originalFile.getName());
         try {
             FileUtils.copyFile(originalFile, targetFile);
-            return true;
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     "IOException: " + e.getMessage(),
                     Settings.getJpoResources().getString("genericError"),
                     JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return false;
+        return true;
     }
 
 }
