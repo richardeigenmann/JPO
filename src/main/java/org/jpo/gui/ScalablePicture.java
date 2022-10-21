@@ -193,7 +193,7 @@ public class ScalablePicture
     }
 
     /**
-     * Loads the image on the current thread. Doesn'tsend status updates.
+     * Loads the image on the current thread. Doesn't send status updates.
      *
      * @param imageFile The image File to be loaded
      * @param rotation  The angle by which it is to be rotated upon loading.
@@ -202,9 +202,9 @@ public class ScalablePicture
         if ( sourcePicture != null ) {
             sourcePicture.removeListener( this );
         }
+        LOGGER.log(Level.FINE, "About to load image: {0}", imageFile);
         sourcePicture = new SourcePicture();
         scaleAfterLoad = false;
-        LOGGER.log(Level.FINE, "About to load image: {0}", imageFile);
         sourcePicture.loadPicture(sha256, imageFile, rotation);
         LOGGER.log(Level.FINE, "Finished loading image: {0}", imageFile);
     }

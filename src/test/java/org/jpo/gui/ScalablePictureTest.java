@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import com.google.common.hash.Hashing;
 import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,10 +38,11 @@ class ScalablePictureTest {
         final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         try {
             final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-            scalablePicture.loadPictureImd(imageFile, 0.0);
+            final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+            scalablePicture.loadPictureImd(hash.toString(), imageFile, 0.0);
             assertEquals(350, scalablePicture.getSourcePicture().getWidth());
             assertEquals(233, scalablePicture.getSourcePicture().getHeight());
-        } catch (final URISyntaxException e) {
+        } catch (final URISyntaxException | IOException e) {
             fail(e.getMessage());
         }
     }
@@ -55,10 +57,11 @@ class ScalablePictureTest {
         final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         try {
             final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-            scalablePicture.loadPictureImd(imageFile, 90.0);
+            final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+            scalablePicture.loadPictureImd(hash.toString(), imageFile, 90.0);
             assertEquals(233, scalablePicture.getSourcePicture().getWidth());
             assertEquals(350, scalablePicture.getSourcePicture().getHeight());
-        } catch (final URISyntaxException e) {
+        } catch (final URISyntaxException | IOException e) {
             fail(e.getMessage());
         }
     }
@@ -74,7 +77,8 @@ class ScalablePictureTest {
         final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
         try {
             final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-            scalablePicture.loadPictureImd(imageFile, 90.0);
+            final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+            scalablePicture.loadPictureImd(hash.toString(), imageFile, 90.0);
             assertEquals(233, scalablePicture.getSourcePicture().getWidth());
             assertEquals(350, scalablePicture.getSourcePicture().getHeight());
 
@@ -82,7 +86,7 @@ class ScalablePictureTest {
             scalablePicture.scalePicture();
             assertEquals(466, scalablePicture.getScaledWidth());
             assertEquals(700, scalablePicture.getScaledHeight());
-        } catch (final URISyntaxException e) {
+        } catch (final URISyntaxException | IOException e) {
             fail(e.getMessage());
         }
     }
@@ -96,13 +100,15 @@ class ScalablePictureTest {
         assertNotNull(scalablePicture);
 
         final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
-        File imageFile = null;
         try {
-            imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-        } catch (final URISyntaxException e) {
+            final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
+            final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+            scalablePicture.loadPictureImd(hash.toString(), imageFile, 0.0);
+        } catch (final URISyntaxException | IOException e) {
             fail(e.getMessage());
         }
-        scalablePicture.loadPictureImd(imageFile, 0.0);
+
+
         assertEquals(350, scalablePicture.getSourcePicture().getWidth());
         assertEquals(233, scalablePicture.getSourcePicture().getHeight());
 
@@ -121,7 +127,8 @@ class ScalablePictureTest {
             assertTrue(outputFile.exists());
 
             final var sourcePicture = new SourcePicture();
-            sourcePicture.loadPicture(outputFile, 0.0);
+            final var hash = com.google.common.io.Files.asByteSource(outputFile).hash(Hashing.sha256());
+            sourcePicture.loadPicture(hash.toString(), outputFile, 0.0);
             assertEquals(700, sourcePicture.getWidth());
             assertEquals(466, sourcePicture.getHeight());
 
