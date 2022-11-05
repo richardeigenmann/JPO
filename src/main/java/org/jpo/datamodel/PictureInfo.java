@@ -580,7 +580,7 @@ public class PictureInfo implements Serializable {
      * @return the creation time
      */
     public synchronized Calendar getCreationTimeAsDate() {
-        return (Tools.parseDate(creationTime));
+        return Tools.parseDate(creationTime);
     }
 
     /**
@@ -1184,12 +1184,20 @@ public class PictureInfo implements Serializable {
     public int compareTo(final @NotNull PictureInfo otherPictureInfo, final Settings.FieldCodes sortField) {
         return switch (sortField) {
             case FILM_REFERENCE -> this.getFilmReference().compareTo(otherPictureInfo.getFilmReference());
-            case CREATION_TIME -> this.getCreationTimeAsDate().compareTo(otherPictureInfo.getCreationTimeAsDate());
+            case CREATION_TIME -> compareDates(this.getCreationTimeAsDate(), otherPictureInfo.getCreationTimeAsDate());
             case COMMENT -> this.getComment().compareTo(otherPictureInfo.getComment());
             case PHOTOGRAPHER -> this.getPhotographer().compareTo(otherPictureInfo.getPhotographer());
             case COPYRIGHT_HOLDER -> this.getCopyrightHolder().compareTo(otherPictureInfo.getCopyrightHolder());
             default -> this.getDescription().compareTo(otherPictureInfo.getDescription());
         };
+    }
+
+    private int compareDates(final Calendar myCreationCalendar, final Calendar otherCreationCalendar){
+        if ( myCreationCalendar == null || otherCreationCalendar == null ) {
+            return 0; // retain the sort order
+        } else {
+            return myCreationCalendar.compareTo(otherCreationCalendar);
+        }
     }
 
 }

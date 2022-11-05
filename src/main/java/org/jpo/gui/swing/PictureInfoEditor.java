@@ -24,8 +24,6 @@ import java.awt.event.*;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -710,18 +708,11 @@ public class PictureInfoEditor extends JFrame {
      * Reparse the date from the EXIF information
      */
     private void doReparseDate() {
-        try {
-            final var url = new URL(highresLocationJTextField.getText());
-            final var file = new File(url.toURI());
-            final var exifInfo = new ExifInfo(file);
-            final var timestamp = exifInfo.getCreateDateTime();
-            creationTimeJTextField.setText(timestamp);
-            parseTimestamp(timestamp);
-
-        } catch (final MalformedURLException | URISyntaxException ex) {
-            Logger.getLogger(PictureInfoEditor.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
+        final var file = new File(highresLocationJTextField.getText());
+        final var exifInfo = new ExifInfo(file);
+        final var timestamp = exifInfo.getCreateDateTime();
+        creationTimeJTextField.setText(timestamp);
+        parseTimestamp(timestamp);
     }
 
     /**

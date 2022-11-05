@@ -4,12 +4,13 @@ import org.jpo.datamodel.Camera;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
 
 import javax.swing.tree.TreeModel;
 import java.awt.*;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -156,7 +157,20 @@ public class CameraDownloadWizardData {
     /**
      * The description of the new Group. It defaults to "Download &lt;&lt;date&gt;&gt;"
      */
-    private String newGroupDescription = "Download " + Tools.currentDate( Settings.ADD_FROM_CAMERA_DATE_FORMAT);
+    private String newGroupDescription = "Download " + currentDate( Settings.ADD_FROM_CAMERA_DATE_FORMAT);
+
+    /**
+     * returns the current date and time formatted per the formatting string.
+     * See the API doc on SimpleDateFormat for the meaning of the letters.
+     *
+     * @param formatString The format string
+     * @return current date and time
+     */
+    private static String currentDate(final String formatString) {
+        final SimpleDateFormat formatter = new SimpleDateFormat(formatString);
+        final Date currentTime = new Date();
+        return formatter.format(currentTime);
+    }
 
     /**
      * Sets the name for the new group, if a new group should be created. If

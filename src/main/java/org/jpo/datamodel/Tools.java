@@ -6,8 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;
-import java.io.*;
-import java.text.SimpleDateFormat;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -16,7 +18,6 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -241,27 +242,12 @@ public class Tools {
     }
 
 
-
-    /**
-     * returns the current date and time formatted per the formatting string.
-     * See the API doc on SimpleDateFormat for the meaning of the letters.
-     *
-     * @param formatString The format string
-     * @return current date and time
-     */
-    public static String currentDate(final String formatString) {
-        final SimpleDateFormat formatter = new SimpleDateFormat(formatString);
-        final Date currentTime = new Date();
-        return formatter.format(currentTime);
-    }
-
-
     /*
-     * This method tries it's best to parse the supplied date into a Java Date
-     * object.
+     * This method tries its best to parse the supplied date into a Java Date
+     * object. If the date can't be parsed it returns null.
      *
      * @param dateString the String to be parsed
-     * @return the Java Calendar object or null if it could not be parsed.
+     * @return the Java Calendar object with the parsed date
      */
     public static Calendar parseDate(final String dateString) {
         final String[] patterns = {
