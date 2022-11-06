@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 /*
  ApplicationJMenuBar.java:  main menu for the application
@@ -133,7 +134,7 @@ public class ApplicationJMenuBar extends JMenuBar {
             for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
                 recentOpenedFileJMenuItem[i] = new JMenuItem();
                 final int index = i;  // the anonymous inner class needs a final variable
-                recentOpenedFileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new OpenRecentCollectionRequest(index))));
+                recentOpenedFileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new FileLoadRequest(new File(Settings.getRecentCollections()[index])))));
                 recentOpenedFileJMenuItem[i].setVisible(false);
                 recentOpenedFileJMenuItem[i].setAccelerator(KeyStroke.getKeyStroke("control " + Integer.toString(i).substring(1, 1)));
                 fileOpenRecentJMenu.add(recentOpenedFileJMenuItem[i]);

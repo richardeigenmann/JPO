@@ -72,7 +72,7 @@ public class EventBusViewer extends JPanel {
     }
 
     /**
-     * Handles the UpdateApplicationTitleRequest by loggin the title
+     * Handles the UpdateApplicationTitleRequest by logging the title
      *
      * @param request the request to log
      */

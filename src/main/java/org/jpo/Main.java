@@ -26,8 +26,8 @@ import org.jpo.gui.ApplicationStartupHandler;
  * The first class to be started to get the JPO application going.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.14
- * @since JDK1.12.0
+ * @version 0.18
+ * @since JDK1.18.0
  */
 public class Main {
 
@@ -106,7 +106,6 @@ public class Main {
         JpoEventBus.getInstance().register(new MoveNodeHandler());
         JpoEventBus.getInstance().register(new RemoveNodeHandler());
         JpoEventBus.getInstance().register(new DeleteNodeFileHandler());
-        JpoEventBus.getInstance().register(new OpenRecentCollectionHandler());
         JpoEventBus.getInstance().register(new ChooseAndAddPicturesToGroupHandler());
         JpoEventBus.getInstance().register(new PictureControllerZoomHandler());
         JpoEventBus.getInstance().register(new ChooseAndAddFlatfileHandler());
@@ -129,6 +128,7 @@ public class Main {
         JpoEventBus.getInstance().register(new FindBasedirHandler());
         JpoEventBus.getInstance().register(new StartThumbnailCreationDaemonWatchDogHandler());
         JpoEventBus.getInstance().register(new StartHashCodeScannerHandler());
+        JpoEventBus.getInstance().register(new CheckForCollectionProblemsHandler());
     }
 
 

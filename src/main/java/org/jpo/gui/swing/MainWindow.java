@@ -54,12 +54,12 @@ public class MainWindow extends ResizableJFrame {
      * The controller for the Docking Frames framework that controls all the
      * internal windows.
      */
-    private final transient CControl control;
+    private final transient CControl control = new CControl(this);
 
     /**
      * The grid to which all components are added
      */
-    private final transient CGrid grid;
+    private final transient CGrid grid = new CGrid(control);
 
     /**
      * A handle to the Collection Tree so that we can ask it to move to the
@@ -88,9 +88,6 @@ public class MainWindow extends ResizableJFrame {
      */
     public MainWindow() {
         super(Settings.getJpoResources().getString("ApplicationTitle"));
-        // Set up Docking Frames
-        control = new CControl(this);
-        grid = new CGrid(control);
         initComponents();
     }
 
@@ -149,13 +146,11 @@ public class MainWindow extends ResizableJFrame {
                 Settings.getJpoResources().getString("jpoTabbedPaneSearches"),
                 new QueriesJTreeController().getJComponent());
 
-        final var eventBusViewerJPanel = new EventBusViewer();
-
         final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
         final var statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
         final var mapsDockable = new DefaultSingleCDockable("MapId", "Map", mapWindow.getJComponent());
+        final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", new EventBusViewer());
         final var thumbnailsDockable = new DefaultSingleCDockable("ThumbnailsId", "Thumbnails", thumbnailPanel);
-        final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", eventBusViewerJPanel);
 
         grid.add(0, 0, 0.2, 0.8, tree);
         grid.add(0, 0, 0.2, 0.8, searches);
@@ -167,9 +162,7 @@ public class MainWindow extends ResizableJFrame {
         }
         grid.add(1, 0, .5, 2, thumbnailsDockable);
 
-        final CContentArea content = control.getContentArea();
-        content.deploy(grid);
-
+        control.getContentArea().deploy(grid);
         getContentPane().add(control.getContentArea());
 
         pack();

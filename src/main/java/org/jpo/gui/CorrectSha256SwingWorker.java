@@ -15,8 +15,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
-
  Copyright (C) 2022  Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -32,6 +30,9 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Looks for missing SHA256 code and corrects them.
+ */
 public class CorrectSha256SwingWorker extends SwingWorker<Integer, String> {
 
     private SortableDefaultMutableTreeNode startNode;
