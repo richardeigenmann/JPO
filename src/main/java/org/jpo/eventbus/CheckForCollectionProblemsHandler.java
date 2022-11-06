@@ -5,8 +5,6 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -29,9 +27,6 @@ import java.util.logging.Logger;
  */
 public class CheckForCollectionProblemsHandler {
 
-
-    private static final Logger LOGGER = Logger.getLogger(CheckForCollectionProblemsHandler.class.getName());
-
     /**
      * Checks the loaded collection for problems and suggests measures
      *
@@ -50,9 +45,7 @@ public class CheckForCollectionProblemsHandler {
                     "WARNING",
                     JOptionPane.YES_NO_OPTION);
             if (choice == JOptionPane.YES_OPTION) {
-                LOGGER.log(Level.INFO, "Correct NOW!");
-            } else {
-                LOGGER.log(Level.INFO, "No Correct !");
+                JpoEventBus.getInstance().post(new StartHashCodeScannerRequest(Settings.getPictureCollection().getRootNode()));
             }
         });
 

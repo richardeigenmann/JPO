@@ -375,7 +375,7 @@ public class ApplicationJMenuBar extends JMenuBar {
             add(findBaseDirJMenuItem);
 
             final var scanHashCodeJMenuItem = new JMenuItem("Scan for checksums");
-            scanHashCodeJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post((new StartHashCodeScannerRequest(Settings.getPictureCollection().getRootNode()))));
+            scanHashCodeJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new StartHashCodeScannerRequest(Settings.getPictureCollection().getRootNode())));
             add(scanHashCodeJMenuItem);
 
             setMenuTexts();

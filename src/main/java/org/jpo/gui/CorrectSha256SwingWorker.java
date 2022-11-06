@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.FileSaveRequest;
 import org.jpo.eventbus.JpoEventBus;
@@ -10,7 +11,6 @@ import org.jpo.eventbus.StartNewCollectionHandler;
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,8 +37,47 @@ public class CorrectSha256SwingWorker extends SwingWorker<Integer, String> {
 
     private SortableDefaultMutableTreeNode startNode;
 
+
+    final PrivateFileSaveAsHandler privateFileSaveAsHandler = new PrivateFileSaveAsHandler();
+    final PrivateStartNewCollectionHandler privateStartNewCollectionHandler = new PrivateStartNewCollectionHandler();
+
+
+    private final JProgressBar progressBar = new JProgressBar();
+
+
+    final JFrame frame = new JFrame();
+
     public CorrectSha256SwingWorker(final SortableDefaultMutableTreeNode startNode) {
         this.startNode = startNode;
+
+        final var jPanel = new JPanel();
+        jPanel.setLayout( new BoxLayout( jPanel, BoxLayout.PAGE_AXIS ) );
+
+        jPanel.add(new JLabel("Creating hash codes..."));
+
+
+        var picsToProcess = startNode.getChildPictureNodesDFS().filter(
+                node -> {
+                    final var pictureInfo = (PictureInfo) node.getUserObject();
+                    return pictureInfo.getSha256().equals("");
+                }).count();
+        publish(String.format("%d PictureInfo objects have missing sha256 file hashes%n", picsToProcess));
+
+        progressBar.setMinimum( 0 );
+        progressBar.setMaximum( (int) picsToProcess );
+        progressBar.setStringPainted( true );
+        jPanel.add( progressBar );
+        final var stopButton = new JButton("Stop");
+        stopButton.addActionListener(e -> stopTheJob.set(true));
+        jPanel.add( stopButton );
+
+        frame.getContentPane().add(jPanel);
+        frame.setLocationRelativeTo(Settings.getAnchorFrame());
+        frame.pack();
+        frame.setVisible(true);
+
+        JpoEventBus.getInstance().register(privateFileSaveAsHandler);
+        JpoEventBus.getInstance().register(privateStartNewCollectionHandler);
     }
 
     /**
@@ -48,50 +87,44 @@ public class CorrectSha256SwingWorker extends SwingWorker<Integer, String> {
 
     @Override
     protected Integer doInBackground() {
-
-        final var privateFileSaveAsHandler = new PrivateFileSaveAsHandler();
-        final var privateStartNewCollectionHandler = new PrivateStartNewCollectionHandler();
-        JpoEventBus.getInstance().register(privateFileSaveAsHandler);
-        JpoEventBus.getInstance().register(privateStartNewCollectionHandler);
-
-        var missing = startNode.getChildPictureNodesDFS().filter(
-                node -> {
+        try {
+            startNode
+                .getChildPictureNodesDFS()
+                .filter( node -> {
                     final var pictureInfo = (PictureInfo) node.getUserObject();
                     return pictureInfo.getSha256().equals("");
-                }).count();
-        publish(String.format("%d PictureInfo objects have missing sha256 file hashes%n", missing));
-
-        final var hashCodesFixed = new AtomicInteger();
-
-        try {
-            startNode.getChildPictureNodesDFS().filter(
-                    node -> {
-                        final var pictureInfo = (PictureInfo) node.getUserObject();
-                        return pictureInfo.getSha256().equals("");
-                    }).forEach(node -> {
-                final var pictureInfo = (PictureInfo) node.getUserObject();
-                pictureInfo.setSha256();
-                hashCodesFixed.getAndIncrement();
-                if (hashCodesFixed.get() % 50 == 0) {
-                    publish(String.format("%d sha-256 hash codes populated out of %d nodes", hashCodesFixed.get(), missing));
-                }
-                if (stopTheJob.get()) {
-                    throw new BreakException();
-                }
-            });
+                })
+                .forEach(node -> {
+                    final var pictureInfo = (PictureInfo) node.getUserObject();
+                    pictureInfo.setSha256();
+                    publish(pictureInfo.getImageLocation());
+                    if (stopTheJob.get()) {
+                        throw new BreakException();
+                    }
+                });
         } catch (BreakException e) {
             // OK, we need to stop here
         }
 
-        JpoEventBus.getInstance().unregister(privateFileSaveAsHandler);
-        JpoEventBus.getInstance().unregister(privateStartNewCollectionHandler);
-
-        return hashCodesFixed.get();
+        return null;
     }
 
     @Override
     protected void process(final List<String> chunks) {
         chunks.forEach(e -> LOGGER.log(Level.INFO, e));
+        SwingUtilities.invokeLater(
+                () -> progressBar.setValue(progressBar.getValue() + chunks.size())
+        );
+    }
+
+    /**
+     * The Swing Worked calls this method when done.
+     */
+    @Override
+    protected void done() {
+        progressBar.setValue(progressBar.getMaximum());
+        JpoEventBus.getInstance().unregister(privateFileSaveAsHandler);
+        JpoEventBus.getInstance().unregister(privateStartNewCollectionHandler);
     }
 
     AtomicBoolean stopTheJob = new AtomicBoolean(false);
