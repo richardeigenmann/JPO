@@ -22,9 +22,9 @@ import java.util.Collection;
  */
 
 /**
- * This request indicates that the user wants to delete the file of a specific node and remove the node
+ * This request indicates that the user wants to delete the picture files of nodes and remove the nodes
  *
- * @param nodes The node for which the file and the node are to be deleted
+ * @param nodes The nodes for which the file and the node are to be deleted
  * @author Richard Eigenmann
  */
 public record DeleteNodeFileRequest(@NotNull Collection<SortableDefaultMutableTreeNode> nodes) {

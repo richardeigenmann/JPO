@@ -9,9 +9,9 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 
 /**
- * Handles the request to delete the files of a node
+ * Handles the request to delete the picture files of nodes
  */
 public class DeleteNodeFileHandler {
 
@@ -44,47 +44,6 @@ public class DeleteNodeFileHandler {
      */
     private static final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
 
-    /**
-     * Deletes the file and the node
-     *
-     * @param request the request the request
-     */
-    @Subscribe
-    public void handleEvent(final DeleteNodeFileRequest request) {
-        request
-                .nodes()
-                .stream()
-                .filter(e -> e.getUserObject() instanceof PictureInfo)
-                .forEach(this::deletePictureInfo);
-    }
-
-    /**
-     * Deletes the file and the node
-     *
-     * @param node the node to delete
-     */
-    void deletePictureInfo(final SortableDefaultMutableTreeNode node) {
-        var pictureInfo = (PictureInfo) node.getUserObject();
-        final var highresFile = pictureInfo.getImageFile();
-        final int option = JOptionPane.showConfirmDialog(
-                Settings.getAnchorFrame(),
-                Settings.getJpoResources().getString("FileDeleteLabel") + highresFile + "\n" + Settings.getJpoResources().getString("areYouSure"),
-                Settings.getJpoResources().getString("FileDeleteTitle"),
-                JOptionPane.OK_CANCEL_OPTION);
-
-        if (option == 0 && highresFile.exists()) {
-            try {
-                deleteNodeAndFile(node);
-            } catch (IOException e) {
-                LOGGER.log(Level.INFO, "File deleted failed on file {0}: {1}", new Object[]{highresFile, e.getMessage()});
-                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("fileDeleteError") + highresFile + e.getMessage(),
-                        GENERIC_ERROR,
-                        JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
 
     /**
      * Deletes the file and the node
@@ -92,25 +51,26 @@ public class DeleteNodeFileHandler {
      * @param request the request
      */
     @Subscribe
-    public void handleEvent(final DeleteMultiNodeFileRequest request) {
+    public void handleEvent(final DeleteNodeFileRequest request) {
         final var textArea = new JTextArea();
-        textArea.setText(getFilenames(request.nodes()));
+        textArea.setText(getFilenames(request));
+        textArea.append("\n");
         textArea.append(Settings.getJpoResources().getString("areYouSure"));
 
         final int option = JOptionPane.showConfirmDialog(
-                Settings.getAnchorFrame(), //very annoying if the main window is used as it forces itself into focus.
+                Settings.getAnchorFrame(),
                 textArea,
                 Settings.getJpoResources().getString("FileDeleteLabel"),
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
-            for (final SortableDefaultMutableTreeNode selectedNode : request.nodes()) {
+            for (final var node : request.nodes()) {
                 try {
-                    deleteNodeAndFile(selectedNode);
+                    deleteNodeAndFile(node);
                 } catch (final IOException e) {
-                    LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{selectedNode, e.getMessage()});
+                    LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{node, e.getMessage()});
                     JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            Settings.getJpoResources().getString("fileDeleteError") + selectedNode.toString(),
+                            Settings.getJpoResources().getString("fileDeleteError") + node.toString(),
                             GENERIC_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                 }
@@ -141,14 +101,14 @@ public class DeleteNodeFileHandler {
     }
 
 
-    private String getFilenames(final Collection<SortableDefaultMutableTreeNode> nodes) {
-        final var sb = new StringBuilder();
-        for (final SortableDefaultMutableTreeNode selectedNode : nodes) {
-            if (selectedNode.getUserObject() instanceof PictureInfo pictureInfo) {
-                sb.append(pictureInfo.getImageLocation() + "\n");
-            }
-        }
-        return sb.toString();
+
+    private String getFilenames(final DeleteNodeFileRequest request) {
+        return  request
+        .nodes()
+        .stream()
+        .filter(node -> node.getUserObject() instanceof PictureInfo)
+        .map(node -> ((PictureInfo) node.getUserObject()).getImageFile().toString() )
+        .collect(Collectors.joining("\n"));
     }
 
 }
