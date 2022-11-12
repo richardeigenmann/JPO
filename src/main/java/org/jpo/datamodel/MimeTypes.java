@@ -43,7 +43,7 @@ public class MimeTypes {
     public static String getMimeType(final File file) {
         try {
             if (!file.exists()) {
-                LOGGER.log(Level.SEVERE, "File {0} doesnt exist!", file);
+                LOGGER.log(Level.SEVERE, "File {0} doesn't exist!", file);
                 return "null";
             } else if (!file.canRead()) {
                 LOGGER.log(Level.SEVERE, "File {0} cant be read!", file);
@@ -61,9 +61,11 @@ public class MimeTypes {
 
     public static boolean isADocument(final File file) {
         var mimeType = getMimeType(file);
+        System.out.println(mimeType);
         return "application/msword".equals(mimeType)
                 || "application/vnd.openxmlformats-officedocument.wordprocessingml.document".equals(mimeType)
-                || "application/vnd.oasis.opendocument.text".equals(mimeType);
+                || "application/vnd.oasis.opendocument.text".equals(mimeType)
+                || "application/pdf".equals(mimeType);
     }
 
     public static boolean isAMovie(final File file) {

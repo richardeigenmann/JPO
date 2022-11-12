@@ -1009,7 +1009,7 @@ public class SortableDefaultMutableTreeNode
      *
      * @param addFile            the file of the picture that should be added
      * @param newOnly            flag whether to check if the picture is in the collection
-     *                           already; if true will only add the picture if its not yet included
+     *                           already; if true will only add the picture if it is not yet included
      * @param selectedCategories selected categories
      * @return true if the node was added, false if not.
      */

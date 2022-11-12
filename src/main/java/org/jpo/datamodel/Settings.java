@@ -2288,10 +2288,9 @@ public class Settings {
      * @param newLocation The new location to memorise
      */
     public static void memorizeDefaultSourceLocation(final String newLocation) {
-        LOGGER.log(Level.INFO, "Memorising Default SourceLocation: {0}", newLocation);
         final var sourceLocationFile = new File(newLocation);
         if (sourceLocationFile.exists() && sourceLocationFile.isDirectory()) {
-            LOGGER.log(Level.INFO, "It exists and is a directory");
+            LOGGER.log(Level.FINE, "Memorising Default SourceLocation {0} since it exists and is a directory", newLocation);
             defaultSourceLocation = newLocation;
             writeSettings();
         }

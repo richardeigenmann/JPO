@@ -1,6 +1,5 @@
 package org.jpo.datamodel;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -181,11 +180,13 @@ class MimeTypesTest {
     }
 
     @Test
-    @Disabled("Doesn't work in Travis")
-    void testIsPicture() {
+    void noPictureFile() {
         var noFile = new File("");
         assertFalse(MimeTypes.isAPicture(noFile));
+    }
 
+    @Test
+    void jpgIsAPicture() {
         try {
             final var image = "exif-test-sony-d700.jpg";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -193,7 +194,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void pngIsAPicture() {
         try {
             final var image = "png.png";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -201,7 +205,9 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
-
+    }
+    @Test
+    void pnmIsAPicture() {
         try {
             final var image = "pnm.pnm";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -209,7 +215,9 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
-
+    }
+    @Test
+    void gifIsAPicture() {
         try {
             final var image = "gif.gif";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -217,7 +225,9 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
-
+    }
+    @Test
+    void psdIsAPicture() {
         try {
             final var image = "psd.psd";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -225,7 +235,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void sgiIsAPicture() {
         try {
             final var image = "sgi.sgi";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -234,7 +247,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void tgaIsAPicture() {
         try {
             final var image = "tga.tga";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -242,7 +258,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void tiffIsAPicture() {
         try {
             final var image = "tiff_image.tiff";
             final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
@@ -250,7 +269,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void docIsNotAPicture() {
         try {
             final var msWordDoc = "MSWord.doc";
             final var msWordDocFile = new File(this.getClass().getClassLoader().getResource(msWordDoc).toURI());
@@ -258,7 +280,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void docxIsNotAPicture() {
         try {
             final var msWordDocx = "MSWord.docx";
             final var msWordDocxFile = new File(this.getClass().getClassLoader().getResource(msWordDocx).toURI());
@@ -266,7 +291,10 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void odtIsNotAPicture() {
         try {
             final var libreOfficeOdt = "LibreOfficeText.odt";
             final var libreOfficeOdtFile = new File(this.getClass().getClassLoader().getResource(libreOfficeOdt).toURI());
@@ -274,11 +302,24 @@ class MimeTypesTest {
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
+    }
 
+    @Test
+    void mp4IsNotAPicture() {
         try {
             final var movie = "PXL_20220212_171902333.mp4";
             final var movieFile = new File(this.getClass().getClassLoader().getResource(movie).toURI());
             assertFalse(MimeTypes.isAPicture(movieFile));
+        } catch (final URISyntaxException e) {
+            fail(e.getMessage());
+        }
+    }
+    @Test
+    void pdfIsADocumnet() {
+        try {
+            final var PDF_DOCUMENT = "pdf-document.pdf";
+            final var pdfDocument = new File(this.getClass().getClassLoader().getResource(PDF_DOCUMENT).toURI());
+            assert(MimeTypes.isADocument(pdfDocument));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
