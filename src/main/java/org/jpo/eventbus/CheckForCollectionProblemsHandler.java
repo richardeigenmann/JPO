@@ -39,15 +39,17 @@ public class CheckForCollectionProblemsHandler {
                 .filter(e -> ((PictureInfo) e.getUserObject()).getSha256().equals(""))
                 .count();
 
-        SwingUtilities.invokeLater(() -> {
-            var choice = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                    String.format("%d SHA256 hash codes missing in collection. Choose Yes to repair", missingSha256Count),
-                    "WARNING",
-                    JOptionPane.YES_NO_OPTION);
-            if (choice == JOptionPane.YES_OPTION) {
-                JpoEventBus.getInstance().post(new StartHashCodeScannerRequest(Settings.getPictureCollection().getRootNode()));
-            }
-        });
+        if (missingSha256Count > 0) {
+            SwingUtilities.invokeLater(() -> {
+                var choice = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
+                        String.format("%d SHA256 hash codes missing in collection. Choose Yes to repair", missingSha256Count),
+                        "WARNING",
+                        JOptionPane.YES_NO_OPTION);
+                if (choice == JOptionPane.YES_OPTION) {
+                    JpoEventBus.getInstance().post(new StartHashCodeScannerRequest(Settings.getPictureCollection().getRootNode()));
+                }
+            });
+        }
 
 
     }
