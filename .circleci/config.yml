@@ -5,7 +5,7 @@
 version: 2.1
 
 orbs:
-  gradle: circleci/gradle@2.2.0
+  gradle: circleci/gradle@3.0.0
 
 jobs:
   build:
