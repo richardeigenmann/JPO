@@ -1,13 +1,13 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.ben-manes.versions" version "0.44.0" // dependency updates
+    id "com.github.ben-manes.versions" version "0.46.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
     id 'org.beryx.jlink' version '2.26.0'
     id "org.javamodularity.moduleplugin" version "1.8.12"
-    id "org.sonarqube" version "3.5.0.2730"
+    id "org.sonarqube" version "4.0.0.2929"
     id 'jacoco'
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 
@@ -24,11 +24,11 @@ application {
 }
 
 dependencies {
-    implementation 'com.miglayout:miglayout-swing:11.0'
-    implementation 'com.miglayout:miglayout-core:11.0'
+    implementation 'com.miglayout:miglayout-swing:11.1'
+    implementation 'com.miglayout:miglayout-core:11.1'
     implementation 'org.apache.commons:commons-text:1.9'
     implementation files('libs/tagcloud.library-0.0.1.jar')
-    implementation 'org.apache.commons:commons-compress:1.22'
+    implementation 'org.apache.commons:commons-compress:1.23.0'
     implementation 'org.apache.commons:commons-jcs3:3.1'
     implementation 'org.apache.commons:commons-jcs3-core:3.1'
     implementation 'org.apache.commons:commons-jcs3-jcache:3.1'
@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'commons-net:commons-net:3.9.0'
-    implementation 'org.jetbrains:annotations:24.0.0'
+    implementation 'org.jetbrains:annotations:24.0.1'
     implementation 'com.google.gdata:core:1.47.1', {
         exclude group: "xpp3", module: "xpp3"
     }
@@ -88,7 +88,7 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.9.4'
-    implementation group: 'org.json', name: 'json', version: '20220924'
+    implementation group: 'org.json', name: 'json', version: '20230227'
     implementation 'com.jidesoft:jide-oss:3.6.18'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
