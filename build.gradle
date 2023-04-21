@@ -11,7 +11,7 @@ plugins {
 }
 
 
-version = 0.18
+version = 0.20
 group = 'org.jpo'
 
 repositories {
@@ -130,9 +130,7 @@ test {
 }
 
 jacoco {
-    //Support for Java 15 starts with 0.8.7
-    //toolVersion = "0.8.6"
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.9"
 }
 
 jacocoTestReport {

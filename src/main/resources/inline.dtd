@@ -1,0 +1,78 @@
+<!DOCTYPE collection [
+<!ELEMENT collection (group*  | picture* | categories? )*>
+<!ATTLIST collection
+	collection_name  CDATA  #REQUIRED
+	collection_created  CDATA  #REQUIRED
+	collection_protected  CDATA  #REQUIRED
+>
+
+<!ELEMENT group (picture* | group* )*>
+<!ATTLIST group
+	group_name  CDATA  #REQUIRED
+>
+
+<!ELEMENT picture (description, 
+	CREATION_TIME?, 
+	file_URL?,
+	checksum?,
+	file_lowres_URL?, 
+	COMMENT?, 
+	PHOTOGRAPHER?, 
+	film_reference?, 
+	COPYRIGHT_HOLDER?,
+	ROTATION?,
+	LATLNG?,
+	categoryAssignment* )>
+	
+<!-- The description or caption of the Image;
+     it specifies the subject or purpose of the image. -->
+<!ELEMENT description (#PCDATA)>
+
+<!-- The location of the high resolution source Image -->
+<!ELEMENT file_URL (#PCDATA)>
+
+<!-- The Adler32 checksum of the source Image -->
+<!ELEMENT checksum (#PCDATA)>
+
+<!-- The location of the generated Thumbnail that may be overwritten -->
+<!ELEMENT file_lowres_URL (#PCDATA)>
+
+<!-- The time the image was created. This should be the original 
+     time when the shutter snapped closed and not the time of 
+     scanning etc. -->
+<!ELEMENT CREATION_TIME (#PCDATA)>
+
+
+<!-- A handy spare field where stuff can be captured that doesn't fit -->
+<!ELEMENT COMMENT (#PCDATA)>
+
+
+<!ELEMENT PHOTOGRAPHER (#PCDATA)>
+
+
+<!--  A reference back to the original media such as a slide filing number,
+      Shoebox number etc. -->
+<!ELEMENT film_reference (#PCDATA)>
+
+<!ELEMENT COPYRIGHT_HOLDER (#PCDATA)>
+
+
+<!ELEMENT ROTATION (#PCDATA)>
+
+<!ELEMENT LATLNG (#PCDATA)>
+ 
+<!ELEMENT categories ( category* )>
+
+<!ELEMENT category ( categoryDescription ) >
+<!ATTLIST category
+	index  CDATA  #REQUIRED >
+	
+<!ELEMENT categoryDescription (#PCDATA)>
+
+<!ELEMENT categoryAssignment (#PCDATA) >
+<!ATTLIST categoryAssignment
+	index  CDATA  #REQUIRED >
+
+]>
+
+

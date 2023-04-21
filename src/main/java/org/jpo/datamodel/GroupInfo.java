@@ -6,8 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -143,17 +141,9 @@ public class GroupInfo implements Serializable {
     public void dumpToXml(final BufferedWriter out, final boolean rootNode, final boolean protection)
             throws IOException {
 
-        if (rootNode) {
-            out.write("<collection collection_name=\""
-                    + StringEscapeUtils.escapeXml11(getGroupName())
-                    + "\" collection_created=\""
-                    + DateFormat.getDateInstance().format(Calendar.getInstance().getTime())
-                    + "\""
-                    + (protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\""));
-        } else {
-            out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\"" );
+        if (!rootNode) {
+            out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\">" );
         }
-        out.write( ">" );
         out.newLine();
     }
 

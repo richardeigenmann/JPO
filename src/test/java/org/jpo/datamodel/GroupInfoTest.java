@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +13,7 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 
 /**
- * Tests for Groupinfo class
+ * Tests for GroupInfo class
  *
  * @author Richard Eigenmann
  */
@@ -42,8 +40,8 @@ class GroupInfoTest {
      */
     @Test
     void testToString() {
-        final GroupInfo gi = new GroupInfo("Test");
-        assertEquals("Test", gi.toString());
+        final var groupInfo = new GroupInfo("Test");
+        assertEquals("Test", groupInfo.toString());
     }
 
     /**
@@ -51,10 +49,10 @@ class GroupInfoTest {
      */
     @Test
     void testGetGroupName() {
-        final GroupInfo gi = new GroupInfo("Test");
-        final String EXPECTED = "Tarrantino";
-        gi.setGroupName(EXPECTED);
-        assertEquals(EXPECTED, gi.getGroupName());
+        final var groupInfo = new GroupInfo("Test");
+        final var EXPECTED = "Tarrantino";
+        groupInfo.setGroupName(EXPECTED);
+        assertEquals(EXPECTED, groupInfo.getGroupName());
     }
 
     /**
@@ -62,31 +60,21 @@ class GroupInfoTest {
      */
     @Test
     void testGetGroupNameHtml() {
-        final GroupInfo gi = new GroupInfo("Test");
-        final String EXPECTED = "Tarrantino";
-        gi.setGroupName(EXPECTED);
-        assertEquals(EXPECTED, gi.getGroupNameHtml());
+        final var groupInfo = new GroupInfo("Test");
+        final var EXPECTED = "Tarrantino";
+        groupInfo.setGroupName(EXPECTED);
+        assertEquals(EXPECTED, groupInfo.getGroupNameHtml());
 
-        final String QUOTED_STRING = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
-        final String EXPECTED_QUOTED_STRING = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
-        gi.setGroupName(QUOTED_STRING);
-        assertEquals(EXPECTED_QUOTED_STRING, gi.getGroupNameHtml());
+        final var QUOTED_STRING = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
+        final var EXPECTED_QUOTED_STRING = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
+        groupInfo.setGroupName(QUOTED_STRING);
+        assertEquals(EXPECTED_QUOTED_STRING, groupInfo.getGroupNameHtml());
         
-        final String UMLAUT_STRING = "Rüeblitorten gären im Brötlichorb";
-        final String UMLAUT_EXPECTED_STRING = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlichorb";
-        gi.setGroupName( UMLAUT_STRING);
-        assertEquals( UMLAUT_EXPECTED_STRING, gi.getGroupNameHtml() );
+        final var UMLAUT_STRING = "Rüeblitorten gären im Brötlichorb";
+        final var UMLAUT_EXPECTED_STRING = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlichorb";
+        groupInfo.setGroupName( UMLAUT_STRING);
+        assertEquals( UMLAUT_EXPECTED_STRING, groupInfo.getGroupNameHtml() );
     }
-
-    /**
-     * A dumb PictureInfoChangeListener that only counts the events received
-     *
-     private final GroupInfoChangeListener groupInfoChangeListener = new GroupInfoChangeListener() {
-
-    @Override public void groupInfoChangeEvent( final GroupInfoChangeEvent event ) {
-    eventsReceived++;
-    }
-    };*/
 
     /**
      * Tests the change listener
@@ -95,109 +83,59 @@ class GroupInfoTest {
     void testGroupInfoChangeListener() {
         final List<GroupInfoChangeEvent> receivedGroupInfoChangedEvents = new ArrayList<>();
         Settings.getPictureCollection().setSendModelUpdates(true);
-        final GroupInfo gi = new GroupInfo("Create GroupInfo when no Change listener attached");
+        final var groupInfo = new GroupInfo("Create GroupInfo when no Change listener attached");
         assertEquals(0, receivedGroupInfoChangedEvents.size());
 
-        gi.setGroupName("Change the name without a change listener attached");
+        groupInfo.setGroupName("Change the name without a change listener attached");
         assertEquals(0, receivedGroupInfoChangedEvents.size());
 
         final GroupInfoChangeListener listener = receivedGroupInfoChangedEvents::add;
-        gi.addGroupInfoChangeListener(listener);
-        gi.setGroupName("Change with Change Listener");
+        groupInfo.addGroupInfoChangeListener(listener);
+        groupInfo.setGroupName("Change with Change Listener");
         assertEquals(1, receivedGroupInfoChangedEvents.size());
-        assertEquals(gi, receivedGroupInfoChangedEvents.get(0).getGroupInfo());
+        assertEquals(groupInfo, receivedGroupInfoChangedEvents.get(0).getGroupInfo());
         assertTrue(receivedGroupInfoChangedEvents.get(0).getGroupNameChanged());
         assertFalse(receivedGroupInfoChangedEvents.get(0).getThumbnailChanged());
         assertFalse(receivedGroupInfoChangedEvents.get(0).getWasSelected());
         assertFalse(receivedGroupInfoChangedEvents.get(0).getWasUnselected());
 
         Settings.getPictureCollection().setSendModelUpdates(false);
-        gi.setGroupName("Change with sendModelUpdates false");
+        groupInfo.setGroupName("Change with sendModelUpdates false");
         assertEquals(1, receivedGroupInfoChangedEvents.size());
 
         Settings.getPictureCollection().setSendModelUpdates(true);
-        gi.setGroupName("Change with sendModelUpdates true");
+        groupInfo.setGroupName("Change with sendModelUpdates true");
         assertEquals(2, receivedGroupInfoChangedEvents.size());
-        assertEquals(gi, receivedGroupInfoChangedEvents.get(1).getGroupInfo());
+        assertEquals(groupInfo, receivedGroupInfoChangedEvents.get(1).getGroupInfo());
         assertTrue(receivedGroupInfoChangedEvents.get(1).getGroupNameChanged());
 
-        gi.removeGroupInfoChangeListener(listener);
-        gi.setGroupName("Last change, without Listener");
+        groupInfo.removeGroupInfoChangeListener(listener);
+        groupInfo.setGroupName("Last change, without Listener");
         assertEquals(2, receivedGroupInfoChangedEvents.size());
     }
 
 
-    /**
-     * Test dumpToXml
-     */
-    @Test
-    void testDumpToXmlRootNotProtected() {
-        final GroupInfo gi = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
-
-        final StringWriter sw = new StringWriter();
-        try (
-                final BufferedWriter bw = new BufferedWriter(sw)) {
-            gi.dumpToXml(bw, true, false);
-            gi.endGroupXML(bw, true);
-        } catch (final IOException ex) {
-            Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
-            fail(ex.getMessage());
-        }
-
-        final String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
-                + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                + "\" collection_protected=\"Yes\">\n\n";
-        
-        final String result = sw.toString();
-        assertEquals( expected, result );
-    }
-
-    /**
-     * Test dumpToXml
-     */
-    @Test
-    void testDumpToXmlRootProtected() {
-        final GroupInfo gi = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
-
-        final StringWriter sw = new StringWriter();
-        try (
-                final BufferedWriter bw = new BufferedWriter(sw)) {
-            gi.dumpToXml(bw, true, true);
-            gi.endGroupXML(bw, true);
-        } catch (final IOException ex) {
-            Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
-            fail("Unexpected IOException");
-        }
-
-        final String expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
-                + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() ) 
-                + "\" collection_protected=\"No\">\n\n";
-        
-        final String result = sw.toString();
-        assertEquals( expected, result );
-    }
 
     /**
      * Test dumpToXml
      */
     @Test
     void testDumpToXmlNormalNodeProtected() {
-        final GroupInfo gi = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
+        final var groupInfo = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
 
-        final StringWriter sw = new StringWriter();
+        final var stringWriter = new StringWriter();
         try (
-                final BufferedWriter bw = new BufferedWriter(sw)) {
-            gi.dumpToXml(bw, false, true);
-            gi.endGroupXML(bw, false);
+                final var bufferedWriter = new BufferedWriter(stringWriter)) {
+            groupInfo.dumpToXml(bufferedWriter, false, true);
+            groupInfo.endGroupXML(bufferedWriter, false);
         } catch (final IOException ex) {
             Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
             fail("Unexpected IOException");
         }
 
-        final String expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\">\n</group>\n";
+        final var expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\">\n</group>\n";
 
-        final String result = sw.toString();
-        assertEquals(expected, result);
+        assertEquals(expected, stringWriter.toString());
     }
 
     @Test

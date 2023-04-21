@@ -9,6 +9,8 @@ import javax.swing.tree.TreeNode;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +20,7 @@ import static java.util.Objects.isNull;
 
 
 /*
- * Copyright (C) 2006-2022 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006-2023 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation,
  * either version 2 of the License, or any later version. This program is
@@ -989,6 +991,42 @@ public class PictureCollection {
      */
     public int countSelectedNodes() {
         return selection.size();
+    }
+
+    /**
+     * Returns a common path between two Java Path objects.
+     * Note that it makes a different which path comes first. If we are comparing against a result
+     * of a prior request (like when you are comparing a whole list) then the commonPath has to
+     * come second.
+     * @see <a href="https://stackoverflow.com/a/54596165/804766">https://stackoverflow.com/a/54596165/804766</a>
+     * @param path1 The first path
+     * @param path2 The second path
+     * @return The common path
+     */
+    static Path getCommonPath(final Path path1, final Path path2) {
+        LOGGER.log(Level.FINE, "Path1: {0} Path2: {1}", new Object[]{path1, path2});
+        var relativePath = path1.relativize(path2).normalize();
+        while(relativePath != null && !relativePath.endsWith("..")) {
+            relativePath = relativePath.getParent();
+        }
+        LOGGER.log(Level.FINE, "final relativePath is: {0}", relativePath);
+        return path1.resolve(relativePath).normalize();
+    }
+
+    Path getCommonPath() {
+        LOGGER.log(Level.INFO, "Searching for common path of the pictures");
+        final var pictureNodes = getRootNode().getChildPictureNodes(true);
+        if (pictureNodes.size() < 1) { return Paths.get(""); }
+        final var firstNode = pictureNodes.get(0);
+        final var firstPictureInfo = (PictureInfo) firstNode.getUserObject();
+        var commonPath = firstPictureInfo.getImageFile().toPath();
+        for (int i = 1; i<pictureNodes.size(); i++) {
+            final var nextPictureInfo = (PictureInfo) pictureNodes.get(i).getUserObject();
+            LOGGER.log(Level.FINE,"Next picture: {0}, File: {1}", new Object[]{nextPictureInfo.getDescription(), nextPictureInfo.getImageFile()});
+            commonPath = getCommonPath(nextPictureInfo.getImageFile().toPath(), commonPath);
+        }
+        LOGGER.log(Level.INFO, "Common path is {0}", commonPath);
+        return commonPath;
     }
 
 }

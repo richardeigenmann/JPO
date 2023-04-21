@@ -12,9 +12,12 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
@@ -504,12 +507,12 @@ class PictureCollectionTest {
         }
 
         try {
-            final File tempFile = File.createTempFile("fileSave", ".xml");
+            final var tempFile = File.createTempFile("fileSave", ".xml");
             picCollection.setXmlFile(tempFile);
             picCollection.fileSave();
             assertTrue(tempFile.exists());
-            try (final Stream<String> s = Files.lines(tempFile.toPath())) {
-                assertEquals(7, s.count());
+            try (final var lines = Files.lines(tempFile.toPath())) {
+                assertEquals(85, lines.count());
             }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
@@ -530,15 +533,16 @@ class PictureCollectionTest {
 
         try {
             // createTempFile actually creates the file
-            final File tempFile = File.createTempFile("fileSaveNoPriorFile", ".xml");
-            // So let's just go and delete it
+            final var tempFile = File.createTempFile("fileSaveNoPriorFile", ".xml");
+            // So let's just go and delete it to ensure it's gone
             Files.delete(tempFile.toPath());
             assertFalse(tempFile.exists());
+
             picCollection.setXmlFile(tempFile);
             picCollection.fileSave();
             assertTrue(tempFile.exists());
-            try (final Stream<String> s = Files.lines(tempFile.toPath())) {
-                assertEquals(7, s.count());
+            try (final var lines = Files.lines(tempFile.toPath())) {
+                assertEquals(85, lines.count());
             }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
@@ -578,4 +582,115 @@ class PictureCollectionTest {
         final String[] result = myPictureCollection.getSortedCategoryStream().map(Map.Entry::getValue).toArray(String[]::new);
         assertArrayEquals(new String[]{LAKES, MOUNTAINS, SWITZERLAND}, result);
     }
+
+    @Test
+    void getCommonPathLinux() {
+        Path path1 = Paths.get("/richi/Fotos/20230106/20230106_181642.jpg");
+        Path path2 = Paths.get("/richi/Fotos/20230118/20230118_181701.jpg");
+        Path commonPath = PictureCollection.getCommonPath(path1, path2);
+        assertEquals(Paths.get("/richi/Fotos"), commonPath);
+    }
+
+    @Test
+    void getCommonPathWindows() {
+        Path path1 = Paths.get("c:/richi/Fotos/20230106/20230106_181642.jpg");
+        Path path2 = Paths.get("c:/richi/Fotos/20230118/20230118_181701.jpg");
+        Path commonPath = PictureCollection.getCommonPath(path1, path2);
+        assertEquals(Paths.get("c:/richi/Fotos"), commonPath);
+    }
+
+    @Test
+    void noCommonPathLinux() {
+        Path path1 = Paths.get("/richi/Fotos/20230106/20230106_181642.jpg");
+        Path path2 = Paths.get("/sandra/Fotos/20230118/20230118_181701.jpg");
+        Path commonPath = PictureCollection.getCommonPath(path1, path2);
+        assertEquals(Paths.get("/"), commonPath);
+    }
+
+    @Test
+    void noCommonPathWindows() {
+        Path path1 = Paths.get("c:/richi/Fotos/20230106/20230106_181642.jpg");
+        Path path2 = Paths.get("d:/sandra/Fotos/20230118/20230118_181701.jpg");
+        Path commonPath = PictureCollection.getCommonPath(path1, path2);
+        assertEquals(Paths.get(""), commonPath);
+    }
+
+    @Test
+    void chainingCommonPaths() {
+        Path path1 = Paths.get("/richi/Fotos/20230106/20230106_181642.jpg");
+        Path path2 = Paths.get("/richi/Fotos/20230118/20230118_181701.jpg");
+        Path commonPath = PictureCollection.getCommonPath(path1, path2);
+        assertEquals(Paths.get("/richi/Fotos"), commonPath);
+
+        Path path3 = Paths.get("/richi/Fotos/Holiday/beach.jpg");
+        Path secondCommonPath = PictureCollection.getCommonPath(path3, commonPath);
+        assertEquals(Paths.get("/richi/Fotos"), secondCommonPath);
+
+        Path path4 = Paths.get("/richi/Fotos/Holiday/cocktail.jpg");
+        Path thirdCommonPath = PictureCollection.getCommonPath(path4, secondCommonPath);
+        assertEquals(Paths.get("/richi/Fotos"), thirdCommonPath);
+    }
+
+    @Test
+    void findCommonPathsFrom3() {
+        final var paths = new ArrayList<Path>(Arrays.asList(
+           Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
+           Paths.get("/richi/Fotos/Miami/beach.jpg"),
+           Paths.get("/richi/Food/Lasagne.jpg")
+        ));
+        final var pictureCollection = new PictureCollection();
+
+        for (final var path : paths) {
+            final var pictureInfo = new PictureInfo();
+            pictureInfo.setImageLocation(path.toFile());
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            pictureCollection.getRootNode().add(node);
+        }
+        assertEquals(Paths.get("/richi"), pictureCollection.getCommonPath());
+    }
+
+    @Test
+    void findCommonPathsFrom4() {
+        final var paths = new ArrayList<Path>(Arrays.asList(
+                Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
+                Paths.get("/richi/Fotos/Miami/beach.jpg"),
+                Paths.get("/richi/Food/Lasagne.jpg"),
+                Paths.get("/richi/Food/Cake.jpg")
+        ));
+        final var pictureCollection = new PictureCollection();
+
+        for (final var path : paths) {
+            final var pictureInfo = new PictureInfo();
+            pictureInfo.setImageLocation(path.toFile());
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            pictureCollection.getRootNode().add(node);
+        }
+        assertEquals(Paths.get("/richi"), pictureCollection.getCommonPath());
+    }
+
+    @Test
+    void findCommonPathsFrom104() {
+        var paths = new ArrayList<Path>(Arrays.asList(
+                Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
+                Paths.get("/richi/Fotos/Miami/beach.jpg"),
+                Paths.get("/richi/Food/Lasagne.jpg"),
+                Paths.get("/richi/Food/Cake.jpg")
+        ));
+
+        for (var i = 1; i <= 100; i++) {
+            paths.add(Paths.get(String.format("/richi/Fotos/Img-%03d.jpg",i)));
+        }
+        assertEquals(104, paths.size());
+
+        final var pictureCollection = new PictureCollection();
+
+        for (final var path : paths) {
+            final var pictureInfo = new PictureInfo();
+            pictureInfo.setImageLocation(path.toFile());
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            pictureCollection.getRootNode().add(node);
+        }
+        assertEquals(Paths.get("/richi"), pictureCollection.getCommonPath());
+    }
+
 }

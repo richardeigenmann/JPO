@@ -275,6 +275,8 @@ public class SortableDefaultMutableTreeNode
 
     /**
      * returns the collection associated with this node
+     * TODO: This is not the right way to find the collection for the node. We should jump to the root note
+     * and that should know the way to find the collections it belongs to.
      *
      * @return the picture collection.
      */

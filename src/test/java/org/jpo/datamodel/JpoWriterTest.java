@@ -7,6 +7,10 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,7 +67,7 @@ class JpoWriterTest {
                 JpoWriter.writeXmlHeaderTestOnly(bout);
             }
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {
-                assertEquals(2, s.count());
+                assertEquals(1, s.count());
             }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
@@ -93,6 +97,63 @@ class JpoWriterTest {
         } catch (final IOException e) {
             fail(e.getMessage());
         }
+    }
+
+    /**
+     * Test dumpToXml
+     */
+    @Test
+    void testWriteCollectionHeader() {
+        final var groupInfo = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
+        final var node = new SortableDefaultMutableTreeNode(groupInfo);
+        //final var pictureCollection = new PictureCollection();
+        final var pictureCollection = Settings.getPictureCollection();
+        pictureCollection.getRootNode().add(node);
+        pictureCollection.setAllowEdits(true);
+
+        final var stringWriter = new StringWriter();
+        try (
+                final var bufferedWriter = new BufferedWriter(stringWriter)) {
+            JpoWriter.writeCollectionHeaderTestOnly(node, bufferedWriter);
+        } catch (final IOException ex) {
+            Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
+            fail("Unexpected IOException");
+        }
+
+        final var expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
+                + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
+                + "\" collection_protected=\"No\" basedir=\"\">\n";
+
+        assertEquals( expected, stringWriter.toString() );
+    }
+
+
+    /**
+     * Test dumpToXml
+     */
+    @Test
+    void testWriteCollectionHeaderProtectedCollection() {
+        final var groupInfo = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
+        final var node = new SortableDefaultMutableTreeNode(groupInfo);
+        //final var pictureCollection = new PictureCollection();
+        final var pictureCollection = Settings.getPictureCollection();
+        pictureCollection.getRootNode().add(node);
+        pictureCollection.setAllowEdits(false);
+
+        final var stringWriter = new StringWriter();
+        try (
+                final var bufferedWriter = new BufferedWriter(stringWriter)) {
+            JpoWriter.writeCollectionHeaderTestOnly(node, bufferedWriter);
+        } catch (final IOException ex) {
+            Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
+            fail(ex.getMessage());
+        }
+
+        final var expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
+                + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
+                + "\" collection_protected=\"Yes\" basedir=\"\">\n";
+
+        assertEquals( expected, stringWriter.toString());
     }
 
 }
