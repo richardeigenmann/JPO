@@ -1,4 +1,4 @@
-<?php include 'page-start.php'; ?>
+<?php include_once 'page-start.php'; ?>
 
 <div class="container">
     <h1>Pictures with Umlauts don't load on Linux</h1>
@@ -13,16 +13,16 @@
     <hr>
     <h1>Memory settings:</h1>
     <p>If you get <span style="color:red">out of Memory</span> errors then you are probably best off
-        using the local jar way of starting this application as you can then set the initial memory heap with 
+        using the local jar way of starting this application as you can then set the initial memory heap wit
         the -Xms and the maximum memory heap with the -Xmx parameters. </p>
     <p>I have discovered the option -XX:+AggressiveHeap which sounds great for what JPO needs. Please let me know if you have issues with this.</p>
 
     <hr>
     <h1>Chinese Font</h1>
     <p>Franklin He has been kind enough to translate the User Interface to Traditional and Simplified
-        Chinese. This looks really cool but poses some installation hassles if your Java system 
+        Chinese. This looks really cool but poses some installation hassles if your Java system
         is not correctly configured.
-        When I had a SuSE 10 system I had to create a /usr/java/jdk1.5.0_07/jre/lib/fontconfig.SuSE.properties 
+        When I had a SuSE 10 system I had to create a /usr/java/jdk1.5.0_07/jre/lib/fontconfig.SuSE.properties
         file. Click <a href="fontconfig">here</a> to download my version.</p>
 
 
@@ -31,7 +31,7 @@
 
 
     <hr>
-    <p>Last update to this page: 14 Jan 2021<br>
-        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 25 April 2023<br>
+        Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include 'page-end.php'; ?>
+<?php include_once 'page-end.php'; ?>

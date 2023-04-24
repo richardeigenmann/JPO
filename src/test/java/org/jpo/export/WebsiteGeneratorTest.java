@@ -5,7 +5,6 @@ import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.GenerateWebsiteRequest;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2018-2022  Richard Eigenmann.
+ Copyright (C) 2018-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -140,12 +139,11 @@ class WebsiteGeneratorTest {
     }
 
     @Test
-    @Disabled("Unstable")
     void testGenerateWebsite() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
 
         // set up the request
-        final GenerateWebsiteRequest request = new GenerateWebsiteRequestDefaultOptions();
+        final var request = new GenerateWebsiteRequestDefaultOptions();
         request.setOutputTarget(GenerateWebsiteRequest.OutputTarget.OUTPUT_LOCAL_DIRECTORY);
         request.setWriteRobotsTxt(true);
         request.setOpenWebsiteAfterRendering(false);
@@ -176,9 +174,7 @@ class WebsiteGeneratorTest {
 
         final WebsiteGenerator[] websiteGenerator = {null};
         try {
-            SwingUtilities.invokeAndWait(() -> {
-                websiteGenerator[0] = WebsiteGenerator.generateWebsite(request);
-            });
+            SwingUtilities.invokeAndWait(() -> websiteGenerator[0] = WebsiteGenerator.generateWebsite(request));
         } catch (InterruptedException | InvocationTargetException e) {
             LOGGER.severe("Why was the website generation interrupted?");
             LOGGER.severe(e.getMessage());

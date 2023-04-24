@@ -34,7 +34,7 @@ public class JTableCopyPasteClipboardAdapter implements ActionListener {
      *   JTable on which it enables Copy-Paste and acts
      *   as a Clipboard listener.
      *
-     * @param myJTable tabke
+     * @param myJTable table
      */
     public JTableCopyPasteClipboardAdapter( JTable myJTable ) {
         jTable = myJTable;

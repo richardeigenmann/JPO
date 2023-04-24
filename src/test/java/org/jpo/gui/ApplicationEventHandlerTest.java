@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 
 import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.DeleteNodeFileHandler;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 /*
- Copyright (C) 2017-2022 Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,19 +59,22 @@ class ApplicationEventHandlerTest {
             final var rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
 
+            var pictureCollection = new PictureCollection();
+            pictureCollection.getRootNode().add(rootNode);
+
             final var picture1 = new File(tempDir.toFile(), "picture1.jpg");
             try (final var bin1 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
-                 final var bout1 = new BufferedOutputStream(new FileOutputStream(picture1));) {
+                 final var bout1 = new BufferedOutputStream(new FileOutputStream(picture1))) {
                 bin1.transferTo(bout1);
             }
             final var picture2 = new File(tempDir.toFile(), "picture2.jpg");
             try (final var bin2 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
-                 final var bout2 = new BufferedOutputStream(new FileOutputStream(picture2));) {
+                 final var bout2 = new BufferedOutputStream(new FileOutputStream(picture2))) {
                 bin2.transferTo(bout2);
             }
             final var picture3 = new File(tempDir.toFile(), "picture3.jpg");
             try (final var bin3 = new BufferedInputStream(Objects.requireNonNull(ApplicationEventHandlerTest.class.getClassLoader().getResource(TEST_IMAGE)).openStream());
-                 final var bout3 = new BufferedOutputStream(new FileOutputStream(picture3));) {
+                 final var bout3 = new BufferedOutputStream(new FileOutputStream(picture3))) {
                 bin3.transferTo(bout3);
             }
 

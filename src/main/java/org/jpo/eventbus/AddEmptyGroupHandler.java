@@ -3,13 +3,12 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,11 +43,11 @@ public class AddEmptyGroupHandler {
      */
     @Subscribe
     public void handleEvent(final AddEmptyGroupRequest request) {
-        final SortableDefaultMutableTreeNode node = request.node();
+        final var node = request.node();
         if (!(node.getUserObject() instanceof GroupInfo)) {
             LOGGER.log(Level.WARNING, "node {0} is of type {1} instead of GroupInfo. Proceeding anyway.", new Object[]{node.getUserObject(), node.getUserObject().getClass()});
         }
-        final SortableDefaultMutableTreeNode newNode = node.addGroupNode("New Group");
+        final var newNode = node.addGroupNode("New Group");
         Settings.memorizeGroupOfDropLocation(newNode);
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
         JpoEventBus.getInstance().post(new ShowGroupRequest(newNode));

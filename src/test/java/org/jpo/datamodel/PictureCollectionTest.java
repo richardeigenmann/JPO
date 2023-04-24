@@ -1,7 +1,6 @@
 package org.jpo.datamodel;
 
 import org.assertj.swing.edt.GuiActionRunner;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -24,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2022 Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -51,48 +50,54 @@ class PictureCollectionTest {
     private static final String MOUNTAINS = "Mountains";
     private static final String LAKES = "Lakes";
 
-    /**
-     * Let's have a nice little collection for some tests....
-     */
-    private PictureCollection pictureCollection;
-    private final PictureInfo pi1 = new PictureInfo(new File("/images/image1.jpg"), "Picture 1");
-    // deliberately re-using image1.jpg so that we can find multiple groups referring to the same image.
-    private final PictureInfo pi2 = new PictureInfo(new File("/images/image1.jpg"), "Picture 2");
-    private final PictureInfo pi3 = new PictureInfo(new File("/images/image1.jpg"), "Picture 3");
-    private final PictureInfo pi4 = new PictureInfo(new File("/images/image1.jpg"), "Picture 4");
-    private final PictureInfo pi5 = new PictureInfo( new File("/images/image5.jpg"), "Picture 5" );
-    private final PictureInfo pi6 = new PictureInfo( new File("/images/image6.jpg"), "Picture 6" );
-    private final SortableDefaultMutableTreeNode picture1 = new SortableDefaultMutableTreeNode( pi1 );
-    private final SortableDefaultMutableTreeNode picture2 = new SortableDefaultMutableTreeNode( pi2 );
-    private final SortableDefaultMutableTreeNode picture3 = new SortableDefaultMutableTreeNode( pi3 );
-    private final SortableDefaultMutableTreeNode picture4 = new SortableDefaultMutableTreeNode( pi4 );
-    private final SortableDefaultMutableTreeNode picture5 = new SortableDefaultMutableTreeNode( pi5 );
-    private final SortableDefaultMutableTreeNode picture6 = new SortableDefaultMutableTreeNode( pi6 );
-    private final SortableDefaultMutableTreeNode group1 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group1" ) );
-    private final SortableDefaultMutableTreeNode group2 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group2" ) );
-    private final SortableDefaultMutableTreeNode group3 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group3" ) );
-    private final SortableDefaultMutableTreeNode group4 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group4" ) );
-    private final SortableDefaultMutableTreeNode group5 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group5" ) );
-    private final SortableDefaultMutableTreeNode group6 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group6" ) );
+    private PictureCollection getSamplePictureCollection() {
+        final var pictureCollection = new PictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
 
-    /**
-     * Set up tests
-     */
-    @BeforeEach
-    public void setUp()  {
-        pictureCollection = new PictureCollection();
-        pictureCollection.getRootNode().add( group1 );
-        pictureCollection.getRootNode().add( group2 );
-        pictureCollection.getRootNode().add( group3 );
-        pictureCollection.getRootNode().add( group4 );
+        final var group1 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group1" ) );
+        rootNode.add( group1 );
+
+        final var pi1 = new PictureInfo(new File("/images/image1.jpg"), "Picture 1");
+        final var picture1 = new SortableDefaultMutableTreeNode( pi1 );
         group1.add( picture1 );
+
+        final var group2 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group2" ) );
+        rootNode.add( group2 );
+
+        // deliberately re-using image1.jpg so that we can find multiple groups referring to the same image.
+        final var pi2 = new PictureInfo(new File("/images/image1.jpg"), "Picture 2");
+        final var picture2 = new SortableDefaultMutableTreeNode( pi2 );
         group2.add( picture2 );
+
+        final var group3 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group3" ) );
+        rootNode.add( group3 );
+
+        final var pi3 = new PictureInfo(new File("/images/image1.jpg"), "Picture 3");
+        final var picture3 = new SortableDefaultMutableTreeNode( pi3 );
         group3.add( picture3 );
+
+        final var group4 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group4" ) );
+        rootNode.add( group4 );
+
+        final var pi4 = new PictureInfo(new File("/images/image1.jpg"), "Picture 4");
+        final var picture4 = new SortableDefaultMutableTreeNode( pi4 );
         group4.add( picture4 );
+
+        final var group5 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group5" ) );
         group4.add( group5 );
+
+        final var group6 = new SortableDefaultMutableTreeNode( new GroupInfo( "Group6" ) );
         group5.add( group6 );
+
+        final var pi5 = new PictureInfo( new File("/images/image5.jpg"), "Picture 5" );
+        final var picture5 = new SortableDefaultMutableTreeNode( pi5 );
         group6.add( picture5 );
+
+        final var pi6 = new PictureInfo( new File("/images/image6.jpg"), "Picture 6" );
+        final var picture6 = new SortableDefaultMutableTreeNode( pi6 );
         group6.add( picture6 );
+
+        return pictureCollection;
     }
 
     /**
@@ -101,6 +106,10 @@ class PictureCollectionTest {
     @Test
     void testFindParentGroups() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
         // Test that something is returned when looking for parent groups
         assertNotNull(pictureCollection.findLinkingGroups(picture1));
     }
@@ -110,6 +119,10 @@ class PictureCollectionTest {
      */
     @Test
     void testFindLinkingGroups1() {
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+
         // Test that it returns an empty Set if the node is not a PictureInfo node
         assertEquals(0, pictureCollection.findLinkingGroups(group1).size());
     }
@@ -119,16 +132,29 @@ class PictureCollectionTest {
      */
     @Test
     void testFindLinkingGroups2() {
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var group4 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(3);
+        final var group5 = (SortableDefaultMutableTreeNode) group4.getChildAt(1);
+        final var group6 = (SortableDefaultMutableTreeNode) group5.getChildAt(0);
+
         //test that the parent group is one of the returned groups
-        final Set<SortableDefaultMutableTreeNode> linkingGroups = pictureCollection.findLinkingGroups(picture1);
+        final var linkingGroups = pictureCollection.findLinkingGroups(picture1);
         assertTrue(linkingGroups.contains(group1));
         assertFalse(linkingGroups.contains(group6));
     }
 
     @Test
     void testFindLinkingGroups3() {
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+
         //test that the 4 groups which refer to the same picture are returned
-        final Set<SortableDefaultMutableTreeNode> findLinkingGroups = pictureCollection.findLinkingGroups(picture1);
+        final Set<SortableDefaultMutableTreeNode> findLinkingGroups = getSamplePictureCollection().findLinkingGroups(picture1);
         assertEquals(4, findLinkingGroups.size());
     }
 
@@ -138,11 +164,12 @@ class PictureCollectionTest {
     @Test
     void testSetXmlFile() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final File f = new File("dir/test.xml");
-        pictureCollection.setXmlFile(f);
+        final var file = new File("dir/test.xml");
+        final var pictureCollection = getSamplePictureCollection();
+        pictureCollection.setXmlFile(file);
         final File f2 = pictureCollection.getXmlFile();
         // Checking that we get the same file back that we put in
-        assertEquals(f, f2);
+        assertEquals(file, f2);
 
         pictureCollection.clearCollection();
         File f3 = pictureCollection.getXmlFile();
@@ -157,6 +184,15 @@ class PictureCollectionTest {
     @Test
     void testSelections() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var group2 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(1);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var group4 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(3);
+        final var group5 = (SortableDefaultMutableTreeNode) group4.getChildAt(1);
+        final var group6 = (SortableDefaultMutableTreeNode) group5.getChildAt(0);
+
         assertEquals(0, pictureCollection.getSelection().size());
         pictureCollection.addToSelectedNodes(group1);
         pictureCollection.addToSelectedNodes(picture1);
@@ -196,6 +232,16 @@ class PictureCollectionTest {
     @Test
     void testMailSelections() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var group2 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(1);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var group4 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(3);
+        final var group5 = (SortableDefaultMutableTreeNode) group4.getChildAt(1);
+        final var group6 = (SortableDefaultMutableTreeNode) group5.getChildAt(0);
+
+
         assertEquals(0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection(group1);
         pictureCollection.addToMailSelection(picture1);
@@ -241,6 +287,11 @@ class PictureCollectionTest {
     @Test
     void testAddToMailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+
         assertEquals(0, pictureCollection.getMailSelectedNodes().size());
         pictureCollection.addToMailSelection(picture1);
         assertEquals(1, pictureCollection.getMailSelectedNodes().size());
@@ -248,7 +299,7 @@ class PictureCollectionTest {
         assertEquals(1, pictureCollection.getMailSelectedNodes().size());
     }
 
-    private class CountingPictureInfoChangeListener implements PictureInfoChangeListener {
+    private static class CountingPictureInfoChangeListener implements PictureInfoChangeListener {
         public int selectedCount;
         public int unselectedCount;
         public int mailSelectedCount;
@@ -274,7 +325,15 @@ class PictureCollectionTest {
     @Test
     void testSelectNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var pi1 = (PictureInfo) picture1.getUserObject();
+        final var group2 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(1);
+        final var picture2 = (SortableDefaultMutableTreeNode) group2.getChildAt(0);
+
+        final var countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
         pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
         pictureCollection.addToSelectedNodes(picture1);
         // We should have received a notification that the picture was selected
@@ -318,7 +377,13 @@ class PictureCollectionTest {
     @Test
     void testClearMailSelection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var pi1 = (PictureInfo) picture1.getUserObject();
+
+        final var countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
         pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
         pictureCollection.addToMailSelection(picture1);
         // We should have received a notification that the picture was selected
@@ -337,7 +402,16 @@ class PictureCollectionTest {
     @Test
     void testMailSelectNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final CountingPictureInfoChangeListener countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var pi1 = (PictureInfo) picture1.getUserObject();
+        final var group2 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(1);
+        final var picture2 = (SortableDefaultMutableTreeNode) group2.getChildAt(0);
+
+
+        final var countingPictureInfoChangeListener = new CountingPictureInfoChangeListener();
         pi1.addPictureInfoChangeListener(countingPictureInfoChangeListener);
         pictureCollection.addToMailSelection(picture1);
         // We should have received a notification that the picture was selected
@@ -379,29 +453,43 @@ class PictureCollectionTest {
     }
 
 
-    private class CountingTreeModelListener implements TreeModelListener {
+    private static class CountingTreeModelListener implements TreeModelListener {
+
+        /**
+         * The constructor does a somewhat pointless action on the Swing EDT to ensure that
+         * all pending node events have been processed when it returns.
+         */
+        public CountingTreeModelListener() {
+            try {
+                SwingUtilities.invokeAndWait(() -> assertTrue(SwingUtilities.isEventDispatchThread()));
+            } catch (InterruptedException | InvocationTargetException e) {
+                fail("Unexpected Exception: " + e);
+            }
+        }
+
         private int nodesChanged;  // default is 0
         private int nodesInserted;
         private int nodesRemoved;
         private int nodeStructureChanged;
 
         @Override
-        public void treeNodesChanged(TreeModelEvent e) {
+        public void treeNodesChanged(TreeModelEvent treeModelEvent) {
             nodesChanged++;
         }
 
         @Override
-        public void treeNodesInserted(TreeModelEvent e) {
+        public void treeNodesInserted(TreeModelEvent treeModelEvent) {
+            System.out.println(treeModelEvent);
             nodesInserted++;
         }
 
         @Override
-        public void treeNodesRemoved(TreeModelEvent e) {
+        public void treeNodesRemoved(TreeModelEvent treeModelEvent) {
             nodesRemoved++;
         }
 
         @Override
-        public void treeStructureChanged(TreeModelEvent e) {
+        public void treeStructureChanged(TreeModelEvent treeModelEvent) {
             nodeStructureChanged++;
         }
     }
@@ -414,10 +502,15 @@ class PictureCollectionTest {
     @Test
     void testChangeNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final var countingTreeModelListener = new CountingTreeModelListener();
-        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
+        final var picture1 = (SortableDefaultMutableTreeNode) group1.getChildAt(0);
+        final var pi1 = (PictureInfo) picture1.getUserObject();
 
-        Settings.setPictureCollection(pictureCollection);
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.addTreeModelListener(countingTreeModelListener);
+
         assertEquals(0, countingTreeModelListener.nodesChanged);
         pi1.setDescription("Changed Description");
         // After updating the description we should have 1 node changed
@@ -434,13 +527,17 @@ class PictureCollectionTest {
     @Test
     void testInsertNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final var countingTreeModelListener = new CountingTreeModelListener();
-        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
 
-        Settings.setPictureCollection(pictureCollection);
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.addTreeModelListener(countingTreeModelListener);
         assertEquals(0, countingTreeModelListener.nodesChanged);
-        SortableDefaultMutableTreeNode newNode = new SortableDefaultMutableTreeNode();
+
+        final var newNode = new SortableDefaultMutableTreeNode();
         group1.add(newNode);
+
         await().until(() -> countingTreeModelListener.nodesInserted == 1);
         assertEquals(0, countingTreeModelListener.nodesChanged);
         assertEquals(0, countingTreeModelListener.nodesRemoved);
@@ -450,12 +547,16 @@ class PictureCollectionTest {
     @Test
     void testRemoveNodesNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final var countingTreeModelListener = new CountingTreeModelListener();
-        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
+        final var pictureCollection = getSamplePictureCollection();
+        final var rootNode = pictureCollection.getRootNode();
+        final var group1 = (SortableDefaultMutableTreeNode) rootNode.getChildAt(0);
 
-        Settings.setPictureCollection(pictureCollection);
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.addTreeModelListener(countingTreeModelListener);
         assertEquals(0, countingTreeModelListener.nodesChanged);
+
         group1.deleteNode();
+
         await().until(() -> countingTreeModelListener.nodesRemoved == 1);
         assertEquals(0, countingTreeModelListener.nodesChanged);
         assertEquals(0, countingTreeModelListener.nodesInserted);
@@ -465,12 +566,14 @@ class PictureCollectionTest {
     @Test
     void testStructureChangedNotification() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final var countingTreeModelListener = new CountingTreeModelListener();
-        pictureCollection.getTreeModel().addTreeModelListener(countingTreeModelListener);
+        final var pictureCollection = getSamplePictureCollection();
 
-        Settings.setPictureCollection(pictureCollection);
+        final var countingTreeModelListener = new CountingTreeModelListener();
+        pictureCollection.addTreeModelListener(countingTreeModelListener);
         assertEquals(0, countingTreeModelListener.nodesChanged);
+
         GuiActionRunner.execute(() -> pictureCollection.getRootNode().sortChildren(Settings.FieldCodes.DESCRIPTION));
+
         await().until(() -> countingTreeModelListener.nodeStructureChanged == 1);
         assertEquals(0, countingTreeModelListener.nodesChanged);
         assertEquals(0, countingTreeModelListener.nodesInserted);
@@ -484,37 +587,32 @@ class PictureCollectionTest {
     @Test
     void testSendModelUpdates() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final PictureCollection pc = new PictureCollection();
+        final var pictureCollection = new PictureCollection();
         // Default of sendModelUpdates should be true
-        assertTrue(pc.getSendModelUpdates());
-        pc.setSendModelUpdates(false);
+        assertTrue(pictureCollection.getSendModelUpdates());
+        pictureCollection.setSendModelUpdates(false);
         // sendModelUpdates should be false when changed
-        assertFalse(pc.getSendModelUpdates());
-        pc.setSendModelUpdates(true);
+        assertFalse(pictureCollection.getSendModelUpdates());
+        pictureCollection.setSendModelUpdates(true);
         // sendModelUpdates should be true when turned on again
-        assertTrue(pc.getSendModelUpdates());
+        assertTrue(pictureCollection.getSendModelUpdates());
     }
 
     @Test
-    void fileSave() {
+    void fileSaveEmptyCollection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final PictureCollection picCollection = new PictureCollection();
-        try {
-            SwingUtilities.invokeAndWait(picCollection::clearCollection);
-        } catch (final InterruptedException | InvocationTargetException ex) {
-            fail(ex.getMessage());
-            Thread.currentThread().interrupt();
-        }
+        final var pictureCollection = new PictureCollection();
 
         try {
             final var tempFile = File.createTempFile("fileSave", ".xml");
-            picCollection.setXmlFile(tempFile);
-            picCollection.fileSave();
+            pictureCollection.setXmlFile(tempFile);
+            pictureCollection.fileSave();
             assertTrue(tempFile.exists());
             try (final var lines = Files.lines(tempFile.toPath())) {
-                assertEquals(85, lines.count());
+                assertEquals(89, lines.count());
             }
-            Files.delete(tempFile.toPath());
+            System.out.println(tempFile);
+            //Files.delete(tempFile.toPath());
         } catch (final IOException e) {
             fail(e.getMessage());
         }
@@ -523,7 +621,7 @@ class PictureCollectionTest {
     @Test
     void fileSaveNoPriorFile() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        final PictureCollection picCollection = new PictureCollection();
+        final var picCollection = new PictureCollection();
         try {
             SwingUtilities.invokeAndWait(picCollection::clearCollection);
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -542,7 +640,7 @@ class PictureCollectionTest {
             picCollection.fileSave();
             assertTrue(tempFile.exists());
             try (final var lines = Files.lines(tempFile.toPath())) {
-                assertEquals(85, lines.count());
+                assertEquals(89, lines.count());
             }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
@@ -553,6 +651,7 @@ class PictureCollectionTest {
     @Test
     void clearCollection() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+        final var pictureCollection = getSamplePictureCollection();
         assertEquals(4, pictureCollection.getRootNode().getChildCount());
         pictureCollection.clearCollection();
         assertEquals(0, pictureCollection.getRootNode().getChildCount());
@@ -633,10 +732,10 @@ class PictureCollectionTest {
 
     @Test
     void findCommonPathsFrom3() {
-        final var paths = new ArrayList<Path>(Arrays.asList(
-           Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
-           Paths.get("/richi/Fotos/Miami/beach.jpg"),
-           Paths.get("/richi/Food/Lasagne.jpg")
+        final var paths = new ArrayList<>(Arrays.asList(
+                Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
+                Paths.get("/richi/Fotos/Miami/beach.jpg"),
+                Paths.get("/richi/Food/Lasagne.jpg")
         ));
         final var pictureCollection = new PictureCollection();
 
@@ -651,7 +750,7 @@ class PictureCollectionTest {
 
     @Test
     void findCommonPathsFrom4() {
-        final var paths = new ArrayList<Path>(Arrays.asList(
+        final var paths = new ArrayList<>(Arrays.asList(
                 Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
                 Paths.get("/richi/Fotos/Miami/beach.jpg"),
                 Paths.get("/richi/Food/Lasagne.jpg"),
@@ -670,7 +769,7 @@ class PictureCollectionTest {
 
     @Test
     void findCommonPathsFrom104() {
-        var paths = new ArrayList<Path>(Arrays.asList(
+        var paths = new ArrayList<>(Arrays.asList(
                 Paths.get("/richi/Fotos/NewYork/skyline.jpg"),
                 Paths.get("/richi/Fotos/Miami/beach.jpg"),
                 Paths.get("/richi/Food/Lasagne.jpg"),

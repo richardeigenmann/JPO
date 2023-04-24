@@ -1,7 +1,9 @@
 package org.jpo.gui;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -15,9 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- ConsolidateGroupWorkerTest.java: 
-
- Copyright (C) 2016-2022 Richard Eigenmann.
+ Copyright (C) 2016-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -88,7 +88,7 @@ class ConsolidateGroupWorkerTest {
     }
 
     /**
-     * Test need to move Move a picture to the same directory returns false
+     * Test need to move a picture to the same directory returns false
      */
     @Test
     void testNeedToMovePictureSameDirectory() {
@@ -302,6 +302,10 @@ class ConsolidateGroupWorkerTest {
     @Test
     void testMoveReadonlyPictureNewDirectory() {
         try {
+            // we need to have a picture collection so that the search for other nodes can proceed
+            final var pictureCollection = new PictureCollection();
+            Settings.setPictureCollection(pictureCollection);
+
             final var tempSourceDirectory = Files.createTempDirectory("testMoveReadonlyPictureNewDirectory-Source").toFile();
             tempSourceDirectory.deleteOnExit();
             final var sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");

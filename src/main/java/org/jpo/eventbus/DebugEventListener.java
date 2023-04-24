@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,7 +35,7 @@ public class DebugEventListener {
     private static final Logger LOGGER = Logger.getLogger( DebugEventListener.class.getName() );
 
     /**
-     * This event listener registers so it receives all types of event objects
+     * This event listener registers, so it receives all types of event objects
      * from the EventBus and then logs them on the console.
      *
      * @param o the event

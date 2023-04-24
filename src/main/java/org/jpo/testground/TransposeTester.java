@@ -1,6 +1,8 @@
 package org.jpo.testground;
 
 
+import java.util.Arrays;
+
 public class TransposeTester {
 
     /**
@@ -21,18 +23,16 @@ public class TransposeTester {
     }
 
     private static void printTable(final int n, final int COLS) {
-        System.out.println(String.format("%nTable n=%d COLS=%d", n, COLS));
+        System.out.printf("%nTable n=%d COLS=%d%n", n, COLS);
         int[] myArray = new int[n];
         for (var i = 0; i < n; i++) {
             myArray[i] = i;
         }
 
         final var ROWS = (n + COLS - 1) / COLS;
-        System.out.println(String.format("ROWS: %d", ROWS));
+        System.out.printf("ROWS: %d%n", ROWS);
         int[] transposedArray = new int[n + COLS];
-        for (var i = 0; i < transposedArray.length; i++) {
-            transposedArray[i] = -1;
-        }
+        Arrays.fill(transposedArray, -1);
 
         for (var i = 0; i < n; i++) {
             int maxrows = (int) Math.ceil(n / ((double) COLS));
@@ -44,7 +44,7 @@ public class TransposeTester {
 
         for (var i = 0; i < transposedArray.length; i++) {
             if (i % COLS == 0 && i > 0) {
-                System.out.println("");
+                System.out.println();
             }
             if (transposedArray[i] > -1) {
                 System.out.print(transposedArray[i]);

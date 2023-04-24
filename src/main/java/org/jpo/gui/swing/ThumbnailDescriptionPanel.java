@@ -1,9 +1,7 @@
 package org.jpo.gui.swing;
 
 /*
- ThumbnailDescriptionPanel.java:  a Swing view for the descriptions of a thumbnail
-
- Copyright (C) 2020-2022  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2020-2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -261,14 +259,14 @@ public class ThumbnailDescriptionPanel extends JPanel {
         categoriesJSP.repaint();
     }
 
-    public void addToCategopriesJPanel(final JComponent component) {
+    public void addToCategoriesJPPanel(final JComponent component) {
         categoriesJPanel.add(component);
         categoriesJSP.revalidate();
     }
 
     public void setCategoryLockMode() {
-        for ( Component c : categoriesJPanel.getComponents() ) {
-            if (c instanceof CategoryButton categoryButton) {
+        for ( final var component : categoriesJPanel.getComponents() ) {
+            if (component instanceof CategoryButton categoryButton) {
                 categoryButton.setRemoveButtonVisibility();
             }
         }
@@ -349,6 +347,6 @@ public class ThumbnailDescriptionPanel extends JPanel {
 
     @Subscribe
     public void handleCollectionLockNotification(CollectionLockNotification event) {
-        categoryMenuPopupButton.setVisible(Settings.getPictureCollection().getAllowEdits());
+        categoryMenuPopupButton.setVisible(event.pictureCollection().getAllowEdits());
     }
 }

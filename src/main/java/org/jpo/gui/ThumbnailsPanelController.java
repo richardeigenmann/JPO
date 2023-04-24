@@ -37,7 +37,7 @@ import static java.awt.Component.TOP_ALIGNMENT;
  * The ThumbnailPanelController manages a JPanel in a JScrollPane that displays
  * a group of pictures in a grid of thumbnailControllers or ad hoc search
  * results. Real pictures are shown as a thumbnail of the image whilst groups
- * are shown as a folder icon. Each thumbnail has it's caption under the image.
+ * are shown as a folder icon. Each thumbnail has its caption under the image.
  * <p>
  * If the size of the component is changed the images are re-laid out and can
  * take advantage of the extra space if there is some.

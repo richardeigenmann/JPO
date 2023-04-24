@@ -1,10 +1,9 @@
 package org.jpo.eventbus;
 
-import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
 
 /*
- Copyright (C) 2020-2022 Richard Eigenmann.
+ Copyright (C) 2020-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,5 +25,5 @@ import org.jpo.datamodel.PictureInfo;
  * @param pictureInfo The pictureInfo to remove it from
  * @author Richard Eigenmann
  */
-public record RemoveCategoryFromPictureInfoRequest(@NotNull int category, PictureInfo pictureInfo) {
+public record RemoveCategoryFromPictureInfoRequest(int category, PictureInfo pictureInfo) {
 }

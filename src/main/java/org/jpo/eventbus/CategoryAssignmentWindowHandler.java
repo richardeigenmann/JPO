@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.gui.swing.CategroyAssignmentWindow;
+import org.jpo.gui.swing.CategoryAssignmentWindow;
 
 /*
  Copyright (C) 2022  Richard Eigenmann.
@@ -31,7 +31,7 @@ public class CategoryAssignmentWindowHandler {
      */
     @Subscribe
     public void handleEvent(final CategoryAssignmentWindowRequest request) {
-        new CategroyAssignmentWindow(request);
+        new CategoryAssignmentWindow(request);
     }
 
 }

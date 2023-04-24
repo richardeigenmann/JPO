@@ -13,6 +13,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+/*
+ Copyright (C) 2023 Richard Eigenmann, Zurich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
 /**
  * Tests for the SortableDefaultMutableTreeNode tests
  *
@@ -66,8 +82,9 @@ class SortableDefaultMutableTreeNodeTest {
      */
     @BeforeEach
     public void setUp() {
-
+        final var pictureCollection = new PictureCollection();
         rootNode = new SortableDefaultMutableTreeNode();
+        pictureCollection.getRootNode().add(rootNode);
         group1 = new SortableDefaultMutableTreeNode(gr1);
         group2 = new SortableDefaultMutableTreeNode(gr2);
         group3 = new SortableDefaultMutableTreeNode(gr3);
@@ -162,12 +179,12 @@ class SortableDefaultMutableTreeNodeTest {
         // After moving, picture4 is owned by Group1
         assertEquals(picture4.getParent(), group1);
 
-        // The parent of the root node is null before a move
-        assertNull(rootNode.getParent());
+        // The parent of the root node is the picture collection root node before a move
+        assertEquals(rootNode.getPictureCollection().getRootNode(),rootNode.getParent());
         // Move should fail
         assertFalse(rootNode.moveToLastChild(group1));
         // The parent of the root node is null after a move because it was not moved
-        assertNull(rootNode.getParent());
+        assertEquals(rootNode.getPictureCollection().getRootNode(), rootNode.getParent());
 
         // Before the move group2 was a child of rootNode
         assertEquals( group2.getParent(), rootNode);
@@ -185,14 +202,14 @@ class SortableDefaultMutableTreeNodeTest {
      * test for moving a node up
      */
     @Test
-    void testMoveBeforeError1() {
+    void testMoveBeforeErrorWhenAtTop() {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        // The parent of the root node is null before a move
-        assertNull(rootNode.getParent());
+        // The parent of the root node is the collection root node
+        assertEquals(rootNode.getPictureCollection().getRootNode(), rootNode.getParent());
         // Move should fail
         assertFalse(rootNode.moveBefore(group1));
-        // The parent of the root node is null after a move because it was not moved
-        assertNull(rootNode.getParent());
+        // The parent of the root node is still the root node of the collection
+        assertEquals(rootNode.getPictureCollection().getRootNode(), rootNode.getParent());
     }
 
     /**
@@ -202,7 +219,7 @@ class SortableDefaultMutableTreeNodeTest {
     void testMoveBeforeError2() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         // Move should fail
-        assertFalse(group1.moveBefore(rootNode));
+        assertFalse(rootNode.moveBefore(rootNode.getPictureCollection().getRootNode()));
         // The parent of group1 is still the root node because the move before the root node was not done
         assertEquals(rootNode, group1.getParent());
     }
@@ -356,11 +373,11 @@ class SortableDefaultMutableTreeNodeTest {
      */
     @Test
     void testMoveToIndexErrors2() {
-        // The parent of the root node is null before a move
-        assertNull(rootNode.getParent());
+        // The parent of the root node is the collection root
+        assertEquals(rootNode.getPictureCollection().getRootNode(), rootNode.getParent());
         assertFalse(rootNode.moveToIndex(group1, 0));
-        // The parent of the root node is null after a move because it was not moved
-        assertNull(rootNode.getParent());
+        // The parent of the root node is still the same after a move because it was not moved
+        assertEquals(rootNode.getPictureCollection().getRootNode(), rootNode.getParent());
 
     }
 
@@ -434,18 +451,19 @@ class SortableDefaultMutableTreeNodeTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final GroupInfo gA = new GroupInfo("A");
-                final GroupInfo gB = new GroupInfo("B");
-                final GroupInfo gC = new GroupInfo("C");
-                final GroupInfo gD = new GroupInfo("D");
-                final GroupInfo gE = new GroupInfo("E");
+                final var root = new SortableDefaultMutableTreeNode();
+                final var gA = new GroupInfo("A");
+                final var gB = new GroupInfo("B");
+                final var gC = new GroupInfo("C");
+                final var gD = new GroupInfo("D");
+                final var gE = new GroupInfo("E");
                 root.add(new SortableDefaultMutableTreeNode(gD));
                 root.add(new SortableDefaultMutableTreeNode(gE));
                 root.add(new SortableDefaultMutableTreeNode(gC));
                 root.add(new SortableDefaultMutableTreeNode(gB));
                 root.add(new SortableDefaultMutableTreeNode(gA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
                 root.sortChildren(Settings.FieldCodes.DESCRIPTION);
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
@@ -464,7 +482,6 @@ class SortableDefaultMutableTreeNodeTest {
     void testSortChildrenGroupsOnCreationTime() {
         try {
             SwingUtilities.invokeAndWait(() -> {
-
                 final var rootNode = new SortableDefaultMutableTreeNode();
                 final var groupInfoA = new GroupInfo("A");
                 final var groupInfoB = new GroupInfo("B");
@@ -476,6 +493,9 @@ class SortableDefaultMutableTreeNodeTest {
                 rootNode.add(new SortableDefaultMutableTreeNode(groupInfoC));
                 rootNode.add(new SortableDefaultMutableTreeNode(groupInfoB));
                 rootNode.add(new SortableDefaultMutableTreeNode(groupInfoA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(rootNode);
+
                 rootNode.sortChildren(Settings.FieldCodes.CREATION_TIME);
                 assertEquals("A", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(1)).getUserObject().toString());
@@ -494,29 +514,31 @@ class SortableDefaultMutableTreeNodeTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final PictureInfo pA = new PictureInfo();
+                final var groupNode = new SortableDefaultMutableTreeNode(new GroupInfo("GroupNode"));
+                final var pA = new PictureInfo();
                 pA.setDescription("A");
-                final PictureInfo pB = new PictureInfo();
+                final var pB = new PictureInfo();
                 pB.setDescription("B");
-                final PictureInfo pC = new PictureInfo();
+                final var pC = new PictureInfo();
                 pC.setDescription("C");
-                final PictureInfo pD = new PictureInfo();
+                final var pD = new PictureInfo();
                 pD.setDescription("D");
-                final PictureInfo pE = new PictureInfo();
+                final var pE = new PictureInfo();
                 pE.setDescription("E");
-                root.add(new SortableDefaultMutableTreeNode(pD));
-                root.add(new SortableDefaultMutableTreeNode(pE));
-                root.add(new SortableDefaultMutableTreeNode(pC));
-                root.add(new SortableDefaultMutableTreeNode(pB));
-                root.add(new SortableDefaultMutableTreeNode(pA));
-                root.sortChildren(Settings.FieldCodes.DESCRIPTION);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                groupNode.add(new SortableDefaultMutableTreeNode(pD));
+                groupNode.add(new SortableDefaultMutableTreeNode(pE));
+                groupNode.add(new SortableDefaultMutableTreeNode(pC));
+                groupNode.add(new SortableDefaultMutableTreeNode(pB));
+                groupNode.add(new SortableDefaultMutableTreeNode(pA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(groupNode);
+
+                groupNode.sortChildren(Settings.FieldCodes.DESCRIPTION);
+                assertEquals("A", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(0)).getUserObject().toString());
+                assertEquals("B", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(1)).getUserObject().toString());
+                assertEquals("C", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(2)).getUserObject().toString());
+                assertEquals("D", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(3)).getUserObject().toString());
+                assertEquals("E", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(4)).getUserObject().toString());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -530,16 +552,16 @@ class SortableDefaultMutableTreeNodeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
 
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final PictureInfo pA = new PictureInfo();
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
                 pA.setFilmReference("A");
-                final PictureInfo pB = new PictureInfo();
+                final var pB = new PictureInfo();
                 pB.setFilmReference("B");
-                final PictureInfo pC = new PictureInfo();
+                final var pC = new PictureInfo();
                 pC.setFilmReference("C");
-                final PictureInfo pD = new PictureInfo();
+                final var pD = new PictureInfo();
                 pD.setFilmReference("D");
-                final PictureInfo pE = new PictureInfo();
+                final var pE = new PictureInfo();
                 pE.setFilmReference("E");
                 pA.setDescription("A");
                 pB.setDescription("B");
@@ -551,6 +573,9 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(pC));
                 root.add(new SortableDefaultMutableTreeNode(pB));
                 root.add(new SortableDefaultMutableTreeNode(pA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
                 root.sortChildren(Settings.FieldCodes.FILM_REFERENCE);
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
@@ -569,12 +594,12 @@ class SortableDefaultMutableTreeNodeTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final PictureInfo pA = new PictureInfo();
-                final PictureInfo pB = new PictureInfo();
-                final PictureInfo pC = new PictureInfo();
-                final PictureInfo pD = new PictureInfo();
-                final PictureInfo pE = new PictureInfo();
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
+                final var pB = new PictureInfo();
+                final var pC = new PictureInfo();
+                final var pD = new PictureInfo();
+                final var pE = new PictureInfo();
                 pA.setDescription("A");
                 pB.setDescription("B");
                 pC.setDescription("C");
@@ -590,6 +615,9 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(pC));
                 root.add(new SortableDefaultMutableTreeNode(pB));
                 root.add(new SortableDefaultMutableTreeNode(pA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
                 root.sortChildren(Settings.FieldCodes.COMMENT);
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
@@ -609,16 +637,16 @@ class SortableDefaultMutableTreeNodeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
 
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final PictureInfo pA = new PictureInfo();
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
                 pA.setPhotographer("A");
-                final PictureInfo pB = new PictureInfo();
+                final var pB = new PictureInfo();
                 pB.setPhotographer("B");
-                final PictureInfo pC = new PictureInfo();
+                final var pC = new PictureInfo();
                 pC.setPhotographer("C");
-                final PictureInfo pD = new PictureInfo();
+                final var pD = new PictureInfo();
                 pD.setPhotographer("D");
-                final PictureInfo pE = new PictureInfo();
+                final var pE = new PictureInfo();
                 pE.setPhotographer("E");
                 pA.setDescription("A");
                 pB.setDescription("B");
@@ -630,6 +658,9 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(pC));
                 root.add(new SortableDefaultMutableTreeNode(pB));
                 root.add(new SortableDefaultMutableTreeNode(pA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
                 root.sortChildren(Settings.FieldCodes.PHOTOGRAPHER);
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
@@ -649,16 +680,16 @@ class SortableDefaultMutableTreeNodeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
 
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final PictureInfo pA = new PictureInfo();
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
                 pA.setCopyrightHolder("A");
-                final PictureInfo pB = new PictureInfo();
+                final var pB = new PictureInfo();
                 pB.setCopyrightHolder("B");
-                final PictureInfo pC = new PictureInfo();
+                final var pC = new PictureInfo();
                 pC.setCopyrightHolder("C");
-                final PictureInfo pD = new PictureInfo();
+                final var pD = new PictureInfo();
                 pD.setCopyrightHolder("D");
-                final PictureInfo pE = new PictureInfo();
+                final var pE = new PictureInfo();
                 pE.setCopyrightHolder("E");
                 pA.setDescription("A");
                 pB.setDescription("B");
@@ -670,6 +701,8 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(pC));
                 root.add(new SortableDefaultMutableTreeNode(pB));
                 root.add(new SortableDefaultMutableTreeNode(pA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
                 root.sortChildren(Settings.FieldCodes.COPYRIGHT_HOLDER);
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
@@ -689,20 +722,20 @@ class SortableDefaultMutableTreeNodeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
 
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final PictureInfo pA = new PictureInfo();
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
                 pA.setDescription("A");
                 pA.setCreationTime("2021-10-02 at 14.43.23"); //5
-                final PictureInfo pB = new PictureInfo();
+                final var pB = new PictureInfo();
                 pB.setDescription("B");
                 pB.setCreationTime("2021-10-01 at 18.49.44"); //1
-                final PictureInfo pC = new PictureInfo();
+                final var pC = new PictureInfo();
                 pC.setDescription("C");
                 pC.setCreationTime("2021:10:01 20:03:35"); //2
-                final PictureInfo pD = new PictureInfo();
+                final var pD = new PictureInfo();
                 pD.setDescription("D");
                 pD.setCreationTime("2021:10:02 12:09:42"); //4
-                final PictureInfo pE = new PictureInfo();
+                final var pE = new PictureInfo();
                 pE.setDescription("E");
                 pE.setCreationTime("2021:10:01 09:44:17"); //3
                 root.add(new SortableDefaultMutableTreeNode(pA));
@@ -710,6 +743,9 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(pC));
                 root.add(new SortableDefaultMutableTreeNode(pD));
                 root.add(new SortableDefaultMutableTreeNode(pE));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
                 root.sortChildren(Settings.FieldCodes.CREATION_TIME);
                 assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
@@ -730,20 +766,24 @@ class SortableDefaultMutableTreeNodeTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
 
-                final SortableDefaultMutableTreeNode root = new SortableDefaultMutableTreeNode();
-                final GroupInfo gA = new GroupInfo("A");
-                final GroupInfo gB = new GroupInfo("B");
-                final PictureInfo pC = new PictureInfo();
+                final var root = new SortableDefaultMutableTreeNode();
+                final var gA = new GroupInfo("A");
+                final var gB = new GroupInfo("B");
+                final var pC = new PictureInfo();
                 pC.setDescription("C");
-                final PictureInfo pD = new PictureInfo();
+                final var pD = new PictureInfo();
                 pD.setDescription("D");
-                final GroupInfo gE = new GroupInfo("E");
+                final var gE = new GroupInfo("E");
                 root.add(new SortableDefaultMutableTreeNode(pD));
                 root.add(new SortableDefaultMutableTreeNode(gE));
                 root.add(new SortableDefaultMutableTreeNode(pC));
                 root.add(new SortableDefaultMutableTreeNode(gB));
                 root.add(new SortableDefaultMutableTreeNode(gA));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
                 root.sortChildren(Settings.FieldCodes.DESCRIPTION);
+
                 assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
                 assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
                 assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());

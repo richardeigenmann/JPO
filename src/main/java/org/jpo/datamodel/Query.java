@@ -1,10 +1,7 @@
 package org.jpo.datamodel;
 
-
 /*
-Query.java:  An Interface that specifies what a query must implement so it can be shown
-
-Copyright (C) 2006-2022 Richard Eigenmann.
+Copyright (C) 2006-2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -18,8 +15,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /** 
- *  An Interface that specifies what a query must implement so it can be shown
+ *  An Interface that specifies what a query must implement, so it can be shown
  */
 public interface Query {
 
@@ -51,7 +49,7 @@ public interface Query {
 
 
     /**
-     *  returns a the title for the search that can be used to display the search results under.
+     *  returns the title for the search that can be used to display the search results under.
      *
      *  @return a title
      */

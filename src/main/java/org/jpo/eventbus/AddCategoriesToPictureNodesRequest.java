@@ -1,12 +1,11 @@
 package org.jpo.eventbus;
 
-import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.util.Collection;
 
 /*
- Copyright (C) 2020 -2022  Richard Eigenmann.
+ Copyright (C) 2020 -2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +27,7 @@ import java.util.Collection;
  * @param nodes    The collection of nodes to add the category to
  * @author Richard Eigenmann
  */
-public record AddCategoriesToPictureNodesRequest(@NotNull int category,
+public record AddCategoriesToPictureNodesRequest(int category,
                                                  Collection<SortableDefaultMutableTreeNode> nodes) {
 }
 

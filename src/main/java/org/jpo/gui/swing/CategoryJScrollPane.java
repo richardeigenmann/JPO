@@ -59,7 +59,7 @@ public class CategoryJScrollPane extends JScrollPane {
             }
             if (!categoriesJList.isSelectionEmpty()) {
                 int index = categoriesJList.getSelectedIndex();
-                final Category cat = (Category) categoriesJList.getModel().getElementAt(index);
+                final Category cat = categoriesJList.getModel().getElementAt(index);
                 int status = cat.getStatus();
                 if (status == Category.UNDEFINED) {
                     cat.setStatus(Category.SELECTED);

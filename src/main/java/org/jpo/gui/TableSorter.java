@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * and itself implements TableModel. TableSorter does not store or copy the data
  * in the TableModel, instead it maintains an array of integers which it keeps
  * the same size as the number of rows in its model. When the model changes it
- * notifies the sorter that something has changed eg. "rowsAdded" so that its
+ * notifies the sorter that something has changed e.g. "rowsAdded" so that its
  * internal array of integers can be reallocated. As requests are made of the
  * sorter (like getValueAt(row, col) it redirects them to its model via the
  * mapping array. That way the TableSorter appears to hold another copy of the
@@ -210,8 +210,8 @@ public final class TableSorter extends TableMap {
          than assigned otherwise sister calls in the recursion might
          get out of sync.  When the number of elements is three they
          are partitioned so that the first set, [low, mid), has one
-         element and and the second, [mid, high), has two. We skip the
-         optimisation when the number of elements is three or less as
+         element and the second, [mid, high), has two. We skip the
+         optimisation when the number of elements is three or less, as
          the first compare in the normal merge will produce the same
          sequence of steps. This optimisation seems to be worthwhile
          for partially ordered lists but some analysis is needed to
@@ -276,14 +276,13 @@ public final class TableSorter extends TableMap {
      */
     public void addMouseListenerToHeaderInTable(final JTable table) {
         final TableSorter sorter = this;
-        final JTable tableView = table;
         final MouseAdapter listMouseListener = new MouseAdapter() {
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                final TableColumnModel columnModel = tableView.getColumnModel();
+                final TableColumnModel columnModel = table.getColumnModel();
                 final int viewColumn = columnModel.getColumnIndexAtX(e.getX());
-                final int column = tableView.convertColumnIndexToModel(viewColumn);
+                final int column = table.convertColumnIndexToModel(viewColumn);
                 if (e.getClickCount() == 1 && column != -1) {
                     final int shiftPressed = e.getModifiersEx() & InputEvent.SHIFT_DOWN_MASK;
                     final boolean sortAscending = (shiftPressed == 0);
@@ -291,7 +290,7 @@ public final class TableSorter extends TableMap {
                 }
             }
         };
-        final JTableHeader th = tableView.getTableHeader();
+        final JTableHeader th = table.getTableHeader();
         th.addMouseListener( listMouseListener );
     }
 }

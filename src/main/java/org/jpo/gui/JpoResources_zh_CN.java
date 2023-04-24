@@ -101,17 +101,18 @@ public class JpoResources_zh_CN extends ListResourceBundle {
 
             // PictureViewer
             {"PictureViewerTitle", "JPO图片浏览"},
-            {"PictureViewerKeycodes", "可以使用以下的快捷方式\n"
-                    + "N: 下一张\n"
-                    + "P: 前一张\n"
-                    + "I: 关闭显示图片信息\n"
-                    + "<space>,<home>: 适合窗口大小\n"
-                    + "<left>,<right>,<up>,<down>: 图片移位\n"
-                    + "<PgUp>: 缩小\n"
-                    + "<PgDown>: 放大\n"
-                    + "1: 原始大小\n"
-                    + "F: 窗口尺寸菜单\n"
-                    + "M: 弹出菜单"},
+            {"PictureViewerKeycodes", """
+可以使用以下的快捷方式
+N: 下一张
+P: 前一张
+I: 关闭显示图片信息
+<space>,<home>: 适合窗口大小
+<left>,<right>,<up>,<down>: 图片移位
+<PgUp>: 缩小
+<PgDown>: 放大
+1: 原始大小
+F: 窗口尺寸菜单
+M: 弹出菜单"""},
             {"PictureViewerKeycodesTitle", "键盘快捷方式"},
             {"NavigationPanel", "导航工具"},
             {"fullScreenJButton.ToolTipText", "全屏"},
@@ -724,7 +725,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"VersionUpdate.outdatedMessage", """
                     <html><body>
                     You are running version %s
-                    of JPO.<br>The current version is %s 
+                    of JPO.<br>The current version is %s
                     <br>Would you like to visit the website<br>
                     <a href="%s">%s</a><br>so you can upgrade?
                     </body></html>"""},

@@ -7,6 +7,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
@@ -78,20 +79,20 @@ class JpoWriterTest {
     @Test
     void writePicture() {
         try {
-            final File tempFile = File.createTempFile("temp", null);
-            try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
-                final PictureInfo pictureInfo = new PictureInfo();
+            final var tempFile = File.createTempFile("temp", null);
+            try (final var bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
+                final var pictureInfo = new PictureInfo();
                 pictureInfo.setDescription("A Test image");
                 pictureInfo.setFilmReference("Film Reference");
                 pictureInfo.setImageLocation(new File("gaga.jpg"));
                 pictureInfo.setCopyrightHolder("Richard Eigenmann");
-                pictureInfo.setComment("A Commment");
+                pictureInfo.setComment("A Comment");
                 pictureInfo.setPhotographer("A master");
-                JpoWriter.writePictureTestOnly(pictureInfo, bout, null, false);
+                JpoWriter.writePictureTestOnly(pictureInfo, bout, null, false, Paths.get(""));
             }
 
-            try(final Stream<String> s = Files.lines(tempFile.toPath())) {
-                assertEquals(8, s.count());
+            try(final var lines = Files.lines(tempFile.toPath())) {
+                assertEquals(8, lines.count());
             }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
@@ -106,15 +107,14 @@ class JpoWriterTest {
     void testWriteCollectionHeader() {
         final var groupInfo = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
         final var node = new SortableDefaultMutableTreeNode(groupInfo);
-        //final var pictureCollection = new PictureCollection();
-        final var pictureCollection = Settings.getPictureCollection();
+        final var pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add(node);
         pictureCollection.setAllowEdits(true);
 
         final var stringWriter = new StringWriter();
         try (
                 final var bufferedWriter = new BufferedWriter(stringWriter)) {
-            JpoWriter.writeCollectionHeaderTestOnly(node, bufferedWriter);
+            JpoWriter.writeCollectionHeaderTestOnly(node, bufferedWriter, Paths.get("C:/User/Tom/Pictures"));
         } catch (final IOException ex) {
             Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
             fail("Unexpected IOException");
@@ -122,7 +122,7 @@ class JpoWriterTest {
 
         final var expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
-                + "\" collection_protected=\"No\" basedir=\"\">\n";
+                + "\" collection_protected=\"No\" basedir=\"C:/User/Tom/Pictures\">\n";
 
         assertEquals( expected, stringWriter.toString() );
     }
@@ -135,15 +135,14 @@ class JpoWriterTest {
     void testWriteCollectionHeaderProtectedCollection() {
         final var groupInfo = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
         final var node = new SortableDefaultMutableTreeNode(groupInfo);
-        //final var pictureCollection = new PictureCollection();
-        final var pictureCollection = Settings.getPictureCollection();
+        final var pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add(node);
         pictureCollection.setAllowEdits(false);
 
         final var stringWriter = new StringWriter();
         try (
                 final var bufferedWriter = new BufferedWriter(stringWriter)) {
-            JpoWriter.writeCollectionHeaderTestOnly(node, bufferedWriter);
+            JpoWriter.writeCollectionHeaderTestOnly(node, bufferedWriter, Paths.get("/linux/filesystem/pictures"));
         } catch (final IOException ex) {
             Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
             fail(ex.getMessage());
@@ -151,7 +150,7 @@ class JpoWriterTest {
 
         final var expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
-                + "\" collection_protected=\"Yes\" basedir=\"\">\n";
+                + "\" collection_protected=\"Yes\" basedir=\"/linux/filesystem/pictures\">\n";
 
         assertEquals( expected, stringWriter.toString());
     }

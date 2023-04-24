@@ -3,7 +3,7 @@ package org.jpo.gui;
 import java.io.File;
 
 /*
- Copyright (C) 2015 - 2020 Richard Eigenmann.
+ Copyright (C) 2015 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,7 +20,7 @@ import java.io.File;
 
 /**
  * This interface allows the GUI to call back with the directory and whether to
- * consolidate the sub-groups.
+ * consolidate the subgroups.
  *
  * @author Richard Eigenmann
  */
@@ -30,7 +30,7 @@ public interface ConsolidateGroupActionCallback {
      * The callback with the chosen parameters
      *
      * @param highresDirectory The target directory
-     * @param recurseSubgroups true if the sub-groups are to consolidated,
+     * @param recurseSubgroups true if the subgroups are to consolidated,
      *                         false if not
      */
     void consolidateGroupCallback(final File highresDirectory, final boolean recurseSubgroups);

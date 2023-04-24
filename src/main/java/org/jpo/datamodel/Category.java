@@ -1,10 +1,11 @@
 package org.jpo.datamodel;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 
 /*
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,6 +27,7 @@ import java.io.Serializable;
  */
 public class Category implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1;
 
     /**

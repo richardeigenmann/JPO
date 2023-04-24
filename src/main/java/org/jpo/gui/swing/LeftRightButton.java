@@ -95,25 +95,14 @@ public class LeftRightButton extends NavBarButton {
      * @param state the state from the enum to set
      */
     public void setDecoration( BUTTON_STATE state ) {
-        switch ( state ) {
-            case BEGINNING:
-                setIcon( ICON_ARROW_LEFT_STOP );
-                break;
-            case HAS_PREVIOUS:
-                setIcon( ICON_DOUBLE_ARROW_LEFT );
-                break;
-            case HAS_LEFT:
-                setIcon( ICON_ARROW_LEFT );
-                break;
-            case HAS_RIGHT:
-                setIcon( ICON_ARROW_RIGHT );
-                break;
-            case HAS_NEXT:
-                setIcon( ICON_DOUBLE_ARROW_RIGHT );
-                break;
-            default: // END:
-                setIcon( ICON_ARROW_RIGHT_STOP );
-                break;
+        switch (state) {
+            case BEGINNING -> setIcon(ICON_ARROW_LEFT_STOP);
+            case HAS_PREVIOUS -> setIcon(ICON_DOUBLE_ARROW_LEFT);
+            case HAS_LEFT -> setIcon(ICON_ARROW_LEFT);
+            case HAS_RIGHT -> setIcon(ICON_ARROW_RIGHT);
+            case HAS_NEXT -> setIcon(ICON_DOUBLE_ARROW_RIGHT);
+            default -> // END:
+                    setIcon(ICON_ARROW_RIGHT_STOP);
         }
     }
 

@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,7 +50,7 @@ public class OpenMainWindowHandler {
                     () -> {
                         new MainWindow();
                         JpoEventBus.getInstance().post(new LoadDockablesPositionsRequest());
-                        Settings.getPictureCollection().getTreeModel().addTreeModelListener(new OpenMainWindowHandler.MainAppModelListener());
+                        Settings.getPictureCollection().addTreeModelListener(new OpenMainWindowHandler.MainAppModelListener());
                     }
             );
         } catch (final InterruptedException | InvocationTargetException ex) {
@@ -90,8 +90,8 @@ public class OpenMainWindowHandler {
 
         @Override
         public void treeStructureChanged(final TreeModelEvent e) {
-            final var tp = e.getTreePath();
-            if (tp.getPathCount() == 1) { //if the root node sent the event
+            final var treePath = e.getTreePath();
+            if (treePath.getPathCount() == 1) { //if the root node sent the event
                 updateApplicationTitle();
             }
         }
@@ -104,7 +104,7 @@ public class OpenMainWindowHandler {
         private void updateApplicationTitle() {
             final var xmlFile = Settings.getPictureCollection().getXmlFile();
             if (xmlFile != null) {
-                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle") + ":  " + xmlFile.toString()));
+                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle") + ":  " + xmlFile));
             } else {
                 JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle")));
             }

@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -68,20 +68,18 @@ public class UnsavedUpdatesDialogHandler {
                     options[0]);
 
             switch (option) {
-                case 0:
-                    JpoEventBus.getInstance().post(request.nextRequest());
-                    break;
-                case 1:
+                case 0 -> JpoEventBus.getInstance().post(request.nextRequest());
+                case 1 -> {
                     final var fileSaveRequest = new FileSaveRequest(request.nextRequest());
                     JpoEventBus.getInstance().post(fileSaveRequest);
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     final var fileSaveAsRequest = new FileSaveAsRequest(request.nextRequest());
                     JpoEventBus.getInstance().post(fileSaveAsRequest);
-                    break;
-                default:
+                }
+                default -> {
                     // do a cancel if no other option was chosen
-                    break;
+                }
             }
         } else {
             JpoEventBus.getInstance().post(request.nextRequest());

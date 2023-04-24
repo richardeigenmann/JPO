@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2006-2022  Richard Eigenmann.
+ Copyright (C) 2006-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -119,7 +119,7 @@ public class Emailer
 
         Tools.checkEDT();
 
-        final JPanel progPanel = new JPanel();
+        final var progPanel = new JPanel();
         progPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
         progPanel.setLayout( new MigLayout() );
 
@@ -158,7 +158,7 @@ public class Emailer
     }
 
     /**
-     * This is where the SwingWorker does it's stuff
+     * This is where the SwingWorker does its stuff
      *
      * @return "Done"
      */
@@ -201,7 +201,7 @@ public class Emailer
      */
     @Override
     protected void process(List<String> chunks) {
-        for (final String s : chunks) {
+        for (final var s : chunks) {
             progBar.setValue(progBar.getValue() + 1);
             progressLabel.setText(s);
         }
@@ -234,45 +234,40 @@ public class Emailer
             final ScalablePicture scalablePicture = new ScalablePicture();
             scalablePicture.setScaleSize( scaleSize );
 
-            File highresFile;
-            PictureInfo pi;
-            DataSource ds;
-            ByteArrayOutputStream baos;
-            EncodedDataSource encds;
             for ( int i = 0; ( i < emailSelected.size() ) && ( !interrupted ); i++ ) {
                 publish( String.format( "%d / %d", progBar.getValue(), progBar.getMaximum() ) );
                 pictureDescriptionMimeBodyPart = new MimeBodyPart();
-                pi = (PictureInfo) emailSelected.get( i ).getUserObject();
+                final var pictureInfo = (PictureInfo) emailSelected.get( i ).getUserObject();
 
-                pictureDescriptionMimeBodyPart.setText( pi.getDescription(), "iso-8859-1" );
+                pictureDescriptionMimeBodyPart.setText( pictureInfo.getDescription(), "iso-8859-1" );
                 mp.addBodyPart( pictureDescriptionMimeBodyPart );
 
                 if ( scaleImages ) {
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerLoading"), pi.getImageFile()});
-                    scalablePicture.loadPictureImd(pi.getSha256(), pi.getImageFile(), pi.getRotation());
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerScaling"), pi.getImageFile()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerLoading"), pictureInfo.getImageFile()});
+                    scalablePicture.loadPictureImd(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getRotation());
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerScaling"), pictureInfo.getImageFile()});
                     scalablePicture.scalePicture();
-                    baos = new ByteArrayOutputStream();
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerWriting"), pi.getImageFile()});
-                    scalablePicture.writeScaledJpg(baos);
-                    encds = new EncodedDataSource("image/jpeg", pi.getImageFile().getName(), baos);
+                    final var byteArrayOutputStream = new ByteArrayOutputStream();
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerWriting"), pictureInfo.getImageFile()});
+                    scalablePicture.writeScaledJpg(byteArrayOutputStream);
+                    final var encodedDataSource = new EncodedDataSource("image/jpeg", pictureInfo.getImageFile().getName(), byteArrayOutputStream);
                     scaledPictureMimeBodyPart = new MimeBodyPart();
-                    scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encds ) );
-                    scaledPictureMimeBodyPart.setFileName(pi.getImageFile().getName());
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile()});
+                    scaledPictureMimeBodyPart.setDataHandler( new DataHandler( encodedDataSource ) );
+                    scaledPictureMimeBodyPart.setFileName(pictureInfo.getImageFile().getName());
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pictureInfo.getImageFile()});
                     mp.addBodyPart(scaledPictureMimeBodyPart);
                 }
 
                 if ( sendOriginal ) {
                     // create the message part for the original image
                     originalPictureMimeBodyPart = new MimeBodyPart();
-                    highresFile = pi.getImageFile();
+                    final var highresFile = pictureInfo.getImageFile();
                     // attach the file to the message
-                    ds = new FileDataSource( highresFile );
-                    originalPictureMimeBodyPart.setDataHandler( new DataHandler( ds ) );
-                    originalPictureMimeBodyPart.setFileName( pi.getImageFile().getName() );
+                    final var dataSource = new FileDataSource( highresFile );
+                    originalPictureMimeBodyPart.setDataHandler( new DataHandler( dataSource ) );
+                    originalPictureMimeBodyPart.setFileName( pictureInfo.getImageFile().getName() );
                     // create the Multipart and add its parts to it
-                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pi.getImageFile()});
+                    LOGGER.log(Level.INFO, "{0}{1}", new Object[]{Settings.getJpoResources().getString("EmailerAdding"), pictureInfo.getImageFile()});
                     mp.addBodyPart(originalPictureMimeBodyPart);
                 }
 
@@ -292,7 +287,7 @@ public class Emailer
      * method that sends the email
      */
     private void sendEmailNoAuth() {
-        final Properties props = System.getProperties();
+        final var props = System.getProperties();
         props.setProperty("mail.smtp.host", Settings.getEmailServer());
         props.setProperty("mail.smtp.port", Settings.getEmailPort());
         //props.put( "mail.debug", "true" );
@@ -330,7 +325,7 @@ public class Emailer
         props.setProperty("mail.smtp.socketFactory.port", Settings.getEmailPort());
         props.setProperty("mail.smtp.starttls.enable", "true");
 
-        final Session session = Session.getDefaultInstance(props, new Authenticator() {
+        final var session = Session.getDefaultInstance(props, new Authenticator() {
 
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -360,7 +355,7 @@ public class Emailer
      * method that sends the email via SSL
      */
     private void sendEmailSSL() {
-        final Properties props = System.getProperties();
+        final var props = System.getProperties();
         props.setProperty("mail.smtp.host", Settings.getEmailServer());
         props.setProperty("mail.smtp.port", Settings.getEmailPort());
         props.setProperty("mail.smtp.auth", "true");
@@ -383,7 +378,7 @@ public class Emailer
         } else {
             try {
                 publish(Settings.getJpoResources().getString("EmailerSending"));
-                final MimeMessage msg = buildMessage(session);
+                final var msg = buildMessage(session);
                 Objects.requireNonNull(msg, "msg must not be null");
                 Transport.send(msg);
                 publish(Settings.getJpoResources().getString("EmailerSent"));

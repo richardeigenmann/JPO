@@ -43,7 +43,7 @@ hopes you will find it useful and enjoys feedback.
 * Export to directory facility to share via e-mail or CD-ROM
 * Open XML data structures
 * Pure Java, no native libraries
-* Runs on Windows, Linux and Mac OS, anywhere Java runs
+* Runs on Windows, Linux and macOS, anywhere Java runs
 * Can call up outside applications
 * Leaves your pictures where they are
 * Can move pictures to new locations to tidy up
@@ -55,7 +55,7 @@ hopes you will find it useful and enjoys feedback.
 Visit the SourceForge.net download page by clicking this green button. Note that the download starts directly after 5
 seconds. Install the application like any other windows application. You can remove it just like any other windows
 application by opening the Start menu, clicking on the cogwheel icon (Settings), choosing Apps in the Settings Window
-that opens up, scroll down to JPO and there click on the Uninstall button.
+that opens up, scroll down to JPO and there click on the uninstall button.
 
 [![Download Button](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/j-po/files/JPO-0.14.exe/download)
 
@@ -83,7 +83,7 @@ sourcetrail
 # on the New Project screen click on the plus (+) icon
 # Add a new Source Group Type - Java - Empty Java Source Group
 # Java Standard: 12
-# Files and Directoris to index: src/main/java
+# Files and Directories to index: src/main/java
 # Next > Create
 # Classes > Main > ApplicationStartupRequest > ApplicationEventHandler > handleApplicationStartupRequest
 ```

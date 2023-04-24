@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2002 - 2022 Richard Eigenmann, Zurich, Switzerland This
+ * Copyright (C) 2002 - 2023 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -49,7 +49,9 @@ public class CollectionJTreeController {
      * @param pictureCollection the PictureCollection to control
      */
     public CollectionJTreeController(final PictureCollection pictureCollection) {
-        collectionJTree.setModel(pictureCollection.getTreeModel());
+        if (pictureCollection != null) {
+            collectionJTree.setModel(pictureCollection.getTreeModel());
+        }
         collectionJTree.setTransferHandler(new MyTransferHandler());
         ToolTipManager.sharedInstance().registerComponent(collectionJTree);
         collectionJTree.setDragEnabled(true);
@@ -148,7 +150,7 @@ public class CollectionJTreeController {
         @Override
         protected Transferable createTransferable(final JComponent component) {
             final var selectedTreePath = collectionJTree.getSelectionPath();
-            final var node = (SortableDefaultMutableTreeNode) selectedTreePath.getLastPathComponent();
+            final var node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(selectedTreePath).getLastPathComponent();
             if (node.isRoot()) {
                 LOGGER.log(Level.SEVERE, "This is the root node: {0}\nPath: {1}\nIt may not be dragged. Dragging disabled.", new Object[]{node, selectedTreePath});
                 return null;
@@ -176,7 +178,7 @@ public class CollectionJTreeController {
         private List<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable t) {
             List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
             try {
-                final Object o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
+                final var o = t.getTransferData(JpoTransferable.jpoNodeFlavor);
                 transferableNodes = (List<SortableDefaultMutableTreeNode>) o;
                 LOGGER.log(Level.INFO, "processing a list with {0} transferable nodes", transferableNodes.size());
             } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
@@ -210,7 +212,6 @@ public class CollectionJTreeController {
          * @return true if successful
          */
         @Override
-        @SuppressWarnings({"unchecked"})
         public boolean importData(final TransferSupport support) {
             final var actionType = support.getDropAction();
             if (!((actionType == TransferHandler.COPY) || (actionType == TransferHandler.MOVE))) {

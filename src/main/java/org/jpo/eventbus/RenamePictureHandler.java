@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,29 +44,29 @@ public class RenamePictureHandler {
      */
     @Subscribe
     public void handleEvent(@NonNull final RenamePictureRequest request) {
-        for (final SortableDefaultMutableTreeNode node : request.nodes()) {
+        for (final var node : request.nodes()) {
             renameOnePictureRequest(node);
         }
     }
 
     /**
      * Handles the request to rename the picture indicated by a node. The new name
-     * is chosed by {Tools.inventFilename}
+     * is chosen by {Tools.inventFilename}
      *
      * @param node the node whose picture needs a new filename.
      */
     private static void renameOnePictureRequest(@NonNull final SortableDefaultMutableTreeNode node) {
-        final PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+        final var pictureInfo = (PictureInfo) node.getUserObject();
 
         final var imageFile = pictureInfo.getImageFile();
         if (imageFile == null) {
             return;
         }
 
-        final Object object = Settings.getJpoResources().getString("FileRenameLabel1")
-                + imageFile.toString()
+        final var object = Settings.getJpoResources().getString("FileRenameLabel1")
+                + imageFile
                 + Settings.getJpoResources().getString("FileRenameLabel2");
-        final String selectedValue = JOptionPane.showInputDialog(Settings.getAnchorFrame(),
+        final var selectedValue = JOptionPane.showInputDialog(Settings.getAnchorFrame(),
                 object,
                 imageFile.toString());
         if (selectedValue != null) {
@@ -75,7 +75,7 @@ public class RenamePictureHandler {
             if (newName.exists()) {
                 final var alternativeNewName = Tools.inventFilename(newName.getParentFile(), newName.getName());
                 int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                        String.format(Settings.getJpoResources().getString("FileRenameTargetExistsText"), newName.toString(), alternativeNewName.toString()),
+                        String.format(Settings.getJpoResources().getString("FileRenameTargetExistsText"), newName, alternativeNewName),
                         Settings.getJpoResources().getString("FileRenameTargetExistsTitle"),
                         JOptionPane.OK_CANCEL_OPTION);
                 if (alternativeAnswer == JOptionPane.OK_OPTION) {

@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 /*
  CameraDownloadWizardData.java:  holds the data being shown in the Camera download wizard
 
- Copyright (C) 2007-2022  Richard Eigenmann.
+ Copyright (C) 2007-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * This class was designed to hold the data that the the
+ * This class was designed to hold the data that the
  * {@link CameraDownloadWizard} needs. It is made accessible to all Wizard
  * steps.
  *
@@ -135,7 +135,7 @@ public class CameraDownloadWizardData {
     /**
      * Sets whether to copy or move the pictures from the camera to the
      * computer. This does not have to be set before calling the wizard. By
-     * default the operation is set to copy.
+     * default, the operation is set to copy.
      *
      * @param copyMode Set to true if the wizard should copy the pictures, false
      *                 if it should move them.
@@ -167,15 +167,15 @@ public class CameraDownloadWizardData {
      * @return current date and time
      */
     private static String currentDate(final String formatString) {
-        final SimpleDateFormat formatter = new SimpleDateFormat(formatString);
-        final Date currentTime = new Date();
+        final var formatter = new SimpleDateFormat(formatString);
+        final var currentTime = new Date();
         return formatter.format(currentTime);
     }
 
     /**
      * Sets the name for the new group, if a new group should be created. If
      * this is not set a default of "Download date" is proposed. Calling
-     * this method can change that name. If the (@link #shouldCreateNewGroup}
+     * this method can change that name. If the {@link #shouldCreateNewGroup}
      * flag has been set a new group is created, otherwise this String will not
      * be used.
      *
@@ -222,7 +222,7 @@ public class CameraDownloadWizardData {
 
     /**
      * The TreeModel of the Collection. Since we only have one Collection at a
-     * time this is hard wired to the one collection. But if there were more
+     * time this is hard-wired to the one collection. But if there were more
      * than one collection you could specify which collection to add the
      * pictures to here.
      */

@@ -1,11 +1,10 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
 import org.jpo.gui.CorrectSha256SwingWorker;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +31,7 @@ public class StartHashCodeScannerHandler {
      */
     @Subscribe
     public void handleEvent(final StartHashCodeScannerRequest request) {
-        (new CorrectSha256SwingWorker(Settings.getPictureCollection().getRootNode())).execute();
+        new CorrectSha256SwingWorker(request.startNode()).execute();
     }
 
 

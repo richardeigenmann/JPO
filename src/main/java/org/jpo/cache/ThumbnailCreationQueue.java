@@ -6,7 +6,7 @@ import java.util.concurrent.PriorityBlockingQueue;
 
 
 /*
- Copyright (C) 2003-2022  Richard Eigenmann.
+ Copyright (C) 2003-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,7 +39,7 @@ public class ThumbnailCreationQueue {
     /**
      * This method creates a {@link ThumbnailQueueRequest} and sticks it on the
      * {@link ThumbnailCreationQueue} if Thumbnail is not already on the queue.
-     * Otherwise the queue priority of the existing request is increased if the
+     * Otherwise, the queue priority of the existing request is increased if the
      * request comes in with a higher priority. If the new request forces a
      * rebuild of the image this is also updated in the request.
      *
@@ -95,7 +95,7 @@ public class ThumbnailCreationQueue {
 
     /**
      * This method returns the {@link ThumbnailQueueRequest} for the supplied
-     * ThumbnailController if such a request exists. Otherwise it returns null.
+     * ThumbnailController if such a request exists. Otherwise, it returns null.
      *
      * @param callbackHandler The {@link ThumbnailQueueRequestCallbackHandler}
      * for which the request is to be found
@@ -104,9 +104,8 @@ public class ThumbnailCreationQueue {
     @TestOnly
     protected static ThumbnailQueueRequest findThumbnailQueueRequest(
             final ThumbnailQueueRequestCallbackHandler callbackHandler ) {
-        for (final var i = QUEUE.iterator(); i.hasNext(); ) {
-            final var thumbnailQueueRequest = i.next();
-            if ((callbackHandler != null) && (thumbnailQueueRequest.getThumbnailQueueRequestCallbackHandler().equals(callbackHandler))) {
+        for (final var thumbnailQueueRequest : QUEUE) {
+            if ((thumbnailQueueRequest.getThumbnailQueueRequestCallbackHandler().equals(callbackHandler))) {
                 return thumbnailQueueRequest;
             }
         }

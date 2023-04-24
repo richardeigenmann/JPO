@@ -93,16 +93,16 @@ public class RunUserFunctionHandler {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
             int blank = command.indexOf(' ');
+            final String[] cmdarray;
             if (blank > -1) {
-                final var cmdarray = new String[2];
+                cmdarray = new String[2];
                 cmdarray[0] = command.substring(0, blank);
                 cmdarray[1] = command.substring(blank + 1);
-                Runtime.getRuntime().exec(cmdarray);
             } else {
-                final var cmdarray = new String[1];
+                cmdarray = new String[1];
                 cmdarray[0] = command;
-                Runtime.getRuntime().exec(cmdarray);
             }
+            Runtime.getRuntime().exec(cmdarray);
         } catch (final IOException x) {
             LOGGER.log(Level.INFO, "Runtime.exec collapsed with and IOException: {0}", x.getMessage());
         }

@@ -3,7 +3,6 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
@@ -13,7 +12,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,10 +48,10 @@ public class AddCollectionToGroupHandler {
     public void handleEvent(final AddCollectionToGroupRequest request) {
         LOGGER.info("Starting");
         Tools.checkEDT();
-        final SortableDefaultMutableTreeNode popupNode = request.node();
+        final var popupNode = request.node();
         final var fileToLoad = request.collectionFile();
 
-        final SortableDefaultMutableTreeNode newNode = popupNode.addGroupNode("New Group");
+        final var newNode = popupNode.addGroupNode("New Group");
         try {
             PictureCollection.fileLoad(fileToLoad, newNode);
         } catch (final FileNotFoundException x) {

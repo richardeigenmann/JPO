@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.jpo.datamodel.PictureCollection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,7 +45,7 @@ public class CategoryEditorJFrameTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final CategoryEditorJFrame jFrame = new CategoryEditorJFrame();
+                final var jFrame = new CategoryEditorJFrame(new PictureCollection());
                 assertNotNull(jFrame);
                 jFrame.getRid();
             });

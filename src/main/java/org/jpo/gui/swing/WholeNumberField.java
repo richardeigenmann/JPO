@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2002-2014  Richard Eigenmann (for the modifications over the original I copied)
+ Copyright (C) 2002-2023 Richard Eigenmann (for the modifications over the original I copied)
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,7 +29,6 @@ import java.util.logging.Logger;
  */
 /**
  * This class extends the JTextField and allow only entry of digits.
- *
  * This was the suggested method in the Swing tutorials in February 2002 when I
  * wrote this class. Java probably didn't have NumberFormatter,
  * FormattedTextFields etc. in those days.
@@ -145,8 +144,8 @@ public class WholeNumberField extends JTextField {
                 AttributeSet attributeSet )
                 throws BadLocationException {
 
-            char[] source = string.toCharArray();
-            char[] result = new char[source.length];
+            final var source = string.toCharArray();
+            final var result = new char[source.length];
             int j = 0;
 
             for ( int i = 0; i < result.length; i++ ) {

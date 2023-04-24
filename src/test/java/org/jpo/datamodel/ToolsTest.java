@@ -120,7 +120,6 @@ class ToolsTest {
             SwingUtilities.invokeAndWait(() -> {
                 try {
                     Tools.checkEDT();
-                    return;
                 } catch (final EdtViolationException ex) {
                     fail("An EDT violation should not have been thrown!");
                 }

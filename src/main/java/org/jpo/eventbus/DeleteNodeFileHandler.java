@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -70,12 +70,11 @@ public class DeleteNodeFileHandler {
                 } catch (final IOException e) {
                     LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{node, e.getMessage()});
                     JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            Settings.getJpoResources().getString("fileDeleteError") + node.toString(),
+                            Settings.getJpoResources().getString("fileDeleteError") + node,
                             GENERIC_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
-            Settings.getPictureCollection().clearSelection();
         }
     }
 
@@ -91,8 +90,8 @@ public class DeleteNodeFileHandler {
     }
 
     private static void deleteNodeAndFile(final SortableDefaultMutableTreeNode node) throws IOException {
-        if (node.getUserObject() instanceof PictureInfo pi) {
-            final var highresFile = pi.getImageFile();
+        if (node.getUserObject() instanceof PictureInfo pictureInfo) {
+            final var highresFile = pictureInfo.getImageFile();
             if (highresFile.exists()) {
                 Files.delete(highresFile.toPath());
             }

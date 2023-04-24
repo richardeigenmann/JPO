@@ -42,7 +42,6 @@ import java.util.logging.Logger;
  *
  * @author Richard Eigenmann
  */
-@SuppressWarnings("UnstableApiUsage")
 public class MainWindow extends ResizableJFrame {
 
     /**
@@ -144,7 +143,7 @@ public class MainWindow extends ResizableJFrame {
                 new CollectionJTreeController(Settings.getPictureCollection()).getJScrollPane());
         searches = new DefaultSingleCDockable("SearchId",
                 Settings.getJpoResources().getString("jpoTabbedPaneSearches"),
-                new QueriesJTreeController().getJComponent());
+                new QueriesJTreeController(Settings.getPictureCollection()).getJComponent());
 
         final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
         final var statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);

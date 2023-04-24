@@ -20,10 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- ReconcileJFrame.java:  
- a class that creates a GUI, asks for a directory and then tells you if the files are in your collection.
-
- Copyright (C) 2002 - 2020 Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -70,7 +67,7 @@ public class ReconcileJFrame extends JFrame {
 
     /**
      * Creates a JFrame with the GUI elements and buttons that can start and
-     * stop the reconciliation. The reconciliation itself runs in it's own
+     * stop the reconciliation. The reconciliation itself runs in its own
      * SwingWorker.
      *
      * @param    startNode    The node which should be used as a starting point for
@@ -226,7 +223,7 @@ public class ReconcileJFrame extends JFrame {
     /**
      * Do the reconciliation in a SwingWorker
      */
-    private class Reconciler
+    private static class Reconciler
             extends SwingWorker<String, String> {
 
         /**
@@ -271,7 +268,7 @@ public class ReconcileJFrame extends JFrame {
 
         @Override
         protected String doInBackground() {
-            //Build HashSet of all of the URIs know to the collection
+            //Build HashSet of all the URIs know to the collection
             final Enumeration<TreeNode> e = startNode.preorderEnumeration();
             while ( e.hasMoreElements()) {
                 final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) e.nextElement();

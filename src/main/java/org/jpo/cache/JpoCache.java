@@ -13,20 +13,20 @@ import org.jpo.gui.ScalablePicture;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2014-2022 Richard Eigenmann.
+ Copyright (C) 2014-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,8 +67,8 @@ public class JpoCache {
     private static Dimension groupThumbnailDimension;
 
     static {
-        try (final BufferedInputStream bis = new BufferedInputStream(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg"))) {
-            final BufferedImage groupThumbnail = ImageIO.read(bis);
+        try (final var bis = new BufferedInputStream(Objects.requireNonNull(JpoCache.class.getClassLoader().getResourceAsStream("icon_folder_large.jpg")))) {
+            final var groupThumbnail = ImageIO.read(bis);
             groupThumbnailDimension = new Dimension(groupThumbnail.getWidth(), groupThumbnail.getHeight());
 
         } catch (final IOException | NullPointerException ex) {
@@ -128,7 +128,7 @@ public class JpoCache {
             return properties;
         }
 
-        try (final var inStream = ccfUrl.openStream();) {
+        try (final var inStream = ccfUrl.openStream()) {
             properties.load(inStream);
         } catch (final IOException e) {
             LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage());
@@ -158,34 +158,6 @@ public class JpoCache {
      * @param file The file of the image
      * @return and ImageBytes object
      * @throws IOException if something went wrong
-     *
-    @Deprecated
-    public static ImageBytes getHighresImageBytes(final File file) throws IOException {
-        LOGGER.log(Level.FINE, "Hitting cache for file {0}", file);
-        var imageBytes = highresMemoryCache.get(file);
-        if (imageBytes != null) {
-            imageBytes.setRetrievedFromCache(true);
-            try {
-                final var lastModification = (Files.getLastModifiedTime(file.toPath()));
-                if (lastModification.compareTo(imageBytes.getLastModification()) > 0) {
-                    imageBytes = getHighresImageBytesFromFile(file);
-                }
-            } catch (final IOException ex) {
-                LOGGER.severe(ex.getLocalizedMessage());
-            }
-        } else {
-            imageBytes = getHighresImageBytesFromFile(file);
-        }
-        LOGGER.log(Level.FINE, "Returning {0} bytes from file {1} loaded from cache: {2}", new Object[]{imageBytes.getBytes().length, file, imageBytes.isRetrievedFromCache()});
-        return imageBytes;
-    }*/
-
-    /**
-     * Returns the highres image bytes from the cache or disk
-     *
-     * @param file The file of the image
-     * @return and ImageBytes object
-     * @throws IOException if something went wrong
      */
     public static ImageBytes getHighresImageBytes(final String sha256, final File file) throws IOException {
         LOGGER.log(Level.FINE, "Hitting cache for sha256 {0}", sha256);
@@ -202,8 +174,8 @@ public class JpoCache {
     /**
      * Loads the image bytes from the supplied file and stores the loaded image in the highres cache
      *
-     * @param file
-     * @return
+     * @param file the image file
+     * @return the image bytes
      */
     private static ImageBytes getHighresImageBytesFromFile(final String sha256, final File file) throws IOException {
         LOGGER.log(Level.FINE, "Loading file from disk file {0}", file);
@@ -214,20 +186,6 @@ public class JpoCache {
         return imageBytes;
     }
 
-    /**
-     * Stores the highres imageBytes object into the highres cache
-     *
-     * @param file       The file that was loaded
-     * @param imageBytes the ImageBytes object to store
-     *
-    @Deprecated
-    private static void storeInHighresCache(final File file, final ImageBytes imageBytes) {
-        try {
-            highresMemoryCache.put(file, imageBytes);
-        } catch (final NullPointerException | CacheException ex) {
-            LOGGER.severe(ex.getLocalizedMessage());
-        }
-    }*/
 
     /**
      * Stores the highres imageBytes object into the highres cache
@@ -264,7 +222,7 @@ public class JpoCache {
                     imageBytes = createThumbnailAndStoreInCache(key, file, rotation, maxSize);
                 }
             } catch (final IOException ex) {
-                // We might have the image in the cache but it disappeared from disk
+                // We might have the image in the cache, but it disappeared from disk
                 LOGGER.log(Level.SEVERE, "Hit IOException: {0}", ex.getLocalizedMessage());
                 imageBytes = null;
             }
@@ -296,7 +254,7 @@ public class JpoCache {
     /**
      * Creates a thumbnail
      *
-     * @param file      The the picture file
+     * @param file      The picture file
      * @param rotation  the rotation to apply
      * @param maxSize the maximum size
      * @return the thumbnail
@@ -356,42 +314,38 @@ public class JpoCache {
         final var verticalPics = (groupThumbnailDimension.height - topMargin) / (Settings.miniThumbnailSize.height + margin);
         final var numberOfPics = horizontalPics * verticalPics;
 
-        final List<PictureInfo> usablePictures = childPictureNodes
+        final var usablePictures = childPictureNodes
                 .stream()
                 .map(node -> (PictureInfo) node.getUserObject())
                 .filter(pictureInfo -> org.jpo.datamodel.ImageIO.jvmHasReader(pictureInfo.getImageFile()))
                 .limit(numberOfPics)
                 .toList();
 
-        final var sb = new StringBuilder("Group-");
+        final var stringBuilder = new StringBuilder("Group-");
 
         for (final var pictureInfo : usablePictures) {
-            sb.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
+            stringBuilder.append(String.format("%s-%fdeg-", pictureInfo.getImageFile().toString(), pictureInfo.getRotation()));
         }
 
-        final var key = sb.toString();
+        final var key = stringBuilder.toString();
         var imageBytes = thumbnailMemoryAndDiskCache.get(key);
 
         if (imageBytes != null) {
-            try {
-                final FileTime thumbnailLastModification = imageBytes.getLastModification();
+            final FileTime thumbnailLastModification = imageBytes.getLastModification();
 
-                var thumbnailNeedsRefresh = false;
-                for (final var pictureInfo : usablePictures) {
-                    final var imagePath = Paths.get(pictureInfo.getImageURIOrNull());
-                    final var lastModification = (Files.getLastModifiedTime(imagePath));
-                    if (lastModification.compareTo(thumbnailLastModification) > 0) {
-                        thumbnailNeedsRefresh = true;
-                        break;
-                    }
+            var thumbnailNeedsRefresh = false;
+            for (final var pictureInfo : usablePictures) {
+                final var imagePath = Paths.get(pictureInfo.getImageURIOrNull());
+                final var lastModification = (Files.getLastModifiedTime(imagePath));
+                if (lastModification.compareTo(thumbnailLastModification) > 0) {
+                    thumbnailNeedsRefresh = true;
+                    break;
                 }
+            }
 
-                if (thumbnailNeedsRefresh) {
-                    imageBytes = createGroupThumbnailAndStoreInCache(key, usablePictures);
+            if (thumbnailNeedsRefresh) {
+                imageBytes = createGroupThumbnailAndStoreInCache(key, usablePictures);
 
-                }
-            } catch (final IOException ex) {
-                throw (ex);
             }
         } else {
             imageBytes = createGroupThumbnailAndStoreInCache(key, usablePictures);

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /*
  DuplicatesQuery.java:  Finds duplicates and adds them to a query object
 
- Copyright (C) 2010-2022  Richard Eigenmann.
+ Copyright (C) 2010-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -75,7 +75,7 @@ public class DuplicatesQuery
     }
 
     /**
-     * returns a the title for the search that can be used to display the search
+     * returns the title for the search that can be used to display the search
      * results under. The JTree asks for toString()
      */
     @Override
@@ -101,22 +101,19 @@ public class DuplicatesQuery
      * Finds the duplicates
      */
     private void extractSearchResults() {
-        List<SortableDefaultMutableTreeNode> results = new ArrayList<>();
-        List<SortableDefaultMutableTreeNode> nodeList = Settings.getPictureCollection().getRootNode().getChildPictureNodes(true);
+        var results = new ArrayList<SortableDefaultMutableTreeNode>();
+        var nodeList = Settings.getPictureCollection().getRootNode().getChildPictureNodes(true);
         int size = nodeList.size();
         LOGGER.log(Level.INFO, "Built a list of {0} picture nodes.", size );
 
-        SortableDefaultMutableTreeNode baseNode;
-        PictureInfo baseNodePictureInfo;
-        PictureInfo compareNodePictureInfo;
         for (int i = 0; i < size; i++ ) {
-            baseNode = nodeList.get( i );
-            baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
+            final var baseNode = nodeList.get( i );
+            final var baseNodePictureInfo = (PictureInfo) baseNode.getUserObject();
             if ( i % 250 == 0 ) {
                 LOGGER.log(Level.INFO, "Processed {0} potential duplicates out of {1}]", new Object[]{i, size});
             }
             for (int j = i + 1; j < size; j++ ) {
-                compareNodePictureInfo = (PictureInfo) nodeList.get( j ).getUserObject();
+                final var compareNodePictureInfo = (PictureInfo) nodeList.get( j ).getUserObject();
                 if ((baseNodePictureInfo.getImageFile().equals(compareNodePictureInfo.getImageFile()))
                         || ((!baseNodePictureInfo.getSha256().equals("")) && (baseNodePictureInfo.getSha256().equals(compareNodePictureInfo.getSha256())))) {
                     LOGGER.log(Level.INFO, "Found a duplicate: {0} = {1}", new Object[]{baseNode, nodeList.get(j)});

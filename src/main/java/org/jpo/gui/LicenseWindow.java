@@ -6,12 +6,12 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 
 /*
- LicenseWindow.java:  Creates the License window
-
- Copyright (C) 2007 - 2020 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2007 - 2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,7 +45,7 @@ public class LicenseWindow {
 
         String license;
         try {
-            license = IOUtils.toString(LicenseWindow.class.getClassLoader().getResourceAsStream("gpl.txt"), "UTF-8");
+            license = IOUtils.toString(Objects.requireNonNull(LicenseWindow.class.getClassLoader().getResourceAsStream("gpl.txt")), StandardCharsets.UTF_8);
         } catch (final IOException e) {
             license = "Error loading the license text. The license is still GPL.";
         }

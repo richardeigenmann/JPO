@@ -17,7 +17,7 @@ import java.io.File;
 
 
 /*
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,7 +62,7 @@ public class PictureFileChooser
             return;
         }
 
-        initComponents();
+        initComponents(request);
 
         if (jFileChooser.showOpenDialog(Settings.getAnchorFrame()) == JFileChooser.APPROVE_OPTION) {
             final var chosenFiles = jFileChooser.getSelectedFiles();
@@ -143,7 +143,7 @@ public class PictureFileChooser
     /**
      * Creates the GUI components for the PictureFileChooser controller
      */
-    private void initComponents() {
+    private void initComponents(final ChooseAndAddPicturesToGroupRequest request) {
         recurseJCheckBox.setSelected( true );
         newOnlyJCheckBox.setSelected(true);
         showThumbnailJCheckBox.setSelected(Settings.isShowThumbOnFileChooser());
@@ -158,7 +158,7 @@ public class PictureFileChooser
         optionsJPanel.setPreferredSize(OPTIONS_PANEL_DIMENSION);
         thumbnailJLabel.setPreferredSize(OPTIONS_PANEL_DIMENSION);
 
-        categoryJScrollPane.loadCategories(Settings.getPictureCollection().getCategoryIterator());
+        categoryJScrollPane.loadCategories(request.node().getPictureCollection().getCategoryIterator());
 
         final var tabbedPane = new JTabbedPane();
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));

@@ -96,7 +96,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
 
     /**
      * sends the notification that the Icon is available to the callback handler
-     * if the request was not canceled in the mean time.
+     * if the request was not canceled in the meantime.
      */
     public void notifyCallbackHandler() {
         if (!isCanceled()) {
@@ -129,21 +129,6 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     public int compareTo(final ThumbnailQueueRequest thumbnailQueueRequest) {
         return priority.compareTo(thumbnailQueueRequest.priority);
     }
-
-    /**
-     * We must override equals if we provide a compareTo
-     */
-    @Override
-    public boolean equals(final Object obj) {
-        return super.equals(obj);
-    }
-
-     /**
-      * We must override hashCode if we override equals
-      */
-     @Override public int hashCode() {
-         return super.hashCode();
-     }
 
 
     /**
@@ -194,7 +179,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * @see https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused
+     * https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused
      */
     private final Object lock = new Object();
 

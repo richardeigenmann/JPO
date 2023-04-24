@@ -44,7 +44,7 @@ public class FileSaveAsHandler {
             jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
         }
 
-        final int returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
+        final var returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             var chosenFile = jFileChooser.getSelectedFile();
             chosenFile = Tools.correctFilenameExtension("xml", chosenFile);

@@ -1,4 +1,4 @@
-<?php include 'page-start.php'; ?>
+<?php include_once 'page-start.php'; ?>
 <div class="container">
     <h2>Thanks go out to</h2>
     <ul>
@@ -14,7 +14,7 @@
         <li><strong>Rob Camick</strong> for his Wrap Layout <a href="https://tips4java.wordpress.com/2008/11/06/wrap-layout">https://tips4java.wordpress.com/2008/11/06/wrap-layout/</a></li>
         <li><strong>Font Awesome</strong> for the Free Icon Fonts <a href="https://fontawesome.com/">https://fontawesome.com/</a></li>
         <li><strong>JSON in Java [package org.json]</strong> for JSON parser <a href="https://github.com/stleary/JSON-java">https://github.com/stleary/JSON-java</a></li>
-        <li><strong>Awaitility</strong> for asynchroneous testing <a href="https://github.com/awaitility/awaitility/wiki/Getting_started">https://github.com/awaitility/awaitility/wiki/Getting_started</a></li>
+        <li><strong>Awaitility</strong> for asynchronous testing <a href="https://github.com/awaitility/awaitility/wiki/Getting_started">https://github.com/awaitility/awaitility/wiki/Getting_started</a></li>
         <li><strong>Jidesoft</strong> for the JIDE Common Layer (Open Source Project) which I use for the JidePopupMenu which overflows nicely<a href="http://www.jidesoft.com/products/oss.htm">http://www.jidesoft.com/products/oss.htm</a></li>
         <li><strong>simple icon</strong> for the movie and document icons<a href="http://simpleicon.com/movie-1.html">http://simpleicon.com/movie-1.html</a> <a href="http://simpleicon.com/license-agreement/">license</a></li>
         <li><strong>Sandra Keller</strong> for putting up with me while I was developing this software which she would "Delete right away after downloading it from the internet"</li>
@@ -32,13 +32,13 @@
 
     <hr>
     <h2>About the Project</h2>
-    <p>JPO was written in Z&uuml;rich, Switzerland but also while on vacation in South Africa and the 
-        Caribbean. The sites JPO was coded at include aeroplanes, trains, cars, safari camps, sail boats, 
+    <p>JPO was written in Z&uuml;rich, Switzerland but also while on vacation in South Africa and th
+        Caribbean. The sites JPO was coded at include aeroplanes, trains, cars, safari camps, sail boats,
         botanical gardens, restaurants, bars and swimming pools.</p>
     <p>Download stats <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/stats/timeline?dates=2019-12-01%20to%202020-03-01&period=monthly">Sourceforge</a></p>
 
     <hr>
-    <p>Last update to this page: 13 February 2022<br>
-        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 25 April 2023<br>
+        Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include 'page-end.php'; ?>
+<?php include_once 'page-end.php'; ?>

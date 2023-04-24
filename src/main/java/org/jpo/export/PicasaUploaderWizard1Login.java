@@ -10,9 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Logger;
 
 /*
- * PicasaUploaderWizard1Login.java: Login stuff for Picasa
- *
- * Copyright (C) 2012-2020 Richard Eigenmann. Zürich
+ * Copyright (C) 2012-2023 Richard Eigenmann. Zürich
  *
  * This program is free software; you can redistribute it and/or modify it under
  * the terms of the GNU General Public License as published by the Free Software
@@ -42,7 +40,7 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
     private final PicasaUploadRequest myRequest;
 
     /**
-     * Asks all the questions we need to know in regards to the thumbnails on
+     * Asks all the questions we need to know in regard to the thumbnails on
      * the final website.
      *
      * @param myRequest my request
@@ -56,7 +54,7 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
     }
     private final JTextField userNameJTextField = new JTextField();
     private final JPasswordField passwordJPasswordField = new JPasswordField();
-    private final JCheckBox rememberCredentialsJCheckkBox = new JCheckBox( "Remember credentials" );
+    private final JCheckBox rememberCredentialsJCheckBox = new JCheckBox( "Remember credentials" );
     private final JButton loginJButton = new JButton();
     private final JTextArea errorJTextArea = new JTextArea();
 
@@ -67,12 +65,12 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
      */
     @Override
     protected JComponent createComponent() {
-        final JPanel wizardPanel = new JPanel();
-        final MigLayout layout = new MigLayout( "wrap 2" );
+        final var wizardPanel = new JPanel();
+        final var layout = new MigLayout( "wrap 2" );
         wizardPanel.setLayout( layout );
 
-        final Dimension minimumSize = new Dimension( 250, 28 );
-        final Dimension maximumSize = new Dimension( 550, 35 );
+        final var minimumSize = new Dimension( 250, 28 );
+        final var maximumSize = new Dimension( 550, 35 );
         userNameJTextField.setMinimumSize( minimumSize );
         userNameJTextField.setMaximumSize( maximumSize );
         wizardPanel.add( new JLabel( "Username:" ) );
@@ -82,13 +80,13 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
         passwordJPasswordField.setMaximumSize( maximumSize );
         wizardPanel.add( new JLabel( "Password:" ) );
         wizardPanel.add( passwordJPasswordField );
-        wizardPanel.add( rememberCredentialsJCheckkBox, "wrap" );
+        wizardPanel.add(rememberCredentialsJCheckBox, "wrap" );
         loginJButton.setText( "Log in" );
         wizardPanel.add( loginJButton, "span 2" );
         loginJButton.addActionListener(( ActionEvent ae ) -> {
             try {
                 errorJTextArea.setText( "Logging in..." );
-                if ( rememberCredentialsJCheckkBox.isSelected() ) {
+                if ( rememberCredentialsJCheckBox.isSelected() ) {
                     LOGGER.info("saving");
                     Settings.setRememberGoogleCredentials(true);
                     Settings.setGoogleUsername(userNameJTextField.getText());
@@ -118,7 +116,7 @@ public class PicasaUploaderWizard1Login extends AbstractStep {
         wizardPanel.add(errorJTextArea, "span2");
         setCanGoNext(false);
 
-        rememberCredentialsJCheckkBox.setSelected(Settings.isRememberGoogleCredentials());
+        rememberCredentialsJCheckBox.setSelected(Settings.isRememberGoogleCredentials());
         if (Settings.isRememberGoogleCredentials()) {
             LOGGER.info("remembering");
             userNameJTextField.setText(Settings.getGoogleUsername());

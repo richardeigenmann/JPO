@@ -17,9 +17,7 @@ import java.util.logging.Logger;
 import static java.util.Objects.isNull;
 
 /*
- PicturePopupMenu.java:  a popup menu for pictures
-
- Copyright (C) 2002-2022  Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -196,8 +194,8 @@ public class PicturePopupMenu extends JPopupMenu {
         assignCategoryWindowJMenuItem.addActionListener((ActionEvent e) -> {
             final ArrayList<SortableDefaultMutableTreeNode> nodesToAssign = new ArrayList<>();
             final var actionNode = mySetOfNodes.getNode(index);
-            if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(actionNode))) {
-                for (var selectedNode : Settings.getPictureCollection().getSelection()) {
+            if ((popupNode.getPictureCollection().countSelectedNodes() > 1) && (popupNode.getPictureCollection().isSelected(actionNode))) {
+                for (var selectedNode : popupNode.getPictureCollection().getSelection()) {
                     if (selectedNode.getUserObject() instanceof PictureInfo) {
                         nodesToAssign.add(selectedNode);
                     }
@@ -207,7 +205,7 @@ public class PicturePopupMenu extends JPopupMenu {
             }
             JpoEventBus.getInstance().post(new CategoryAssignmentWindowRequest(nodesToAssign));
         });
-        assignCategoryWindowJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+        assignCategoryWindowJMenuItem.setVisible(popupNode.getPictureCollection().getAllowEdits());
         return assignCategoryWindowJMenuItem;
     }
 
@@ -231,7 +229,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
     private JMenuItem navigateToJMenuItem() {
         final var navigateMenuItem = new JMenu(Settings.getJpoResources().getString("navigationJMenu"));
-        final Set<SortableDefaultMutableTreeNode> linkingNodes = Settings.getPictureCollection().findLinkingGroups(popupNode);
+        final var linkingNodes = popupNode.getPictureCollection().findLinkingGroups(popupNode);
         for (final var linkingNode : linkingNodes) {
             final var navigateTargetRoute = new JMenuItem(linkingNode.getUserObject().toString());
             navigateTargetRoute.addActionListener(e -> JpoEventBus.getInstance().post(new ShowGroupRequest(linkingNode)));
@@ -247,12 +245,12 @@ public class PicturePopupMenu extends JPopupMenu {
     private JMenuItem mailSelectJMenuItem() {
         final var pictureMailSelectJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailSelectJMenuItem"));
         pictureMailSelectJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new AddPictureNodesToEmailSelectionRequest(getNodesToActOn())));
-        pictureMailSelectJMenuItem.setVisible(isEmailSelectable(Settings.getPictureCollection()));
+        pictureMailSelectJMenuItem.setVisible(isEmailSelectable(popupNode.getPictureCollection()));
         return pictureMailSelectJMenuItem;
     }
 
     /**
-     * if there is no selection and we click on a node which is not email selected
+     * if there is no selection, and we click on a node which is not email selected
      * then offer to email select it
      * if there is a selection but some are not email selected, offer to select them
      * if there is a selection but the selected node is not part of it
@@ -297,26 +295,27 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     /**
-     * if there is no selection and we click on a node which is email selected
+     * if there is no selection, and we click on a node which is email selected
      * then offer to unselect it
      * if there is a selection and email selected, offer to unselect them
      * if there is a selection but the selected node is not part of it
      * and the node is selected then offer to unselect it
      */
     private boolean isEmailUnSelectable() {
+        final var pictureCollection = popupNode.getPictureCollection();
         var emailUnSelectable = false;
-        if ((Settings.getPictureCollection().countSelectedNodes() == 0)
-                || (!Settings.getPictureCollection().isSelected(popupNode))) {
+        if ((pictureCollection.countSelectedNodes() == 0)
+                || (!pictureCollection.isSelected(popupNode))) {
 
             // deal with single node
-            emailUnSelectable = popupNode.getPictureCollection()
+            emailUnSelectable = pictureCollection
                     .isMailSelected(popupNode);
 
         } else {
             // we have a selection and the popup node is part of it
-            for (final SortableDefaultMutableTreeNode selectedNode : Settings.getPictureCollection().getSelection()) {
+            for (final var selectedNode : pictureCollection.getSelection()) {
                 if ((selectedNode.getUserObject() instanceof PictureInfo)
-                        && (Settings.getPictureCollection().isMailSelected(selectedNode))) {
+                        && (pictureCollection.isMailSelected(selectedNode))) {
                     emailUnSelectable = true;
                     break;
                 }
@@ -328,7 +327,7 @@ public class PicturePopupMenu extends JPopupMenu {
     private JMenuItem mailUnselectAllJMenuItem() {
         final var pictureMailUnselectAllJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailUnselectAllJMenuItem"));
         pictureMailUnselectAllJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ClearEmailSelectionRequest()));
-        pictureMailUnselectAllJMenuItem.setVisible(Settings.getPictureCollection().countMailSelectedNodes() > 0);
+        pictureMailUnselectAllJMenuItem.setVisible(popupNode.getPictureCollection().countMailSelectedNodes() > 0);
         return pictureMailUnselectAllJMenuItem;
     }
 
@@ -342,7 +341,7 @@ public class PicturePopupMenu extends JPopupMenu {
     private JMenuItem getPictureNodeRemove() {
         final var pictureNodeRemove = new JMenuItem(Settings.getJpoResources().getString("pictureNodeRemove"));
         pictureNodeRemove.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new RemoveNodeRequest(getNodesToActOn())));
-        pictureNodeRemove.setVisible(Settings.getPictureCollection().getAllowEdits());
+        pictureNodeRemove.setVisible(popupNode.getPictureCollection().getAllowEdits());
         return pictureNodeRemove;
     }
 
@@ -363,7 +362,7 @@ public class PicturePopupMenu extends JPopupMenu {
                             imageFile.getParentFile())
             ));
         }
-        consolidateHereMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+        consolidateHereMenuItem.setVisible(popupNode.getPictureCollection().getAllowEdits());
         return consolidateHereMenuItem;
     }
 
@@ -422,14 +421,14 @@ public class PicturePopupMenu extends JPopupMenu {
     /**
      * Returns the nodes to act on:
      * If no nodes are selected and a node has been picked, this node is returned.
-     * If there are nodes selected and we have acted on a node that is part of the selection, return the selection.
-     * If there are nodes selected but the action was on a non selected node, ignore the selection and return the action node.
+     * If there are nodes selected, and we have acted on a node that is part of the selection, return the selection.
+     * If there are nodes selected but the action was on a non-selected node, ignore the selection and return the action node.
      *
      * @return one or many nodes to act on
      */
     Collection<SortableDefaultMutableTreeNode> getNodesToActOn() {
-        if ( Settings.getPictureCollection().getSelection().contains(popupNode) ) {
-            return Settings.getPictureCollection().getSelection();
+        if ( popupNode.getPictureCollection().getSelection().contains(popupNode) ) {
+            return popupNode.getPictureCollection().getSelection();
         } else {
             return List.of(popupNode);
         }
@@ -439,7 +438,7 @@ public class PicturePopupMenu extends JPopupMenu {
         final var memorizedZipFileJMenuItems = new JMenuItem[Settings.MAX_MEMORISE];
         final String[] memorizedZipFilesArray = Settings.getMemorizedZipFiles().toArray(new String[0]);
         for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
-            final File loc = (i < memorizedZipFilesArray.length) ? new File(memorizedZipFilesArray[i]) : new File(".");
+            final var loc = (i < memorizedZipFilesArray.length) ? new File(memorizedZipFilesArray[i]) : new File(".");
             memorizedZipFileJMenuItems[i] = new JMenuItem();
             memorizedZipFileJMenuItems[i].addActionListener((ActionEvent ae) -> JpoEventBus.getInstance().post(new CopyToZipfileRequest(getNodesToActOn(), loc)));
             copyJMenu.add(memorizedZipFileJMenuItems[i]);
@@ -595,14 +594,14 @@ public class PicturePopupMenu extends JPopupMenu {
         fileDeleteJMenuItem.addActionListener((final ActionEvent e) -> JpoEventBus.getInstance().post(new DeleteNodeFileRequest(getNodesToActOn())));
         fileOperationsJMenu.add(fileDeleteJMenuItem);
 
-        fileOperationsJMenu.setVisible(Settings.getPictureCollection().getAllowEdits());
-        fileRenameJMenu.setVisible(Settings.getPictureCollection().getAllowEdits());
-        fileDeleteJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+        fileOperationsJMenu.setVisible(popupNode.getPictureCollection().getAllowEdits());
+        fileRenameJMenu.setVisible(popupNode.getPictureCollection().getAllowEdits());
+        fileDeleteJMenuItem.setVisible(popupNode.getPictureCollection().getAllowEdits());
         return fileOperationsJMenu;
     }
 
     /**
-     * Adds a the Rename > Rename menu item. The button will trigger a rename on the selected picture
+     * Adds the Rename > Rename menu item. The button will trigger a rename on the selected picture
      * or the set of pictures if the popup was triggered on one of the selection.
      *
      * @param fileRenameJMenu the JMenu to which to attach the menu entry
@@ -632,9 +631,9 @@ public class PicturePopupMenu extends JPopupMenu {
     }
 
     private String getFilenameMenuText() {
-        if (Settings.getPictureCollection().countSelectedNodes() > 1
-                && Settings.getPictureCollection().isSelected(popupNode)) {
-            return Settings.getPictureCollection().countSelectedNodes() + " pictures";
+        if (popupNode.getPictureCollection().countSelectedNodes() > 1
+                && popupNode.getPictureCollection().isSelected(popupNode)) {
+            return popupNode.getPictureCollection().countSelectedNodes() + " pictures";
         } else {
             final var imageFile = ((PictureInfo) popupNode.getUserObject()).getImageFile();
             if (isNull(imageFile)) {
@@ -649,17 +648,18 @@ public class PicturePopupMenu extends JPopupMenu {
     /**
      * Returns the title for the popup Menu. If nodes are selected and the
      * selected node is one of them it returns the number of selected nodes.
-     * Otherwise it returns the description of the picture.
+     * Otherwise, it returns the description of the picture.
      *
      * @return the title for the popup menu
      */
     private String getTitle() {
         String title;
-        if ((Settings.getPictureCollection().countSelectedNodes() > 1) && (Settings.getPictureCollection().isSelected(popupNode))) {
-            title = String.format("%d nodes", Settings.getPictureCollection().countSelectedNodes());
+        final var pictureCollection = popupNode.getPictureCollection();
+        if ((pictureCollection.countSelectedNodes() > 1) && (pictureCollection.isSelected(popupNode))) {
+            title = String.format("%d nodes", pictureCollection.countSelectedNodes());
         } else {
-            if (popupNode.getUserObject() instanceof PictureInfo pi) {
-                String description = pi.getDescription();
+            if (popupNode.getUserObject() instanceof PictureInfo pictureInfo) {
+                String description = pictureInfo.getDescription();
                 title = description.length() > 25
                         ? description.substring(0, 25) + "..." : description;
             } else {

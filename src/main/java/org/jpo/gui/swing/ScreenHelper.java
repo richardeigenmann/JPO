@@ -4,9 +4,7 @@ import java.awt.*;
 
 
 /*
-ScreenHelper.java:  class that helps with screen size logic
-
-Copyright (C) 2006-2022 Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006-2023 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -36,9 +34,9 @@ public class ScreenHelper {
      *  @return The number of screen devices
      */
     public static int getNumberOfScreenDevices() {
-        final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final GraphicsDevice[] gs = ge.getScreenDevices();
-        return gs.length;
+        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
+        return localGraphicsEnvironmentScreenDevices.length;
     }
 
 
@@ -51,13 +49,12 @@ public class ScreenHelper {
         if (getNumberOfScreenDevices() < 2) {
             return false;
         }
-        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final var gs = ge.getScreenDevices();
-        for (final var g : gs) {
-            final var gd = g;
-            final var gc = gd.getDefaultConfiguration();
-            final var r = gc.getBounds();
-            if ((r.x != 0) || (r.y != 0)) {
+        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
+        for (final var graphicsDevice : localGraphicsEnvironmentScreenDevices) {
+            final var graphicsDeviceDefaultConfiguration = graphicsDevice.getDefaultConfiguration();
+            final var bounds = graphicsDeviceDefaultConfiguration.getBounds();
+            if ((bounds.x != 0) || (bounds.y != 0)) {
                 return true;
             }
         }
@@ -76,12 +73,12 @@ public class ScreenHelper {
      */
     public static Rectangle getXineramaScreenBounds() {
         var virtualBounds = new Rectangle();
-        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final var gs = ge.getScreenDevices();
-        for (final var gd : gs) {
-            final var gc = gd.getConfigurations();
-            for (final var gc1 : gc) {
-                virtualBounds = virtualBounds.union(gc1.getBounds());
+        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
+        for (final var graphicsDevice : localGraphicsEnvironmentScreenDevices) {
+            final var configurations = graphicsDevice.getConfigurations();
+            for (final var graphicsConfiguration : configurations) {
+                virtualBounds = virtualBounds.union(graphicsConfiguration.getBounds());
             }
         }
         return virtualBounds;
@@ -94,9 +91,9 @@ public class ScreenHelper {
      * @return The bounds of the primary screen
      */
     public static Rectangle getPrimaryScreenBounds() {
-        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final var gd = ge.getDefaultScreenDevice();
-        return gd.getDefaultConfiguration().getBounds();
+        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var defaultScreenDevice = localGraphicsEnvironment.getDefaultScreenDevice();
+        return defaultScreenDevice.getDefaultConfiguration().getBounds();
     }
 
     /**
@@ -105,12 +102,12 @@ public class ScreenHelper {
      * @return the Graphics Configuration of the secondary screen
      */
     private static GraphicsConfiguration getSecondaryScreenGraphicsConfiguration() {
-        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final var gd = ge.getScreenDevices();
-        if (gd.length > 1) {
-            return gd[1].getDefaultConfiguration();
+        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
+        if (localGraphicsEnvironmentScreenDevices.length > 1) {
+            return localGraphicsEnvironmentScreenDevices[1].getDefaultConfiguration();
         } else {
-            return gd[0].getDefaultConfiguration();
+            return localGraphicsEnvironmentScreenDevices[0].getDefaultConfiguration();
         }
     }
 
@@ -130,7 +127,7 @@ public class ScreenHelper {
 
     /**
      *  Returns the bounds for the full screen. In a Xinerama context this is the full Xinerama area.
-     *  If there is a secondary device we will use this. Otherwise the primary.
+     *  If there is a secondary device we will use this. Otherwise, the primary.
      * @return bounds for the full screen
      */
     public static Rectangle getFullScreenBounds() {
@@ -151,8 +148,8 @@ public class ScreenHelper {
      */
     public static Rectangle getLeftScreenBounds() {
         if ( isXinerama() ) {
-            final var xsb = getXineramaScreenBounds();
-            return new Rectangle( xsb.x, xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
+            final var xineramaScreenBounds = getXineramaScreenBounds();
+            return new Rectangle( xineramaScreenBounds.x, xineramaScreenBounds.y, xineramaScreenBounds.width / getNumberOfScreenDevices(), xineramaScreenBounds.height );
         } else {
             if ( getNumberOfScreenDevices() > 1 ) {
                 return getPrimaryScreenBounds();
@@ -166,16 +163,16 @@ public class ScreenHelper {
 
     /**
      *  Returns the bounds for the "right" window. In a Xinerama context this is the screen
-     *  we assume that the screens are same sized so we subtract a screen width from the right edge and
+     *  we assume that the screens are same sized, so we subtract a screen width from the right edge and
      *  hope this is the correct location In a non Xinerama context this is the secondary
      *  screen.
      * @return bounds of the right screen
      */
     public static Rectangle getRightScreenBounds() {
         if ( isXinerama() ) {
-            final var xsb = getXineramaScreenBounds();
-            return new Rectangle( xsb.x + ( xsb.width / getNumberOfScreenDevices() * ( getNumberOfScreenDevices() - 1 ) ),
-                    xsb.y, xsb.width / getNumberOfScreenDevices(), xsb.height );
+            final var xineramaScreenBounds = getXineramaScreenBounds();
+            return new Rectangle( xineramaScreenBounds.x + ( xineramaScreenBounds.width / getNumberOfScreenDevices() * ( getNumberOfScreenDevices() - 1 ) ),
+                    xineramaScreenBounds.y, xineramaScreenBounds.width / getNumberOfScreenDevices(), xineramaScreenBounds.height );
         } else {
             if ( getNumberOfScreenDevices() > 1 ) {
                 return getSecondaryScreenGraphicsConfiguration().getBounds();
@@ -258,9 +255,9 @@ public class ScreenHelper {
             sbadd("HEADLESS: The GraphicsEnvironment is reporting it is not headless. How reassuring.");
         }
 
-        final var ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
         sbadd("                  The LocalGraphicsEnvironment is reporting " +
-                ((ge.isHeadlessInstance()) ? "no Display, Keyboard and Mound can be supported in this environment"
+                ((localGraphicsEnvironment.isHeadlessInstance()) ? "no Display, Keyboard and Mound can be supported in this environment"
                         : "it is not headless. How reassuring."));
 
 
@@ -270,26 +267,26 @@ public class ScreenHelper {
             sbadd( "XINERAMA: The environment is not a Xinerama environment" );
         }
 
-        final GraphicsDevice[] gd = ge.getScreenDevices();
-        sbadd( "There are " + gd.length + " Screen Devices: " );
+        final var screenDevices = localGraphicsEnvironment.getScreenDevices();
+        sbadd( "There are " + screenDevices.length + " Screen Devices: " );
 
 
-        sbadd( "The Graphics Environment Maximum Window Bounds are: " + ge.getMaximumWindowBounds().toString() );
-        sbadd( "The Graphics Environment Center Point is at : " + ge.getCenterPoint().toString() );
+        sbadd( "The Graphics Environment Maximum Window Bounds are: " + localGraphicsEnvironment.getMaximumWindowBounds().toString() );
+        sbadd( "The Graphics Environment Center Point is at : " + localGraphicsEnvironment.getCenterPoint().toString() );
 
         sbadd( "The left window bounds are: " + getLeftScreenBounds().toString() );
-        sbadd( "The top left window bounds are: " + getTopLeftScreenBounds().toString() );
-        sbadd( "The bottom left window bounds are: " + getBottomLeftScreenBounds().toString() );
+        sbadd( "The top left window bounds are: " + getTopLeftScreenBounds());
+        sbadd( "The bottom left window bounds are: " + getBottomLeftScreenBounds());
         sbadd( "The right window bounds are: " + getRightScreenBounds().toString() );
-        sbadd( "The top right window bounds are: " + getTopRightScreenBounds().toString() );
-        sbadd( "The bottom right window bounds are: " + getBottomRightScreenBounds().toString());
+        sbadd( "The top right window bounds are: " + getTopRightScreenBounds());
+        sbadd( "The bottom right window bounds are: " + getBottomRightScreenBounds());
 
 
         sbadd("The Default Screen Device configuration:");
-        explainGraphicsDevice(ge.getDefaultScreenDevice() );
+        explainGraphicsDevice(localGraphicsEnvironment.getDefaultScreenDevice() );
 
 
-        for (final GraphicsDevice device : gd) {
+        for (final GraphicsDevice device : screenDevices) {
             explainGraphicsDevice(device);
         }
 
@@ -337,21 +334,21 @@ public class ScreenHelper {
     /**
      *  Explains the display mode to the log file
      * @param id Id
-     * @param dm DisplayMode
+     * @param displayMode DisplayMode
      */
-    public static void explainDisplayMode(final String id, final DisplayMode dm) {
-        sbadd("DisplayMode for Device: " + id + " Bit Depth: " + dm.getBitDepth() + " RefreshRate: " + dm.getRefreshRate() + " Width: " + dm.getWidth() + " Height: " + dm.getHeight());
+    public static void explainDisplayMode(final String id, final DisplayMode displayMode) {
+        sbadd("DisplayMode for Device: " + id + " Bit Depth: " + displayMode.getBitDepth() + " RefreshRate: " + displayMode.getRefreshRate() + " Width: " + displayMode.getWidth() + " Height: " + displayMode.getHeight());
     }
 
 
     /**
      *  Explains the graphics configuration to the log file
      * @param id Id
-     * @param gc GraphicsConfiguration
+     * @param graphicsConfiguration GraphicsConfiguration
      */
     public static void explainGraphicsConfiguration(final String id,
-                                                    final GraphicsConfiguration gc) {
+                                                    final GraphicsConfiguration graphicsConfiguration) {
         final var toolkit = Toolkit.getDefaultToolkit();
-        sbadd("Graphicsconfiguration for Device: " + id + " Bounds: " + gc.getBounds() + " Insets: " + toolkit.getScreenInsets(gc));
+        sbadd("Graphicsconfiguration for Device: " + id + " Bounds: " + graphicsConfiguration.getBounds() + " Insets: " + toolkit.getScreenInsets(graphicsConfiguration));
     }
 }

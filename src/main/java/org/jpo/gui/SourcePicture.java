@@ -12,7 +12,6 @@ import javax.imageio.event.IIOReadProgressListener;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -27,9 +26,7 @@ import static org.jpo.gui.SourcePicture.SourcePictureStatus.*;
 
 
 /*
- SourcePicture.java:  class that can load a picture from a URL
-
- Copyright (C) 2002 - 2022  Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -155,7 +152,7 @@ public class SourcePicture {
      * a new thread. This is handy to update the screen while the loading chugs
      * along in the background.
      *
-     * @param imageFile The file with the the image to be loaded
+     * @param imageFile The file with the image to be loaded
      * @param priority  The Thread priority for this thread.
      * @param rotation  The rotation 0-360 to be used on this picture
      */
@@ -217,25 +214,25 @@ public class SourcePicture {
 
     private void rotateImage() {
         setStatus(SOURCE_PICTURE_ROTATING, "Rotating: " + imageFile.toString());
-        final int xRot = sourcePictureBufferedImage.getWidth() / 2;
-        final int yRot = sourcePictureBufferedImage.getHeight() / 2;
-        final AffineTransform rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
-        AffineTransformOp op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
-        Rectangle2D newBounds = op.getBounds2D(sourcePictureBufferedImage);
+        final var xRot = sourcePictureBufferedImage.getWidth() / 2;
+        final var yRot = sourcePictureBufferedImage.getHeight() / 2;
+        final var rotateAf = AffineTransform.getRotateInstance(Math.toRadians(rotation), xRot, yRot);
+        var op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
+        var newBounds = op.getBounds2D(sourcePictureBufferedImage);
         // a simple AffineTransform would give negative top left coordinates -->
         // do another transform to get 0,0 as top coordinates again.
         final double minX = newBounds.getMinX();
         final double minY = newBounds.getMinY();
 
-        final AffineTransform translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
+        final var translateAf = AffineTransform.getTranslateInstance(minX * (-1), minY * (-1));
         rotateAf.preConcatenate(translateAf);
         op = new AffineTransformOp(rotateAf, AffineTransformOp.TYPE_BILINEAR);
         newBounds = op.getBounds2D(sourcePictureBufferedImage);
 
-        // this piece of code is so essential!!! Otherwise the internal image format
+        // this piece of code is so essential!!! Otherwise, the internal image format
         // is totally altered and either the AffineTransformOp decides it doesn't
         // want to rotate the image or web browsers can't read the resulting image.
-        final BufferedImage targetImage = new BufferedImage(
+        final var targetImage = new BufferedImage(
                 (int) newBounds.getWidth(),
                 (int) newBounds.getHeight(),
                 BufferedImage.TYPE_3BYTE_BGR);
@@ -248,7 +245,7 @@ public class SourcePicture {
         // We have the bytes from the image that came from the cache or the disk
         // now create a BufferedImage from that
         try (final var bis = imageBytes.getByteArrayInputStream();
-             final ImageInputStream iis = ImageIO.createImageInputStream(bis)) {
+             final var iis = ImageIO.createImageInputStream(bis)) {
             final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
             if (reader == null) {
                 LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
@@ -293,9 +290,9 @@ public class SourcePicture {
         } else {
             LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
 
-            final BufferedImage bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
+            final var bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
                     bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
-            final Graphics2D g = bgr3ByteImage.createGraphics();
+            final var g = bgr3ByteImage.createGraphics();
             g.drawImage(bufferedImage, 0, 0, null);
             g.dispose();
             return bgr3ByteImage;
@@ -313,7 +310,7 @@ public class SourcePicture {
     /**
      * this method can be invoked to stop the current reader except if it is
      * reading the desired file. It returns true is the desired file is being
-     * loaded. Otherwise it returns false.
+     * loaded. Otherwise, it returns false.
      *
      * @param exemptionFile The exemption URL
      * @return True if loading in progress, false if not

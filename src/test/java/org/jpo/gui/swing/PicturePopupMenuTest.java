@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -91,9 +91,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testMenuTitle.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testMenuTitle.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var title = (JMenuItem) picturePopupMenu.getComponent(0);
                 assertEquals(MY_PICTURE, title.getText());
@@ -112,9 +115,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testShowPictureJMenuItemClick.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testShowPictureJMenuItemClick.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var showPictureJMenuItem = (JMenuItem) picturePopupMenu.getComponent(2);
                 assertEquals("Show Picture", showPictureJMenuItem.getText());
@@ -142,8 +148,11 @@ class PicturePopupMenuTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final var pictureInfo = new PictureInfo();
-                final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
-                final var navigator = new SingleNodeNavigator(pictureNode);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var navigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
                 try {
                     final var tempFile = File.createTempFile("testOpenFolder", ".jpg");
@@ -180,13 +189,15 @@ class PicturePopupMenuTest {
             SwingUtilities.invokeAndWait(() -> {
                 final var pictureInfo = new PictureInfo();
                 final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var parentNode = new SortableDefaultMutableTreeNode(new GroupInfo("Parent Group"));
+                parentNode.add(pictureNode);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(parentNode);
+
                 try {
                     final var tempFile = File.createTempFile("testNavigateTo", ".jpg");
                     tempFile.deleteOnExit();
                     pictureInfo.setImageLocation(tempFile);
-                    final var parentNode = new SortableDefaultMutableTreeNode(new GroupInfo("Parent Group"));
-                    parentNode.add(pictureNode);
-                    Settings.getPictureCollection().getRootNode().add(parentNode);
 
                     final var navigator = new SingleNodeNavigator(pictureNode);
                     final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
@@ -222,9 +233,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testSelectForEmail.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testSelectForEmail.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var selectForEmail = (JMenuItem) picturePopupMenu.getComponent(5);
                 assertEquals("Select for email", selectForEmail.getText());
@@ -250,9 +264,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testUnselectForEmail.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testUnselectForEmail.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var unselectForEmail = (JMenuItem) picturePopupMenu.getComponent(6);
                 assertEquals("Unselect for email", unselectForEmail.getText());
@@ -278,9 +295,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testClearEmailSelection.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testClearEmailSelection.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var clearEmailSelection = (JMenuItem) picturePopupMenu.getComponent(7);
                 assertEquals("Clear email selection", clearEmailSelection.getText());
@@ -313,9 +333,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testUserFunctions.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testUserFunctions.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var userFunction = (JMenu) picturePopupMenu.getComponent(8);
                 final var userFunction0 = userFunction.getItem(0);
@@ -349,9 +372,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testRotation.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testRotation.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var rotation = (JMenu) picturePopupMenu.getComponent(9);
                 final var rotate90 = rotation.getItem(0);
@@ -394,9 +420,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testRefresh.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testRefresh.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var refreshThumbnail = (JMenuItem) picturePopupMenu.getComponent(10);
                 assertEquals("Refresh Thumbnail", refreshThumbnail.getText());
@@ -422,9 +451,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testMove.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testMove.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var move = (JMenu) picturePopupMenu.getComponent(11);
                 final var moveToTop = move.getItem(Settings.getMaxDropnodes() + 1);
@@ -493,9 +525,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testCopy.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testCopy.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var copyImage = (JMenu) picturePopupMenu.getComponent(12);
                 final var copyImageChooseTargetDir = copyImage.getItem(0);
@@ -531,9 +566,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testCopyToClipboard.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testCopyToClipboard.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var copyImage = (JMenu) picturePopupMenu.getComponent(12);
                 final var copyToClipboard = copyImage.getItem(13);
@@ -561,9 +599,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testRemoveNode.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testRemoveNode.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var removeNode = (JMenuItem) picturePopupMenu.getComponent(14);
                 assertEquals("Remove Node", removeNode.getText());
@@ -589,9 +630,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testMoveToNewLocation.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testMoveToNewLocation.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var fileOperations = (JMenu) picturePopupMenu.getComponent(15);
                 assertEquals("File operations", fileOperations.getText());
@@ -620,9 +664,12 @@ class PicturePopupMenuTest {
     void testFileRename() {
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testFileRename.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testFileRename.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 assumeFalse(GraphicsEnvironment.isHeadless());
                 final var fileOperations = (JMenu) picturePopupMenu.getComponent(15);
@@ -664,11 +711,15 @@ class PicturePopupMenuTest {
                 groupNode.add(node3);
                 final var node4 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("nosuchfile4.jpg"), MY_PICTURE));
                 groupNode.add(node4);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(groupNode);
+
+                pictureCollection.addToSelectedNodes(node1);
+                pictureCollection.addToSelectedNodes(node2);
+                pictureCollection.addToSelectedNodes(node3);
+                pictureCollection.addToSelectedNodes(node4);
+
                 final var flatGroupNavigator = new FlatGroupNavigator(groupNode);
-                Settings.getPictureCollection().addToSelectedNodes(node1);
-                Settings.getPictureCollection().addToSelectedNodes(node2);
-                Settings.getPictureCollection().addToSelectedNodes(node3);
-                Settings.getPictureCollection().addToSelectedNodes(node4);
 
                 Settings.setLocale(Locale.ENGLISH);
                 final var picturePopupMenu = new PicturePopupMenu(flatGroupNavigator, 0);
@@ -700,9 +751,12 @@ class PicturePopupMenuTest {
     void testFileDelete() {
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testFileDelete.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testFileDelete.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 assumeFalse(GraphicsEnvironment.isHeadless());
                 final var fileOperations = (JMenu) picturePopupMenu.getComponent(15);
@@ -731,9 +785,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testAddCategoryMenuItem.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testAddCategoryMenuItem.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var assignCategoryMenu = (JMenuItem) picturePopupMenu.getComponent(16);
                 final int[] eventsReceived = {0};
@@ -758,9 +815,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var myPictureInfo = new PictureInfo(new File("nosuchfile-testProperties.jpg"), MY_PICTURE);
-                final var myNode = new SortableDefaultMutableTreeNode(myPictureInfo);
-                final var myNavigator = new SingleNodeNavigator(myNode);
+                final var pictureInfo = new PictureInfo(new File("nosuchfile-testProperties.jpg"), MY_PICTURE);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var myNavigator = new SingleNodeNavigator(node);
                 final var picturePopupMenu = new PicturePopupMenu(myNavigator, 0);
                 final var properties = (JMenuItem) picturePopupMenu.getComponent(19);
                 assertEquals("Properties", properties.getText());
@@ -787,15 +847,18 @@ class PicturePopupMenuTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final var pictureInfo = new PictureInfo();
-                final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
-                final var navigator = new SingleNodeNavigator(pictureNode);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var navigator = new SingleNodeNavigator(node);
                 try {
                     final var tempFile = File.createTempFile("testConsolidateHere", ".jpg");
                     tempFile.deleteOnExit();
                     pictureInfo.setImageLocation(tempFile);
                     final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
                     final var parentNode = new SortableDefaultMutableTreeNode(new GroupInfo("Parent Group"));
-                    parentNode.add(pictureNode);
+                    parentNode.add(node);
 
                     final var consolidateHere = (JMenuItem) picturePopupMenu.getComponent(17);
                     assertEquals("Consolidate Here", consolidateHere.getText());
@@ -898,9 +961,12 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                Settings.getPictureCollection().clearSelection();
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.clearSelection();
                 final var pictureInfo = new PictureInfo();
                 final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
+                pictureCollection.getRootNode().add(pictureNode);
+
                 final var navigator = new SingleNodeNavigator(pictureNode);
                 final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
                 final var actionNodes = picturePopupMenu.getNodesToActOn();
@@ -918,14 +984,19 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                Settings.getPictureCollection().clearSelection();
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.clearSelection();
                 final var pictureInfo1 = new PictureInfo();
                 final var pictureNode1 = new SortableDefaultMutableTreeNode(pictureInfo1);
                 final var pictureInfo2 = new PictureInfo();
                 final var pictureNode2 = new SortableDefaultMutableTreeNode(pictureInfo2);
+                pictureCollection.getRootNode().add(pictureNode1);
+                pictureCollection.getRootNode().add(pictureNode2);
+
                 final var navigator = new ListNavigator(List.of(pictureNode1, pictureNode2));
-                Settings.getPictureCollection().addToSelectedNodes(pictureNode1);
-                Settings.getPictureCollection().addToSelectedNodes(pictureNode2);
+
+                pictureCollection.addToSelectedNodes(pictureNode1);
+                pictureCollection.addToSelectedNodes(pictureNode2);
                 final var picturePopupMenu = new PicturePopupMenu(navigator, 0);
                 final var actionNodes = picturePopupMenu.getNodesToActOn();
                 assertEquals(2, actionNodes.size());
@@ -942,16 +1013,21 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                Settings.getPictureCollection().clearSelection();
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.clearSelection();
                 final var pictureInfo1 = new PictureInfo();
                 final var pictureNode1 = new SortableDefaultMutableTreeNode(pictureInfo1);
                 final var pictureInfo2 = new PictureInfo();
                 final var pictureNode2 = new SortableDefaultMutableTreeNode(pictureInfo2);
                 final var pictureInfo3 = new PictureInfo();
-                final var pictureNode3 = new SortableDefaultMutableTreeNode(pictureInfo2);
+                final var pictureNode3 = new SortableDefaultMutableTreeNode(pictureInfo3);
+                pictureCollection.getRootNode().add(pictureNode1);
+                pictureCollection.getRootNode().add(pictureNode2);
+                pictureCollection.getRootNode().add(pictureNode3);
+
                 final var navigator = new ListNavigator(List.of(pictureNode1, pictureNode2, pictureNode3));
-                Settings.getPictureCollection().addToSelectedNodes(pictureNode1);
-                Settings.getPictureCollection().addToSelectedNodes(pictureNode2);
+                pictureCollection.addToSelectedNodes(pictureNode1);
+                pictureCollection.addToSelectedNodes(pictureNode2);
                 final var picturePopupMenu = new PicturePopupMenu(navigator, 2);
                 final var actionNodes = picturePopupMenu.getNodesToActOn();
                 assertEquals(1, actionNodes.size());

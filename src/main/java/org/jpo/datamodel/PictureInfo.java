@@ -7,10 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.geom.Point2D;
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -19,7 +18,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2022  Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,11 +46,12 @@ import java.util.logging.Logger;
  *
  * @see GroupInfo
  */
-public class PictureInfo implements Serializable {
+public class PictureInfo implements Serializable, GroupOrPicture {
 
     /**
      * Keep serialisation happy
      */
+    @Serial
     private static final long serialVersionUID = 1;
 
     /**
@@ -65,7 +65,7 @@ public class PictureInfo implements Serializable {
     /**
      * The description of the image.
      */
-    private String description;
+    private String description = "";
     //----------------------------------------
     private File imageFile;
     private String myImageLocation = "";
@@ -79,7 +79,7 @@ public class PictureInfo implements Serializable {
     /**
      * The film reference of the image.
      */
-    private String filmReference;
+    private String filmReference = "";
     /**
      * The time the image was created. This should be the original time when the
      * shutter snapped closed and not the time of scanning etc.
@@ -120,7 +120,7 @@ public class PictureInfo implements Serializable {
     /**
      * The category assignments are held in the categoryAssignments HashSet.
      */
-    private Set<Integer> categoryAssignments = new HashSet<>();
+    private final Set<Integer> categoryAssignments = new HashSet<>();
     /**
      * Temporary variable to allow appending of characters as the XML file is
      * being read.
@@ -133,8 +133,6 @@ public class PictureInfo implements Serializable {
      * Constructor without options. All strings are set to blanks
      */
     public PictureInfo() {
-        description = "";
-        filmReference = "";
     }
 
     /**
@@ -157,28 +155,24 @@ public class PictureInfo implements Serializable {
      * @return the creation time as a formatted string
      */
     public static String getFormattedCreationTime(final Calendar dateTime) {
-        String formattedDate;
         if (dateTime == null) {
-            formattedDate = Settings.getJpoResources().getString("failedToParse");
-        } else {
-            formattedDate = Settings.getJpoResources().getString("parsedAs")
-                    + String.format("%tc", dateTime);
+            return Settings.getJpoResources().getString("failedToParse");
         }
-        return formattedDate;
+        return Settings.getJpoResources().getString("parsedAs")
+                    + String.format("%tc", dateTime);
     }
 
     /**
-     * Returns the creationTime as a formatted String. If parsing doens't work it returns an empty string
+     * Returns the creationTime as a formatted String. If parsing doesn't work it returns an empty string
      *
      * @return the creation time as a formatted string
      */
     public String getFormattedCreationTimeForTimestamp() {
-        String formattedDate = "";
         final Calendar dateTime = getCreationTimeAsDate();
-        if (dateTime != null) {
-            formattedDate = String.format("%tc", dateTime);
+        if (dateTime == null) {
+            return "";
         }
-        return formattedDate;
+        return String.format("%tc", dateTime);
     }
 
 
@@ -203,7 +197,7 @@ public class PictureInfo implements Serializable {
      * @param out The Buffered Writer receiving the xml data
      * @throws IOException If there was an IO error
      */
-    public void dumpToXml(final BufferedWriter out)
+    public void dumpToXml(final BufferedWriter out, final Path baseDir)
             throws IOException {
         out.write("<picture>");
         out.newLine();
@@ -216,7 +210,9 @@ public class PictureInfo implements Serializable {
         }
 
         if (getImageFile().toURI().toString().length() > 0) {
-            out.write("\t<file_URL>" + StringEscapeUtils.escapeXml11(getImageFile().toURI().toString()) + "</file_URL>");
+            final var file = getImageFile();
+            final var relativeImageFile = getRelativePath(file, baseDir);
+            out.write("\t<file>" + StringEscapeUtils.escapeXml11(relativeImageFile.toString()) + "</file>");
             out.newLine();
         }
 
@@ -256,15 +252,18 @@ public class PictureInfo implements Serializable {
         }
 
         if (categoryAssignments != null) {
-            final Iterator<Integer> i = categoryAssignments.iterator();
-            while (i.hasNext()) {
-                out.write("\t<categoryAssignment index=\"" + i.next() + "\"/>");
+            for (final var categoryAssignment : categoryAssignments) {
+                out.write("\t<categoryAssignment index=\"" + categoryAssignment + "\"/>");
                 out.newLine();
             }
         }
 
         out.write("</picture>");
         out.newLine();
+    }
+
+    public static Path getRelativePath(final File imageFile, final Path baseDir) {
+        return baseDir.relativize(imageFile.toPath());
     }
 
     /**
@@ -305,7 +304,7 @@ public class PictureInfo implements Serializable {
 
     /**
      * Checks whether the searchString parameter is contained in the
-     * description. The search is case insensitive.
+     * description. The search is case-insensitive.
      *
      * @param searchString The string to search for.
      * @return true if found. false if not.
@@ -320,12 +319,19 @@ public class PictureInfo implements Serializable {
      */
     private void sendDescriptionChangedEvent() {
         LOGGER.fine("preparing to send description changed event");
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setDescriptionChanged();
-            sendPictureInfoChangedEvent(pce);
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setDescriptionChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
             LOGGER.fine("sent description changed event");
-            Settings.getPictureCollection().setUnsavedUpdates();
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
@@ -337,12 +343,11 @@ public class PictureInfo implements Serializable {
      * @see #setImageLocation
      */
     public synchronized String getImageLocation() {
-        File file = getImageFile();
+        final var file = getImageFile();
         if (file != null) {
             return file.toURI().toString();
-        } else {
-            return "";
         }
+        return "";
     }
 
     /**
@@ -387,11 +392,27 @@ public class PictureInfo implements Serializable {
         if (s.length() > 0) {
             myImageLocation = myImageLocation.concat(s);
             try {
-                imageFile = new File(new URL(myImageLocation).toURI());
-            } catch (final URISyntaxException | MalformedURLException e) {
+                imageFile = new File(new URI(myImageLocation));
+            } catch (final URISyntaxException e) {
                 // Ignore it
                 LOGGER.log(Level.INFO, "Exception when parsing ImageLocation: {0} Exception: {1}", new Object[]{myImageLocation, e.getMessage()});
             }
+            sendImageLocationChangedEvent();
+        }
+    }
+
+
+    private String myImageFile = "";
+
+    /**
+     * Appends the text to the field (used by XML parser).
+     *
+     * @param s The text fragment to be added to the image Location
+     */
+    public synchronized void appendToImageFile(final String s, final Path baseDir) {
+        if (s.length() > 0) {
+            myImageFile = myImageFile.concat(s);
+            imageFile = new File(baseDir.toFile(), myImageFile);
             sendImageLocationChangedEvent();
         }
     }
@@ -404,11 +425,16 @@ public class PictureInfo implements Serializable {
      * that the image location was updated.
      */
     private void sendImageLocationChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setHighresLocationChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+        if (pictureCollection != null && pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setHighresLocationChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
         }
     }
 
@@ -432,12 +458,11 @@ public class PictureInfo implements Serializable {
      */
     public String calculateSha256() throws IOException {
         final var hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
-        if (hash != null) {
-            LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{getImageFile(), hash.toString().toUpperCase()});
-            return hash.toString().toUpperCase();
-        } else {
+        if (hash == null) {
             return "";
         }
+        LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{getImageFile(), hash.toString().toUpperCase()});
+        return hash.toString().toUpperCase();
     }
 
     /**
@@ -470,11 +495,18 @@ public class PictureInfo implements Serializable {
      * that the fileHash was updated.
      */
     private void sendSha256ChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
             final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
             pictureInfoChangeEvent.setSha256Changed();
             sendPictureInfoChangedEvent(pictureInfoChangeEvent);
-            Settings.getPictureCollection().setUnsavedUpdates();
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
@@ -517,11 +549,11 @@ public class PictureInfo implements Serializable {
     /**
      * Sets the film reference.
      *
-     * @param s The new film reference.
+     * @param newFilmReference The new film reference.
      */
-    public synchronized void setFilmReference(final String s) {
-        if (!filmReference.equals(s)) {
-            filmReference = s;
+    public synchronized void setFilmReference(final String newFilmReference) {
+        if (!filmReference.equals(newFilmReference)) {
+            filmReference = newFilmReference;
             sendFilmReferenceChangedEvent();
         }
     }
@@ -531,22 +563,29 @@ public class PictureInfo implements Serializable {
      * that the film reference was updated.
      */
     private void sendFilmReferenceChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setFilmReferenceChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setFilmReferenceChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
     /**
      * appends the text fragment to the creation time.
      *
-     * @param s The text fragment to add.
+     * @param textFragment The text fragment to add.
      */
-    public synchronized void appendToCreationTime(final String s) {
-        if (s.length() > 0) {
-            creationTime = creationTime.concat(s);
+    public synchronized void appendToCreationTime(final String textFragment) {
+        if (textFragment.length() > 0) {
+            creationTime = creationTime.concat(textFragment);
             sendCreationTimeChangedEvent();
         }
     }
@@ -565,11 +604,11 @@ public class PictureInfo implements Serializable {
     /**
      * Sets the creationTime.
      *
-     * @param s The new creation time.
+     * @param newCreationTime The new creation time.
      */
-    public synchronized void setCreationTime(final String s) {
-        if ((s != null) && (!creationTime.equals(s))) {
-            creationTime = s;
+    public synchronized void setCreationTime(final String newCreationTime) {
+        if ((newCreationTime != null) && (!creationTime.equals(newCreationTime))) {
+            creationTime = newCreationTime;
             sendCreationTimeChangedEvent();
         }
     }
@@ -591,7 +630,7 @@ public class PictureInfo implements Serializable {
      * @return the creation time
      */
     public synchronized String getFormattedCreationTime() {
-        final Calendar dateTime = getCreationTimeAsDate();
+        final var dateTime = getCreationTimeAsDate();
         return getFormattedCreationTime(dateTime);
     }
 
@@ -600,11 +639,18 @@ public class PictureInfo implements Serializable {
      * that the film reference was updated.
      */
     private void sendCreationTimeChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setCreationTimeChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setCreationTimeChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
@@ -613,11 +659,11 @@ public class PictureInfo implements Serializable {
     /**
      * Appends the text fragment to the comment.
      *
-     * @param s the text fragment
+     * @param textFragment the text fragment
      */
-    public synchronized void appendToComment(final String s) {
-        if (s.length() > 0) {
-            comment = comment.concat(s);
+    public synchronized void appendToComment(final String textFragment) {
+        if (textFragment.length() > 0) {
+            comment = comment.concat(textFragment);
             sendCommentChangedEvent();
         }
     }
@@ -634,11 +680,11 @@ public class PictureInfo implements Serializable {
     /**
      * Sets the comment.
      *
-     * @param s The new comment
+     * @param newComment The new comment
      */
-    public synchronized void setComment(final String s) {
-        if (!comment.equals(s)) {
-            comment = s;
+    public synchronized void setComment(final String newComment) {
+        if (!comment.equals(newComment)) {
+            comment = newComment;
             sendCommentChangedEvent();
         }
     }
@@ -648,22 +694,29 @@ public class PictureInfo implements Serializable {
      * that the comment was updated.
      */
     private void sendCommentChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setCommentChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setCommentChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
     /**
      * Appends the text fragment to the photographer field.
      *
-     * @param s The photographer.
+     * @param textFragment The photographer.
      */
-    public synchronized void appendToPhotographer(final String s) {
-        if (s.length() > 0) {
-            photographer = photographer.concat(s);
+    public synchronized void appendToPhotographer(final String textFragment) {
+        if (textFragment.length() > 0) {
+            photographer = photographer.concat(textFragment);
             sendPhotographerChangedEvent();
         }
     }
@@ -682,11 +735,11 @@ public class PictureInfo implements Serializable {
     /**
      * Sets the Photographer.
      *
-     * @param s The new Photographer
+     * @param newPhotographer The new Photographer
      */
-    public synchronized void setPhotographer(final String s) {
-        if (!photographer.equals(s)) {
-            photographer = s;
+    public synchronized void setPhotographer(final String newPhotographer) {
+        if (!photographer.equals(newPhotographer)) {
+            photographer = newPhotographer;
             sendPhotographerChangedEvent();
         }
     }
@@ -696,22 +749,29 @@ public class PictureInfo implements Serializable {
      * that the photographer was updated.
      */
     private void sendPhotographerChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setPhotographerChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setPhotographerChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
     /**
      * appends the text fragment to the copyright holder field.
      *
-     * @param s The text fragment.
+     * @param textFragment The text fragment.
      */
-    public synchronized void appendToCopyrightHolder(final String s) {
-        if (s.length() > 0) {
-            copyrightHolder = copyrightHolder.concat(s);
+    public synchronized void appendToCopyrightHolder(final String textFragment) {
+        if (textFragment.length() > 0) {
+            copyrightHolder = copyrightHolder.concat(textFragment);
             sendCopyrightHolderChangedEvent();
         }
     }
@@ -728,11 +788,11 @@ public class PictureInfo implements Serializable {
     /**
      * Sets the copyright holder.
      *
-     * @param s The copyright holder
+     * @param newCopyrightHolder The copyright holder
      */
-    public synchronized void setCopyrightHolder(final String s) {
-        if (!copyrightHolder.equals(s)) {
-            copyrightHolder = s;
+    public synchronized void setCopyrightHolder(final String newCopyrightHolder) {
+        if (!this.copyrightHolder.equals(newCopyrightHolder)) {
+            this.copyrightHolder = newCopyrightHolder;
             sendCopyrightHolderChangedEvent();
         }
     }
@@ -742,23 +802,30 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendCopyrightHolderChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setCopyrightHolderChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setCopyrightHolderChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
     /**
      * Appends the text fragment to the rotation field.
-     * does not sent a rotationChangedEvent as the rotation has not yet been parsed
+     * does not send a rotationChangedEvent as the rotation has not yet been parsed
      *
-     * @param s Text fragment
+     * @param textFragment Text fragment
      */
-    public synchronized void appendToRotation(final String s) {
-        if (s.length() > 0) {
-            rotationString = rotationString.concat(s);
+    public synchronized void appendToRotation(final String textFragment) {
+        if (textFragment.length() > 0) {
+            rotationString = rotationString.concat(textFragment);
         }
     }
 
@@ -823,22 +890,29 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendRotationChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setRotationChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setRotationChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
     /**
      * appends the text fragment to the latlng string.
      *
-     * @param s The text fragment.
+     * @param textFragment The text fragment.
      */
-    public synchronized void appendToLatLng(final String s) {
-        if (s.length() > 0) {
-            latLngString = latLngString.concat(s);
+    public synchronized void appendToLatLng(final String textFragment) {
+        if (textFragment.length() > 0) {
+            latLngString = latLngString.concat(textFragment);
         }
     }
 
@@ -847,9 +921,9 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseLatLng() {
         try {
-            final String[] latLngArray = latLngString.split("x");
-            double lat = Double.parseDouble(latLngArray[0]);
-            double lng = Double.parseDouble(latLngArray[1]);
+            final var latLngArray = latLngString.split("x");
+            final var lat = Double.parseDouble(latLngArray[0]);
+            final var lng = Double.parseDouble(latLngArray[1]);
             setLatLng(new Point2D.Double(lat, lng));
             latLngString = null;
         } catch (final NumberFormatException x) {
@@ -900,7 +974,7 @@ public class PictureInfo implements Serializable {
      * @return The latitude and longitude in the format of 2 doubles with an x
      */
     public synchronized String getLatLngString() {
-        final Point2D.Double latLang = getLatLng();
+        final var latLang = getLatLng();
         NumberFormat numberFormatter = NumberFormat.getNumberInstance();
         return numberFormatter.format(latLang.x) + "x" + numberFormatter.format(latLang.y);
 
@@ -911,11 +985,18 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendLatLngChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
-            final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-            pce.setLatLngChanged();
-            sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
+            final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+            pictureInfoChangeEvent.setLatLngChanged();
+            sendPictureInfoChangedEvent(pictureInfoChangeEvent);
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
@@ -932,10 +1013,8 @@ public class PictureInfo implements Serializable {
      * removes all category Assignments
      */
     public synchronized void clearCategoryAssignments() {
-        if (categoryAssignments != null) {
-            sendCategoryAssignmentsChangedEvent();
-            categoryAssignments.clear();
-        }
+        sendCategoryAssignmentsChangedEvent();
+        categoryAssignments.clear();
     }
 
     /**
@@ -990,7 +1069,7 @@ public class PictureInfo implements Serializable {
      */
     public synchronized void parseCategoryAssignment() {
         try {
-            final Integer category = Integer.valueOf(categoryAssignmentString);
+            final var category = Integer.valueOf(categoryAssignmentString);
             categoryAssignmentString = "";
             addCategoryAssignment(category);
         } catch (final NumberFormatException x) {
@@ -1005,9 +1084,6 @@ public class PictureInfo implements Serializable {
      * @return true if the key was in the categories
      */
     public synchronized boolean containsCategory(final Integer key) {
-        if (categoryAssignments == null) {
-            return false;
-        }
         return categoryAssignments.contains(key);
     }
 
@@ -1017,7 +1093,7 @@ public class PictureInfo implements Serializable {
      * @param key the key to search for
      */
     public synchronized void removeCategory(final Object key) {
-        if (categoryAssignments != null && categoryAssignments.remove(key)) {
+        if (categoryAssignments.remove(key)) {
             sendCategoryAssignmentsChangedEvent();
         }
     }
@@ -1029,11 +1105,18 @@ public class PictureInfo implements Serializable {
      * that the copyright holder was updated.
      */
     private void sendCategoryAssignmentsChangedEvent() {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection.getSendModelUpdates()) {
             final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
             pce.setCategoryAssignmentsChanged();
             sendPictureInfoChangedEvent(pce);
-            Settings.getPictureCollection().setUnsavedUpdates();
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
@@ -1047,9 +1130,9 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasSelectedEvent() {
-        final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-        pce.setWasSelected();
-        sendPictureInfoChangedEvent(pce);
+        final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+        pictureInfoChangeEvent.setWasSelected();
+        sendPictureInfoChangedEvent(pictureInfoChangeEvent);
     }
 
     //-------------------------------------------
@@ -1062,9 +1145,9 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasUnselectedEvent() {
-        final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-        pce.setWasUnselected();
-        sendPictureInfoChangedEvent(pce);
+        final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+        pictureInfoChangeEvent.setWasUnselected();
+        sendPictureInfoChangedEvent(pictureInfoChangeEvent);
     }
 
     //-------------------------------------------
@@ -1077,9 +1160,9 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasMailSelectedEvent() {
-        final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-        pce.setWasMailSelected();
-        sendPictureInfoChangedEvent(pce);
+        final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+        pictureInfoChangeEvent.setWasMailSelected();
+        sendPictureInfoChangedEvent(pictureInfoChangeEvent);
     }
 
     //-------------------------------------------
@@ -1092,9 +1175,9 @@ public class PictureInfo implements Serializable {
      * this notification.
      */
     public void sendWasMailUnselectedEvent() {
-        final PictureInfoChangeEvent pce = new PictureInfoChangeEvent(this);
-        pce.setWasMailUnselected();
-        sendPictureInfoChangedEvent(pce);
+        final var pictureInfoChangeEvent = new PictureInfoChangeEvent(this);
+        pictureInfoChangeEvent.setWasMailUnselected();
+        sendPictureInfoChangedEvent(pictureInfoChangeEvent);
     }
 
     /**
@@ -1103,7 +1186,7 @@ public class PictureInfo implements Serializable {
      * @return a clone of the current PictureInfo object.
      */
     public PictureInfo getClone() {
-        final PictureInfo clone = new PictureInfo();
+        final var clone = new PictureInfo();
         clone.setDescription(this.getDescription());
         clone.setImageLocation(this.getImageFile());
         clone.setFilmReference(this.getFilmReference());
@@ -1129,7 +1212,7 @@ public class PictureInfo implements Serializable {
      * Removes the supplied listener
      *
      * @param pictureInfoChangeListener The listener that doesn't want to
-     *                                  notifications any more.
+     *                                  notifications anymore.
      */
     public void removePictureInfoChangeListener(
             final PictureInfoChangeListener pictureInfoChangeListener) {
@@ -1139,13 +1222,20 @@ public class PictureInfo implements Serializable {
     /**
      * Send PictureInfoChangeEvents.
      *
-     * @param pce The Event we want to notify.
+     * @param pictureInfoChangeEvent The Event we want to notify.
      */
-    private void sendPictureInfoChangedEvent(final PictureInfoChangeEvent pce) {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
+    private void sendPictureInfoChangedEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+
+        if (pictureCollection != null && pictureCollection.getSendModelUpdates()) {
             synchronized (pictureInfoListeners) {
                 pictureInfoListeners.forEach(pictureInfoChangeListener
-                        -> pictureInfoChangeListener.pictureInfoChangeEvent(pce)
+                        -> pictureInfoChangeListener.pictureInfoChangeEvent(pictureInfoChangeEvent)
                 );
             }
         }
@@ -1179,7 +1269,7 @@ public class PictureInfo implements Serializable {
      *
      * @param otherPictureInfo The other GroupInfo object
      * @param sortField        which attribute to use in the comparison
-     * @return negative number if this is less then other Zero if same or positive numper if other is less than this
+     * @return negative number if this is less than or Zero if same or positive number if other is less than this
      */
     public int compareTo(final @NotNull PictureInfo otherPictureInfo, final Settings.FieldCodes sortField) {
         return switch (sortField) {
@@ -1195,9 +1285,18 @@ public class PictureInfo implements Serializable {
     private int compareDates(final Calendar myCreationCalendar, final Calendar otherCreationCalendar){
         if ( myCreationCalendar == null || otherCreationCalendar == null ) {
             return 0; // retain the sort order
-        } else {
-            return myCreationCalendar.compareTo(otherCreationCalendar);
         }
+        return myCreationCalendar.compareTo(otherCreationCalendar);
     }
 
+    private SortableDefaultMutableTreeNode myOwningNode = null;
+    @Override
+    public void setOwningNode(SortableDefaultMutableTreeNode sortableDefaultMutableTreeNode) {
+        myOwningNode = sortableDefaultMutableTreeNode;
+    }
+
+    @Override
+    public SortableDefaultMutableTreeNode getOwningNode( ) {
+        return myOwningNode;
+    }
 }

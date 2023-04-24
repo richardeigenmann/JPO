@@ -21,9 +21,8 @@ import java.util.logging.Logger;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
-
 /*
- Copyright (C) 2002-2022 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -169,6 +168,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 } else if ((k == KeyEvent.VK_F)) {
                     requestScreenSizeMenu();
                     keyEvent.consume();
+                } else if ((k == KeyEvent.VK_ESCAPE)) {
+                    keyEvent.consume();
+                    closeViewer();
                 }
                 if (!keyEvent.isConsumed()) {
                     JOptionPane.showMessageDialog(pictureFrame.getResizableJFrame(),
@@ -196,31 +198,18 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                                              final String pictureStatusMessage) {
                 final Runnable runnable = () -> {
                     switch (pictureStatusCode) {
-                        case SCALABLE_PICTURE_UNINITIALISED:
-                            pictureFrame.setProgressBarVisible(false);
-                            break;
-                        case SCALABLE_PICTURE_GARBAGE_COLLECTION:
-                            pictureFrame.setProgressBarVisible(false);
-                            break;
-                        case SCALABLE_PICTURE_LOADING:
-                            pictureFrame.setProgressBarVisible(true);
-                            break;
-                        case SCALABLE_PICTURE_LOADED:
-                            pictureFrame.setProgressBarVisible(false);
-                            break;
-                        case SCALABLE_PICTURE_SCALING:
-                            pictureFrame.setProgressBarVisible(false);
-                            break;
-                        case SCALABLE_PICTURE_READY:
+                        case SCALABLE_PICTURE_UNINITIALISED,
+                                SCALABLE_PICTURE_GARBAGE_COLLECTION,
+                                SCALABLE_PICTURE_LOADED,
+                                SCALABLE_PICTURE_SCALING,
+                                SCALABLE_PICTURE_ERROR -> pictureFrame.setProgressBarVisible(false);
+                        case SCALABLE_PICTURE_LOADING -> pictureFrame.setProgressBarVisible(true);
+                        case SCALABLE_PICTURE_READY -> {
                             pictureFrame.setProgressBarVisible(false);
                             pictureFrame.getResizableJFrame().toFront();
-                            break;
-                        case SCALABLE_PICTURE_ERROR:
-                            pictureFrame.setProgressBarVisible(false);
-                            break;
-                        default:
-                            LOGGER.log(Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{pictureStatusCode, pictureStatusMessage});
-                            break;
+                        }
+                        default ->
+                                LOGGER.log(Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{pictureStatusCode, pictureStatusMessage});
                     }
                 };
                 if (SwingUtilities.isEventDispatchThread()) {
@@ -242,17 +231,16 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                                                        final int percentage) {
                 final Runnable runnable = () -> {
                     switch (statusCode) {
-                        case SOURCE_PICTURE_LOADING_STARTED:
+                        case SOURCE_PICTURE_LOADING_STARTED -> {
                             pictureFrame.setProgressBarValue(0);
                             pictureFrame.setProgressBarVisible(true);
-                            break;
-                        case SOURCE_PICTURE_LOADING_PROGRESS:
+                        }
+                        case SOURCE_PICTURE_LOADING_PROGRESS -> {
                             pictureFrame.setProgressBarValue(percentage);
                             pictureFrame.setProgressBarVisible(true);
-                            break;
-                        default: // SOURCE_PICTURE_LOADING_COMPLETED:
-                            pictureFrame.setProgressBarVisible(false);
-                            break;
+                        }
+                        default -> // SOURCE_PICTURE_LOADING_COMPLETED:
+                                pictureFrame.setProgressBarVisible(false);
                     }
                 };
                 if (SwingUtilities.isEventDispatchThread()) {
@@ -269,8 +257,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private void saveChangedDescription() {
         final var node = getCurrentNode();
-        if ((node != null) && (node.getUserObject() instanceof PictureInfo pi)) {
-            pi.setDescription(
+        if ((node != null) && (node.getUserObject() instanceof PictureInfo pictureInfo)) {
+            pictureInfo.setDescription(
                     pictureFrame.getDescription());
         }
     }
@@ -314,7 +302,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * Don't use: accessor to the private getCurrentNode method for unit tests.
      *
-     * @return the curent node
+     * @return the current node
      */
     @TestOnly
     public SortableDefaultMutableTreeNode getCurrentNodeTest() {
@@ -349,7 +337,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             return;
         }
 
-        if (!(node.getUserObject() instanceof PictureInfo)) {
+        if (!(node.getUserObject() instanceof final PictureInfo pictureInfo)) {
             LOGGER.log(Level.SEVERE,
                     "The new node is not for a PictureInfo object. Aborting. userObject class: {0}, mySetOfNodes: {1}, index: {2}",
                     new Object[]{node.getUserObject().getClass(), mySetOfNodes, myIndex});
@@ -357,12 +345,11 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             return;
         }
 
-        // remove the pictureinfo change listener if present
+        // remove the pictureInfo change listener if present
         if (this.mySetOfNodes != null) {
             ((PictureInfo) this.mySetOfNodes.getNode(this.myIndex).getUserObject()).removePictureInfoChangeListener(this);
         }
-        // attach the pictureinfo change listener
-        final var pictureInfo = (PictureInfo) node.getUserObject();
+        // attach the pictureInfo change listener
         pictureInfo.addPictureInfoChangeListener(this);
 
         if (this.mySetOfNodes == null) {
@@ -437,7 +424,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * Request the PictureViewer to display the next picture. It calls
      * {@link SortableDefaultMutableTreeNode#getNextPicture} to find the image.
-     * If the call returned a non null node {@link #showNode} is called to
+     * If the call returned a non-null node {@link #showNode} is called to
      * request the loading and display of the new picture.
      *
      * @see #requestPriorPicture()
@@ -552,7 +539,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     }
 
     /**
-     * This method looks at the position the currentNode is in regard to it's
+     * This method looks at the position the currentNode is in regard to its
      * siblings and changes the forward and back icons to reflect the position
      * of the current node.
      */
@@ -598,7 +585,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 pictureFrame.getPictureViewerNavBar().setNextButtonHasRight();
             } else {
                 // it must be a GroupInfo node
-                // since we must descend into it it gets a nextnext icon.
+                // since we must descend into it, it gets a nextnext icon.
                 pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
             }
         } else // the getNextSibling() method returned null

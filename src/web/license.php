@@ -1,4 +1,4 @@
-<?php include 'page-start.php'; ?>
+<?php include_once 'page-start.php'; ?>
 <div class="container">
 <h1>License</h1>
 
@@ -6,7 +6,7 @@
 
 <hr>
 <h2>Third Party Licenses</h2>
-<p>JPO uses a number of third party libraries because it is better to reuse well written well tested 
+<p>JPO uses a number of third party libraries because it is better to reuse well written well tested
         code from others instead of re-inventing the wheel:</p>
 
 <p><a href="http://commons.apache.org/proper/commons-compress/">Apache Commons Compress</a> which is licensed under the Apache 2.0 license
@@ -17,7 +17,7 @@
 <br><a href="https://developers.google.com/gdata/articles/java_client_lib">Google Data Library</a> which is probably Apache 2.0 licensed
 <br><a href="https://code.google.com/p/guava-libraries/">Google Guava library</a> which is licensed under Apache 2.0
 <br><a href="https://java.net/projects/javamail/pages/Home">JavaMail API</a> which is licensed under CDDL license and the GPLv2 with Classpath Exception license
-<br><a href="http://www.jcraft.com/jsch/">JSch</a> library is licensed under a BSD-style license. It is Copyright (c) 2002-2014 by Atsuhiko Yamanaka, JCraft,Inc. 
+<br><a href="http://www.jcraft.com/jsch/">JSch</a> library is licensed under a BSD-style license. It is Copyright (c) 2002-2014 by Atsuhiko Yamanaka, JCraft,Inc.
 <br><a href="http://javaprog.net/jwizz/">JWizz</a> is licensed under the FreeBSD license by Michael Rudolf.
 <br><a href="https://github.com/msteiger/jxmapviewer2">Jxmapviewer2</a> is licensed under LGPL.
 <br><a href="https://code.google.com/p/metadata-extractor/">Metadata-Extractor</a> by Drew Noakes is licensed under Apache License 2.0
@@ -30,8 +30,8 @@
 </p>
 
 <hr>
-<p>Last update to this page: 14 Jan 2021<br>
-Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 25 April 2023<br>
+Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
-<?php include 'page-end.php'; ?>
+<?php include_once 'page-end.php'; ?>

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.swing.PictureController;
 
 /*
- Copyright (C) 2017 - 2022 Richard Eigenmann.
+ Copyright (C) 2017 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,6 +25,5 @@ import org.jpo.gui.swing.PictureController;
  * @param pictureController The PictureFrame that is to receive the request
  * @author Richard Eigenmann
  */
-public record PictureControllerZoomRequest(@NotNull PictureController pictureController, @NotNull Zoom zoom) {
-};
+public record PictureControllerZoomRequest(@NotNull PictureController pictureController, @NotNull Zoom zoom) {}
 

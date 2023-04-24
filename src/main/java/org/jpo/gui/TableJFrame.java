@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
- Copyright (C) 2002 - 2022 Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -131,7 +131,7 @@ public class TableJFrame extends JFrame {
         /**
          * JTable uses this method to determine the default renderer/ editor for
          * each cell. If we didn't implement this method, then the last column
-         * would contain text ("true"/"false"), rather than a check box.
+         * would contain text ("true"/"false"), rather than a checkbox.
          */
         @Override
         public Class getColumnClass( int c ) {
@@ -166,29 +166,19 @@ public class TableJFrame extends JFrame {
             }
             final var queryNode = (SortableDefaultMutableTreeNode) groupNode.getChildAt(row);
             final var userObject = queryNode.getUserObject();
-            if (userObject instanceof PictureInfo pi) {
-                switch (col) {
-                    case 1:
-                        return pi.getDescription();
-                    case 2:
-                        return pi.getImageLocation();
-                    case 3:
-                        return pi.getFilmReference();
-                    case 4:
-                        return pi.getCreationTime();
-                    case 5:
-                        return pi.getComment();
-                    case 6:
-                        return pi.getPhotographer();
-                    case 7:
-                        return pi.getCopyrightHolder();
-                    case 8:
-                        return pi.getLatLngString();
-                    case 9:
-                        return pi.getSha256();
-                    default:
-                        return "Unknown Column: " + col;
-                }
+            if (userObject instanceof PictureInfo pictureInfo) {
+                return switch (col) {
+                    case 1 -> pictureInfo.getDescription();
+                    case 2 -> pictureInfo.getImageLocation();
+                    case 3 -> pictureInfo.getFilmReference();
+                    case 4 -> pictureInfo.getCreationTime();
+                    case 5 -> pictureInfo.getComment();
+                    case 6 -> pictureInfo.getPhotographer();
+                    case 7 -> pictureInfo.getCopyrightHolder();
+                    case 8 -> pictureInfo.getLatLngString();
+                    case 9 -> pictureInfo.getSha256();
+                    default -> "Unknown Column: " + col;
+                };
             } else {
                 // GroupInfo
                 if (col == 1) {
@@ -209,36 +199,16 @@ public class TableJFrame extends JFrame {
             final var newString = value.toString();
             if (userObject instanceof PictureInfo pi) {
                 switch (col) {
-                    case 1:
-                        pi.setDescription(newString);
-                        break;
-                    case 2:
-                        pi.setImageLocation(new File(newString));
-                        break;
-                    case 3:
-                        pi.setFilmReference(newString);
-                        break;
-                    case 4:
-                        pi.setCreationTime( newString );
-                        break;
-                    case 5:
-                        pi.setComment(newString);
-                        break;
-                    case 6:
-                        pi.setPhotographer(newString);
-                        break;
-                    case 7:
-                        pi.setCopyrightHolder(newString);
-                        break;
-                    case 8:
-                        pi.setLatLng(newString);
-                        break;
-                    case 9:
-                        pi.setSha256(newString);
-                        break;
-                    default:
-                        LOGGER.log(Level.INFO, "Bad column: {0}", Integer.toString(col));
-                        break;
+                    case 1 -> pi.setDescription(newString);
+                    case 2 -> pi.setImageLocation(new File(newString));
+                    case 3 -> pi.setFilmReference(newString);
+                    case 4 -> pi.setCreationTime(newString);
+                    case 5 -> pi.setComment(newString);
+                    case 6 -> pi.setPhotographer(newString);
+                    case 7 -> pi.setCopyrightHolder(newString);
+                    case 8 -> pi.setLatLng(newString);
+                    case 9 -> pi.setSha256(newString);
+                    default -> LOGGER.log(Level.INFO, "Bad column: {0}", Integer.toString(col));
                 }
             } else {
                 // GroupInfo

@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import javax.swing.tree.TreeNode;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -10,7 +11,7 @@ import java.util.List;
 /*
  TextQuery.java:  The parameters for a search
 
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,6 +34,7 @@ public class TextQuery implements Serializable, Query {
     /**
      * Keep serialisation happy
      */
+    @Serial
     private static final long serialVersionUID = 1;
 
     /**
@@ -189,7 +191,7 @@ public class TextQuery implements Serializable, Query {
     }
 
     /**
-     * Forces the query to re-executed
+     * Forces the query to re-execute
      */
     @Override
     public void refresh() {
@@ -204,20 +206,18 @@ public class TextQuery implements Serializable, Query {
      * @return true if the node matches the query, false if not.
      */
     public boolean isMatch( final SortableDefaultMutableTreeNode n ) {
-        Object nodeObject = n.getUserObject();
-        if ( !( nodeObject instanceof PictureInfo ) ) {
+        var userObject = n.getUserObject();
+        if ( !(userObject instanceof PictureInfo pictureInfo) ) {
             // it's not a pictureinfo node so it can't be a batch.
             return false;
         }
 
-        PictureInfo pi = (PictureInfo) nodeObject;
-
         boolean match = false;
         if ( anyField != null ) {
-            match = pi.anyMatch( anyField );
+            match = pictureInfo.anyMatch( anyField );
         }
 
-        final Calendar testNodeDate = pi.getCreationTimeAsDate();
+        final var testNodeDate = pictureInfo.getCreationTimeAsDate();
         if ( match && ( lowerDateRange != null ) ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
@@ -251,7 +251,7 @@ public class TextQuery implements Serializable, Query {
     }
 
     /**
-     * returns a the title for the search that can be used to display the search
+     * returns the title for the search that can be used to display the search
      * results under.
      */
     @Override

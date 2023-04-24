@@ -44,7 +44,7 @@ public class CameraDownloadWizardStep7
 
 
     /**
-     * Returns the component that visualises the user interactionable stuff for this step of the wizard.
+     * Returns the component that visualises the user widgets for this step of the wizard.
      * @return the component
      */
     @Override

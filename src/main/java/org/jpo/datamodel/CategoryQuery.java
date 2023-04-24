@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 /*
  CategoryQuery.java:  A type of query for Categories
 
- Copyright (C) 2006-2022 Richard Eigenmann.
+ Copyright (C) 2006-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,7 +39,7 @@ public class CategoryQuery implements Query {
     private final Integer key;
 
     /**
-     * An List of the nodes that represent these images
+     * A List of the nodes that represent these images
      */
     private List<SortableDefaultMutableTreeNode> resultList;
 
@@ -98,7 +98,7 @@ public class CategoryQuery implements Query {
     }
 
     /**
-     * returns a the title for the search that can be used to display the search
+     * returns the title for the search that can be used to display the search
      * results under.
      *
      * @return the title for the search
@@ -118,7 +118,7 @@ public class CategoryQuery implements Query {
     }
 
     /**
-     * Returns an List of the nodes that match this category
+     * Returns a List of the nodes that match this category
      *
      * @param key       The key of the category to find
      * @param startNode the node at which to start
@@ -126,10 +126,10 @@ public class CategoryQuery implements Query {
      */
     private static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
             final Integer key, final SortableDefaultMutableTreeNode startNode) {
-        final List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
+        final var resultList = new ArrayList<SortableDefaultMutableTreeNode>();
         final var nodes = startNode.children();
         while (nodes.hasMoreElements()) {
-            final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) nodes.nextElement();
+            final var node = (SortableDefaultMutableTreeNode) nodes.nextElement();
             if (node.getUserObject() instanceof PictureInfo pi
                     && pi.containsCategory(key)) {
                 resultList.add(node);

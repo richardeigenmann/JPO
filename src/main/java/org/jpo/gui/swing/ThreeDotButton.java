@@ -5,9 +5,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
- ThreeDotButton.java:  This class ovewrrides a JButton and sets the size and text.
-
- Copyright (C) 2010-2020  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2023 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

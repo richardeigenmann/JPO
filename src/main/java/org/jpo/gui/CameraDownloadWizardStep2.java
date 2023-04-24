@@ -48,7 +48,7 @@ public class CameraDownloadWizardStep2 extends AbstractStep {
     private final CameraDownloadWizardData dataModel;
 
     /**
-     * Returns the component that visualises the user interactable stuff for
+     * Returns the component that visualises the user widgets for
      * this step of the wizard.
      *
      * @return the component

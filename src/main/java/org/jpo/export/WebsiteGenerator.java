@@ -32,7 +32,7 @@ import java.util.zip.ZipOutputStream;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 
 /*
- * Copyright (C) 2002-2022 Richard Eigenmann.
+ * Copyright (C) 2002-2023 Richard Eigenmann.
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -173,8 +173,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      * @return The cleaned up filename
      */
     public static String cleanupFilename(final String string) {
-        String returnString = string;
-        for (final Map.Entry<String, String> entry : CHARACTER_TRANSLATION.entrySet()) {
+        var returnString = string;
+        for (final var entry : CHARACTER_TRANSLATION.entrySet()) {
             if (returnString.contains(entry.getKey())) {
                 returnString = returnString.replace(entry.getKey(), entry.getValue());
             }
@@ -252,10 +252,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         final var targetFile = new File(targetDirectory, file);
         websiteMemberFiles.add(targetFile);
         try (
-                final var inputStream = Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource(file)).openStream();
-                final var outSfileOutputStreamream = new FileOutputStream(targetFile);
-                final var bufferedInputStream = new BufferedInputStream(inputStream);
-                final var bufferedOutputStream = new BufferedOutputStream(outSfileOutputStreamream)) {
+                final var bufferedInputStream = new BufferedInputStream(Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource(file)).openStream());
+                final var bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(targetFile))) {
             bufferedInputStream.transferTo(bufferedOutputStream);
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
@@ -275,14 +273,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private static void writeFolderIcon(final GenerateWebsiteRequest request, final List<File> websiteMemberFiles) throws IOException {
         final var folderIconFile = new File(request.getTargetDirectory(), FOLDER_ICON);
         try (
-                final var inputStream = Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource(FOLDER_ICON)).openStream();
-                final var fileOutputStream = new FileOutputStream(folderIconFile);
-                final var bufferedInputStream = new BufferedInputStream(inputStream);
-                final var bufferedOutputStream = new BufferedOutputStream(fileOutputStream);) {
+                final var bufferedInputStream = new BufferedInputStream(Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource(FOLDER_ICON)).openStream());
+                final var bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(folderIconFile))) {
             websiteMemberFiles.add(folderIconFile);
             bufferedInputStream.transferTo(bufferedOutputStream);
-        } catch (final IOException e) {
-            throw (e);
         }
     }
 
@@ -294,7 +288,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     /**
      * Searches for all the pictures in the request's startNode and adds them to a zipfile if isGenerateZipfile is true;
      *
-     * @param request
+     * @param request the request
      */
     private static void generateZipfile(final GenerateWebsiteRequest request) {
         if (!request.isGenerateZipfile()) {
@@ -306,7 +300,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
                 final var fileOutputStream
                         = new FileOutputStream(new File(request.getTargetDirectory(), request.getDownloadZipFileName()));
                 final var bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
-                final var zipOutputStream = new ZipOutputStream(bufferedOutputStream);) {
+                final var zipOutputStream = new ZipOutputStream(bufferedOutputStream)) {
             var picWroteCounter = request.getSequentialStartNumber();
             for (final var sortableDefaultMutableTreeNode : request.getStartNode().getChildPictureNodes(true)) {
                 final var pictureInfo = (PictureInfo) sortableDefaultMutableTreeNode.getUserObject();
@@ -380,8 +374,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     final Map<Integer, File> midresHtmlFiles = new HashMap<>();
 
     /**
-     * The sequential counting of files gets complicated in tree structures so I will pre-
-     * allocate the filenames in a first pass and then look them up.
+     * The sequential counting of files gets complicated in tree structures, so I will
+     * pre-allocate the filenames in a first pass and then look them up.
      *
      * @param request The request
      */
@@ -409,17 +403,17 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private static File getOutputImageFile(final GenerateWebsiteRequest request, final PictureInfo pictureInfo, final String suffix, final int picsWroteCounter, final boolean keepExtension) {
-        final String extension = keepExtension ? FilenameUtils.getExtension(pictureInfo.getImageFile().getName()) : "";
+        final var extension = keepExtension ? FilenameUtils.getExtension(pictureInfo.getImageFile().getName()) : "";
         switch (request.getPictureNaming()) {
             case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
-                final String rootName = cleanupFilename(FilenameUtils.getBaseName(pictureInfo.getImageFile().getName()));
+                final var rootName = cleanupFilename(FilenameUtils.getBaseName(pictureInfo.getImageFile().getName()));
                 return new File(request.getTargetDirectory(), rootName + suffix + extension);
             }
             case PICTURE_NAMING_BY_SEQUENTIAL_NUMBER -> {
-                final String convertedNumber = Integer.toString(picsWroteCounter);
-                final String padding = "00000";
-                final String formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
-                final String root = "jpo_" + formattedNumber;
+                final var convertedNumber = Integer.toString(picsWroteCounter);
+                final var padding = "00000";
+                final var formattedNumber = padding.substring(convertedNumber.length()) + convertedNumber;
+                final var root = "jpo_" + formattedNumber;
                 return new File(request.getTargetDirectory(), root + suffix + extension);
             }
             default -> {
@@ -431,14 +425,14 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     /**
      * This method is called by SwingWorker when the background process sends a
-     * publish.
+     * publish event.
      *
      * @param messages A message that will be written to the logfile.
      */
     @Override
     protected void process(final List<String> messages) {
         progressGui.progressIncrement(messages.size());
-        messages.stream().forEach(message -> LOGGER.log(Level.INFO, "Message: {0}", message));
+        messages.forEach(message -> LOGGER.log(Level.INFO, "Message: {0}", message));
     }
 
     /**
@@ -518,11 +512,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             final var pictureInfo = (PictureInfo) node.getUserObject();
             publish(String.format("Processing picture node: %s", pictureInfo.toString()));
             LOGGER.log(Level.INFO, "Loading: {0}", pictureInfo.getImageFile());
-            final ScalablePicture scp = loadScalablePicture(pictureInfo);
+            final var scalablePicture = loadScalablePicture(pictureInfo);
 
-            writeLowres(lowresGroupWriter, node, scp, websiteMemberFiles);
-            final var midresDimension = writeScaledPicture(midresFiles.get(node.hashCode()), request.getMidresDimension(), request.getMidresJpgQuality(), scp, websiteMemberFiles);
-            writeHighresPicture(request, node, scp, websiteMemberFiles);
+            writeLowres(lowresGroupWriter, node, scalablePicture, websiteMemberFiles);
+            final var midresDimension = writeScaledPicture(midresFiles.get(node.hashCode()), request.getMidresDimension(), request.getMidresJpgQuality(), scalablePicture, websiteMemberFiles);
+            writeHighresPicture(request, node, scalablePicture, websiteMemberFiles);
 
             if (request.isGenerateMidresHtml()) {
                 writeMidres(node, childNumber, midresDimension);
@@ -574,13 +568,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private void writeLinkToParentGroup(SortableDefaultMutableTreeNode groupNode, BufferedWriter out) throws IOException {
         if (!groupNode.equals(request.getStartNode())) {
             //link to parent
-            final SortableDefaultMutableTreeNode parentNode = groupNode.getParent();
-            String parentLink = "jpo_" + parentNode.hashCode() + ".htm";
+            final var parentNode = groupNode.getParent();
+            var parentLink = "jpo_" + parentNode.hashCode() + ".htm";
             if (parentNode.equals(request.getStartNode())) {
                 parentLink = INDEX_PAGE;
             }
 
-            out.write(String.format("<p>Up to: <a href=\"%s\">%s</a>", parentLink, parentNode.toString()));
+            out.write(String.format("<p>Up to: <a href=\"%s\">%s</a>", parentLink, parentNode));
             out.newLine();
         }
     }
@@ -596,7 +590,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void startGroupTable(final SortableDefaultMutableTreeNode groupNode, final BufferedWriter out, final GenerateWebsiteRequest request) throws IOException {
-        final int tableWidth = (request.getPicsPerRow() * request.getThumbnailWidth() + (request.getPicsPerRow() - 1) * request.getCellspacing());
+        final var tableWidth = (request.getPicsPerRow() * request.getThumbnailWidth() + (request.getPicsPerRow() - 1) * request.getCellspacing());
         out.write("<table  style=\"border-spacing: " + request.getCellspacing()
                 + "px; width: "
                 + tableWidth
@@ -688,7 +682,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         int childCount = pictureNode.getParent().getChildCount();
         midresHtmlWriter.write(String.format("Picture %d of %d", childNumber + 1, childCount));
         midresHtmlWriter.newLine();
-        final int matrixWidth = 130;
+        final var matrixWidth = 130;
         final StringBuilder previewArray = writeNumberPickTable(pictureNode, childNumber, midresHtmlWriter, matrixWidth);
         midresHtmlWriter.newLine();
         writeMidresLinks(pictureNode, highresFile, midresHtmlWriter);
@@ -737,17 +731,17 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     @NotNull
     private StringBuilder writeNumberPickTable(final SortableDefaultMutableTreeNode pictureNode, final int childNumber, final BufferedWriter midresHtmlWriter, final int matrixWidth) throws IOException {
         // Do the matrix with the pictures to click
-        final int indexPerRow = 5;
+        final var indexPerRow = 5;
 
         midresHtmlWriter.write("<table class=\"numberPickTable\">");
         midresHtmlWriter.newLine();
-        final PictureInfo pictureInfo = (PictureInfo) pictureNode.getUserObject();
-        final String htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replace("\'", "\\\\'"));
+        final var pictureInfo = (PictureInfo) pictureNode.getUserObject();
+        final var htmlFriendlyDescription = StringEscapeUtils.escapeHtml4(pictureInfo.getDescription().replace("'", "\\\\'"));
         int childCount = pictureNode.getParent().getChildCount();
-        final StringBuilder dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
+        final var dhtmlArray = startDhtmlArray(childNumber, childCount, pictureInfo, htmlFriendlyDescription);
 
-        final int startIndex = getStartIndex(childNumber, indexPerRow);
-        final int endIndex = getEndIndex(startIndex, childCount, indexPerRow);
+        final var startIndex = getStartIndex(childNumber, indexPerRow);
+        final var endIndex = getEndIndex(startIndex, childCount, indexPerRow);
 
 
         for (var i = startIndex; i < endIndex; i++) {
@@ -798,7 +792,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     public static int getStartIndex(int childNumber, int indexPerRow) {
-        final int indexBeforeCurrent = 15;
+        final var indexBeforeCurrent = 15;
         var startIndex = (int) Math.floor((childNumber - indexBeforeCurrent) / (double) indexPerRow) * indexPerRow;
         if (startIndex < 0) {
             startIndex = 0;
@@ -843,8 +837,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     private void writeMidresImgTag(final SortableDefaultMutableTreeNode node, final BufferedWriter midresHtmlWriter, final Dimension midresDimension) throws IOException {
-        final PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
-        final String imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFiles.get(node.hashCode()).getName(), midresDimension.width, midresDimension.height, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
+        final var pictureInfo = (PictureInfo) node.getUserObject();
+        final var imgTag = "<img src=\"%s\" width= \"%d\" height=\"%d\" alt=\"%s\" />".formatted(midresFiles.get(node.hashCode()).getName(), midresDimension.width, midresDimension.height, StringEscapeUtils.escapeHtml4(pictureInfo.getDescription()));
         if (request.isLinkToHighres()) {
             writeHyperlink(midresHtmlWriter, pictureInfo.getImageLocation(), imgTag);
         } else if (request.isExportHighres()) {
@@ -868,7 +862,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         websiteMemberFiles.add(targetFile);
 
-        final Dimension scaledDimension = new Dimension();
+        final var scaledDimension = new Dimension();
         scaledDimension.width = scp.getScaledWidth();
         scaledDimension.height = scp.getScaledHeight();
         LOGGER.log(Level.INFO, "Wrote image to file {0}, scaled to {1}x{2}", new Object[]{targetFile, scaledDimension.width, scaledDimension.height});
@@ -877,8 +871,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
 
     private void writeLowres(final BufferedWriter out, final SortableDefaultMutableTreeNode node, final ScalablePicture scp, final List<File> websiteMemberFiles) throws IOException {
-        final File lowresFile = lowresFiles.get(node.hashCode());
-        final Dimension lowresDimension = writeScaledPicture(lowresFile, request.getThumbnailDimension(), request.getLowresJpgQuality(), scp, websiteMemberFiles);
+        final var lowresFile = lowresFiles.get(node.hashCode());
+        final var lowresDimension = writeScaledPicture(lowresFile, request.getThumbnailDimension(), request.getLowresJpgQuality(), scp, websiteMemberFiles);
 
         out.write("<td class=\"pictureThumbnailCell\" id=\"" + StringEscapeUtils.escapeHtml4(lowresFile.getName()) + "\">");
 
@@ -949,20 +943,20 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     private StringBuilder startDhtmlArray(final int childNumber, final int childCount, final PictureInfo pictureInfo, final String htmlFriendlyDescription) {
         final var dhtmlArray = new StringBuilder(String.format("content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription));
         if (pictureInfo.getCreationTime().length() > 0) {
-            dhtmlArray.append("<p><strong>Date:</strong><br>").append(pictureInfo.getCreationTime().replace("\'", "\\\\'")).append("</p>");
+            dhtmlArray.append("<p><strong>Date:</strong><br>").append(pictureInfo.getCreationTime().replace("'", "\\\\'")).append("</p>");
         }
 
         if (pictureInfo.getPhotographer().length() > 0) {
-            dhtmlArray.append("<strong>Photographer:</strong><br>").append(pictureInfo.getPhotographer().replace("\'", "\\\\'")).append("<br>");
+            dhtmlArray.append("<strong>Photographer:</strong><br>").append(pictureInfo.getPhotographer().replace("'", "\\\\'")).append("<br>");
         }
         if (pictureInfo.getComment().length() > 0) {
-            dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replace("\'", "\\\\'")).append("<br>");
+            dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replace("'", "\\\\'")).append("<br>");
         }
         if (pictureInfo.getFilmReference().length() > 0) {
-            dhtmlArray.append("<strong>Film Reference:</strong><br>").append(pictureInfo.getFilmReference().replace("\'", "\\\\'")).append("<br>");
+            dhtmlArray.append("<strong>Film Reference:</strong><br>").append(pictureInfo.getFilmReference().replace("'", "\\\\'")).append("<br>");
         }
         if (pictureInfo.getCopyrightHolder().length() > 0) {
-            dhtmlArray.append("<strong>Copyright Holder:</strong><br>").append(pictureInfo.getCopyrightHolder().replace("\'", "\\\\'")).append("<br>");
+            dhtmlArray.append("<strong>Copyright Holder:</strong><br>").append(pictureInfo.getCopyrightHolder().replace("'", "\\\\'")).append("<br>");
         }
 
         dhtmlArray.append("'\n");
@@ -1000,7 +994,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     private void sshCopyToServer(final List<File> files) {
         LOGGER.info("Setting up ssh connection:");
-        final JSch jsch = new JSch();
+        final var jsch = new JSch();
         try {
             final Session session = getSshSession(jsch, request);
 
@@ -1042,8 +1036,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         try (
             // get I/O streams for remote scp
-            final OutputStream outputStream = channel.getOutputStream();
-            final InputStream inputStream = channel.getInputStream()) {
+            final var outputStream = channel.getOutputStream();
+            final var inputStream = channel.getInputStream()) {
             LOGGER.info("Connecting Channel...");
             channel.connect();
 
@@ -1076,8 +1070,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
             // send a content of lfile
             try (
-                final FileInputStream fileInputStream = new FileInputStream(file)) {
-                final byte[] buf = new byte[1024];
+                final var fileInputStream = new FileInputStream(file)) {
+                final var buf = new byte[1024];
                 while (true) {
                     LOGGER.log(Level.INFO, "Sending bytes: {0}", buf.length);
                     int len = fileInputStream.read(buf, 0, buf.length);
@@ -1104,13 +1098,13 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     /*
      * to test you can start up a simple ftp server with docker:
-     * docker run -d -v <directory on your host>:/home/vsftpd  -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=user -e FTP_PASS=password -e PASV_ADDRESS=<ip addres, yes ip, not hostname!> --name ftp --restart=always bogem/ftp
+     * docker run -d -v <directory on your host>:/home/vsftpd  -p 20:20 -p 21:21 -p 47400-47470:47400-47470 -e FTP_USER=user -e FTP_PASS=password -e PASV_ADDRESS=<ip address, yes ip, not hostname!> --name ftp --restart=always bogem/ftp
      * username = user
      * password = password
      */
     private void ftpCopyToServer(final Collection<File> files) {
         LOGGER.info("Setting up ftp connection:");
-        final FTPClient ftp = new FTPClient();
+        final var ftp = new FTPClient();
         try {
             ftp.connect(request.getFtpServer(), request.getFtpPort());
             int reply = ftp.getReplyCode();
@@ -1141,11 +1135,11 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             boolean binarymode = ftp.setFileType(FTP.BINARY_FILE_TYPE);
             LOGGER.log(Level.INFO, "Binarymode: {0}", binarymode);
             ftp.enterLocalPassiveMode();
-            for (final File file : files) {
-                try (final InputStream input = new BufferedInputStream(new FileInputStream(file));) {
-                    final String remote = request.getFtpTargetDir() + file.getName();
+            for (final var file : files) {
+                try (final var bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
+                    final var remote = request.getFtpTargetDir() + file.getName();
                     LOGGER.log(Level.INFO, "Putting file {0} to {1}:{2}", new Object[]{file, request.getFtpServer(), remote});
-                    boolean done = ftp.storeFile(remote, input);
+                    boolean done = ftp.storeFile(remote, bufferedInputStream);
                     LOGGER.log(Level.INFO, "stored file successfully: {0}", done);
                 }
             }

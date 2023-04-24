@@ -31,7 +31,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * Constructs the LayoutManager. We need a reference to the JComponent to
      * query for the width to which we are supposed to lay out the thumbnails.
      *
-     * @param widthProvider The width providing JComponent. Typically the
+     * @param widthProvider The width providing JComponent. Typically, the
      * JViewport of the JScrollPane showing the thumbnails.
      */
     public ThumbnailLayoutManager( final JComponent widthProvider ) {
@@ -44,7 +44,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     private final JComponent widthProvider;
 
     /**
-     * Must have for LayoutManager interface
+     * Must-have for LayoutManager interface
      *
      * @param name name
      * @param comp component
@@ -55,7 +55,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     }
 
     /**
-     * Must have for LayoutManager interface
+     * Must-have for LayoutManager interface
      *
      * @param comp component
      */
@@ -257,8 +257,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
 
     /**
      * Returns the width of the parent component. This most likely is the JPanel
-     * and that is not interesting so we go the parent's parent which is the
-     * JViewport and ask that for it's width.
+     * and that is not interesting, so we go the parent's parent which is the
+     * JViewport and ask that for its width.
      *
      * @param parent Parent
      * @return the width of the parent component.

@@ -50,7 +50,7 @@ public class MapWindow {
     private final GeoPosition northernPointOfEurope = new GeoPosition(71, 18, 55, 25, 67, 64);
     private final GeoPosition falklandIslands = new GeoPosition(-51, 79, -63, 59, 52, 36);
     private final GeoPosition tasmania = new GeoPosition(-42, 4, 9, +146, 80, 87);
-    List<GeoPosition> track = Arrays.asList(northernPointOfEurope, falklandIslands, tasmania);
+    final List<GeoPosition> track = Arrays.asList(northernPointOfEurope, falklandIslands, tasmania);
     final MapViewer mapViewer = new MapViewer();
     final JPanel mapPanel = new JPanel();
 
@@ -119,9 +119,9 @@ public class MapWindow {
         LOGGER.log(Level.FINE, "LatLang: {0}", latLng);
         // Create waypoints from the geo-positions
         if (latLng.x != 0.0 && latLng.y != 0.0) {
-            final var geoPostion = new GeoPosition(latLng.x, latLng.y);
-            waypoints.add(new DefaultWaypoint(geoPostion));
-            geoPositions.add(geoPostion);
+            final var geoPosition = new GeoPosition(latLng.x, latLng.y);
+            waypoints.add(new DefaultWaypoint(geoPosition));
+            geoPositions.add(geoPosition);
         }
     }
 

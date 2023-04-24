@@ -95,7 +95,7 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
             return;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Input Output Exception:\n" + ex.getMessage(),
-                    "IOExeption",
+                    "IOException",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }

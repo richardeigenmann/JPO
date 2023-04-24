@@ -1,6 +1,7 @@
 package org.jpo.gui.swing;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +16,22 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
+
+/*
+ Copyright (C) 2023 Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
 
 class CategoryPopupMenuTest {
 
@@ -31,14 +48,16 @@ class CategoryPopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
-                final File picture1 = new File("picture1.jpg");
-                final PictureInfo pictureInfo1 = new PictureInfo(picture1, "Image 1");
+                final var node = new SortableDefaultMutableTreeNode();
+                final var picture1 = new File("picture1.jpg");
+                final var pictureInfo1 = new PictureInfo(picture1, "Image 1");
                 node.setUserObject(pictureInfo1);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
 
-                final List<SortableDefaultMutableTreeNode> nodes = new ArrayList<>(List.of(node));
+                final var nodes = new ArrayList<>(List.of(node));
 
-                final CategoryPopupMenu jPopupMenu = new CategoryPopupMenu(nodes);
+                final var jPopupMenu = new CategoryPopupMenu(nodes);
                 assertNotNull(jPopupMenu);
                 assertEquals("Add a Category to the Picture", jPopupMenu.getLabel());
             });

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2004-2022 Richard Eigenmann.
+ Copyright (C) 2004-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -42,14 +42,12 @@ public class EmailerGui extends JFrame {
     private static final String GENERIC_ERROR_TITLE = Settings.getJpoResources().getString("genericError");
 
     /**
-     * Internal array that holds the nodes to be send by email.
+     * Internal array that holds the nodes to be sent by email.
      */
     private final List<SortableDefaultMutableTreeNode> emailSelected;
 
     /**
      * Creates a GUI to send the selected pictures as an email
-     *
-     *
      */
     public EmailerGui() {
         emailSelected = Settings.getPictureCollection().getMailSelectedNodes();

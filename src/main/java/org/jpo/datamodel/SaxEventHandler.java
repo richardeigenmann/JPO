@@ -6,13 +6,15 @@ import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.jpo.datamodel.Settings.FieldCodes.*;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +30,7 @@ import static org.jpo.datamodel.Settings.FieldCodes.*;
  */
 
 /**
- * An xml parser to load the collections.
+ * A xml parser to load the collections.
  */
 public class SaxEventHandler extends DefaultHandler {
 
@@ -75,6 +77,8 @@ public class SaxEventHandler extends DefaultHandler {
      */
     private SortableDefaultMutableTreeNode currentPicture;
 
+    private Path baseDir = null;
+
     /**
      * method that gets invoked by the parser when a new element is discovered
      *
@@ -91,6 +95,12 @@ public class SaxEventHandler extends DefaultHandler {
         GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
+            final var basDirName = attrs.getValue("basedir");
+            if (basDirName != null) {
+                baseDir = Paths.get(basDirName);
+                LOGGER.log(Level.INFO, "Collection Base Directory is: {0}", basDirName);
+            }
+
             currentGroup.setUserObject(groupInfo);
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
         } else if ( "group".equals( qName ) && attrs != null ) {
@@ -108,6 +118,8 @@ public class SaxEventHandler extends DefaultHandler {
             currentField = DESCRIPTION;
         } else if ( "file_URL".equals( qName ) ) {
             currentField = FILE_URL;
+        } else if ( "file".equals( qName ) ) {
+            currentField = FILE;
         } else if ( "file_lowres_URL".equals( qName ) ) {
             currentField = FILE_LOWRES_URL;
         } else if ( "film_reference".equals( qName ) ) {
@@ -153,7 +165,7 @@ public class SaxEventHandler extends DefaultHandler {
     private String temporaryCategory = "";
 
     /**
-     * method that gets invoked by the parser when a end element is discovered;
+     * method that gets invoked by the parser when an end element is discovered;
      * used here to go back to the parent group if a &lt;group&gt; tag is found.
      *
      * @param namespaceURI the URI
@@ -166,26 +178,18 @@ public class SaxEventHandler extends DefaultHandler {
                            final String qName // qualified name
     ) {
         if ( null != qName ) {
-            switch ( qName ) {
-                case "group":
-                    currentGroup = currentGroup.getParent();
-                    break;
-                case "file_lowres_URL":
-                    lowresUrls.append(LINE_SEPERATOR);
-                    break;
-                case "ROTATION":
-                    ( (PictureInfo) currentPicture.getUserObject() ).parseRotation();
-                    break;
-                case "LATLNG":
-                    ( (PictureInfo) currentPicture.getUserObject() ).parseLatLng();
-                    break;
-                case "categoryDescription":
-                    currentGroup.getPictureCollection().addCategory( Integer.parseInt( temporaryCategoryIndex ), temporaryCategory );
+            switch (qName) {
+                case "group" -> currentGroup = currentGroup.getParent();
+                case "file_lowres_URL" -> lowresUrls.append(LINE_SEPERATOR);
+                case "ROTATION" -> ((PictureInfo) currentPicture.getUserObject()).parseRotation();
+                case "LATLNG" -> ((PictureInfo) currentPicture.getUserObject()).parseLatLng();
+                case "categoryDescription" -> {
+                    currentGroup.getPictureCollection().addCategory(Integer.parseInt(temporaryCategoryIndex), temporaryCategory);
                     temporaryCategory = "";
-                    break;
-                default:
+                }
+                default -> {
                     //Nothing needs to be done on the other types of endElement
-                    break;
+                }
             }
         }
     }
@@ -205,6 +209,7 @@ public class SaxEventHandler extends DefaultHandler {
         switch (currentField) {
             case DESCRIPTION -> ((PictureInfo) currentPicture.getUserObject()).appendToDescription(readString);
             case FILE_URL -> ((PictureInfo) currentPicture.getUserObject()).appendToImageLocation(readString);
+            case FILE -> ((PictureInfo) currentPicture.getUserObject()).appendToImageFile(readString, baseDir);
             case FILE_LOWRES_URL -> lowresUrls.append(readString);
             case FILM_REFERENCE -> ((PictureInfo) currentPicture.getUserObject()).appendToFilmReference(readString);
             case CREATION_TIME -> ((PictureInfo) currentPicture.getUserObject()).appendToCreationTime(readString);
@@ -240,7 +245,7 @@ public class SaxEventHandler extends DefaultHandler {
     /**
      * Returns the collection.dtd definition as an InputSource.
      *
-     * @return The collection.dtd file
+     * @return The collection. dtd file
      * @throws IOException If something went wrong
      */
     public static InputSource getCollectionDtdInputSource() throws IOException {

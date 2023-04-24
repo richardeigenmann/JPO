@@ -56,7 +56,7 @@ public class JpoTransferable
     private final Collection<SortableDefaultMutableTreeNode> transferableNodes;
 
     /**
-     * Definition of the data flavor as a org.jpo internal object
+     * Definition of the data flavor as an org.jpo internal object
      */
     public static final DataFlavor jpoNodeFlavor = new DataFlavor(Object.class, "JpoTransferable");
 

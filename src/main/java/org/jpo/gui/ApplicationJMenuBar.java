@@ -11,9 +11,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 /*
- ApplicationJMenuBar.java:  main menu for the application
-
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,7 +47,7 @@ public class ApplicationJMenuBar extends JMenuBar {
     }
 
 
-    private class FileJMenu extends JMenu {
+    private static class FileJMenu extends JMenu {
 
         /**
          * Menu item that will request a File|New operation.
@@ -108,7 +106,12 @@ public class ApplicationJMenuBar extends JMenuBar {
         }
 
         private void setMenuVisibility() {
-            fileAddJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+            final var pictureCollection = Settings.getPictureCollection();
+            if (pictureCollection == null) {
+                return;
+            }
+            fileAddJMenuItem.setVisible(pictureCollection.getAllowEdits());
+
         }
 
         public FileJMenu() {
@@ -200,7 +203,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         }
     }
 
-    private class EditJMenu extends JMenu {
+    private static class EditJMenu extends JMenu {
         /**
          * Menu item that allows the user to set up his cameras.
          */
@@ -224,7 +227,11 @@ public class ApplicationJMenuBar extends JMenuBar {
         @Subscribe
         public void handleCollectionLockNotification(final CollectionLockNotification event) {
             setMenuVisibility();
-            if (Settings.getPictureCollection().getAllowEdits() ) {
+
+            final var pictureCollection = Settings.getPictureCollection();
+            if (pictureCollection == null) { return; }
+
+            if (pictureCollection.getAllowEdits() ) {
                 editModeJMenuItem.setText("Disable Editing");
             } else {
                 editModeJMenuItem.setText("Enable Editing");
@@ -232,7 +239,11 @@ public class ApplicationJMenuBar extends JMenuBar {
         }
 
         private void setMenuVisibility() {
-            editCamerasJMenuItem.setVisible(Settings.getPictureCollection().getAllowEdits());
+            final var pictureCollection = Settings.getPictureCollection();
+            if (pictureCollection == null) {
+                return;
+            }
+            editCamerasJMenuItem.setVisible(pictureCollection.getAllowEdits());
         }
 
         public EditJMenu() {
@@ -267,9 +278,9 @@ public class ApplicationJMenuBar extends JMenuBar {
 
     }
 
-    private class ActionJMenu extends JMenu {
+    private static class ActionJMenu extends JMenu {
         /**
-         * Menu item that will request a Action | Send Email
+         * Menu item that will request an Action | Send Email
          */
         private final JMenuItem emailJMenuItem = new JMenuItem();
 
@@ -311,7 +322,7 @@ public class ApplicationJMenuBar extends JMenuBar {
     }
 
 
-    private class ExtrasJMenu extends JMenu {
+    private static class ExtrasJMenu extends JMenu {
         /**
          * Menu item that calls the Check Directories item
          */
@@ -363,7 +374,7 @@ public class ApplicationJMenuBar extends JMenuBar {
             add(findDuplicatesJMenuItem);
 
             editCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
-            editCategoriesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
+            editCategoriesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest(Settings.getPictureCollection())));
             add(editCategoriesJMenuItem);
 
             startThumbnailCreationThreadJMenuItem.setMnemonic(KeyEvent.VK_T);
@@ -399,7 +410,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
     }
 
-    private class HelpJMenu extends JMenu {
+    private static class HelpJMenu extends JMenu {
 
 
         /**

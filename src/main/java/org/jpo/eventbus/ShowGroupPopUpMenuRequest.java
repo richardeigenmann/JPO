@@ -6,7 +6,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import java.awt.*;
 
 /*
- Copyright (C) 2019 - 2020 Richard Eigenmann, Zürich
+ Copyright (C) 2019 - 2023 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,5 +32,5 @@ import java.awt.*;
  * @author Richard Eigenmann
  */
 public record ShowGroupPopUpMenuRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull Component invoker,
-                                        @NotNull int x, @NotNull int y) {
+                                        int x, int y) {
 }

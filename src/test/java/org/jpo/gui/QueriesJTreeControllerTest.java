@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.jpo.datamodel.PictureCollection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2019, 2022  Richard Eigenmann, Zürich
+ Copyright (C) 2019, 2023 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,18 +30,19 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  */
 
 
-public class QueriesJTreeControllerTest {
+class QueriesJTreeControllerTest {
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
     @Test
     void testImageInitialisation() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final QueriesJTreeController c = new QueriesJTreeController();
+                final QueriesJTreeController c = new QueriesJTreeController(new PictureCollection());
                 assertNotNull(c);
             });
         } catch (final InterruptedException | InvocationTargetException ex) {

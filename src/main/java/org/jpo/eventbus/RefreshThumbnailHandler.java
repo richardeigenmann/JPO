@@ -42,25 +42,24 @@ public class RefreshThumbnailHandler {
      */
     @Subscribe
     public void handleEvent(final RefreshThumbnailRequest request) {
-        request.nodes().stream().forEach(this::refrehThumbnail);
+        request.nodes().forEach(this::refreshThumbnail);
         if (request.includeParents()) {
             request
                     .nodes()
                     .stream()
                     .map(SortableDefaultMutableTreeNode::getParent)
                     .distinct()
-                    .forEach(this::refrehThumbnail);
+                    .forEach(this::refreshThumbnail);
         }
     }
 
-    private boolean refrehThumbnail(SortableDefaultMutableTreeNode node) {
+    private void refreshThumbnail(final SortableDefaultMutableTreeNode node) {
         if (node.isRoot()) {
             LOGGER.fine("Ignoring the request for a thumbnail refresh on the Root Node as the query for it's parent's children will fail");
-            return true;
+            return;
         }
         LOGGER.log(Level.FINE, "refreshing the thumbnail on the node {0}%nAbout to create the thumbnail", this);
         final var thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
         thumbnailController.setNode(new SingleNodeNavigator(node), 0);
-        return false;
     }
 }

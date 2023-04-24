@@ -1,7 +1,7 @@
 package org.jpo.cache;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -30,5 +30,5 @@ public enum QUEUE_PRIORITY {
     /** Lower queue priority */
     LOW_PRIORITY,
     /** Lowest queue priority */
-    LOWEST_PRIORITY;
+    LOWEST_PRIORITY
 }

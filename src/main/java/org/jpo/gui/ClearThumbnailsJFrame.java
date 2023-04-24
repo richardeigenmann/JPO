@@ -224,9 +224,9 @@ public class ClearThumbnailsJFrame extends JFrame {
             if (parentDirectory != null && parentDirectory.canWrite() && Objects.requireNonNull(parentDirectory.list()).length == 0) {
                 try {
                     Files.delete(parentDirectory.toPath());
-                    publish(String.format("Parent directory %s successfully deleted%n", parentDirectory.toString()));
+                    publish(String.format("Parent directory %s successfully deleted%n", parentDirectory));
                 } catch (final IOException e) {
-                    publish(String.format("Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory.toString()));
+                    publish(String.format("Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory));
                 }
             }
         }

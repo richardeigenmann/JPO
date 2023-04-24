@@ -100,7 +100,7 @@ public class ListNavigator
     }
 
     /**
-     * Celars all nodes from the List
+     * Clears all nodes from the List
      */
     public void clear() {
         allPictures.clear();

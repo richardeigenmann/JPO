@@ -8,8 +8,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- GroupBrower.java:  an implementation of the NodeNavigator for browsing groups.
-
  Copyright (C) 2002-2022 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -54,8 +52,9 @@ public class GroupNavigator extends NodeNavigator {
      */
     private void setNode(final SortableDefaultMutableTreeNode node) {
         // deregister from prior TreeModelListener (could be that the new group is from a different tree)
-        if (myNode != null) {
-            myNode.getPictureCollection().getTreeModel().removeTreeModelListener(myTreeModelListener);
+        final var pictureCollection = node.getPictureCollection();
+        if (myNode != null && pictureCollection != null) {
+            myNode.getPictureCollection().removeTreeModelListener(myTreeModelListener);
         }
 
         // validate that we are dealing with a GroupInfo node
@@ -63,8 +62,10 @@ public class GroupNavigator extends NodeNavigator {
             myNode = null;
         } else {
             myNode = node;
-            // register this component so that it receives notifications from the Model
-            myNode.getPictureCollection().getTreeModel().addTreeModelListener( myTreeModelListener );
+            if ( pictureCollection != null ) {
+                // register this component so that it receives notifications from the Model
+                myNode.getPictureCollection().addTreeModelListener(myTreeModelListener);
+            }
         }
     }
 
@@ -136,8 +137,8 @@ public class GroupNavigator extends NodeNavigator {
 
         /**
          * This method is defined by the TreeModelListener interface and gives
-         * the GroupNavigator a notification that some nodes changed in a non
-         * dramatic way. The nodes that were changed have their Constraints
+         * the GroupNavigator a notification that some nodes changed in a non-dramatic
+         * way. The nodes that were changed have their Constraints
          * reevaluated and a revalidate is called to update the screen.
          *
          * @param treeModelEvent The event
@@ -161,7 +162,7 @@ public class GroupNavigator extends NodeNavigator {
          * This method is defined by the TreeModelListener interface and gives
          * the GroupNavigator a notification if additional nodes were inserted.
          * The additional nodes are added and the existing nodes are reevaluated
-         * as to whether they are at the right place. Revalidate is called to
+         * whether they are at the right place. Revalidate is called to
          * update the screen.
          *
          * @param treeModelEvent The event
@@ -183,7 +184,6 @@ public class GroupNavigator extends NodeNavigator {
         /**
          * This method is defined by the TreeModelListener interface and gives
          * the GroupNavigator a notification that some nodes were removed.
-         *
          * Case 1: the removal affected some other part of the tree. Result: we
          * don't care Case 2: the Group being shown was wiped off the tree.
          * Result: We reposition to the last node still in existence (could be
@@ -206,7 +206,7 @@ public class GroupNavigator extends NodeNavigator {
                 setNode((SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() );
                 notifyNodeNavigatorListeners();
             } else {
-                // don't get excited and force a relayout unless the partent of the deleted
+                // don't get excited and force a relayout unless the parent of the deleted
                 // node is the current group
                 final var myPath = new TreePath(myNode.getPath() );
                 if ( myPath.equals( treeModelEvent.getTreePath() ) ) {

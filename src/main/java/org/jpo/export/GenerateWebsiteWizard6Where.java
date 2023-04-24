@@ -19,6 +19,7 @@ import java.awt.event.FocusEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serial;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +27,7 @@ import java.util.logging.Logger;
 import static org.jpo.eventbus.GenerateWebsiteRequest.OutputTarget.*;
 
 /*
- Copyright (C) 2008-2020  Richard Eigenmann.
+ Copyright (C) 2008-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -107,7 +108,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
     /**
      * SSH Authentication Options
      */
-    private final JComboBox<String> sshAuthOoptionChooser = new JComboBox<>(SSH_AUTH_OPTIONS);
+    private final JComboBox<String> sshAuthOptionChooser = new JComboBox<>(SSH_AUTH_OPTIONS);
     /**
      * The ssh password
      */
@@ -233,12 +234,12 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         });
 
         wizardPanel.add(finalTarget, "wrap");
-        final String ALIGN_LABEL = "align label";
+        final var ALIGN_LABEL = "align label";
         wizardPanel.add(new JLabel(Settings.getJpoResources().getString("genericTargetDirText")), ALIGN_LABEL + ", wrap");
 
         wizardPanel.add(targetDirJTextField, "wrap");
 
-        final JButton checkButton = new JButton(Settings.getJpoResources().getString("check"));
+        final var checkButton = new JButton(Settings.getJpoResources().getString("check"));
         checkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         checkButton.setMaximumSize(Settings.getDefaultButtonDimension());
         checkButton.addActionListener((ActionEvent arg0) -> {
@@ -298,7 +299,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpPanel.add(ftpTargetDir,
                 "growx, wrap");
 
-        final JButton ftpTestJButton = new JButton("Test");
+        final var ftpTestJButton = new JButton("Test");
         ftpTestJButton.addActionListener((ActionEvent e) -> {
             String returnString = testFtpConnection();
             ftpError.setText(returnString);
@@ -308,7 +309,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         ftpPanel.add(ftpError,
                 "grow, spany2, wrap");
 
-        final JButton ftpMkdirJButton = new JButton("mkdir");
+        final var ftpMkdirJButton = new JButton("mkdir");
         ftpMkdirJButton.addActionListener((ActionEvent e) -> {
             String returnString = ftpMkdir();
             ftpError.setText(returnString);
@@ -348,13 +349,13 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPanel.add(sshUser,
                 "growx, wrap");
 
-        final JLabel sshPasswordLabel = new JLabel("SSH password:");
-        final JLabel sshKeyfileLabel = new JLabel("SSH keyfile:");
+        final var sshPasswordLabel = new JLabel("SSH password:");
+        final var sshKeyfileLabel = new JLabel("SSH keyfile:");
 
         sshPanel.add(
                 new JLabel("SSH Auth:"), ALIGN_LABEL);
-        sshAuthOoptionChooser.addActionListener((ActionEvent arg0) -> {
-            if (sshAuthOoptionChooser.getSelectedIndex() == 1) {
+        sshAuthOptionChooser.addActionListener((ActionEvent arg0) -> {
+            if (sshAuthOptionChooser.getSelectedIndex() == 1) {
                 sshPasswordLabel.setVisible(false);
                 sshPassword.setVisible(false);
                 sshKeyfileLabel.setVisible(true);
@@ -368,7 +369,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                 GenerateWebsiteWizard6Where.this.request.setSshAuthType(GenerateWebsiteRequest.SshAuthType.SSH_AUTH_PASSWORD);
             }
         });
-        sshPanel.add(sshAuthOoptionChooser,
+        sshPanel.add(sshAuthOptionChooser,
                 "wrap");
 
         sshPanel.add(sshPasswordLabel,
@@ -408,7 +409,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPanel.add(sshTargetDir,
                 "growx, wrap");
 
-        final JButton sshTestJButton = new JButton("Test");
+        final var sshTestJButton = new JButton("Test");
 
         sshTestJButton.addActionListener((ActionEvent e) -> testSshConnection());
         sshPanel.add(sshTestJButton,
@@ -422,7 +423,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPanel.add(sshMkdirJButton,
                 "align label, wrap");
 
-        final Font errorLabelFont = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
+        final var errorLabelFont = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
 
         sshError.setFont(errorLabelFont);
 
@@ -463,9 +464,9 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPort.setValue(request.getSshPort());
         sshUser.setText(request.getSshUser());
         if (request.getSshAuthType() == GenerateWebsiteRequest.SshAuthType.SSH_AUTH_KEYFILE) {
-            sshAuthOoptionChooser.setSelectedIndex(1);
+            sshAuthOptionChooser.setSelectedIndex(1);
         } else {
-            sshAuthOoptionChooser.setSelectedIndex(0);
+            sshAuthOptionChooser.setSelectedIndex(0);
         }
         sshPassword.setText(request.getSshPassword());
         sshTargetDir.setText(request.getSshTargetDir());
@@ -484,13 +485,13 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     private String executeSshCommand(final String command) {
         LOGGER.info("Testing ssh connection:");
-        String response = "";
+        var response = "";
         final JSch jsch = new JSch();
         try {
             final Session session = WebsiteGenerator.getSshSession(jsch, request);
 
             LOGGER.info("Opening Channel \"exec\"...");
-            final Channel channel = session.openChannel("exec");
+            final var channel = session.openChannel("exec");
             LOGGER.log(Level.INFO, "Setting command: {0}", command);
             ((ChannelExec) channel).setCommand(command);
 
@@ -528,8 +529,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     private String testFtpConnection() {
         LOGGER.info("Setting up ftp connection:");
-        String returnString = "Connection OK.";
-        final FTPClient ftp = new FTPClient();
+        var returnString = "Connection OK.";
+        final var ftp = new FTPClient();
         int reply;
         try {
             ftp.connect(request.getFtpServer(), request.getFtpPort());
@@ -568,8 +569,8 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     private String ftpMkdir() {
         LOGGER.info("Setting up ftp connection:");
-        String returnString = "Connection OK.";
-        final FTPClient ftp = new FTPClient();
+        var returnString = "Connection OK.";
+        final var ftp = new FTPClient();
         int reply;
         try {
             ftp.connect(request.getFtpServer(), request.getFtpPort());
@@ -608,10 +609,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
     /**
      * From
-     * http://stackoverflow.com/questions/2152742/java-swing-multiline-labels
+     * <a href="http://stackoverflow.com/questions/2152742/java-swing-multiline-labels">...</a>
      */
     private static class JMultilineLabel extends JTextArea {
 
+        @Serial
         private static final long serialVersionUID = 1L;
 
         JMultilineLabel() {

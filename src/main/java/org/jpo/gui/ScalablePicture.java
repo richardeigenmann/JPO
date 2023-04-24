@@ -30,9 +30,7 @@ import java.util.logging.Logger;
 import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.*;
 
 /*
- ScalablePicture.java:  class that can load and save images
-
- Copyright (C) 2002 - 2022  Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -169,11 +167,9 @@ public class ScalablePicture
      * and scaled in a new thread. This is handy to update the screen while the
      * loading chugs along in the background. Make sure you invoked
      * setScaleFactor or setScaleSize before invoking this method.
-     *
      * Step 1: Am I already loading what I need somewhere? If yes -&gt; use it.
      * Has it finished loading? If no -&gt; wait for it If yes -&gt; use it Else
      * -&gt; load it
-     *
      * @param file	The URL of the image you want to load
      * @param priority	The Thread priority
      * @param rotation	The rotation 0-360 that the image should be put through
@@ -194,7 +190,6 @@ public class ScalablePicture
 
     /**
      * Loads the image on the current thread. Doesn't send status updates.
-     *
      * @param imageFile The image File to be loaded
      * @param rotation  The angle by which it is to be rotated upon loading.
      */
@@ -226,7 +221,7 @@ public class ScalablePicture
     /**
      * method that is invoked by the SourcePictureListener interface. Usually
      * this will be called by the SourcePicture telling the ScalablePicture that
-     * it has completed loading. The ScalablePicture should then change it's own
+     * it has completed loading. The ScalablePicture should then change its own
      * status and tell the ScalableListeners what's up.
      *
      * @param statusCode status code
@@ -237,33 +232,28 @@ public class ScalablePicture
     public void sourceStatusChange( final SourcePictureStatus statusCode, final String statusMessage,
             final SourcePicture sp ) {
 
-        switch ( statusCode ) {
-            case SOURCE_PICTURE_UNINITIALISED:
-                setStatus( SCALABLE_PICTURE_UNINITIALISED, statusMessage );
-                break;
-            case SOURCE_PICTURE_ERROR:
-                setStatus( SCALABLE_PICTURE_ERROR, statusMessage );
-                sourcePicture.removeListener( this );
-                break;
-            case SOURCE_PICTURE_LOADING, SOURCE_PICTURE_ROTATING:
-                setStatus( SCALABLE_PICTURE_LOADING, statusMessage );
-                break;
-            case SOURCE_PICTURE_READY:
-                setStatus( SCALABLE_PICTURE_LOADED, statusMessage );
-                sourcePicture.removeListener( this );
-                if ( scaleAfterLoad ) {
-                    createScaledPictureInThread( Thread.MAX_PRIORITY );
+        switch (statusCode) {
+            case SOURCE_PICTURE_UNINITIALISED -> setStatus(SCALABLE_PICTURE_UNINITIALISED, statusMessage);
+            case SOURCE_PICTURE_ERROR -> {
+                setStatus(SCALABLE_PICTURE_ERROR, statusMessage);
+                sourcePicture.removeListener(this);
+            }
+            case SOURCE_PICTURE_LOADING, SOURCE_PICTURE_ROTATING -> setStatus(SCALABLE_PICTURE_LOADING, statusMessage);
+            case SOURCE_PICTURE_READY -> {
+                setStatus(SCALABLE_PICTURE_LOADED, statusMessage);
+                sourcePicture.removeListener(this);
+                if (scaleAfterLoad) {
+                    createScaledPictureInThread(Thread.MAX_PRIORITY);
                     scaleAfterLoad = false;
                 }
-                break;
-            default:
-                break;
-
+            }
+            default -> {
+            }
         }
     }
 
     /**
-     * method that creates the scaled image in the background in it's own
+     * method that creates the scaled image in the background in its own
      * thread.
      *
      * @param priority The priority this image takes relative to the others.
@@ -282,8 +272,6 @@ public class ScalablePicture
 
     /**
      * call this method when the affine transform op is to be executed.
-     *
-     *
      */
     public void scalePicture() {
         LOGGER.fine( "scaling..." );
@@ -345,7 +333,7 @@ public class ScalablePicture
 
     private int getAffineTransformOp() {
                  /* note that I have tried to use other AffineTransformOps such as TYPE_BILINEAR and
-                 TYPE_BICUBIC. Only they don't work as they muck about with the color channels
+                 TYPE_BICUBIC. Only they don't work as they muck about with the color channels,
                  and we end up with a non JFIF compliant JPEG image. This doesn't display well
                  in most programs which makes this format useless. This is thoroughly explained
                  in the following article. The workaround doesn't work though.
@@ -428,7 +416,7 @@ public class ScalablePicture
 
     /**
      * return the current scale size. This is the area that the picture is
-     * fitted into. Since the are could be wider or taller than the picture will
+     * fitted into. Since the area could be wider or taller than the picture will
      * be scaled to there is a different method <code>getScaledSize</code> that
      * will return the size of the picture.
      *

@@ -53,17 +53,6 @@ public class GroupInfoChangeEvent {
     }
 
 
-    /**
-     * toString method that returns the description of the group
-     *
-     * @return The description of the group
-     *
-     @Override
-    public String toString() {
-        return "This is a GroupInfoChangeEvent from " + groupInfo;
-    }
-    */
-
 //-----------------
     /**
      *  indicates whether the description was changed.

@@ -5,8 +5,8 @@ import java.awt.*;
 
 /**
  * FlowLayout subclass that fully supports wrapping of components.
- * Origin: http://www.camick.com/java/source/WrapLayout.java
- * Described https://tips4java.wordpress.com/2008/11/06/wrap-layout/
+ * Origin: <a href="http://www.camick.com/java/source/WrapLayout.java">...<a href="</a>
+ ">* Described https://tips4java.wordpress.com/2008/</a>11/06/wrap-layout/
  */
 public class WrapLayout extends FlowLayout {
 
@@ -80,7 +80,7 @@ public class WrapLayout extends FlowLayout {
      * container.
      *
      * @param target    target to get layout size for
-     * @param preferred should preferred size be calculated
+     * @param preferred the preferred size be calculated
      * @return the dimension to layout the target container
      */
     private Dimension layoutSize(final Container target, final boolean preferred) {

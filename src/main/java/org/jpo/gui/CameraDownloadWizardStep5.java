@@ -7,14 +7,13 @@ import org.jpo.datamodel.SortOption;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
 CameraDownloadWizardStep5.java: the fourth step in the download from Camera Wizard
 
-Copyright (C) 2007 - 2022  Richard Eigenmann.
+Copyright (C) 2007 - 2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -56,7 +55,7 @@ public class CameraDownloadWizardStep5
 
 
     /**
-     *  Returns the component that visualises the user interactable stuff for this step of the wizard.
+     *  Returns the component that visualises the user widgets for this step of the wizard.
      * @return the component
      */
     @Override
@@ -69,9 +68,9 @@ public class CameraDownloadWizardStep5
         stepComponent.add( Box.createVerticalGlue() );
 
 
-        final List<SortOption> sortOptions = Settings.getSortOptions();
-        final JComboBox <SortOption> sortChoice = new JComboBox<>( sortOptions.toArray( new SortOption[0]) );
-        for ( int i = 0; i < sortOptions.size(); i++ ) {
+        final var sortOptions = Settings.getSortOptions();
+        final var sortChoice = new JComboBox<>( sortOptions.toArray( new SortOption[0]) );
+        for ( var i = 0; i < sortOptions.size(); i++ ) {
             if ( sortOptions.get(i).getSortCode() == dataModel.getSortCode() ) {
                 sortChoice.setSelectedIndex( i );
                 break;
@@ -81,8 +80,8 @@ public class CameraDownloadWizardStep5
         sortChoice.setMaximumSize( new Dimension( 220, 30 ) );
         stepComponent.add( sortChoice );
         sortChoice.addActionListener(( ActionEvent e ) -> {
-            final JComboBox<SortOption> cb = (JComboBox<SortOption>) e.getSource();
-            SortOption sortOption = (SortOption) cb.getSelectedItem();
+            final var sortOptionJComboBox = (JComboBox<SortOption>) e.getSource();
+            var sortOption = (SortOption) sortOptionJComboBox.getSelectedItem();
             if ( sortOption == null ) {
                 sortOption = sortOptions.get(3); // by creation time
             }

@@ -54,13 +54,10 @@ public interface PictureControllerImage {
      * Set the scale factor to the new desired value. The scale factor is a
      * multiplier by which the original picture needs to be multiplied to get
      * the size of the picture on the screen.
-     *
-     * The image should only be scaled when 
+     * The image should only be scaled when
      * {@link #createScaledPictureInThread(int)} is called.<p>
-     *
      * Example: Original is 3000 x 2000 --&gt; Scale Factor 0.10 --&gt; Target Picture
      * is 300 x 200
-     *
      * @param newFactor new facture
      */
     void setScaleFactor(final double newFactor);

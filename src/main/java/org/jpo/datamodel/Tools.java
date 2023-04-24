@@ -144,12 +144,12 @@ public class Tools {
 
 
     /**
-     * method to copy any file from a source stream to a output stream
+     * method to copy any file from a source stream to an output stream
      *
      * @param bin  Buffered Input Stream
      * @param bout Buffered Output Stream
      * @return the crc of the file
-     * @throws IOException Exception of error
+     * @throws IOException Exception if things went wrong
      */
     public static long copyBufferedStream(final BufferedInputStream bin,
                                           final BufferedOutputStream bout)

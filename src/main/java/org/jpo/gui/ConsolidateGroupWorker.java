@@ -8,10 +8,8 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
-import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -21,7 +19,7 @@ import static org.apache.commons.io.FileUtils.moveFile;
 import static org.jpo.datamodel.Tools.warnOnEDT;
 
 /*
- Copyright (C) 2002 - 2020  Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -113,7 +111,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
 
     @Override
     protected void done() {
-        final String done = String.format(Settings.getJpoResources().getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
+        final var done = String.format(Settings.getJpoResources().getString("ConsolidateProgBarDone"), consolidatedCount, movedCount);
         progGui.setDoneString(done);
         progGui.switchToDoneMode();
 
@@ -140,23 +138,23 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param groupNode the Group whose nodes are to be consolidated.
      */
     private void consolidateGroup(final SortableDefaultMutableTreeNode groupNode) {
-        final List<SortableDefaultMutableTreeNode> nodes = groupNode.getChildPictureNodes(recurseGroups);
+        final var nodes = groupNode.getChildPictureNodes(recurseGroups);
         LOGGER.log(Level.INFO, "List Size: {0}", nodes.size());
         nodes.forEach(node -> {
-            final PictureInfo pictureInfo = (PictureInfo) node.getUserObject();
+            final var pictureInfo = (PictureInfo) node.getUserObject();
             consolidatedCount++;
             LOGGER.info("node: " + pictureInfo.toString());
             if (needToMovePicture(pictureInfo, targetDirectory)) {
                 if (movePicture(pictureInfo, targetDirectory)) {
                     movedCount++;
-                    LOGGER.info(String.format("Successfully Moved Highres file of node %s", pictureInfo.toString()));
-                    publish(String.format("Consolidated node: %s", node.toString() ) );
+                    LOGGER.info(String.format("Successfully Moved Highres file of node %s", pictureInfo));
+                    publish(String.format("Consolidated node: %s", node) );
                 } else {
-                    LOGGER.severe( String.format( "Could not move highres picture of node %s. Aborting.", node.toString() ) );
+                    LOGGER.severe( String.format( "Could not move highres picture of node %s. Aborting.", node) );
                     errorCount++;
                 }
             } else {
-                publish( String.format( "No need to move node: %s", node.toString() ) );
+                publish( String.format( "No need to move node: %s", node) );
             }
         } );
     }
@@ -169,7 +167,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @return True if a move is needed False if not.
      */
     public static boolean needToMovePicture( @NonNull final PictureInfo pictureInfo, @NonNull final File targetDirectory ) {
-        final File parentDirectory = Objects.requireNonNull(pictureInfo.getImageFile().getParentFile());
+        final var parentDirectory = Objects.requireNonNull(pictureInfo.getImageFile().getParentFile());
         return ! parentDirectory.equals( targetDirectory );
     }
 
@@ -185,13 +183,13 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
         Objects.requireNonNull(pictureInfo);
         Objects.requireNonNull(targetDirectory);
 
-        final File pictureFile = pictureInfo.getImageFile();
+        final var pictureFile = pictureInfo.getImageFile();
 
         if (!isInTargetDirectory(targetDirectory, pictureFile)) {
 
             // make sure that we get a new filename. Some cameras might keep reusing the name DSC_01234.jpg
             // over and over again which would overwrite pictures in the worst case.
-            final File newFile = Tools.inventFilename(targetDirectory, pictureInfo.getImageFile().getName());
+            final var newFile = Tools.inventFilename(targetDirectory, pictureInfo.getImageFile().getName());
             try {
                 moveFile(pictureFile, newFile);
             } catch (final IOException ex) {
@@ -205,7 +203,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     }
 
     private static boolean isInTargetDirectory(@NotNull File targetDirectory, File pictureFile) {
-        final File parentDirectory = pictureFile.getParentFile();
+        final var parentDirectory = pictureFile.getParentFile();
         return ((parentDirectory != null) && (parentDirectory.equals(targetDirectory)));
     }
 
@@ -219,17 +217,15 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     private static void correctReferences(final File oldReference, final File newReference) {
         warnOnEDT();
         //  search for other picture nodes in the tree using this image file
-        SortableDefaultMutableTreeNode node;
-        Object nodeObject;
-        int count = 0;
-        final Enumeration<TreeNode> e = Settings.getPictureCollection().getRootNode().preorderEnumeration();
-        while ( e.hasMoreElements()) {
-            node = (SortableDefaultMutableTreeNode) e.nextElement();
-            nodeObject = node.getUserObject();
-            if (nodeObject instanceof PictureInfo pi) {
-                final File imageFile = pi.getImageFile();
+        var count = 0;
+        final var enumeration = Settings.getPictureCollection().getRootNode().preorderEnumeration();
+        while ( enumeration.hasMoreElements()) {
+            final var node = (SortableDefaultMutableTreeNode) enumeration.nextElement();
+            final var nodeObject = node.getUserObject();
+            if (nodeObject instanceof PictureInfo pictureInfo) {
+                final var imageFile = pictureInfo.getImageFile();
                 if (imageFile != null && imageFile.equals(oldReference)) {
-                    pi.setImageLocation(newReference);
+                    pictureInfo.setImageLocation(newReference);
                     count++;
                 }
             }

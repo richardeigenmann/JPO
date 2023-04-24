@@ -3,9 +3,7 @@ package org.jpo.datamodel;
 import org.jpo.datamodel.Settings.FieldCodes;
 
 /*
-SortOption.java:  a String, int object that helps with the sortoptions
-
-Copyright (C) 2002, 2020  Richard Eigenmann.
+Copyright (C) 2002, 2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -20,7 +18,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * A class that holds a description of what will be sorted and it's key
+ * A class that holds a description of what will be sorted, and it's key
  * @author  Richard Eigenmann
  */
 public class SortOption {

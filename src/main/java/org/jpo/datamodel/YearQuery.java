@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,9 +8,7 @@ import java.util.List;
 
 
 /*
- YearQuery.java:  The parameters for a search
-
- Copyright (C) 2014-2022 Richard Eigenmann.
+ Copyright (C) 2014-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,10 +32,11 @@ public class YearQuery implements Serializable, Query {
     /**
      * Keep serialisation happy
      */
+    @Serial
     private static final long serialVersionUID = 1;
 
     /**
-     * This flag indicates whether dates that can't be parsed should be treaded
+     * This flag indicates whether dates that can't be parsed should be treated
      * as matches or fails
      */
     private boolean includeNullDates;  // default is false
@@ -186,7 +186,7 @@ public class YearQuery implements Serializable, Query {
     }
 
     /**
-     * Forces the query to re-executed
+     * Forces the query to be re-executed
      */
     @Override
     public void refresh() {
@@ -201,16 +201,13 @@ public class YearQuery implements Serializable, Query {
      * @return true if the node matches the query, false if not.
      */
     public boolean isMatch(final SortableDefaultMutableTreeNode n) {
-        var nodeObject = n.getUserObject();
-        if (!(nodeObject instanceof PictureInfo)) {
-            // it's not a pictureInfo node so it can't be a match.
+        if (!(n.getUserObject() instanceof final PictureInfo pictureInfo)) {
+            // it's not a pictureInfo node, so it can't be a match.
             return false;
         }
 
-        final var pictureInfo = (PictureInfo) nodeObject;
-
         var match = true;
-        Calendar testNodeDate = pictureInfo.getCreationTimeAsDate();
+        final var testNodeDate = pictureInfo.getCreationTimeAsDate();
         if ( lowerDateRange != null ) {
             // test for the lower date range
             if ( testNodeDate == null ) {
@@ -242,7 +239,7 @@ public class YearQuery implements Serializable, Query {
     }
 
     /**
-     * returns a the title for the search that can be used to display the search
+     * returns the title for the search that can be used to display the search
      * results under.
      */
     @Override

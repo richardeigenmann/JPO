@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,8 +23,7 @@ import java.util.logging.Logger;
  */
 /**
  * This is basically a JFrame which understands how to resize itself to a
- * specific {
- * <p>
+ * specific <p>
  * {@link WindowSize} and can switch on and off the window decorations (which
  * requires disposing of the window and redrawing itself).
  */
@@ -113,7 +112,7 @@ public class ResizableJFrame
     private boolean decorateWindow = true;
 
     /**
-     * request that the window showing the picture be changed be changed.
+     * request that the window showing the picture be changed
      *
      * @param newMode {@link WindowSize#WINDOW_UNDECORATED_FULLSCREEN}, {@link WindowSize#WINDOW_UNDECORATED_LEFT},
      *                {@link WindowSize#WINDOW_UNDECORATED_RIGHT},  {@link WindowSize#WINDOW_TOP_LEFT},
@@ -130,14 +129,12 @@ public class ResizableJFrame
 
         switch (newMode) {
             case WINDOW_UNDECORATED_FULLSCREEN, WINDOW_DECORATED_FULLSCREEN -> maximise();
-            case WINDOW_DECORATED_PRIMARY -> setBounds(ScreenHelper.getBottomLeftScreenBounds());
-            case WINDOW_DECORATED_SECONDARY -> setBounds(ScreenHelper.getBottomRightScreenBounds());
+            case WINDOW_DECORATED_PRIMARY, WINDOW_BOTTOM_LEFT -> setBounds(ScreenHelper.getBottomLeftScreenBounds());
+            case WINDOW_DECORATED_SECONDARY, WINDOW_BOTTOM_RIGHT -> setBounds(ScreenHelper.getBottomRightScreenBounds());
             case WINDOW_UNDECORATED_LEFT -> setBounds(ScreenHelper.getLeftScreenBounds());
             case WINDOW_UNDECORATED_RIGHT -> setBounds(ScreenHelper.getRightScreenBounds());
             case WINDOW_TOP_LEFT -> setBounds(ScreenHelper.getTopLeftScreenBounds());
             case WINDOW_TOP_RIGHT -> setBounds(ScreenHelper.getTopRightScreenBounds());
-            case WINDOW_BOTTOM_LEFT -> setBounds(ScreenHelper.getBottomLeftScreenBounds());
-            case WINDOW_BOTTOM_RIGHT -> setBounds(ScreenHelper.getBottomRightScreenBounds());
             case WINDOW_CUSTOM_SIZE_MAIN_FRAME -> setBounds(Settings.getLastMainFrameCoordinates());
             case WINDOW_CUSTOM_SIZE_LAST_VIEWER -> setBounds(Settings.getLastViewerCoordinates());
             // no default is deliberate
@@ -171,7 +168,7 @@ public class ResizableJFrame
     /**
      * Resizes the screen to the specified size after un-maximising it.
      * Unlike the method it is overriding, it calls validate directly so
-     * the caller doesn't have to. Also it calls unMaximise().
+     * the caller doesn't have to. Also, it calls unMaximise().
      *
      * @param targetSize The dimension you want the Frame to have
      */

@@ -22,7 +22,7 @@ import static com.drew.metadata.exif.ExifDirectoryBase.*;
 /*
  ExifInfo.java: This class interacts with Drew Noake's library and extracts the Exif information
 
- Copyright (C) 2002-2022  Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -244,22 +244,12 @@ public class ExifInfo {
                 camera = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, TAG_MODEL, camera ), " " );
                 final String rotationString = StringUtils.stripEnd(tryToGetTag(exifSubIFD0directory, TAG_ORIENTATION, ""), " ");
 
-                switch ( rotationString ) {
-                    case "Top, left side (Horizontal / normal)":
-                        rotation = 0;
-                        break;
-                    case "Right side, top (Rotate 90 CW)":
-                        rotation = 90;
-                        break;
-                    case "Left side, bottom (Rotate 270 CW)":
-                        rotation = 270;
-                        break;
-                    case "Bottom, right side (Rotate 180)":
-                        rotation = 180;
-                        break;
-                    default:
-                        rotation = 0;
-                        break;
+                switch (rotationString) {
+                    case "Top, left side (Horizontal / normal)" -> rotation = 0;
+                    case "Right side, top (Rotate 90 CW)" -> rotation = 90;
+                    case "Left side, bottom (Rotate 270 CW)" -> rotation = 270;
+                    case "Bottom, right side (Rotate 180)" -> rotation = 180;
+                    default -> rotation = 0;
                 }
 
             }

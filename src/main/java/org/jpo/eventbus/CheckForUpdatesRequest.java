@@ -17,8 +17,6 @@ package org.jpo.eventbus;
  */
 
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * This request asks the handler to check whether there is a new version of
  * the application available. If so it presents a dialog box offering to take
@@ -28,5 +26,5 @@ import org.jetbrains.annotations.NotNull;
  * @param forceCheck set to true if the check should bypass the snooze period check and the neverCheck flag
  * @author Richard Eigenmann
  */
-public record CheckForUpdatesRequest(@NotNull boolean forceCheck) {
+public record CheckForUpdatesRequest(boolean forceCheck) {
 }

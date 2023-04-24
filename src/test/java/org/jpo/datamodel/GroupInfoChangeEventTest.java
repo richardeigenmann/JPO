@@ -9,6 +9,10 @@ class GroupInfoChangeEventTest {
     @Test
     void testChangingGroupName() {
         final var groupInfo = new GroupInfo("GroupInfo");
+        final var node = new SortableDefaultMutableTreeNode(groupInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
+
         final int[] count = new int[1];
         final GroupInfoChangeListener groupInfoChangeListener = groupInfoChangeEvent -> {
             count[0]++;

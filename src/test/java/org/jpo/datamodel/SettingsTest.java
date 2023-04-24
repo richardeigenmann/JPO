@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2022 Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -94,7 +94,7 @@ class SettingsTest {
      */
     @Test
     void testReadWriteSettingsLocale() {
-        // load the settings first or we have uninitialised objects which crash the writing
+        // load the settings first, or we have uninitialised objects which crash the writing
         Settings.loadSettings();
         // memorise the locale so that we can write it back in the end
         final Locale saveLocale = Settings.getCurrentLocale();

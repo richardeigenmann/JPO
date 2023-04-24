@@ -6,7 +6,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import java.io.File;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,9 +26,9 @@ import java.io.File;
  *
  * @param node             The node to consolidate
  * @param targetDir        the target directory.
- * @param recurseSubgroups whether to recurse into sub groups
+ * @param recurseSubgroups whether to recurse into subgroups
  * @author Richard Eigenmann
  */
 public record ConsolidateGroupRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull File targetDir,
-                                      @NotNull boolean recurseSubgroups) {
+                                      boolean recurseSubgroups) {
 }

@@ -12,9 +12,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /*
- PictureFrame.java:  Class that manages the frame and display of the Picture
-
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,7 +47,7 @@ public class PictureFrame {
      */
     private final JPanel viewerPanel;
     /**
-     * The Window in which the viewer will place it's components.
+     * The Window in which the viewer will place its components.
      */
     private final ResizableJFrame myJFrame;
     /**
@@ -66,7 +64,7 @@ public class PictureFrame {
      */
     public PictureFrame() {
         viewerPanel = new JPanel();
-        inittializeGui();
+        initializeGui();
         myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"));
         myJFrame.getContentPane().add(viewerPanel);
         myJFrame.pack();
@@ -111,7 +109,7 @@ public class PictureFrame {
      * This method creates all the GUI widgets and connects them for the
      * PictureViewer.
      */
-    private void inittializeGui() {
+    private void initializeGui() {
         Tools.checkEDT();
 
         viewerPanel.setBackground(Settings.getPictureviewerBackgroundColor());
@@ -207,7 +205,7 @@ public class PictureFrame {
     /**
      * Returns the resizeable frame object
      *
-     * @return the fram object
+     * @return the frame object
      */
     public ResizableJFrame getResizableJFrame() {
         return myJFrame;

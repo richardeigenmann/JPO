@@ -1,6 +1,5 @@
 package org.jpo.datamodel;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -11,7 +10,7 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
-Copyright (C) 2002-2022  Richard Eigenmann.
+Copyright (C) 2002-2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,7 +27,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 class MimeTypesTest {
 
-    private static Logger LOGGER = Logger.getLogger(MimeTypesTest.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(MimeTypesTest.class.getName());
 
     @Test
     void testGetMimeType() {
@@ -198,6 +197,17 @@ class MimeTypesTest {
     }
 
     @Test
+    void hdrIsAPicture() {
+        try {
+            final var image = "memorial_o876.hdr";
+            final var imageFile = new File(this.getClass().getClassLoader().getResource(image).toURI());
+            assert (MimeTypes.isAPicture(imageFile));
+        } catch (final URISyntaxException e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
     void pngIsAPicture() {
         try {
             final var image = "png.png";
@@ -239,7 +249,6 @@ class MimeTypesTest {
     }
 
     @Test
-    @Disabled("Travis doesn't like it")
     void sgiIsAPicture() {
         try {
             final var image = "sgi.sgi";
@@ -252,7 +261,6 @@ class MimeTypesTest {
     }
 
     @Test
-    @Disabled("Travis doesn't like it")
     void tgaIsAPicture() {
         try {
             final var image = "tga.tga";
@@ -318,7 +326,7 @@ class MimeTypesTest {
         }
     }
     @Test
-    void pdfIsADocumnet() {
+    void pdfIsADDocument() {
         try {
             final var PDF_DOCUMENT = "pdf-document.pdf";
             final var pdfDocument = new File(this.getClass().getClassLoader().getResource(PDF_DOCUMENT).toURI());

@@ -12,7 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /*
-Copyright (C) 2002 - 2020 Richard Eigenmann.
+Copyright (C) 2002 - 2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -108,7 +108,7 @@ public class PrivacyJFrame
 
     /**
      * A Controller that handles the clicks on the buttons of the Privacy JFrame.
-     * Implemented as an inner class as it is quite specific to the GUI but
+     * Implemented as an inner class as it is quite specific to the GUI, but
      * I wanted to maintain a semblance of MVC.
      */
     private static class PrivacyController {
@@ -127,7 +127,7 @@ public class PrivacyJFrame
         /**
          * Handles a click on the clear selected button.
          * @param clearRecentFiles  Whether to clear the recent files of not
-         * @param clearAutoload  Whether to clear the Autoload 
+         * @param clearAutoload  Whether to clear Autoload
          * @param clearMemorisedDirs  Whether to clear the memorised locations
          */
         public void clearSelected( final boolean clearRecentFiles,

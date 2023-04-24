@@ -2,7 +2,6 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -11,7 +10,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,9 +40,9 @@ public class CopyPathToClipboardHandler {
     public void handleEvent(final CopyPathToClipboardRequest request) {
         final var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         final var sb = new StringBuilder();
-        for (final SortableDefaultMutableTreeNode s : request.nodes()) {
-            if (s.getUserObject() instanceof PictureInfo pi) {
-                sb.append(pi.getImageFile().getAbsoluteFile().toString());
+        for (final var node : request.nodes()) {
+            if (node.getUserObject() instanceof PictureInfo pictureInfo) {
+                sb.append(pictureInfo.getImageFile().getAbsoluteFile());
                 sb.append(System.lineSeparator());
             }
         }

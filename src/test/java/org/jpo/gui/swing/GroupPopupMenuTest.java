@@ -2,6 +2,7 @@ package org.jpo.gui.swing;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,8 +35,7 @@ class GroupPopupMenuTest {
     }
 
 
-    private final GroupInfo myGroupInfo = new GroupInfo("My Group");
-    private final SortableDefaultMutableTreeNode myNode = new SortableDefaultMutableTreeNode(myGroupInfo);
+
     private GroupPopupMenu myGroupPopupMenu;
     private JMenuItem showGroup;
     private JMenuItem showPictures;
@@ -60,7 +60,11 @@ class GroupPopupMenuTest {
 
         try {
             SwingUtilities.invokeAndWait(() -> {
-                myGroupPopupMenu = new GroupPopupMenu(myNode);
+                final var groupInfo = new GroupInfo("My Group");
+                final var node = new SortableDefaultMutableTreeNode(groupInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+                myGroupPopupMenu = new GroupPopupMenu(node);
                 showGroup = (JMenuItem) myGroupPopupMenu.getComponent(0);
                 showPictures = (JMenuItem) myGroupPopupMenu.getComponent(1);
                 refreshIcon = (JMenuItem) myGroupPopupMenu.getComponent(3);
@@ -96,9 +100,9 @@ class GroupPopupMenuTest {
                     final Field popupNodeField;
                     popupNodeField = GroupPopupMenu.class.getDeclaredField("popupNode");
                     popupNodeField.setAccessible(true);
-                    final SortableDefaultMutableTreeNode verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get(myGroupPopupMenu);
-                    final GroupInfo verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
-                    assertEquals(myGroupInfo, verifyGroupInfo);
+                    final var verifyNode = (SortableDefaultMutableTreeNode) popupNodeField.get(myGroupPopupMenu);
+                    final var verifyGroupInfo = (GroupInfo) verifyNode.getUserObject();
+                    assertEquals(myGroupPopupMenu.getPopupNode().getUserObject(), verifyGroupInfo);
                 } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException ex) {
                     Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
                     fail("Should not have hit the catch statement");
@@ -116,9 +120,7 @@ class GroupPopupMenuTest {
     void testGetChildrenShowGroup() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait(() -> {
-                assertEquals("Show Group", showGroup.getText());
-            });
+            SwingUtilities.invokeAndWait(() -> assertEquals("Show Group", showGroup.getText()));
         } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
@@ -130,9 +132,7 @@ class GroupPopupMenuTest {
     void testGetChildrenShowPictures() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            SwingUtilities.invokeAndWait(() -> {
-                assertEquals("Show Pictures", showPictures.getText());
-            });
+            SwingUtilities.invokeAndWait(() -> assertEquals("Show Pictures", showPictures.getText()));
         } catch (final InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(GroupPopupMenuTest.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();

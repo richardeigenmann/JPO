@@ -2,32 +2,47 @@ package org.jpo.datamodel;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
-import org.xml.sax.InputSource;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
+
+/*
+ Copyright (C) 2023 Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
 
 /**
  *
  * @author Richard Eigenmann
  */
-public class SaxEventHandlerTest {
+class SaxEventHandlerTest {
 
     /**
      * Jpo uses the dtd file in the classpath. As this can go missing if the
      * build is poor this unit test checks whether it is there
      */
     @Test
-    public void testGetCollectionDtdInputSource() {
+    void testGetCollectionDtdInputSource() {
         try {
-            InputSource inputSource = SaxEventHandler.getCollectionDtdInputSource();
+            final var inputSource = SaxEventHandler.getCollectionDtdInputSource();
             assertNotNull(inputSource);
 
-            try (final InputStream is = inputSource.getByteStream()) {
-                final String dtdDocument = IOUtils.toString(is, "UTF-8");
+            try (final var inputSourceByteStream = inputSource.getByteStream()) {
+                final var dtdDocument = IOUtils.toString(inputSourceByteStream, StandardCharsets.UTF_8);
                 assert (dtdDocument.contains("collection"));
             }
 

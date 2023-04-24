@@ -27,7 +27,7 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_IN
 /*
  ThumbnailDescriptionController.java:  class that creates a panel showing the description of a thumbnail
 
- Copyright (C) 2002-2022  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -74,7 +74,7 @@ public class ThumbnailDescriptionController
     /**
      * Tracks whether to show the filename or not
      */
-    private Boolean showFilenameState = Settings.isShowFilenamesOnThumbnailPanel();
+    private final Boolean showFilenameState = Settings.isShowFilenamesOnThumbnailPanel();
 
     /**
      * Construct a new ThumbnailDescriptionJPanel
@@ -240,9 +240,9 @@ public class ThumbnailDescriptionController
             final Collection<Integer> categories = pi.getCategoryAssignments();
             if (categories != null) {
                 categories.forEach(category -> {
-                    final var categoryDescription = Settings.getPictureCollection().getCategory(category);
+                    final var categoryDescription = referringNode.getPictureCollection().getCategory(category);
                     final var categoryButton = new CategoryButton(categoryDescription);
-                    panel.addToCategopriesJPanel(categoryButton);
+                    panel.addToCategoriesJPPanel(categoryButton);
                     categoryButton.addRemovalListener(e ->
                             JpoEventBus.getInstance().post(
                                     new RemoveCategoryFromPictureInfoRequest(category, pi)
@@ -310,7 +310,11 @@ public class ThumbnailDescriptionController
      * the selection
      */
     public void showSelectionStatus() {
-        panel.showAsSelected(Settings.getPictureCollection().isSelected(referringNode));
+        if (referringNode != null && referringNode.getPictureCollection() != null) {
+            panel.showAsSelected(referringNode.getPictureCollection().isSelected(referringNode));
+        } else {
+            panel.showAsSelected(false);
+        }
     }
 
     /**

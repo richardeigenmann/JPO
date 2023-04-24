@@ -718,7 +718,7 @@ public class JpoResources_de extends ListResourceBundle {
             {"VersionUpdate.outdatedMessage", """
                     <html><body>
                     Sie verwenden die Version %s
-                    von JPO.<br>Die aktuelle Version ist %s 
+                    von JPO.<br>Die aktuelle Version ist %s
                     <br>Möchten Sie die Webseite <br>
                     <a href="%s">%s</a><br> öffnen, von der aus Sie aktualisieren können?
                     </body></html>"""},

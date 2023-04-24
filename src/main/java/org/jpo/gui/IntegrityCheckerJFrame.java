@@ -12,9 +12,7 @@ import java.util.logging.Logger;
 
 
 /*
- IntegrityCheckerJFrame.java:  creates a frame and checks the integrity of the collection
-
- Copyright (C) 2002-2022  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2023 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,8 +30,6 @@ import java.util.logging.Logger;
 /**
  * IntegrityChecker.java: creates a frame and checks the integrity of the
  * collection
- *
- *
  */
 public class IntegrityCheckerJFrame
         extends JFrame {
@@ -42,7 +38,6 @@ public class IntegrityCheckerJFrame
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger( IntegrityCheckerJFrame.class.getName() );
-    private final JTextArea resultJTextArea = new JTextArea( 25, 80 );
     /**
      * reference to the node that should be checked
      */
@@ -66,6 +61,7 @@ public class IntegrityCheckerJFrame
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         final JButton correctChecksumsJButton = new JButton("Correct picture checksums");
         jPanel.add(correctChecksumsJButton, "wrap");
+        JTextArea resultJTextArea = new JTextArea(25, 80);
         final JScrollPane resultScrollPane = new JScrollPane(resultJTextArea);
         jPanel.add(resultScrollPane, "wrap");
         final JButton interruptJButton = new JButton("Interrupt");

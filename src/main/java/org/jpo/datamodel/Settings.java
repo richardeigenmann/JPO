@@ -20,7 +20,7 @@ import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 /*
- * Copyright (C) 2002-2022 Richard Eigenmann, Zürich, Switzerland This program
+ * Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation,
  * either version 2 of the License, or any later version. This program is
@@ -35,7 +35,7 @@ import java.util.prefs.Preferences;
 
 /**
  * This class defines all the settings for the JPO application. In order for it
- * to be valid for all objects it's components are all static as is the Settings
+ * to be valid for all objects its components are all static as is the Settings
  * object itself when created.
  * <p>
  * The SettingsDialog is the editor for these settings.
@@ -275,7 +275,7 @@ public class Settings {
      * A static reference to the Collection being displayed. In future perhaps
      * we will allow multiple collections to be loaded.
      */
-    private static PictureCollection pictureCollection = new PictureCollection();
+    private static PictureCollection pictureCollection;
     /**
      * flag to indicate that debug information should be logged
      */
@@ -411,7 +411,7 @@ public class Settings {
      */
     private static int maximumPictureSize = 6000;
     /**
-     * the font used to display the title. Currently Arial Bold 20.
+     * the font used to display the title. Currently, Arial Bold 20.
      */
     private static Font titleFont;
     /**
@@ -1466,7 +1466,7 @@ public class Settings {
     }
 
     /**
-     * returns an List of SortOptions
+     * returns a List of SortOptions
      *
      * @return the List of sort options
      */
@@ -1732,7 +1732,7 @@ public class Settings {
     /**
      * Remembers the Google password
      *
-     * @param googlePassword the google password
+     * @param googlePassword the Google password
      */
     public static void setGooglePassword(final String googlePassword) {
         Settings.googlePassword = googlePassword;
@@ -2032,16 +2032,14 @@ public class Settings {
         prefs.putBoolean("pictureViewerFastScale", pictureViewerFastScale);
         prefs.putBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         n = 0;
-        final Iterator<Object> senders = emailSenders.iterator();
-        while (senders.hasNext()) {
-            prefs.put("emailSender-" + n, (String) senders.next());
+        for (final var emailSender : emailSenders) {
+            prefs.put("emailSender-" + n, (String) emailSender);
             n++;
         }
         prefs.putInt("emailSenders", n);
         n = 0;
-        final Iterator<Object> recipients = emailRecipients.iterator();
-        while (recipients.hasNext()) {
-            prefs.put("emailRecipient-" + n, (String) recipients.next());
+        for (final var emailRecipient : emailRecipients) {
+            prefs.put("emailRecipient-" + n, (String) emailRecipient);
             n++;
         }
         prefs.putInt("emailRecipients", n);
@@ -2077,7 +2075,7 @@ public class Settings {
     /**
      * Writes the cameras collection to the preferences. Uses an idea presented
      * by Greg Travis on this IBM website:
-     * http://www-128.ibm.com/developerworks/java/library/j-prefapi.html
+     * <a href="http://www-128.ibm.com/developerworks/java/library/j-prefapi.html">...</a>
      */
     public static void writeCameraSettings() {
         prefs.putInt("NumberOfCameras", cameras.size());
@@ -2191,7 +2189,7 @@ public class Settings {
 
     /**
      * Sets the new locale. As of 3 Apr 2014 this doesn't send a
-     * LocaleChangeEvent any more. Instead the widget changing the locale is
+     * LocaleChangeEvent anymore. Instead, the widget changing the locale is
      * expected to send a LocaledChangedEvent
      *
      * @param newLocale the new locale
@@ -2283,7 +2281,7 @@ public class Settings {
 
     /**
      * This method memorises the directory used in the most recent Add Pictures operation.
-     * The location is only memorized if it points to a valid directory.
+     * The location is only memorised if it points to a valid directory.
      *
      * @param newLocation The new location to memorise
      */
@@ -2390,7 +2388,7 @@ public class Settings {
     }
 
     /**
-     * Remembers the user choice about prompfting version alerts
+     * Remembers the user choice about prompting version alerts
      *
      * @param ignore send true to turn off version alerting
      */
@@ -2404,7 +2402,7 @@ public class Settings {
     /**
      * Records the expiry DateTime before which the version alerts shall not be shown.
      *
-     * @param expiryDateTime the exipry DateTime for the snooze
+     * @param expiryDateTime the expiry DateTime for the snooze
      */
     public static void setSnoozeVersionAlertsExpiryDateTime(final LocalDateTime expiryDateTime) {
         if (snoozeVersionAlertsExpiryDateTime != expiryDateTime) {
@@ -2440,6 +2438,7 @@ public class Settings {
         NO_SORTING,
         DESCRIPTION,
         FILE_URL,
+        FILE,
         FILE_LOWRES_URL,
         FILM_REFERENCE,
         CREATION_TIME,

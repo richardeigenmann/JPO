@@ -1,4 +1,4 @@
-<?php include 'page-start.php'; ?>
+<?php include_once 'page-start.php'; ?>
 <div class="container">
     <h1>Installing JPO on Windows</h1>
 
@@ -14,20 +14,20 @@
     <p>Alternatively, visit the <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a></p>
 
    <p>Then install the downloaded file and you will find a JPO icon in your Start Menu and on your Desktop. JPO installs
-   istelf into c:\Program Files\JPO</p>
+   itself into c:\Program Files\JPO</p>
 
     <h4>Scary Warnings - Unknown publisher</h4>
     <img src="jpo_scr_7.jpg" width=400 height=319 alt="Scary Warning"><br>
     <p>Sorry, I have not yet figured out how to digitally sign my packages so Windows insists on splashing up
     a scary warning. If you know how I can improve this user experience, please let me know.</p>
 
-    <p>I can assure you that JPO doesn't spy on you, doesn't send spam and doesn't try to sell you 
+    <p>I can assure you that JPO doesn't spy on you, doesn't send spam and doesn't try to sell you
         anything. Better than that, it's open source software so you or someone you trust can go and
         analyse the lines of source code and compile your own version! Check out the linked code analysis tool reports to see
         how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
 
     <hr>
-    <p>Last update to this page: 25 July 2021<br>
-        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 25 April 2023<br>
+        Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include 'page-end.php'; ?>
+<?php include_once 'page-end.php'; ?>

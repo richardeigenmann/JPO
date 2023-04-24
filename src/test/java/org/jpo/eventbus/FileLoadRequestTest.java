@@ -1,6 +1,5 @@
 package org.jpo.eventbus;
 
-import org.jpo.datamodel.NodeStatisticsTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -14,6 +13,23 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+/*
+Copyright (C) 2023 Richard Eigenmann.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version. This program is distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details. You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+The license is in gpl.txt.
+See http://www.gnu.org/copyleft/gpl.html for the details.
+*/
+
+
 class FileLoadRequestTest {
 
     public static final String AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN = "An IllegalArgumentException was supposed to be thrown";
@@ -21,7 +37,7 @@ class FileLoadRequestTest {
     @Test
     void makeFileLoadRequest() {
         try {
-            final File existingFile = new File(Objects.requireNonNull(NodeStatisticsTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).toURI());
+            final var existingFile = new File(Objects.requireNonNull(FileLoadRequestTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).toURI());
             new FileLoadRequest(existingFile);
         } catch (final IllegalArgumentException e) {
             fail("There wasn't supposed to be an IllegalArgumentException in this test. Exception reads: " + e.getMessage());
@@ -33,7 +49,7 @@ class FileLoadRequestTest {
     @Test
     void makeFileLoadRequestInexistantFile() {
         try {
-            final File inexistantFile = new File("no_such_file.txt");
+            final var inexistantFile = new File("no_such_file.txt");
             new FileLoadRequest(inexistantFile);
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
@@ -65,7 +81,7 @@ class FileLoadRequestTest {
                 if (unreadableFile != null) {
                     Files.delete(unreadableFile.toPath());
                 }
-                Files.delete(tempDir);
+                Files.delete(Objects.requireNonNull(tempDir));
             } catch (final IOException e) {
                 fail("Could no clean up from test: " + e.getMessage());
             }
@@ -76,7 +92,7 @@ class FileLoadRequestTest {
     @Test
     void makeFileLoadRequestOnDirectory() {
         try {
-            final File directory = new File(".");
+            final var directory = new File(".");
             new FileLoadRequest(directory);
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {

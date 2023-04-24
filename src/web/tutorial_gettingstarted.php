@@ -1,4 +1,4 @@
-<?php include 'page-start.php'; ?>
+<?php include_once 'page-start.php'; ?>
 <div class="container">
     <h1>Tutorial: Your first use of the Application:<br>
         Create a new collection, add pictures and organise them</h1>
@@ -102,7 +102,7 @@ source code. This keeps you up to date with the latest enhancements.</p>
 <h2>Organising pictures with Drag and Drop</h2>
 <p>To rearrange the pictures, use drag and drop. You pick up a picture by left-clicking on it and keeping
     the mouse button depressed. Then move the mouse to where the picture should be dropped and release the mouse.
-    To cancel an inadvertant drag operation press the Esc key on the keyboard.</p>
+    To cancel an inadvertent drag operation press the Esc key on the keyboard.</p>
 
 <img src="tutorial_drag.png" width="807" height="573" alt="Screenshot of a thumbnail being dragged"/>
 
@@ -159,7 +159,7 @@ source code. This keeps you up to date with the latest enhancements.</p>
 
 
 <hr>
-<p>Last update to this page: 3 Dec 2018<br>
-    Copyright 2009-2018 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 24 April 2023<br>
+    Copyright 2009-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include 'page-end.php'; ?>
+<?php include_once 'page-end.php'; ?>

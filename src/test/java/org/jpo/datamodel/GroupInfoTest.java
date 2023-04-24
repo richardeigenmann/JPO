@@ -6,7 +6,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -81,9 +80,13 @@ class GroupInfoTest {
      */
     @Test
     void testGroupInfoChangeListener() {
-        final List<GroupInfoChangeEvent> receivedGroupInfoChangedEvents = new ArrayList<>();
-        Settings.getPictureCollection().setSendModelUpdates(true);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.setSendModelUpdates(true);
         final var groupInfo = new GroupInfo("Create GroupInfo when no Change listener attached");
+        final var node = new SortableDefaultMutableTreeNode(groupInfo);
+        pictureCollection.getRootNode().add(node);
+
+        final var receivedGroupInfoChangedEvents = new ArrayList<GroupInfoChangeEvent>();
         assertEquals(0, receivedGroupInfoChangedEvents.size());
 
         groupInfo.setGroupName("Change the name without a change listener attached");
@@ -99,11 +102,11 @@ class GroupInfoTest {
         assertFalse(receivedGroupInfoChangedEvents.get(0).getWasSelected());
         assertFalse(receivedGroupInfoChangedEvents.get(0).getWasUnselected());
 
-        Settings.getPictureCollection().setSendModelUpdates(false);
+        pictureCollection.setSendModelUpdates(false);
         groupInfo.setGroupName("Change with sendModelUpdates false");
         assertEquals(1, receivedGroupInfoChangedEvents.size());
 
-        Settings.getPictureCollection().setSendModelUpdates(true);
+        pictureCollection.setSendModelUpdates(true);
         groupInfo.setGroupName("Change with sendModelUpdates true");
         assertEquals(2, receivedGroupInfoChangedEvents.size());
         assertEquals(groupInfo, receivedGroupInfoChangedEvents.get(1).getGroupInfo());

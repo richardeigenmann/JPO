@@ -10,7 +10,6 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Scanner;
@@ -20,7 +19,7 @@ import java.util.logging.Logger;
 import static java.awt.event.ItemEvent.SELECTED;
 
 /*
- Copyright (C) 2021-2022 Richard Eigenmann.
+ Copyright (C) 2021-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -55,10 +54,10 @@ public class VersionUpdate {
     public VersionUpdate() {
         try {
             final var latestVersion = getLatestJpoVersion();
-            if (Float.valueOf(latestVersion) > Float.valueOf(Settings.JPO_VERSION)) {
+            if (Float.parseFloat(latestVersion) > Float.parseFloat(Settings.JPO_VERSION)) {
                 EventQueue.invokeLater(() -> showOutOfDateDialog(latestVersion));
             }
-        } catch (final IOException e) {
+        } catch (final IOException | URISyntaxException e) {
             LOGGER.log(Level.SEVERE, "Could not determine latest version: {0}", e.getMessage());
         }
     }
@@ -70,9 +69,9 @@ public class VersionUpdate {
      * @return The contents of URL as a String
      * @throws IOException if something went wrong.
      */
-    private static String readFromURL(final String requestURL) throws IOException {
-        try (final var scanner = new Scanner(new URL(requestURL).openStream(),
-                StandardCharsets.UTF_8.toString())) {
+    private static String readFromURL(final String requestURL) throws IOException, URISyntaxException {
+        try (final var scanner = new Scanner(new URI(requestURL).toURL().openStream(),
+                StandardCharsets.UTF_8)) {
             scanner.useDelimiter("\\A");
             return scanner.hasNext() ? scanner.next() : "";
         }
@@ -84,7 +83,7 @@ public class VersionUpdate {
      * @return The latest version number of JPO
      * @throws IOException If something went wrong
      */
-    private static String getLatestJpoVersion() throws IOException {
+    private static String getLatestJpoVersion() throws IOException, URISyntaxException {
         final var jsonData = readFromURL(Settings.JPO_VERSION_URL);
         LOGGER.log(Level.INFO, jsonData);
         final var obj = new JSONObject(jsonData);
@@ -92,7 +91,7 @@ public class VersionUpdate {
     }
 
     @TestOnly
-    public static String getLatestJpoVersionTestOnly() throws IOException {
+    public static String getLatestJpoVersionTestOnly() throws IOException, URISyntaxException {
         return getLatestJpoVersion();
     }
 
@@ -127,9 +126,9 @@ public class VersionUpdate {
 
         snoozeJCheckBox.addItemListener(snoozeListener -> {
             final var now = LocalDateTime.now();
-            final var fornight = now.plusDays(14);
+            final var fortnight = now.plusDays(14);
             if (snoozeListener.getStateChange() == SELECTED) {
-                Settings.setSnoozeVersionAlertsExpiryDateTime(fornight);
+                Settings.setSnoozeVersionAlertsExpiryDateTime(fortnight);
             } else {
                 Settings.setSnoozeVersionAlertsExpiryDateTime(now);
             }
@@ -157,9 +156,6 @@ public class VersionUpdate {
 
     /**
      * Opens the JPO Download page in the system browser
-     *
-     * @throws IOException
-     * @throws URISyntaxException
      */
     private void openDownloadLinkInBrowser() {
         if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {

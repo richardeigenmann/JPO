@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2010-2022 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2023 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -100,7 +100,7 @@ public class Thumbnail extends JComponent {
         super.setVisible(visibility);
         if (visibility && getSize().height != thumbnailHeight) {
             // finally I found the solution to the size issue! Unless it's set to
-            // non visible the whole rendering engine sees no point in fixing the size.
+            // non-visible the whole rendering engine sees no point in fixing the size.
             Thumbnail.super.setVisible(false);
             Thumbnail.super.setVisible(true);
         }
@@ -113,8 +113,7 @@ public class Thumbnail extends JComponent {
     private float thumbnailScaleFactor = 1;
 
     /**
-     * This method sets the scaling factor for the display of a thumbnail. 0 ..
-     * 1
+     * This method sets the scaling factor for the display of a thumbnail. 0..1
      *
      * @param thumbnailSizeFactor factor
      */
@@ -184,7 +183,7 @@ public class Thumbnail extends JComponent {
     }
 
     /**
-     * I've put in this variable because I have having real trouble with the
+     * I've put in this variable because I had real trouble with the
      * getPreferredSize method not being able to access the ImageObserver to
      * query the height of the thumbnail.
      */
@@ -282,7 +281,7 @@ public class Thumbnail extends JComponent {
     private boolean drawOfflineIcon;  // default is false
 
     /**
-     * Indicates to the Thumbnail that it should or should not draw it's Offline
+     * Indicates to the Thumbnail that it should or should not draw its Offline
      * Status. Calls repaint()
      *
      * @param flag true if the little CD-rom icon should be drawn, false if not.
@@ -360,7 +359,7 @@ public class Thumbnail extends JComponent {
      * we are overriding the default paintComponent method, grabbing the
      * Graphics handle and doing our own drawing here. Essentially this method
      * draws a large white rectangle. A drawImage is then painted doing an
-     * affine transformation on the image to position it so the the desired
+     * affine transformation on the image to position it so the desired
      * point is in the middle of the Graphics object.
      *
      * @param graphics Graphics

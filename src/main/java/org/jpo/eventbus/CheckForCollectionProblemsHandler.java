@@ -7,7 +7,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -46,7 +46,7 @@ public class CheckForCollectionProblemsHandler {
                         "WARNING",
                         JOptionPane.YES_NO_OPTION);
                 if (choice == JOptionPane.YES_OPTION) {
-                    JpoEventBus.getInstance().post(new StartHashCodeScannerRequest(Settings.getPictureCollection().getRootNode()));
+                    JpoEventBus.getInstance().post(new StartHashCodeScannerRequest(request.pictureCollection().getRootNode()));
                 }
             });
         }

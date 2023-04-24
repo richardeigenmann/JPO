@@ -722,7 +722,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"VersionUpdate.outdatedMessage", """
                     <html><body>
                     You are running version %s
-                    of JPO.<br>The current version is %s 
+                    of JPO.<br>The current version is %s
                     <br>Would you like to visit the website<br>
                     <a href="%s">%s</a><br>so you can upgrade?
                     </body></html>"""},

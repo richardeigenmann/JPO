@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -73,11 +73,14 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
-                final PictureInfo pictureInfo = new PictureInfo();
-                final String pictureInfoDescription = "A PictureInfo description";
+                final var pictureInfo = new PictureInfo();
+                final var pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var controller = new ThumbnailDescriptionController();
                 controller.setNode(node);
                 assertEquals(pictureInfoDescription, controller.getDescription());
             } );
@@ -92,10 +95,13 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
-                final String groupDescription = "A GroupInfo description";
-                final GroupInfo groupInfo = new GroupInfo(groupDescription);
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(groupInfo);
+                final var groupDescription = "A GroupInfo description";
+                final var groupInfo = new GroupInfo(groupDescription);
+                final var node = new SortableDefaultMutableTreeNode(groupInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var controller = new ThumbnailDescriptionController();
                 controller.setNode(node);
                 assertEquals(groupDescription, controller.getDescription());
             });
@@ -110,8 +116,11 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode();
+                final var node = new SortableDefaultMutableTreeNode();
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var panel = new ThumbnailDescriptionController();
                 panel.setNode(node);
                 panel.setNode(null);
                 assertEquals("No node for this position.", panel.getDescription());
@@ -127,7 +136,7 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
+                final var panel = new ThumbnailDescriptionController();
                 panel.setNode(null);
                 assertEquals("", panel.getDescription());
             });
@@ -143,20 +152,23 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
+                final var panel = new ThumbnailDescriptionController();
                 // First attach a pictureInfo
-                PictureInfo pictureInfo = new PictureInfo();
+                final var pictureInfo = new PictureInfo();
                 final String pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
-                SortableDefaultMutableTreeNode pinode = new SortableDefaultMutableTreeNode(pictureInfo);
-                panel.setNode(pinode);
+                final var piNode = new SortableDefaultMutableTreeNode(pictureInfo);
+                panel.setNode(piNode);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(piNode);
+
                 assertEquals(pictureInfoDescription, panel.getDescription());
 
                 // then replace the node with a GroupInfo node
-                final String groupInfoDescription = "A GroupInfo description";
-                final GroupInfo groupInfo = new GroupInfo(groupInfoDescription);
-                final SortableDefaultMutableTreeNode ginode = new SortableDefaultMutableTreeNode(groupInfo);
-                panel.setNode(ginode);
+                final var groupInfoDescription = "A GroupInfo description";
+                final var groupInfo = new GroupInfo(groupInfoDescription);
+                final var giNode = new SortableDefaultMutableTreeNode(groupInfo);
+                panel.setNode(giNode);
                 assertEquals(groupInfoDescription, panel.getDescription());
 
             } );
@@ -171,15 +183,18 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController panel = new ThumbnailDescriptionController();
-                final PictureInfo pictureInfo = new PictureInfo();
-                final String pictureInfoDescription = "A PictureInfo description";
+                final var pictureInfo = new PictureInfo();
+                final var pictureInfoDescription = "A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var panel = new ThumbnailDescriptionController();
                 panel.setNode(node);
                 assertEquals(pictureInfoDescription, panel.getDescription());
 
-                final String newDescription = "A changed description";
+                final var newDescription = "A changed description";
                 pictureInfo.setDescription(newDescription);
                 assertEquals(newDescription, panel.getDescription());
             } );
@@ -195,21 +210,20 @@ public class ThumbnailDescriptionControllerTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 // set up a Picture collection and bind it to the Settings
-                final PictureCollection pc = new PictureCollection();
-                Settings.setPictureCollection(pc);
-                // The controller binds to the TreeModelListener of the Settings.getPictureCopllection root node.
-                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
+                final var pictureCollection = new PictureCollection();
 
-                final SortableDefaultMutableTreeNode childNode1 = new SortableDefaultMutableTreeNode(new GroupInfo("First Child is a GroupInfo node"));
-                pc.getRootNode().add(childNode1);
-                final String CHILD_GROUP_INFO_TEXT = "Second Child is a GroupInfo node";
-                final SortableDefaultMutableTreeNode childNode2= new SortableDefaultMutableTreeNode(new GroupInfo(CHILD_GROUP_INFO_TEXT));
-                pc.getRootNode().add(childNode2);
-                final PictureInfo pictureInfo = new PictureInfo();
-                final String pictureInfoDescription ="A PictureInfo description";
+                final var childNode1 = new SortableDefaultMutableTreeNode(new GroupInfo("First Child is a GroupInfo node"));
+                pictureCollection.getRootNode().add(childNode1);
+                final var CHILD_GROUP_INFO_TEXT = "Second Child is a GroupInfo node";
+                final var childNode2= new SortableDefaultMutableTreeNode(new GroupInfo(CHILD_GROUP_INFO_TEXT));
+                pictureCollection.getRootNode().add(childNode2);
+                final var pictureInfo = new PictureInfo();
+                final var pictureInfoDescription ="A PictureInfo description";
                 pictureInfo.setDescription(pictureInfoDescription);
-                final SortableDefaultMutableTreeNode pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
                 childNode2.add(pictureNode);
+
+                final var controller = new ThumbnailDescriptionController();
                 controller.setNode(childNode2);
                 assertEquals(CHILD_GROUP_INFO_TEXT, controller.getDescription());
 
@@ -217,9 +231,7 @@ public class ThumbnailDescriptionControllerTest {
                 ((GroupInfo) childNode2.getUserObject()).setGroupName(CHANGED_GROUP_NAME);
                 assertEquals(CHANGED_GROUP_NAME, controller.getDescription());
 
-                pc.getRootNode().remove(0);
-
-
+                pictureCollection.getRootNode().remove(0);
             } );
         } catch (final InterruptedException | InvocationTargetException ex  ) {
             fail(ex.getMessage());
@@ -233,16 +245,19 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final ThumbnailDescriptionController controller = new ThumbnailDescriptionController();
-                final PictureInfo pictureInfo = new PictureInfo();
-                final String ORIGINAL_FILENAME = "gaga.jpg";
+                final var pictureInfo = new PictureInfo();
+                final var ORIGINAL_FILENAME = "gaga.jpg";
                 pictureInfo.setImageLocation(new File(ORIGINAL_FILENAME));
-                final SortableDefaultMutableTreeNode node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(node);
+
+                final var controller = new ThumbnailDescriptionController();
                 controller.setNode(node);
                 assertEquals(ORIGINAL_FILENAME,pictureInfo.getImageFile().getName());
                 assertEquals(ORIGINAL_FILENAME, Paths.get(controller.getFileLocation()).getFileName().toString());
 
-                final String NEW_FILENAME = "newfile.jpg";
+                final var NEW_FILENAME = "newfile.jpg";
                 pictureInfo.setImageLocation(new File(NEW_FILENAME));
                 assertEquals(NEW_FILENAME, pictureInfo.getImageFile().getName());
                 assertEquals(NEW_FILENAME, Paths.get(controller.getFileLocation()).getFileName().toString());
@@ -258,10 +273,10 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final JTextArea area = new JTextArea();
-                final String STRING_WITHOUT_SPECIAL_CHARS = "No special chars in this string";
+                final var area = new JTextArea();
+                final var STRING_WITHOUT_SPECIAL_CHARS = "No special chars in this string";
                 Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITHOUT_SPECIAL_CHARS, area);
-                assertTrue(!optional.isPresent());
+                assertFalse(optional.isPresent());
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
@@ -274,16 +289,16 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final JTextArea area = new JTextArea();
-                final String STRING_WITH_UNDERSCORE = "Text_with_underscores";
-                final String EXPECTED_RESULT = "Text with underscores";
+                final var area = new JTextArea();
+                final var STRING_WITH_UNDERSCORE = "Text_with_underscores";
+                final var EXPECTED_RESULT = "Text with underscores";
                 final Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNDERSCORE, area);
                 assertTrue(optional.isPresent());
 
-                final JPopupMenu menu = optional.get();
+                final var menu = optional.get();
                 assertEquals(1,menu.getComponentCount());
 
-                final JMenuItem item = (JMenuItem) menu.getComponent(0);
+                final var item = (JMenuItem) menu.getComponent(0);
                 item.doClick();
                 assertEquals(area.getText(), EXPECTED_RESULT);
             } );
@@ -298,16 +313,16 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final JTextArea area = new JTextArea();
-                final String STRING_WITH_UNICODE_SPACE = "Text%20with%20unicode%20spaces";
-                final String EXPECTED_RESULT = "Text with unicode spaces";
+                final var area = new JTextArea();
+                final var STRING_WITH_UNICODE_SPACE = "Text%20with%20unicode%20spaces";
+                final var EXPECTED_RESULT = "Text with unicode spaces";
                 final Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE, area);
                 assertTrue(optional.isPresent());
 
-                final JPopupMenu menu = optional.get();
+                final var menu = optional.get();
                 assertEquals(1,menu.getComponentCount());
 
-                final JMenuItem item = (JMenuItem) menu.getComponent(0);
+                final var item = (JMenuItem) menu.getComponent(0);
                 item.doClick();
                 assertEquals(area.getText(), EXPECTED_RESULT);
             } );
@@ -322,16 +337,16 @@ public class ThumbnailDescriptionControllerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final JTextArea area = new JTextArea();
-                final String STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES = "Text%20with%20unicode%20spaces_and_underscores";
-                final String EXPECTED_RESULT = "Text with unicode spaces and underscores";
+                final var area = new JTextArea();
+                final var STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES = "Text%20with%20unicode%20spaces_and_underscores";
+                final var EXPECTED_RESULT = "Text with unicode spaces and underscores";
                 final Optional<JPopupMenu> optional = ThumbnailDescriptionController.correctTextPopupMenu(STRING_WITH_UNICODE_SPACE_AND_UNDERSCORES, area);
                 assertTrue(optional.isPresent());
 
-                final JPopupMenu menu = optional.get();
+                final var menu = optional.get();
                 assertEquals(3,menu.getComponentCount());
 
-                final JMenuItem item = (JMenuItem) menu.getComponent(2);
+                final var item = (JMenuItem) menu.getComponent(2);
                 item.doClick();
                 assertEquals(area.getText(), EXPECTED_RESULT);
             } );

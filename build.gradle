@@ -26,7 +26,7 @@ application {
 dependencies {
     implementation 'com.miglayout:miglayout-swing:11.1'
     implementation 'com.miglayout:miglayout-core:11.1'
-    implementation 'org.apache.commons:commons-text:1.9'
+    implementation 'org.apache.commons:commons-text:1.10.0'
     implementation files('libs/tagcloud.library-0.0.1.jar')
     implementation 'org.apache.commons:commons-compress:1.23.0'
     implementation 'org.apache.commons:commons-jcs3:3.1'
@@ -53,28 +53,26 @@ dependencies {
     //implementation group: 'org.dockingframes', name: 'docking-frames-common', version: '1.1.2p6a'
     implementation files('libs/docking-frames-common.jar')
     implementation files('libs/docking-frames-core.jar')
-    //used by Metadata Extractor. Note only 5.x seems to be compatible
-    //implementation 'com.adobe.xmp:xmpcore:5.1.3'
     implementation 'com.adobe.xmp:xmpcore:6.1.11'
-    /*implementation 'com.twelvemonkeys.imageio:imageio-batik:3.8.2'
-    implementation 'org.apache.xmlgraphics:batik-transcoder:1.14', {
+    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.9.4'
+    implementation 'org.apache.xmlgraphics:batik-transcoder:1.16', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-anim:1.14', {
+    implementation 'org.apache.xmlgraphics:batik-anim:1.16', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.14', {
+    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.16', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.14'*/
-    /*Ierror: module not found: org.apache.batik.bridge.RhinoInterpreterFactory
-    implementation 'org.apache.xmlgraphics:batik-extension:1.14', {
+    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.16'
+
+    implementation 'org.apache.xmlgraphics:batik-extension:1.16', {
         exclude group: "xml-apis", module: "xml-apis"
-    }*/
+    }
     implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.8'
     implementation 'org.apache.xmlgraphics:batik-svggen:1.16'
     implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.9.4' //OK -- But what does it do?
+    implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-icns:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-iff:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.9.4'
@@ -242,7 +240,7 @@ task openJavadocInBrowser {
     dependsOn 'javadoc'
     group = 'documentation'
     doLast {
-        java.awt.Desktop.desktop.open(new File(buildDir, "/docs/javadoc/index.html"))
+        desktop.open(new File(buildDir, "/docs/javadoc/index.html"))
     }
 }
 
@@ -254,7 +252,7 @@ jlink {
         jvmArgs = []
     }
     jpackage {
-        OperatingSystem os = OperatingSystem.current();
+        var os = OperatingSystem.current()
 
         println "*** Building on ${os.familyName} / ${os.name} / ${os.version} / ${System.getProperty("os.arch")}."
         println "*** Building on ${os.toString()}."

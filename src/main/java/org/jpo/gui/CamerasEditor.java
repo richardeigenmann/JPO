@@ -78,7 +78,7 @@ public class CamerasEditor extends JFrame {
     private final JTree cameraJTree;
 
     /**
-     * keep a copy of the old cameras so we can restore them with the cancel button.
+     * keep a copy of the old cameras, so we can restore them with the cancel button.
      */
     private final List<Camera> backupCameras;
 
@@ -132,8 +132,7 @@ public class CamerasEditor extends JFrame {
                 return;
             }
             Object object = node.getUserObject();
-            if (object instanceof Camera) {
-                Camera camera = (Camera) object;
+            if (object instanceof Camera camera) {
                 cameraPicked(camera);
             } else {
                 LOGGER.fine("Very odd: the camera JTree reported a valueChanged but there is no selected camera. Could be the root node");

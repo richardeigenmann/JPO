@@ -29,12 +29,12 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
  *
  * @author Richard Eigenmann
  */
-public class JpoTransferrableDropTargetListener implements DropTargetListener {
+public class JpoTransferableDropTargetListener implements DropTargetListener {
 
     /**
      * Defines a LOGGER for this class
      */
-    private static final Logger LOGGER = Logger.getLogger( JpoTransferrableDropTargetListener.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger( JpoTransferableDropTargetListener.class.getName() );
 
     /**
      * Reference to the node for which this is a drop target listener.
@@ -46,7 +46,7 @@ public class JpoTransferrableDropTargetListener implements DropTargetListener {
      *
      * @param jpoDropTargetDropEventHandler Event handler
      */
-    public JpoTransferrableDropTargetListener(final JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler) {
+    public JpoTransferableDropTargetListener(final JpoDropTargetDropEventHandler jpoDropTargetDropEventHandler) {
         this.jpoDropTargetDropEventHandler = jpoDropTargetDropEventHandler;
     }
 

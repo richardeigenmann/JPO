@@ -81,9 +81,9 @@ public class RenameMenuItems {
                     menuItems.add(renameSpaceJMenuItem2);
                 }
 
-                final Optional<String> potentialNewFilenameWithoutUndescores = PicturePopupMenu.replaceUnderscore(pi.getImageFile().getName());
-                if (potentialNewFilenameWithoutUndescores.isPresent()) {
-                    final var suggestedFileName3 = Tools.inventFilename(pi.getImageFile().getParentFile(), potentialNewFilenameWithoutUndescores.get());
+                final Optional<String> potentialNewFilenameWithoutUnderscores = PicturePopupMenu.replaceUnderscore(pi.getImageFile().getName());
+                if (potentialNewFilenameWithoutUnderscores.isPresent()) {
+                    final var suggestedFileName3 = Tools.inventFilename(pi.getImageFile().getParentFile(), potentialNewFilenameWithoutUnderscores.get());
                     final var renameUnderscoreJMenuItem = new JMenuItem("To: " + suggestedFileName3.getName());
                     renameUnderscoreJMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new RenameFileRequest(node, suggestedFileName3.getName())));
                     menuItems.add(renameUnderscoreJMenuItem);

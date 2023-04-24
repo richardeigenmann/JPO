@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +32,7 @@ public class FileSaveHandler {
 
     /**
      * Calls the {@link org.jpo.datamodel.PictureCollection#fileSave} method that
-     * saves the current collection under it's present name and if it was never
+     * saves the current collection under its present name and if it was never
      * saved before brings up a popup window.
      *
      * @param request The request

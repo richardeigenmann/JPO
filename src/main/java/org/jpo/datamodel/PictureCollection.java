@@ -3,6 +3,7 @@ package org.jpo.datamodel;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -50,12 +51,12 @@ public class PictureCollection {
      * This HashMap holds the categories that will be available for this
      * collection.
      */
-    private final HashMap<Integer, String> categories;
+    private final HashMap<Integer, String> categories = new HashMap<>();
     /**
      * This List holds references to the selected nodes for mailing. It works
      * just like the selection only that the purpose is a different one.
      */
-    private final List<SortableDefaultMutableTreeNode> mailSelection;
+    private final List<SortableDefaultMutableTreeNode> mailSelection = new ArrayList<>();
     /**
      * A reference to the selected nodes.
      */
@@ -73,8 +74,8 @@ public class PictureCollection {
      * This variable indicates whether uncommitted changes exist for this
      * collection. Care should be taken when adding removing or changing nodes
      * to update this flag. It should be queried before exiting the application.
-     * Also when a new collection is loaded this flag should be checked so as
-     * not to loose modifications. This flag should be set only on the root
+     * Also, when a new collection is loaded this flag should be checked so as
+     * not to lose modifications. This flag should be set only on the root
      * node.
      *
      * @see #setUnsavedUpdates()
@@ -105,16 +106,17 @@ public class PictureCollection {
      * A file reference to the file that was loaded. It will come in handy when
      * a save instruction comes along.
      */
-    private File xmlFile;
+    private File xmlFile = null;
 
     /**
      * Constructs a new PictureCollection object with a root object
      */
     public PictureCollection() {
-        setRootNode(new SortableDefaultMutableTreeNode());
+        final var node = new SortableDefaultMutableTreeNode(new GroupInfo(Settings.getJpoResources().getString("DefaultRootNodeText")));
+        setRootNode(node);
+        node.setPictureCollection(this);
+
         treeModel = new DefaultTreeModel(getRootNode());
-        categories = new HashMap<>();
-        mailSelection = new ArrayList<>();
         setAllowEdits(true);
         setUnsavedUpdates(false);
     }
@@ -140,11 +142,12 @@ public class PictureCollection {
      * @param node the node to load it into
      */
     public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node) {
-        node.getPictureCollection().setSendModelUpdates(false); // turn off model notification of each add for performance
+        final var pictureCollection = node.getPictureCollection();
+        pictureCollection.setSendModelUpdates(false); // turn off model notification of each add for performance
         XmlReader.read(is, node);
-        node.getPictureCollection().setSendModelUpdates(true);
-        node.getPictureCollection().sendNodeStructureChanged(node);
-        JpoEventBus.getInstance().post(new CollectionLockNotification());
+        pictureCollection.setSendModelUpdates(true);
+        pictureCollection.sendNodeStructureChanged(node);
+        JpoEventBus.getInstance().post(new CollectionLockNotification(pictureCollection));
     }
 
     /**
@@ -182,7 +185,7 @@ public class PictureCollection {
      * @return The tree Model
      */
     public DefaultTreeModel getTreeModel() {
-        return (treeModel);
+        return treeModel;
     }
 
     /**
@@ -345,14 +348,14 @@ public class PictureCollection {
     }
 
     /**
-     * sets the allow edit allowedEdits of this collection
+     * sets the allow-edit allowedEdits of this collection
      *
      * @param newAllowEdits pass true to allow edits, false to forbid
      */
     public void setAllowEdits(final boolean newAllowEdits) {
         if ( allowEdits != newAllowEdits ) {
             allowEdits = newAllowEdits;
-            JpoEventBus.getInstance().post(new CollectionLockNotification());
+            JpoEventBus.getInstance().post(new CollectionLockNotification(this));
         }
     }
 
@@ -552,9 +555,9 @@ public class PictureCollection {
     }
 
     /**
-     * Returns a set of of category keys
+     * Returns a set of category keys
      *
-     * @return an set of category keys
+     * @return a set of category keys
      */
     public Set<Integer> getCategoryKeySet() {
         return categories.keySet();
@@ -645,11 +648,11 @@ public class PictureCollection {
      * This method clears the mailSelection HashSet.
      */
     public void clearMailSelection() {
-        //can't use iterator directly or we have a concurrent modification exception
+        //can't use iterator directly, or we have a concurrent modification exception
         final List<SortableDefaultMutableTreeNode> clone = new ArrayList<>(mailSelection.size());
         clone.addAll(mailSelection);
 
-        for (final SortableDefaultMutableTreeNode node : clone) {
+        for (final var node : clone) {
             LOGGER.log(Level.FINE, "Removing node: {0}", node);
             removeFromMailSelection(node);
         }
@@ -701,7 +704,7 @@ public class PictureCollection {
 
     /**
      * This method returns true if the indicated picture file is already a
-     * member of the collection. Otherwise it returns false.
+     * member of the collection. Otherwise, it returns false.
      *
      * @param file The File object of the file to check for
      * @return true if found, false if not
@@ -726,7 +729,7 @@ public class PictureCollection {
 
     /**
      * This method returns true if the indicated checksum is already a member of
-     * the collection. Otherwise it returns false.
+     * the collection. Otherwise, it returns false.
      *
      * @param sha256 The checksum of the picture to check for
      * @return true if found, false if not
@@ -859,8 +862,8 @@ public class PictureCollection {
      * This method replaces the old file with the new file by renaming the old to
      * <<filename>>.orig and then moves the new file to that name. If there were no errors it
      * then deletes the old file.
-     * @param oldFile
-     * @param newFile
+     * @param oldFile the old file
+     * @param newFile the new file
      */
     private static void replaceFile(final File oldFile, final File newFile) {
         final File backupOldFile = new File(oldFile.getPath() + ".orig");
@@ -896,15 +899,15 @@ public class PictureCollection {
     public Set<SortableDefaultMutableTreeNode> findLinkingGroups(
             final SortableDefaultMutableTreeNode suppliedNode) {
 
-        final Set<SortableDefaultMutableTreeNode> linkingGroups = new HashSet<>();
+        final var linkingGroups = new HashSet<SortableDefaultMutableTreeNode>();
 
         if (suppliedNode.getUserObject() instanceof PictureInfo pictureInfo) {
-            final File comparingFile = pictureInfo.getImageFile();
+            final var comparingFile = pictureInfo.getImageFile();
             if (isNull(comparingFile)) {
                 return linkingGroups;
             }
-            for (final Enumeration<TreeNode> e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
-                final SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
+            for (final var e = getRootNode().preorderEnumeration(); e.hasMoreElements(); ) {
+                final var testNode = (SortableDefaultMutableTreeNode) e.nextElement();
                 if (testNode.getUserObject() instanceof PictureInfo pi && !isNull(pi.getImageFile()) && pi.getImageFile().equals(comparingFile)) {
                     linkingGroups.add(testNode.getParent());
                 }
@@ -1004,6 +1007,10 @@ public class PictureCollection {
      * @return The common path
      */
     static Path getCommonPath(final Path path1, final Path path2) {
+        final var emptyPath = Paths.get("");
+        if ( path1 == null || path2 == null || path1 == emptyPath || path2 == emptyPath) {
+            return emptyPath;
+        }
         LOGGER.log(Level.FINE, "Path1: {0} Path2: {1}", new Object[]{path1, path2});
         var relativePath = path1.relativize(path2).normalize();
         while(relativePath != null && !relativePath.endsWith("..")) {
@@ -1016,7 +1023,11 @@ public class PictureCollection {
     Path getCommonPath() {
         LOGGER.log(Level.INFO, "Searching for common path of the pictures");
         final var pictureNodes = getRootNode().getChildPictureNodes(true);
-        if (pictureNodes.size() < 1) { return Paths.get(""); }
+        LOGGER.log(Level.INFO, "GAGA The collection has {0} pictures. Returning an empty common path.", pictureNodes.size());
+        if (pictureNodes.isEmpty()) {
+            LOGGER.log(Level.INFO, "The collection has {0} pictures. Returning an empty common path.", pictureNodes.size());
+            return Paths.get("");
+        }
         final var firstNode = pictureNodes.get(0);
         final var firstPictureInfo = (PictureInfo) firstNode.getUserObject();
         var commonPath = firstPictureInfo.getImageFile().toPath();
@@ -1027,6 +1038,24 @@ public class PictureCollection {
         }
         LOGGER.log(Level.INFO, "Common path is {0}", commonPath);
         return commonPath;
+    }
+
+    /**
+     * Adds a treeModelListener to the collection.
+     * Uses the treeModel associated with the PictureCollection to handle the details
+     * @param treeModelListener The listener to add
+     */
+    public void addTreeModelListener( final TreeModelListener treeModelListener){
+        getTreeModel().addTreeModelListener(treeModelListener);
+    }
+
+    /**
+     * Removes a treeModelListener from the collection.
+     * Uses the treeModel associated with the PictureCollection to handle the details
+     * @param treeModelListener The listener to remove
+     */
+    public void removeTreeModelListener( final TreeModelListener treeModelListener){
+        getTreeModel().addTreeModelListener(treeModelListener);
     }
 
 }

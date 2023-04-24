@@ -449,15 +449,7 @@ public class SettingsDialog extends JDialog {
         authenticationJComboBox.addActionListener((ActionEvent e) -> {
             final String cbSelection = (String) authenticationJComboBox.getSelectedItem();
             switch (Objects.requireNonNull(cbSelection)) {
-                case "Password" -> {
-                    userNameJLabel.setVisible(true);
-                    emailUserJTextField.setVisible(true);
-                    passwordJLabel.setVisible(true);
-                    emailPasswordJTextField.setVisible(true);
-                    showPasswordButton.setVisible(true);
-                    showPasswordLabel.setVisible(true);
-                }
-                case "SSL" -> {
+                case "Password", "SSL" -> {
                     userNameJLabel.setVisible(true);
                     emailUserJTextField.setVisible(true);
                     passwordJLabel.setVisible(true);

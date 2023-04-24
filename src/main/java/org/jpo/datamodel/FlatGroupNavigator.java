@@ -45,7 +45,10 @@ public class FlatGroupNavigator
     public FlatGroupNavigator(final SortableDefaultMutableTreeNode groupNode) {
         super( groupNode.getChildPictureNodes(true) );
         this.groupNode = groupNode;
-        Settings.getPictureCollection().getTreeModel().addTreeModelListener(new MyTreeModelListener());
+        final var pictureCollection = groupNode.getPictureCollection();
+        if (pictureCollection != null) {
+            pictureCollection.addTreeModelListener(new MyTreeModelListener());
+        }
     }
 
 

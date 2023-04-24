@@ -1,6 +1,7 @@
 package org.jpo.cache;
 
 import java.io.ByteArrayInputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
@@ -32,6 +33,7 @@ import java.time.Instant;
  */
 public class ImageBytes implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 4;
     private Instant lastModification;
     private final byte[] bytes;

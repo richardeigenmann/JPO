@@ -41,7 +41,7 @@ import java.util.logging.Logger;
 
 /**
  * Brings up a window showing all the available Categories and allows the user to assign or remove categories
- * for the nodes supplied in the CategoryAssignmnetWindowRequest.
+ * for the nodes supplied in the CategoryAssignmentWindowRequest.
  * <p>
  * Since there can be many categories they are shown as checkboxes in multiple columns. (Layout works left to
  * right but the categories should be shown alphabetically top to bottom in the columns which gave rise to the code
@@ -50,17 +50,17 @@ import java.util.logging.Logger;
  * The checkboxes show whether none, all or some of the supplied nodes have the category.
  * The TristateCheckBox class has logic to allow selection or deselection on categories that have none or all.
  * Where some nodes have a category, the TristateCheckBox cycles through select all, deselect all and leave unchanged.
- * Elections where the node categoiry assignments will be changed are shown in a different color.
+ * Elections where the node category assignments will be changed are shown in a different color.
  *
  * @author Richard Eigenmann
  */
-public class CategroyAssignmentWindow {
+public class CategoryAssignmentWindow {
 
     /**
      * The category
      */
     public static final String CATEGORY = "Category";
-    private static final Logger LOGGER = Logger.getLogger(CategroyAssignmentWindow.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CategoryAssignmentWindow.class.getName());
     private static final int COLUMNS = 8;
     private final JFrame frame = new JFrame();
     private final JPanel categoriesPanel = new JPanel();
@@ -84,7 +84,7 @@ public class CategroyAssignmentWindow {
         }
     };
 
-    public CategroyAssignmentWindow(final CategoryAssignmentWindowRequest request) {
+    public CategoryAssignmentWindow(final CategoryAssignmentWindowRequest request) {
         this.request = request;
         EventQueue.invokeLater(() -> {
             frame.setTitle(String.format("Category assignment for %d pictures", request.nodes().size()));
@@ -106,7 +106,7 @@ public class CategroyAssignmentWindow {
             buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
             final var editCategoriesJButton = new JButton("Edit");
             editCategoriesJButton.setPreferredSize(Settings.getDefaultButtonDimension());
-            editCategoriesJButton.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
+            editCategoriesJButton.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest(Settings.getPictureCollection())));
             final var cancelJButton = new JButton("Cancel");
             cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
             cancelJButton.addActionListener(e -> frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING)));
@@ -134,7 +134,7 @@ public class CategroyAssignmentWindow {
                 @Override
                 public void windowClosed(final WindowEvent e) {
                     super.windowClosed(e);
-                    JpoEventBus.getInstance().unregister(CategroyAssignmentWindow.this);
+                    JpoEventBus.getInstance().unregister(CategoryAssignmentWindow.this);
                 }
             });
         });
@@ -185,7 +185,7 @@ public class CategroyAssignmentWindow {
                 for (var categoryCode : pi.getCategoryAssignments()) {
                     Integer count = categoryUsageCount.get(categoryCode);
                     if (count == null) {
-                        count = Integer.valueOf(1);
+                        count = 1;
                     } else {
                         count++;
                     }
@@ -196,16 +196,16 @@ public class CategroyAssignmentWindow {
         return categoryUsageCount;
     }
 
-    private void populateCheckBoxes(final Map<Integer, Integer> categopryUsageCount, int nodes, final JPanel categoriesPanel) {
+    private void populateCheckBoxes(final Map<Integer, Integer> categoryUsageCount, int nodes, final JPanel categoriesPanel) {
         final var pictureCollection = Settings.getPictureCollection();
         final List<TristateCheckBox> sortedCheckBoxList = new ArrayList<>();
         pictureCollection.getSortedCategoryStream().forEach(category -> {
-            if (categopryUsageCount.get(category.getKey()) == null) {
+            if (categoryUsageCount.get(category.getKey()) == null) {
                 final var tristateCheckBox = new TristateCheckBox(category.getValue(), TristateCheckBox.TCheckBoxInitialState.UNSELECTED);
                 tristateCheckBox.addKeyListener(escapeKeyListener);
                 tristateCheckBox.putClientProperty(CATEGORY, category);
                 sortedCheckBoxList.add(tristateCheckBox);
-            } else if (categopryUsageCount.get(category.getKey()) == nodes) {
+            } else if (categoryUsageCount.get(category.getKey()) == nodes) {
                 final var tristateCheckBox = new TristateCheckBox(category.getValue(), TristateCheckBox.TCheckBoxInitialState.SELECTED);
                 tristateCheckBox.addKeyListener(escapeKeyListener);
                 tristateCheckBox.putClientProperty(CATEGORY, category);
@@ -228,9 +228,9 @@ public class CategroyAssignmentWindow {
             transposedList[pos] = sortedCheckBoxList.get(i);
         }
 
-        for (var i = 0; i < transposedList.length; i++) {
-            if (transposedList[i] != null) {
-                categoriesPanel.add(transposedList[i]);
+        for (final var tristateCheckBox : transposedList) {
+            if (tristateCheckBox != null) {
+                categoriesPanel.add(tristateCheckBox);
             } else {
                 // need to add a non-showing component to keep the alignment
                 categoriesPanel.add(new JPanel());

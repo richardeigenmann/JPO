@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.util.List;
 
 /*
- Copyright (C) 2002-2022  Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,9 +52,9 @@ public class CategoryPopupMenu extends JidePopupMenu {
      */
     public static void addMenuItems(final JComponent parentMenu, final List<SortableDefaultMutableTreeNode> referringNodes) {
         final var addCategoryMenuItem = new JMenuItem("Add Category");
-        addCategoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest()));
+        final var pictureCollection = referringNodes.get(0).getPictureCollection();
+        addCategoryMenuItem.addActionListener(e -> JpoEventBus.getInstance().post(new OpenCategoryEditorRequest(pictureCollection)));
         parentMenu.add(addCategoryMenuItem);
-        final var pictureCollection = Settings.getPictureCollection();
         pictureCollection.getSortedCategoryStream().forEach(category -> {
             final var categoryDescription = category.getValue();
             final var categoryMenuItem = new JMenuItem();

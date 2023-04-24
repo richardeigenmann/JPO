@@ -3,7 +3,6 @@ package org.jpo.gui;
 import com.google.common.hash.Hashing;
 import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -19,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -78,20 +77,11 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
      }
 
      @Test
-     @Disabled("Doens't make sense in the context of sha256 - no file no sha256!")
-     void loadInexistentFile() {
-         final var sourcePicture = new SourcePicture();
-         sourcePicture.loadPicture(null, new File("no such file.jpg"), 0.0);
-         assertNull(sourcePicture.getSourceBufferedImage());
-     }
-
-
-     @Test
      void getWidth() {
          final var sourcePicture = new SourcePicture();
          final var NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
          final var imageUrl = this.getClass().getClassLoader().getResource(NIKON_D100_IMAGE);
-         File imageFile = null;
+         File imageFile;
          try {
              imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
              final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
@@ -108,7 +98,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var sourcePicture = new SourcePicture();
          final var NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
          final var imageUrl = this.getClass().getClassLoader().getResource(NIKON_D100_IMAGE);
-         File imageFile = null;
+         File imageFile;
          try {
              imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
              final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
@@ -147,7 +137,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var sourcePicture = new SourcePicture();
          final var NIKON_D100_IMAGE = "exif-test-nikon-d100-1.jpg";
          final var imageUrl = this.getClass().getClassLoader().getResource(NIKON_D100_IMAGE);
-         File imageFile = null;
+         File imageFile;
          try {
              imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
              final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
@@ -237,26 +227,6 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
      }
 
      @Test
-     @Disabled("ImageIO PDF doesn't seem to work")
-     void testPdfImage() {
-         final var sourcePicture = new SourcePicture();
-         final var PDF_IMAGE_FILE = "pdf-document.pdf";
-         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PDF_IMAGE_FILE));
-         try {
-             final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
-             assertNotNull(sourcePicture.getSourceBufferedImage());
-             assertEquals(768, sourcePicture.getHeight());
-             assertEquals(512, sourcePicture.getWidth());
-         } catch (final URISyntaxException | IOException e) {
-             fail(e.getMessage());
-         }
-
-    }
-
-     @Test
-     @Disabled("Doesn't work after Modularisation")
      void testSvgImage() {
          assumeFalse(GraphicsEnvironment.isHeadless());
          final var sourcePicture = new SourcePicture();

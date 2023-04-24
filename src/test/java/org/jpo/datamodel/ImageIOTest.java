@@ -1,6 +1,5 @@
 package org.jpo.datamodel;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageReader;
@@ -16,7 +15,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -121,7 +120,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("doesn't work")
     void testHasHdrImageReader() {
         final var HDR_IMAGE_FILE = "memorial_o876.hdr";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(HDR_IMAGE_FILE));
@@ -133,35 +131,8 @@ class ImageIOTest {
         }
     }
 
-    @Test
-    @Disabled("ImageIO PDF doesn't seem to work")
-    void testGetPdfImageIOReader() {
-        final var PDF_IMAGE_FILE = "pdf-document.pdf";
-        final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PDF_IMAGE_FILE));
-        try (final var input = imageUrl.openStream();
-             final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
-            assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pdf.PDFImageReader"));
-        } catch (final NoSuchElementException | IOException e) {
-            fail(e.getMessage());
-        }
-    }
 
     @Test
-    @Disabled("ImageIO PDF doesn't seem to work")
-    void testHasPdfImageReader() {
-        final var PDF_IMAGE_FILE = "pdf-document.pdf";
-        final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PDF_IMAGE_FILE));
-        try {
-            final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
-        } catch (final URISyntaxException e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    @Disabled("Problems with module-path")
     void testGetSvgImageIOReader() {
         final var SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SVG_IMAGE_FILE));
@@ -175,7 +146,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("Problems with module-path")
     void testHasSvgImageReader() {
         final var SVG_IMAGE_FILE = "Ghostscript_Tiger.svg";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SVG_IMAGE_FILE));
@@ -226,7 +196,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("Doesn't work on Travis")
     void testHasSgiImageReader() {
         final var SGI_IMAGE_FILE = "sgi.sgi";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SGI_IMAGE_FILE));
@@ -252,7 +221,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("Doesn't work with Travis")
     void testHasTgaImageReader() {
         final var TGA_IMAGE_FILE = "tga.tga";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
@@ -353,7 +321,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("Doesn't work with Travis")
     void testHasGifImageReader() {
         final var GIF_IMAGE_FILE = "gif.gif";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(GIF_IMAGE_FILE));
@@ -379,7 +346,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("Doesn't work with Travis")
     void testHasIffImageReader() {
         final var IFF_IMAGE_FILE = "AmigaAmiga.iff";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(IFF_IMAGE_FILE));
@@ -431,7 +397,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("Doesn't work with Travis")
     void testHasPctImageReader() {
         final var PICT_IMAGE_FILE = "food.pct";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PICT_IMAGE_FILE));
@@ -483,19 +448,6 @@ class ImageIOTest {
     }
 
     @Test
-    @Disabled("doesn't work")
-    void testHasIcnsImageReader() {
-        final var ICNS_IMAGE_FILE = "7zIcon.icns";
-        final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(ICNS_IMAGE_FILE));
-        try {
-            final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
-        } catch (final URISyntaxException e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
     void testGetThumbsDbImageIOReader() {
         final var THUMBS_DB_IMAGE_FILE = "Thumbs.db";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
@@ -504,19 +456,6 @@ class ImageIOTest {
             final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader"));
         } catch (final NoSuchElementException | IOException e) {
-            fail(e.getMessage());
-        }
-    }
-
-    @Test
-    @Disabled("doesn't work")
-    void testHasThumbsDbImageReader() {
-        final var THUMBS_DB_IMAGE_FILE = "Thumbs.db";
-        final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
-        try {
-            final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
-        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }

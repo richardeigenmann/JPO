@@ -14,7 +14,6 @@ module org.jpo {
     requires com.google.common;
     requires com.miglayout.swing;
     requires commons.jcs3.core;
-    requires commons.jcs3.jcache;
     requires docking.frames.common;
     requires java.desktop;
     requires java.logging;

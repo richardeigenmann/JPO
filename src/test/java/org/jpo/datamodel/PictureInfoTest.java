@@ -6,10 +6,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017 - 2022 Richard Eigenmann.
+ Copyright (C) 2017 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -65,7 +65,10 @@ class PictureInfoTest {
      */
     @Test
     void testSetDescription() {
-        final PictureInfo pictureInfo = new PictureInfo();
+        final var pictureInfo = new PictureInfo();
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
         final int[] changeEvents = {0};
         final PictureInfoChangeListener pictureInfoChangeListener = (PictureInfoChangeEvent arg0) -> changeEvents[0] += 1;
         pictureInfo.addPictureInfoChangeListener(pictureInfoChangeListener);
@@ -83,6 +86,9 @@ class PictureInfoTest {
     @Test
     void testSetDescriptionSame() {
         final PictureInfo pictureInfo = new PictureInfo();
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
         final int[] countEvents = {0};
         final PictureInfoChangeListener pictureInfoChangeListener = (PictureInfoChangeEvent arg0) -> countEvents[0] += 1;
         pictureInfo.addPictureInfoChangeListener(pictureInfoChangeListener);
@@ -192,10 +198,10 @@ class PictureInfoTest {
     void testSetImageLocationUrl() {
         try {
             final PictureInfo pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(new File(new URL("file:///dir/picture.jpg").toURI()));
+            pictureInfo.setImageLocation(new File(new URI("file:///dir/picture.jpg")));
             final File imageFile = pictureInfo.getImageFile();
             assertEquals("/dir/picture.jpg", imageFile.toString());
-        } catch (final MalformedURLException | URISyntaxException e) {
+        } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
     }
@@ -231,14 +237,17 @@ class PictureInfoTest {
         int[] eventsReceived = new int[1];
         eventsReceived[0] = 0;
         final PictureInfoChangeListener pictureInfoChangeListener = e -> eventsReceived[0]++;
-        final PictureInfo pictureInfo = new PictureInfo();
+        final var pictureInfo = new PictureInfo();
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
         assertEquals(0, eventsReceived[0]);
         pictureInfo.setDescription("Step 1");
         // There is no listener attached so there is no event
         assertEquals(0, eventsReceived[0]);
         pictureInfo.addPictureInfoChangeListener(pictureInfoChangeListener);
         pictureInfo.setDescription("Step 2");
-        // The listener should have fired and we should have 1 event
+        // The listener should have fired. We should have 1 event
         assertEquals(1, eventsReceived[0]);
         pictureInfo.removePictureInfoChangeListener(pictureInfoChangeListener);
         pictureInfo.setDescription("Step 3");
@@ -251,8 +260,9 @@ class PictureInfoTest {
      */
     @Test
     void testDumpToXml() {
-        final URL url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
-        final PictureInfo pictureInfo = new PictureInfo(new File(url.getFile()), "First <Picture> & difficult xml chars ' \"");
+        final var TEST_PICTURE = "exif-test-canon-eos-350d.jpg";
+        final var pictureResourceUrl = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource(TEST_PICTURE));
+        final var pictureInfo = new PictureInfo(new File(pictureResourceUrl.getFile()), "First <Picture> & difficult xml chars ' \"");
         pictureInfo.setComment("Comment <<&>'\">");
         pictureInfo.setFilmReference("Reference <<&>'\">");
         pictureInfo.setRotation(45.1);
@@ -262,21 +272,25 @@ class PictureInfoTest {
         pictureInfo.addCategoryAssignment("1");
         pictureInfo.setSha256("1234");
 
-        final StringWriter stringWriter = new StringWriter();
-        try (final BufferedWriter bufferedWriter = new BufferedWriter(stringWriter)) {
-            pictureInfo.dumpToXml(bufferedWriter);
+        Path baseDir = null;
+        try {
+            final var pathOfPicture = Paths.get(pictureResourceUrl.toURI());
+            baseDir = pathOfPicture.getParent();
+        } catch (URISyntaxException e) {
+            fail("Unexpected Exception: " + e);
+        }
+
+        final var stringWriter = new StringWriter();
+        try (final var bufferedWriter = new BufferedWriter(stringWriter)) {
+            pictureInfo.dumpToXml(bufferedWriter, baseDir);
         } catch (final IOException ex) {
             Logger.getLogger(PictureInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
             fail("Unexpected IOException");
         }
 
-        final URL jpgResource = PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg");
-
         final String expected = "<picture>\n"
                 + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>\n"
-                + "\t<file_URL>"
-                + Objects.requireNonNull(jpgResource).toString()
-                + "</file_URL>\n"
+                + "\t<file>" + TEST_PICTURE + "</file>\n"
                 + "\t<sha256>1234</sha256>\n"
                 + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>\n"
                 + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>\n"
@@ -290,6 +304,13 @@ class PictureInfoTest {
         assertEquals(expected, stringWriter.toString());
     }
 
+    @Test
+    void testRelativePath() {
+        final var imageFile = new File("/linux/filesystem/pictures/picture.jpg");
+        final var baseDir = Paths.get("/linux/filesystem");
+        final var relativeImageFile = PictureInfo.getRelativePath(imageFile, baseDir);
+        assertEquals(Paths.get("pictures/picture.jpg"), relativeImageFile);
+    }
 
     @Test
     void testSha256() {
@@ -304,7 +325,7 @@ class PictureInfoTest {
         try {
             final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
             final var hashCode = pictureInfo.calculateSha256();
-            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", hashCode.toString().toUpperCase());
+            assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", hashCode.toUpperCase());
 
         } catch (final URISyntaxException | IOException e) {
             fail(e.getMessage());
@@ -316,6 +337,9 @@ class PictureInfoTest {
         final var url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
             final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            final var pictureCollection = new PictureCollection();
+            pictureCollection.getRootNode().add(node);
             final var listener = new TestPictureInfoChangeListener();
             pictureInfo.addPictureInfoChangeListener(listener);
             assertEquals("", pictureInfo.getSha256());
@@ -333,6 +357,9 @@ class PictureInfoTest {
     @Test
     void getSetFileHashBadFile() {
         final var pictureInfo = new PictureInfo(new File("NoSuchFile.txt"), "Sample Picture");
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
         final var listener = new TestPictureInfoChangeListener();
         pictureInfo.addPictureInfoChangeListener(listener);
         assertEquals("", pictureInfo.getSha256());
@@ -346,6 +373,9 @@ class PictureInfoTest {
         final var url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
             final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            final var pictureCollection = new PictureCollection();
+            pictureCollection.getRootNode().add(node);
             final var listener = new TestPictureInfoChangeListener();
             pictureInfo.addPictureInfoChangeListener(listener);
             assertEquals("", pictureInfo.getSha256());
@@ -401,8 +431,11 @@ class PictureInfoTest {
 
     @Test
     void setRotationEvent() {
-        final PictureInfo pictureInfo = new PictureInfo();
-        final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        final var pictureInfo = new PictureInfo();
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
+        final var listener = new TestPictureInfoChangeListener();
         pictureInfo.addPictureInfoChangeListener(listener);
         pictureInfo.setRotation(45.5);
         assertEquals(45.5, pictureInfo.getRotation());
@@ -413,8 +446,12 @@ class PictureInfoTest {
 
     @Test
     void setRotationEventTwice() {
-        final PictureInfo pictureInfo = new PictureInfo();
-        final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        final var pictureInfo = new PictureInfo();
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
+
+        final var listener = new TestPictureInfoChangeListener();
         pictureInfo.addPictureInfoChangeListener(listener);
         pictureInfo.setRotation(45.5);
         assertEquals(45.5, pictureInfo.getRotation());
@@ -428,8 +465,11 @@ class PictureInfoTest {
 
     @Test
     void setCategory() {
-        final PictureInfo pictureInfo = new PictureInfo();
-        final TestPictureInfoChangeListener listener = new TestPictureInfoChangeListener();
+        final var pictureInfo = new PictureInfo();
+        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var pictureCollection = new PictureCollection();
+        pictureCollection.getRootNode().add(node);
+        final var listener = new TestPictureInfoChangeListener();
         assertEquals(0, listener.events.size());
         pictureInfo.addPictureInfoChangeListener(listener);
         pictureInfo.addCategoryAssignment("0");
@@ -437,13 +477,13 @@ class PictureInfoTest {
         pictureInfo.addCategoryAssignment("1");
         assertEquals(2, listener.events.size());
 
-        // add the same one and we don't actually add to the set
+        // add the same one. We don't actually add to the set
         pictureInfo.addCategoryAssignment("1");
         assertEquals(2, listener.events.size());
     }
 
 
-    private class TestPictureInfoChangeListener implements PictureInfoChangeListener {
+    private static class TestPictureInfoChangeListener implements PictureInfoChangeListener {
 
         final List<PictureInfoChangeEvent> events = new ArrayList<>();
 
@@ -455,12 +495,12 @@ class PictureInfoTest {
 
     @Test
     void dateFunctions() {
-        final PictureInfo pictureInfo = new PictureInfo();
+        final var pictureInfo = new PictureInfo();
         System.setProperty("user.timezone", "Europe/Zurich");
         pictureInfo.setCreationTime("2021-10-02 at 14.43.23");
         assertEquals("2021-10-02 at 14.43.23", pictureInfo.getCreationTime());
         assertEquals(Tools.parseDate("2021-10-02 14:43:23"), pictureInfo.getCreationTimeAsDate());
-        // can't figure out how to get travis to honor the timezone so we just compare the first 31 characters
+        // can't figure out how to get travis to honor the timezone, so we just compare the first 31 characters
         assertEquals("Parses as: Sat Oct 02 14:43:23 CEST 2021".substring(0, 31), pictureInfo.getFormattedCreationTime().substring(0, 31));
     }
 

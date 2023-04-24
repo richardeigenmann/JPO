@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2017-2022, Richard Eigenmann, Zürich
+ Copyright (C) 2017-2023 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,8 +25,7 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Brings up an Auto Advance Dialog and sends off an new request if successful.
- *
+ * Brings up an Auto Advance Dialog and sends off a new request if successful.
  * Note that if the request's parentComponent is a ComponentMock then the actual
  * modal dialog is skipped.
  *

@@ -61,7 +61,7 @@ public class CameraDownloadWizardStep3
     private final CameraDownloadWizardData dataModel;
 
     /**
-     * Returns the component that visualises the user interactable stuff for
+     * Returns the component that visualises the user widgets for
      * this step of the wizard.
      *
      * @return the component
@@ -124,7 +124,7 @@ public class CameraDownloadWizardStep3
         collectionJTree.setEditable( false );
         collectionJTree.addTreeSelectionListener(( TreeSelectionEvent e ) -> {
             LOGGER.fine( String.format( "listening to a value changed event e: %s", e.toString() ) );
-            // Are we trying to get the last clicked node? Not sure this is best...
+            // Are we trying to get the last clicked node?
             final SortableDefaultMutableTreeNode node = (SortableDefaultMutableTreeNode) collectionJTree.getLastSelectedPathComponent();
             try {
                 if ( node.getUserObject() instanceof GroupInfo ) {

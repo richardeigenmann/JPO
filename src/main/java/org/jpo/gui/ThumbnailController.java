@@ -22,7 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,7 +58,7 @@ public class ThumbnailController
         myThumbnail.setThumbnailSize(thumbnailSize);
         myThumbnail.addMouseListener(new ThumbnailMouseAdapter());
 
-        new DropTarget(myThumbnail, new JpoTransferrableDropTargetListener(this));
+        new DropTarget(myThumbnail, new JpoTransferableDropTargetListener(this));
         final var dragSource = DragSource.getDefaultDragSource();
         dragSource.createDefaultDragGestureRecognizer(
                 myThumbnail, DnDConstants.ACTION_COPY_OR_MOVE, new ThumbnailDragGestureListener());
@@ -177,7 +177,7 @@ public class ThumbnailController
     }
 
     /**
-     * Shows the timestamp if the node is populated, showTimestamp is true and we are showing a picture
+     * Shows the timestamp if the node is populated, showTimestamp is true, and we are showing a picture
      */
     private void showTimestamp() {
         if (myNode != null && showTimestamp && myNode.getUserObject() instanceof PictureInfo pictureInfo) {
@@ -209,7 +209,7 @@ public class ThumbnailController
                 }
             }
         } catch (NullPointerException npe) {
-            // the thumbnail is not in the JViewport hierarchy so we can't say
+            // the thumbnail is not in the JViewport hierarchy, so we can't say
         }
         return false;
     }
@@ -346,19 +346,19 @@ public class ThumbnailController
          */
         private void leftClickResponse(final MouseEvent e) {
             if (e.isControlDown()) {
-                if (Settings.getPictureCollection().isSelected(myNode)) {
-                    Settings.getPictureCollection().removeFromSelection(myNode);
+                if (myNode.getPictureCollection().isSelected(myNode)) {
+                    myNode.getPictureCollection().removeFromSelection(myNode);
                 } else {
-                    LOGGER.log(Level.FINE, "Adding; Now Selected: {0}", Settings.getPictureCollection().getSelection().size());
-                    Settings.getPictureCollection().addToSelectedNodes(myNode);
+                    LOGGER.log(Level.FINE, "Adding; Now Selected: {0}", myNode.getPictureCollection().getSelection().size());
+                    myNode.getPictureCollection().addToSelectedNodes(myNode);
                 }
             } else {
-                if (Settings.getPictureCollection().isSelected(myNode)) {
-                    Settings.getPictureCollection().clearSelection();
+                if (myNode.getPictureCollection().isSelected(myNode)) {
+                    myNode.getPictureCollection().clearSelection();
                 } else {
-                    Settings.getPictureCollection().clearSelection();
-                    Settings.getPictureCollection().addToSelectedNodes(myNode);
-                    LOGGER.log(Level.FINE, "1 selection added; Now Selected: {0}", Settings.getPictureCollection().getSelection().size());
+                    myNode.getPictureCollection().clearSelection();
+                    myNode.getPictureCollection().addToSelectedNodes(myNode);
+                    LOGGER.log(Level.FINE, "1 selection added; Now Selected: {0}", myNode.getPictureCollection().getSelection().size());
                 }
             }
         }
@@ -439,7 +439,10 @@ public class ThumbnailController
      * the selection
      */
     private void showSelectionStatus() {
-        if (Settings.getPictureCollection().isSelected(myNode)) {
+        if (myNode == null || myNode.getPictureCollection() == null) {
+            return;
+        }
+        if (myNode.getPictureCollection().isSelected(myNode)) {
             myThumbnail.setSelected();
         } else {
             myThumbnail.setUnSelected();
@@ -447,8 +450,7 @@ public class ThumbnailController
     }
 
     /**
-     * This method sets the scaling factor for the display of a thumbnail. 0 ..
-     * 1
+     * This method sets the scaling factor for the display of a thumbnail. 0..1
      *
      * @param thumbnailSizeFactor Factor
      */
@@ -477,7 +479,7 @@ public class ThumbnailController
      * image.
      */
     public void determineMailSelectionStatus() {
-        myThumbnail.drawMailIcon((myNode != null) && decorateThumbnails && Settings.getPictureCollection().isMailSelected(myNode));
+        myThumbnail.drawMailIcon((myNode != null) && decorateThumbnails && myNode.getPictureCollection().isMailSelected(myNode));
     }
 
     /**
@@ -499,12 +501,12 @@ public class ThumbnailController
 
             JpoTransferable transferable;
 
-            if (Settings.getPictureCollection().countSelectedNodes() < 1) {
+            if (myNode.getPictureCollection().countSelectedNodes() < 1) {
                 final List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
                 transferableNodes.add(myNode);
                 transferable = new JpoTransferable(transferableNodes);
             } else {
-                transferable = new JpoTransferable(Settings.getPictureCollection().getSelection());
+                transferable = new JpoTransferable(myNode.getPictureCollection().getSelection());
             }
 
             try {

@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.io.File;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +28,7 @@ public class Filechoosers {
     }
 
     /**
-     * Method that chooses an xml file or returns null
+     * Method that chooses a xml file or returns null
      *
      * @return the xml file or null
      */

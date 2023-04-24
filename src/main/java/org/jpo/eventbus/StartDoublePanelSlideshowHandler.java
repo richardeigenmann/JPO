@@ -8,7 +8,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_LE
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_RIGHT;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,8 +36,8 @@ public class StartDoublePanelSlideshowHandler {
         final var p2 = new PictureViewer();
         p2.switchWindowMode(WINDOW_UNDECORATED_RIGHT);
         final var rootNode = request.node();
-        final var rb1 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
-        final var rb2 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode.toString()));
+        final var rb1 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode));
+        final var rb2 = new RandomNavigator(rootNode.getChildPictureNodes(true), String.format("Randomised pictures from %s", rootNode));
         p1.showNode(rb1, 0);
         p1.startAdvanceTimer(10);
         p2.showNode(rb2, 0);

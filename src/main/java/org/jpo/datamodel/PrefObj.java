@@ -8,7 +8,7 @@ import java.util.prefs.Preferences;
 
 /* The licensing is not clear. There are no copyright notices in the code yet 
  there is a lot of standard legal stuff on the download
- page. My take is that this is pretty low key stuff so IBM will not get 
+ page. My take is that this is pretty low-key stuff so IBM will not get
  overly upset by my using their sample code. If I am wrong 
  then please let me know and I will have to re-invent the wheel on 
  these preference things. */
@@ -30,15 +30,15 @@ public class PrefObj {
             = ( ( 3 * Preferences.MAX_VALUE_LENGTH ) / 4 );
 
     private static byte[] object2Bytes( Object o ) throws IOException {
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        final ObjectOutputStream oos = new ObjectOutputStream( baos );
-        oos.writeObject( o );
-        return baos.toByteArray();
+        final var byteArrayOutputStream = new ByteArrayOutputStream();
+        final var objectOutputStream = new ObjectOutputStream( byteArrayOutputStream );
+        objectOutputStream.writeObject( o );
+        return byteArrayOutputStream.toByteArray();
     }
 
     private static byte[][] breakIntoPieces(byte[] raw) {
         final int numPieces = ( raw.length + PIECE_LENGTH - 1 ) / PIECE_LENGTH;
-        final byte[][] pieces = new byte[numPieces][];
+        final var pieces = new byte[numPieces][];
         for ( int i = 0; i < numPieces; ++i ) {
             int startByte = i * PIECE_LENGTH;
             int endByte = startByte + PIECE_LENGTH;
@@ -54,7 +54,7 @@ public class PrefObj {
 
     private static void writePieces( Preferences prefs, String key,
                                      byte[][] pieces) throws BackingStoreException {
-        final Preferences node = prefs.node( key );
+        final var node = prefs.node( key );
         node.clear();
         for ( int i = 0; i < pieces.length; ++i ) {
             node.putByteArray( "" + i, pieces[i] );
@@ -63,10 +63,10 @@ public class PrefObj {
 
     private static byte[][] readPieces( Preferences prefs, String key )
             throws BackingStoreException {
-        final Preferences node = prefs.node( key );
-        final String[] keys = node.keys();
+        final var node = prefs.node( key );
+        final var keys = node.keys();
         final int numPieces = keys.length;
-        final byte[][] pieces = new byte[numPieces][];
+        final var pieces = new byte[numPieces][];
         for ( int i = 0; i < numPieces; ++i ) {
             pieces[i] = node.getByteArray( "" + i, null );
         }
@@ -75,12 +75,12 @@ public class PrefObj {
 
     private static byte[] combinePieces(byte[][] pieces) {
         int length = 0;
-        for (byte[] piece : pieces) {
+        for (var piece : pieces) {
             length += piece.length;
         }
-        byte[] raw = new byte[length];
+        var raw = new byte[length];
         int cursor = 0;
-        for (byte[] piece : pieces) {
+        for (var piece : pieces) {
             System.arraycopy(piece, 0, raw, cursor, piece.length);
             cursor += piece.length;
         }
@@ -89,8 +89,8 @@ public class PrefObj {
 
     private static Object bytes2Object(byte[] raw)
             throws IOException, ClassNotFoundException {
-        final ByteArrayInputStream bais = new ByteArrayInputStream( raw );
-        final ObjectInputStream ois = new ObjectInputStream( bais );
+        final var bais = new ByteArrayInputStream( raw );
+        final var ois = new ObjectInputStream( bais );
         return ois.readObject();
     }
 
@@ -98,15 +98,15 @@ public class PrefObj {
      * Puts an object in the preferences
      *
      * @param prefs the preferences to store into
-     * @param key the key Key under which to store
-     * @param o the object Object to store
+     * @param key the Key under which to store
+     * @param o the Object to store
      * @throws IOException Error when no good
      * @throws BackingStoreException Error when no good
      */
     public static void putObject( Preferences prefs, String key, Object o )
             throws IOException, BackingStoreException {
-        final byte[] raw = object2Bytes(o);
-        final byte[][] pieces = breakIntoPieces(raw);
+        final var raw = object2Bytes(o);
+        final var pieces = breakIntoPieces(raw);
         writePieces( prefs, key, pieces );
     }
 
@@ -114,16 +114,16 @@ public class PrefObj {
      * Retrieves the object from the preferences
      *
      * @param prefs the preferences to retrieve from
-     * @param key the key the key
-     * @return the object The object
+     * @param key the key
+     * @return The object
      * @throws IOException Error if no good
      * @throws BackingStoreException Error if no good
      * @throws ClassNotFoundException Error if no good
      */
     public static Object getObject( Preferences prefs, String key )
             throws IOException, BackingStoreException, ClassNotFoundException {
-        final byte[][] pieces = readPieces(prefs, key);
-        final byte[] raw = combinePieces(pieces);
+        final var pieces = readPieces(prefs, key);
+        final var raw = combinePieces(pieces);
         return bytes2Object( raw );
     }
 }

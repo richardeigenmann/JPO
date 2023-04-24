@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022  Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2023 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,7 +35,7 @@ import java.util.logging.Logger;
  */
 public class CorrectSha256SwingWorker extends SwingWorker<Integer, String> {
 
-    private SortableDefaultMutableTreeNode startNode;
+    private final SortableDefaultMutableTreeNode startNode;
 
 
     final PrivateFileSaveAsHandler privateFileSaveAsHandler = new PrivateFileSaveAsHandler();
@@ -125,12 +125,15 @@ public class CorrectSha256SwingWorker extends SwingWorker<Integer, String> {
         progressBar.setValue(progressBar.getMaximum());
         JpoEventBus.getInstance().unregister(privateFileSaveAsHandler);
         JpoEventBus.getInstance().unregister(privateStartNewCollectionHandler);
+
+        new Timer(3000, e -> frame.dispose()).start();
     }
 
-    AtomicBoolean stopTheJob = new AtomicBoolean(false);
+    final AtomicBoolean stopTheJob = new AtomicBoolean(false);
 
     private class PrivateFileSaveAsHandler {
         @Subscribe
+        //TODO: Why stop on a file save?
         public void handleEvent(final FileSaveRequest request) {
             stopTheJob.set(true);
         }
@@ -143,7 +146,7 @@ public class CorrectSha256SwingWorker extends SwingWorker<Integer, String> {
         }
     }
 
-    private class BreakException extends RuntimeException {
+    private static class BreakException extends RuntimeException {
     }
 
 }

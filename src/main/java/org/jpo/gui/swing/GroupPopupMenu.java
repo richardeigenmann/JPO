@@ -14,7 +14,7 @@ import java.util.List;
 /*
  GroupPopupMenu.java: popup menu for groups
 
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -316,7 +316,7 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem getGroupExportNewCollection() {
-        //  menu item that allows the user to export the group to several different formats
+        //  menu item that allows the user to export the group to several formats
         final var groupExportNewCollection = new JMenuItem(Settings.getJpoResources().getString("groupExportNewCollectionMenuText"));
         groupExportNewCollection.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ExportGroupToNewCollectionRequest(popupNode)));
         return groupExportNewCollection;
@@ -404,5 +404,9 @@ public class GroupPopupMenu extends JPopupMenu {
                 recentOpenedfileJMenuItem[i].setVisible(false);
             }
         }
+    }
+
+    public SortableDefaultMutableTreeNode getPopupNode() {
+        return popupNode;
     }
 }

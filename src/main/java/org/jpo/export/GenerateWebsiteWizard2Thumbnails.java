@@ -41,7 +41,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     private final GenerateWebsiteRequest request;
 
     /**
-     * Asks all the questions we need to know in regards to the thumbnails on
+     * Asks all the questions we need to know in regard to the thumbnails on
      * the final website.
      *
      * @param request Options

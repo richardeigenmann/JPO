@@ -91,7 +91,7 @@ public class ThumbnailDescriptionTester {
         final var addCategoryButton = new JButton("add Category");
         addCategoryButton.addActionListener((ActionEvent e) -> {
             final var categoryButton = new CategoryButton("Category");
-            panel.addToCategopriesJPanel(categoryButton);
+            panel.addToCategoriesJPPanel(categoryButton);
             categoryButton.addRemovalListener(e1 -> panel.removeFirstCategory());
             categoryButton.addClickListener(e1 -> panel.setDescription("Category was clicked"));
         });
@@ -117,19 +117,13 @@ public class ThumbnailDescriptionTester {
         callSetTextAreaSizeButton.addActionListener((ActionEvent e) ->  panel.setTextAreaSize());
         buttonPanel.add(callSetTextAreaSizeButton);
 
-        /**
-         *  The largest size for the thumbnail slider
+        /*
+           The largest size for the thumbnail slider
          */
         final var THUMBNAILSIZE_SLIDER_MIN = 5;
 
-        /**
-         *  The smallest size for the thumbnail slider
-         */
         final var THUMBNAILSIZE_SLIDER_MAX = 20;
 
-        /**
-         *  The starting position for the thumbnail slider
-         */
         final var THUMBNAILSIZE_SLIDER_INIT = 20;
 
         final var resizeJSlider = new JSlider(SwingConstants.HORIZONTAL,

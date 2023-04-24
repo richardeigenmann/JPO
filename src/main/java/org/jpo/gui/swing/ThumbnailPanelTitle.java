@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.Objects;
 
 /*
-Copyright (C) 2009-2022 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2023 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -84,7 +84,7 @@ public class ThumbnailPanelTitle
     public final JLabel lblPage = new JLabel();
 
     /**
-     *  the JLabel that holds the description of what is being shown in the TubnmailPanel
+     *  the JLabel that holds the description of what is being shown in the ThumbnailPanel
      */
     private final JLabel title = new JLabel();
 
@@ -155,7 +155,7 @@ public class ThumbnailPanelTitle
 
 
 
-    public class NavigationButtonPanel extends JPanel {
+    public static class NavigationButtonPanel extends JPanel {
 
         /**
          * a button to navigate back to the first page
@@ -250,7 +250,7 @@ public class ThumbnailPanelTitle
 
     /**
      *   Changes the title at the top of the page.<p>
-     *   This method is EDT safe; it can be called from outside the EDT
+     *   This method is EDT safe; it can be called from outside the EDT,
      *   and it will detect this and submit itself on the EDT.
      *
      * @param    titleString    The text to be printed across the top

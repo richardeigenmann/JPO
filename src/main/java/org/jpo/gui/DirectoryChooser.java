@@ -17,10 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
-DirectoryChooserTest.java:  a object that displays a JTextFiled and has a button
-next to it which allows you to bring up a filechooser
-
-Copyright (C) 2002 - 2020  Richard Eigenmann.
+Copyright (C) 2002 - 2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -39,8 +36,8 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  * An object of this class displays a directory field with a dropdown button to
  * select the previously used directories and has a button next to it which
- * allows you to bring up a filechooser. The selected directory is validated as
- * to whether it exists and is writable. If this is not the case the characters
+ * allows you to bring up a filechooser. The selected directory is validated
+ * whether it exists and is writable. If this is not the case the characters
  * of the textfield are displayed in red.
  *
  * @author Richard Eigenmann
@@ -71,20 +68,20 @@ public class DirectoryChooser
      * The title that will be used in the JFileChooser if the user clicks the
      * button
      */
-    private String chooserTitle = "";
+    private String chooserTitle;
     /**
      * Variable that records what type of validation this object must perform.
      * Valid Types are DIR_MUST_EXIST and DIR_MUST_BE_WRITABLE.
      */
     private final int validationType;
     /**
-     * The drop down list of the previously used directories
+     * The drop-down list of the previously used directories
      */
     private final JComboBox<Object> directoryJComboBox = new JComboBox<>();
     /**
      * Field that allows the user to capture the directory which is a sub object
-     * of the JComboBox. This code relies that the ComboBoxEditors are
-     * implemented as a JTextField. The Java 1.4.0 manual says this is the case.
+     * of the JComboBox. This code relies upon ComboBoxEditors implemented as a
+     * JTextField. The Java 1.4.0 manual says this is the case.
      */
     private final JTextField directoryJTextField = (JTextField) directoryJComboBox.getEditor().getEditorComponent();
 

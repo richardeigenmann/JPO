@@ -30,5 +30,5 @@ import java.io.File;
  * @author Richard Eigenmann
  */
 public record ExportGroupToCollectionRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull File targetFile,
-                                             @NotNull boolean exportPictures) {
+                                             boolean exportPictures) {
 }

@@ -34,7 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2022  Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -202,7 +202,7 @@ public class PictureInfoEditor extends JFrame {
 
         // set this up so that we can close the GUI if the picture node is removed while we
         // are displaying it.
-        editNode.getPictureCollection().getTreeModel().addTreeModelListener(myTreeModelListener);
+        editNode.getPictureCollection().addTreeModelListener(myTreeModelListener);
         pictureInfo.addPictureInfoChangeListener(myPictureInfoChangeListener);
 
         thumbnailController.setNode(new SingleNodeNavigator(editNode), 0);
@@ -294,7 +294,7 @@ public class PictureInfoEditor extends JFrame {
 
         final var spinner = new JSpinner(angleModel);
 
-        //Make the angle formatted without a thousands separator.
+        //Make the angle formatted without a thousand separator.
         spinner.setEditor(new JSpinner.NumberEditor(spinner, "###.##"));
         rotationPanel.add(spinner);
 
@@ -386,9 +386,9 @@ public class PictureInfoEditor extends JFrame {
             if (e.getValueIsAdjusting()) {
                 return;
             }
-            if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(setupCategories))) {
-                        new CategoryEditorJFrame();
-                    } else if (categoriesJList.isSelectedIndex(((DefaultListModel) categoriesJList.getModel()).indexOf(noCategories))) {
+            if (categoriesJList.isSelectedIndex(((DefaultListModel<?>) categoriesJList.getModel()).indexOf(setupCategories))) {
+                        new CategoryEditorJFrame(myNode.getPictureCollection());
+                    } else if (categoriesJList.isSelectedIndex(((DefaultListModel<?>) categoriesJList.getModel()).indexOf(noCategories))) {
                         categoriesJList.clearSelection();
                     }
                     categoryAssignmentsJLabel.setText(selectedJListCategoriesToString(categoriesJList));
@@ -537,7 +537,7 @@ public class PictureInfoEditor extends JFrame {
         listModel.addElement(setupCategories);
         listModel.addElement(noCategories);
 
-        final List<Integer> selections = new ArrayList<>();
+        final var selections = new ArrayList<Integer>();
         myNode.getPictureCollection().getSortedCategoryStream().forEach(entry -> {
             final var category = new Category(entry.getKey(), entry.getValue());
             listModel.addElement(category);
@@ -668,7 +668,7 @@ public class PictureInfoEditor extends JFrame {
             var comma = "";
             for (final Category c : selectedCategories) {
                 if (!((c.equals(setupCategories)) || (c.equals(noCategories)))) {
-                    resultString.append(comma).append(c.toString());
+                    resultString.append(comma).append(c);
                     comma = ", ";
                 }
             }
@@ -697,7 +697,7 @@ public class PictureInfoEditor extends JFrame {
      */
     public void getRid() {
         if (myNode.getPictureCollection().getTreeModel() != null) {
-            myNode.getPictureCollection().getTreeModel().removeTreeModelListener(myTreeModelListener);
+            myNode.getPictureCollection().removeTreeModelListener(myTreeModelListener);
         }
         pictureInfo.removePictureInfoChangeListener(myPictureInfoChangeListener);
         setVisible(false);

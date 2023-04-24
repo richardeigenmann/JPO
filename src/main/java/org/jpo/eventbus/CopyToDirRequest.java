@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +32,7 @@ import java.util.Collection;
  */
 public record CopyToDirRequest(@NonNull Collection<SortableDefaultMutableTreeNode> nodes, @NonNull File targetDirectory) {
     /**
-     * Constructor to validate the that target Directory is writable and that is is a directory
+     * Constructor to validate the that target Directory is writable and that it is a directory
      *
      * @param nodes           The nodes to copy
      * @param targetDirectory the target directory to copy to

@@ -49,24 +49,24 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
 
         // load the options into the GUI components
         switch (request.getPictureNaming()) {
-            case PICTURE_NAMING_BY_HASH_CODE:
+            case PICTURE_NAMING_BY_HASH_CODE -> {
                 hashcodeRadioButton.setSelected(true);
                 originalNameRadioButton.setSelected(false);
                 sequentialRadioButton.setSelected(false);
                 sequentialStartJSpinner.setEnabled(false);
-                break;
-            case PICTURE_NAMING_BY_ORIGINAL_NAME:
+            }
+            case PICTURE_NAMING_BY_ORIGINAL_NAME -> {
                 hashcodeRadioButton.setSelected(false);
                 originalNameRadioButton.setSelected(true);
                 sequentialRadioButton.setSelected(false);
                 sequentialStartJSpinner.setEnabled(false);
-                break;
-            default: // PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
+            }
+            default -> { // PICTURE_NAMING_BY_SEQUENTIAL_NUMBER:
                 hashcodeRadioButton.setSelected(false);
                 originalNameRadioButton.setSelected(false);
                 sequentialRadioButton.setSelected(true);
                 sequentialStartJSpinner.setEnabled(true);
-                break;
+            }
         }
         sequentialStartJSpinner.getModel().setValue(request.getSequentialStartNumber());
         generateRobotsJCheckBox.setSelected(request.isWriteRobotsTxt());

@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.*;
 
@@ -8,7 +9,7 @@ import java.io.File;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2014-2022  Richard Eigenmann.
+ Copyright (C) 2014-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +29,6 @@ import java.util.logging.Logger;
  *
  * @author Richard Eigenmann
  */
-@SuppressWarnings("UnstableApiUsage")
 public class ApplicationStartupHandler {
 
     /**
@@ -60,6 +60,7 @@ public class ApplicationStartupHandler {
         LOGGER.info("------------------------------------------------------------\n      Starting JPO");
 
         Settings.loadSettings();
+        Settings.setPictureCollection(new PictureCollection());
 
         JpoEventBus.getInstance().post(new OpenMainWindowRequest());
         JpoEventBus.getInstance().post(new StartCameraWatchDaemonRequest());

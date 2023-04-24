@@ -4,6 +4,7 @@ import org.jpo.testground.PlayWithFontAwesome;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,10 +45,10 @@ public class FontAwesomeFont {
     static {
         try (final var regular = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf");
              final var solid = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
-            final var baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, regular);
+            final var baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(regular));
             fontAwesomeRegular24 = baseFontRegular.deriveFont(Font.PLAIN, 24f);
             fontAwesomeRegular18 = baseFontRegular.deriveFont(Font.PLAIN, 18f);
-            final var baseFontSolid = Font.createFont(Font.TRUETYPE_FONT, solid);
+            final var baseFontSolid = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(solid));
             fontAwesomeSolid24 = baseFontSolid.deriveFont(Font.PLAIN, 24f);
         } catch (final IOException | FontFormatException e) {
             LOGGER.log(Level.SEVERE, "Could not load FontAwesome font. Exception: {0}", e.getMessage());

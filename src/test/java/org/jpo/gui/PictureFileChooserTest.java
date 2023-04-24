@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
@@ -35,9 +36,9 @@ class PictureFileChooserTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
         SwingUtilities.invokeLater(() -> {
-            final var sortableDefaultMutableTreeNode = new SortableDefaultMutableTreeNode();
+            final var node = new SortableDefaultMutableTreeNode();
             Settings.setLocale(Locale.ENGLISH);
-            final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(sortableDefaultMutableTreeNode);
+            final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(node);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
             // EDT blocks there
         });
@@ -56,8 +57,11 @@ class PictureFileChooserTest {
 
         SwingUtilities.invokeLater(() -> {
             final var groupInfo = new GroupInfo("GroupInfo");
-            final var sortableDefaultMutableTreeNode = new SortableDefaultMutableTreeNode(groupInfo);
-            final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(sortableDefaultMutableTreeNode);
+            final var node = new SortableDefaultMutableTreeNode(groupInfo);
+            final var pictureCollection = new PictureCollection();
+            pictureCollection.getRootNode().add(node);
+
+            final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(node);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
             // EDT blocks there
         });
@@ -88,11 +92,11 @@ class PictureFileChooserTest {
 
     /**
      * Searches for the Dialog window and returns true if it found it. The actual dialog
-     * is returned in the resultJDialog array (pass by reference)
+     * is returned to the resultJDialog array (pass by reference)
      *
-     * @param titleToFind
-     * @param resultJDialog
-     * @return
+     * @param titleToFind the search term
+     * @param resultJDialog the dialog box
+     * @return if the term was found
      */
     private static boolean searchForDialog(final String titleToFind, final JDialog[] resultJDialog) {
         LOGGER.log(Level.FINE, "Searching for dialog with the tile {0}", titleToFind);

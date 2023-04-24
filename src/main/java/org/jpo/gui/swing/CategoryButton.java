@@ -82,7 +82,7 @@ public class CategoryButton extends JPanel {
     }
 
     /**
-     * Connects a Listener to handle the click events ont he button
+     * Connects a Listener to handle the click events ont the button
      *
      * @param actionListener The Listener to handle the click events on the button.
      */

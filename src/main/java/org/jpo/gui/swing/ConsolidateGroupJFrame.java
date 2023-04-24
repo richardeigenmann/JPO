@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 /*
- Copyright (C) 2015-2022  Richard Eigenmann.
+ Copyright (C) 2015-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +28,7 @@ import java.io.File;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * GUI to ask for the target directory and whether to recurse the sub-groups in
+ * GUI to ask for the target directory and whether to recurse the subgroups in
  * a consolidation.
  *
  * @author Richard Eigenmann

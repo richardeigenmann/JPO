@@ -8,14 +8,11 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 import javax.swing.tree.*;
 import java.awt.*;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
-CollectionJTree.java:  class that creates a JTree for the collection
-
-Copyright (C) 2002-2022  Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2002-2023 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -32,7 +29,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 
 /**
  * This is the View object of the CollectionJTreeController.
- * All it can do is display the nodes of the data model and add a non standard set of icons depending on
+ * All it can do is display the nodes of the data model and add a non-standard set of icons depending on
  * the userObject in the TreeNodes.
  *
  * @author Richard Eigenmann
@@ -67,7 +64,7 @@ public class CollectionJTree
              *  the SortableDefaultMutableTreeNode is carrying and the expansion state
              *  of the node.
              *  First we let the super implementation give us the component.
-             *  Then we look at the userObject and it's class and figure
+             *  Then we look at the userObject and its class and figure
              *  out what sort of icon to give it.
              */
             @Override
@@ -104,7 +101,7 @@ public class CollectionJTree
 
             /**
              * This solution to the bug 4745084 found on
-             * http://forum.java.sun.com/thread.jspa?threadID=196868&start=15&tstart=0
+             * <a href="http://forum.java.sun.com/thread.jspa?threadID=196868&start=15&tstart=0">...</a>
              * The problem is that when you hit F2 to edit the field without this override you
              * fall back on the default icon set.
              */
@@ -114,8 +111,8 @@ public class CollectionJTree
                                            int row) {
                 super.determineOffset(tree, value, isSelected, isExpanded, isLeaf, row);
                 final Component rendererComponent = super.renderer.getTreeCellRendererComponent(tree, value, isSelected, isExpanded, isLeaf, row, true);
-                if (rendererComponent instanceof JLabel) {
-                    super.editingIcon = ((JLabel) rendererComponent).getIcon();
+                if (rendererComponent instanceof JLabel jLabel) {
+                    super.editingIcon = (jLabel.getIcon());
                 }
             }
         };
@@ -155,7 +152,7 @@ public class CollectionJTree
 
     static {
         final var OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
-        final URL resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
+        final var resource = CollectionJTree.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, OPEN_FOLDER_ICON_FILE);
             OPEN_FOLDER_ICON = null;

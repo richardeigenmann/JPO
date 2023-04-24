@@ -1,9 +1,8 @@
-package org.jpo.eventbus;
-
-import com.google.common.eventbus.Subscribe;
-import org.jpo.gui.TableJFrame;
+package org.jpo.datamodel;
 
 /*
+ GroupOrPicture.java: The userObjects in the TreeNodes
+
  Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -19,19 +18,22 @@ import org.jpo.gui.TableJFrame;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class ShowGroupAsTableHandler {
+
+/**
+ * Objects conforming to this interface are the objects on each tree node in JPO.
+ * They will be PictureInfo or GroupInfo objects
+ */
+public interface GroupOrPicture {
 
     /**
-     * When the app sees a ShowGroupAsTableRequest it will open the group in
-     * a table.
-     *
-     * @param request the request
+     * A GroupOrPicture must be able to remember the node that owns it to facilitate traversal
+     * @param sortableDefaultMutableTreeNode The owning node
      */
-    @Subscribe
-    public void handleEvent(final ShowGroupAsTableRequest request) {
-        final var tableJFrame = new TableJFrame(request.node());
-        tableJFrame.pack();
-        tableJFrame.setVisible(true);
-    }
+    void setOwningNode(final SortableDefaultMutableTreeNode sortableDefaultMutableTreeNode);
 
+    /**
+     * Returns the node that owns this object
+     * @return the node that owns this object
+     */
+    SortableDefaultMutableTreeNode getOwningNode();
 }

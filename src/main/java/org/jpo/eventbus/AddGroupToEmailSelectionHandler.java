@@ -2,14 +2,10 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
-import javax.swing.tree.TreeNode;
-import java.util.Enumeration;
-
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,11 +31,11 @@ public class AddGroupToEmailSelectionHandler {
      */
     @Subscribe
     public void handleEvent(final AddGroupToEmailSelectionRequest request) {
-        final SortableDefaultMutableTreeNode groupNode = request.node();
-        for (final Enumeration<TreeNode> e = groupNode.breadthFirstEnumeration(); e.hasMoreElements(); ) {
-            final SortableDefaultMutableTreeNode n = (SortableDefaultMutableTreeNode) e.nextElement();
-            if (n.getUserObject() instanceof PictureInfo) {
-                Settings.getPictureCollection().addToMailSelection(n);
+        final var groupNode = request.node();
+        for (final var nodeEnumeration = groupNode.breadthFirstEnumeration(); nodeEnumeration.hasMoreElements(); ) {
+            final var node = (SortableDefaultMutableTreeNode) nodeEnumeration.nextElement();
+            if (node.getUserObject() instanceof PictureInfo) {
+                groupNode.getPictureCollection().addToMailSelection(node);
             }
         }
     }

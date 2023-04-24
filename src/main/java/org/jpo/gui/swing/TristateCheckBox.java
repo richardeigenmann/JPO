@@ -4,6 +4,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+/* Copyright (C) 2023 Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+*/
+
 
 /**
  * The TristateCheckBox is a JCheckBox with a third state.
@@ -46,14 +61,9 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
     public void setSelectionState(final TCheckBoxChosenState state) {
         putClientProperty(SELECTION, state);
         switch (state) {
-            case SELECT:
-                super.setSelected(true);
-                break;
-            case UNSELECT:
-                super.setSelected(false);
-                break;
-            default:
-                super.setSelected(getInitialState() == TCheckBoxInitialState.SELECTED);
+            case SELECT -> super.setSelected(true);
+            case UNSELECT -> super.setSelected(false);
+            default -> super.setSelected(getInitialState() == TCheckBoxInitialState.SELECTED);
         }
 
         if (state == TCheckBoxChosenState.UNCHANGED) {
@@ -90,12 +100,12 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
     }
 
     public void actionPerformed(final ActionEvent e) {
-        final var tcb = (TristateCheckBox) e.getSource();
-        final var oldState = (TCheckBoxChosenState) tcb.getClientProperty(SELECTION);
-        if (((TCheckBoxInitialState) tcb.getClientProperty(INITIAL_STATE)) == TCheckBoxInitialState.MIXED) {
+        final var tristateCheckBox = (TristateCheckBox) e.getSource();
+        final var oldState = (TCheckBoxChosenState) tristateCheckBox.getClientProperty(SELECTION);
+        if (tristateCheckBox.getClientProperty(INITIAL_STATE) == TCheckBoxInitialState.MIXED) {
             setSelectionState(getNextStateForMixedCheckbox(oldState));
         } else {
-            setSelectionState(getNextStateForPureCheckbox(oldState, tcb.getInitialState()));
+            setSelectionState(getNextStateForPureCheckbox(oldState, tristateCheckBox.getInitialState()));
         }
     }
 
@@ -108,13 +118,10 @@ public class TristateCheckBox extends JCheckBox implements Icon, ActionListener 
     }
 
     public static TCheckBoxChosenState getNextStateForMixedCheckbox(final TCheckBoxChosenState oldState) {
-        switch (oldState) {
-            case UNCHANGED:
-                return TCheckBoxChosenState.SELECT;
-            case SELECT:
-                return TCheckBoxChosenState.UNSELECT;
-            default:
-                return TCheckBoxChosenState.UNCHANGED;
-        }
+        return switch (oldState) {
+            case UNCHANGED -> TCheckBoxChosenState.SELECT;
+            case SELECT -> TCheckBoxChosenState.UNSELECT;
+            default -> TCheckBoxChosenState.UNCHANGED;
+        };
     }
 }

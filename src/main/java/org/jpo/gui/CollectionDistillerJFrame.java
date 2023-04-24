@@ -198,7 +198,7 @@ public class CollectionDistillerJFrame extends JFrame {
         Settings.pushRecentCollection(targetFile.toString());
         JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                Settings.getJpoResources().getString("collectionSaveBody") + targetFile.toString(),
+                Settings.getJpoResources().getString("collectionSaveBody") + targetFile,
                 Settings.getJpoResources().getString("collectionSaveTitle"),
                 JOptionPane.INFORMATION_MESSAGE);
 

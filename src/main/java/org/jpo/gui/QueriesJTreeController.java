@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Query;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
@@ -14,9 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /*
- QueriesJTreeController.java:  Controller for the Searches JTree
-
- Copyright (C) 2006 - 2022 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2006 - 2023 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -32,7 +31,7 @@ import java.awt.event.MouseEvent;
  */
 
 /**
- * Controller for the Searches JTree
+ * Controller for the searches JTree
  *
  * @author Richard Eigenmann
  */
@@ -47,15 +46,18 @@ public class QueriesJTreeController {
 
     /**
      * Constructs a JTree for the queries
+     * @param pictureCollection The PictureCollection on which the tree will be working
      */
-    public QueriesJTreeController() {
+    public QueriesJTreeController(final PictureCollection pictureCollection) {
         queriesJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         queriesJTree.putClientProperty("JTree.lineStyle", "Angled");
         queriesJTree.setOpaque(true);
         queriesJTree.setEditable(false);
         queriesJTree.setShowsRootHandles(true);
         queriesJTree.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
-        queriesJTree.setModel(Settings.getPictureCollection().getQueriesTreeModel());
+        if (pictureCollection != null) {
+            queriesJTree.setModel(pictureCollection.getQueriesTreeModel());
+        }
 
         queriesJTree.addMouseListener(new MouseAdapter() {
             @Override
@@ -63,8 +65,8 @@ public class QueriesJTreeController {
                 final var clickPath = queriesJTree.getPathForLocation(e.getX(), e.getY());
                 if (clickPath != null && e.getClickCount() == 1 && (!e.isPopupTrigger())) {
                     final var clickNode = (DefaultMutableTreeNode) clickPath.getLastPathComponent();
-                    if ((clickNode != null) && (clickNode.getUserObject() != null) && (clickNode.getUserObject() instanceof Query)) {
-                        JpoEventBus.getInstance().post(new ShowQueryRequest((Query) clickNode.getUserObject()));
+                    if ((clickNode != null) && (clickNode.getUserObject() != null) && (clickNode.getUserObject() instanceof Query query)) {
+                        JpoEventBus.getInstance().post(new ShowQueryRequest(query));
                     }
                 }
             }
@@ -78,7 +80,7 @@ public class QueriesJTreeController {
 
 
     /**
-     * Returns a a new view component with the JTree embedded in a JScrollpane
+     * Returns a new view component with the JTree embedded in a JScrollpane
      *
      * @return the view
      */

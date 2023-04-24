@@ -50,9 +50,9 @@ public class PictureInfoChangeEvent {
 
 
     /**
-     * This overriden toString reports the status of all flags in the PictureInfoChangeEvent
+     * This overridden toString reports the status of all flags in the PictureInfoChangeEvent
      *
-     * @return a verbose one line description of the flags in the PictureInforChangeEvent
+     * @return a verbose one line description of the flags in the PictureInfoChangeEvent
      */
     @Override
     public String toString() {
@@ -180,7 +180,7 @@ public class PictureInfoChangeEvent {
 
 
     /**
-     *  returns whether the creation time was changed was changed
+     *  returns whether the creation time was changed
      *
      * @return true if changed, false if not
      */
@@ -334,7 +334,7 @@ public class PictureInfoChangeEvent {
 
 //-----------------
     /**
-     *  indicates whether the category assignments were changed changed.
+     *  indicates whether the category assignments were changed.
      */
     private boolean categoryAssignmentsChanged;  // default is false
 

@@ -44,7 +44,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 public class OverlayedPictureController extends PictureController implements ScalablePictureListener {
 
     /**
-     * Constcts the overlay that can show an info panel
+     * Constructs the overlay that can show an info panel
      *
      * @param scalablePicture a reference to the picture
      */
@@ -107,7 +107,6 @@ public class OverlayedPictureController extends PictureController implements Sca
         switch (showInfo) {
             case NO_OVERLAY -> showInfo = PHOTOGRAPHIC_OVERLAY;
             case PHOTOGRAPHIC_OVERLAY -> showInfo = APPLICATION_OVERLAY;
-            case APPLICATION_OVERLAY -> showInfo = NO_OVERLAY;
             default -> showInfo = NO_OVERLAY;
         }
         repaint();
@@ -180,6 +179,8 @@ public class OverlayedPictureController extends PictureController implements Sca
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(INFO_FONT_COLOR);
         switch (showInfo) {
+            case NO_OVERLAY:
+                break;
             case PHOTOGRAPHIC_OVERLAY:
                 g2d.drawString(Settings.getJpoResources().getString("ExifInfoCamera"), infoCoordinates.x, infoCoordinates.y);
                 g2d.drawString(exifInfo.getCamera(), infoCoordinates.x + TABSTOP, infoCoordinates.y);

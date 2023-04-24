@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2022 Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,10 +16,14 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.PictureCollection;
+
 /**
  * This request should fire off a program that checks the currently loaded collection for problems
  *
  * @author Richard Eigenmann
+ * @param pictureCollection The picture collection to check
  */
-public class CheckForCollectionProblemsRequest {
+public record CheckForCollectionProblemsRequest(@NotNull PictureCollection pictureCollection) {
 }

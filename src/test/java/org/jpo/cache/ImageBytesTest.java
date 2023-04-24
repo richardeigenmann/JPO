@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,20 +33,20 @@ class ImageBytesTest {
 
     @Test
     void constructorTest() {
-        byte[] sourceBytes = "Any String you want".getBytes();
-        final ImageBytes ib = new ImageBytes(sourceBytes);
-        byte[] bytes = ib.getBytes();
+        final var sourceBytes = "Any String you want".getBytes();
+        final var imageBytes = new ImageBytes(sourceBytes);
+        final var bytes = imageBytes.getBytes();
         assertArrayEquals(sourceBytes, bytes);
     }
 
     @Test
     void testSerializable() {
-        byte[] sourceBytes = "Any String you want".getBytes();
-        final ImageBytes imageBytes1 = new ImageBytes(sourceBytes);
+        final var sourceBytes = "Any String you want".getBytes();
+        final var imageBytes1 = new ImageBytes(sourceBytes);
         try {
             final var tempFile = File.createTempFile("testSerializable", ".jpg");
             try (final var fileOutputStream = new FileOutputStream(tempFile);
-                 final var objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                 final var objectOutputStream = new ObjectOutputStream(fileOutputStream)
             ) {
                 objectOutputStream.writeObject(imageBytes1);
             } catch (final IOException e) {
@@ -55,7 +55,7 @@ class ImageBytesTest {
             }
 
             try (final var fileInputStream = new FileInputStream(tempFile);
-                 final var objectInputStream = new ObjectInputStream(fileInputStream);
+                 final var objectInputStream = new ObjectInputStream(fileInputStream)
             ) {
                 // Method for deserialization of object
                 final var imageBytes = (ImageBytes) objectInputStream.readObject();

@@ -3,7 +3,6 @@ package org.jpo.cache;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import org.jpo.datamodel.Settings;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -13,14 +12,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -46,30 +44,30 @@ class JpoCacheTest {
      */
     private static final Logger LOGGER = Logger.getLogger(JpoCacheTest.class.getName());
 
-    private static final File IMAGE_FILE_1 = getFileFromResouces("exif-test-nikon-d100-1.jpg");
+    private static final File IMAGE_FILE_1 = getFileFromResources("exif-test-nikon-d100-1.jpg");
     private static HashCode IMAGE_FILE_1_HASH_CODE;
 
     static {
         try {
-            IMAGE_FILE_1_HASH_CODE = com.google.common.io.Files.asByteSource(IMAGE_FILE_1).hash(Hashing.sha256());
+            IMAGE_FILE_1_HASH_CODE = com.google.common.io.Files.asByteSource(Objects.requireNonNull(IMAGE_FILE_1)).hash(Hashing.sha256());
         } catch (IOException e) {
             fail(e);
         }
     }
 
-    private static final long LENGHT_FILE_1 = IMAGE_FILE_1.length();
-    private static final File IMAGE_FILE_2 = getFileFromResouces("exif-test-samsung-s4.jpg");
+    private static final long LENGTH_FILE_1 = IMAGE_FILE_1.length();
+    private static final File IMAGE_FILE_2 = getFileFromResources("exif-test-samsung-s4.jpg");
 
-    private static final long LENGHT_FILE_2 = IMAGE_FILE_2.length();
+    private static final long LENGTH_FILE_2 = IMAGE_FILE_2.length();
 
     static {
-        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number of bytes, 21599 (actual: {1})", new Object[]{IMAGE_FILE_1, LENGHT_FILE_1});
-        assertEquals(21599, LENGHT_FILE_1);
-        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number of bytes, 2354328 (actual: {1})", new Object[]{IMAGE_FILE_2, LENGHT_FILE_2});
-        assertEquals(2354328, LENGHT_FILE_2);
+        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number of bytes, 21599 (actual: {1})", new Object[]{IMAGE_FILE_1, LENGTH_FILE_1});
+        assertEquals(21599, LENGTH_FILE_1);
+        LOGGER.log(Level.INFO, "Asserting that file {0} has the right number of bytes, 2354328 (actual: {1})", new Object[]{IMAGE_FILE_2, LENGTH_FILE_2});
+        assertEquals(2354328, LENGTH_FILE_2);
     }
 
-    private static File getFileFromResouces(final String resourceName) {
+    private static File getFileFromResources(final String resourceName) {
         try {
             return new File(ClassLoader.getSystemResources(resourceName).nextElement().toURI());
         } catch (final URISyntaxException | IOException e) {
@@ -81,7 +79,7 @@ class JpoCacheTest {
     @Test
     void testLoadProperties() {
         Settings.loadSettings();
-        Properties props = JpoCache.loadProperties();
+        final var props = JpoCache.loadProperties();
         // Expecting more than x properties to be defined in the cache.ccf file
         assertTrue(Objects.requireNonNull(props).entrySet().size() > 15);
     }
@@ -96,10 +94,10 @@ class JpoCacheTest {
         try {
             JpoCache.removeFromHighresCache(IMAGE_FILE_1_HASH_CODE.toString());
             final var imageBytes = JpoCache.getHighresImageBytes(IMAGE_FILE_1_HASH_CODE.toString(), IMAGE_FILE_1);
-            assertEquals(LENGHT_FILE_1, imageBytes.getBytes().length);
+            assertEquals(LENGTH_FILE_1, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
             final var imageBytes2 = JpoCache.getHighresImageBytes(IMAGE_FILE_1_HASH_CODE.toString(), IMAGE_FILE_1);
-            assertEquals(LENGHT_FILE_1, imageBytes2.getBytes().length);
+            assertEquals(LENGTH_FILE_1, imageBytes2.getBytes().length);
             assertTrue(imageBytes2.isRetrievedFromCache());
         } catch (final IOException e) {
             fail(e.getMessage());
@@ -120,8 +118,8 @@ class JpoCacheTest {
             final var imageBytes = JpoCache.getHighresImageBytes(hashCode1.toString(), tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that the tempFile {0} was not retrieved from cache (isRetrievedFromCache: {1}) and has {2} bytes ({3})",
-                    new Object[]{tempFile, imageBytes.isRetrievedFromCache(), LENGHT_FILE_1, imageBytes.getBytes().length});
-            assertEquals(LENGHT_FILE_1, imageBytes.getBytes().length);
+                    new Object[]{tempFile, imageBytes.isRetrievedFromCache(), LENGTH_FILE_1, imageBytes.getBytes().length});
+            assertEquals(LENGTH_FILE_1, imageBytes.getBytes().length);
             assertFalse(imageBytes.isRetrievedFromCache());
 
             com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
@@ -140,14 +138,14 @@ class JpoCacheTest {
             LOGGER.log(Level.INFO,
                     "asserting that the overwritten tempFile {0} was not retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
                     new Object[]{tempFile, imageBytes2.isRetrievedFromCache(), imageBytes2.getBytes().length});
-            assertEquals(LENGHT_FILE_2, imageBytes2.getBytes().length);
+            assertEquals(LENGTH_FILE_2, imageBytes2.getBytes().length);
             assertFalse(imageBytes2.isRetrievedFromCache());
 
             final var imageBytes3 = JpoCache.getHighresImageBytes(hashCode2.toString(), tempFile);
             LOGGER.log(Level.INFO,
                     "asserting that a new request for unchanged tempFile {0} was retrieved from cache (actual: {1}) and has 2354328 bytes ({2})",
                     new Object[]{tempFile, imageBytes3.isRetrievedFromCache(), imageBytes3.getBytes().length});
-            assertEquals(LENGHT_FILE_2, imageBytes3.getBytes().length);
+            assertEquals(LENGTH_FILE_2, imageBytes3.getBytes().length);
             assertTrue(imageBytes3.isRetrievedFromCache());
 
             Files.delete(tempFile.toPath());
@@ -158,42 +156,14 @@ class JpoCacheTest {
 
     @Test
     void testGetThumbnailImageBytes() {
-        final String key = String.format("%s-%fdeg-w:%dpx-h:%dpx", IMAGE_FILE_1, 0.0, 350, 350);
+        final var key = String.format("%s-%fdeg-w:%dpx-h:%dpx", IMAGE_FILE_1, 0.0, 350, 350);
         JpoCache.removeFromThumbnailCache(key);
-        final ImageBytes imageBytes = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
+        final var imageBytes = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
         assertEquals(13094, imageBytes.getBytes().length);
         assertFalse(imageBytes.isRetrievedFromCache());
-        final ImageBytes imageBytes2 = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
+        final var imageBytes2 = JpoCache.getThumbnailImageBytes(IMAGE_FILE_1, 0.0f, new Dimension(350, 350));
         assertEquals(13094, imageBytes2.getBytes().length);
         assertTrue(imageBytes2.isRetrievedFromCache());
-    }
-
-    @Test
-    @Disabled("Does this make sense after sha256 introduction?")
-    void testGetThumbnailImageBytesFileChanged() {
-        try {
-            final var tempFile = File.createTempFile("testImage", ".jpg");
-            com.google.common.io.Files.copy(IMAGE_FILE_1, tempFile);
-
-            final var key = String.format("%s-%fdeg-w:%dpx-h:%dpx", tempFile, 0.0, 350, 350);
-            JpoCache.removeFromThumbnailCache(key);
-            final var imageBytes = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
-            assertEquals(13094, imageBytes.getBytes().length);
-            assertFalse(imageBytes.isRetrievedFromCache());
-
-            com.google.common.io.Files.copy(IMAGE_FILE_2, tempFile);
-            final var imageBytes2 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
-            assertEquals(16076, imageBytes2.getBytes().length);
-            assertFalse(imageBytes2.isRetrievedFromCache());
-
-            final var imageBytes3 = JpoCache.getThumbnailImageBytes(tempFile, 0.0f, new Dimension(350, 350));
-            assertEquals(16076, imageBytes3.getBytes().length);
-            assertTrue(imageBytes3.isRetrievedFromCache());
-
-            Files.delete(tempFile.toPath());
-        } catch (final IOException e) {
-            fail(e.getMessage());
-        }
     }
 
 }

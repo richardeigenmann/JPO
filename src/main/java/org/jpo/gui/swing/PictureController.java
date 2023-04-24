@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -30,11 +30,9 @@ import java.util.logging.Logger;
  */
 /**
  * The job of this Component is to scale and display a picture.
- *
  * It notifies the registered parent about status changes so that a description
  * object can be updated. When the image has been rendered and displayed the
- * legend of the image is send to the parent with the ready status.<p>
- *
+ * legend of the image is set to the parent with the ready status.<p>
  * The image is centred on the component to the {@link #focusPoint} in the
  * coordinate space of the image. This translated using the
  * {@link ScalablePicture#setScaleFactor( double )} to the coordinate space of
@@ -181,18 +179,10 @@ public class PictureController extends JComponent {
      */
     public void handleZoomRequest(final PictureControllerZoomRequest request) {
         switch (request.zoom()) {
-            case IN:
-                zoomIn();
-                break;
-            case OUT:
-                zoomOut();
-                break;
-            case FIT:
-                zoomToFit();
-                break;
-            case NO_SCALE:
-                zoomFull();
-                break;
+            case IN -> zoomIn();
+            case OUT -> zoomOut();
+            case FIT -> zoomToFit();
+            case NO_SCALE -> zoomFull();
         }
     }
 
@@ -261,8 +251,8 @@ public class PictureController extends JComponent {
     /**
      * Set image to centre of panel by putting the coordinates of the middle of
      * the original image into the Centre to X and Centre to Y variables by
-     * invoking the setCenterLoaction method. This method calls
-     * <code>repaint()</code> directly since no time consuming image operations
+     * invoking the setCenterLocation method. This method calls
+     * <code>repaint()</code> directly since no time-consuming image operations
      * need to take place.
      */
     public void centerImage() {
@@ -281,7 +271,7 @@ public class PictureController extends JComponent {
 
     /**
      * method that moves the image up by 10% of the pixels shown on the screen.
-     * This method calls <code>repaint()</code> directly since no time consuming
+     * This method calls <code>repaint()</code> directly since no time-consuming
      * image operations need to take place.
      * <p><img src=../scrollUp.png alt="Scroll Up"></p>
      * 
@@ -303,8 +293,8 @@ public class PictureController extends JComponent {
 
     /**
      * method that moves the image down by 10% of the pixels shown on the
-     * screen. This method calls <code>repaint()</code> directly since no time
-     * consuming image operations need to take place.
+     * screen. This method calls <code>repaint()</code> directly since no
+     * time-consuming image operations need to take place.
      * <p><img src=../scrollDown.png alt="Scroll Down"></p>
      * @see #scrollUp()
      * @see #scrollDown()
@@ -322,8 +312,8 @@ public class PictureController extends JComponent {
 
     /**
      * method that moves the image left by 10% of the pixels shown on the
-     * screen. This method calls <code>repaint()</code> directly since no time
-     * consuming image operations need to take place. works just like
+     * screen. This method calls <code>repaint()</code> directly since no
+     * time-consuming image operations need to take place. works just like
      * {@link #scrollUp()}.
      *
      * @see #scrollUp()
@@ -343,8 +333,8 @@ public class PictureController extends JComponent {
 
     /**
      * method that moves the image right by 10% of the pixels shown on the
-     * screen. This method calls <code>repaint()</code> directly since no time
-     * consuming image operations need to take place. works just like
+     * screen. This method calls <code>repaint()</code> directly since no
+     * time-consuming image operations need to take place. works just like
      * {@link #scrollDown()}.
      *
      * @see #scrollUp()
@@ -377,7 +367,7 @@ public class PictureController extends JComponent {
      * Graphics handle and doing our own drawing here. Essentially this method
      * draws a large background color rectangle. A drawRenderedImage is then
      * painted doing an affine transformation on the scaled image to position it
-     * so the the desired point is in the middle of the Graphics object. The
+     * so the desired point is in the middle of the Graphics object. The
      * picture is not scaled here because this is a slow operation and only
      * needs to be done once, while moving the image is something the user is
      * likely to do more often.

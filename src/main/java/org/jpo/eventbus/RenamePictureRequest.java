@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,9 +31,9 @@ import java.util.Objects;
 public record RenamePictureRequest(@NonNull Collection<SortableDefaultMutableTreeNode> nodes) {
 
     /**
-     * Constructor validates that the supplied nodes are holding picutres
+     * Constructor validates that the supplied nodes are holding pictures
      *
-     * @param nodes the nodes for which to rename the picutures
+     * @param nodes the nodes for which to rename the pictures
      */
     public RenamePictureRequest {
         Objects.requireNonNull(nodes);

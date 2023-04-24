@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
 /*
  GroupInfo.java:  definitions for the group objects
 
- Copyright (C) 2002 - 2022 Richard Eigenmann.
+ Copyright (C) 2002 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,19 +32,20 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * A class which holds information about the group and has been given the
- * intelligence of how to write itself and it's pictures to an html document.
+ * A GroupInfo object carries a description and its owning node can have zero or
+ * many GroupOrPicture carrying nodes.
  * <p>
  * This class must implement the Serializable interface or Drag and Drop will
  * not work.
  *
  * @see PictureInfo
  */
-public class GroupInfo implements Serializable {
+public class GroupInfo implements Serializable, GroupOrPicture {
 
     /**
      * Keep serialisation happy
      */
+    @Serial
     private static final long serialVersionUID = 1;
 
     /**
@@ -120,12 +122,18 @@ public class GroupInfo implements Serializable {
      */
     private void sendGroupNameChangedEvent() {
         LOGGER.log(Level.FINE, "preparing to send GroupName changed event");
-        if ( ( Settings.getPictureCollection() != null ) && ( Settings.getPictureCollection().getSendModelUpdates() ) ) {
+        final var owningNode = getOwningNode();
+        if (owningNode == null ) {
+            // no owning node, no change notification
+            return;
+        }
+        final var pictureCollection = owningNode.getPictureCollection();
+        if ( ( pictureCollection != null ) && ( pictureCollection.getSendModelUpdates() ) ) {
             final var groupInfoChangeEvent = new GroupInfoChangeEvent(this);
             groupInfoChangeEvent.setGroupNameChanged();
             sendGroupInfoChangedEvent(groupInfoChangeEvent);
             LOGGER.log(Level.FINE, "sent description changed event");
-            Settings.getPictureCollection().setUnsavedUpdates();
+            pictureCollection.setUnsavedUpdates();
         }
     }
 
@@ -209,7 +217,7 @@ public class GroupInfo implements Serializable {
      * Removes the change listener
      *
      * @param groupInfoChangeListener	The listener that doesn't want to
-     * notifications any more.
+     * receive notifications.
      */
     public void removeGroupInfoChangeListener( GroupInfoChangeListener groupInfoChangeListener ) {
         groupInfoListeners.remove( groupInfoChangeListener );
@@ -221,7 +229,8 @@ public class GroupInfo implements Serializable {
      * @param groupInfoChangeEvent The Event we want to notify.
      */
     private void sendGroupInfoChangedEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
-        if (Settings.getPictureCollection().getSendModelUpdates()) {
+        final var pictureCollection = getOwningNode().getPictureCollection();
+        if (pictureCollection != null && pictureCollection.getSendModelUpdates()) {
             synchronized (groupInfoListeners) {
                 groupInfoListeners.forEach(groupInfoChangeListener
                         -> groupInfoChangeListener.groupInfoChangeEvent(groupInfoChangeEvent)
@@ -244,11 +253,22 @@ public class GroupInfo implements Serializable {
      * Defines how GroupInfo objects compare themselves
      *
      * @param otherGroupInfo The other GroupInfo object
-     * @return negative number if this is less then other Zero if same or positive numper if other is less than this
+     * @return negative number if this is less than other Zero if same or positive number if other is less than this
      */
     public int compareTo(final @NotNull GroupInfo otherGroupInfo) {
         return (this.getGroupName().compareTo(otherGroupInfo.getGroupName()));
     }
 
+
+    private SortableDefaultMutableTreeNode myOwningNode = null;
+    @Override
+    public void setOwningNode(SortableDefaultMutableTreeNode sortableDefaultMutableTreeNode) {
+        myOwningNode = sortableDefaultMutableTreeNode;
+    }
+
+    @Override
+    public SortableDefaultMutableTreeNode getOwningNode( ) {
+        return myOwningNode;
+    }
 
 }
