@@ -2,7 +2,7 @@
 <div class="container">
 <h1>License</h1>
 
-<p>JPO is licensed under the GPL license. It is explained here: <a href="http://www.gnu.org/copyleft/gpl.html">http://www.gnu.org/copyleft/gpl.html</a></p>
+<p>JPO is licensed under the GPLv2 license. It is explained here: <a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html">https://www.gnu.org/licenses/old-licenses/gpl-2.0.html</a></p>
 
 <hr>
 <h2>Third Party Licenses</h2>
@@ -30,7 +30,7 @@
 </p>
 
 <hr>
-<p>Last update to this page: 25 April 2023<br>
+<p>Last update to this page: 26 April 2023<br>
 Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
