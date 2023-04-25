@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017 -2022 Richard Eigenmann.
+ Copyright (C) 2017 -2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -17,11 +17,13 @@ package org.jpo.eventbus;
  */
 
 import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.PictureCollection;
 
 /**
- * This request opens the dialog after a file save
+ * This request opens the dialog after the File > Save and asks if the user wants to make this file
+ * the default file to open.
  *
  * @author Richard Eigenmann
  */
-public record AfterFileSaveRequest(@NotNull String autoLoadCollectionFile) {
+public record AfterFileSaveRequest(@NotNull PictureCollection pictureCollection) {
 }

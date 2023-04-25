@@ -8,7 +8,7 @@ import org.jpo.gui.XmlFilter;
 import javax.swing.*;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,7 +38,7 @@ public class FileSaveAsHandler {
         jFileChooser.setDialogTitle(Settings.getJpoResources().getString("fileSaveAsTitle"));
         jFileChooser.setMultiSelectionEnabled(false);
         jFileChooser.setFileFilter(new XmlFilter());
-        if (Settings.getPictureCollection().getXmlFile() != null) {
+        if (request.pictureCollection().getXmlFile() != null) {
             jFileChooser.setCurrentDirectory(Settings.getPictureCollection().getXmlFile());
         } else {
             jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
@@ -59,14 +59,14 @@ public class FileSaveAsHandler {
                 }
             }
 
-            Settings.getPictureCollection().setXmlFile(chosenFile);
-            Settings.getPictureCollection().fileSave();
+            request.pictureCollection().setXmlFile(chosenFile);
+            request.pictureCollection().fileSave();
 
             Settings.memorizeCopyLocation(chosenFile.getParent());
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
             Settings.pushRecentCollection(chosenFile.toString());
             JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
-            JpoEventBus.getInstance().post(new AfterFileSaveRequest(Settings.getPictureCollection().getXmlFile().toString()));
+            JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {
                 JpoEventBus.getInstance().post(request.onSuccessNextRequest());
             }

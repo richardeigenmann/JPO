@@ -18,9 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- MainWindow.java:  main window of the JPO application
-
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -100,7 +98,7 @@ public class MainWindow extends ResizableJFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(new ShutdownApplicationRequest()));
+                JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(Settings.getPictureCollection(), new ShutdownApplicationRequest()));
             }
         });
 

@@ -37,19 +37,29 @@ public class AfterFileSaveHandler {
     public void handleEvent(final AfterFileSaveRequest request) {
         final var panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel(Settings.getJpoResources().getString("collectionSaveBody") + Settings.getPictureCollection().getXmlFile().toString()));
+        panel.add(new JLabel(Settings.getJpoResources().getString("collectionSaveBody") + request.pictureCollection().getXmlFile().toString()));
         final var setAutoload = new JCheckBox(Settings.getJpoResources().getString("setAutoload"));
-        if (Settings.getAutoLoad() != null && ((new File(Settings.getAutoLoad())).compareTo(Settings.getPictureCollection().getXmlFile()) == 0)) {
+        if (Settings.getAutoLoad() != null && ((new File(Settings.getAutoLoad())).compareTo(request.pictureCollection().getXmlFile()) == 0)) {
             setAutoload.setSelected(true);
         }
         panel.add(setAutoload);
-        JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+         /*JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 panel,
                 Settings.getJpoResources().getString("collectionSaveTitle"),
-                JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.INFORMATION_MESSAGE);*/
+
+        JOptionPane jOptionPane = new JOptionPane(panel);
+        final JDialog jDialog = new JDialog(Settings.getAnchorFrame(), Settings.getJpoResources().getString("collectionSaveTitle"));
+        jDialog.setContentPane(jOptionPane);
+        jDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        jDialog.setLocationRelativeTo(Settings.getAnchorFrame());
+        jDialog.pack();
+        // auto-close this dialog after 15 seconds if the user hasn't made a choice
+        new Timer(15000, e -> jDialog.dispose()).start();
+        jDialog.setVisible(true);
 
         if (setAutoload.isSelected()) {
-            Settings.setAutoLoad(request.autoLoadCollectionFile());
+            Settings.setAutoLoad(request.pictureCollection().getXmlFile().toString());
             Settings.writeSettings();
         }
     }

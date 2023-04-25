@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017 - 2020 Richard Eigenmann.
+ Copyright (C) 2017 - 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,7 +16,9 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jpo.datamodel.PictureCollection;
 
 /**
  * This request indicates that the user wants to save the collection
@@ -24,5 +26,5 @@ import org.jetbrains.annotations.Nullable;
  * @param onSuccessNextRequest the next request or null if none
  * @author Richard Eigenmann
  */
-public record FileSaveRequest(@Nullable Object onSuccessNextRequest) {
+public record FileSaveRequest(@NotNull PictureCollection pictureCollection, @Nullable Object onSuccessNextRequest) {
 }

@@ -70,11 +70,11 @@ public class UnsavedUpdatesDialogHandler {
             switch (option) {
                 case 0 -> JpoEventBus.getInstance().post(request.nextRequest());
                 case 1 -> {
-                    final var fileSaveRequest = new FileSaveRequest(request.nextRequest());
+                    final var fileSaveRequest = new FileSaveRequest(request.pictureCollection(), request.nextRequest());
                     JpoEventBus.getInstance().post(fileSaveRequest);
                 }
                 case 2 -> {
-                    final var fileSaveAsRequest = new FileSaveAsRequest(request.nextRequest());
+                    final var fileSaveAsRequest = new FileSaveAsRequest(request.pictureCollection(), request.nextRequest());
                     JpoEventBus.getInstance().post(fileSaveAsRequest);
                 }
                 default -> {

@@ -39,13 +39,13 @@ public class FileSaveHandler {
      */
     @Subscribe
     public void handleEvent(final FileSaveRequest request) {
-        if (Settings.getPictureCollection().getXmlFile() == null) {
-            final var fileSaveAsRequest = new FileSaveAsRequest(request.onSuccessNextRequest());
+        if (request.pictureCollection().getXmlFile() == null) {
+            final var fileSaveAsRequest = new FileSaveAsRequest(request.pictureCollection(), request.onSuccessNextRequest());
             JpoEventBus.getInstance().post(fileSaveAsRequest);
         } else {
             LOGGER.log(Level.INFO, "Saving under the name: {0}", Settings.getPictureCollection().getXmlFile());
-            Settings.getPictureCollection().fileSave();
-            JpoEventBus.getInstance().post(new AfterFileSaveRequest(Settings.getPictureCollection().getXmlFile().toString()));
+            request.pictureCollection().fileSave();
+            JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {
                 JpoEventBus.getInstance().post(request.onSuccessNextRequest());
             }
