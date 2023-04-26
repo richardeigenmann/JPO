@@ -76,7 +76,7 @@ public class MimeTypes {
 
     public static boolean isAPicture(final File file) {
         var mimeType = getMimeType(file);
-        if (mimeType == "null" && (FileNameUtils.getExtension(file.toPath()).equalsIgnoreCase("hdr"))) {
+        if (mimeType.equals("null") && (FileNameUtils.getExtension(file.toPath()).equalsIgnoreCase("hdr"))) {
             return true;
         }
         return mimeType.startsWith("image/");
