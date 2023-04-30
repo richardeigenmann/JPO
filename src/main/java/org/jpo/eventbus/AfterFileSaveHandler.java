@@ -4,7 +4,10 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  Copyright (C) 2023 Richard Eigenmann.
@@ -27,6 +30,12 @@ import java.io.File;
  * be set as the default start up collection.
  */
 public class AfterFileSaveHandler {
+
+    /**
+     * Defines a logger for this class
+     */
+    private static final Logger LOGGER = Logger.getLogger(AfterFileSaveHandler.class.getName());
+
     /**
      * Brings up the dialog after a file save and allows the saved collection to
      * be set as the default start up collection.
@@ -37,31 +46,40 @@ public class AfterFileSaveHandler {
     public void handleEvent(final AfterFileSaveRequest request) {
         final var panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         panel.add(new JLabel(Settings.getJpoResources().getString("collectionSaveBody") + request.pictureCollection().getXmlFile().toString()));
-        final var setAutoload = new JCheckBox(Settings.getJpoResources().getString("setAutoload"));
+        final var autoLoadJCheckBox = new JCheckBox(Settings.getJpoResources().getString("setAutoload"));
         if (Settings.getAutoLoad() != null && ((new File(Settings.getAutoLoad())).compareTo(request.pictureCollection().getXmlFile()) == 0)) {
-            setAutoload.setSelected(true);
+            autoLoadJCheckBox.setSelected(true);
         }
-        panel.add(setAutoload);
-         /*JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                panel,
-                Settings.getJpoResources().getString("collectionSaveTitle"),
-                JOptionPane.INFORMATION_MESSAGE);*/
+        panel.add(autoLoadJCheckBox);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JOptionPane jOptionPane = new JOptionPane(panel);
-        final JDialog jDialog = new JDialog(Settings.getAnchorFrame(), Settings.getJpoResources().getString("collectionSaveTitle"));
-        jDialog.setContentPane(jOptionPane);
+        final var jDialog = new JDialog(Settings.getAnchorFrame(), Settings.getJpoResources().getString("collectionSaveTitle"));
+
+        final var okButton = new JButton("OK");
+        okButton.addActionListener(e -> closeAfterFileSaveDialog(request, autoLoadJCheckBox, jDialog));
+        final var buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(okButton);
+        panel.add(buttonPanel);
+
+        jDialog.setContentPane(panel);
         jDialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         jDialog.setLocationRelativeTo(Settings.getAnchorFrame());
         jDialog.pack();
-        // auto-close this dialog after 15 seconds if the user hasn't made a choice
-        new Timer(15000, e -> jDialog.dispose()).start();
         jDialog.setVisible(true);
 
-        if (setAutoload.isSelected()) {
+        // auto-close this dialog after 15 seconds if the user hasn't made a choice
+        new Timer(15000, e -> closeAfterFileSaveDialog(request, autoLoadJCheckBox, jDialog)).start();
+    }
+
+    private static void closeAfterFileSaveDialog(final AfterFileSaveRequest request, final JCheckBox autoLoadJCheckBox, final JDialog jDialog) {
+        if (autoLoadJCheckBox.isSelected()) {
+            LOGGER.log(Level.INFO, "Setting JPO Autostart to load file: {0}", request.pictureCollection().getXmlFile() );
             Settings.setAutoLoad(request.pictureCollection().getXmlFile().toString());
             Settings.writeSettings();
         }
+        jDialog.dispose();
     }
 
 }

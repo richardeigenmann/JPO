@@ -1021,9 +1021,8 @@ public class PictureCollection {
     }
 
     Path getCommonPath() {
-        LOGGER.log(Level.INFO, "Searching for common path of the pictures");
+        LOGGER.log(Level.FINE, "Searching for common path of the pictures");
         final var pictureNodes = getRootNode().getChildPictureNodes(true);
-        LOGGER.log(Level.INFO, "GAGA The collection has {0} pictures. Returning an empty common path.", pictureNodes.size());
         if (pictureNodes.isEmpty()) {
             LOGGER.log(Level.INFO, "The collection has {0} pictures. Returning an empty common path.", pictureNodes.size());
             return Paths.get("");
@@ -1036,7 +1035,7 @@ public class PictureCollection {
             LOGGER.log(Level.FINE,"Next picture: {0}, File: {1}", new Object[]{nextPictureInfo.getDescription(), nextPictureInfo.getImageFile()});
             commonPath = getCommonPath(nextPictureInfo.getImageFile().toPath(), commonPath);
         }
-        LOGGER.log(Level.INFO, "Common path is {0}", commonPath);
+        LOGGER.log(Level.FINE, "Common path is {0}", commonPath);
         return commonPath;
     }
 
