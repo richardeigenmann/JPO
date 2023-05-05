@@ -10,7 +10,6 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
-
 version = 0.20
 group = 'org.jpo'
 
@@ -116,6 +115,7 @@ test {
     moduleOptions {
         runOnClasspath = true
     }
+
 
     testLogging {
         events "passed", "skipped", "failed"

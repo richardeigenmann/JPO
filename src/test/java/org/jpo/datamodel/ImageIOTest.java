@@ -1,5 +1,7 @@
 package org.jpo.datamodel;
 
+import com.google.common.hash.Hashing;
+import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageReader;
@@ -226,8 +228,17 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
+
+            final var hash = Files.asByteSource(image).hash(Hashing.sha256());
+            assertEquals("465b09bb5e2a312a308c89a3381c02aee59b573643dd2ca0603351dd8c1a657a", hash.toString());
+
+            System.out.println("jdk.module.path: " + System.getProperty("jdk.module.path"));
+            System.out.println("java.class.path: " + System.getProperty("java.class.path"));
+
+            Class.forName("com.twelvemonkeys.imageio.plugins.tga.TGA");
+
             assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
-        } catch (final URISyntaxException e) {
+        } catch (final URISyntaxException | IOException | ClassNotFoundException e) {
             fail(e.getMessage());
         }
     }

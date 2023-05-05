@@ -13,8 +13,12 @@ import com.drew.metadata.exif.makernotes.NikonType2MakernoteDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import org.apache.commons.lang3.StringUtils;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import static com.drew.metadata.exif.ExifDirectoryBase.*;
@@ -160,9 +164,15 @@ public class ExifInfo {
     }
 
     /**
+     * The width
+     */
+    private String exifWidth= "";
+
+
+    /**
      * The parsed width
      */
-    private String exifWidth = "";
+    private String exifHeight= "";
 
     /**
      * Returns the height as stored in the Exif
@@ -172,11 +182,6 @@ public class ExifInfo {
     public String getExifHeight() {
         return exifHeight;
     }
-
-    /**
-     * The parsed width
-     */
-    private String exifHeight = "";
 
     /**
      * Returns the rotation in the Exif
@@ -218,16 +223,12 @@ public class ExifInfo {
             return;
         }
         try {
-            final InputStream imageStream = new FileInputStream(pictureFile);
-            final Metadata metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(imageStream));
+            final var imageStream = new FileInputStream(pictureFile);
+            final var metadata = ImageMetadataReader.readMetadata(new BufferedInputStream(imageStream));
 
-            final JpegDirectory jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
-            if (jpegDirectory != null) {
-                exifWidth = tryToGetTag(jpegDirectory, JpegDirectory.TAG_IMAGE_WIDTH, exifWidth);
-                exifHeight = tryToGetTag(jpegDirectory, JpegDirectory.TAG_IMAGE_HEIGHT, exifHeight);
-            }
+            extractDimensions(metadata);
 
-            final ExifSubIFDDirectory exifSubIFDdirectory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+            final var exifSubIFDdirectory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
             if (exifSubIFDdirectory != null) {
                 setCreateDateTime(tryToGetTag(exifSubIFDdirectory, TAG_DATETIME_ORIGINAL, getCreateDateTime()));
                 aperture = tryToGetTag( exifSubIFDdirectory, TAG_FNUMBER, aperture );
@@ -239,7 +240,7 @@ public class ExifInfo {
                 lens = tryToGetTag( exifSubIFDdirectory, TAG_LENS, lens );
             }
 
-            final ExifIFD0Directory exifSubIFD0directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
+            final var exifSubIFD0directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
             if ( exifSubIFD0directory != null ) {
                 camera = StringUtils.stripEnd( tryToGetTag( exifSubIFD0directory, TAG_MODEL, camera ), " " );
                 final String rotationString = StringUtils.stripEnd(tryToGetTag(exifSubIFD0directory, TAG_ORIENTATION, ""), " ");
@@ -254,7 +255,7 @@ public class ExifInfo {
 
             }
 
-            final GpsDirectory gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+            final var gpsDirectory = metadata.getFirstDirectoryOfType(GpsDirectory.class);
             if ( gpsDirectory != null ) {
                 GeoLocation location = gpsDirectory.getGeoLocation();
                 if ( location != null ) {
@@ -263,13 +264,13 @@ public class ExifInfo {
                 }
             }
 
-            final NikonType2MakernoteDirectory nikonType2MakernoteDirectory = metadata.getFirstDirectoryOfType(NikonType2MakernoteDirectory.class);
+            final var nikonType2MakernoteDirectory = metadata.getFirstDirectoryOfType(NikonType2MakernoteDirectory.class);
             if ( nikonType2MakernoteDirectory != null ) {
                 iso = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_ISO_1, iso );
                 lens = tryToGetTag( nikonType2MakernoteDirectory, NikonType2MakernoteDirectory.TAG_LENS, lens );
             }
 
-            final CanonMakernoteDirectory canonMakernoteDirectory = metadata.getFirstDirectoryOfType(CanonMakernoteDirectory.class);
+            final var canonMakernoteDirectory = metadata.getFirstDirectoryOfType(CanonMakernoteDirectory.class);
             if ( canonMakernoteDirectory != null ) {
                 lens = tryToGetTag(canonMakernoteDirectory, CanonMakernoteDirectory.TAG_LENS_MODEL, lens);
                 if ("".equals(lens)) {
@@ -279,7 +280,7 @@ public class ExifInfo {
                 }
             }
 
-            for (final Directory directory : metadata.getDirectories()) {
+            for (final var directory : metadata.getDirectories()) {
                 directory.getTags().forEach(tag
                         -> exifDump.append(tag.getTagTypeHex()).append(" - ").append(tag.getTagName()).append(":\t").append(tag.getDirectoryName()).append(":\t").append(tag.getDescription()).append("\n")
                 );
@@ -288,6 +289,15 @@ public class ExifInfo {
             LOGGER.severe(x.getMessage());
         }
 
+    }
+
+    private Dimension extractDimensions(final Metadata metadata) {
+        final var jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory.class);
+        if (jpegDirectory != null) {
+            exifWidth = tryToGetTag(jpegDirectory, JpegDirectory.TAG_IMAGE_WIDTH, getExifWidth());
+            exifHeight = tryToGetTag(jpegDirectory, JpegDirectory.TAG_IMAGE_HEIGHT, getExifHeight());
+        }
+        return new Dimension (0,0);
     }
 
     private static String removeLastChars(String str, int chars) {

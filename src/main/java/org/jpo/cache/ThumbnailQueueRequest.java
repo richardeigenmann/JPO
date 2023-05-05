@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /*
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -128,6 +128,21 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     @Override
     public int compareTo(final ThumbnailQueueRequest thumbnailQueueRequest) {
         return priority.compareTo(thumbnailQueueRequest.priority);
+    }
+
+    /**
+     * Compares to another request based on priority.
+     *
+     * @param obj The request to compare against
+     * @return if the priority is the same
+     * interface
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        /*if (obj instanceof ThumbnailQueueRequest thumbnailQueueRequest) {
+            return priority.equals(thumbnailQueueRequest.priority);
+        }*/
+        return super.equals(obj);
     }
 
 
