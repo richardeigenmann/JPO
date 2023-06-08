@@ -1,5 +1,6 @@
 package org.jpo.gui.swing;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
@@ -44,7 +45,7 @@ public class CollectionJTree
     private static final Logger LOGGER = Logger.getLogger(CollectionJTree.class.getName());
 
     /**
-     * Constructor for the CollectionJTree, sets styles, cellrenderer, minimum size.
+     * Constructor for the CollectionJTree, sets styles, cell renderer, minimum size.
      */
     public CollectionJTree() {
         putClientProperty("JTree.lineStyle", "Angled");
@@ -55,7 +56,14 @@ public class CollectionJTree
         setEditable(true);
         getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 
-        final var renderer = new DefaultTreeCellRenderer() {
+        setCellRenderer(getRenderer());
+        setCellEditor(getTreeCellEditor());
+
+    }
+
+    @NotNull
+    private static DefaultTreeCellRenderer getRenderer() {
+        return new DefaultTreeCellRenderer() {
 
             /**
              *  Overridden method that sets the icon in the JTree to either a
@@ -95,9 +103,11 @@ public class CollectionJTree
                 return this;
             }
         };
+    }
 
-        final TreeCellEditor localCellEditor = new DefaultCellEditor(new JTextField());
-        final TreeCellEditor treeCellEditor = new DefaultTreeCellEditor(this, renderer, localCellEditor) {
+
+    private  TreeCellEditor getTreeCellEditor() {
+        return new DefaultTreeCellEditor(this, getRenderer(), new DefaultCellEditor(new JTextField())) {
 
             /**
              * This solution to the bug 4745084 found on
@@ -116,10 +126,8 @@ public class CollectionJTree
                 }
             }
         };
-        setCellRenderer(renderer);
-        setCellEditor(treeCellEditor);
-
     }
+
 
 
     /**

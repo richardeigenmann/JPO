@@ -1,21 +1,23 @@
 package org.jpo.gui;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2022 Richard Eigenmann.
+ Copyright (C) 2017-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,7 +46,7 @@ public class CollectionJTreeControllerTest {
      * Test Constructor
      */
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assumeFalse( GraphicsEnvironment.isHeadless() );
         try {
             SwingUtilities.invokeAndWait( () -> {
@@ -58,4 +60,49 @@ public class CollectionJTreeControllerTest {
             Thread.currentThread().interrupt();
         }
     }
+
+    @Test
+    void testSelection() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final var pictureCollection = new PictureCollection();
+                final var groupNode = new SortableDefaultMutableTreeNode(new GroupInfo("Group Node"));
+                pictureCollection.getRootNode().add(groupNode);
+                final var collectionJTreeController = new CollectionJTreeController(pictureCollection);
+
+                final var collectionJTree = collectionJTreeController.getCollectionJTree();
+
+                final var selectedNode = CollectionJTreeController.getSelectedNode(collectionJTree);
+                assert(selectedNode.isEmpty());
+
+                final var selectionPath = new TreePath(new Object[]{groupNode});
+                collectionJTree.setSelectionPath(selectionPath);
+                final var selectedNodeAfterSetting = CollectionJTreeController.getSelectedNode(collectionJTree);
+                assert(selectedNodeAfterSetting.isPresent());
+                assertEquals(groupNode, selectedNodeAfterSetting.get());
+            } );
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
+            fail( ex.getCause().getMessage() );
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testSelectionOfDifferentJTree() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final var anyJTree = new JTree();
+
+                final var selectedNode = CollectionJTreeController.getSelectedNode(anyJTree);
+                assert(selectedNode.isEmpty());
+            } );
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
+            fail( ex.getCause().getMessage() );
+            Thread.currentThread().interrupt();
+        }
+    }
+
+
 }

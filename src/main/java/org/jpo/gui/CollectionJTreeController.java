@@ -3,6 +3,7 @@ package org.jpo.gui;
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.CollectionJTree;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -124,6 +126,28 @@ public class CollectionJTreeController {
         return false;
     }
 
+    /**
+     * A helper method that returns us the selected node on the tree if we have a selection and it is
+     * pointing to a GroupInfo or a PictureInfo object.
+     * @param component The component that we want to check
+     * @return the node if we have one.
+     */
+    public static Optional<SortableDefaultMutableTreeNode> getSelectedNode(final JComponent component) {
+        if ( component instanceof CollectionJTree collectionJTree) {
+            final var selectionPath = collectionJTree.getSelectionPath();
+            if ( selectionPath == null ) {
+                return Optional.empty();
+            }
+            final var lastPathComponent = selectionPath.getLastPathComponent();
+            if ( lastPathComponent instanceof SortableDefaultMutableTreeNode node ) {
+                if (node.getUserObject() instanceof GroupInfo || node.getUserObject() instanceof PictureInfo) {
+                    return Optional.of(node);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
 
     private class MyTransferHandler
             extends TransferHandler {
@@ -136,9 +160,17 @@ public class CollectionJTreeController {
          * @return COPY_OR_MOVE for this TransferHandler
          */
         @Override
-        public int getSourceActions( JComponent component ) {
-            return COPY_OR_MOVE;
+        public int getSourceActions( final JComponent component ) {
+            final var selectedNode = CollectionJTreeController.getSelectedNode(component);
+            if ( selectedNode.isPresent() ) {
+                LOGGER.log(Level.INFO, "Allowing drag from node {0}", selectedNode.get());
+                return COPY_OR_MOVE;
+            }
+            LOGGER.log(Level.INFO, "Cant support drag from component {0}", component);
+            return NONE;
         }
+
+
 
         /**
          * This method bundles up the data to be exported into a Transferable
@@ -149,14 +181,12 @@ public class CollectionJTreeController {
          */
         @Override
         protected Transferable createTransferable(final JComponent component) {
-            final var selectedTreePath = collectionJTree.getSelectionPath();
-            final var node = (SortableDefaultMutableTreeNode) Objects.requireNonNull(selectedTreePath).getLastPathComponent();
-            if (node.isRoot()) {
-                LOGGER.log(Level.SEVERE, "This is the root node: {0}\nPath: {1}\nIt may not be dragged. Dragging disabled.", new Object[]{node, selectedTreePath});
+            final var selectedNode = CollectionJTreeController.getSelectedNode(component);
+            if (selectedNode.isEmpty()) {
                 return null;
             }
-            List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
-            transferableNodes.add(node);
+            final List<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
+            transferableNodes.add(selectedNode.get());
             return new JpoTransferable(transferableNodes);
         }
 
@@ -272,6 +302,10 @@ public class CollectionJTreeController {
     }
 
 
+    @TestOnly
+    public CollectionJTree getCollectionJTree() {
+        return (CollectionJTree) collectionJTree;
+    }
 
 
     /**
