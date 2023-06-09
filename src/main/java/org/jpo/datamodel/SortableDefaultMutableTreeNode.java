@@ -188,6 +188,20 @@ public class SortableDefaultMutableTreeNode
 
 
     /**
+     * This method reports if one of the supplied nodes is an ancestor of the current node.
+     * @param potentialAncestorNodes The collection of potential ancestor nodes to check
+     * @return true if an ancestor is found
+     */
+    public boolean containsAnAncestor(final Collection<SortableDefaultMutableTreeNode> potentialAncestorNodes) {
+        for (final var potentialAncestorNode : potentialAncestorNodes) {
+            if (this.isNodeAncestor(potentialAncestorNode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Checks if the DropTargetDropEvent is suitable. Presently we can only deal
      * with local transfers of JpoTransferables
      *
@@ -619,20 +633,17 @@ public class SortableDefaultMutableTreeNode
             return;
         }
 
-        for (final SortableDefaultMutableTreeNode sourceNode : transferableNodes) {
-            if (this.isNodeAncestor(sourceNode)) {
-                LOGGER.log(Level.INFO, """
-                        One of the transferring nodes is an ancestor of the current node which would orphan the tree.
-                        Ancestor node: {0}
-                        Current node: {1}""", new Object[]{sourceNode, this});
-                JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("moveNodeError"),
-                        Settings.getJpoResources().getString(GENERIC_ERROR),
-                        JOptionPane.ERROR_MESSAGE);
-                dropEvent.dropComplete(false);
+        if (this.containsAnAncestor(transferableNodes)) {
+            LOGGER.log(Level.INFO, """
+                    One of the transferring nodes is an ancestor of the current node which would orphan the tree.
+                    """);
+            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
+                    Settings.getJpoResources().getString("moveNodeError"),
+                    Settings.getJpoResources().getString(GENERIC_ERROR),
+                    JOptionPane.ERROR_MESSAGE);
+            dropEvent.dropComplete(false);
 
-                return;
-            }
+            return;
         }
 
         memorizeGroupOfDropLocation(this);

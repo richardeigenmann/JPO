@@ -849,4 +849,13 @@ class SortableDefaultMutableTreeNodeTest {
         assertNull(g1.getCommonPath());
     }
 
+    @Test
+    void testIsAncestor() {
+        assert(group1.containsAnAncestor(List.of(rootNode)));
+        assertFalse(rootNode.containsAnAncestor(List.of(group1, group2)));
+        assert(picture1.containsAnAncestor(List.of(group1)));
+        assertFalse(group1.containsAnAncestor(List.of(picture1, picture2)));
+        assertFalse(group3.containsAnAncestor(List.of(picture1, picture2)));
+        assert(group4.containsAnAncestor(List.of(group3)));
+    }
 }

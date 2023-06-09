@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
 
- Copyright (C) 2002-2022 Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -142,9 +142,8 @@ public class JpoTransferable
      */
     private Object getJavaFileListTransferable() {
         final var fileList = new ArrayList<>();
-        for (final Object transferableNode : transferableNodes) {
-            if ((transferableNode instanceof SortableDefaultMutableTreeNode node)
-                    && (node.getUserObject() instanceof PictureInfo pictureInfo)) {
+        for (final var transferableNode : transferableNodes) {
+            if ( transferableNode.getUserObject() instanceof PictureInfo pictureInfo ) {
                 fileList.add(pictureInfo.getImageFile());
             }
         }
