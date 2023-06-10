@@ -204,8 +204,7 @@ public class GroupNavigator extends NodeNavigator {
             // if the current node is part of the tree that was deleted then we need to
             //  reposition the group at the parent node that remains.
             if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, treeModelEvent)) {
-                LOGGER.log(Level.INFO, "Determined that our current node has died. Moving to the last node still present: {0}", treeModelEvent.getTreePath().getLastPathComponent());
-                //setNode((SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() );
+                LOGGER.log(Level.INFO, "Determined that our current node has died. {0}", treeModelEvent.getTreePath().getLastPathComponent());
                 notifyNodeNavigatorListeners();
             } else {
                 // don't get excited and force a relayout unless the parent of the deleted

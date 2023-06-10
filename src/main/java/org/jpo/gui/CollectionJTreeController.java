@@ -58,6 +58,16 @@ public class CollectionJTreeController {
         collectionJTree.setDragEnabled(true);
         collectionJTree.setDropMode(DropMode.ON_OR_INSERT);
 
+        collectionJTree.putClientProperty("JTree.lineStyle", "Angled");
+        collectionJTree.setShowsRootHandles(true);
+        collectionJTree.setOpaque(true);
+        collectionJTree.setBackground(Settings.getJpoBackgroundColor());
+        collectionJTree.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
+        collectionJTree.setEditable(true);
+        collectionJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        collectionJTree.setCellRenderer(getRenderer());
+        collectionJTree.setCellEditor(getTreeCellEditor());
+
         collectionJScrollPane.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
@@ -331,19 +341,6 @@ public class CollectionJTreeController {
             return toolTip;
         }
     };
-
-    {
-        collectionJTree.putClientProperty("JTree.lineStyle", "Angled");
-        collectionJTree.setShowsRootHandles(true);
-        collectionJTree.setOpaque(true);
-        collectionJTree.setBackground(Settings.getJpoBackgroundColor());
-        collectionJTree.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
-        collectionJTree.setEditable(true);
-        collectionJTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        collectionJTree.setCellRenderer(getRenderer());
-        collectionJTree.setCellEditor(getTreeCellEditor());
-    }
-
 
     /**
      * The private reference to the JScrollPane that holds the JTree.
