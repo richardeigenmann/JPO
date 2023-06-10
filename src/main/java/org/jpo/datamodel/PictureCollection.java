@@ -214,7 +214,7 @@ public class PictureCollection {
      */
     public void sendNodeStructureChanged(final TreeNode changedNode) {
         final Runnable r = () -> {
-            LOGGER.log(Level.FINE, "Sending a node structure change on node: {0}", changedNode);
+            LOGGER.log(Level.INFO, "Sending a node structure change on node: {0}", changedNode);
             getTreeModel().nodeStructureChanged(changedNode);
         };
         if (SwingUtilities.isEventDispatchThread()) {
@@ -233,7 +233,7 @@ public class PictureCollection {
     public void sendNodeChanged(
             final TreeNode changedNode) {
         final Runnable r = () -> {
-            LOGGER.log(Level.FINE, "Sending a node change on node: {0}", changedNode);
+            LOGGER.log(Level.INFO, "Sending a node change on node: {0}", changedNode);
             getTreeModel().nodeChanged(changedNode);
         };
 
@@ -251,11 +251,9 @@ public class PictureCollection {
      * @param changedNode  The node that was inserted
      * @param childIndices The Child indices
      */
-    public void sendNodesWereInserted(
-            final TreeNode changedNode,
-            final int[] childIndices) {
+    public void sendNodesWereInserted( final TreeNode changedNode,final int[] childIndices) {
         final Runnable r = () -> {
-            LOGGER.log(Level.FINE, "Sending a node was inserted notification on node: {0}", changedNode);
+            LOGGER.log(Level.INFO, "Sending a node was inserted notification on node: {0} with childIndices {1}", new Object[]{changedNode, childIndices});
             getTreeModel().nodesWereInserted(changedNode, childIndices);
         };
 
@@ -278,7 +276,7 @@ public class PictureCollection {
                                      final int[] childIndices,
                                      final Object[] removedChildren) {
         final Runnable r = () -> {
-            LOGGER.log(Level.FINE, "Sending a node was removed change on node: {0}", node);
+            LOGGER.log(Level.INFO, "Sending a node was removed change on node: {0}", node);
             getTreeModel().nodesWereRemoved(node, childIndices, removedChildren);
         };
         if (SwingUtilities.isEventDispatchThread()) {

@@ -70,7 +70,11 @@ public class AfterFileSaveHandler {
         jDialog.setVisible(true);
 
         // auto-close this dialog after 15 seconds if the user hasn't made a choice
-        new Timer(15000, e -> closeAfterFileSaveDialog(request, autoLoadJCheckBox, jDialog)).start();
+        final var timer = new Timer(15000, e -> closeAfterFileSaveDialog(request, autoLoadJCheckBox, jDialog));
+        timer.setRepeats(false);
+        timer.start();
+
+
     }
 
     private static void closeAfterFileSaveDialog(final AfterFileSaveRequest request, final JCheckBox autoLoadJCheckBox, final JDialog jDialog) {

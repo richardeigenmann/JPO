@@ -59,13 +59,8 @@ public class CollectionJTreeController {
         collectionJScrollPane.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        final var mouseAdapter = new CollectionJTreeMouseAdapter();
-        collectionJTree.addMouseListener( mouseAdapter );
-        registerOnEventBus();
-    }
-
-    private void registerOnEventBus() {
-        JpoEventBus.getInstance().register( this );
+        collectionJTree.addMouseListener(new CollectionJTreeMouseAdapter());
+        JpoEventBus.getInstance().register(this);
     }
 
     /**
@@ -98,16 +93,6 @@ public class CollectionJTreeController {
         }
     }
 
-    private static boolean ancestorViolationCheckWithAlert(final SortableDefaultMutableTreeNode targetNode, final Collection<SortableDefaultMutableTreeNode> transferableNodes) {
-        if ( targetNode.containsAnAncestor(transferableNodes) ) {
-            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("moveNodeError"),
-                    Settings.getJpoResources().getString("genericError"),
-                    JOptionPane.ERROR_MESSAGE);
-            return true;
-        }
-        return false;
-    }
 
     /**
      * A helper method that returns us the selected node on the tree if we have a selection and it is
@@ -145,7 +130,6 @@ public class CollectionJTreeController {
         public int getSourceActions( final JComponent component ) {
             final var selectedNode = CollectionJTreeController.getSelectedNode(component);
             if ( selectedNode.isPresent() ) {
-                LOGGER.log(Level.INFO, "Allowing drag from node {0}", selectedNode.get());
                 final var userObject = selectedNode.get().getUserObject();
                 if ( userObject instanceof  GroupInfo ) {
                     return MOVE;
@@ -173,6 +157,7 @@ public class CollectionJTreeController {
             if (selectedNode.isEmpty()) {
                 return null;
             }
+            LOGGER.log(Level.INFO, "Created a Transferable from node {0}", selectedNode);
             return new JpoTransferable(List.of(selectedNode.get()));
         }
 
@@ -186,36 +171,34 @@ public class CollectionJTreeController {
          */
         @Override
         public boolean canImport(final TransferSupport support) {
-            LOGGER.log(Level.INFO, "canImport fired on {0}", support);
             if (! support.isDataFlavorSupported(JpoTransferable.jpoNodeFlavor)) {
-                LOGGER.log(Level.INFO, "Only drops of JpoTransferables are supported");
+                LOGGER.log(Level.INFO, "Can''t drop as we only accept drops of JpoTransferables here");
                 return false;
             }
 
-            final var dropLocation = (JTree.DropLocation) support.getDropLocation();
-            final var treePath = dropLocation.getPath();
-            final var closestNode = (SortableDefaultMutableTreeNode) treePath.getLastPathComponent();
-
+            final var closestNode = getClosestTargetNode(support);
             if ( closestNode.containsAnAncestor(getTransferableNodes(support.getTransferable())) ) {
-                LOGGER.log(Level.INFO, "Cant allow drop on node {0} because of ancestor violation", closestNode);
+                LOGGER.log(Level.FINE, "Cant allow drop on node {0} because of ancestor violation", closestNode);
                 return false;
             }
 
             return true;
         }
 
+        private SortableDefaultMutableTreeNode getClosestTargetNode(TransferSupport support) {
+            final var dropLocation = (JTree.DropLocation) support.getDropLocation();
+            return (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
+        }
+
 
         @NonNull
         private Collection<SortableDefaultMutableTreeNode> getTransferableNodes(final Transferable transferable) {
-            Collection<SortableDefaultMutableTreeNode> transferableNodes = new ArrayList<>();
             try {
-                final var transferData = transferable.getTransferData(JpoTransferable.jpoNodeFlavor);
-                transferableNodes = (List<SortableDefaultMutableTreeNode>) transferData;
-                LOGGER.log(Level.INFO, "processing a list with {0} transferable nodes", transferableNodes.size());
+                return (Collection<SortableDefaultMutableTreeNode>) transferable.getTransferData(JpoTransferable.jpoNodeFlavor);
             } catch (final UnsupportedFlavorException | ClassCastException | IOException x) {
                 LOGGER.log(Level.SEVERE, x.getMessage());
             }
-            return transferableNodes;
+            return new ArrayList<>();
         }
 
 
@@ -236,7 +219,7 @@ public class CollectionJTreeController {
         }
 
         /**
-         * This method is called on a successful drop (or paste) and initiates
+         * This method is called on a successful drop and initiates
          * the transfer of data to the target component. This method returns
          * true if the import was successful and false otherwise.
          *
@@ -251,28 +234,32 @@ public class CollectionJTreeController {
                 return false;
             }
 
+            // see the documentation for JTree.DropLocation; if the childIndex is -1 the drop occurred on the node.
+            // if it has a value, this is the index position between the nodes
             final var dropLocation = (JTree.DropLocation) support.getDropLocation();
-            final var targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            LOGGER.log(Level.INFO, "Choosing node {0} as target for path {1}, ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
+            final var targetNode = getClosestTargetNode(support);
+            LOGGER.log(Level.INFO, "Choosing node {0} as target based on path {1}, with ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
 
 
             final var transferableNodes = getTransferableNodes(support.getTransferable());
-            if (ancestorViolationCheckWithAlert(targetNode, transferableNodes)) return false;
+            if (targetNode. containsAnAncestor(transferableNodes)) {
+                LOGGER.log(Level.SEVERE, "The drop operation on node {0} could not be completed because one of the dropped nodes was an ancestor", targetNode);
+                return false;
+            }
 
             memorizeGroupOfDropLocation(targetNode);
-            transferableNodes.forEach(sourceNode -> importNode(actionType, dropLocation, targetNode, sourceNode));
+            transferableNodes.forEach(sourceNode -> {
+                if (actionType == TransferHandler.MOVE) {
+                    dndMoveNode(dropLocation, sourceNode);
+                } else {
+                    importNodeCopy(dropLocation, sourceNode);
+                }
+            });
             return true;
         }
 
-        private void importNode(int actionType, JTree.DropLocation dropLocation, SortableDefaultMutableTreeNode targetNode, SortableDefaultMutableTreeNode sourceNode) {
-            if (actionType == TransferHandler.MOVE) {
-                importNodeMove(dropLocation, targetNode, sourceNode);
-            } else {
-                importNodeCopy(dropLocation, targetNode, sourceNode);
-            }
-        }
-
-        private void importNodeCopy(JTree.DropLocation dropLocation, SortableDefaultMutableTreeNode targetNode, SortableDefaultMutableTreeNode sourceNode) {
+        private void importNodeCopy(final JTree.DropLocation dropLocation, final SortableDefaultMutableTreeNode sourceNode) {
+            final var targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
             SortableDefaultMutableTreeNode cloneNode = sourceNode.getClone();
             if (dropLocation.getChildIndex() == -1) {
                 if (targetNode.getUserObject() instanceof GroupInfo) {
@@ -286,9 +273,11 @@ public class CollectionJTreeController {
             }
         }
 
-        private void importNodeMove(JTree.DropLocation dropLocation, SortableDefaultMutableTreeNode targetNode, SortableDefaultMutableTreeNode sourceNode) {
-            LOGGER.log(Level.INFO, "Processing a MOVE on node: {0}", sourceNode);
+        private void dndMoveNode(final JTree.DropLocation dropLocation, final SortableDefaultMutableTreeNode sourceNode) {
+            final var targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
+            LOGGER.log(Level.INFO, "DND Moving source node {0} to target Node {1}, dropLocation path: {2}, dropLocation.childIndex is {3}", new Object[] {sourceNode, targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
             if (dropLocation.getChildIndex() == -1) {
+                // i.e. drop ON the node
                 if (targetNode.getUserObject() instanceof GroupInfo) {
                     // append to end of group if dropping on a group node
                     sourceNode.moveToLastChild(targetNode);

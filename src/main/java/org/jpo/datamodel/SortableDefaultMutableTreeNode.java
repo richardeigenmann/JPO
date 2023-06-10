@@ -98,16 +98,25 @@ public class SortableDefaultMutableTreeNode
      * loading of collections (which of course massively change the collection
      * in memory) to report nothing changed.
      *
-     * @param newNode the new node
+     * @param nodeToAdd the new node
      */
-    public void add(final SortableDefaultMutableTreeNode newNode) {
-        synchronized (this.getRoot()) {
-            super.add(newNode);
+    public void add(final SortableDefaultMutableTreeNode nodeToAdd) {
+        final var priorParent = nodeToAdd.getParent();
+        var priorChildIndex = -1;
+        if (priorParent != null ) {
+            priorChildIndex = priorParent.getIndex(nodeToAdd);
         }
+
+        synchronized (this.getRoot()) {
+            super.add(nodeToAdd);
+        }
+
         final var pictureCollection = getPictureCollection();
         if (pictureCollection != null && pictureCollection.getSendModelUpdates()) {
-            int index = this.getIndex(newNode);
-            LOGGER.log(Level.FINE, "The new node {0} has index {1}", new Object[]{newNode, index});
+            int index = this.getIndex(nodeToAdd);
+            if (priorParent !=null && priorChildIndex != -1) {
+                pictureCollection.sendNodesWereRemoved(priorParent, new int[] {priorChildIndex}, new Object[] {nodeToAdd});
+            }
             pictureCollection.sendNodesWereInserted(this, new int[]{index});
             pictureCollection.setUnsavedUpdates();
         }
@@ -926,6 +935,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if the move was successful, false if not
      */
     public boolean moveToLastChild(final SortableDefaultMutableTreeNode targetNode) {
+        LOGGER.log(Level.INFO, "moving node {0} to the last child of node {1}", new Object[]{this, targetNode});
         if (targetNode.isNodeAncestor(this)) {
             LOGGER.log(Level.SEVERE, "You can''t move a node to be a child of who it is an ancestor! Aborting move.");
             return false;
@@ -936,8 +946,6 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized (targetNode.getRoot()) {
-            LOGGER.log(Level.INFO, "Removing node {0} from its parent", this);
-            this.removeFromParent();
             LOGGER.log(Level.INFO, "Adding node {0} to target node {1}", new Object[]{this, targetNode});
             targetNode.add(this);
         }
@@ -953,6 +961,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if the move was successful, false if not
      */
     public boolean moveBefore(final SortableDefaultMutableTreeNode targetNode) {
+        LOGGER.log(Level.INFO, "moving node {0} to the position before node {1}", new Object[]{this, targetNode});
         if (isNodeDescendant(targetNode)) {
             LOGGER.fine("Can't move to a descendant node. Aborting move.");
             return false;
@@ -964,7 +973,7 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized (targetNode.getRoot()) {
-            final SortableDefaultMutableTreeNode targetParentNode = targetNode.getParent();
+            final var targetParentNode = targetNode.getParent();
             int targetIndex = targetParentNode.getIndex(targetNode);
             return moveToIndex(targetParentNode, targetIndex);
         }
@@ -979,6 +988,7 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean moveToIndex(final SortableDefaultMutableTreeNode parentNode,
                                final int index) {
+        LOGGER.log(Level.INFO, "Moving node {0} to child index {1} of node {2}", new Object[]{this, index, parentNode});
         if (isNodeDescendant(parentNode)) {
             LOGGER.log(Level.SEVERE, "Can''t move to a descendant node. Aborting move.");
             return false;
