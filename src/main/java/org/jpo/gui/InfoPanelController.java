@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.eventbus.GroupSelectionEvent;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
 
@@ -13,7 +12,7 @@ import java.awt.event.ActionEvent;
 /*
  InfoPanelController.java:  The Controller for the Info Panel
 
- Copyright (C) 2009-2022  Richard Eigenmann.
+ Copyright (C) 2009-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,16 +57,6 @@ public class InfoPanelController {
      */
     public JComponent getInfoPanel() {
         return nodeStatisticsController.getJComponent();
-    }
-
-    /**
-     * Handles group selection events by refreshing the display.
-     *
-     * @param event The Group Selection Event
-     */
-    @Subscribe
-    public void handleGroupSelectionEvent(final GroupSelectionEvent event) {
-        showInfo(event.node());
     }
 
     /**

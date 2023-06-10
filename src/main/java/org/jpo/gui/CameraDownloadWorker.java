@@ -94,7 +94,7 @@ public class CameraDownloadWorker
     @Override
     protected void done() {
         progressBar.setValue(progressBar.getMaximum());
-        JpoEventBus.getInstance().post(new GroupSelectionEvent(dataModel.getTargetNode()));
+        JpoEventBus.getInstance().post(new ShowGroupRequest(dataModel.getTargetNode()));
         step7.done();
 
     }

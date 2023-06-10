@@ -59,7 +59,7 @@ public class CollectionJTreeController {
         collectionJScrollPane.setMinimumSize(Settings.JPO_NAVIGATOR_JTABBEDPANE_MINIMUM_SIZE);
         collectionJScrollPane.setPreferredSize( Settings.jpoNavigatorJTabbedPanePreferredSize );
 
-        final var mouseAdapter = new CollectionMouseAdapter();
+        final var mouseAdapter = new CollectionJTreeMouseAdapter();
         collectionJTree.addMouseListener( mouseAdapter );
         registerOnEventBus();
     }
@@ -69,37 +69,25 @@ public class CollectionJTreeController {
     }
 
     /**
-     * When the tree receives a GroupSelectionEvent it will expand the treepath
-     * to show the node that was selected.
-     *
-     * @param event The GroupSelectionEvent
-     */
-    @Subscribe
-    public void handleGroupSelectionEvent(final GroupSelectionEvent event) {
-        expandAndScroll(event.node());
-    }
-
-    /**
-     * When the tree receives a ShowGroupRequest it will expand the treepath to
-     * show the node that was selected.
+     * When the tree receives a ShowGroupRequest it position the selection on the node.
      *
      * @param request The ShowGroupRequest
      */
     @Subscribe
     public void handleShowGroupRequest(final ShowGroupRequest request) {
-        expandAndScroll(request.node());
+        setSelection(request.node());
     }
 
     /**
-     * Expands the nodes and scroll the tree so that the indicated node is
-     * visible.
+     * Sets the tree selection on the supplied node. Will also scroll the tree so that the selected node is
+     * visible. It used to also expand the node but that was wierd. If the user wants to expand she can
+     * click on the + sign next to the node.
      *
-     * @param node The node
+     * @param node The node to select in the tree
      */
-    private void expandAndScroll(final SortableDefaultMutableTreeNode node) {
+    private void setSelection(final SortableDefaultMutableTreeNode node) {
         final var treePath = new TreePath(node.getPath());
         final Runnable r = () -> {
-            collectionJTree.expandPath(treePath);
             collectionJTree.scrollPathToVisible(treePath);
             collectionJTree.setSelectionPath(treePath);
         };
@@ -363,14 +351,9 @@ public class CollectionJTreeController {
     }
 
     /**
-     * This class decides what to do with mouse events on the JTree. Since there
-     * is so much logic tied to what we are trying to do in the context of the
-     * JTree being the top left component here which might not be desirable in a
-     * different context this is kept as an inner class of the
-     * CollectionJTreeController. the groupPopupJPopupMenu menu must exist.
-     *
+     * This class decides what to do with mouse events on the JTree.
      */
-    private static class CollectionMouseAdapter
+    private static class CollectionJTreeMouseAdapter
             extends MouseAdapter {
 
         /**
@@ -379,63 +362,48 @@ public class CollectionJTreeController {
          * If it was multi-click open the (first) picture.
          */
         @Override
-        public void mouseClicked(final MouseEvent e) {
-            final var clickPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
-            if (clickPath == null) { // this happens
-                return;
+        public void mouseClicked(final MouseEvent mouseEvent) {
+            final var clickNode = getTreeNodeFromMouseEvent(mouseEvent);
+            clickNode.ifPresent( node ->  {
+                if (mouseEvent.getClickCount() == 1 && (!mouseEvent.isPopupTrigger()) && node.getUserObject() instanceof GroupInfo) {
+                    JpoEventBus.getInstance().post(new ShowGroupRequest(node));
+                } else if (mouseEvent.getClickCount() > 1 && (!mouseEvent.isPopupTrigger())) {
+                    final var groupNavigator = new FlatGroupNavigator(node.getParent());
+                    JpoEventBus.getInstance().post(new ShowPictureRequest(groupNavigator, node.getParent().getIndex(node)));
+                }
+            });
+        }
+
+        private static Optional<SortableDefaultMutableTreeNode> getTreeNodeFromMouseEvent(final MouseEvent mouseEvent) {
+            final var clickPath = ((JTree) mouseEvent.getSource()).getPathForLocation(mouseEvent.getX(), mouseEvent.getY());
+            if (clickPath == null) {
+                return Optional.empty();
             }
             final var clickNode = (SortableDefaultMutableTreeNode) clickPath.getLastPathComponent();
-
-            if (e.getClickCount() == 1 && (!e.isPopupTrigger())) {
-                if (clickNode.getUserObject() instanceof GroupInfo) {
-                    JpoEventBus.getInstance().post(new ShowGroupRequest(clickNode));
-                }
-            } else if (e.getClickCount() > 1 && (!e.isPopupTrigger())) {
-                final var groupNavigator = new FlatGroupNavigator(clickNode.getParent());
-                JpoEventBus.getInstance().post(new ShowPictureRequest(groupNavigator, clickNode.getParent().getIndex(clickNode)));
-            }
+            return Optional.of(clickNode);
         }
 
         /**
          * Override the mousePressed event.
          */
         @Override
-        public void mousePressed( MouseEvent e ) {
-            maybeShowPopup( e );
-        }
+        public void mousePressed( MouseEvent mouseEvent ) {
+            if (mouseEvent.isPopupTrigger()) {
+                final var clickNode = getTreeNodeFromMouseEvent(mouseEvent);
+                clickNode.ifPresent( node -> {
+                    final var nodeInfo = node.getUserObject();
 
-        /**
-         * Override the mouseReleased event.
-         */
-        @Override
-        public void mouseReleased( MouseEvent e ) {
-            maybeShowPopup( e );
-        }
-
-        /**
-         * This method figures out whether a popup window should be displayed
-         * and displays it.
-         *
-         * @param e The MouseEvent that was trapped.
-         */
-        private void maybeShowPopup(final MouseEvent e) {
-            if (e.isPopupTrigger()) {
-                final var popupPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
-                if (popupPath == null) {
-                    return;
-                } // happens
-
-                final var popupNode = (SortableDefaultMutableTreeNode) popupPath.getLastPathComponent();
-                ((JTree) e.getSource()).setSelectionPath(popupPath);
-                final var nodeInfo = popupNode.getUserObject();
-
-                if ( nodeInfo instanceof GroupInfo ) {
-                    JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest( popupNode, e.getComponent(), e.getX(), e.getY() ));
-                } else if ( nodeInfo instanceof PictureInfo ) {
-                    final var sb = new SingleNodeNavigator(popupNode);
-                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest( sb, 0, e.getComponent(), e.getX(), e.getY() ));
-                }
+                    if (nodeInfo instanceof GroupInfo) {
+                        JpoEventBus.getInstance().post(new ShowGroupPopUpMenuRequest(node, mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY()));
+                    } else if (nodeInfo instanceof PictureInfo) {
+                        final var groupNavigator = new GroupNavigator( node.getParent() );
+                        final var index = node.getParent().getIndex(node);
+                        JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(groupNavigator, index, mouseEvent.getComponent(), mouseEvent.getX(), mouseEvent.getY()));
+                    }
+                });
             }
         }
+
+
     }
 }

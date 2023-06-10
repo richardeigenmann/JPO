@@ -209,7 +209,7 @@ public class PicturePopupMenu extends JPopupMenu {
         return assignCategoryWindowJMenuItem;
     }
 
-    private JMenuItem getTitleJMenuItem(String title) {
+    private JMenuItem getTitleJMenuItem(final String title) {
         final var titleJMenuItem = new JMenuItem(title);
         titleJMenuItem.setEnabled(false);
         return titleJMenuItem;
@@ -608,8 +608,8 @@ public class PicturePopupMenu extends JPopupMenu {
      */
     private void addRenameMenuItems(final JMenu fileRenameJMenu) {
         //TODO: EventBus missing!
-        for (final JComponent c : RenameMenuItems.getRenameMenuItems(getNodesToActOn())) {
-            fileRenameJMenu.add(c);
+        for (final var component : RenameMenuItems.getRenameMenuItems(getNodesToActOn())) {
+            fileRenameJMenu.add(component);
         }
     }
 
