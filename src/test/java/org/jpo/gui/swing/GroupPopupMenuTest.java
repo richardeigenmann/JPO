@@ -37,9 +37,9 @@ class GroupPopupMenuTest {
 
 
     private GroupPopupMenu myGroupPopupMenu;
+    private JMenuItem title;
     private JMenuItem showGroup;
     private JMenuItem showPictures;
-    private JMenuItem categories;
     private JMenuItem refreshIcon;
     private JMenuItem editAsTable;
     private JMenuItem add;
@@ -65,21 +65,22 @@ class GroupPopupMenuTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(node);
                 myGroupPopupMenu = new GroupPopupMenu(node);
-                showGroup = (JMenuItem) myGroupPopupMenu.getComponent(0);
-                showPictures = (JMenuItem) myGroupPopupMenu.getComponent(1);
-                refreshIcon = (JMenuItem) myGroupPopupMenu.getComponent(3);
-                editAsTable = (JMenuItem) myGroupPopupMenu.getComponent(5);
-                add = (JMenuItem) myGroupPopupMenu.getComponent(7);
-                move = (JMenuItem) myGroupPopupMenu.getComponent(8);
-                removeNode = (JMenuItem) myGroupPopupMenu.getComponent(9);
-                consolidate = (JMenuItem) myGroupPopupMenu.getComponent(11);
-                sortBy = (JMenuItem) myGroupPopupMenu.getComponent(13);
-                selectAllForEmailing = (JMenuItem) myGroupPopupMenu.getComponent(15);
-                generateWebsite = (JMenuItem) myGroupPopupMenu.getComponent(16);
-                exportToCollection = (JMenuItem) myGroupPopupMenu.getComponent(17);
-                exportToFlatFile = (JMenuItem) myGroupPopupMenu.getComponent(18);
-                exportToPicasa = (JMenuItem) myGroupPopupMenu.getComponent(19);
-                properties = (JMenuItem) myGroupPopupMenu.getComponent(21);
+                title = (JMenuItem) myGroupPopupMenu.getComponent(0);
+                showGroup = (JMenuItem) myGroupPopupMenu.getComponent(2);
+                showPictures = (JMenuItem) myGroupPopupMenu.getComponent(3);
+                refreshIcon = (JMenuItem) myGroupPopupMenu.getComponent(5);
+                editAsTable = (JMenuItem) myGroupPopupMenu.getComponent(7);
+                add = (JMenuItem) myGroupPopupMenu.getComponent(9);
+                move = (JMenuItem) myGroupPopupMenu.getComponent(10);
+                removeNode = (JMenuItem) myGroupPopupMenu.getComponent(11);
+                consolidate = (JMenuItem) myGroupPopupMenu.getComponent(13);
+                sortBy = (JMenuItem) myGroupPopupMenu.getComponent(15);
+                selectAllForEmailing = (JMenuItem) myGroupPopupMenu.getComponent(17);
+                generateWebsite = (JMenuItem) myGroupPopupMenu.getComponent(18);
+                exportToCollection = (JMenuItem) myGroupPopupMenu.getComponent(19);
+                exportToFlatFile = (JMenuItem) myGroupPopupMenu.getComponent(20);
+                exportToPicasa = (JMenuItem) myGroupPopupMenu.getComponent(21);
+                properties = (JMenuItem) myGroupPopupMenu.getComponent(23);
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -145,6 +146,7 @@ class GroupPopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
+                assertEquals("My Group", title.getText());
                 assertEquals("Refresh Icon", refreshIcon.getText());
                 assertEquals("Edit as Table", editAsTable.getText());
                 assertEquals("Add", add.getText());

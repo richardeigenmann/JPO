@@ -76,6 +76,10 @@ public class GroupPopupMenu extends JPopupMenu {
      * Create the menu items
      */
     private void initComponents() {
+        final var title = getPopupNode().toString();
+        setLabel(title);
+        add(getTitleJMenuItem(title));
+        addSeparator();
         add(getGroupShowJMenuItem());
         add(getGroupSlideshowJMenuItem());
         addSeparator();
@@ -101,6 +105,13 @@ public class GroupPopupMenu extends JPopupMenu {
         addSeparator();
         add(getGroupEditJMenuItem());
     }
+
+    private JMenuItem getTitleJMenuItem(final String title) {
+        final var titleJMenuItem = new JMenuItem(title);
+        titleJMenuItem.setEnabled(false);
+        return titleJMenuItem;
+    }
+
 
     private JMenuItem getGroupShowJMenuItem() {
         final var groupShowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupShowJMenuItem"));
