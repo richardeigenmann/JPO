@@ -4,7 +4,6 @@ import net.javaprog.ui.wizard.AbstractStep;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.swing.CollectionJTree;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -119,7 +118,7 @@ public class CameraDownloadWizardStep3
         stepComponent.add( secondStrut );
         stepComponent.add( selectNodeLabel );
 
-        final JTree collectionJTree = new CollectionJTree();
+        final JTree collectionJTree = new JTree();
         collectionJTree.setModel( dataModel.getTreeModel() );
         collectionJTree.setEditable( false );
         collectionJTree.addTreeSelectionListener(( TreeSelectionEvent e ) -> {

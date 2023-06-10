@@ -104,5 +104,23 @@ public class CollectionJTreeControllerTest {
         }
     }
 
+    @Test
+    void testImageInitialisation() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                final var collectionJTreeController = new CollectionJTreeController(new PictureCollection());
+                assertNotNull(collectionJTreeController);
+
+                assertNotNull(collectionJTreeController.getPictureIcon());
+                assertNotNull(collectionJTreeController.getClosedFolderIcon());
+                assertNotNull(collectionJTreeController.getOpenFolderIcon());
+
+            });
+        } catch (final InterruptedException | InvocationTargetException ex) {
+            fail(ex.getCause().getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
 
 }

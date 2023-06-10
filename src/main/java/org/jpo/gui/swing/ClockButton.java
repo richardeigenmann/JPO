@@ -44,7 +44,7 @@ public class ClockButton extends NavBarButton {
 
     static {
         final String ICON_CLOCK_ON_FILE = "icon_clock_on.gif";
-        URL resource = CollectionJTree.class.getClassLoader().getResource(ICON_CLOCK_ON_FILE);
+        URL resource = ClockButton.class.getClassLoader().getResource(ICON_CLOCK_ON_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", ICON_CLOCK_ON_FILE);
             ICON_CLOCK_ON = null;
@@ -65,7 +65,7 @@ public class ClockButton extends NavBarButton {
 
     static {
         final String ICON_CLOCK_OFF_FILE = "icon_clock_off.gif";
-        URL resource = CollectionJTree.class.getClassLoader().getResource(ICON_CLOCK_OFF_FILE);
+        URL resource = ClockButton.class.getClassLoader().getResource(ICON_CLOCK_OFF_FILE);
         if (resource == null) {
             LOGGER.log(Level.SEVERE, "Classloader could not find the file: {0}", ICON_CLOCK_OFF_FILE);
             ICON_CLOCK_OFF = null;
