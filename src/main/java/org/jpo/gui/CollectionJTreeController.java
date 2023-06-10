@@ -130,7 +130,11 @@ public class CollectionJTreeController {
         public int getSourceActions( final JComponent component ) {
             final var selectedNode = CollectionJTreeController.getSelectedNode(component);
             if ( selectedNode.isPresent() ) {
-                final var userObject = selectedNode.get().getUserObject();
+                final var node = selectedNode.get();
+                if ( node.isRoot() ) {
+                    return NONE;
+                }
+                final var userObject = node.getUserObject();
                 if ( userObject instanceof  GroupInfo ) {
                     return MOVE;
                 } else if ( userObject instanceof PictureInfo ) {
