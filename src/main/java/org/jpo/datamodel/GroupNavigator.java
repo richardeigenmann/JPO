@@ -184,10 +184,12 @@ public class GroupNavigator extends NodeNavigator {
         /**
          * This method is defined by the TreeModelListener interface and gives
          * the GroupNavigator a notification that some nodes were removed.
-         * Case 1: the removal affected some other part of the tree. Result: we
-         * don't care Case 2: the Group being shown was wiped off the tree.
+         * Case 1: the removal affected some other part of the tree.
+         * Result: we don't care
+         * Case 2: the Group being shown was wiped off the tree.
          * Result: We reposition to the last node still in existence (could be
-         * the root node) Case 3: a child of our current Group was removed.
+         * the root node)
+         * Case 3: a child of our current Group was removed.
          * Result: we relayout the nodes.
          *
          * @param treeModelEvent The event
@@ -203,7 +205,7 @@ public class GroupNavigator extends NodeNavigator {
             //  reposition the group at the parent node that remains.
             if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, treeModelEvent)) {
                 LOGGER.log(Level.INFO, "Determined that our current node has died. Moving to the last node still present: {0}", treeModelEvent.getTreePath().getLastPathComponent());
-                setNode((SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() );
+                //setNode((SortableDefaultMutableTreeNode) treeModelEvent.getTreePath().getLastPathComponent() );
                 notifyNodeNavigatorListeners();
             } else {
                 // don't get excited and force a relayout unless the parent of the deleted

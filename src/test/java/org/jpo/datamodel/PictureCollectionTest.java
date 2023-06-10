@@ -555,7 +555,7 @@ class PictureCollectionTest {
         pictureCollection.addTreeModelListener(countingTreeModelListener);
         assertEquals(0, countingTreeModelListener.nodesChanged);
 
-        group1.deleteNode();
+        group1.removeFromParent();
 
         await().until(() -> countingTreeModelListener.nodesRemoved == 1);
         assertEquals(0, countingTreeModelListener.nodesChanged);

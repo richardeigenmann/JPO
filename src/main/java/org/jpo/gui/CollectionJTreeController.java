@@ -136,11 +136,11 @@ public class CollectionJTreeController {
                 } else if ( userObject instanceof PictureInfo ) {
                     return COPY_OR_MOVE;
                 } else {
-                    LOGGER.log(Level.INFO, "Odd userobject - can''t support drag from if: {0}", userObject);
+                    LOGGER.log(Level.INFO, "Odd userobject - can''t support drag from object: {0}", userObject);
                     return NONE;
                 }
             }
-            LOGGER.log(Level.INFO, "Can''t support drag from component {0}", component);
+            LOGGER.log(Level.FINE, "Can''t support drag from component {0}", component);
             return NONE;
         }
 
@@ -157,7 +157,7 @@ public class CollectionJTreeController {
             if (selectedNode.isEmpty()) {
                 return null;
             }
-            LOGGER.log(Level.INFO, "Created a Transferable from node {0}", selectedNode);
+            LOGGER.log(Level.FINE, "Created a Transferable from node {0}", selectedNode);
             return new JpoTransferable(List.of(selectedNode.get()));
         }
 
@@ -238,7 +238,7 @@ public class CollectionJTreeController {
             // if it has a value, this is the index position between the nodes
             final var dropLocation = (JTree.DropLocation) support.getDropLocation();
             final var targetNode = getClosestTargetNode(support);
-            LOGGER.log(Level.INFO, "Choosing node {0} as target based on path {1}, with ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
+            LOGGER.log(Level.FINE, "Choosing node {0} as target based on path {1}, with ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
 
 
             final var transferableNodes = getTransferableNodes(support.getTransferable());
@@ -275,8 +275,9 @@ public class CollectionJTreeController {
 
         private void dndMoveNode(final JTree.DropLocation dropLocation, final SortableDefaultMutableTreeNode sourceNode) {
             final var targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            LOGGER.log(Level.INFO, "DND Moving source node {0} to target Node {1}, dropLocation path: {2}, dropLocation.childIndex is {3}", new Object[] {sourceNode, targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
+            LOGGER.log(Level.FINE, "DND Moving source node {0} to target Node {1}, dropLocation path: {2}, dropLocation.childIndex is {3}", new Object[] {sourceNode, targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
             if (dropLocation.getChildIndex() == -1) {
+                LOGGER.log(Level.FINE, "This is a drop onto the target node {0}", targetNode);
                 // i.e. drop ON the node
                 if (targetNode.getUserObject() instanceof GroupInfo) {
                     // append to end of group if dropping on a group node
@@ -286,6 +287,7 @@ public class CollectionJTreeController {
                     sourceNode.moveBefore(targetNode);
                 }
             } else {
+                LOGGER.log(Level.FINE, "This is a next to a node. Parent: {0} Index: {1}", new Object[]{targetNode, dropLocation.getChildIndex()});
                 //index was supplied by the JTree notification
                 sourceNode.moveToIndex(targetNode, dropLocation.getChildIndex());
             }

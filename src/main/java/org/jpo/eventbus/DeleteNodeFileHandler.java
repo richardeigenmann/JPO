@@ -96,7 +96,7 @@ public class DeleteNodeFileHandler {
                 Files.delete(highresFile.toPath());
             }
         }
-        node.deleteNode();
+        node.removeFromParent();
     }
 
 

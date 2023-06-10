@@ -94,7 +94,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * changed
      */
     private final GroupInfoChangeListener myGroupInfoChangeListener = (GroupInfoChangeEvent groupInfoChangeEvent) -> {
-        LOGGER.info("change event received.");
+        LOGGER.log(Level.FINE,"change event received.");
         updateTitle();
     };
 

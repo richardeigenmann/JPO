@@ -113,11 +113,13 @@ public class SortableDefaultMutableTreeNode
 
         final var pictureCollection = getPictureCollection();
         if (pictureCollection != null && pictureCollection.getSendModelUpdates()) {
-            int index = this.getIndex(nodeToAdd);
             if (priorParent !=null && priorChildIndex != -1) {
                 pictureCollection.sendNodesWereRemoved(priorParent, new int[] {priorChildIndex}, new Object[] {nodeToAdd});
             }
+
+            int index = this.getIndex(nodeToAdd);
             pictureCollection.sendNodesWereInserted(this, new int[]{index});
+
             pictureCollection.setUnsavedUpdates();
         }
     }
@@ -364,16 +366,16 @@ public class SortableDefaultMutableTreeNode
      * deletions that have been detected in the TreeModelListener delivered
      * TreeModelEvent.
      *
-     * @param affectedNode The node to check whether it is or is a descendant of
+     * @param potentiallyAffectedNode The node to check whether it is or is a descendant of
      *                     the deleted node.
-     * @param e            the TreeModelEvent that was detected
+     * @param treeModelEvent The TreeModelEvent that was detected
      * @return true if successful, false if not
      */
     public static boolean wasNodeDeleted(
-            final SortableDefaultMutableTreeNode affectedNode, final TreeModelEvent e) {
+            final SortableDefaultMutableTreeNode potentiallyAffectedNode, final TreeModelEvent treeModelEvent) {
         TreePath removedChild;
-        final TreePath currentNodeTreePath = new TreePath(affectedNode.getPath());
-        final Object[] children = e.getChildren();
+        final TreePath currentNodeTreePath = new TreePath(potentiallyAffectedNode.getPath());
+        final Object[] children = treeModelEvent.getChildren();
         for (final Object child : children) {
             removedChild = new TreePath(child);
             if (removedChild.isDescendant(currentNodeTreePath)) {
@@ -678,75 +680,43 @@ public class SortableDefaultMutableTreeNode
      */
     @Override
     public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangeEvent) {
-        getPictureCollection().sendNodeChanged(this);
+        if ( this.getParent() != null ) {
+            getPictureCollection().sendNodeChanged(this);
+        }
     }
 
     @Override
     public void groupInfoChangeEvent(final GroupInfoChangeEvent groupInfoChangeEvent) {
-        getPictureCollection().sendNodeChanged(this);
+        if ( this.getParent() != null ) {
+            getPictureCollection().sendNodeChanged(this);
+        }
     }
 
-    /**
-     * This method removes the designated SortableDefaultMutableTreeNode from
-     * the tree. The parent node is made the currently selected node.
-     */
-    public void deleteNode() {
-        LOGGER.log(Level.FINE, "Delete requested for node: {0}", this);
-        if (this.isRoot()) {
-            LOGGER.info("Delete attempted on Root node. Can't do this! Aborted.");
-            JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("deleteRootNodeError"),
-                    Settings.getJpoResources().getString(GENERIC_ERROR),
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        getPictureCollection().setUnsavedUpdates();
-        synchronized (this.getRoot()) {
-
-            final var parentNode = this.getParent();
-            final var pictureCollection = getPictureCollection();
-
-            int[] childIndices = {parentNode.getIndex(this)};
-            final Object[] removedChildren = {this};
-
-            super.removeFromParent();
-
-            if (pictureCollection != null && pictureCollection.getSendModelUpdates()) {
-                LOGGER.log(Level.FINE, "Sending delete message. Parent: {0}, ChildIndex {1}, removedChild: {2}",
-                        new Object[]{parentNode, childIndices[0], removedChildren[0]});
-                pictureCollection.sendNodesWereRemoved(parentNode, childIndices, removedChildren);
-                pictureCollection.removeFromSelection(this);
-            }
-        }
-
-        final var treeNodeEnumeration = this.breadthFirstEnumeration();
-        while (treeNodeEnumeration.hasMoreElements()) {
-            Settings.getRecentDropNodes().remove(treeNodeEnumeration.nextElement());
-        }
-
-    }
 
     /**
-     * Removes the node from the parent and sends a model update.
+     * Removes the node from the parent and sends a nodesWereRemoved notification.
+     * Essentially this is the equivalent of deleting the node from the tree.
      */
     @Override
     public void removeFromParent() {
-        synchronized (this.getRoot()) {
-
-            final var oldParentNode = this.getParent();
-            if (oldParentNode == null) {
-                return;
-            }
-            final var pictureCollection = oldParentNode.getPictureCollection();
-            final var oldParentIndex = oldParentNode.getIndex(this);
-            super.removeFromParent();
-
-            if (pictureCollection.getSendModelUpdates()) {
-                pictureCollection.sendNodesWereRemoved(oldParentNode,
-                        new int[]{oldParentIndex},
-                        new Object[]{this});
-            }
+        final var oldParentNode = this.getParent();
+        if (oldParentNode == null) {
+            return;
         }
+        final var pictureCollection = oldParentNode.getPictureCollection();
+        final var oldParentIndex = oldParentNode.getIndex(this);
+
+        synchronized (this.getRoot()) {
+            super.removeFromParent();
+        }
+        pictureCollection.setUnsavedUpdates();
+
+        if (pictureCollection.getSendModelUpdates() && oldParentIndex != -1) {
+            pictureCollection.sendNodesWereRemoved(oldParentNode,
+                    new int[]{oldParentIndex},
+                    new Object[]{this});
+        }
+
     }
 
     /**
@@ -935,7 +905,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if the move was successful, false if not
      */
     public boolean moveToLastChild(final SortableDefaultMutableTreeNode targetNode) {
-        LOGGER.log(Level.INFO, "moving node {0} to the last child of node {1}", new Object[]{this, targetNode});
+        LOGGER.log(Level.FINE, "moving node {0} to the last child of node {1}", new Object[]{this, targetNode});
         if (targetNode.isNodeAncestor(this)) {
             LOGGER.log(Level.SEVERE, "You can''t move a node to be a child of who it is an ancestor! Aborting move.");
             return false;
@@ -945,10 +915,8 @@ public class SortableDefaultMutableTreeNode
             return false;
         }
 
-        synchronized (targetNode.getRoot()) {
-            LOGGER.log(Level.INFO, "Adding node {0} to target node {1}", new Object[]{this, targetNode});
-            targetNode.add(this);
-        }
+        LOGGER.log(Level.FINE, "Adding node {0} to target node {1}", new Object[]{this, targetNode});
+        targetNode.add(this);
 
         getPictureCollection().setUnsavedUpdates();
         return true;
@@ -988,7 +956,7 @@ public class SortableDefaultMutableTreeNode
      */
     public boolean moveToIndex(final SortableDefaultMutableTreeNode parentNode,
                                final int index) {
-        LOGGER.log(Level.INFO, "Moving node {0} to child index {1} of node {2}", new Object[]{this, index, parentNode});
+        LOGGER.log(Level.FINE, "Moving node {0} to child index {1} of node {2}", new Object[]{this, index, parentNode});
         if (isNodeDescendant(parentNode)) {
             LOGGER.log(Level.SEVERE, "Can''t move to a descendant node. Aborting move.");
             return false;
@@ -1002,7 +970,7 @@ public class SortableDefaultMutableTreeNode
             }
             this.removeFromParent();
         }
-        LOGGER.log(Level.INFO, "Inserting node {0} at index {1} on parent node {2}", new Object[]{this, index + offset, parentNode});
+        LOGGER.log(Level.FINE, "Inserting node {0} at index {1} on parent node {2}", new Object[]{this, index + offset, parentNode});
         parentNode.insert(this, index + offset);
         getPictureCollection().setUnsavedUpdates();
         return true;

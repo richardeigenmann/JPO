@@ -862,11 +862,11 @@ public class PictureInfoEditor extends JFrame {
          * removed or whether it is a child of the removed nodes. If so we close
          * the window.
          *
-         * @param e The event
+         * @param treeModelEvent The event
          */
         @Override
-        public void treeNodesRemoved(final TreeModelEvent e) {
-            if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, e)) {
+        public void treeNodesRemoved(final TreeModelEvent treeModelEvent) {
+            if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, treeModelEvent)) {
                 getRid();
             }
         }

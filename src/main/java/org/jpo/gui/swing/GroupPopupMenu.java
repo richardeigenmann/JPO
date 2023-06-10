@@ -243,14 +243,11 @@ public class GroupPopupMenu extends JPopupMenu {
     private JMenuItem getGroupRemove() {
         final var groupRemove = new JMenuItem(Settings.getJpoResources().getString("groupRemoveLabel"));
         groupRemove.addActionListener((ActionEvent event) -> {
-            List<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
             if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
-                actionNodes.addAll(Settings.getPictureCollection().getSelection());
+                JpoEventBus.getInstance().post(new RemoveNodeRequest(Settings.getPictureCollection().getSelection()));
             } else {
-                actionNodes.add(popupNode);
+                JpoEventBus.getInstance().post(new RemoveNodeRequest(List.of(popupNode)));
             }
-
-            JpoEventBus.getInstance().post(new RemoveNodeRequest(actionNodes));
         });
         return groupRemove;
     }

@@ -40,7 +40,7 @@ public class Main {
      */
     public static void main( String[] args ) {
         System.out.println("\nJPO version " + Settings.JPO_VERSION + "\n"
-                + "Copyright (C) 2000-2022 Richard Eigenmann,\nZurich, Switzerland\n"
+                + "Copyright (C) 2000-2023 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"

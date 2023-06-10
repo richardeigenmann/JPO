@@ -3,6 +3,7 @@ package org.jpo.datamodel;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -117,6 +118,7 @@ public class PictureCollection {
         node.setPictureCollection(this);
 
         treeModel = new DefaultTreeModel(getRootNode());
+        treeModel.addTreeModelListener(new PictureCollectionTreeModelListener());
         setAllowEdits(true);
         setUnsavedUpdates(false);
     }
@@ -214,14 +216,10 @@ public class PictureCollection {
      */
     public void sendNodeStructureChanged(final TreeNode changedNode) {
         final Runnable r = () -> {
-            LOGGER.log(Level.INFO, "Sending a node structure change on node: {0}", changedNode);
+            LOGGER.log(Level.FINE, "Sending a node structure change on node: {0}", changedNode);
             getTreeModel().nodeStructureChanged(changedNode);
         };
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
+        SwingUtilities.invokeLater(r);
     }
 
     /**
@@ -233,15 +231,10 @@ public class PictureCollection {
     public void sendNodeChanged(
             final TreeNode changedNode) {
         final Runnable r = () -> {
-            LOGGER.log(Level.INFO, "Sending a node change on node: {0}", changedNode);
+            LOGGER.log(Level.FINE, "Sending a node change on node: {0}", changedNode);
             getTreeModel().nodeChanged(changedNode);
         };
-
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
+        SwingUtilities.invokeLater(r);
     }
 
     /**
@@ -253,15 +246,10 @@ public class PictureCollection {
      */
     public void sendNodesWereInserted( final TreeNode changedNode,final int[] childIndices) {
         final Runnable r = () -> {
-            LOGGER.log(Level.INFO, "Sending a node was inserted notification on node: {0} with childIndices {1}", new Object[]{changedNode, childIndices});
+            LOGGER.log(Level.FINE, "Sending a node was inserted notification on node: {0}", new Object[]{changedNode});
             getTreeModel().nodesWereInserted(changedNode, childIndices);
         };
-
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
+        SwingUtilities.invokeLater(r);
     }
 
     /**
@@ -276,14 +264,18 @@ public class PictureCollection {
                                      final int[] childIndices,
                                      final Object[] removedChildren) {
         final Runnable r = () -> {
-            LOGGER.log(Level.INFO, "Sending a node was removed change on node: {0}", node);
+            LOGGER.log(Level.FINE, "Sending a node was removed change on node: {0}, childIndices: [{1}]",
+                    new Object[]{
+                            node,
+                            Arrays
+                                .stream(childIndices)
+                                .mapToObj(String::valueOf)
+                                .reduce((a, b) -> a.concat(",").concat(b))
+                                .get()
+                    });
             getTreeModel().nodesWereRemoved(node, childIndices, removedChildren);
         };
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
+        SwingUtilities.invokeLater(r);
     }
 
     /**
@@ -942,10 +934,10 @@ public class PictureCollection {
     public void removeFromSelection(final SortableDefaultMutableTreeNode node) {
         selection.remove(node);
         final Object userObject = node.getUserObject();
-        if (userObject instanceof PictureInfo pi) {
-            pi.sendWasUnselectedEvent();
-        } else if (userObject instanceof GroupInfo gi) {
-            gi.sendWasUnselectedEvent();
+        if (userObject instanceof PictureInfo pictureInfo) {
+            pictureInfo.sendWasUnselectedEvent();
+        } else if (userObject instanceof GroupInfo groupInfo) {
+            groupInfo.sendWasUnselectedEvent();
         }
     }
 
@@ -1055,4 +1047,29 @@ public class PictureCollection {
         getTreeModel().addTreeModelListener(treeModelListener);
     }
 
+    private class PictureCollectionTreeModelListener implements TreeModelListener {
+        @Override
+        public void treeNodesChanged(TreeModelEvent treeModelEvent) {
+            // noop
+        }
+
+        @Override
+        public void treeNodesInserted(TreeModelEvent treeModelEvent) {
+            // noop
+        }
+
+        /**
+         * When nodes are removed from the tree they can't be left as selected nodes.
+         * @param treeModelEvent a {@code TreeModelEvent} describing changes to a tree model
+         */
+        @Override
+        public void treeNodesRemoved(final TreeModelEvent treeModelEvent) {
+            Arrays.stream(treeModelEvent.getChildren()).forEach(child -> removeFromSelection((SortableDefaultMutableTreeNode) child));
+        }
+
+        @Override
+        public void treeStructureChanged(TreeModelEvent treeModelEvent) {
+            // noop
+        }
+    }
 }

@@ -138,7 +138,7 @@ public class PictureAdder
     private void removeEmptyDirectoryNode(final SortableDefaultMutableTreeNode directoryNode) {
         // it can happen that we end up adding no pictures and could be returning a new empty group
         if (request.retainDirectories() && (directoryNode.getChildCount() == 0)) {
-            directoryNode.deleteNode();
+            directoryNode.removeFromParent();
         }
     }
 
