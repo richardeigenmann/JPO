@@ -10,15 +10,16 @@ blocks:
       jobs:
         - name: Build
           commands:
-            - sem-version java 20
+            #- sem-version java 20
             - checkout
             - sudo apt update
             - sudo apt install -y xvfb nsis
             - Xvfb :97 &
             - ps aux | grep Xvfb
             - export DISPLAY=:97
-            #- curl https://download.java.net/openjdk/jdk16/ri/openjdk-16+36_linux-x64_bin.tar.gz | tar xz -C ~/
-            #- export JAVA_HOME=/home/semaphore/jdk-17
+            - curl https://download.java.net/java/GA/jdk20.0.1/b4887098932d415489976708ad6d1a4b/9/GPL/openjdk-20.0.1_linux-x64_bin.tar.gz | tar xz -C ~/
+            - find ~/
+            - export JAVA_HOME=/home/semaphore/jdk-20
             - cd ~/JPO
             - ./gradlew compileTestJava
             #- ./gradlew check buildWindowsExecutable buildWindowsInstaller
