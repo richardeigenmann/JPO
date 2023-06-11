@@ -455,6 +455,8 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             {"FileSaveAsMenuItemText", "另存為"},
             {"FileExitMenuItemText", "退出"},
             {"EditJMenuText", "編輯"},
+            {"editModeDisable", "Disable Editing"},
+            {"editModeEnable", "Enable Editing"},
             {"EditFindJMenuItemText", "查找"},
             {"ExtrasJMenu", "附加功能"},
             {"EditCheckDirectoriesJMenuItemText", "檢查"},

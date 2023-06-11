@@ -1779,7 +1779,7 @@ public class Settings {
     public static void loadSettings() {
         setDefaults();
 
-        setLocale(new Locale(prefs.get("currentLocale", getCurrentLocale().toString())));
+        setLocale(Locale.of(prefs.get("currentLocale", getCurrentLocale().toString())));
         maximumPictureSize = prefs.getInt("maximumPictureSize", maximumPictureSize);
         maxThumbnails = prefs.getInt("maxThumbnails", maxThumbnails);
         thumbnailSize = prefs.getInt("thumbnailSize", thumbnailSize);

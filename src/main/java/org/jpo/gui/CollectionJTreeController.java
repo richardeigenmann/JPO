@@ -256,7 +256,6 @@ public class CollectionJTreeController {
             final var targetNode = getClosestTargetNode(support);
             LOGGER.log(Level.FINE, "Choosing node {0} as target based on path {1}, with ChildIndex: {2}", new Object[]{targetNode, dropLocation.getPath(), dropLocation.getChildIndex()});
 
-
             final var transferableNodes = getTransferableNodes(support.getTransferable());
             if (targetNode. containsAnAncestor(transferableNodes)) {
                 LOGGER.log(Level.SEVERE, "The drop operation on node {0} could not be completed because one of the dropped nodes was an ancestor", targetNode);

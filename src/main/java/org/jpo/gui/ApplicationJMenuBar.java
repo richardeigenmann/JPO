@@ -232,9 +232,9 @@ public class ApplicationJMenuBar extends JMenuBar {
             if (pictureCollection == null) { return; }
 
             if (pictureCollection.getAllowEdits() ) {
-                editModeJMenuItem.setText("Disable Editing");
+                editModeJMenuItem.setText(Settings.getJpoResources().getString("editModeDisable"));
             } else {
-                editModeJMenuItem.setText("Enable Editing");
+                editModeJMenuItem.setText(Settings.getJpoResources().getString("editModeEnable"));
             }
         }
 

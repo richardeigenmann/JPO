@@ -6,7 +6,7 @@ import java.util.ListResourceBundle;
 
 
 /*
-Copyright (C) 2002-2022  Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
  
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -450,6 +450,8 @@ public class JpoResources_de extends ListResourceBundle {
             {"FileSaveAsMenuItemText", "Speichern unter"},
             {"FileExitMenuItemText", "Beenden"},
             {"EditJMenuText", "Editieren"},
+            {"editModeDisable", "Editieren verunmöglichen"},
+            {"editModeEnable", "Editieren erlauben"},
             {"EditFindJMenuItemText", "Suchen"},
             {"ExtrasJMenu", "Extras"},
             {"EditCheckDirectoriesJMenuItemText", "Abgleichen"},
