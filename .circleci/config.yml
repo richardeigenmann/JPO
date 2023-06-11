@@ -5,13 +5,15 @@
 version: 2.1
 
 orbs:
-  gradle: circleci/gradle@3.0.0
+  #gradle: circleci/gradle@3.0.0
+  gradle-orb: entur/gradle-orb@0.0.9
 jobs:
   build:
     docker:
       # specify the version you desire here
       # from https://hub.docker.com/r/cimg/openjdk
-      - image: cimg/openjdk:19.0.2
+      #- image: cimg/openjdk:19.0.2
+      - image: cimg/openjdk:20.0.1
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
