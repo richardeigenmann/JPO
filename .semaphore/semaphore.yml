@@ -3,14 +3,14 @@ name: Java
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu1804
+    os_image: ubuntu2204
 blocks:
   - name: Gradle
     task:
       jobs:
         - name: Build
           commands:
-            - sem-version java 18
+            - sem-version java 20
             - checkout
             - sudo apt update
             - sudo apt install -y xvfb nsis
