@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
@@ -61,6 +62,7 @@ class PictureFileChooserTest {
             final var pictureCollection = new PictureCollection();
             pictureCollection.getRootNode().add(node);
 
+            Settings.setLocale(Locale.ENGLISH);
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(node);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
             // EDT blocks there
@@ -119,7 +121,7 @@ class PictureFileChooserTest {
      * @return The JButton that matches the text or null
      * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
      */
-    private static JButton getButton(final Container container, final String text) {
+    private static JButton getButton(final @NotNull Container container, final String text) {
         JButton btn = null;
         var children = new ArrayList<Container>(25);
         for (final var child : container.getComponents()) {
@@ -153,7 +155,7 @@ class PictureFileChooserTest {
      * @return The JOptionPane that matches the text or null
      * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
      */
-    private static JOptionPane getJOptionPane(final Container container, final String messageToFind) {
+    private static JOptionPane getJOptionPane(final @NotNull Container container, final String messageToFind) {
         JOptionPane pane = null;
         var children = new ArrayList<Container>(25);
         for (final var child : container.getComponents()) {
@@ -186,7 +188,7 @@ class PictureFileChooserTest {
      * @return The JFileChooser or null
      * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
      */
-    private static JFileChooser getJFileChooser(final Container container) {
+    private static JFileChooser getJFileChooser(final @NotNull Container container) {
         JFileChooser jFileChooser = null;
         var children = new ArrayList<Container>(25);
         for (final var child : container.getComponents()) {
@@ -210,7 +212,7 @@ class PictureFileChooserTest {
     }
 
 
-    private void clickJButton(final JButton btn) {
+    private void clickJButton(final @NotNull JButton btn) {
         SwingUtilities.invokeLater(btn::doClick);
     }
 
