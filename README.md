@@ -140,3 +140,19 @@ To run the application, click on Projects in the left Panel and expand the JPO p
 
 JPO is a Java Swing application which uses the Guava [EventBus](https://github.com/google/guava/wiki/EventBusExplained) 
 to order and fulfil the GUI tasks.
+
+## HIDPI
+
+Determine the scale factor you want to apply. For example, if you have a HiDPI display and want to scale by a factor of 2, you can set the scale value to 2.
+
+Set the GDK_SCALE environment variable to the desired scale factor. This variable controls the scaling of the UI elements. Replace 2 with your preferred scale factor.
+
+```bash
+export GDK_SCALE=2
+```
+
+Set the GDK_DPI_SCALE environment variable to the inverse of the GDK_SCALE value. This variable adjusts the DPI scaling of fonts and other elements to maintain their proper size. For example, if you set GDK_SCALE to 2, then GDK_DPI_SCALE should be set to 0.5.
+
+```bash
+export GDK_DPI_SCALE=0.5
+```
