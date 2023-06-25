@@ -103,51 +103,51 @@ public class SaxEventHandler extends DefaultHandler {
 
             currentGroup.setUserObject(groupInfo);
             currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
-        } else if ( "group".equals( qName ) && attrs != null ) {
+        } else if ( "group".equalsIgnoreCase( qName ) && attrs != null ) {
             incrementGroupCount();
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null ? attrs.getValue( "group_name" ) : "" );
             SortableDefaultMutableTreeNode nextCurrentGroup
                     = new SortableDefaultMutableTreeNode(groupInfo);
             currentGroup.add( nextCurrentGroup );
             currentGroup = nextCurrentGroup;
-        } else if ( "picture".equals( qName ) ) {
+        } else if ( "picture".equalsIgnoreCase( qName) ) {
             incrementPictureCount();
             currentPicture = new SortableDefaultMutableTreeNode( new PictureInfo() );
             currentGroup.add( currentPicture );
-        } else if ( "description".equals( qName ) ) {
+        } else if ( "description".equalsIgnoreCase( qName ) ) {
             currentField = DESCRIPTION;
-        } else if ( "file_URL".equals( qName ) ) {
+        } else if ( "file_url".equalsIgnoreCase( qName ) ) {
             currentField = FILE_URL;
-        } else if ( "file".equals( qName ) ) {
+        } else if ( "file".equalsIgnoreCase( qName ) ) {
             currentField = FILE;
-        } else if ( "file_lowres_URL".equals( qName ) ) {
+        } else if ( "file_lowres_url".equalsIgnoreCase( qName ) ) {
             currentField = FILE_LOWRES_URL;
-        } else if ( "film_reference".equals( qName ) ) {
+        } else if ( "film_reference".equalsIgnoreCase( qName ) ) {
             currentField = FILM_REFERENCE;
-        } else if ( "CREATION_TIME".equals( qName ) ) {
+        } else if ( "creation_time".equalsIgnoreCase( qName ) ) {
             currentField = CREATION_TIME;
-        } else if ( "COMMENT".equals( qName ) ) {
+        } else if ( "comment".equalsIgnoreCase( qName ) ) {
             currentField = COMMENT;
-        } else if ( "PHOTOGRAPHER".equals( qName ) ) {
+        } else if ( "photographer".equalsIgnoreCase( qName ) ) {
             currentField = PHOTOGRAPHER;
-        } else if ( "COPYRIGHT_HOLDER".equals( qName ) ) {
+        } else if ( "copyright_holder".equalsIgnoreCase( qName ) ) {
             currentField = COPYRIGHT_HOLDER;
-        } else if ( "ROTATION".equals( qName ) ) {
+        } else if ( "rotation".equalsIgnoreCase( qName ) ) {
             currentField = ROTATION;
-        } else if ( "LATLNG".equals( qName ) ) {
+        } else if ( "latlng".equalsIgnoreCase( qName ) ) {
             currentField = LATLNG;
-        } else if ("checksum".equals(qName)) {
-            currentField = CHECKSUM;
-        } else if ("sha256".equals(qName)) {
+        } else if ("checksum".equalsIgnoreCase(qName)) {
+            currentField = IGNORE;
+        } else if ("sha256".equalsIgnoreCase(qName)) {
             currentField = SHA256;
-        } else if ("categoryAssignment".equals(qName) && attrs != null && attrs.getValue(INDEX) != null) {
+        } else if ("categoryAssignment".equalsIgnoreCase(qName) && attrs != null && attrs.getValue(INDEX) != null) {
             ((PictureInfo) currentPicture.getUserObject()).addCategoryAssignment(attrs.getValue(INDEX));
-        } else if ("categories".equals(qName)) {
+        } else if ("categories".equalsIgnoreCase(qName)) {
             currentField = CATEGORIES;
-        } else if ("category".equals(qName) && attrs != null && attrs.getValue(INDEX) != null) {
+        } else if ("category".equalsIgnoreCase(qName) && attrs != null && attrs.getValue(INDEX) != null) {
             temporaryCategoryIndex = attrs.getValue(INDEX);
             currentField = CATEGORY;
-        } else if ("categoryDescription".equals(qName)) {
+        } else if ("categoryDescription".equalsIgnoreCase(qName)) {
             currentField = CATEGORY_DESCRIPTION;
         } else {
             LOGGER.log(Level.INFO, "XmlReader: Don''t know what to do with ELEMENT: {0}", qName);
@@ -225,6 +225,7 @@ public class SaxEventHandler extends DefaultHandler {
                 final var temporaryCategory1 = temporaryCategory;
                 temporaryCategory = temporaryCategory1.concat(readString);
             }
+            case IGNORE -> LOGGER.log(Level.INFO, "Ignoring data from file: {0}", readString);
             default -> LOGGER.log(Level.SEVERE, "Don''t recognize currentField: {0}", currentField);
         }
     }

@@ -2434,7 +2434,6 @@ public class Settings {
      * Codes to indicate the field
      */
     public enum FieldCodes {
-
         NO_SORTING,
         DESCRIPTION,
         FILE_URL,
@@ -2452,6 +2451,7 @@ public class Settings {
         CATEGORIES,
         CATEGORY,
         CATEGORY_DESCRIPTION,
+        IGNORE
     }
 
 }
