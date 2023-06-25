@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -496,6 +497,7 @@ class PictureInfoTest {
     @Test
     void dateFunctions() {
         final var pictureInfo = new PictureInfo();
+        Settings.setLocale(Locale.ENGLISH);
         System.setProperty("user.timezone", "Europe/Zurich");
         pictureInfo.setCreationTime("2021-10-02 at 14.43.23");
         assertEquals("2021-10-02 at 14.43.23", pictureInfo.getCreationTime());

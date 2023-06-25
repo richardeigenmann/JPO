@@ -815,6 +815,7 @@ class PicturePopupMenuTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
+                Settings.setLocale(Locale.ENGLISH);
                 final var pictureInfo = new PictureInfo(new File("nosuchfile-testProperties.jpg"), MY_PICTURE);
                 final var node = new SortableDefaultMutableTreeNode(pictureInfo);
                 final var pictureCollection = new PictureCollection();
