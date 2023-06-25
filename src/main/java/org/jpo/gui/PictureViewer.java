@@ -4,7 +4,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
-import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
+import org.jpo.datamodel.ScalablePicture.ScalablePictureStatus;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;
 import org.jpo.gui.swing.PictureFrame;
 import org.jpo.gui.swing.ResizableJFrame.WindowSize;
@@ -18,8 +18,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
+import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
+import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 /*
  Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland

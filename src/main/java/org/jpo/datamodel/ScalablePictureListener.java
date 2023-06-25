@@ -1,11 +1,11 @@
-package org.jpo.gui;
+package org.jpo.datamodel;
 
-import org.jpo.gui.ScalablePicture.ScalablePictureStatus;
-import org.jpo.gui.SourcePicture.SourcePictureStatus;
+import org.jpo.datamodel.ScalablePicture.ScalablePictureStatus;
+import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 
 
 /*
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

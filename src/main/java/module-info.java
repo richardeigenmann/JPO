@@ -9,6 +9,8 @@ module org.jpo {
     opens org.jpo.gui to com.google.common;
     opens org.jpo.eventbus to com.google.common;
     opens org.jpo.gui.swing to com.google.common;
+    exports org.jpo.datamodel;
+    opens org.jpo.datamodel to com.google.common;
 
     requires activation;
     requires com.google.common;

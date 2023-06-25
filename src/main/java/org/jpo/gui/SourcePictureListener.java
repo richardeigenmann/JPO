@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
-import org.jpo.gui.SourcePicture.SourcePictureStatus;
+import org.jpo.datamodel.SourcePicture;
+import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 
 
 /*

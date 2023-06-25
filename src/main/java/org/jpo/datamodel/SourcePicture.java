@@ -1,10 +1,9 @@
-package org.jpo.gui;
+package org.jpo.datamodel;
 
 import org.jetbrains.annotations.Nullable;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
+import org.jpo.gui.SourcePictureListener;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -22,7 +21,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.gui.SourcePicture.SourcePictureStatus.*;
+import static org.jpo.datamodel.SourcePicture.SourcePictureStatus.*;
 
 
 /*

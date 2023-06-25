@@ -1,7 +1,9 @@
 package org.jpo.gui;
 
 import com.google.common.hash.Hashing;
+import org.jpo.datamodel.ScalablePicture;
 import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SourcePicture;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

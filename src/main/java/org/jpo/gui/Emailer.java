@@ -1,10 +1,7 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
+import org.jpo.datamodel.*;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -359,7 +356,6 @@ public class Emailer
         props.setProperty("mail.smtp.host", Settings.getEmailServer());
         props.setProperty("mail.smtp.port", Settings.getEmailPort());
         props.setProperty("mail.smtp.auth", "true");
-        //props.put( "mail.debug", "true" );
         props.setProperty("mail.smtp.socketFactory.port", Settings.getEmailPort());
         props.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.setProperty("mail.smtp.socketFactory.fallback", "false");

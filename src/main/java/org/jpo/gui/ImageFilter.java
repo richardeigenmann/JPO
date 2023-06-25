@@ -5,7 +5,7 @@ import java.io.File;
 /*
 ImageFilter.java:  class that allows only images to be selected
 
-Copyright (C) 2002 - 2014  Richard Eigenmann.
+Copyright (C) 2002 - 2023 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -35,7 +35,7 @@ public class ImageFilter extends javax.swing.filechooser.FileFilter {
      */
     @Override
     public boolean accept( File file ) {
-        String lowercaseFilename = file.getAbsolutePath().toLowerCase();
+        final var lowercaseFilename = file.getAbsolutePath().toLowerCase();
         return file.isDirectory()
                 || lowercaseFilename.endsWith( ".jpg" )
                 || lowercaseFilename.endsWith( ".jpeg" )

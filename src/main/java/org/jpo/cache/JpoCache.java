@@ -9,7 +9,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.ScalablePicture;
+import org.jpo.datamodel.ScalablePicture;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

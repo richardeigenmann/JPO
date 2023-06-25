@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.OverlayedPictureController;
-import org.jpo.gui.ScalablePicture;
+import org.jpo.datamodel.ScalablePicture;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

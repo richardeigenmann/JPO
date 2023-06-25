@@ -3,6 +3,7 @@ package org.jpo.gui;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.SourcePicture;
 
 import java.awt.datatransfer.*;
 import java.util.ArrayList;

@@ -4,7 +4,7 @@ import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.PictureControllerZoomRequest;
 import org.jpo.eventbus.Zoom;
-import org.jpo.gui.ScalablePicture;
+import org.jpo.datamodel.ScalablePicture;
 
 import javax.swing.*;
 import java.awt.*;

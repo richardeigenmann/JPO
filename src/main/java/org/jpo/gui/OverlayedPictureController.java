@@ -1,8 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.ExifInfo;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
+import org.jpo.datamodel.*;
 import org.jpo.gui.swing.PictureController;
 
 import java.awt.*;
@@ -15,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
+import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 /*
 Copyright (C) 2017 - 2022 Richard Eigenmann.

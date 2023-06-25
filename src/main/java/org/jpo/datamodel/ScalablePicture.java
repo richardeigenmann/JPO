@@ -1,11 +1,11 @@
-package org.jpo.gui;
+package org.jpo.datamodel;
 
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
-import org.jpo.gui.SourcePicture.SourcePictureStatus;
+import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
+import org.jpo.gui.SourcePictureListener;
 import org.jpo.gui.swing.PictureControllerImage;
 
 import javax.imageio.*;
+import javax.imageio.ImageIO;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.*;
@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.*;
+import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.*;
 
 /*
  Copyright (C) 2002 - 2023 Richard Eigenmann.
@@ -247,7 +247,7 @@ public class ScalablePicture
                     scaleAfterLoad = false;
                 }
             }
-            default -> {
+            default -> { //nothing
             }
         }
     }
@@ -587,7 +587,7 @@ public class ScalablePicture
         if (renderedImage == null ) {
             return;
         }
-        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName( "jpg" );
+        final Iterator<ImageWriter> writers = javax.imageio.ImageIO.getImageWritersByFormatName( "jpg" );
         final ImageWriter writer = writers.next();
         final JPEGImageWriteParam params = new JPEGImageWriteParam( null );
         params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );
@@ -597,7 +597,7 @@ public class ScalablePicture
                 new ImageTypeSpecifier( ColorModel.getRGBdefault(),
                         ColorModel.getRGBdefault().createCompatibleSampleModel( 16, 16 ) ) );
 
-        try ( final ImageOutputStream imageOutputStream = ImageIO.createImageOutputStream(
+        try ( final ImageOutputStream imageOutputStream = javax.imageio.ImageIO.createImageOutputStream(
                 new FileOutputStream( targetFile ) ) ) {
             writer.setOutput( imageOutputStream );
             writer.write( null, new IIOImage( renderedImage, null, null ), params );
@@ -617,7 +617,7 @@ public class ScalablePicture
      */
     public static void writeJpg( final OutputStream writeStream,
             final RenderedImage renderedImage, final float jpgQuality ) {
-        final Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName( "jpg" );
+        final Iterator<ImageWriter> writers = javax.imageio.ImageIO.getImageWritersByFormatName( "jpg" );
         final ImageWriter writer = writers.next();
         final JPEGImageWriteParam params = new JPEGImageWriteParam( null );
         params.setCompressionMode( ImageWriteParam.MODE_EXPLICIT );

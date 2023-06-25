@@ -13,7 +13,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.ProgressGui;
-import org.jpo.gui.ScalablePicture;
+import org.jpo.datamodel.ScalablePicture;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static org.jpo.gui.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
+import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 
 /*
  * Copyright (C) 2002-2023 Richard Eigenmann.
