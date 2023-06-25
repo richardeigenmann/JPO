@@ -66,7 +66,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * the context of the browsing
      */
-    private NodeNavigatorInterface mySetOfNodes;
+    private NodeNavigatorInterface myNodeNavigator;
     /**
      * the position in the context being shown
      */
@@ -124,7 +124,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
 
         pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener((ActionEvent e) -> requestScreenSizeMenu());
 
-        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0)));
+        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(myNodeNavigator, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0)));
 
         pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener((ActionEvent e) -> cycleInfoDisplay());
 
@@ -161,7 +161,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                     keyEvent.consume();
                 } else if ((k == KeyEvent.VK_M)) {
                     keyEvent.consume();
-                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(mySetOfNodes, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0));
+                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(myNodeNavigator, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0));
                 } else if ((k == KeyEvent.VK_P)) {
                     requestPriorPicture();
                     keyEvent.consume();
@@ -275,8 +275,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * Closes the PictureViewer and all dangling references.
      */
     private void closeViewer() {
-        if (mySetOfNodes != null) {
-            mySetOfNodes.removeNodeNavigatorListener(this);
+        if (myNodeNavigator != null) {
+            myNodeNavigator.removeNodeNavigatorListener(this);
         }
         stopTimer();
         pictureFrame.getRid();
@@ -292,7 +292,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private SortableDefaultMutableTreeNode getCurrentNode() {
         try {
-            return mySetOfNodes.getNode(myIndex);
+            return myNodeNavigator.getNode(myIndex);
         } catch (final NullPointerException npe) {
             LOGGER.log(Level.WARNING, "Got a npe on node {0}. Message: {1}", new Object[]{myIndex, npe.getMessage()});
             return null;
@@ -320,19 +320,19 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     /**
      * Puts the picture of the indicated node onto the viewer panel
      *
-     * @param mySetOfNodes The set of nodes from which one picture is to be
+     * @param newNodeNavigator The set of nodes from which one picture is to be
      *                     shown
-     * @param myIndex      The index of the set of nodes to be shown.
+     * @param newIndex      The index of the set of nodes to be shown.
      */
-    public void showNode(final NodeNavigatorInterface mySetOfNodes,
-                         final int myIndex) {
-        LOGGER.log(Level.FINE, "Navigator: {0} Nodes: {1} Index: {2}", new Object[]{mySetOfNodes, mySetOfNodes.getNumberOfNodes(), myIndex});
+    public void showNode(final NodeNavigatorInterface newNodeNavigator,
+                         final int newIndex) {
+        LOGGER.log(Level.FINE, "Navigator: {0} Nodes: {1} Index: {2}", new Object[]{newNodeNavigator, newNodeNavigator.getNumberOfNodes(), newIndex});
         Tools.checkEDT();
 
         // Validate the inputs
-        final SortableDefaultMutableTreeNode node = mySetOfNodes.getNode(myIndex);
+        final var node = newNodeNavigator.getNode(newIndex);
         if (node == null) {
-            LOGGER.log(Level.SEVERE, "The new node is null. Aborting. mySetOfNodes: {0}, index: {1}", new Object[]{mySetOfNodes, myIndex});
+            LOGGER.log(Level.SEVERE, "The new node is null. Aborting. mySetOfNodes: {0}, index: {1}", new Object[]{newNodeNavigator, newIndex});
             closeViewer();
             return;
         }
@@ -340,35 +340,36 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         if (!(node.getUserObject() instanceof final PictureInfo pictureInfo)) {
             LOGGER.log(Level.SEVERE,
                     "The new node is not for a PictureInfo object. Aborting. userObject class: {0}, mySetOfNodes: {1}, index: {2}",
-                    new Object[]{node.getUserObject().getClass(), mySetOfNodes, myIndex});
+                    new Object[]{node.getUserObject().getClass(), newNodeNavigator, newIndex});
             closeViewer();
             return;
         }
 
-        // remove the pictureInfo change listener if present
-        if (this.mySetOfNodes != null) {
-            ((PictureInfo) this.mySetOfNodes.getNode(this.myIndex).getUserObject()).removePictureInfoChangeListener(this);
+        LOGGER.log(Level.FINE, "remove the pictureInfo change listener if present");
+        if (this.myNodeNavigator != null) {
+            ((PictureInfo) this.myNodeNavigator.getNode(this.myIndex).getUserObject()).removePictureInfoChangeListener(this);
         }
-        // attach the pictureInfo change listener
+
+        LOGGER.log(Level.FINE, "attaching a new pictureInfo change listener");
         pictureInfo.addPictureInfoChangeListener(this);
 
-        if (this.mySetOfNodes == null) {
-            // add viewer to the new one
-            this.mySetOfNodes = mySetOfNodes;
-            mySetOfNodes.addNodeNavigatorListener(this);
-        } else //did we get a new navigator?
-        {
-            if (!this.mySetOfNodes.equals(mySetOfNodes)) {
-                LOGGER.log(Level.INFO, "Got a new navigator: old: {0} new: {1}", new Object[]{this.mySetOfNodes, mySetOfNodes});
-                //get rid of the old navigator
-                this.mySetOfNodes.removeNodeNavigatorListener(this);
-                // add viewer to the new one
-                this.mySetOfNodes = mySetOfNodes;
-                mySetOfNodes.addNodeNavigatorListener(this);
+        if (this.myNodeNavigator == null) {
+            LOGGER.log(Level.INFO, "We didn''t have a nodeNavigator, so we set it fresh.");
+            this.myNodeNavigator = newNodeNavigator;
+            newNodeNavigator.addNodeNavigatorListener(this);
+        } else {
+            if (!this.myNodeNavigator.equals(newNodeNavigator)) {
+                LOGGER.log(Level.FINE, "Got a new navigator: old: {0} new: {1}", new Object[]{this.myNodeNavigator, newNodeNavigator});
+                LOGGER.log(Level.FINE, "Removing the navigatorListener from the the old nodeNavigator");
+                this.myNodeNavigator.removeNodeNavigatorListener(this);
+                LOGGER.log(Level.FINE, "Attaching the navigatorListener to the new nodeNavigator");
+                this.myNodeNavigator = newNodeNavigator;
+                newNodeNavigator.addNodeNavigatorListener(this);
             }
         }
 
-        this.myIndex = myIndex;
+        LOGGER.log(Level.FINE, "Setting my Index to {0}", newIndex);
+        this.myIndex = newIndex;
 
         pictureFrame.setDescription(pictureInfo.getDescription());
         setPicture(pictureInfo);
@@ -384,7 +385,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private void setPicture(final PictureInfo pictureInfo) {
         LOGGER.log(Level.FINE, "Set picture to PictureInfo: {0}", pictureInfo);
-        pictureFrame.getPictureController().setPicture(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getDescription(), pictureInfo.getRotation());
+        pictureFrame.getPictureController().setPicture(pictureInfo);
     }
 
     /**
@@ -400,13 +401,13 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
         if (pictureInfoChangedEvent.getHighresLocationChanged()) {
-            final var node = mySetOfNodes.getNode(myIndex);
+            final var node = myNodeNavigator.getNode(myIndex);
             final var pictureInfo = (PictureInfo) node.getUserObject();
             setPicture(pictureInfo);
         }
 
         if (pictureInfoChangedEvent.getRotationChanged()) {
-            final var pictureInfo = (PictureInfo) mySetOfNodes.getNode(myIndex).getUserObject();
+            final var pictureInfo = (PictureInfo) myNodeNavigator.getNode(myIndex).getUserObject();
             setPicture(pictureInfo);
         }
     }
@@ -417,7 +418,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     @Override
     public void nodeLayoutChanged() {
         LOGGER.info("Got notified to relayout");
-        showNode(mySetOfNodes, myIndex);
+        showNode(myNodeNavigator, myIndex);
 
     }
 
@@ -430,10 +431,10 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @see #requestPriorPicture()
      */
     private void requestNextPicture() {
-        if (mySetOfNodes.getNumberOfNodes() > myIndex + 1) {
+        if (myNodeNavigator.getNumberOfNodes() > myIndex + 1) {
 
             SwingUtilities.invokeLater(
-                    () -> showNode(mySetOfNodes, myIndex + 1)
+                    () -> showNode(myNodeNavigator, myIndex + 1)
             );
         }
     }
@@ -446,7 +447,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      */
     private void requestPriorPicture() {
         if (myIndex > 0) {
-            SwingUtilities.invokeLater(() -> showNode(mySetOfNodes, myIndex - 1));
+            SwingUtilities.invokeLater(() -> showNode(myNodeNavigator, myIndex - 1));
         }
     }
 
@@ -549,7 +550,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     }
 
     private void setIconDecorationPreviousButton() {
-        final SortableDefaultMutableTreeNode currentNode = getCurrentNode();
+        final var currentNode = getCurrentNode();
         if (currentNode == null) {
             return;
         }
@@ -558,7 +559,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
         } else {
             // determine if there are any previous nodes that are not groups.
-            DefaultMutableTreeNode testNode = currentNode.getPreviousNode();
+            var testNode = currentNode.getPreviousNode();
             while ((testNode != null) && (!(testNode.getUserObject() instanceof PictureInfo))) {
                 testNode = testNode.getPreviousNode();
             }

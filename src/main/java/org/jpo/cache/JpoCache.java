@@ -159,8 +159,12 @@ public class JpoCache {
      * @return and ImageBytes object
      * @throws IOException if something went wrong
      */
-    public static ImageBytes getHighresImageBytes(final String sha256, final File file) throws IOException {
-        LOGGER.log(Level.FINE, "Hitting cache for sha256 {0}", sha256);
+    public static ImageBytes getHighresImageBytes(String sha256, final File file) throws IOException {
+        if ( sha256.length() != 64 ) {
+            LOGGER.log(Level.FINE, "Bad hash length: {0} instead of 64 chars. Rebuilding sha256 for file {1}", new Object[]{ sha256.length(), file});
+            sha256 = PictureInfo.calculateSha256(file);
+        }
+        LOGGER.log(Level.FINE, "Hitting cache for sha256: {0}", sha256);
         var imageBytes = highresMemoryCache.get(sha256);
         if (imageBytes != null) {
             imageBytes.setRetrievedFromCache(true);

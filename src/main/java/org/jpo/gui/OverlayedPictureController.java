@@ -4,7 +4,6 @@ import org.jpo.datamodel.*;
 import org.jpo.gui.swing.PictureController;
 
 import java.awt.*;
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,8 +11,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
+import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
 
 /*
 Copyright (C) 2017 - 2022 Richard Eigenmann.
@@ -149,20 +148,17 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * Brings up the indicated picture on the display.
      *
-     * @param file        The URL of the picture to display
-     * @param description The description of the picture
-     * @param rotation    The rotation that should be applied
+     * @param pictureInfo The pictureInfo to display
      */
-    public void setPicture(final String sha256, final File file, final String description,
-                           final double rotation) {
-        scalablePicture.stopLoadingExcept(file);
+    public void setPicture(final PictureInfo pictureInfo) {
+        scalablePicture.stopLoadingExcept(pictureInfo.getImageFile());
 
         setCenterWhenScaled(true);
         scalablePicture.setScaleSize(getSize());
-        scalablePicture.loadAndScalePictureInThread(sha256, file, Thread.MAX_PRIORITY, rotation);
+        scalablePicture.loadAndScalePictureInThread(pictureInfo.getSha256(), pictureInfo.getImageFile(), Thread.MAX_PRIORITY, pictureInfo.getRotation());
 
-        legend = description;
-        exifInfo = new ExifInfo(file);
+        legend = pictureInfo.getDescription();
+        exifInfo = new ExifInfo(pictureInfo.getImageFile());
         exifInfo.decodeExifTags();
     }
 

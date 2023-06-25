@@ -324,7 +324,7 @@ class PictureInfoTest {
         final var url = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg"));
         try {
             final var pictureInfo = new PictureInfo(new File(url.toURI()), "Sample Picture");
-            final var hashCode = pictureInfo.calculateSha256();
+            final var hashCode = pictureInfo.calculateSha256(pictureInfo.getImageFile());
             assertEquals("E7D7D40A06D1B974F741920A6489FDDA4CA4A05C55ED122C602B360640E9E67C", hashCode.toUpperCase());
 
         } catch (final URISyntaxException | IOException e) {

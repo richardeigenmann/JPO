@@ -7,7 +7,7 @@ import java.util.List;
 /*
  ListNavigator.java:  an implementation of the NodeNavigator for browsing pictures.
 
- Copyright (C) 2006-2022 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,7 +29,7 @@ import java.util.List;
 public class ListNavigator
         extends NodeNavigator {
 
-    public ListNavigator(Collection<SortableDefaultMutableTreeNode> nodes) {
+    public ListNavigator(final Collection<SortableDefaultMutableTreeNode> nodes) {
         add(nodes);
     }
 
@@ -86,7 +86,7 @@ public class ListNavigator
      *
      * @param nodes a node to add to the allPictures List
      */
-    public void add(Collection<SortableDefaultMutableTreeNode> nodes) {
+    public void add(final Collection<SortableDefaultMutableTreeNode> nodes) {
         allPictures.addAll(nodes);
     }
 
@@ -95,7 +95,7 @@ public class ListNavigator
      *
      * @param removeNode a node to add to the allPictures List
      */
-    public void removeNode(SortableDefaultMutableTreeNode removeNode) {
+    public void removeNode(final SortableDefaultMutableTreeNode removeNode) {
         allPictures.remove(removeNode);
     }
 
@@ -113,7 +113,7 @@ public class ListNavigator
      */
     @Override
     public String toString() {
-        return String.format("ListNavigator %d Title: %s  with %d nodes",
+        return String.format("ListNavigator %d Title: %s with %d nodes",
                 hashCode(), getTitle(), getNumberOfNodes());
     }
 }

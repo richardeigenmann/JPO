@@ -1,10 +1,7 @@
 package org.jpo.datamodel;
 
 /*
- NodeNavigatorInterface.java:  defines the methods that a "set of nodes" must 
- implement so that the Controller can  identify the Nodes to be displayed.
-
- Copyright (C) 2002-2022 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,14 +51,14 @@ public interface NodeNavigatorInterface {
      *
      * @param nodeNavigatorListener a NodeNavigatorListener to notify
      */
-    void addNodeNavigatorListener(NodeNavigatorListener nodeNavigatorListener);
+    void addNodeNavigatorListener(final NodeNavigatorListener nodeNavigatorListener);
 
     /**
      * Removes a NodeNavigatorListener
      *
      * @param nodeNavigatorListener the listener to remove
      */
-    void removeNodeNavigatorListener(NodeNavigatorListener nodeNavigatorListener);
+    void removeNodeNavigatorListener(final NodeNavigatorListener nodeNavigatorListener);
 
     /**
      * Node Navigators must be able to send notifications to their listeners.

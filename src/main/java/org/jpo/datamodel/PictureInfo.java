@@ -456,12 +456,12 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @return returns a HashCode object containing the SHA256 of the Image File
      * @throws IOException if the underlying library encounters and {@link IOException}
      */
-    public String calculateSha256() throws IOException {
-        final var hash = Files.asByteSource(getImageFile()).hash(Hashing.sha256());
+    public static String calculateSha256(final File file) throws IOException {
+        final var hash = Files.asByteSource(file).hash(Hashing.sha256());
         if (hash == null) {
             return "";
         }
-        LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{getImageFile(), hash.toString().toUpperCase()});
+        LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{file, hash.toString().toUpperCase()});
         return hash.toString().toUpperCase();
     }
 
@@ -471,7 +471,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      */
     public void setSha256() {
         try {
-            setSha256(calculateSha256());
+            setSha256(calculateSha256(getImageFile()));
         } catch (final IOException e) {
             LOGGER.severe("Could not create SHA-256 code: " + e.getMessage());
             sha256 = "";

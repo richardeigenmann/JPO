@@ -162,15 +162,15 @@ public class SourcePicture {
         this.sha256 = sha256;
         this.imageFile = imageFile;
         this.rotation = rotation;
-        final Thread t = new Thread("SourcePicture.loadPictureInThread") {
+        final var thread = new Thread("SourcePicture.loadPictureInThread") {
 
             @Override
             public void run() {
                 loadPicture();
             }
         };
-        t.setPriority(priority);
-        t.start();
+        thread.setPriority(priority);
+        thread.start();
     }
 
     /**
@@ -180,7 +180,7 @@ public class SourcePicture {
      */
     private void loadPicture() {
         setStatus(SOURCE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
-        final long start = System.currentTimeMillis();
+        final var start = System.currentTimeMillis();
         loadTime = 0;
         ImageBytes imageBytes;
         try {
