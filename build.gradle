@@ -88,8 +88,8 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20230618'
     implementation 'com.jidesoft:jide-oss:3.6.18'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0-M1'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0-M1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0-M1'
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0-M1'
+    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0-M1'
     testImplementation(platform('org.junit:junit-bom:5.10.0-M1'))
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
@@ -116,7 +116,6 @@ test {
         runOnClasspath = true
     }
 
-
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
@@ -140,12 +139,10 @@ jacocoTestReport {
 }
 
 plugins.withType(JacocoPlugin) {
-    // jacoco doesn't like Java 15 in Nov 2020
     tasks["test"].finalizedBy 'jacocoTestReport'
 }
 
 check.dependsOn jacocoTestReport
-
 
 
 // docker run -d --name sonarqube -p 9000:9000 sonarqube:8.4.2-community
