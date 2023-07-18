@@ -126,6 +126,16 @@ test {
     }
 }
 
+/* To turn on FINE Logging add this block to the class after the LOGGER definition:
+    static {
+        LOGGER.setLevel(Level.FINE);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.FINE);
+        LOGGER.addHandler(consoleHandler);
+    }
+*/
+
+
 jacoco {
     toolVersion = "0.8.9"
 }

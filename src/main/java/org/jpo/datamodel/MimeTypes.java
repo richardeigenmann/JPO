@@ -5,6 +5,8 @@ import org.apache.commons.compress.utils.FileNameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -83,9 +85,15 @@ public class MimeTypes {
         return mimeType.startsWith("video/") || "application/x-troff-msvideo".equals(mimeType) || "application/x-matroska".equals(mimeType);
     }
 
+    /**
+     * TravisCI has an interesting JVM which doesn't detect the mime type of hdr and tga images and thus fails tests.
+     */
+    final static List<String> OVERRIDE_PICTURE_TYPES = Arrays.asList("hdr", "tga", "sgi");
+
     public static boolean isAPicture(final File file) {
         var mimeType = getMimeType(file);
-        if (mimeType.equals("null") && (FileNameUtils.getExtension(file.toPath()).equalsIgnoreCase("hdr"))) {
+        if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FileNameUtils.getExtension(file.toPath()).toLowerCase())) {
+                //(FileNameUtils.getExtension(file.toPath()).equalsIgnoreCase("hdr"))) {
             return true;
         }
         return mimeType.startsWith("image/");
