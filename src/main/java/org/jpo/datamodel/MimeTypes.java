@@ -1,7 +1,5 @@
 package org.jpo.datamodel;
 
-import org.apache.commons.compress.utils.FileNameUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -92,10 +90,10 @@ public class MimeTypes {
 
     public static boolean isAPicture(final File file) {
         var mimeType = getMimeType(file);
-        if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FileNameUtils.getExtension(file.toPath()).toLowerCase())) {
+        /*if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FileNameUtils.getExtension(file.toPath()).toLowerCase())) {
                 //(FileNameUtils.getExtension(file.toPath()).equalsIgnoreCase("hdr"))) {
             return true;
-        }
+        }*/
         return mimeType.startsWith("image/");
     }
 }

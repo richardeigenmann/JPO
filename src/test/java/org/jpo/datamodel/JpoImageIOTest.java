@@ -2,7 +2,6 @@ package org.jpo.datamodel;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageReader;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -200,7 +198,6 @@ class JpoImageIOTest {
     }
 
     @Test
-    @Disabled ("Travis doesn't like this")
     void testHasSgiImageReader() {
         final var SGI_IMAGE_FILE = "sgi.sgi";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SGI_IMAGE_FILE));
@@ -213,7 +210,6 @@ class JpoImageIOTest {
     }
 
     @Test
-    @Disabled("Travis CI doesn't like this")
     void testGetTgaImageIOReader() {
         final var TGA_IMAGE_FILE = "tga.tga";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
@@ -227,7 +223,6 @@ class JpoImageIOTest {
     }
 
     @Test
-    //@Disabled("Travis doesn't like this")
     void testHasTgaImageReader() {
         final var TGA_IMAGE_FILE = "tga.tga";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
@@ -236,36 +231,8 @@ class JpoImageIOTest {
 
             final var hash = Files.asByteSource(image).hash(Hashing.sha256());
             assertEquals("465b09bb5e2a312a308c89a3381c02aee59b573643dd2ca0603351dd8c1a657a", hash.toString());
-
-            // Get a list of all registered ImageReaders
-            final Iterator<ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName("TGA");
-            System.out.println("Registered ImageIO readers:");
-            // Iterate over the list and print the names of the readers
-            while (readers.hasNext()) {
-                ImageReader reader = readers.next();
-                System.out.println(reader.getFormatName());
-                System.out.println(reader);
-            }
-            System.out.println("End of registered ImageIO readers");
-
-            // Get a list of all registered ImageReaders
-            final Iterator<ImageReader> readers2 = javax.imageio.ImageIO.getImageReadersByFormatName("JPEG");
-            System.out.println("Registered ImageIO readers:");
-            // Iterate over the list and print the names of the readers
-            while (readers2.hasNext()) {
-                ImageReader reader = readers2.next();
-                System.out.println(reader.getFormatName());
-            }
-            System.out.println("End of registered ImageIO readers");
-
-
-            System.out.println("jdk.module.path: " + System.getProperty("jdk.module.path"));
-            System.out.println("java.class.path: " + System.getProperty("java.class.path"));
-
-            Class.forName("com.twelvemonkeys.imageio.plugins.tga.TGA");
-
             assertTrue(JpoImageIO.jvmHasReader(image));
-        } catch (final URISyntaxException | IOException | ClassNotFoundException e) {
+        } catch (final URISyntaxException | IOException e ) {
             fail(e.getMessage());
         }
     }
@@ -384,7 +351,6 @@ class JpoImageIOTest {
     }
 
     @Test
-    @Disabled("Travis doesn't like this")
     void testHasIffImageReader() {
         final var IFF_IMAGE_FILE = "AmigaAmiga.iff";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(IFF_IMAGE_FILE));
@@ -436,7 +402,6 @@ class JpoImageIOTest {
     }
 
     @Test
-    @Disabled("Travis doesn't like this")
     void testHasPctImageReader() {
         final var PICT_IMAGE_FILE = "food.pct";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PICT_IMAGE_FILE));
