@@ -1,5 +1,7 @@
 package org.jpo.datamodel;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -86,14 +88,14 @@ public class MimeTypes {
     /**
      * TravisCI has an interesting JVM which doesn't detect the mime type of hdr and tga images and thus fails tests.
      */
-    final static List<String> OVERRIDE_PICTURE_TYPES = Arrays.asList("hdr", "tga", "sgi");
+    final static List<String> OVERRIDE_PICTURE_TYPES = Arrays.asList("hdr", "pct", "tga", "sgi");
 
     public static boolean isAPicture(final File file) {
         var mimeType = getMimeType(file);
-        /*if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FileNameUtils.getExtension(file.toPath()).toLowerCase())) {
-                //(FileNameUtils.getExtension(file.toPath()).equalsIgnoreCase("hdr"))) {
+        if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FilenameUtils.getExtension(file.toPath().toString()).toLowerCase())) {
+            LOGGER.log(Level.SEVERE, "The JVM/OS failed to recognize the file {0} as an image. Overriding this because of its filename extension");
             return true;
-        }*/
+        }
         return mimeType.startsWith("image/");
     }
 }
