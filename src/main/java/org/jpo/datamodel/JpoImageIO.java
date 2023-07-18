@@ -24,11 +24,11 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ImageIO {
+public class JpoImageIO {
 
-    private static final Logger LOGGER = Logger.getLogger(ImageIO.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(JpoImageIO.class.getName());
 
-    private ImageIO() {
+    private JpoImageIO() {
         throw new IllegalStateException("Utility class");
     }
 

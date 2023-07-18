@@ -362,7 +362,7 @@ public class Camera implements Serializable {
     private Collection<File> getNewPicturesLoop(File[] files, Collection<File> newFiles) {
         for ( File f : files ) {
             if ( !f.isDirectory() ) {
-                if (ImageIO.jvmHasReader(f) && !inOldImage(f)) {
+                if (JpoImageIO.jvmHasReader(f) && !inOldImage(f)) {
                     newFiles.add(f);
                 }
             } else {

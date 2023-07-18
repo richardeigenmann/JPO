@@ -179,7 +179,7 @@ public class ThumbnailCreationDaemon implements Runnable {
             request.setIcon(MOVIE_ICON);
         } else if (MimeTypes.isADocument(imageFile)) {
             request.setIcon(DOCUMENT_ICON);
-        } else if (!ImageIO.jvmHasReader(imageFile)) {
+        } else if (!JpoImageIO.jvmHasReader(imageFile)) {
             request.setIcon(BROKEN_THUMBNAIL_PICTURE);
         } else {
             final var imageBytes = JpoCache.getThumbnailImageBytes(imageFile,

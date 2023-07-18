@@ -245,7 +245,7 @@ public class SourcePicture {
         // now create a BufferedImage from that
         try (final var bis = imageBytes.getByteArrayInputStream();
              final var iis = ImageIO.createImageInputStream(bis)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             if (reader == null) {
                 LOGGER.log(Level.SEVERE, "No reader found for URL: {0}", imageFile);
                 setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s", imageFile.toString()));

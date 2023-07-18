@@ -170,7 +170,7 @@ public class SortableDefaultMutableTreeNode
      * @return true if the picture was valid, false if not.
      */
     public boolean addPicture(final File file, final Collection<Integer> categoryAssignments) {
-        if (ImageIO.jvmHasReader(file)
+        if (JpoImageIO.jvmHasReader(file)
                 || MimeTypes.isAPicture(file)
                 || MimeTypes.isADocument(file)
                 || MimeTypes.isAMovie(file)) {

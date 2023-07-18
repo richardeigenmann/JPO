@@ -6,10 +6,7 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.ScalablePicture;
+import org.jpo.datamodel.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -264,7 +261,7 @@ public class JpoCache {
      * @return the thumbnail
      */
     private static ImageBytes createThumbnail(final String sha256, final File file, final double rotation, final Dimension maxSize) {
-        if (!org.jpo.datamodel.ImageIO.jvmHasReader(file)) {
+        if (!JpoImageIO.jvmHasReader(file)) {
             return null;
         }
         // create a new thumbnail from the highres
@@ -321,7 +318,7 @@ public class JpoCache {
         final var usablePictures = childPictureNodes
                 .stream()
                 .map(node -> (PictureInfo) node.getUserObject())
-                .filter(pictureInfo -> org.jpo.datamodel.ImageIO.jvmHasReader(pictureInfo.getImageFile()))
+                .filter(pictureInfo -> JpoImageIO.jvmHasReader(pictureInfo.getImageFile()))
                 .limit(numberOfPics)
                 .toList();
 
@@ -393,11 +390,11 @@ public class JpoCache {
             final var yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
             var y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
 
-            if (!org.jpo.datamodel.ImageIO.jvmHasReader(pictureInfo.getImageFile())) {
+            if (!JpoImageIO.jvmHasReader(pictureInfo.getImageFile())) {
                 continue;
             } else {
                 LOGGER.log(Level.INFO, "We hava a reader for file: {0} it is class {1}",
-                        new Object[]{pictureInfo.getImageFile(), org.jpo.datamodel.ImageIO.getImageIOReader(ImageIO.createImageInputStream(new FileInputStream(pictureInfo.getImageFile()))).getClass()});
+                        new Object[]{pictureInfo.getImageFile(), JpoImageIO.getImageIOReader(ImageIO.createImageInputStream(new FileInputStream(pictureInfo.getImageFile()))).getClass()});
             }
 
             final var scalablePicture = new ScalablePicture();

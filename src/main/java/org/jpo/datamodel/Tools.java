@@ -131,7 +131,7 @@ public class Tools {
                 if (hasPictures(file)) {
                     return true;
                 }
-            } else if (ImageIO.jvmHasReader(file)) {
+            } else if (JpoImageIO.jvmHasReader(file)) {
                 return true;
             } else if (MimeTypes.isADocument(file)) {
                 return true;

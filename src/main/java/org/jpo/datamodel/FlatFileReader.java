@@ -61,7 +61,7 @@ public class FlatFileReader {
 
                 if (!testFile.canRead()) {
                     LOGGER.log(Level.INFO, "Can''t read file: {0}", line);
-                } else if (ImageIO.jvmHasReader(testFile)) {
+                } else if (JpoImageIO.jvmHasReader(testFile)) {
 
                     LOGGER.log(Level.INFO, "adding file to node: {0}", line);
                     final SortableDefaultMutableTreeNode newPictureNode = new SortableDefaultMutableTreeNode(

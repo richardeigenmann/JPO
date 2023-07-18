@@ -2,7 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.FlatGroupNavigator;
-import org.jpo.datamodel.ImageIO;
+import org.jpo.datamodel.JpoImageIO;
 import org.jpo.datamodel.MimeTypes;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.gui.PictureViewer;
@@ -56,7 +56,7 @@ public class ShowPictureHandler {
             }
             return;
         }
-        if (!ImageIO.jvmHasReader(file)) {
+        if (!JpoImageIO.jvmHasReader(file)) {
             LOGGER.log(Level.SEVERE, "Can''t find a JVM reader for file: {0}", file);
             return;
         }

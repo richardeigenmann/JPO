@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
@@ -33,14 +34,14 @@ import static org.junit.jupiter.api.Assertions.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-class ImageIOTest {
+class JpoImageIOTest {
     @Test
     void testGetJpgImageIOReader() {
         final var JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -53,7 +54,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -65,7 +66,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(BMP_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.BMPImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -78,7 +79,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(BMP_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -90,7 +91,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TIFF_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -103,7 +104,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TIFF_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -115,7 +116,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(HDR_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.hdr.HDRImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -128,7 +129,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(HDR_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -141,7 +142,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SVG_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.svg.SVGImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -154,7 +155,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SVG_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -166,7 +167,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PNM_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pnm.PNMImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -179,7 +180,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PNM_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -191,7 +192,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SGI_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.sgi.SGIImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -205,7 +206,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SGI_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -218,7 +219,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.tga.TGAImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -236,12 +237,23 @@ class ImageIOTest {
             final var hash = Files.asByteSource(image).hash(Hashing.sha256());
             assertEquals("465b09bb5e2a312a308c89a3381c02aee59b573643dd2ca0603351dd8c1a657a", hash.toString());
 
+            // Get a list of all registered ImageReaders
+            final Iterator<ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName("*");
+
+            System.out.println("Registered ImageIO readers:");
+            // Iterate over the list and print the names of the readers
+            while (readers.hasNext()) {
+                ImageReader reader = readers.next();
+                System.out.println(reader.getFormatName());
+            }
+            System.out.println("End of registered ImageIO readers");
+
             System.out.println("jdk.module.path: " + System.getProperty("jdk.module.path"));
             System.out.println("java.class.path: " + System.getProperty("java.class.path"));
 
             Class.forName("com.twelvemonkeys.imageio.plugins.tga.TGA");
 
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException | IOException | ClassNotFoundException e) {
             fail(e.getMessage());
         }
@@ -253,7 +265,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PSD_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.psd.PSDImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -266,7 +278,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PSD_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -278,7 +290,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(ICO_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.bmp.ICOImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -291,7 +303,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(ICO_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -303,7 +315,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PNG_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.png.PNGImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -316,7 +328,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PNG_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -328,7 +340,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(GIF_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.sun.imageio.plugins.gif.GIFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -341,7 +353,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(GIF_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -353,7 +365,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(IFF_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.iff.IFFImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -367,7 +379,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(IFF_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -380,7 +392,7 @@ class ImageIOTest {
         final URL imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PCX_IMAGE_FILE));
         try (final InputStream input = imageUrl.openStream();
              final ImageInputStream iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final ImageReader reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final ImageReader reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pcx.PCXImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -393,7 +405,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PCX_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -405,7 +417,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PICT_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.pict.PICTImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -420,7 +432,7 @@ class ImageIOTest {
         try {
             final File image;
             image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -432,7 +444,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.jpeg.JPEGImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -445,7 +457,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertTrue(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertTrue(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
@@ -457,7 +469,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(ICNS_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.icns.ICNSImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -470,7 +482,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
         try (final var input = imageUrl.openStream();
              final var iis = javax.imageio.ImageIO.createImageInputStream(input)) {
-            final var reader = org.jpo.datamodel.ImageIO.getImageIOReader(iis);
+            final var reader = JpoImageIO.getImageIOReader(iis);
             assertTrue(reader.toString().startsWith("com.twelvemonkeys.imageio.plugins.thumbsdb.ThumbsDBImageReader"));
         } catch (final NoSuchElementException | IOException e) {
             fail(e.getMessage());
@@ -483,7 +495,7 @@ class ImageIOTest {
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(MS_WORD_FILE));
         try {
             final var image = new File(imageUrl.toURI());
-            assertFalse(org.jpo.datamodel.ImageIO.jvmHasReader(image));
+            assertFalse(JpoImageIO.jvmHasReader(image));
         } catch (final URISyntaxException e) {
             fail(e.getMessage());
         }
