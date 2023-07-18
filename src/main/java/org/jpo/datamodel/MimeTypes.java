@@ -5,6 +5,8 @@ import org.apache.commons.compress.utils.FileNameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +33,13 @@ public class MimeTypes {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(MimeTypes.class.getName());
+    static {
+        LOGGER.setLevel(Level.FINE);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.FINE);
+        LOGGER.addHandler(consoleHandler);
+    }
+
 
     private MimeTypes() {
         throw new IllegalStateException("Utility class");

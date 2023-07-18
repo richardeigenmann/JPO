@@ -21,12 +21,20 @@ import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class JpoImageIO {
 
     private static final Logger LOGGER = Logger.getLogger(JpoImageIO.class.getName());
+    static {
+        LOGGER.setLevel(Level.FINE);
+        Handler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.FINE);
+        LOGGER.addHandler(consoleHandler);
+    }
 
     private JpoImageIO() {
         throw new IllegalStateException("Utility class");
@@ -40,7 +48,7 @@ public class JpoImageIO {
      * @return true if the JVM has a reader false if not.
      */
     public static boolean jvmHasReader(final File file) {
-        LOGGER.log(Level.INFO, "checking jvmHasReader for file {0}", file);
+        LOGGER.log(Level.FINE, "checking jvmHasReader for file {0}", file);
         if (!MimeTypes.isAPicture(file)) {
             LOGGER.log(Level.INFO, "File {0} ist not a picture according the MimeType {1}", new Object[]{file, MimeTypes.getMimeType(file)});
             return false;
@@ -48,7 +56,7 @@ public class JpoImageIO {
         try (final var testStream = new FileImageInputStream(file)) {
             final ImageReader reader = javax.imageio.ImageIO.getImageReaders(testStream).next();
             if (reader != null) {
-                LOGGER.log(Level.INFO, "File {0} has a picture mime type and ImageIO has a reader for it. Class is {1}", new Object[]{file, reader.getClass()});
+                LOGGER.log(Level.FINE, "File {0} has a picture mime type and ImageIO has a reader for it. Class is {1}", new Object[]{file, reader.getClass()});
                 return true;
             } else {
                 LOGGER.log(Level.INFO, "Cant find an ImageIO reader for file {0}", file);
