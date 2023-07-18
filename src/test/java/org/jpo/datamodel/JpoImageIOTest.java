@@ -238,15 +238,26 @@ class JpoImageIOTest {
             assertEquals("465b09bb5e2a312a308c89a3381c02aee59b573643dd2ca0603351dd8c1a657a", hash.toString());
 
             // Get a list of all registered ImageReaders
-            final Iterator<ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName("*");
-
+            final Iterator<ImageReader> readers = javax.imageio.ImageIO.getImageReadersByFormatName("TGA");
             System.out.println("Registered ImageIO readers:");
             // Iterate over the list and print the names of the readers
             while (readers.hasNext()) {
                 ImageReader reader = readers.next();
                 System.out.println(reader.getFormatName());
+                System.out.println(reader);
             }
             System.out.println("End of registered ImageIO readers");
+
+            // Get a list of all registered ImageReaders
+            final Iterator<ImageReader> readers2 = javax.imageio.ImageIO.getImageReadersByFormatName("JPEG");
+            System.out.println("Registered ImageIO readers:");
+            // Iterate over the list and print the names of the readers
+            while (readers2.hasNext()) {
+                ImageReader reader = readers2.next();
+                System.out.println(reader.getFormatName());
+            }
+            System.out.println("End of registered ImageIO readers");
+
 
             System.out.println("jdk.module.path: " + System.getProperty("jdk.module.path"));
             System.out.println("java.class.path: " + System.getProperty("java.class.path"));
