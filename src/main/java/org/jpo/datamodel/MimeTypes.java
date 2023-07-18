@@ -88,12 +88,12 @@ public class MimeTypes {
     /**
      * TravisCI has an interesting JVM which doesn't detect the mime type of hdr and tga images and thus fails tests.
      */
-    final static List<String> OVERRIDE_PICTURE_TYPES = Arrays.asList("hdr", "pct", "tga", "sgi");
+    static final List<String> OVERRIDE_PICTURE_TYPES = Arrays.asList("iff", "hdr", "pct", "tga", "sgi");
 
     public static boolean isAPicture(final File file) {
         var mimeType = getMimeType(file);
         if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FilenameUtils.getExtension(file.toPath().toString()).toLowerCase())) {
-            LOGGER.log(Level.SEVERE, "The JVM/OS failed to recognize the file {0} as an image. Overriding this because of its filename extension");
+            LOGGER.log(Level.SEVERE, "The JVM/OS failed to recognize the file {0} as an image. Overriding this because of its filename extension", file);
             return true;
         }
         return mimeType.startsWith("image/");
