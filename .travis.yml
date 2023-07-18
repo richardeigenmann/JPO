@@ -6,6 +6,7 @@ services:
   - xvfb
 before_install:
   - sudo apt-get install jq
+  - echo -e "image/x-tga tga\nimage/x-iff iff\nimage/x-hdr hdr\nimage/x-pct pct\nimage/x-sgi sgi" >> .mime.types
   - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest
     | jq -r .assets[0].browser_download_url)
   - export PATH=$GRADLE_HOME/bin:$PATH

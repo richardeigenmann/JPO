@@ -1,7 +1,5 @@
 package org.jpo.datamodel;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -92,10 +90,10 @@ public class MimeTypes {
 
     public static boolean isAPicture(final File file) {
         var mimeType = getMimeType(file);
-        if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FilenameUtils.getExtension(file.toPath().toString()).toLowerCase())) {
+        /*if (mimeType.equals("null") && OVERRIDE_PICTURE_TYPES.contains(FilenameUtils.getExtension(file.toPath().toString()).toLowerCase())) {
             LOGGER.log(Level.SEVERE, "The JVM/OS failed to recognize the file {0} as an image. Overriding this because of its filename extension", file);
             return true;
-        }
+        }*/
         return mimeType.startsWith("image/");
     }
 }
