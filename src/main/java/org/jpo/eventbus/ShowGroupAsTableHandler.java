@@ -19,6 +19,7 @@ import org.jpo.gui.TableJFrame;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@EventHandler
 public class ShowGroupAsTableHandler {
 
     /**

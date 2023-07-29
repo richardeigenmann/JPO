@@ -22,6 +22,7 @@ import org.jpo.gui.ConsolidateGroupController;
 /**
  * Opens the consolidate-group dialog
  */
+@EventHandler
 public class ConsolidateGroupDialogHandler {
     /**
      * Opens the consolidate-group dialog

@@ -6,7 +6,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,6 +24,7 @@ import javax.swing.*;
 /**
  * Brings up a chooser to pick a flat file and add them to the group.
  */
+@EventHandler
 public class ChooseAndAddFlatfileHandler {
     /**
      * Brings up a chooser to pick a flat file and add them to the group.

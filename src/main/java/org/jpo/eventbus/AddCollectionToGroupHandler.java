@@ -30,6 +30,7 @@ import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 /**
  * Adds a collection to a group node
  */
+@EventHandler
 public class AddCollectionToGroupHandler {
 
     /**

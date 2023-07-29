@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  * Brings up the dialog after a file save and allows the saved collection to
  * be set as the default start up collection.
  */
+@EventHandler
 public class AfterFileSaveHandler {
 
     /**

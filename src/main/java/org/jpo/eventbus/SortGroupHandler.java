@@ -6,7 +6,7 @@ import org.jpo.cache.QUEUE_PRIORITY;
 import java.util.List;
 
 /*
- Copyright (C) 2022 Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -21,6 +21,7 @@ import java.util.List;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@EventHandler
 public class SortGroupHandler {
     /**
      * when the App sees this request it will sort the group by the criteria

@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.gui.swing.CategoryAssignmentWindow;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -22,6 +22,7 @@ import org.jpo.gui.swing.CategoryAssignmentWindow;
 /**
  * Opens the Category Assignment window to pick categories for the indicated nodes.
  */
+@EventHandler
 public class CategoryAssignmentWindowHandler {
     /**
      * When the app sees a CategoryAssignmentWindowRequest it will open the

@@ -24,6 +24,7 @@ import javax.swing.*;
 /**
  * Handles the RemoveOldLowresThumbnailsRequest request
  */
+@EventHandler
 public class RemoveOldLowresThumbnailsHandler {
     /**
      * Handles the RemoveOldLowresThumbnailsRequest request

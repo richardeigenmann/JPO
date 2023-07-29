@@ -5,7 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import static org.jpo.gui.swing.Filechoosers.chooseXmlFile;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,6 +23,7 @@ import static org.jpo.gui.swing.Filechoosers.chooseXmlFile;
 /**
  * Facilitates adding a collection to the current one
  */
+@EventHandler
 public class ChooseAndAddCollectionHandler {
     /**
      * When the app sees a ChooseAndAddCollectionRequest it will open a

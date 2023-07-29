@@ -23,6 +23,7 @@ import javax.swing.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@EventHandler
 public class FileSaveAsHandler {
     /**
      * method that saves the entire index in XML format. It prompts for the

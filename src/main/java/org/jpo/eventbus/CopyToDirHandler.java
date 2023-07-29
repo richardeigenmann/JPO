@@ -31,7 +31,7 @@ import static org.jpo.gui.ApplicationStartupHandler.GENERIC_INFO;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class CopyToDirHandler {
     /**
      * Defines a logger for this class

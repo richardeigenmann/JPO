@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Handles the request to delete the picture files of nodes
  */
+@EventHandler
 public class DeleteNodeFileHandler {
 
     /**

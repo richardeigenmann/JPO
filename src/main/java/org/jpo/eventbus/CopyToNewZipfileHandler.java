@@ -6,7 +6,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,7 +20,7 @@ import javax.swing.*;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class CopyToNewZipfileHandler {
     /**
      * Brings up a JFileChooser to select the target zip file and then copies

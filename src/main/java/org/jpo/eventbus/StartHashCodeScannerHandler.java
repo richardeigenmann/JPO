@@ -22,6 +22,7 @@ import org.jpo.gui.CorrectSha256SwingWorker;
 /**
  * Scans for non-populated hashcodes
  */
+@EventHandler
 public class StartHashCodeScannerHandler {
 
     /**

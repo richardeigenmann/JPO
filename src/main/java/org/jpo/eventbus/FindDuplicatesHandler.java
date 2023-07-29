@@ -19,7 +19,7 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.DuplicatesQuery;
 import org.jpo.datamodel.Settings;
-
+@EventHandler
 public class FindDuplicatesHandler {
     /**
      * The user wants to find duplicates

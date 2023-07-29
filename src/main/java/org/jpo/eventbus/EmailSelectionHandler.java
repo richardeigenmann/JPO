@@ -23,6 +23,7 @@ import org.jpo.datamodel.Settings;
 /**
  * Adds the picture nodes in the supplied request to the email selection
  */
+@EventHandler
 public class EmailSelectionHandler {
 
     /**

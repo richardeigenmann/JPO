@@ -23,6 +23,7 @@ import static org.jpo.gui.swing.ResizableJFrame.WindowSize.WINDOW_UNDECORATED_RI
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@EventHandler
 public class StartDoublePanelSlideshowHandler {
     /**
      * Starts a double panel slide show

@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
+@EventHandler
 public class OpenHelpAboutFrameHandler {
 
     /**

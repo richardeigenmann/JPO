@@ -6,8 +6,8 @@
 
 <hr>
 <h2>Third Party Licenses</h2>
-<p>JPO uses a number of third party libraries because it is better to reuse well written well tested
-        code from others instead of re-inventing the wheel:</p>
+<p>JPO uses a number of third party libraries. Here is the list of components with their license. Thank you to all
+the developers out there who have contributed to the pool of Open Source Software!</p>
 
 <p><a href="http://commons.apache.org/proper/commons-compress/">Apache Commons Compress</a> which is licensed under the Apache 2.0 license
 <br><a href="http://commons.apache.org/proper/commons-io/">Apache Commons IO</a> which is licensed under the Apache 2.0 license
@@ -27,10 +27,11 @@
 <br><a href="https://github.com/JetBrains/java-annotations">JetBrains Java Annotations</a> is licensed under Apache 2.0
 <br><a href="https://github.com/haraldk/TwelveMonkeys">TwelveMonkeys ImageIO</a> is licensed under BSD-3-Clause
 <br><a href="https://xmlgraphics.apache.org/batik">Apache SVG Batik libraries</a> are licensed under Apache 2.0
+<br><a href="https://io.github.classgraph">io.github.classgraph</a> uses the MIT License
 </p>
 
 <hr>
-<p>Last update to this page: 26 April 2023<br>
+<p>Last update to this page: 27 July 2023<br>
 Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>

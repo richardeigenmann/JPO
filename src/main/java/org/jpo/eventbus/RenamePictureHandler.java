@@ -1,5 +1,17 @@
 package org.jpo.eventbus;
 
+import com.google.common.eventbus.Subscribe;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -16,18 +28,7 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import com.google.common.eventbus.Subscribe;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
-
-import javax.swing.*;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+@EventHandler
 public class RenamePictureHandler {
 
     /**

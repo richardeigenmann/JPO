@@ -4,12 +4,12 @@ module org.jpo {
     exports org.jpo.eventbus;
     exports org.jpo.gui.swing;
     exports org.jpo.testground;
+    exports org.jpo.datamodel;
 
     opens org.jpo to com.google.common;
     opens org.jpo.gui to com.google.common;
     opens org.jpo.eventbus to com.google.common;
     opens org.jpo.gui.swing to com.google.common;
-    exports org.jpo.datamodel;
     opens org.jpo.datamodel to com.google.common;
 
     requires activation;
@@ -36,5 +36,6 @@ module org.jpo {
     requires org.jetbrains.annotations;
     requires org.json;
     requires org.tagcloud;
+    requires io.github.classgraph;
 }
 

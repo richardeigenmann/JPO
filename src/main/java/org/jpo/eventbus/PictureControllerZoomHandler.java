@@ -17,7 +17,7 @@ import com.google.common.eventbus.Subscribe;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class PictureControllerZoomHandler {
     /**
      * Handles the request to zoom in on the PictureController

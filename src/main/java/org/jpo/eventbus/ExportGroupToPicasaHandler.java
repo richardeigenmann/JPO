@@ -5,7 +5,7 @@ import org.jpo.export.PicasaUploadRequest;
 import org.jpo.export.PicasaUploaderWizard;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,7 +19,7 @@ import org.jpo.export.PicasaUploaderWizard;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class ExportGroupToPicasaHandler {
     /**
      * When the app receives the ExportGroupToPicasaRequest the dialog will be

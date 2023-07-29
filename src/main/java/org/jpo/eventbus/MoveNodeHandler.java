@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.cache.QUEUE_PRIORITY;
 
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -18,7 +18,7 @@ import org.jpo.cache.QUEUE_PRIORITY;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class MoveNodeHandler {
     /**
      * Moves the node to the first position in the group

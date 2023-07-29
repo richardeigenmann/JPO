@@ -23,6 +23,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 /**
  * Adds the pictures in the supplied group to the email selection
  */
+@EventHandler
 public class AddGroupToEmailSelectionHandler {
     /**
      * Adds the pictures in the supplied group to the email selection

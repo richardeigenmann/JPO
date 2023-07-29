@@ -1,7 +1,16 @@
 package org.jpo.eventbus;
 
+import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.Settings;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
- Copyright (C) 2022  Richard Eigenmann.
+ Copyright (C) 2022-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,15 +25,7 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+@EventHandler
 public class RunUserFunctionHandler {
 
     /**
@@ -76,7 +77,7 @@ public class RunUserFunctionHandler {
         final var filename = (myObject).getImageFile().toString();
         command = command.replace("%f", filename);
 
-        final String escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
+        final var escapedFilename = filename.replaceAll("\\s", "\\\\\\\\ ");
         command = command.replace("%e", escapedFilename);
 
         try {
@@ -92,7 +93,7 @@ public class RunUserFunctionHandler {
         try {
             // Had big issues here because the simple exec (String) calls a StringTokenizer
             // which messes up the filename parameters
-            int blank = command.indexOf(' ');
+            final var blank = command.indexOf(' ');
             final String[] cmdarray;
             if (blank > -1) {
                 cmdarray = new String[2];

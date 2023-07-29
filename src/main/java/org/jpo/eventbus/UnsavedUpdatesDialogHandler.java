@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@EventHandler
 public class UnsavedUpdatesDialogHandler {
     /**
      * Defines a logger for this class

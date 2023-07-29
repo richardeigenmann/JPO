@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  *
  * @author Richard Eigenmann
  */
+@EventHandler
 public class ApplicationStartupHandler {
 
     /**

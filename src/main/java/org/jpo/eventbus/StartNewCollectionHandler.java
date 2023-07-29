@@ -21,6 +21,7 @@ import javax.swing.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@EventHandler
 public class StartNewCollectionHandler {
     /**
      * Clears the collection and starts a new one. Remember to wrap this request

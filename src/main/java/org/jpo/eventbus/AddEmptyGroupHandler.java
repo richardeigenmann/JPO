@@ -26,6 +26,7 @@ import java.util.logging.Logger;
 /**
  * Adds an empty group to the indicated group node
  */
+@EventHandler
 public class AddEmptyGroupHandler {
 
     /**

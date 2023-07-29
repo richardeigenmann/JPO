@@ -87,13 +87,14 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.9.4'
     implementation group: 'org.json', name: 'json', version: '20230618'
     implementation 'com.jidesoft:jide-oss:3.6.18'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0-RC1'
-    testImplementation(platform('org.junit:junit-bom:5.10.0-RC1'))
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation(platform('org.junit:junit-bom:5.10.0'))
     testImplementation 'org.assertj:assertj-core:3.24.2'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.2.0'
     implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
     implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
+    implementation 'io.github.classgraph:classgraph:4.8.161'
 }
 
 tasks.withType(JavaCompile) {

@@ -22,6 +22,7 @@ import org.jpo.gui.CategoryEditorJFrame;
 /**
  * Handles the OpenCategoryEditorRequest request
  */
+@EventHandler
 public class OpenCategoryEditorHandler {
     /**
      * Handles the OpenCategoryEditorRequest request

@@ -18,7 +18,7 @@ import org.jpo.datamodel.Settings;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class RemoveNodeHandler {
     /**
      * Removes the nodes in the request from their parent which essentially deletes them from the tree.

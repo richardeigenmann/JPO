@@ -1,5 +1,16 @@
 package org.jpo.eventbus;
 
+import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.Settings;
+import org.jpo.gui.swing.MainWindow;
+
+import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /*
  Copyright (C) 2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -16,17 +27,7 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
-import org.jpo.gui.swing.MainWindow;
-
-import javax.swing.*;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+@EventHandler
 public class OpenMainWindowHandler {
 
     /**

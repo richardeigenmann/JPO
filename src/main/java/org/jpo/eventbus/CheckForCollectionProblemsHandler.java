@@ -25,6 +25,7 @@ import javax.swing.*;
 /**
  * Checks the loaded collection for problems and suggests measures
  */
+@EventHandler
 public class CheckForCollectionProblemsHandler {
 
     /**

@@ -22,6 +22,7 @@ import org.jpo.datamodel.FlatFileReader;
 /**
  * Adds the contents of a flat file to the supplied node
  */
+@EventHandler
 public class AddFlatFileRequestHandler {
     /**
      * Handles the request to add a flat file to a node

@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 /**
  * Handles the request to rename a file
  */
+@EventHandler
 public class RenameFileHandler {
 
     /**

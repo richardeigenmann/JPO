@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
+@EventHandler
 public class FileSaveHandler {
 
     /**
