@@ -55,7 +55,7 @@ public class MimeTypes {
      */
     public static String getMimeType(final File file) {
         try {
-            if (!file.exists()) {
+            if (! Files.exists(file.toPath())) {
                 LOGGER.log(Level.SEVERE, "File {0} does not exist!", file);
                 return "null";
             } else if (!file.canRead()) {
