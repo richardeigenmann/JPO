@@ -1,13 +1,9 @@
 package org.jpo;
 
-import io.github.classgraph.ClassGraph;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.ApplicationStartupRequest;
+import org.jpo.eventbus.EventBusInitializer;
 import org.jpo.eventbus.JpoEventBus;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /*
@@ -51,43 +47,8 @@ public class Main {
                 + "to redistribute it under certain conditions;\n"
                 + "see Help | License for details.\n\n");
 
-        registerEventHandlers();
+        EventBusInitializer.registerEventHandlers();
         JpoEventBus.getInstance().post(new ApplicationStartupRequest() );
     }
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
-
-
-    private static void registerEventHandlers() {
-        findAndLoadEventhandlers("org.jpo.gui");
-        findAndLoadEventhandlers("org.jpo.eventbus");
-    }
-
-    /**
-     * Searches the indicated packages for classes that are tagged with the EVentHandler annotation. When such a
-     * class is found it is instantiated and attached to the EventBus of the JPO application. Most if not all user
-     * driven actions and many system driven actions in JPO use the EventBus to decouple the source of the event from
-     * the part of the program that fulfills the request.
-     * @param packageName The package name that should be searched for EventHandler tagges classes
-     */
-    private static void findAndLoadEventhandlers(final String packageName) {
-        try (final var scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageName)
-                .scan()) {
-            final var routeClassInfoList = scanResult.getClassesWithAnnotation("org.jpo.eventbus.EventHandler");
-            for (final var routeClassInfo : routeClassInfoList) {
-                LOGGER.log(Level.INFO, "Loading EventHandler class: {0}", routeClassInfo);
-                final Class<?> type = routeClassInfo.loadClass();
-                try {
-                    JpoEventBus.getInstance().register(type.getDeclaredConstructor().newInstance());
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    LOGGER.log(Level.SEVERE, "Exception occurred while instantiating a JPO component class: {0}", e.getMessage());
-                }
-            }
-        }
-    }
-
 
 }
