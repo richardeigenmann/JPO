@@ -19,13 +19,8 @@ package org.jpo.testground;
 
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.SingleNodeNavigator;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.StartThumbnailCreationDaemonRequest;
-import org.jpo.gui.ApplicationStartupHandler;
+import org.jpo.datamodel.*;
+import org.jpo.eventbus.*;
 import org.jpo.gui.ThumbnailController;
 import org.jpo.gui.swing.ResizeSlider;
 
@@ -36,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,12 +46,13 @@ public class ThumbnailTester {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        EventBusInitializer.registerEventHandlers();
         Settings.loadSettings();
-        new ApplicationStartupHandler();
+        Settings.setPictureCollection(new PictureCollection());
+        JpoEventBus.getInstance().post(new StartNewCollectionRequest());
         JpoEventBus.getInstance().post(new StartThumbnailCreationDaemonRequest());
         try {
-            SwingUtilities.invokeAndWait(ThumbnailTester::new
-            );
+            SwingUtilities.invokeAndWait(ThumbnailTester::new);
         } catch (InterruptedException | InvocationTargetException ex) {
             Logger.getLogger(ThumbnailTester.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
@@ -69,16 +66,26 @@ public class ThumbnailTester {
         final var thumbnailController = new ThumbnailController(350);
 
         final var SAMSUNG_S4_IMAGE = "testimage.jpg";
-        File imageFile = new File("nofile");
+        var imageFile = new File("nofile");
         try {
             imageFile = new File(ThumbnailTester.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        final var pictureInfo = new PictureInfo(imageFile, "Image");
-        pictureInfo.setCreationTime("2099-01-01 16:30:00");
-        final var node = new SortableDefaultMutableTreeNode(pictureInfo);
-        final var singleNodeNavigator = new SingleNodeNavigator(node);
+
+        var rootNode = Settings.getPictureCollection().getRootNode();
+
+        final File[] files = {imageFile};
+        JpoEventBus.getInstance().post(
+                new PictureAdderRequest(rootNode,
+                files, false, false, false,  new ArrayList<Integer>()));
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        var pictureNode = rootNode.getChildPictureNodes(true).get(0);
+        final var singleNodeNavigator = new SingleNodeNavigator(pictureNode);
         thumbnailController.setNode(singleNodeNavigator, 0);
 
 
@@ -101,7 +108,7 @@ public class ThumbnailTester {
         buttonPanel.add(showUndecoratedButton, "wrap");
 
         final var showSelectedButton = new JButton("Selected");
-        showSelectedButton.addActionListener((ActionEvent e) -> Settings.getPictureCollection().addToSelectedNodes(node));
+        showSelectedButton.addActionListener((ActionEvent e) -> Settings.getPictureCollection().addToSelectedNodes(pictureNode));
         buttonPanel.add(showSelectedButton);
 
         final var showUnselectedButton = new JButton("Unselected");
@@ -118,7 +125,7 @@ public class ThumbnailTester {
 
         final var showMailSelectedButton = new JButton("Mail Selected");
         showMailSelectedButton.addActionListener((ActionEvent e) -> {
-            Settings.getPictureCollection().addToMailSelection(node);
+            Settings.getPictureCollection().addToMailSelection(pictureNode);
             thumbnailController.determineMailSelectionStatus();
         });
         buttonPanel.add(showMailSelectedButton);
@@ -132,6 +139,7 @@ public class ThumbnailTester {
 
         final var showTimestamp = new JButton("Show Timestamp");
         showTimestamp.addActionListener((ActionEvent e) -> {
+            var pictureInfo = (PictureInfo) pictureNode.getUserObject();
             thumbnailController.getThumbnail().setTimestamp(pictureInfo.getFormattedCreationTimeForTimestamp());
             thumbnailController.getThumbnail().repaint();
         });
@@ -163,7 +171,6 @@ public class ThumbnailTester {
         frame.getContentPane().add(jPanel, BorderLayout.CENTER);
         frame.pack();
         frame.setVisible(true);
-
 
     }
 }

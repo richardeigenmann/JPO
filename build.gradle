@@ -20,6 +20,10 @@ repositories {
 application {
     mainModule = 'org.jpo' // name defined in module-info.java
     mainClass = 'org.jpo.Main'
+    //mainClass = 'org.jpo.testground.PlayWithFontAwesome'
+    //mainClass = 'org.jpo.testground.ResizableJFrameTester'
+    //mainClass = 'org.jpo.testground.ThumbnailDescriptionTester'
+    //mainClass = 'org.jpo.testground.ThumbnailTester'
 }
 
 dependencies {

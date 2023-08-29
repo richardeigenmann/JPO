@@ -33,6 +33,9 @@ public class EventBusInitializer {
      */
     private static final Logger LOGGER = Logger.getLogger(EventBusInitializer.class.getName());
 
+    /**
+     * Find the annotated JPO EventHandler classes, instantiate them and connect them to the Event Bus
+     */
     public static void registerEventHandlers() {
         findAndLoadEventhandlers("org.jpo.gui");
         findAndLoadEventhandlers("org.jpo.eventbus");
@@ -45,7 +48,7 @@ public class EventBusInitializer {
      * the part of the program that fulfills the request.
      * @param packageName The package name that should be searched for EventHandler tagges classes
      */
-    public static void findAndLoadEventhandlers(final String packageName) {
+    private static void findAndLoadEventhandlers(final String packageName) {
         try (final var scanResult = new ClassGraph().enableAllInfo().acceptPackages(packageName)
                 .scan()) {
             final var routeClassInfoList = scanResult.getClassesWithAnnotation("org.jpo.eventbus.EventHandler");
