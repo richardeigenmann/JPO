@@ -37,5 +37,6 @@ module org.jpo {
     requires org.json;
     requires org.tagcloud;
     requires io.github.classgraph;
+    requires jdk.xml.dom;  // required for svg
 }
 

@@ -24,6 +24,7 @@ application {
     //mainClass = 'org.jpo.testground.ResizableJFrameTester'
     //mainClass = 'org.jpo.testground.ThumbnailDescriptionTester'
     //mainClass = 'org.jpo.testground.ThumbnailTester'
+    //mainClass = 'org.jpo.testground.TransposeTester'
 }
 
 dependencies {
@@ -36,7 +37,7 @@ dependencies {
     implementation 'org.apache.commons:commons-jcs3-core:3.1'
     implementation 'org.apache.commons:commons-jcs3-jcache:3.1'
     implementation 'commons-io:commons-io:2.13.0'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'commons-logging:commons-logging:1.2'
     implementation 'commons-net:commons-net:3.9.0'
@@ -44,7 +45,7 @@ dependencies {
     implementation 'com.google.gdata:core:1.47.1', {
         exclude group: "xpp3", module: "xpp3"
     }
-    implementation 'com.google.guava:guava:32.1.1-jre'
+    implementation 'com.google.guava:guava:32.1.2-jre'
     implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation files('libs/jwizz-0.1.4.jar')
@@ -58,22 +59,22 @@ dependencies {
     implementation files('libs/docking-frames-core.jar')
     implementation 'com.adobe.xmp:xmpcore:6.1.11'
     implementation 'com.twelvemonkeys.imageio:imageio-batik:3.9.4'
-    implementation 'org.apache.xmlgraphics:batik-transcoder:1.16', {
+    implementation 'org.apache.xmlgraphics:batik-transcoder:1.17', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-anim:1.16', {
+    implementation 'org.apache.xmlgraphics:batik-anim:1.17', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.16', {
+    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.17', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.16'
+    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.17'
 
-    implementation 'org.apache.xmlgraphics:batik-extension:1.16', {
+    implementation 'org.apache.xmlgraphics:batik-extension:1.17', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.8'
-    implementation 'org.apache.xmlgraphics:batik-svggen:1.16'
+    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.9'
+    implementation 'org.apache.xmlgraphics:batik-svggen:1.17'
     implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.9.4'
     implementation 'com.twelvemonkeys.imageio:imageio-icns:3.9.4'
@@ -98,8 +99,9 @@ dependencies {
     testImplementation 'org.awaitility:awaitility:4.2.0'
     implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
     implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
-    implementation 'io.github.classgraph:classgraph:4.8.161'
+    implementation 'io.github.classgraph:classgraph:4.8.162'
 }
+
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -181,7 +183,7 @@ jar {
                 'Permissions': 'all-permissions'
         )
         attributes(
-                [ "Copy": "(c) 2001-2022, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
+                [ "Copy": "(c) 2001-2023, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
         )
     }
     into ('org/jpo/images') { from 'src/images' }

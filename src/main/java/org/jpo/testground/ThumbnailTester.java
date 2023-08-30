@@ -2,7 +2,7 @@ package org.jpo.testground;
 
 
 /*
- Copyright (C) 2020-2022 Richard Eigenmann.
+ Copyright (C) 2020-2023 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,8 +52,15 @@ public class ThumbnailTester {
         JpoEventBus.getInstance().post(new StartNewCollectionRequest());
         JpoEventBus.getInstance().post(new StartThumbnailCreationDaemonRequest());
         try {
-            SwingUtilities.invokeAndWait(ThumbnailTester::new);
-        } catch (InterruptedException | InvocationTargetException ex) {
+            SwingUtilities.invokeAndWait(() -> {
+                try {
+                    new ThumbnailTester();
+                } catch (URISyntaxException e) {
+                    Logger.getLogger(ThumbnailTester.class.getName()).log(Level.SEVERE, null, e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } catch (InterruptedException | InvocationTargetException ex ) {
             Logger.getLogger(ThumbnailTester.class.getName()).log(Level.SEVERE, null, ex);
             Thread.currentThread().interrupt();
         }
@@ -62,20 +69,17 @@ public class ThumbnailTester {
     /**
      * Constructor for the test window
      */
-    public ThumbnailTester() {
+    public ThumbnailTester() throws URISyntaxException {
         final var thumbnailController = new ThumbnailController(350);
 
         final var SAMSUNG_S4_IMAGE = "testimage.jpg";
-        var imageFile = new File("nofile");
-        try {
-            imageFile = new File(ThumbnailTester.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+        final var PNG_IMAGE = "testpng.png";
+        final var SVG_IMAGE = "testsvg.svg";
+        final var imageFileJpg = new File(ThumbnailTester.class.getClassLoader().getResource(SAMSUNG_S4_IMAGE).toURI());
 
         var rootNode = Settings.getPictureCollection().getRootNode();
 
-        final File[] files = {imageFile};
+        final File[] files = {imageFileJpg};
         JpoEventBus.getInstance().post(
                 new PictureAdderRequest(rootNode,
                 files, false, false, false,  new ArrayList<Integer>()));
@@ -105,7 +109,14 @@ public class ThumbnailTester {
 
         final var showUndecoratedButton = new JButton("Undecorate");
         showUndecoratedButton.addActionListener((ActionEvent e) -> thumbnailController.setDecorateThumbnails(false));
-        buttonPanel.add(showUndecoratedButton, "wrap");
+        buttonPanel.add(showUndecoratedButton);
+
+        final var showJpgPictureButton = new JButton("Jpg image");
+        showJpgPictureButton.addActionListener((ActionEvent e) -> {
+
+            ((PictureInfo) pictureNode.getUserObject()).setImageLocation(imageFileJpg);
+        });
+        buttonPanel.add(showJpgPictureButton, "wrap");
 
         final var showSelectedButton = new JButton("Selected");
         showSelectedButton.addActionListener((ActionEvent e) -> Settings.getPictureCollection().addToSelectedNodes(pictureNode));
@@ -113,7 +124,18 @@ public class ThumbnailTester {
 
         final var showUnselectedButton = new JButton("Unselected");
         showUnselectedButton.addActionListener((ActionEvent e) -> Settings.getPictureCollection().clearSelection());
-        buttonPanel.add(showUnselectedButton, "wrap");
+        buttonPanel.add(showUnselectedButton);
+
+        final var showPngPictureButton = new JButton("Png image");
+        showPngPictureButton.addActionListener((ActionEvent e) -> {
+            try {
+                final var imageFilePng = new File(ThumbnailTester.class.getClassLoader().getResource(PNG_IMAGE).toURI());
+                ((PictureInfo) pictureNode.getUserObject()).setImageLocation(imageFilePng);
+
+            } catch (URISyntaxException ex) {
+                ex.printStackTrace();
+            }});
+        buttonPanel.add(showPngPictureButton, "wrap");
 
         final var showAsOfflineButton = new JButton("Offline");
         showAsOfflineButton.addActionListener((ActionEvent e) -> thumbnailController.getThumbnail().drawOfflineIcon(true));
@@ -121,7 +143,18 @@ public class ThumbnailTester {
 
         final var showAsOnlineButton = new JButton("Online");
         showAsOnlineButton.addActionListener((ActionEvent e) -> thumbnailController.getThumbnail().drawOfflineIcon(false));
-        buttonPanel.add(showAsOnlineButton, "wrap");
+        buttonPanel.add(showAsOnlineButton);
+
+        final var showSvgPictureButton = new JButton("Svg image");
+        showSvgPictureButton.addActionListener((ActionEvent e) -> {
+            try {
+                final var imageFilePng = new File(ThumbnailTester.class.getClassLoader().getResource(SVG_IMAGE).toURI());
+                ((PictureInfo) pictureNode.getUserObject()).setImageLocation(imageFilePng);
+
+            } catch (URISyntaxException ex) {
+                ex.printStackTrace();
+            }});
+        buttonPanel.add(showSvgPictureButton, "wrap");
 
         final var showMailSelectedButton = new JButton("Mail Selected");
         showMailSelectedButton.addActionListener((ActionEvent e) -> {
