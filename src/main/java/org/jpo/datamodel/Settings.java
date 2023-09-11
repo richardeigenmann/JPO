@@ -215,13 +215,21 @@ public class Settings {
      * The PictureViewer minimum size
      */
     private static final Dimension PICTUREVIEWER_MINIMUM_SIZE = new Dimension(300, 300);
-    /*
-     * ------------------------------------------------------------------------------
-     *
-     *
-     *
-     *
-     * /**
+
+    /**
+     * The scaling factor for the UI. Defaults to 1, no scaling
+     */
+    private static double uiScale = 1.5;
+
+    public static double getUiScale() {
+        return uiScale;
+    }
+
+    public static void setUiScale(double uiScale) {
+        Settings.uiScale = uiScale;
+    }
+
+    /**
      * Default locale if all else fails use this one.
      */
     private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
@@ -1779,6 +1787,7 @@ public class Settings {
     public static void loadSettings() {
         setDefaults();
 
+        setUiScale(prefs.getDouble("uiScale", 1));
         setLocale(Locale.of(prefs.get("currentLocale", getCurrentLocale().toString())));
         maximumPictureSize = prefs.getInt("maximumPictureSize", maximumPictureSize);
         maxThumbnails = prefs.getInt("maxThumbnails", maxThumbnails);
@@ -1945,6 +1954,7 @@ public class Settings {
      * to Java with 1.4
      */
     public static void writeSettings() {
+        prefs.put("uiScale", String.valueOf(getUiScale()));
         prefs.put("currentLocale", getCurrentLocale().toString());
         prefs.putInt("maximumPictureSize", maximumPictureSize);
         prefs.putInt("maxThumbnails", maxThumbnails);
@@ -2428,6 +2438,8 @@ public class Settings {
     public static int getDefaultThumbnailCreationThreads() {
         return DEFAULT_THUMBNAIL_CREATION_THREADS;
     }
+
+
 
 
     /**

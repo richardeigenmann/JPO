@@ -61,6 +61,8 @@ public class ApplicationStartupHandler {
         LOGGER.info("------------------------------------------------------------\n      Starting JPO");
 
         Settings.loadSettings();
+        // This needs to happen very early on before the graphics subsystem initialises.
+        System.setProperty("sun.java2d.uiScale", String.valueOf(Settings.getUiScale()));
         Settings.setPictureCollection(new PictureCollection());
 
         JpoEventBus.getInstance().post(new OpenMainWindowRequest());

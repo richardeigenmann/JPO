@@ -233,9 +233,18 @@ public class SettingsDialog extends JDialog {
         });
     }
 
+    private final SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(1.0,1,3,1);
+    private final JSpinner scalingJSpinner = new JSpinner(spinnerNumberModel);
+
     @NotNull
     private JPanel getGeneralJPanel() {
         final var generalJPanel = new JPanel(new MigLayout());
+
+        final var scalingJlabel = new JLabel("Scaling (restart app):");
+        generalJPanel.add(scalingJlabel);
+
+        scalingJSpinner.setModel(spinnerNumberModel);
+        generalJPanel.add(scalingJSpinner);
 
         final var languageJLabel = new JLabel(Settings.getJpoResources().getString("languageJLabel"));
         generalJPanel.add(languageJLabel);
@@ -602,6 +611,7 @@ public class SettingsDialog extends JDialog {
         }
 
         autoLoadJTextField.setText(Settings.getAutoLoad());
+        scalingJSpinner.setValue(Settings.getUiScale());
 
         startupSizeDropdown.setSelectedIndex(Settings.getStartupSizeChoice());
         viewerSizeDropdown.setSelectedIndex(Settings.getNewViewerSizeChoice());
@@ -667,6 +677,7 @@ public class SettingsDialog extends JDialog {
             JpoEventBus.getInstance().post(new LocaleChangedEvent());
         }
 
+        Settings.setUiScale((double)scalingJSpinner.getValue());
         Settings.setAutoLoad(autoLoadJTextField.getText());
         Settings.setTagCloudWords((Integer) tagCloudWordsJSpinner.getValue());
         Settings.setStartupSizeChoice(startupSizeDropdown.getSelectedIndex());
