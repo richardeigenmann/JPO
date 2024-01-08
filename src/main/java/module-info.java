@@ -24,7 +24,6 @@ module org.jpo {
     requires jsch;
     requires jsr305;
     requires jwizz;
-    requires jxmapviewer2;
     requires mail;
     requires metadata.extractor;
     requires org.apache.commons.compress;
@@ -37,6 +36,7 @@ module org.jpo {
     requires org.json;
     requires org.tagcloud;
     requires io.github.classgraph;
-    requires jdk.xml.dom;  // required for svg
+    requires jdk.xml.dom;
+    requires org.jxmapviewer.jxmapviewer2;  // required for svg
 }
 

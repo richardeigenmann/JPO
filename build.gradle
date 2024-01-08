@@ -3,9 +3,9 @@ plugins {
     id 'application'
     id "com.github.ben-manes.versions" version "0.50.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
-    id 'org.beryx.jlink' version '2.26.0'
+    id 'org.beryx.jlink' version '3.0.1'
     id "org.javamodularity.moduleplugin" version "1.8.12"
-    id "org.sonarqube" version "4.3.0.3225"
+    id "org.sonarqube" version "4.4.1.3373"
     id 'jacoco'
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -51,7 +51,7 @@ dependencies {
     implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation files('libs/jwizz-0.1.4.jar')
-    implementation 'org.jxmapviewer:jxmapviewer2:2.6'
+    implementation 'org.jxmapviewer:jxmapviewer2:2.8'
     implementation 'com.drewnoakes:metadata-extractor:2.19.0'
     // needed to pull down 1.1.3p1 from 5 May 2018 from http://www.docking-frames.org/download.html
     // Maven dependencies don't work
@@ -92,11 +92,11 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.10.1'
     implementation 'com.twelvemonkeys.imageio:imageio-tga:3.10.1'
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.10.1'
-    implementation group: 'org.json', name: 'json', version: '20230618'
+    implementation group: 'org.json', name: 'json', version: '20231013'
     implementation 'com.jidesoft:jide-oss:3.6.18'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation(platform('org.junit:junit-bom:5.10.0'))
+    testImplementation(platform('org.junit:junit-bom:5.10.1'))
     testImplementation 'org.assertj:assertj-core:3.25.1'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.2.0'
