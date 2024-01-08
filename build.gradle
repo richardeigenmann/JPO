@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.ben-manes.versions" version "0.47.0" // dependency updates
+    id "com.github.ben-manes.versions" version "0.50.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
     id 'org.beryx.jlink' version '2.26.0'
     id "org.javamodularity.moduleplugin" version "1.8.12"
@@ -30,7 +30,7 @@ application {
 }
 
 dependencies {
-    implementation 'com.miglayout:miglayout-swing:11.1'
+    implementation 'com.miglayout:miglayout-swing:11.3'
     implementation 'com.miglayout:miglayout-core:11.1'
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation files('libs/tagcloud.library-0.0.1.jar')
@@ -60,7 +60,7 @@ dependencies {
     implementation files('libs/docking-frames-common.jar')
     implementation files('libs/docking-frames-core.jar')
     implementation 'com.adobe.xmp:xmpcore:6.1.11'
-    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.9.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.10.1'
     implementation 'org.apache.xmlgraphics:batik-transcoder:1.17', {
         exclude group: "xml-apis", module: "xml-apis"
     }
@@ -77,26 +77,26 @@ dependencies {
     }
     implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.9'
     implementation 'org.apache.xmlgraphics:batik-svggen:1.17'
-    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.9.4'
-    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.9.4'
+    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.10.1'
+    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.10.1'
     implementation group: 'org.json', name: 'json', version: '20230618'
     implementation 'com.jidesoft:jide-oss:3.6.18'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
     testImplementation(platform('org.junit:junit-bom:5.10.0'))
-    testImplementation 'org.assertj:assertj-core:3.24.2'
+    testImplementation 'org.assertj:assertj-core:3.25.1'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.2.0'
     implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
