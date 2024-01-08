@@ -31,14 +31,14 @@ application {
 
 dependencies {
     implementation 'com.miglayout:miglayout-swing:11.3'
-    implementation 'com.miglayout:miglayout-core:11.1'
+    implementation 'com.miglayout:miglayout-core:11.3'
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation files('libs/tagcloud.library-0.0.1.jar')
     implementation 'org.apache.commons:commons-compress:1.23.0'
     implementation 'org.apache.commons:commons-jcs3:3.1'
     implementation 'org.apache.commons:commons-jcs3-core:3.1'
     implementation 'org.apache.commons:commons-jcs3-jcache:3.1'
-    implementation 'commons-io:commons-io:2.13.0'
+    implementation 'commons-io:commons-io:2.15.1'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation 'org.apache.commons:commons-text:1.10.0'
     implementation 'commons-logging:commons-logging:1.2'
@@ -47,12 +47,12 @@ dependencies {
     implementation 'com.google.gdata:core:1.47.1', {
         exclude group: "xpp3", module: "xpp3"
     }
-    implementation 'com.google.guava:guava:32.1.2-jre'
+    implementation 'com.google.guava:guava:33.0.0-jre'
     implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation files('libs/jwizz-0.1.4.jar')
     implementation 'org.jxmapviewer:jxmapviewer2:2.6'
-    implementation 'com.drewnoakes:metadata-extractor:2.18.0'
+    implementation 'com.drewnoakes:metadata-extractor:2.19.0'
     // needed to pull down 1.1.3p1 from 5 May 2018 from http://www.docking-frames.org/download.html
     // Maven dependencies don't work
     //implementation group: 'org.dockingframes', name: 'docking-frames-core', version: '1.1.2p6a'
