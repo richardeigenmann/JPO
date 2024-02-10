@@ -38,5 +38,6 @@ module org.jpo {
     requires io.github.classgraph;
     requires jdk.xml.dom;
     requires org.jxmapviewer.jxmapviewer2;  // required for svg
+    requires org.apache.commons.logging;
 }
 

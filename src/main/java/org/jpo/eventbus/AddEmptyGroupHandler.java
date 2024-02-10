@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,23 +35,22 @@ public class AddEmptyGroupHandler {
     private static final Logger LOGGER = Logger.getLogger(AddEmptyGroupHandler.class.getName());
 
     /**
-     * when the App sees an AddEmptyGroup request it will sort the group by the
-     * criteria
-     * TODO: is this a lying comment?
+     * Fulfil an AddEmptyGroup request by adding a "New Group" to the supplied node. Memorises this new group .
      * TODO: why does this check for GroupInfo, moan and then proceed anyway?
      *
      * @param request The node on which the request was made
      */
     @Subscribe
     public void handleEvent(final AddEmptyGroupRequest request) {
-        final var node = request.node();
-        if (!(node.getUserObject() instanceof GroupInfo)) {
-            LOGGER.log(Level.WARNING, "node {0} is of type {1} instead of GroupInfo. Proceeding anyway.", new Object[]{node.getUserObject(), node.getUserObject().getClass()});
+        final var parentNode = request.nodeWhichReceivesChild();
+        if (!(parentNode.getUserObject() instanceof GroupInfo)) {
+            LOGGER.log(Level.WARNING, "node {0} is of type {1} instead of GroupInfo. Proceeding anyway.", new Object[]{parentNode.getUserObject(), parentNode.getUserObject().getClass()});
         }
-        final var newNode = node.addGroupNode("New Group");
+        final var newNode = parentNode.addGroupNode("New Group");
         Settings.memorizeGroupOfDropLocation(newNode);
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
-        JpoEventBus.getInstance().post(new ShowGroupRequest(newNode));
+        // Do not jump to the node. This is annoying when you want to create a new group and then lose the context where you were
+        //JpoEventBus.getInstance().post(new ShowGroupRequest(newNode));
     }
 
 }

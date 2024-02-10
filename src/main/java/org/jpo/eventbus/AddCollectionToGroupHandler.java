@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2004 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +47,6 @@ public class AddCollectionToGroupHandler {
      */
     @Subscribe
     public void handleEvent(final AddCollectionToGroupRequest request) {
-        LOGGER.info("Starting");
         Tools.checkEDT();
         final var popupNode = request.node();
         final var fileToLoad = request.collectionFile();
