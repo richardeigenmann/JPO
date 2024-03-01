@@ -30,9 +30,9 @@ public class JpoImageIO {
 
     private static final Logger LOGGER = Logger.getLogger(JpoImageIO.class.getName());
     static {
-        LOGGER.setLevel(Level.FINE);
+        LOGGER.setLevel(Level.INFO);
         Handler consoleHandler = new ConsoleHandler();
-        consoleHandler.setLevel(Level.FINE);
+        consoleHandler.setLevel(Level.INFO);
         LOGGER.addHandler(consoleHandler);
     }
 

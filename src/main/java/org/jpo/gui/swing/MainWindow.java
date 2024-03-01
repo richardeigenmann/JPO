@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -216,7 +216,7 @@ public class MainWindow extends ResizableJFrame {
      */
     @Subscribe
     public void handleSaveDockablesPositionsRequest(final SaveDockablesPositionsRequest request) {
-        LOGGER.log(Level.INFO, "Saving Main Window position and size");
+        LOGGER.log(Level.FINE, "Saving Main Window position and size");
         try {
             Settings.setLastMainFrameCoordinates(this.getBounds());
             control.getResources().writePreferences();

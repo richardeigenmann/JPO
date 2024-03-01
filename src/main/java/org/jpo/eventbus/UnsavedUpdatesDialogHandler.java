@@ -5,11 +5,9 @@ import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,20 +24,17 @@ import java.util.logging.Logger;
 
 @EventHandler
 public class UnsavedUpdatesDialogHandler {
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(UnsavedUpdatesDialogHandler.class.getName());
 
     /**
      * Brings the unsaved updates dialog if there are unsaved updates and then
      * fires the next request. Logic is: if unsavedChanges then show dialog
      * submit next request
      * <p>
-     * The dialog has choices: 0 : discard unsaved changes and go to next
-     * request 1 : fire save request then send next request 2 : fire save-as
-     * request then send next request 3 : cancel - don't proceed with next
-     * request
+     * The dialog has choices:
+     * 0 : discard unsaved changes and go to next request
+     * 1 : fire save request then send next request
+     * 2 : fire save-as request then send next request
+     * 3 : cancel - don't proceed with next request
      *
      * @param request the request
      */
@@ -48,9 +43,7 @@ public class UnsavedUpdatesDialogHandler {
         Tools.checkEDT();
 
         // a good time to save the window coordinates
-        LOGGER.log(Level.INFO, "Info requesting positions to be saved.");
         JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest());
-
 
         if (Settings.getPictureCollection().getUnsavedUpdates()) {
             final Object[] options = {
@@ -69,15 +62,19 @@ public class UnsavedUpdatesDialogHandler {
                     options[0]);
 
             switch (option) {
+                // discard
                 case 0 -> JpoEventBus.getInstance().post(request.nextRequest());
+                // save
                 case 1 -> {
                     final var fileSaveRequest = new FileSaveRequest(request.pictureCollection(), request.nextRequest());
                     JpoEventBus.getInstance().post(fileSaveRequest);
                 }
+                // save as
                 case 2 -> {
                     final var fileSaveAsRequest = new FileSaveAsRequest(request.pictureCollection(), request.nextRequest());
                     JpoEventBus.getInstance().post(fileSaveAsRequest);
                 }
+                // cancel
                 default -> {
                     // do a cancel if no other option was chosen
                 }

@@ -735,7 +735,7 @@ public class Settings {
      * @param mainFrameCoordinates The position and size of the last main window
      */
     public static void setLastMainFrameCoordinates(final Rectangle mainFrameCoordinates) {
-        LOGGER.log(Level.INFO, "Remembering the last main frame coordinates: {0}", mainFrameCoordinates);
+        LOGGER.log(Level.FINE, "Remembering the last main frame coordinates: {0}", mainFrameCoordinates);
         if (Settings.lastMainFrameCoordinates != mainFrameCoordinates) {
             Settings.lastMainFrameCoordinates = mainFrameCoordinates;
             setUnsavedSettingChanges(true);
