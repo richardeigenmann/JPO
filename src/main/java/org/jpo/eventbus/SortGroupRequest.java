@@ -1,6 +1,7 @@
 package org.jpo.eventbus;
 
 import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
@@ -28,4 +29,11 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
  * @author Richard Eigenmann
  */
 public record SortGroupRequest(@NotNull SortableDefaultMutableTreeNode node, @NotNull FieldCodes sortCriteria) {
+    public SortGroupRequest {
+        if ( ! ( node.getUserObject() instanceof GroupInfo ) )
+            throw new IllegalArgumentException(
+                    String.format("Parameter node must have a userObject of type org.jpo.datamodel.GroupInfo! Node: %s Type: %s",
+                    node, node.getUserObject().getClass().getName())
+            );
+    }
 }

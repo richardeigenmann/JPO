@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -1282,11 +1282,15 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         };
     }
 
-    private int compareDates(final Calendar myCreationCalendar, final Calendar otherCreationCalendar){
-        if ( myCreationCalendar == null || otherCreationCalendar == null ) {
-            return 0; // retain the sort order
-        }
-        return myCreationCalendar.compareTo(otherCreationCalendar);
+    /**
+     * Becomes 0001-01-01 00:00:00
+     */
+
+
+    private int compareDates(final Calendar myCalendar, final Calendar otherCalendar){
+        var myCorrectedCalendar = myCalendar != null ? myCalendar : MinimumCalendar.getInstance().getMinimumCalendar();
+        var otherCorrectedCalendar = otherCalendar != null ? otherCalendar : MinimumCalendar.getInstance().getMinimumCalendar();
+        return myCorrectedCalendar.compareTo(otherCorrectedCalendar);
     }
 
     private SortableDefaultMutableTreeNode myOwningNode = null;

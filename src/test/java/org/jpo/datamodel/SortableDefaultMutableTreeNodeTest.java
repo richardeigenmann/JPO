@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2023 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2023 - 2024 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -465,11 +465,11 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
                 root.sortChildren(Settings.FieldCodes.DESCRIPTION);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(gA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(gB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(gC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(gD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(gE, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
             });
         } catch (InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -497,11 +497,11 @@ class SortableDefaultMutableTreeNodeTest {
                 pictureCollection.getRootNode().add(rootNode);
 
                 rootNode.sortChildren(Settings.FieldCodes.CREATION_TIME);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) rootNode.getChildAt(4)).getUserObject().toString());
+                assertEquals(groupInfoA, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(0)).getUserObject());
+                assertEquals(groupInfoB, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(1)).getUserObject());
+                assertEquals(groupInfoC, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(2)).getUserObject());
+                assertEquals(groupInfoD, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(3)).getUserObject());
+                assertEquals(groupInfoE, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -534,11 +534,11 @@ class SortableDefaultMutableTreeNodeTest {
                 pictureCollection.getRootNode().add(groupNode);
 
                 groupNode.sortChildren(Settings.FieldCodes.DESCRIPTION);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) groupNode.getChildAt(4)).getUserObject().toString());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(3)).getUserObject());
+                assertEquals(pE, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -563,11 +563,6 @@ class SortableDefaultMutableTreeNodeTest {
                 pD.setFilmReference("D");
                 final var pE = new PictureInfo();
                 pE.setFilmReference("E");
-                pA.setDescription("A");
-                pB.setDescription("B");
-                pC.setDescription("C");
-                pD.setDescription("D");
-                pE.setDescription("E");
                 root.add(new SortableDefaultMutableTreeNode(pD));
                 root.add(new SortableDefaultMutableTreeNode(pE));
                 root.add(new SortableDefaultMutableTreeNode(pC));
@@ -577,11 +572,11 @@ class SortableDefaultMutableTreeNodeTest {
                 pictureCollection.getRootNode().add(root);
 
                 root.sortChildren(Settings.FieldCodes.FILM_REFERENCE);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(pE, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -600,11 +595,6 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pC = new PictureInfo();
                 final var pD = new PictureInfo();
                 final var pE = new PictureInfo();
-                pA.setDescription("A");
-                pB.setDescription("B");
-                pC.setDescription("C");
-                pD.setDescription("D");
-                pE.setDescription("E");
                 pA.setComment("A");
                 pB.setComment("B");
                 pC.setComment("C");
@@ -619,11 +609,11 @@ class SortableDefaultMutableTreeNodeTest {
                 pictureCollection.getRootNode().add(root);
 
                 root.sortChildren(Settings.FieldCodes.COMMENT);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(pE, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -648,11 +638,6 @@ class SortableDefaultMutableTreeNodeTest {
                 pD.setPhotographer("D");
                 final var pE = new PictureInfo();
                 pE.setPhotographer("E");
-                pA.setDescription("A");
-                pB.setDescription("B");
-                pC.setDescription("C");
-                pD.setDescription("D");
-                pE.setDescription("E");
                 root.add(new SortableDefaultMutableTreeNode(pD));
                 root.add(new SortableDefaultMutableTreeNode(pE));
                 root.add(new SortableDefaultMutableTreeNode(pC));
@@ -662,11 +647,11 @@ class SortableDefaultMutableTreeNodeTest {
                 pictureCollection.getRootNode().add(root);
 
                 root.sortChildren(Settings.FieldCodes.PHOTOGRAPHER);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(pE, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -691,11 +676,6 @@ class SortableDefaultMutableTreeNodeTest {
                 pD.setCopyrightHolder("D");
                 final var pE = new PictureInfo();
                 pE.setCopyrightHolder("E");
-                pA.setDescription("A");
-                pB.setDescription("B");
-                pC.setDescription("C");
-                pD.setDescription("D");
-                pE.setDescription("E");
                 root.add(new SortableDefaultMutableTreeNode(pD));
                 root.add(new SortableDefaultMutableTreeNode(pE));
                 root.add(new SortableDefaultMutableTreeNode(pC));
@@ -704,11 +684,11 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
                 root.sortChildren(Settings.FieldCodes.COPYRIGHT_HOLDER);
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(pE, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -724,19 +704,14 @@ class SortableDefaultMutableTreeNodeTest {
 
                 final var root = new SortableDefaultMutableTreeNode();
                 final var pA = new PictureInfo();
-                pA.setDescription("A");
                 pA.setCreationTime("2021-10-02 at 14.43.23"); //5
                 final var pB = new PictureInfo();
-                pB.setDescription("B");
                 pB.setCreationTime("2021-10-01 at 18.49.44"); //1
                 final var pC = new PictureInfo();
-                pC.setDescription("C");
                 pC.setCreationTime("2021:10:01 20:03:35"); //2
                 final var pD = new PictureInfo();
-                pD.setDescription("D");
                 pD.setCreationTime("2021:10:02 12:09:42"); //4
                 final var pE = new PictureInfo();
-                pE.setDescription("E");
                 pE.setCreationTime("2021:10:01 09:44:17"); //3
                 root.add(new SortableDefaultMutableTreeNode(pA));
                 root.add(new SortableDefaultMutableTreeNode(pB));
@@ -747,11 +722,71 @@ class SortableDefaultMutableTreeNodeTest {
                 pictureCollection.getRootNode().add(root);
 
                 root.sortChildren(Settings.FieldCodes.CREATION_TIME);
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(pE, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
+            });
+        } catch (final InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testSortChildrenPicturesByCreationTimeWithNullDates() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
+                pA.setCreationTime("2021-10-02 at 14.43.23"); //3
+                final var pB = new PictureInfo();
+                pB.setCreationTime("2021-10-01 at 18.49.44"); //1
+                final var pC = new PictureInfo();
+                // no creation time set so this should become the first result
+                root.add(new SortableDefaultMutableTreeNode(pA));
+                root.add(new SortableDefaultMutableTreeNode(pB));
+                root.add(new SortableDefaultMutableTreeNode(pC));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
+                root.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+            });
+        } catch (final InterruptedException | InvocationTargetException e) {
+            fail(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testSortChildrenPicturesByCreationTimeWithNonParseableDates() {
+        assumeFalse(GraphicsEnvironment.isHeadless());
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+
+                final var root = new SortableDefaultMutableTreeNode();
+                final var pA = new PictureInfo();
+                pA.setCreationTime("2021-10-02 at 14.43.23"); //3
+                final var pB = new PictureInfo();
+                pB.setCreationTime("2021-10-01 at 18.49.44"); //1
+                final var pC = new PictureInfo();
+                pC.setCreationTime("cant parse this"); //1
+                root.add(new SortableDefaultMutableTreeNode(pA));
+                root.add(new SortableDefaultMutableTreeNode(pB));
+                root.add(new SortableDefaultMutableTreeNode(pC));
+                final var pictureCollection = new PictureCollection();
+                pictureCollection.getRootNode().add(root);
+
+                root.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());
@@ -784,11 +819,11 @@ class SortableDefaultMutableTreeNodeTest {
 
                 root.sortChildren(Settings.FieldCodes.DESCRIPTION);
 
-                assertEquals("A", ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject().toString());
-                assertEquals("B", ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject().toString());
-                assertEquals("C", ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject().toString());
-                assertEquals("D", ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject().toString());
-                assertEquals("E", ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject().toString());
+                assertEquals(gA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
+                assertEquals(gB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
+                assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
+                assertEquals(pD, ((SortableDefaultMutableTreeNode) root.getChildAt(3)).getUserObject());
+                assertEquals(gE, ((SortableDefaultMutableTreeNode) root.getChildAt(4)).getUserObject());
             });
         } catch (final InterruptedException | InvocationTargetException e) {
             fail(e.getMessage());

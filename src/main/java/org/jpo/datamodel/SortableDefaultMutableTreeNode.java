@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static org.jpo.datamodel.Tools.copyBufferedStream;
 
 /*
- Copyright (C) 2003 - 2023 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003 - 2024 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -410,30 +410,30 @@ public class SortableDefaultMutableTreeNode
 
 
     private static class SortableDefaultMutableTreeNodeComparator implements Comparator<TreeNode> {
-        SortableDefaultMutableTreeNodeComparator(Settings.FieldCodes sortField) {
+        SortableDefaultMutableTreeNodeComparator(final FieldCodes sortField) {
             mySortField = sortField;
         }
 
-        final Settings.FieldCodes mySortField;
+        final FieldCodes mySortField;
 
         @Override
-        public int compare(final TreeNode o1, final TreeNode o2) {
-            if (o1 instanceof SortableDefaultMutableTreeNode node1 && o2 instanceof SortableDefaultMutableTreeNode node2) {
-                final Object myObject = node1.getUserObject();
-                final Object otherObject = node2.getUserObject();
+        public int compare(final TreeNode treeNode1, final TreeNode treeNode2) {
+            if (treeNode1 instanceof SortableDefaultMutableTreeNode node1 && treeNode2 instanceof SortableDefaultMutableTreeNode node2) {
+                final Object userObject1 = node1.getUserObject();
+                final Object userObject2 = node2.getUserObject();
 
-                if ((myObject instanceof GroupInfo myGroupInfo) && (otherObject instanceof GroupInfo otherGroupInfo)) {
+                if ((userObject1 instanceof GroupInfo myGroupInfo) && (userObject2 instanceof GroupInfo otherGroupInfo)) {
                     return myGroupInfo.compareTo(otherGroupInfo);
                 }
-                if ((myObject instanceof PictureInfo myPictureInfo) && (otherObject instanceof PictureInfo otherPictureInfo)) {
-                    return myPictureInfo.compareTo(otherPictureInfo, mySortField);
+                if ((userObject1 instanceof PictureInfo pictureInfo1) && (userObject2 instanceof PictureInfo pictureInfo2)) {
+                    return pictureInfo1.compareTo(pictureInfo2, mySortField);
                 }
 
-                if ((myObject instanceof GroupInfo myGi) && (otherObject instanceof PictureInfo pi) && (mySortField == FieldCodes.DESCRIPTION)) {
+                if ((userObject1 instanceof GroupInfo myGi) && (userObject2 instanceof PictureInfo pi) && (mySortField == FieldCodes.DESCRIPTION)) {
                     return (myGi.getGroupName().compareTo(pi.getDescription()));
                 }
 
-                if ((myObject instanceof PictureInfo pi) && (otherObject instanceof GroupInfo gi) && (mySortField == FieldCodes.DESCRIPTION)) {
+                if ((userObject1 instanceof PictureInfo pi) && (userObject2 instanceof GroupInfo gi) && (mySortField == FieldCodes.DESCRIPTION)) {
                     return (pi.getDescription().compareTo(gi.getGroupName()));
                 }
             }
