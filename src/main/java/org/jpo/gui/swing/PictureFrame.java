@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /*
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -28,7 +28,9 @@ import java.awt.*;
  */
 
 /**
- * Class that manages the frame and display of the Picture.
+ * Class that manages the frame and display of the Picture. Where the Picture Viewer
+ * is concerned with which node to show, the PictureFrame handles all aspects of showing
+ * the picture.
  *
  * @author Richard Eigenmann
  */
@@ -237,4 +239,7 @@ public class PictureFrame {
         pictureController.requestFocusInWindow();
     }
 
+    public void showError() {
+        pictureController.showError();
+    }
 }

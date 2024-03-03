@@ -169,11 +169,12 @@ sonarqube {
     properties {
         property("sonar.projectName", "Java Picture Organizer")
         property("sonar.projectKey", "richardeigenmann_JPO")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory}/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.sources", "src/main")
-        property("sonar.java.binaries", "${project.buildDir}/classes/java/main")
+        property("sonar.java.binaries", "${project.layout.buildDirectory}/classes/java/main")
         property("sonar.tests", "src/test")
-        property("sonar.tests.binaries", "${project.buildDir}/classes/java/test")
+        property("sonar.tests.binaries", "${project.layout.buildDirectory}/classes/java/test")
+        property("sonar.gradle.skipCompile", true)
     }
 }
 project.tasks["sonarqube"].dependsOn jacocoTestReport
@@ -228,7 +229,7 @@ javadoc.onlyIf { !project.hasProperty('skipJavadoc') }
 javadoc {
     options.encoding = "UTF-8"
     options.addBooleanOption('-enable-preview', true)
-    options.addStringOption('-release', '18')
+    options.addStringOption('-release', '20')
     // gradle doesn't copy the doc-files images!
     // this option is ignored
     options.docFilesSubDirs = true
@@ -237,25 +238,36 @@ javadoc {
         options.classpath = []
     }
     doLast {
+        println "${project.layout.buildDirectory}/docs/javadoc/org/jpo/eventbus/doc-files"
         // instead we have to copy explicitly!
         copy {
             from "src/main/java/org/jpo/eventbus/doc-files"
-            into "$project.buildDir/docs/javadoc/org/jpo/eventbus/doc-files"
+            into (layout.buildDirectory.dir("docs/javadoc/org.jpo/org/jpo/eventbus/doc-files"))
             include "*.png"
         }
+        println "${project.layout.buildDirectory}/docs/javadoc/org/jpo/gui/swing/doc-files"
         copy {
             from "src/main/java/org/jpo/gui/swing/doc-files"
-            into "$project.buildDir/docs/javadoc/org/jpo/gui/swing/doc-files"
+            into (layout.buildDirectory.dir("docs/javadoc/org.jpo/org/jpo/swing/doc-files"))
+            include "*.png"
+        }
+        println "${project.layout.buildDirectory}/docs/javadoc/org/jpo/gui/doc-files"
+        copy {
+            from "src/main/java/org/jpo/gui/doc-files"
+            into (layout.buildDirectory.dir("docs/javadoc/org.jpo/org/jpo/gui"))
             include "*.png"
         }
     }
 }
 
+import java.awt.Desktop
+
 task openJavadocInBrowser {
     dependsOn 'javadoc'
     group = 'documentation'
     doLast {
-        desktop.open(new File(buildDir, "/docs/javadoc/index.html"))
+        def docFile = new File(project.rootDir, "build/docs/javadoc/index.html")
+        Desktop.getDesktop().browse(docFile.toURI())
     }
 }
 

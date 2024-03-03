@@ -286,7 +286,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     }
 
     /**
-     * Searches for all the pictures in the request's startNode and adds them to a zipfile if isGenerateZipfile is true;
+     * Searches for all the pictures in the request's receivingNode and adds them to a zipfile if isGenerateZipfile is true;
      *
      * @param request the request
      */

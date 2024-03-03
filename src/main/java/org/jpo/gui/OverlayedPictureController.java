@@ -4,6 +4,8 @@ import org.jpo.datamodel.*;
 import org.jpo.gui.swing.PictureController;
 
 import java.awt.*;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -11,11 +13,12 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
 
 /*
-Copyright (C) 2017 - 2022 Richard Eigenmann.
+Copyright (C) 2017-2024 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -162,6 +165,21 @@ public class OverlayedPictureController extends PictureController implements Sca
         exifInfo.decodeExifTags();
     }
 
+    public void showError() {
+            final var resourceURL = OverlayedPictureController.class.getClassLoader().getResource("cant_show_object.png");
+            if (resourceURL == null) {
+                LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", "cant_show_object.png");
+            } else {
+                try {
+                    scalablePicture.loadAndScalePictureInThread("", new File(resourceURL.toURI()), Thread.MAX_PRIORITY, 0);
+                } catch (URISyntaxException e) {
+                    LOGGER.log(Level.SEVERE, "Could not load error image! URISyntaxException: {0}", e.getMessage());
+                }
+            }
+            centerImage();
+            repaint();
+    }
+
     /**
      * Overriding the paint to add the drawing of the info panel
      *
@@ -214,6 +232,7 @@ public class OverlayedPictureController extends PictureController implements Sca
 
     }
 
+
     /**
      * method that gets invoked from the ScalablePicture object to notify of
      * status changes. The ScalablePicture goes through several statuses:
@@ -233,14 +252,20 @@ public class OverlayedPictureController extends PictureController implements Sca
 
         String message = pictureStatusMessage;
         if (pictureStatusCode == SCALABLE_PICTURE_READY) {
-            LOGGER.fine("READY status");
+            LOGGER.log(Level.FINE,"Caught a SCALABLE_PICTURE_READY status");
             message = Settings.getJpoResources().getString("PicturePaneReadyStatus");
             if (isCenterWhenScaled()) {
-                LOGGER.fine("centering image");
+                LOGGER.log(Level.FINE,"centering image");
                 centerImage();
             }
-            LOGGER.fine( "forcing Panel repaint" );
+            LOGGER.log(Level.FINE, "forcing Panel repaint" );
             repaint();
+        }
+
+        if (pictureStatusCode == SCALABLE_PICTURE_ERROR) {
+            LOGGER.log(Level.SEVERE, "Caught a SCALABLE_PICTURE_ERROR: {0}", pictureStatusMessage);
+            showError();
+
         }
 
         synchronized ( picturePaneListeners ) {

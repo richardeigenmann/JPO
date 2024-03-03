@@ -8,7 +8,7 @@ import org.jpo.gui.XmlFilter;
 import javax.swing.*;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -23,6 +23,9 @@ import javax.swing.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+/**
+ * Handler for the FileSaveAsRequest request
+ */
 @EventHandler
 public class FileSaveAsHandler {
     /**

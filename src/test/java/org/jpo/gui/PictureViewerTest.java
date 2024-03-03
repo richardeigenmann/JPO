@@ -4,6 +4,7 @@ import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.ShowPictureRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +34,11 @@ class PictureViewerTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
             SwingUtilities.invokeAndWait(() -> {
-                final var pictureViewer = new PictureViewer();
+                final var pictureInfo = new PictureInfo();
+                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+                final var navigator = new SingleNodeNavigator(node);
+                final var request = new ShowPictureRequest(navigator,0 );
+                final var pictureViewer = new PictureViewer(request);
                 assertNotNull(pictureViewer);
                 pictureViewer.closeViewerTest();
             });
@@ -57,8 +62,8 @@ class PictureViewerTest {
                     pictureInfo.setDescription(DESCRIPTION);
                     final var node = new SortableDefaultMutableTreeNode(pictureInfo);
                     final var navigator = new SingleNodeNavigator(node);
-                    final var pictureViewer = new PictureViewer();
-                    pictureViewer.showNode(navigator, 0);
+                    final var request = new ShowPictureRequest(navigator, 0);
+                    final var pictureViewer = new PictureViewer(request);
                     assertEquals(node, pictureViewer.getCurrentNodeTest());
                     pictureViewer.closeViewerTest();
                 } catch (final URISyntaxException e) {

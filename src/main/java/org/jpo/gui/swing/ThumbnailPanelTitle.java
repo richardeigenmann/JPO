@@ -10,7 +10,7 @@ import java.awt.*;
 import java.util.Objects;
 
 /*
-Copyright (C) 2009-2023 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2009-2024 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -28,7 +28,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  * This class does the widgets at the top of the ThumbnailPanel
  *
- * <br><img src="doc-files/ThumbnailPanelTitle.png" alt="ThumbnailPanelTitle visualisation">
+ * <br><img src="ThumbnailPanelTitle.png" alt="ThumbnailPanelTitle visualisation">
  */
 public class ThumbnailPanelTitle
         extends JPanel {

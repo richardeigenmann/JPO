@@ -5,8 +5,7 @@ import java.awt.*;
 
 /**
  * FlowLayout subclass that fully supports wrapping of components.
- * Origin: <a href="http://www.camick.com/java/source/WrapLayout.java">...<a href="</a>
- ">* Described https://tips4java.wordpress.com/2008/</a>11/06/wrap-layout/
+ * Origin: https://tips4java.wordpress.com/2008/11/06/wrap-layout/
  */
 public class WrapLayout extends FlowLayout {
 

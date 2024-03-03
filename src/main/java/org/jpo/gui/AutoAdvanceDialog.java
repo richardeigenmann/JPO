@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2017-2023 Richard Eigenmann, Zürich
+ Copyright (C) 2017-2024 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,6 +24,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Brings up an Auto Advance Dialog and sends off a new request if successful.
  * Note that if the request's parentComponent is a ComponentMock then the actual
@@ -49,6 +50,18 @@ public class AutoAdvanceDialog {
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(AutoAdvanceDialog.class.getName());
+
+    private int showDialog(final Component parentComponent, final Object message) {
+        return JOptionPane.showOptionDialog(
+                parentComponent,
+                message,
+                Settings.getJpoResources().getString("autoAdvanceDialogTitle"),
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                null);
+    }
 
     /**
      * method that brings up a dialog box and asks the user how he would like
@@ -83,55 +96,39 @@ public class AutoAdvanceDialog {
 
         final var parentComponent = request.parentComponent();
         var selectedValue = showDialog(parentComponent, objects);
+        if (selectedValue == 0) {
+            boolean randomAdvanceSelected = randomAdvanceJRadioButton.isSelected();
+            boolean useAllPicturesSelected = useAllPicturesJRadioButton.isSelected();
+            int timerSeconds = timerSecondsField.getValue();
 
-        try {
-            NodeNavigator mySetOfNodes;
-            int myIndex;
-            if ( selectedValue == 0 ) {
-                if ( randomAdvanceJRadioButton.isSelected() ) {
-                    if ( useAllPicturesJRadioButton.isSelected() ) {
-                        final SortableDefaultMutableTreeNode rootNode = Settings.getPictureCollection().getRootNode();
-                        mySetOfNodes
-                                = new RandomNavigator(
-                                        rootNode.getChildPictureNodes( true ),
-                                        String.format( "Randomised pictures from %s",
-                                                Settings.getPictureCollection().getRootNode().toString() ) );
-                    } else {
-                        mySetOfNodes = new RandomNavigator(
-                                request.currentNode().getParent().getChildPictureNodes(true),
-                                String.format("Randomised pictures from %s",
-                                        (request.currentNode().getParent()).toString()));
-                    }
-                } else {
-                    if ( useAllPicturesJRadioButton.isSelected() ) {
-                        mySetOfNodes = new FlatGroupNavigator(request.currentNode().getRoot());
-                    } else {
-                        mySetOfNodes = new FlatGroupNavigator(request.currentNode().getParent());
-                    }
-
-                    myIndex = 0;
-                    request.autoAdvanceTarget().showNode(mySetOfNodes, myIndex);
-                }
-
-                myIndex = 0;
-                request.autoAdvanceTarget().showNode(mySetOfNodes, myIndex);
-                request.autoAdvanceTarget().startAdvanceTimer(timerSecondsField.getValue());
-            }
-        } catch (final NullPointerException ex) {
-            LOGGER.severe("NPE!");
+            final var navigator = getNavigator(request.currentNode(), randomAdvanceSelected, useAllPicturesSelected);
+            request.autoAdvanceTarget().showNode(navigator, 0);
+            request.autoAdvanceTarget().startAdvanceTimer(timerSeconds);
         }
     }
 
-    private int showDialog(final Component parentComponent, final Object message) {
-        return JOptionPane.showOptionDialog(
-                parentComponent,
-                message,
-                Settings.getJpoResources().getString("autoAdvanceDialogTitle"),
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                null);
+    private static NodeNavigatorInterface getNavigator(SortableDefaultMutableTreeNode currentNode, boolean randomAdvanceSelected, boolean useAllPicturesSelected) {
+        if (randomAdvanceSelected) {
+            if (useAllPicturesSelected) {
+                final var rootNode = currentNode.getRoot();
+                return new RandomNavigator(
+                        rootNode.getChildPictureNodes(true),
+                        String.format("Randomised pictures from %s",
+                                rootNode.toString()));
+            } else {
+                return new RandomNavigator(
+                        currentNode.getParent().getChildPictureNodes(true),
+                        String.format("Randomised pictures from %s",
+                                (currentNode.getParent()).toString()));
+            }
+        } else {
+            if (useAllPicturesSelected) {
+                return new FlatGroupNavigator(currentNode.getRoot());
+            } else {
+                return new FlatGroupNavigator(currentNode.getParent());
+            }
+        }
     }
+
 
 }

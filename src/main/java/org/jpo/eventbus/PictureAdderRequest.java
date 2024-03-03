@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.Collection;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,7 +24,8 @@ import java.util.Collection;
  */
 
 /**
- * @param startNode          The node on which to add the pictures. It must be a node with a GroupInfo object
+ * This request holds the details about pictures to be added
+ * @param receivingNode          The node on which to add the pictures. It must be a node with a GroupInfo object
  * @param chosenFiles        The array of Files to add
  * @param newOnly            indicates whether to check if the picture is already in the collection
  * @param recurseDirectories indicates whether to scan down into directories for more pictures.
@@ -32,7 +33,7 @@ import java.util.Collection;
  * @param selectedCategories The categories to give the pictures
  */
 public record PictureAdderRequest(
-        @NotNull SortableDefaultMutableTreeNode startNode,
+        @NotNull SortableDefaultMutableTreeNode receivingNode,
         @NotNull File[] chosenFiles,
         boolean newOnly,
         boolean recurseDirectories,
@@ -40,7 +41,7 @@ public record PictureAdderRequest(
         @NotNull Collection<Integer> selectedCategories) {
 
     public PictureAdderRequest {
-        if (!(startNode.getUserObject() instanceof GroupInfo))
-            throw new IllegalArgumentException("The startNode must have a GroupInfo userObject");
+        if (!(receivingNode.getUserObject() instanceof GroupInfo))
+            throw new IllegalArgumentException("The receivingNode must have a GroupInfo userObject");
     }
 }

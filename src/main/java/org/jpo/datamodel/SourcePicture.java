@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,7 @@ import static org.jpo.datamodel.SourcePicture.SourcePictureStatus.*;
 
 
 /*
- Copyright (C) 2002 - 2023 Richard Eigenmann.
+ Copyright (C) 2002 - 2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -194,7 +195,19 @@ public class SourcePicture {
             return;
         }
 
+        if (imageBytes == null) {
+            LOGGER.log(Level.SEVERE, "There is no image! {0}", imageFile);
+            setStatus(SOURCE_PICTURE_ERROR, "Unable to load image.");
+            return;
+        }
+
         sourcePictureBufferedImage = convertImageBytesToBufferedImage(imageBytes);
+
+        if (sourcePictureBufferedImage == null) {
+            LOGGER.log(Level.SEVERE, "There is no image! {0}", imageFile);
+            setStatus(SOURCE_PICTURE_ERROR, "Unable to convert image.");
+            return;
+        }
 
         if (!abortFlag) {
             if (rotation != 0) {
@@ -252,6 +265,10 @@ public class SourcePicture {
                 return null;
             }
             return readFromReaderWithProgressListener(iis, reader);
+        } catch (final NoSuchElementException e) {
+            LOGGER.log(Level.SEVERE, "NoSuchElementException while converting {0} bytes to a BufferedImage. Exception: {1}", new Object[]{imageBytes.getBytes().length,e.getMessage()});
+            setStatus(SOURCE_PICTURE_ERROR, String.format("No reader found for URL: %s Exception: %s", imageFile.toString(), e.getMessage()));
+            return null;
         } catch (final IOException e) {
             LOGGER.log(Level.SEVERE, "IOException while converting {0} bytes to a BufferedImage: {1}", new Object[]{imageBytes.getBytes().length,e.getMessage()});
             setStatus(SOURCE_PICTURE_ERROR, "Error while reading " + imageFile.toString());
@@ -287,7 +304,7 @@ public class SourcePicture {
         if (bufferedImage.getType() == BufferedImage.TYPE_3BYTE_BGR) {
             return bufferedImage;
         } else {
-            LOGGER.log(Level.INFO, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
+            LOGGER.log(Level.FINE, "Got wrong image type: {0} instead of {1}. Trying to convert...", new Object[]{bufferedImage.getType(), BufferedImage.TYPE_3BYTE_BGR});
 
             final var bgr3ByteImage = new BufferedImage(bufferedImage.getWidth(),
                     bufferedImage.getHeight(), BufferedImage.TYPE_3BYTE_BGR);

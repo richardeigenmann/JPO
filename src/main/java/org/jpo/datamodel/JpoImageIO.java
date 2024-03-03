@@ -1,7 +1,7 @@
 package org.jpo.datamodel;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,6 +25,8 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static javax.imageio.ImageIO.*;
 
 public class JpoImageIO {
 
@@ -54,7 +56,7 @@ public class JpoImageIO {
             return false;
         }
         try (final var testStream = new FileImageInputStream(file)) {
-            final ImageReader reader = javax.imageio.ImageIO.getImageReaders(testStream).next();
+            final ImageReader reader = getImageReaders(testStream).next();
             if (reader != null) {
                 LOGGER.log(Level.FINE, "File {0} has a picture mime type and ImageIO has a reader for it. Class is {1}", new Object[]{file, reader.getClass()});
                 return true;
@@ -75,7 +77,7 @@ public class JpoImageIO {
      * Can throw a java.util.NoSuchElementException if there is no available reader.
      */
     public static ImageReader getImageIOReader(final ImageInputStream iis) {
-        final var readerIterator = javax.imageio.ImageIO.getImageReaders(iis);
+        final var readerIterator = getImageReaders(iis);
         return readerIterator.next();
     }
 }

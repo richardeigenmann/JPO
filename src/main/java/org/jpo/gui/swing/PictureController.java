@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  * coordinate space of the image. This translated using the
  * {@link ScalablePicture#setScaleFactor( double )} to the coordinate space of
  * the JComponent
- * <p> <img src=../Mathematics.png alt="Mathematics"></p>
+ * <p> <img src=Mathematics.png alt="Mathematics"></p>
  *
  *
  */
@@ -273,7 +273,7 @@ public class PictureController extends JComponent {
      * method that moves the image up by 10% of the pixels shown on the screen.
      * This method calls <code>repaint()</code> directly since no time-consuming
      * image operations need to take place.
-     * <p><img src=../scrollUp.png alt="Scroll Up"></p>
+     * <p><img src=scrollUp.png alt="Scroll Up"></p>
      * 
      * @see #scrollUp()
      * @see #scrollDown()
@@ -295,7 +295,7 @@ public class PictureController extends JComponent {
      * method that moves the image down by 10% of the pixels shown on the
      * screen. This method calls <code>repaint()</code> directly since no
      * time-consuming image operations need to take place.
-     * <p><img src=../scrollDown.png alt="Scroll Down"></p>
+     * <p><img src=scrollDown.png alt="Scroll Down"></p>
      * @see #scrollUp()
      * @see #scrollDown()
      * @see #scrollLeft()

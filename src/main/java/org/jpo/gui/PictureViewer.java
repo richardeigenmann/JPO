@@ -3,10 +3,9 @@ package org.jpo.gui;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
-import org.jpo.eventbus.*;
 import org.jpo.datamodel.ScalablePicture.ScalablePictureStatus;
+import org.jpo.eventbus.*;
 import org.jpo.gui.swing.ChangeWindowPopupMenu;
-import org.jpo.gui.swing.PictureFrame;
 import org.jpo.gui.swing.ResizableJFrame.WindowSize;
 
 import javax.swing.*;
@@ -22,7 +21,7 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_P
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 /*
- Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,31 +37,29 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_P
  */
 
 /**
- * PictureViewer is a Controller that manages a window which displays a picture.
+ * PictureViewer is a Controller that manages a window which displays a picture. It
+ * concerns itself with which picture from the Naviator Context should be displayed.
  * It provides navigation control over the collection as well as mouse and
  * keyboard control over the zooming.
- * <p>
- * The user can zoom in on a picture coordinate by clicking the left mouse
+ * <p> The user can zoom in on a picture coordinate by clicking the left mouse
  * button. The middle button scales the picture so that it fits in the available
- * space and centers it there. The right mouse button zooms out.<p>
+ * space and centers it there. The right mouse button zooms out.</p>
+ * <
  *
- *
- * <img src="../PictureViewer.png" alt="Picture Viewer">
+ * <img src="PictureViewer.png" alt="Picture Viewer">
  */
-public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorListener, AutoAdvanceInterface {
+public class PictureViewer implements NodeNavigatorListener, AutoAdvanceInterface {
 
     /**
      * Defines a logger for this class
      */
     private static final Logger LOGGER = Logger.getLogger(PictureViewer.class.getName());
-    /**
-     * PictureFrame
-     */
-    private final PictureFrame pictureFrame = new PictureFrame();
+
+    private final PictureFrameController pictureFrameController = new PictureFrameController();
     /**
      * popup menu for window mode changing
      */
-    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu(pictureFrame.getResizableJFrame());
+    private final ChangeWindowPopupMenu changeWindowPopupMenu = new ChangeWindowPopupMenu(pictureFrameController.getPictureFrame().getResizableJFrame());
     /**
      * the context of the browsing
      */
@@ -78,71 +75,62 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     private Timer advanceTimer;
 
     /**
-     * Brings up a window in which a picture node is displayed. This class
-     * handles all the user interaction such as zoom in / out, drag, navigation,
-     * information display and keyboard keys.
+     * This is a Controller that works off a NodeNavigatorInterface. It opens a new window
+     * and shows the picture pointed at by the NodeNavigator and the index.
+     * It has buttons to navigate, shows the description and responds to mouse actions of the
+     * user.
      */
-    public PictureViewer() {
+    public PictureViewer(final ShowPictureRequest request) {
         attachListeners();
+        showNode(request.nodeNavigator(), request.currentIndex());
     }
 
     private void attachListeners() {
-        final var pictureJPanel = pictureFrame.getPictureController();
-        addStatusListener(pictureJPanel);
 
-        pictureFrame.getResizableJFrame().addWindowListener(new WindowAdapter() {
+        pictureFrameController.getPictureFrame().getResizableJFrame().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent we) {
                 closeViewer();
             }
         });
 
-        pictureFrame.getFocussableDescriptionField().addFocusListener(new FocusAdapter() {
+        addKeyListener(pictureFrameController.getPictureFrame().getPictureController());
 
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e);
-                saveChangedDescription();
-            }
-        });
-
-        addKeyListener(pictureJPanel);
-
-        pictureFrame.getPictureViewerNavBar().rotateLeftJButton.addActionListener((ActionEvent e) -> {
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().rotateLeftJButton.addActionListener((ActionEvent e) -> {
             JpoEventBus.getInstance().post(new RotatePicturesRequest(List.of(getCurrentNode()), 270, QUEUE_PRIORITY.HIGH_PRIORITY));
-            pictureFrame.getPictureController().requestFocusInWindow();
+            pictureFrameController.getPictureFrame().getPictureController().requestFocusInWindow();
         });
 
-        pictureFrame.getPictureViewerNavBar().rotateRightJButton.addActionListener((ActionEvent e) -> {
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().rotateRightJButton.addActionListener((ActionEvent e) -> {
             JpoEventBus.getInstance().post(new RotatePicturesRequest(List.of(getCurrentNode()), 90, QUEUE_PRIORITY.HIGH_PRIORITY));
-            pictureFrame.getPictureController().requestFocusInWindow();
+            pictureFrameController.getPictureFrame().getPictureController().requestFocusInWindow();
         });
 
-        pictureFrame.getPictureViewerNavBar().zoomInJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new PictureControllerZoomRequest(pictureFrame.getPictureController(), Zoom.IN)));
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().zoomInJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new PictureControllerZoomRequest(pictureFrameController.getPictureFrame().getPictureController(), Zoom.IN)));
 
-        pictureFrame.getPictureViewerNavBar().zoomOutJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new PictureControllerZoomRequest(pictureFrame.getPictureController(), Zoom.OUT)));
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().zoomOutJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new PictureControllerZoomRequest(pictureFrameController.getPictureFrame().getPictureController(), Zoom.OUT)));
 
-        pictureFrame.getPictureViewerNavBar().fullScreenJButton.addActionListener((ActionEvent e) -> requestScreenSizeMenu());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().fullScreenJButton.addActionListener((ActionEvent e) -> requestScreenSizeMenu());
 
-        pictureFrame.getPictureViewerNavBar().popupMenuJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(myNodeNavigator, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0)));
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().popupMenuJButton.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(myNodeNavigator, myIndex, pictureFrameController.getPictureFrame().getPictureViewerNavBar(), 120, 0)));
 
-        pictureFrame.getPictureViewerNavBar().infoJButton.addActionListener((ActionEvent e) -> cycleInfoDisplay());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().infoJButton.addActionListener((ActionEvent e) -> cycleInfoDisplay());
 
-        pictureFrame.getPictureViewerNavBar().resetJButton.addActionListener((ActionEvent e) -> pictureFrame.getPictureController().resetPicture());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().resetJButton.addActionListener((ActionEvent e) -> pictureFrameController.getPictureFrame().getPictureController().resetPicture());
 
-        pictureFrame.getPictureViewerNavBar().speedSlider.addChangeListener((ChangeEvent ce) -> {
-            if (!pictureFrame.getPictureViewerNavBar().speedSlider.getValueIsAdjusting()) {
-                setTimerDelay(pictureFrame.getPictureViewerNavBar().speedSlider.getValue());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().speedSlider.addChangeListener((ChangeEvent ce) -> {
+            if (!pictureFrameController.getPictureFrame().getPictureViewerNavBar().speedSlider.getValueIsAdjusting()) {
+                setTimerDelay(pictureFrameController.getPictureFrame().getPictureViewerNavBar().speedSlider.getValue());
             }
         });
 
-        pictureFrame.getPictureViewerNavBar().closeJButton.addActionListener((ActionEvent e) -> closeViewer());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().closeJButton.addActionListener((ActionEvent e) -> closeViewer());
 
-        pictureFrame.getPictureViewerNavBar().previousJButton.addActionListener((ActionEvent e) -> requestPriorPicture());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().previousJButton.addActionListener((ActionEvent e) -> requestPriorPicture());
 
-        pictureFrame.getPictureViewerNavBar().getNextJButton().addActionListener((ActionEvent e) -> requestNextPicture());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().getNextJButton().addActionListener((ActionEvent e) -> requestNextPicture());
 
-        pictureFrame.getPictureViewerNavBar().clockJButton.addActionListener((ActionEvent e) -> requestAutoAdvance());
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().clockJButton.addActionListener((ActionEvent e) -> doAutoAdvanceClick());
     }
 
     private void addKeyListener(OverlayedPictureController pictureJPanel) {
@@ -154,14 +142,14 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             public void keyPressed(KeyEvent keyEvent) {
                 final var k = keyEvent.getKeyCode();
                 if ((k == KeyEvent.VK_I)) {
-                    pictureFrame.cycleInfoDisplay();
+                    pictureFrameController.getPictureFrame().cycleInfoDisplay();
                     keyEvent.consume();
                 } else if ((k == KeyEvent.VK_N)) {
                     requestNextPicture();
                     keyEvent.consume();
                 } else if ((k == KeyEvent.VK_M)) {
                     keyEvent.consume();
-                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(myNodeNavigator, myIndex, pictureFrame.getPictureViewerNavBar(), 120, 0));
+                    JpoEventBus.getInstance().post(new ShowPicturePopUpMenuRequest(myNodeNavigator, myIndex, pictureFrameController.getPictureFrame().getPictureViewerNavBar(), 120, 0));
                 } else if ((k == KeyEvent.VK_P)) {
                     requestPriorPicture();
                     keyEvent.consume();
@@ -173,7 +161,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                     closeViewer();
                 }
                 if (!keyEvent.isConsumed()) {
-                    JOptionPane.showMessageDialog(pictureFrame.getResizableJFrame(),
+                    JOptionPane.showMessageDialog(pictureFrameController.getPictureFrame().getResizableJFrame(),
                             Settings.getJpoResources().getString("PictureViewerKeycodes"),
                             Settings.getJpoResources().getString("PictureViewerKeycodesTitle"),
                             JOptionPane.INFORMATION_MESSAGE);
@@ -182,86 +170,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         });
     }
 
-    private void addStatusListener(final OverlayedPictureController pictureJPanel) {
-        pictureJPanel.addStatusListener(new ScalablePictureListener() {
 
-            /**
-             * This method gets invoked from the ScalablePicture to notify of
-             * status changes. We use the notification to update the progress bar
-             * at the bottom of the screen.
-             *
-             * @param pictureStatusCode    the status code
-             * @param pictureStatusMessage the status message (not used)
-             */
-            @Override
-            public void scalableStatusChange(final ScalablePictureStatus pictureStatusCode,
-                                             final String pictureStatusMessage) {
-                final Runnable runnable = () -> {
-                    switch (pictureStatusCode) {
-                        case SCALABLE_PICTURE_UNINITIALISED,
-                                SCALABLE_PICTURE_GARBAGE_COLLECTION,
-                                SCALABLE_PICTURE_LOADED,
-                                SCALABLE_PICTURE_SCALING,
-                                SCALABLE_PICTURE_ERROR -> pictureFrame.setProgressBarVisible(false);
-                        case SCALABLE_PICTURE_LOADING -> pictureFrame.setProgressBarVisible(true);
-                        case SCALABLE_PICTURE_READY -> {
-                            pictureFrame.setProgressBarVisible(false);
-                            pictureFrame.getResizableJFrame().toFront();
-                        }
-                        default ->
-                                LOGGER.log(Level.WARNING, "Got called with a code that is not understood: {0} {1}", new Object[]{pictureStatusCode, pictureStatusMessage});
-                    }
-                };
-                if (SwingUtilities.isEventDispatchThread()) {
-                    runnable.run();
-                } else {
-                    SwingUtilities.invokeLater(runnable);
-                }
-            }
 
-            /**
-             * method that gets invoked from the ScalablePicture to notify of
-             * status changes in loading the image.
-             *
-             * @param statusCode the status code
-             * @param percentage the percentage
-             */
-            @Override
-            public void sourceLoadProgressNotification(final SourcePicture.SourcePictureStatus statusCode,
-                                                       final int percentage) {
-                final Runnable runnable = () -> {
-                    switch (statusCode) {
-                        case SOURCE_PICTURE_LOADING_STARTED -> {
-                            pictureFrame.setProgressBarValue(0);
-                            pictureFrame.setProgressBarVisible(true);
-                        }
-                        case SOURCE_PICTURE_LOADING_PROGRESS -> {
-                            pictureFrame.setProgressBarValue(percentage);
-                            pictureFrame.setProgressBarVisible(true);
-                        }
-                        default -> // SOURCE_PICTURE_LOADING_COMPLETED:
-                                pictureFrame.setProgressBarVisible(false);
-                    }
-                };
-                if (SwingUtilities.isEventDispatchThread()) {
-                    runnable.run();
-                } else {
-                    SwingUtilities.invokeLater(runnable);
-                }
-            }
-        });
-    }
-
-    /**
-     * This method saves the text of the textbox to the PictureInfo.
-     */
-    private void saveChangedDescription() {
-        final var node = getCurrentNode();
-        if ((node != null) && (node.getUserObject() instanceof PictureInfo pictureInfo)) {
-            pictureInfo.setDescription(
-                    pictureFrame.getDescription());
-        }
-    }
 
     /**
      * Don't use: accessor to the private closeViewer function for unit tests.
@@ -279,7 +189,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             myNodeNavigator.removeNodeNavigatorListener(this);
         }
         stopTimer();
-        pictureFrame.getRid();
+        pictureFrameController.getPictureFrame().getRid();
     }
 
 
@@ -313,8 +223,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * Shows a resize popup menu
      */
     private void requestScreenSizeMenu() {
-        changeWindowPopupMenu.show(pictureFrame.getPictureViewerNavBar(), 96, (int) (0 - changeWindowPopupMenu.getSize().getHeight()));
-        pictureFrame.getPictureController().requestFocusInWindow();
+        changeWindowPopupMenu.show(pictureFrameController.getPictureFrame().getPictureViewerNavBar(), 96, (int) (0 - changeWindowPopupMenu.getSize().getHeight()));
+        pictureFrameController.getPictureFrame().getPictureController().requestFocusInWindow();
     }
 
     /**
@@ -323,10 +233,12 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @param newNodeNavigator The set of nodes from which one picture is to be
      *                     shown
      * @param newIndex      The index of the set of nodes to be shown.
+     * TODO: this should probably become a request from the bus and possibly this should be private
+     * The AutoAdvanceDialog is making this problematic
      */
     public void showNode(final NodeNavigatorInterface newNodeNavigator,
                          final int newIndex) {
-        LOGGER.log(Level.FINE, "Navigator: {0} Nodes: {1} Index: {2}", new Object[]{newNodeNavigator, newNodeNavigator.getNumberOfNodes(), newIndex});
+        LOGGER.log(Level.INFO, "Navigator: {0} Nodes: {1} Index: {2}", new Object[]{newNodeNavigator, newNodeNavigator.getNumberOfNodes(), newIndex});
         Tools.checkEDT();
 
         // Validate the inputs
@@ -345,16 +257,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             return;
         }
 
-        LOGGER.log(Level.FINE, "remove the pictureInfo change listener if present");
-        if (this.myNodeNavigator != null) {
-            ((PictureInfo) this.myNodeNavigator.getNode(this.myIndex).getUserObject()).removePictureInfoChangeListener(this);
-        }
-
-        LOGGER.log(Level.FINE, "attaching a new pictureInfo change listener");
-        pictureInfo.addPictureInfoChangeListener(this);
-
         if (this.myNodeNavigator == null) {
-            LOGGER.log(Level.INFO, "We didn''t have a nodeNavigator, so we set it fresh.");
+            LOGGER.log(Level.INFO, "We do not have a nodeNavigator, so we set it fresh.");
             this.myNodeNavigator = newNodeNavigator;
             newNodeNavigator.addNodeNavigatorListener(this);
         } else {
@@ -371,46 +275,13 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         LOGGER.log(Level.FINE, "Setting my Index to {0}", newIndex);
         this.myIndex = newIndex;
 
-        pictureFrame.setDescription(pictureInfo.getDescription());
-        setPicture(pictureInfo);
+
+        pictureFrameController.setPicture(pictureInfo);
 
         setIconDecorations();
-        pictureFrame.getPictureController().requestFocusInWindow();
+        pictureFrameController.getPictureFrame().getPictureController().requestFocusInWindow();
     }
 
-    /**
-     * brings up the indicated picture on the display.
-     *
-     * @param pictureInfo The PictureInfo object that should be displayed
-     */
-    private void setPicture(final PictureInfo pictureInfo) {
-        LOGGER.log(Level.FINE, "Set picture to PictureInfo: {0}", pictureInfo);
-        pictureFrame.getPictureController().setPicture(pictureInfo);
-    }
-
-    /**
-     * here we get notified by the PictureInfo object that something has
-     * changed.
-     *
-     * @param pictureInfoChangedEvent The event
-     */
-    @Override
-    public void pictureInfoChangeEvent(final PictureInfoChangeEvent pictureInfoChangedEvent) {
-        if (pictureInfoChangedEvent.getDescriptionChanged()) {
-            pictureFrame.setDescription(pictureInfoChangedEvent.getPictureInfo().getDescription());
-        }
-
-        if (pictureInfoChangedEvent.getHighresLocationChanged()) {
-            final var node = myNodeNavigator.getNode(myIndex);
-            final var pictureInfo = (PictureInfo) node.getUserObject();
-            setPicture(pictureInfo);
-        }
-
-        if (pictureInfoChangedEvent.getRotationChanged()) {
-            final var pictureInfo = (PictureInfo) myNodeNavigator.getNode(myIndex).getUserObject();
-            setPicture(pictureInfo);
-        }
-    }
 
     /**
      * gets called when the Navigator notices a change
@@ -452,19 +323,19 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
     }
 
     /**
-     * Brings up the dialog for the AutoAdvance timer or shuts the running one
-     * down.
+     * Handles the click on the clock icon by bringing up the dialog for the AutoAdvance timer
+     * or shutting a running AutoAdvance timer down.
      */
-    private void requestAutoAdvance() {
+    private void doAutoAdvanceClick() {
         if (advanceTimer != null) {
             stopTimer();
-            pictureFrame.getPictureViewerNavBar().clockJButton.setClockIdle();
+            pictureFrameController.getPictureFrame().getPictureViewerNavBar().clockJButton.setClockIdle();
         } else {
             JpoEventBus.getInstance().post(
-                    new ShowAutoAdvanceDialogRequest(pictureFrame.getResizableJFrame(), Objects.requireNonNull(getCurrentNode()), this));
+                    new ShowAutoAdvanceDialogRequest(pictureFrameController.getPictureFrame().getResizableJFrame(), Objects.requireNonNull(getCurrentNode()), this));
         }
 
-        pictureFrame.getPictureController().requestFocusInWindow();
+        pictureFrameController.getPictureFrame().getPictureController().requestFocusInWindow();
     }
 
     /**
@@ -482,8 +353,8 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
             }
         });
         advanceTimer.start();
-        pictureFrame.getPictureViewerNavBar().clockJButton.setClockBusy();
-        pictureFrame.getPictureViewerNavBar().showDelaySlider();
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().clockJButton.setClockBusy();
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().showDelaySlider();
     }
 
     /**
@@ -506,7 +377,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
 
         advanceTimer = null;
-        pictureFrame.getPictureViewerNavBar().hideDelaySlider();
+        pictureFrameController.getPictureFrame().getPictureViewerNavBar().hideDelaySlider();
     }
 
     /**
@@ -517,7 +388,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @return true if ready to advance
      */
     private boolean readyToAdvance() {
-        final OverlayedPictureController pictureJPanel = pictureFrame.getPictureController();
+        final OverlayedPictureController pictureJPanel = pictureFrameController.getPictureFrame().getPictureController();
         final ScalablePictureStatus status = pictureJPanel.getScalablePicture().getStatusCode();
         return (status == SCALABLE_PICTURE_READY) || (status == SCALABLE_PICTURE_ERROR);
     }
@@ -526,7 +397,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * This function cycles to the next info display overlay.
      */
     private void cycleInfoDisplay() {
-        pictureFrame.cycleInfoDisplay();
+        pictureFrameController.getPictureFrame().cycleInfoDisplay();
     }
 
     /**
@@ -536,7 +407,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
      * @param newMode new window mode
      */
     public void switchWindowMode(final WindowSize newMode) {
-        pictureFrame.switchWindowMode(newMode);
+        pictureFrameController.getPictureFrame().switchWindowMode(newMode);
     }
 
     /**
@@ -556,7 +427,7 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
         }
         // let's see what we have in the way of previous siblings..
         if (currentNode.getPreviousSibling() != null) {
-            pictureFrame.getPictureViewerNavBar().setPreviousButtonHasLeft();
+            pictureFrameController.getPictureFrame().getPictureViewerNavBar().setPreviousButtonHasLeft();
         } else {
             // determine if there are any previous nodes that are not groups.
             var testNode = currentNode.getPreviousNode();
@@ -564,9 +435,9 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 testNode = testNode.getPreviousNode();
             }
             if (testNode == null) {
-                pictureFrame.getPictureViewerNavBar().setPreviousButtonBeginning();
+                pictureFrameController.getPictureFrame().getPictureViewerNavBar().setPreviousButtonBeginning();
             } else {
-                pictureFrame.getPictureViewerNavBar().setPreviousButtonHasPrevious();
+                pictureFrameController.getPictureFrame().getPictureViewerNavBar().setPreviousButtonHasPrevious();
             }
         }
     }
@@ -583,20 +454,20 @@ public class PictureViewer implements PictureInfoChangeListener, NodeNavigatorLi
                 // because there is a next sibling object of type
                 // PictureInfo we should set the next icon to the
                 // icon that indicates a next picture in the group
-                pictureFrame.getPictureViewerNavBar().setNextButtonHasRight();
+                pictureFrameController.getPictureFrame().getPictureViewerNavBar().setNextButtonHasRight();
             } else {
                 // it must be a GroupInfo node
                 // since we must descend into it, it gets a nextnext icon.
-                pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
+                pictureFrameController.getPictureFrame().getPictureViewerNavBar().setNextButtonHasNext();
             }
         } else // the getNextSibling() method returned null
         // if the getNextNode also returns null this was the end of the album
         // otherwise there are more pictures in the next group.
         {
             if (currentNode.getNextNode() != null) {
-                pictureFrame.getPictureViewerNavBar().setNextButtonHasNext();
+                pictureFrameController.getPictureFrame().getPictureViewerNavBar().setNextButtonHasNext();
             } else {
-                pictureFrame.getPictureViewerNavBar().setNextButtonEnd();
+                pictureFrameController.getPictureFrame().getPictureViewerNavBar().setNextButtonEnd();
             }
         }
     }

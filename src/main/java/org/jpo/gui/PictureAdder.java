@@ -45,11 +45,11 @@ public class PictureAdder
      */
     public PictureAdder(final PictureAdderRequest request) {
         this.request = request;
-        LOGGER.log(Level.INFO, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{request.startNode(), request.chosenFiles().length, request.newOnly(), request.recurseDirectories(), request.retainDirectories()});
+        LOGGER.log(Level.INFO, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{request.receivingNode(), request.chosenFiles().length, request.newOnly(), request.recurseDirectories(), request.retainDirectories()});
         progGui = new ProgressGui(Tools.countFiles(request.chosenFiles()),
                 Settings.getJpoResources().getString("PictureAdderProgressDialogTitle"),
                 Settings.getJpoResources().getString("picturesAdded"));
-        request.startNode().getPictureCollection().setSendModelUpdates(false);
+        request.receivingNode().getPictureCollection().setSendModelUpdates(false);
     }
 
     /**
@@ -78,11 +78,11 @@ public class PictureAdder
             }
             LOGGER.log(Level.INFO, "Requested file: {0}", addFile);
             if (!addFile.isDirectory()) {
-                addPicture(request.startNode(), addFile);
+                addPicture(request.receivingNode(), addFile);
             } else {
                 // the file is a directory
                 if (Tools.hasPictures(addFile)) {
-                    addDirectory(request.startNode(), addFile);
+                    addDirectory(request.receivingNode(), addFile);
                 } else {
                     LOGGER.log(Level.FINE, "No pictures in directory: {0}", addFile);
                 }
@@ -166,7 +166,7 @@ public class PictureAdder
     @Override
     protected void done() {
         Settings.getPictureCollection().setSendModelUpdates(true);
-        Settings.getPictureCollection().sendNodeStructureChanged(request.startNode());
+        Settings.getPictureCollection().sendNodeStructureChanged(request.receivingNode());
         progGui.switchToDoneMode();
     }
 

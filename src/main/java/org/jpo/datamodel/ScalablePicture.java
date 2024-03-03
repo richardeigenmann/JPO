@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.*;
 
 /*
- Copyright (C) 2002 - 2023 Richard Eigenmann.
+ Copyright (C) 2002 - 2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -235,6 +235,7 @@ public class ScalablePicture
         switch (statusCode) {
             case SOURCE_PICTURE_UNINITIALISED -> setStatus(SCALABLE_PICTURE_UNINITIALISED, statusMessage);
             case SOURCE_PICTURE_ERROR -> {
+                LOGGER.log(Level.SEVERE, "Caught a SOURCE_PICTURE_ERROR: {0}", statusMessage);
                 setStatus(SCALABLE_PICTURE_ERROR, statusMessage);
                 sourcePicture.removeListener(this);
             }

@@ -22,7 +22,7 @@ import javax.swing.*;
  */
 
 /**
- * Handles the request to find a basedir
+ * Handles the request to find a basedir: FindBasedirRequest
  */
 @EventHandler
 public class FindBasedirHandler {

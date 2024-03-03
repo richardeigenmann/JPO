@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017-2023 Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,7 +26,7 @@ import org.jpo.datamodel.PictureCollection;
  *
  * <p>
  *
- * <img src="doc-files/UnsavedChangesLogic.png" alt="Unsaved Changes Logic">
+ * <img src="UnsavedChangesLogic.png" alt="Unsaved Changes Logic">
  * @param pictureCollection the PictureCollection that has the unsaved changes
  * @param nextRequest the request to fire after saving or dismissing but not cancelling
  * @author Richard Eigenmann

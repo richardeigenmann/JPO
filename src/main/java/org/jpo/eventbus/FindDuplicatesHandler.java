@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -19,6 +19,10 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.DuplicatesQuery;
 import org.jpo.datamodel.Settings;
+
+/**
+ * Handler for the FindDuplicatesRequest request
+ */
 @EventHandler
 public class FindDuplicatesHandler {
     /**

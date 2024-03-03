@@ -85,7 +85,7 @@ public class Emailer
 
     /**
      * Creates and starts a Thread that writes the picture nodes from the
-     * specified startNode to the target directory.
+     * specified receivingNode to the target directory.
      *
      * @param emailSelected List of nodes for emailing
      * @param senderAddress The sender address

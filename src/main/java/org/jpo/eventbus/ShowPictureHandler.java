@@ -1,10 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.FlatGroupNavigator;
-import org.jpo.datamodel.JpoImageIO;
-import org.jpo.datamodel.MimeTypes;
-import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.*;
 import org.jpo.gui.PictureViewer;
 
 import javax.swing.*;
@@ -14,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022-2023 Richard Eigenmann.
+ Copyright (C) 2022-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,9 +35,9 @@ public class ShowPictureHandler {
     private static final Logger LOGGER = Logger.getLogger(ShowPictureHandler.class.getName());
 
     /**
-     * When we see a ShowPictureRequest this method will open a {@link PictureViewer}
-     * and will tell it to show the {@link FlatGroupNavigator} based on the pictures
-     * parent node starting at the current position
+     * If the node pointed at by the {@link NodeNavigatorInterface} is a document or a move
+     * we ask the Operating System to open the node.
+     * If it's a picture for which we have a reader we create a new PictureViewer to show the picture.
      *
      * @param request the {@link ShowPictureRequest}
      */
@@ -61,10 +58,7 @@ public class ShowPictureHandler {
             LOGGER.log(Level.SEVERE, "Can''t find a JVM reader for file: {0}", file);
             return;
         }
-        SwingUtilities.invokeLater(() -> {
-            final var pictureViewer = new PictureViewer();
-            pictureViewer.showNode(request.nodeNavigator(), request.currentIndex());
-        });
+        SwingUtilities.invokeLater(() -> new PictureViewer(request));
     }
 
 }

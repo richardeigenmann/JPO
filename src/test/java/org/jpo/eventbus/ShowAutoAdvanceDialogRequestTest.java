@@ -1,6 +1,8 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.PictureViewer;
 import org.junit.jupiter.api.Test;
@@ -15,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017 - 2022 Richard Eigenmann.
+ Copyright (C) 2017 - 2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -59,8 +61,10 @@ class ShowAutoAdvanceDialogRequestTest {
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final var jFrame = new JFrame();
-                final var node = new SortableDefaultMutableTreeNode();
-                final var pictureViewer = new PictureViewer();
+                final var node = new SortableDefaultMutableTreeNode(new PictureInfo());
+                final var navigator = new SingleNodeNavigator(node);
+                final var request = new ShowPictureRequest(navigator, 0);
+                final var pictureViewer = new PictureViewer(request);
 
                 final var showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(jFrame, node, pictureViewer);
                 SwingUtilities.invokeLater(() -> {

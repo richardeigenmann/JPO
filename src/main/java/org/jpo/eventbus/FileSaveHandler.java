@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -20,6 +20,10 @@ import java.util.logging.Logger;
  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
+/**
+ * Handler for the FileSaveRequest
  */
 @EventHandler
 public class FileSaveHandler {
