@@ -104,7 +104,7 @@ public class Settings {
     /**
      * Global constant for the current build version of JPO
      */
-    public static final String JPO_VERSION = "0.18";
+    public static final String JPO_VERSION = "0.21";
     /**
      * The URL of the JPO homepage
      */

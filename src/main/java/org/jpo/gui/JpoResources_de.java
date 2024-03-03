@@ -64,7 +64,7 @@ public class JpoResources_de extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO Version " + Settings.JPO_VERSION + " ist ein Java/Swing Programm\n"
                     + "geschrieben von Richard Eigenmann, Zürich, Schweiz\n"
-                    + "Copyright 2000 - 2022\n"
+                    + "Copyright 2000 - 2024\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
                     + "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"

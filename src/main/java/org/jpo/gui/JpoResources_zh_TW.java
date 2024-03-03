@@ -67,7 +67,7 @@ public class JpoResources_zh_TW extends ListResourceBundle {
             // Help About Dialog
             {"HelpAboutText", "JPO 版本 " + Settings.JPO_VERSION + " 是基于Java/Swing 開發的軟件\n"
                     + "作者Richard Eigenmann在瑞士蘇黎世, \n"
-                    + "版權 2000 - 2022\n"
+                    + "版權 2000 - 2024\n"
                     + "郵件地址：richard.eigenmann@gmail.com\n"
                     + "軟件主頁网址：http://j-po.sourceforge.net\n"
                     + "\nExif（可交換圖像文件）的抽取部分蒙Drew Noakes的幫助\n"

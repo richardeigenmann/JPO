@@ -7,7 +7,7 @@ import org.jpo.eventbus.JpoEventBus;
 
 
 /*
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,7 +25,7 @@ import org.jpo.eventbus.JpoEventBus;
  * The first class to be started to get the JPO application going.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.18
+ * @version 0.21
  */
 public class Main {
 
@@ -40,7 +40,7 @@ public class Main {
      */
     public static void main( String[] args ) {
         System.out.println("\nJPO version " + Settings.JPO_VERSION + "\n"
-                + "Copyright (C) 2000-2023 Richard Eigenmann,\nZurich, Switzerland\n"
+                + "Copyright (C) 2000-2024 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"

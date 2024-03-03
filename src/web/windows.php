@@ -39,17 +39,17 @@
         <p>To run the project go to the Gradle Tasks Window click JPO > build > run.
 
     <h3>Create a windows installable package</h3>
-        <p>Updated in 2021 to use jpackage.</p>
+        <p>Updated in 2024 to use jpackage.</p>
         <p>Run the Gradle Jpo > Tasks > build > signjar task which will create the build/libs/Jpo-all.jar file</p>
         <p>Next run the jpackage command from the command line:<p>
         <code>
-        "c:\Program Files (x86)\jdk-18.0.1\bin\jpackage" ^
+        "c:\Program Files (x86)\jdk-21.0.1\bin\jpackage" ^
         --type exe ^
         --input . ^
         --name JPO ^
         --description "Java Picture Organizer" ^
         --vendor "Richard Eigenmann" ^
-        --app-version 0.18 ^
+        --app-version 0.21 ^
         --main-jar build/libs/Jpo-all.jar ^
         --icon web/favicon.ico ^
         --java-options '--enable-preview' ^
@@ -62,7 +62,7 @@
 
 
     <hr>
-    <p>Last update to this page: 17 Dec 2021<br>
-        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 3 Mar 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

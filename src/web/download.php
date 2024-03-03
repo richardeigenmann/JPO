@@ -26,8 +26,14 @@
         analyse the lines of source code and compile your own version! Check out the linked code analysis tool reports to see
         how JPO is doing in terms of code quality, test coverage and other developer metrics.</p>
 
+    <h2>Tiny Font</h2>
+    <p>If you have a new laptop with a high resolution screen JPO might start up with a super tiny font.
+    You can fix this by opening c:\Program Files\JPO, right-clicking on JPO.exe, Picking the Properties item
+    on the menu, then picking the Compatibility tab, Clicking on the Change high DPI settings button,
+    Ticking the Override high DPI scaling behaviour, and picking System instead of Application.</p>
+
     <hr>
-    <p>Last update to this page: 25 April 2023<br>
-        Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 3 March 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include_once 'page-end.php'; ?>
