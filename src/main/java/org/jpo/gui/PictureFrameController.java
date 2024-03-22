@@ -128,6 +128,8 @@ public class PictureFrameController implements PictureInfoChangeListener {
             public void scalableStatusChange(final ScalablePicture.ScalablePictureStatus pictureStatusCode,
                                              final String pictureStatusMessage) {
                 final Runnable runnable = () -> {
+                    LOGGER.log(Level.INFO, "Got a scalableStatusChange callback. Code: {0}, Message; {1}", new Object[]{pictureStatusCode,pictureStatusMessage});
+                    Thread.dumpStack();
                     switch (pictureStatusCode) {
                         case SCALABLE_PICTURE_UNINITIALISED,
                                 SCALABLE_PICTURE_GARBAGE_COLLECTION,
@@ -136,11 +138,12 @@ public class PictureFrameController implements PictureInfoChangeListener {
                         case SCALABLE_PICTURE_ERROR -> {
                             LOGGER.log(Level.INFO, "Heard about a SCALABLE_PICTURE_ERROR - Calling showError");
                             pictureFrame.setProgressBarVisible(false);
-                            pictureFrame.showError();
+                            pictureFrame.showError(pictureStatusMessage);
                         }
                         case SCALABLE_PICTURE_LOADING -> pictureFrame.setProgressBarVisible(true);
                         case SCALABLE_PICTURE_READY -> {
                             pictureFrame.setProgressBarVisible(false);
+                            pictureFrame.hideError();
                             pictureFrame.getResizableJFrame().toFront();
                         }
                         default ->

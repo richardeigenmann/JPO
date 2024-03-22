@@ -198,7 +198,7 @@ public class ScalablePicture
             sourcePicture.removeListener( this );
         }
         LOGGER.log(Level.FINE, "About to load image: {0}", imageFile);
-        sourcePicture = new SourcePicture();
+        sourcePicture = new SourcePicture();  // TODO: Why create new objects here?
         scaleAfterLoad = false;
         sourcePicture.loadPicture(sha256, imageFile, rotation);
         LOGGER.log(Level.FINE, "Finished loading image: {0}", imageFile);
@@ -275,35 +275,41 @@ public class ScalablePicture
      * call this method when the affine transform op is to be executed.
      */
     public void scalePicture() {
-        LOGGER.fine( "scaling..." );
+        if  ( sourcePicture == null ) {
+            LOGGER.log(Level.SEVERE, "The sourcePicture is not initialised! Is this a coding error?");
+            setStatus(SCALABLE_PICTURE_ERROR, "No source picture connected to ScalaplePicture! Coding error?");
+            Thread.dumpStack();
+            return;
+        }
+
+        if ( sourcePicture.getSourceBufferedImage() == null ) {
+            LOGGER.log(Level.INFO, "Can't scale: The sourceBufferedImage is null.");
+            setStatus(SCALABLE_PICTURE_ERROR, "No source picture to scale.");
+            Thread.dumpStack();
+            return;
+        }
+
         try {
             setStatus( SCALABLE_PICTURE_SCALING, "Scaling picture." );
-
-            if ( ( sourcePicture != null ) && ( sourcePicture.getSourceBufferedImage() != null ) ) {
-                if ( scaleToSize ) {
-                    scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
-
-                    if ( Settings.isDontEnlargeSmallImages() && scaleFactor > 1 ) {
-                        scaleFactor = 1;
-                    }
+            if ( scaleToSize ) {
+                scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
+                if ( Settings.isDontEnlargeSmallImages() && scaleFactor > 1 ) {
+                    scaleFactor = 1;
                 }
-
-                scaledPicture = scaleIt(sourcePicture.getSourceBufferedImage());
-                setStatus(SCALABLE_PICTURE_READY, "Scaled Picture is ready.");
-            } else if (getStatusCode() != SCALABLE_PICTURE_LOADING) {
-                setStatus(SCALABLE_PICTURE_ERROR, "Could not scale image as SourceImage is null.");
             }
+            scaledPicture = getScaledImage(sourcePicture.getSourceBufferedImage(), scaleFactor);
+            setStatus(SCALABLE_PICTURE_READY, "Scaled Picture is ready.");
         } catch (final OutOfMemoryError e) {
-            LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while scaling an image.\n{0}", e.getMessage());
+            LOGGER.log(Level.SEVERE, "OutOfMemoryError while scaling image {0}", e.getMessage());
             setStatus(SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageFile.toString());
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
         }
     }
 
-    private BufferedImage scaleIt(final BufferedImage sourcePicture) {
+    private BufferedImage getScaledImage(final BufferedImage sourcePicture, final double scaleFactor) {
         BufferedImage resultImage = sourcePicture;
-        double factor = getFactor();
+        double factor = getFactor(scaleFactor);
         final AffineTransform afStep = AffineTransform.getScaleInstance(factor, factor);
         final AffineTransformOp opStep = new AffineTransformOp(afStep, getAffineTransformOp());
         for (int i = 0; i < getScaleSteps(); i++) {
@@ -344,7 +350,7 @@ public class ScalablePicture
         return fastScale ? AffineTransformOp.TYPE_NEAREST_NEIGHBOR : AffineTransformOp.TYPE_BICUBIC;
     }
 
-    private double getFactor() {
+    private double getFactor(final double scaleFactor) {
         return fastScale ? scaleFactor : Math.pow(scaleFactor, 1f / getScaleSteps());
     }
 
@@ -673,10 +679,10 @@ public class ScalablePicture
      */
     private void setStatus( final ScalablePictureStatus statusCode, String statusMessage ) {
         pictureStatusCode = statusCode;
-        pictureStatusMessage = statusMessage;
+        //pictureStatusMessage = statusMessage;
 
         synchronized ( scalablePictureStatusListeners ) {
-            scalablePictureStatusListeners.forEach(scalablePictureListener -> scalablePictureListener.scalableStatusChange(pictureStatusCode, pictureStatusMessage));
+            scalablePictureStatusListeners.forEach(scalablePictureListener -> scalablePictureListener.scalableStatusChange(statusCode, statusMessage));
         }
     }
 
@@ -704,10 +710,10 @@ public class ScalablePicture
      * Method that returns the status message of the picture loading.
      *
      * @return the status message
-     */
+     *
     public String getStatusMessage() {
         return pictureStatusMessage;
-    }
+    }*/
 
     /**
      * accessor method to set the quality that should be used on jpg write

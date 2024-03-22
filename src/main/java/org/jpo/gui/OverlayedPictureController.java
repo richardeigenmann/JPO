@@ -4,8 +4,6 @@ import org.jpo.datamodel.*;
 import org.jpo.gui.swing.PictureController;
 
 import java.awt.*;
-import java.io.File;
-import java.net.URISyntaxException;
 import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
@@ -165,7 +163,7 @@ public class OverlayedPictureController extends PictureController implements Sca
         exifInfo.decodeExifTags();
     }
 
-    public void showError() {
+    /*public void showError() {
             final var resourceURL = OverlayedPictureController.class.getClassLoader().getResource("cant_show_object.png");
             if (resourceURL == null) {
                 LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", "cant_show_object.png");
@@ -178,7 +176,7 @@ public class OverlayedPictureController extends PictureController implements Sca
             }
             centerImage();
             repaint();
-    }
+    }*/
 
     /**
      * Overriding the paint to add the drawing of the info panel
@@ -264,8 +262,7 @@ public class OverlayedPictureController extends PictureController implements Sca
 
         if (pictureStatusCode == SCALABLE_PICTURE_ERROR) {
             LOGGER.log(Level.SEVERE, "Caught a SCALABLE_PICTURE_ERROR: {0}", pictureStatusMessage);
-            showError();
-
+            //showError();
         }
 
         synchronized ( picturePaneListeners ) {

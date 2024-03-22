@@ -62,6 +62,13 @@ public class PictureFrame {
     private final JTextArea descriptionJTextField = new JTextArea();
 
     /**
+     * This textarea shows the description of the picture being shown
+     */
+    private final JTextArea errorTextField = new JTextArea("This is an Error message");
+    private final JScrollPane errorJScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+
+    /**
      * Constructor. Initialises the GUI widgets.
      */
     public PictureFrame() {
@@ -125,7 +132,9 @@ public class PictureFrame {
 
     @NotNull
     private JPanel getLowerBar() {
-        final var lowerBar = new JPanel(new MigLayout("insets 0, wrap 3", "[left][grow, fill][right]", "[]"));
+        // insets 0 means no gap around layout, wrap 4 means wrap after 4 columns
+        // the lower bar has loadJProgressBar (mostly hidden), descriptionJTextField, errorTextField and navButtonPanel
+        final var lowerBar = new JPanel(new MigLayout("insets 0, wrap 4", "[left][grow, fill][grow, fill][right]", "[]"));
         lowerBar.setBackground(Settings.getPictureviewerBackgroundColor());
         lowerBar.setOpaque(true);
         lowerBar.setFocusable(false);
@@ -144,7 +153,6 @@ public class PictureFrame {
 
         lowerBar.add(loadJProgressBar, "hidemode 2");
 
-        // The Description_Panel
         descriptionJTextField.setFont(Font.decode(Settings.getJpoResources().getString("PictureViewerDescriptionFont")));
         descriptionJTextField.setWrapStyleWord(true);
         descriptionJTextField.setLineWrap(true);
@@ -155,13 +163,30 @@ public class PictureFrame {
         descriptionJTextField.setOpaque(true);
         descriptionJTextField.setBorder(new EmptyBorder(2, 12, 0, 0));
         descriptionJTextField.setMinimumSize(new Dimension(80, 26));
-
         final var descriptionJScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         descriptionJScrollPane.setViewportView(descriptionJTextField);
         descriptionJScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
         descriptionJScrollPane.setBackground(Settings.getPictureviewerBackgroundColor());
         descriptionJScrollPane.setOpaque(true);
         lowerBar.add(descriptionJScrollPane);
+
+        errorTextField.setFont(Font.decode(Settings.getJpoResources().getString("PictureViewerDescriptionFont")));
+        errorTextField.setWrapStyleWord(true);
+        errorTextField.setLineWrap(true);
+        errorTextField.setEditable(false);
+        errorTextField.setForeground(Color.RED);
+        errorTextField.setBackground(Settings.getPictureviewerBackgroundColor());
+        errorTextField.setCaretColor(Settings.getPictureviewerTextColor());
+        errorTextField.setOpaque(true);
+        errorTextField.setBorder(new EmptyBorder(2, 12, 0, 0));
+        errorTextField.setMinimumSize(new Dimension(80, 26));
+        errorJScrollPane.setViewportView(errorTextField);
+        errorJScrollPane.setBorder(new EmptyBorder(0, 0, 0, 0));
+        errorJScrollPane.setBackground(Settings.getPictureviewerBackgroundColor());
+        errorJScrollPane.setOpaque(true);
+        lowerBar.add(errorJScrollPane);
+
+
 
         lowerBar.add(navButtonPanel);
         return lowerBar;
@@ -239,7 +264,12 @@ public class PictureFrame {
         pictureController.requestFocusInWindow();
     }
 
-    public void showError() {
-        pictureController.showError();
+    public void showError(final String errorMessage) {
+        errorTextField.setText(errorMessage);
+        errorJScrollPane.setVisible(true);
+    }
+
+    public void hideError() {
+        errorJScrollPane.setVisible(false);
     }
 }

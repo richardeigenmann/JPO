@@ -13,12 +13,10 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.ProgressGui;
-import org.jpo.datamodel.ScalablePicture;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -29,10 +27,8 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_ERROR;
-
 /*
- * Copyright (C) 2002-2023 Richard Eigenmann.
+ * Copyright (C) 2002-2024 Richard Eigenmann.
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
@@ -926,15 +922,9 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         scalablePicture.loadPictureImd(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getRotation());
 
         LOGGER.log(Level.INFO, "Done Loading: {0}", pictureInfo.getImageLocation());
-        if (scalablePicture.getStatusCode() == SCALABLE_PICTURE_ERROR) {
-            LOGGER.log(Level.SEVERE, "Problem reading image {0} using ThumbnailPicture instead", pictureInfo.getImageLocation());
-            File file;
-            try {
-                file = new File(Objects.requireNonNull(WebsiteGenerator.class.getClassLoader().getResource("org/jpo/images/broken_thumbnail.gif")).toURI());
-            } catch (final URISyntaxException e) {
-                throw new IOException("Could not load the broken_thumbnail.gif resource: " + e.getMessage());
-            }
-            scalablePicture.loadPictureImd(pictureInfo.getSha256(), file, 0f);
+        if (scalablePicture.getOriginalImage() == null) {
+            LOGGER.log(Level.SEVERE, "Problem reading image {0} using BrokenThumbnailImage instead", pictureInfo.getImageLocation());
+            BrokenThumbnailImage.getImage(scalablePicture);
         }
         return scalablePicture;
     }
