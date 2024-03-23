@@ -21,7 +21,7 @@ import java.util.Calendar;
 /**
  * A singleton to get the smallest date the Calendar object allows so that we can compare
  * null timestamps with real timestamps and make them come out as lower.
- *
+ * <p></p>
  * The code was written by Google Gemini and modified by Richard Eigenmann with some
  * input from the Sonar Linter.
  */

@@ -163,21 +163,6 @@ public class OverlayedPictureController extends PictureController implements Sca
         exifInfo.decodeExifTags();
     }
 
-    /*public void showError() {
-            final var resourceURL = OverlayedPictureController.class.getClassLoader().getResource("cant_show_object.png");
-            if (resourceURL == null) {
-                LOGGER.log(Level.SEVERE, "Classloader could not find the file: {}", "cant_show_object.png");
-            } else {
-                try {
-                    scalablePicture.loadAndScalePictureInThread("", new File(resourceURL.toURI()), Thread.MAX_PRIORITY, 0);
-                } catch (URISyntaxException e) {
-                    LOGGER.log(Level.SEVERE, "Could not load error image! URISyntaxException: {0}", e.getMessage());
-                }
-            }
-            centerImage();
-            repaint();
-    }*/
-
     /**
      * Overriding the paint to add the drawing of the info panel
      *
@@ -189,9 +174,9 @@ public class OverlayedPictureController extends PictureController implements Sca
         final Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(INFO_FONT_COLOR);
         switch (showInfo) {
-            case NO_OVERLAY:
-                break;
-            case PHOTOGRAPHIC_OVERLAY:
+            case NO_OVERLAY -> {
+            }
+            case PHOTOGRAPHIC_OVERLAY -> {
                 g2d.drawString(Settings.getJpoResources().getString("ExifInfoCamera"), infoCoordinates.x, infoCoordinates.y);
                 g2d.drawString(exifInfo.getCamera(), infoCoordinates.x + TABSTOP, infoCoordinates.y);
                 g2d.drawString(Settings.getJpoResources().getString("ExifInfoLens"), infoCoordinates.x, infoCoordinates.y + (LINE_SPACING));
@@ -206,8 +191,8 @@ public class OverlayedPictureController extends PictureController implements Sca
                 g2d.drawString(exifInfo.getIso(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (5 * LINE_SPACING));
                 g2d.drawString(Settings.getJpoResources().getString("ExifInfoTimeStamp"), infoCoordinates.x, infoCoordinates.y + (6 * LINE_SPACING));
                 g2d.drawString(exifInfo.getCreateDateTime(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (6 * LINE_SPACING));
-                break;
-            case APPLICATION_OVERLAY:
+            }
+            case APPLICATION_OVERLAY -> {
                 g2d.drawString(legend, infoCoordinates.x, infoCoordinates.y);
                 g2d.drawString(Settings.getJpoResources().getString("PicturePaneSize")
                         + scalablePicture.getOriginalWidth()
@@ -223,9 +208,9 @@ public class OverlayedPictureController extends PictureController implements Sca
                 g2d.drawString("File: " + scalablePicture.getFilename(), infoCoordinates.x, infoCoordinates.y + (2 * LINE_SPACING));
                 g2d.drawString(Settings.getJpoResources().getString("PicturePaneLoadTime") + TWO_DECIMAL_FORMATTER.format(scalablePicture.getSourcePicture().getLoadTime() / 1000F) + Settings.getJpoResources().getString("PicturePaneSeconds"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
                 g2d.drawString(Settings.getJpoResources().getString("PicturePaneFreeMemory") + Tools.freeMemory(), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
-                break;
-            default: // case NO_OVERLAY:
-                break;
+            }
+            default -> {
+            } // case NO_OVERLAY:
         }
 
     }
@@ -262,7 +247,7 @@ public class OverlayedPictureController extends PictureController implements Sca
 
         if (pictureStatusCode == SCALABLE_PICTURE_ERROR) {
             LOGGER.log(Level.SEVERE, "Caught a SCALABLE_PICTURE_ERROR: {0}", pictureStatusMessage);
-            //showError();
+            repaint();
         }
 
         synchronized ( picturePaneListeners ) {
@@ -302,15 +287,6 @@ public class OverlayedPictureController extends PictureController implements Sca
      */
     public void addStatusListener(final ScalablePictureListener listener) {
         picturePaneListeners.add(listener);
-    }
-
-    /**
-     * de-register the listening object of the status events
-     *
-     * @param listener the listener to remove
-     */
-    public void removeStatusListener(final ScalablePictureListener listener) {
-        picturePaneListeners.remove(listener);
     }
 
     /**

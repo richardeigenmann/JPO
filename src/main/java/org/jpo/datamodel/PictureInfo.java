@@ -204,12 +204,12 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         out.write("\t<description><![CDATA[" + getDescription() + "]]></description>");
         out.newLine();
 
-        if ((getCreationTime() != null) && (getCreationTime().length() > 0)) {
+        if ((getCreationTime() != null) && (!getCreationTime().isEmpty())) {
             out.write("\t<CREATION_TIME><![CDATA[" + getCreationTime() + "]]></CREATION_TIME>");
             out.newLine();
         }
 
-        if (getImageFile().toURI().toString().length() > 0) {
+        if (! getImageFile().toURI().toString().isEmpty()) {
             final var file = getImageFile();
             final var relativeImageFile = getRelativePath(file, baseDir);
             out.write("\t<file>" + StringEscapeUtils.escapeXml11(relativeImageFile.toString()) + "</file>");
@@ -221,22 +221,22 @@ public class PictureInfo implements Serializable, GroupOrPicture {
             out.newLine();
         }
 
-        if (getComment().length() > 0) {
+        if (! getComment().isEmpty()) {
             out.write("\t<COMMENT>" + StringEscapeUtils.escapeXml11(getComment()) + "</COMMENT>");
             out.newLine();
         }
 
-        if (getPhotographer().length() > 0) {
+        if (! getPhotographer().isEmpty()) {
             out.write("\t<PHOTOGRAPHER>" + StringEscapeUtils.escapeXml11(getPhotographer()) + "</PHOTOGRAPHER>");
             out.newLine();
         }
 
-        if (getFilmReference().length() > 0) {
+        if (! getFilmReference().isEmpty()) {
             out.write("\t<film_reference>" + StringEscapeUtils.escapeXml11(getFilmReference()) + "</film_reference>");
             out.newLine();
         }
 
-        if (getCopyrightHolder().length() > 0) {
+        if (! getCopyrightHolder().isEmpty()) {
             out.write("\t<COPYRIGHT_HOLDER>" + StringEscapeUtils.escapeXml11(getCopyrightHolder()) + "</COPYRIGHT_HOLDER>");
             out.newLine();
         }
@@ -296,7 +296,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param s The text fragment to append.
      */
     public synchronized void appendToDescription(final String s) {
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             description = description.concat(s);
             sendDescriptionChangedEvent();
         }
@@ -389,7 +389,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param s The text fragment to be added to the image Location
      */
     public synchronized void appendToImageLocation(final String s) {
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             myImageLocation = myImageLocation.concat(s);
             try {
                 imageFile = new File(new URI(myImageLocation));
@@ -410,7 +410,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param s The text fragment to be added to the image Location
      */
     public synchronized void appendToImageFile(final String s, final Path baseDir) {
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             myImageFile = myImageFile.concat(s);
             imageFile = new File(baseDir.toFile(), myImageFile);
             sendImageLocationChangedEvent();
@@ -516,7 +516,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param s Text fragment
      */
     public synchronized void appendToSha256(final String s) {
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             sha256 = sha256.concat(s);
             sendSha256ChangedEvent();
         }
@@ -531,7 +531,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param s Fragment to append to Film Reference
      */
     public synchronized void appendToFilmReference(final String s) {
-        if (s.length() > 0) {
+        if (!s.isEmpty()) {
             filmReference = filmReference.concat(s);
             sendFilmReferenceChangedEvent();
         }
@@ -584,7 +584,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param textFragment The text fragment to add.
      */
     public synchronized void appendToCreationTime(final String textFragment) {
-        if (textFragment.length() > 0) {
+        if (!textFragment.isEmpty()) {
             creationTime = creationTime.concat(textFragment);
             sendCreationTimeChangedEvent();
         }
@@ -662,7 +662,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param textFragment the text fragment
      */
     public synchronized void appendToComment(final String textFragment) {
-        if (textFragment.length() > 0) {
+        if (!textFragment.isEmpty()) {
             comment = comment.concat(textFragment);
             sendCommentChangedEvent();
         }
@@ -715,7 +715,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param textFragment The photographer.
      */
     public synchronized void appendToPhotographer(final String textFragment) {
-        if (textFragment.length() > 0) {
+        if (!textFragment.isEmpty()) {
             photographer = photographer.concat(textFragment);
             sendPhotographerChangedEvent();
         }
@@ -770,7 +770,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param textFragment The text fragment.
      */
     public synchronized void appendToCopyrightHolder(final String textFragment) {
-        if (textFragment.length() > 0) {
+        if (!textFragment.isEmpty()) {
             copyrightHolder = copyrightHolder.concat(textFragment);
             sendCopyrightHolderChangedEvent();
         }
@@ -824,7 +824,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param textFragment Text fragment
      */
     public synchronized void appendToRotation(final String textFragment) {
-        if (textFragment.length() > 0) {
+        if (!textFragment.isEmpty()) {
             rotationString = rotationString.concat(textFragment);
         }
     }
@@ -911,7 +911,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param textFragment The text fragment.
      */
     public synchronized void appendToLatLng(final String textFragment) {
-        if (textFragment.length() > 0) {
+        if (!textFragment.isEmpty()) {
             latLngString = latLngString.concat(textFragment);
         }
     }
@@ -1023,7 +1023,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param string Text fragment
      */
     public synchronized void appendToCategoryAssignment(final String string) {
-        if (string.length() > 0) {
+        if (!string.isEmpty()) {
             categoryAssignmentString = categoryAssignmentString.concat(string);
         }
     }
@@ -1034,7 +1034,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param string Text fragment
      */
     public synchronized void addCategoryAssignment(final String string) {
-        if (string.length() > 0) {
+        if (!string.isEmpty()) {
             categoryAssignmentString = string;
             parseCategoryAssignment();
         }

@@ -82,7 +82,7 @@ public class ThumbnailTester {
         final File[] files = {imageFileJpg};
         JpoEventBus.getInstance().post(
                 new PictureAdderRequest(rootNode,
-                files, false, false, false,  new ArrayList<Integer>()));
+                files, false, false, false, new ArrayList<>()));
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -113,7 +113,6 @@ public class ThumbnailTester {
 
         final var showJpgPictureButton = new JButton("Jpg image");
         showJpgPictureButton.addActionListener((ActionEvent e) -> {
-
             ((PictureInfo) pictureNode.getUserObject()).setImageLocation(imageFileJpg);
         });
         buttonPanel.add(showJpgPictureButton, "wrap");

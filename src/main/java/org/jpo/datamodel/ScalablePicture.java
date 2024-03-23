@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.*;
 
 /*
- Copyright (C) 2002 - 2024 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -59,7 +59,7 @@ public class ScalablePicture
     /**
      * the source picture for the scalable picture
      */
-    private SourcePicture sourcePicture;
+    private final SourcePicture sourcePicture = new SourcePicture();
 
     /**
      * The scaled version of the image
@@ -75,11 +75,6 @@ public class ScalablePicture
      * the File of the picture
      */
     private File imageFile;
-
-    /**
-     * variable to compose the status message
-     */
-    private String pictureStatusMessage;
 
     /**
      * if true means that the image should be scaled so that it fits inside a
@@ -160,6 +155,7 @@ public class ScalablePicture
     public ScalablePicture() {
         setStatus(SCALABLE_PICTURE_UNINITIALISED, Settings.getJpoResources().getString("ScalablePictureUninitialisedStatus"));
         setScaleFactor(1);
+        sourcePicture.addListener(this);
     }
 
     /**
@@ -177,11 +173,7 @@ public class ScalablePicture
      */
     public void loadAndScalePictureInThread( final String sha256, final File file, final int priority, final double rotation ) {
         this.imageFile = file;
-        if ( sourcePicture != null ) {
-            sourcePicture.removeListener( this );
-        }
-        sourcePicture = new SourcePicture();
-        sourcePicture.addListener(this);
+
         setStatus(SCALABLE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
         scaleAfterLoad = true;
         sourcePicture.loadPictureInThread( sha256, file, priority, rotation );
@@ -194,11 +186,7 @@ public class ScalablePicture
      * @param rotation  The angle by which it is to be rotated upon loading.
      */
     public void loadPictureImd( final String sha256, final File imageFile, final double rotation ) {
-        if ( sourcePicture != null ) {
-            sourcePicture.removeListener( this );
-        }
         LOGGER.log(Level.FINE, "About to load image: {0}", imageFile);
-        sourcePicture = new SourcePicture();  // TODO: Why create new objects here?
         scaleAfterLoad = false;
         sourcePicture.loadPicture(sha256, imageFile, rotation);
         LOGGER.log(Level.FINE, "Finished loading image: {0}", imageFile);
@@ -210,12 +198,7 @@ public class ScalablePicture
      * @param file	The URL of the image which is to be loaded.
      */
     public void stopLoadingExcept( final File file ) {
-        if ( sourcePicture != null ) {
-            boolean isCurrentlyLoading = sourcePicture.stopLoadingExcept( file );
-            if ( !isCurrentlyLoading ) {
-                sourcePicture.removeListener( this );
-            }
-        }
+        sourcePicture.stopLoadingExcept( file );
     }
 
     /**
@@ -237,12 +220,11 @@ public class ScalablePicture
             case SOURCE_PICTURE_ERROR -> {
                 LOGGER.log(Level.SEVERE, "Caught a SOURCE_PICTURE_ERROR: {0}", statusMessage);
                 setStatus(SCALABLE_PICTURE_ERROR, statusMessage);
-                sourcePicture.removeListener(this);
+                scaledPicture = null;
             }
             case SOURCE_PICTURE_LOADING, SOURCE_PICTURE_ROTATING -> setStatus(SCALABLE_PICTURE_LOADING, statusMessage);
             case SOURCE_PICTURE_READY -> {
                 setStatus(SCALABLE_PICTURE_LOADED, statusMessage);
-                sourcePicture.removeListener(this);
                 if (scaleAfterLoad) {
                     createScaledPictureInThread(Thread.MAX_PRIORITY);
                     scaleAfterLoad = false;
@@ -275,17 +257,9 @@ public class ScalablePicture
      * call this method when the affine transform op is to be executed.
      */
     public void scalePicture() {
-        if  ( sourcePicture == null ) {
-            LOGGER.log(Level.SEVERE, "The sourcePicture is not initialised! Is this a coding error?");
-            setStatus(SCALABLE_PICTURE_ERROR, "No source picture connected to ScalaplePicture! Coding error?");
-            Thread.dumpStack();
-            return;
-        }
-
         if ( sourcePicture.getSourceBufferedImage() == null ) {
-            LOGGER.log(Level.INFO, "Can't scale: The sourceBufferedImage is null.");
+            LOGGER.log(Level.INFO, "Can npt scale: The sourceBufferedImage is null.");
             setStatus(SCALABLE_PICTURE_ERROR, "No source picture to scale.");
-            Thread.dumpStack();
             return;
         }
 
@@ -344,7 +318,7 @@ public class ScalablePicture
                  and we end up with a non JFIF compliant JPEG image. This doesn't display well
                  in most programs which makes this format useless. This is thoroughly explained
                  in the following article. The workaround doesn't work though.
-                 http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4503132
+                 https://bugs.java.com/bugdatabase/view_bug?bug_id=4503132
                  RE, 7.9.2005  */
 
         return fastScale ? AffineTransformOp.TYPE_NEAREST_NEIGHBOR : AffineTransformOp.TYPE_BICUBIC;
@@ -679,8 +653,6 @@ public class ScalablePicture
      */
     private void setStatus( final ScalablePictureStatus statusCode, String statusMessage ) {
         pictureStatusCode = statusCode;
-        //pictureStatusMessage = statusMessage;
-
         synchronized ( scalablePictureStatusListeners ) {
             scalablePictureStatusListeners.forEach(scalablePictureListener -> scalablePictureListener.scalableStatusChange(statusCode, statusMessage));
         }
@@ -705,15 +677,6 @@ public class ScalablePicture
     public ScalablePictureStatus getStatusCode() {
         return pictureStatusCode;
     }
-
-    /**
-     * Method that returns the status message of the picture loading.
-     *
-     * @return the status message
-     *
-    public String getStatusMessage() {
-        return pictureStatusMessage;
-    }*/
 
     /**
      * accessor method to set the quality that should be used on jpg write

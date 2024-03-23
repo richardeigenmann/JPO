@@ -15,10 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -229,12 +227,8 @@ public class CategoryAssignmentWindow {
         }
 
         for (final var tristateCheckBox : transposedList) {
-            if (tristateCheckBox != null) {
-                categoriesPanel.add(tristateCheckBox);
-            } else {
-                // need to add a non-showing component to keep the alignment
-                categoriesPanel.add(new JPanel());
-            }
+            // need to add a non-showing component to keep the alignment
+            categoriesPanel.add(Objects.requireNonNullElseGet(tristateCheckBox, JPanel::new));
         }
     }
 

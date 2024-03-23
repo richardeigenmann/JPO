@@ -199,9 +199,10 @@ public class DirectoryChooser
      */
     private static boolean checkDirectory(final File testDir, final int validationType) {
         switch (validationType) {
-            case DIR_MUST_EXIST:
+            case DIR_MUST_EXIST -> {
                 return testDir.exists() && testDir.isDirectory();
-            case DIR_MUST_BE_WRITABLE:
+            }
+            case DIR_MUST_BE_WRITABLE -> {
                 if (testDir.exists()) {
                     return testDir.canWrite() && testDir.isDirectory();
                 } else {
@@ -212,8 +213,10 @@ public class DirectoryChooser
                         return false;
                     }
                 }
-            default:
+            }
+            default -> {
                 return false;
+            }
         }
     }
     

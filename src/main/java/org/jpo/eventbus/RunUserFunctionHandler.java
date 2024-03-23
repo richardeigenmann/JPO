@@ -69,7 +69,7 @@ public class RunUserFunctionHandler {
             return;
         }
         String command = Settings.getUserFunctionCmd()[userFunction];
-        if ((command == null) || (command.length() == 0)) {
+        if ((command == null) || (command.isEmpty())) {
             LOGGER.log(Level.INFO, "Command {0} is not properly defined", Integer.toString(userFunction));
             return;
         }

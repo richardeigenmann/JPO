@@ -107,7 +107,7 @@ public class CollectionJTreeController {
 
 
     /**
-     * A helper method that returns us the selected node on the tree if we have a selection and it is
+     * A helper method that returns us the selected node on the tree if we have a selection, and it is
      * pointing to a GroupInfo or a PictureInfo object.
      * @param component The component that we want to check
      * @return the node if we have one.

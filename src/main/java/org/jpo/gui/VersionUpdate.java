@@ -104,7 +104,7 @@ public class VersionUpdate {
      * @return true if we may check for updates, false if not
      */
     public static boolean mayCheckForUpdates() {
-        return !Settings.isIgnoreVersionAlerts() && LocalDateTime.now().isAfter(Settings.getSnoozeVersionAlertsExpiryDateTime());
+        return Settings.isIgnoreVersionAlerts() && LocalDateTime.now().isAfter(Settings.getSnoozeVersionAlertsExpiryDateTime());
     }
 
     private void showOutOfDateDialog(final String latestVersion) {

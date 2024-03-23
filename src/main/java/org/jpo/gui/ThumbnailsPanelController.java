@@ -346,7 +346,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
             titleJPanel.getSearchField().requestFocus();
             titleJPanel.getSearchField().selectAll();
         } else {
-            if (titleJPanel.getSearchField().getText().length() > 0) {
+            if (!titleJPanel.getSearchField().getText().isEmpty()) {
                 doSearch(titleJPanel.getSearchField().getText());
             } else {
                 titleJPanel.getSearchField().setVisible(false);

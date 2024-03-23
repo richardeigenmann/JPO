@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static org.jpo.datamodel.Tools.copyBufferedStream;
 
 /*
- Copyright (C) 2003 - 2024 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003-2024 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -585,23 +585,27 @@ public class SortableDefaultMutableTreeNode
     @Override
     public void setUserObject(final Object userObject) {
         removeOldListener(getUserObject());
-        if (userObject instanceof String s) {
-            // this gets called when the JTree is being edited with F2 keystroke
-            final Object obj = getUserObject();
-            if (obj instanceof GroupInfo groupInfo) {
-                groupInfo.setGroupName(s);
-            } else if (obj instanceof PictureInfo pictureInfo) {
-                pictureInfo.setDescription(s);
+        switch (userObject) {
+            case String s -> {
+                // this gets called when the JTree is being edited with F2 keystroke
+                final Object obj = getUserObject();
+                if (obj instanceof GroupInfo groupInfo) {
+                    groupInfo.setGroupName(s);
+                } else if (obj instanceof PictureInfo pictureInfo) {
+                    pictureInfo.setDescription(s);
+                }
             }
-        } else if (userObject instanceof PictureInfo pictureInfo) {
-            pictureInfo.addPictureInfoChangeListener(this);
-            super.setUserObject(userObject);
-        } else if (userObject instanceof GroupInfo groupInfo) {
-            groupInfo.addGroupInfoChangeListener(this);
-            super.setUserObject(userObject);
-        } else {
-            // fall back on the default behaviour
-            super.setUserObject(userObject);
+            case PictureInfo pictureInfo -> {
+                pictureInfo.addPictureInfoChangeListener(this);
+                super.setUserObject(userObject);
+            }
+            case GroupInfo groupInfo -> {
+                groupInfo.addGroupInfoChangeListener(this);
+                super.setUserObject(userObject);
+            }
+            case null, default ->
+                // fall back on the default behaviour
+                    super.setUserObject(userObject);
         }
         if (getPictureCollection() != null && getPictureCollection().getSendModelUpdates()) {
             getPictureCollection().sendNodeChanged(this);

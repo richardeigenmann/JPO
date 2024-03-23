@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /*
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -139,9 +139,6 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
      */
     @Override
     public boolean equals(final Object obj) {
-        /*if (obj instanceof ThumbnailQueueRequest thumbnailQueueRequest) {
-            return priority.equals(thumbnailQueueRequest.priority);
-        }*/
         return super.equals(obj);
     }
 
@@ -194,7 +191,7 @@ public class ThumbnailQueueRequest implements Comparable<ThumbnailQueueRequest> 
     }
 
     /**
-     * https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused
+     * <a href="https://www.securecoding.cert.org/confluence/display/java/LCK01-J.+Do+not+synchronize+on+objects+that+may+be+reused">...</a>
      */
     private final Object lock = new Object();
 

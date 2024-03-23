@@ -70,7 +70,7 @@ public class ApplicationStartupHandler {
 
         JpoEventBus.getInstance().post(new StartThumbnailCreationDaemonWatchDogRequest());
 
-        if ((Settings.getAutoLoad() != null) && (Settings.getAutoLoad().length() > 0)) {
+        if ((Settings.getAutoLoad() != null) && (! Settings.getAutoLoad().isEmpty())) {
             final var xmlFile = new File(Settings.getAutoLoad());
             JpoEventBus.getInstance().post(new FileLoadRequest(xmlFile));
         } else {

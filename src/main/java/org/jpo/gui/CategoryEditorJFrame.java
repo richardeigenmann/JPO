@@ -196,7 +196,7 @@ public class CategoryEditorJFrame
         addCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
         addCategoryJButton.addActionListener((ActionEvent evt) -> {
             final var category = categoryJTextField.getText();
-            if (category.length() > 0) {
+            if (! category.isEmpty()) {
                 final Integer key = pictureCollection.addCategory(category);
                 final Category categoryObject = new Category(key, category);
                 categoriesListModel.addElement(categoryObject);

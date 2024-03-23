@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2014-2023 Richard Eigenmann.
+ Copyright (C) 2014-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -150,7 +150,7 @@ public class JpoCache {
     }
 
     /**
-     * Returns the highres image bytes from the cache or disk
+     * Returns the highres image bytes from the cache or from the disk file on a cache miss.
      *
      * @param file The file of the image
      * @return and ImageBytes object

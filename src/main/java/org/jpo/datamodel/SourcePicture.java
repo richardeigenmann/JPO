@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,7 @@ import static org.jpo.datamodel.SourcePicture.SourcePictureStatus.*;
 
 
 /*
- Copyright (C) 2002 - 2024 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -118,7 +119,7 @@ public class SourcePicture {
     /**
      * Indicator to tell us if the loading was aborted.
      */
-    private boolean abortFlag;  // default is false
+    private final AtomicBoolean abortFlag = new AtomicBoolean(false);
 
     /**
      * Rotation 0-360 that the image is subjected to after loading
@@ -138,6 +139,7 @@ public class SourcePicture {
      * @param rotation Image rotation
      */
     public void loadPicture(final String sha256, final File file, final double rotation) {
+        // TODO: Don't we need synchronisation here?
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(file);
         }
@@ -157,6 +159,7 @@ public class SourcePicture {
      * @param rotation  The rotation 0-360 to be used on this picture
      */
     public void loadPictureInThread(final String sha256, final File imageFile, final int priority, final double rotation) {
+        // TODO: Don't we need synchronisation here?
         if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(imageFile);
         }
@@ -180,6 +183,7 @@ public class SourcePicture {
      * failed.
      */
     private void loadPicture() {
+        this.abortFlag.set(false);
         setStatus(SOURCE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
         final var start = System.currentTimeMillis();
         loadTime = 0;
@@ -195,7 +199,7 @@ public class SourcePicture {
             return;
         }
 
-        if (imageBytes == null) {
+        if (imageBytes.getBytes().length == 0) {
             LOGGER.log(Level.SEVERE, "There is no image! {0}", imageFile);
             setStatus(SOURCE_PICTURE_ERROR, "Unable to load image.");
             return;
@@ -209,19 +213,13 @@ public class SourcePicture {
             return;
         }
 
-        if (!abortFlag) {
-            if (rotation != 0) {
-                rotateImage();
-            }
-
-            setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageFile.toString());
-            long end = System.currentTimeMillis();
-            loadTime = end - start;
-        } else {
-            loadTime = 0;
-            setStatus(SOURCE_PICTURE_ERROR, "Aborted!");
-            sourcePictureBufferedImage = null;
+        if (rotation != 0) {
+            rotateImage();
         }
+
+        setStatus(SOURCE_PICTURE_READY, "Loaded: " + imageFile.toString());
+        long end = System.currentTimeMillis();
+        loadTime = end - start;
     }
 
     private void rotateImage() {
@@ -320,7 +318,7 @@ public class SourcePicture {
      * this method can be invoked to flag the current reader to stop at a convenient moment
      */
     public void stopLoading() {
-        abortFlag = true;
+        abortFlag.set(true);
     }
 
     /**
@@ -515,7 +513,7 @@ public class SourcePicture {
 
         @Override
         public void imageProgress(final ImageReader source, final float percentageDone) {
-            if (abortFlag) {
+            if (abortFlag.get()) {
                 source.abort();
             }
             notifySourceLoadProgressListeners(SOURCE_PICTURE_LOADING_PROGRESS, (Float.valueOf(percentageDone)).intValue());
@@ -548,7 +546,7 @@ public class SourcePicture {
 
         @Override
         public void thumbnailProgress(final ImageReader source, final float percentageDone) {
-            if (abortFlag) {
+            if (abortFlag.get()) {
                 source.abort();
             }
         }

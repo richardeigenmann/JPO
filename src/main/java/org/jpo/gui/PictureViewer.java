@@ -44,7 +44,6 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_P
  * <p> The user can zoom in on a picture coordinate by clicking the left mouse
  * button. The middle button scales the picture so that it fits in the available
  * space and centers it there. The right mouse button zooms out.</p>
- * <
  *
  * <img src="PictureViewer.png" alt="Picture Viewer">
  */

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -163,8 +163,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE);
          try {
              final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(233, sourcePicture.getHeight());
              assertEquals(350, sourcePicture.getWidth());
@@ -181,8 +181,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = this.getClass().getClassLoader().getResource(BMP_IMAGE_FILE);
          try {
              final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -199,8 +199,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final URL imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TIFF_IMAGE_FILE));
          try {
              final File imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             s.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             s.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(s.getSourceBufferedImage());
              assertEquals(100, s.getHeight());
              assertEquals(200, s.getWidth());
@@ -217,8 +217,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(HDR_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(768, sourcePicture.getHeight());
              assertEquals(512, sourcePicture.getWidth());
@@ -235,8 +235,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(SVG_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              // Size is not stable. Sometimes we get 400, Sometimes 900
              Logger.getLogger(this.getClass().getName()).log(Level.INFO, "Height of {0} is {1}", new Object[]{SVG_IMAGE_FILE, sourcePicture.getHeight()});
@@ -255,8 +255,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PNM_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -273,8 +273,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = this.getClass().getClassLoader().getResource(SGI_IMAGE_FILE);
          try {
              final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -291,8 +291,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(TGA_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -308,8 +308,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PSD_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -327,8 +327,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = this.getClass().getClassLoader().getResource(ICO_IMAGE_FILE);
          try {
              final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(64, sourcePicture.getHeight());
              assertEquals(64, sourcePicture.getWidth());
@@ -346,8 +346,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PNG_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -364,8 +364,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(GIF_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -381,8 +381,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(IFF_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(150, sourcePicture.getHeight());
              assertEquals(200, sourcePicture.getWidth());
@@ -399,8 +399,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = this.getClass().getClassLoader().getResource(PCX_IMAGE_FILE);
          try {
              final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(100, sourcePicture.getHeight());
              assertEquals(150, sourcePicture.getWidth());
@@ -417,8 +417,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PICT_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(194, sourcePicture.getHeight());
              assertEquals(146, sourcePicture.getWidth());
@@ -434,8 +434,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(CLIP_PATH_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(1800, sourcePicture.getHeight());
              assertEquals(857, sourcePicture.getWidth());
@@ -452,8 +452,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = SourcePictureTest.class.getClassLoader().getResource(ICNS_IMAGE_FILE);
          try {
              final var imageFile = new File(Objects.requireNonNull(imageUrl).toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(16, sourcePicture.getHeight());
              assertEquals(16, sourcePicture.getWidth());
@@ -469,8 +469,8 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
          final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(THUMBS_DB_IMAGE_FILE));
          try {
              final var imageFile = new File(imageUrl.toURI());
-             final var hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
-             sourcePicture.loadPicture(hash.toString(), imageFile, 0.0);
+             final var imageFileSha256Hash = com.google.common.io.Files.asByteSource(imageFile).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash.toString(), imageFile, 0.0);
              assertNotNull(sourcePicture.getSourceBufferedImage());
              assertEquals(96, sourcePicture.getHeight());
              assertEquals(96, sourcePicture.getWidth());
@@ -478,5 +478,59 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
              fail(e.getMessage());
          }
      }
+
+     @Test
+     void testSequentialLoad() {
+         final var sourcePicture = new SourcePicture();
+         final var JPG_IMAGE_FILE_1 = "exif-test-nikon-d100-1.jpg";
+         final var JPG_IMAGE_FILE_2 = "exif-test-canon-eos-350d.jpg";
+         final var imageUrl_1 = this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE_1);
+         final var imageUrl_2 = this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE_2);
+         try {
+             final var imageFile_1 = new File(Objects.requireNonNull(imageUrl_1).toURI());
+             final var imageFileSha256Hash_1 = com.google.common.io.Files.asByteSource(imageFile_1).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash_1.toString(), imageFile_1, 0.0);
+             assertNotNull(sourcePicture.getSourceBufferedImage());
+             assertEquals(350, sourcePicture.getWidth());
+             assertEquals(233, sourcePicture.getHeight());
+
+             final var imageFile_2 = new File(Objects.requireNonNull(imageUrl_2).toURI());
+             final var imageFileSha256Hash_2 = com.google.common.io.Files.asByteSource(imageFile_2).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash_2.toString(), imageFile_2, 0.0);
+             assertNotNull(sourcePicture.getSourceBufferedImage());
+             assertEquals(2496, sourcePicture.getWidth());
+             assertEquals(1664, sourcePicture.getHeight());
+         } catch (final URISyntaxException | IOException e) {
+             fail(e.getMessage());
+         }
+     }
+
+     @Test
+     void testSequentialLoadWithAbort() {
+         final var sourcePicture = new SourcePicture();
+         final var JPG_IMAGE_FILE_1 = "exif-test-nikon-d100-1.jpg";
+         final var JPG_IMAGE_FILE_2 = "exif-test-canon-eos-350d.jpg";
+         final var imageUrl_1 = this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE_1);
+         final var imageUrl_2 = this.getClass().getClassLoader().getResource(JPG_IMAGE_FILE_2);
+         try {
+             final var imageFile_1 = new File(Objects.requireNonNull(imageUrl_1).toURI());
+             final var imageFileSha256Hash_1 = com.google.common.io.Files.asByteSource(imageFile_1).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash_1.toString(), imageFile_1, 0.0);
+             assertNotNull(sourcePicture.getSourceBufferedImage());
+             assertEquals(350, sourcePicture.getWidth());
+             assertEquals(233, sourcePicture.getHeight());
+             sourcePicture.stopLoading();
+
+             final var imageFile_2 = new File(Objects.requireNonNull(imageUrl_2).toURI());
+             final var imageFileSha256Hash_2 = com.google.common.io.Files.asByteSource(imageFile_2).hash(Hashing.sha256());
+             sourcePicture.loadPicture(imageFileSha256Hash_2.toString(), imageFile_2, 0.0);
+             assertNotNull(sourcePicture.getSourceBufferedImage());
+             assertEquals(2496, sourcePicture.getWidth());
+             assertEquals(1664, sourcePicture.getHeight());
+         } catch (final URISyntaxException | IOException e) {
+             fail(e.getMessage());
+         }
+     }
+
 
 }

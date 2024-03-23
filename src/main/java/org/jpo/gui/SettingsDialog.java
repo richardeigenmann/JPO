@@ -276,7 +276,7 @@ public class SettingsDialog extends JDialog {
         generalJPanel.add(checkForUpdatesJLabel);
 
         final var checkForUpdatesOnStartupJCheckBox = new JCheckBox("");
-        checkForUpdatesOnStartupJCheckBox.setSelected(!Settings.isIgnoreVersionAlerts());
+        checkForUpdatesOnStartupJCheckBox.setSelected(Settings.isIgnoreVersionAlerts());
         checkForUpdatesOnStartupJCheckBox.addItemListener(itemEvent -> Settings.setIgnoreVersionAlerts(itemEvent.getStateChange() == DESELECTED));
         generalJPanel.add(checkForUpdatesOnStartupJCheckBox, "wrap");
 

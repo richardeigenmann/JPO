@@ -1995,13 +1995,12 @@ public class Settings {
 
         int i;
         n = 0;
-        for (i = 0; i < Settings.MAX_USER_FUNCTIONS; i++) {
-            if ((userFunctionNames[i] != null) && (userFunctionNames[i].length() > 0) && (userFunctionCmd[i] != null) && (userFunctionCmd[i].length() > 0)) {
+        for (i = 0; i < Settings.MAX_USER_FUNCTIONS; i++)
+            if (userFunctionNames[i] != null && (!userFunctionNames[i].isEmpty()) && (userFunctionCmd[i] != null) && (userFunctionCmd[i].length() > 0)) {
                 prefs.put("userFunctionName-" + n, userFunctionNames[i]);
                 prefs.put("userFunctionCmd-" + n, userFunctionCmd[i]);
                 n++;
             }
-        }
         prefs.putBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
         prefs.putInt("thumbnailCounter", thumbnailCounter);
         prefs.putBoolean("writeLog", writeLog);
@@ -2347,7 +2346,7 @@ public class Settings {
      * home directory
      */
     public static File getDefaultSourceLocation() {
-        if (defaultSourceLocation.length() > 0) {
+        if (!defaultSourceLocation.isEmpty()) {
             final var sourceLocationFile = new File(defaultSourceLocation);
             if (sourceLocationFile.exists()) {
                 return sourceLocationFile;
@@ -2394,7 +2393,7 @@ public class Settings {
      * @return true if version alerts are supposed to be suppressed
      */
     public static boolean isIgnoreVersionAlerts() {
-        return ignoreVersionAlerts;
+        return !ignoreVersionAlerts;
     }
 
     /**

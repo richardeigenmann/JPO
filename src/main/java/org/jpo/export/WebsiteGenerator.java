@@ -932,20 +932,20 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
     @NotNull
     private StringBuilder startDhtmlArray(final int childNumber, final int childCount, final PictureInfo pictureInfo, final String htmlFriendlyDescription) {
         final var dhtmlArray = new StringBuilder(String.format("content[0]='" + "<p><strong>Picture</strong> %d of %d:</p><p><b>Description:</b><br>%s</p>", childNumber, childCount, htmlFriendlyDescription));
-        if (pictureInfo.getCreationTime().length() > 0) {
+        if (!pictureInfo.getCreationTime().isEmpty()) {
             dhtmlArray.append("<p><strong>Date:</strong><br>").append(pictureInfo.getCreationTime().replace("'", "\\\\'")).append("</p>");
         }
 
-        if (pictureInfo.getPhotographer().length() > 0) {
+        if (!pictureInfo.getPhotographer().isEmpty()) {
             dhtmlArray.append("<strong>Photographer:</strong><br>").append(pictureInfo.getPhotographer().replace("'", "\\\\'")).append("<br>");
         }
-        if (pictureInfo.getComment().length() > 0) {
+        if (!pictureInfo.getComment().isEmpty()) {
             dhtmlArray.append("<b>Comment:</b><br>").append(pictureInfo.getComment().replace("'", "\\\\'")).append("<br>");
         }
-        if (pictureInfo.getFilmReference().length() > 0) {
+        if (!pictureInfo.getFilmReference().isEmpty()) {
             dhtmlArray.append("<strong>Film Reference:</strong><br>").append(pictureInfo.getFilmReference().replace("'", "\\\\'")).append("<br>");
         }
-        if (pictureInfo.getCopyrightHolder().length() > 0) {
+        if (!pictureInfo.getCopyrightHolder().isEmpty()) {
             dhtmlArray.append("<strong>Copyright Holder:</strong><br>").append(pictureInfo.getCopyrightHolder().replace("'", "\\\\'")).append("<br>");
         }
 

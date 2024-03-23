@@ -29,6 +29,18 @@ application {
     //mainClass = 'org.jpo.testground.TransposeTester'
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += "--enable-preview"
+}
+
+tasks.withType(Test) {
+    jvmArgs += "--enable-preview"
+}
+
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
+}
+
 dependencies {
     implementation 'com.miglayout:miglayout-swing:11.3'
     implementation 'com.miglayout:miglayout-core:11.3'

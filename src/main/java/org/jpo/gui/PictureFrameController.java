@@ -129,7 +129,6 @@ public class PictureFrameController implements PictureInfoChangeListener {
                                              final String pictureStatusMessage) {
                 final Runnable runnable = () -> {
                     LOGGER.log(Level.INFO, "Got a scalableStatusChange callback. Code: {0}, Message; {1}", new Object[]{pictureStatusCode,pictureStatusMessage});
-                    Thread.dumpStack();
                     switch (pictureStatusCode) {
                         case SCALABLE_PICTURE_UNINITIALISED,
                                 SCALABLE_PICTURE_GARBAGE_COLLECTION,

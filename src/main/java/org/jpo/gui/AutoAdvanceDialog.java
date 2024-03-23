@@ -114,7 +114,7 @@ public class AutoAdvanceDialog {
                 return new RandomNavigator(
                         rootNode.getChildPictureNodes(true),
                         String.format("Randomised pictures from %s",
-                                rootNode.toString()));
+                                rootNode));
             } else {
                 return new RandomNavigator(
                         currentNode.getParent().getChildPictureNodes(true),
