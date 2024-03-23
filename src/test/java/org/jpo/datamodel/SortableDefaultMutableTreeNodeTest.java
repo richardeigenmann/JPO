@@ -879,16 +879,16 @@ class SortableDefaultMutableTreeNodeTest {
 
     @Test
     void testGetCommonPathPosix() {
-        if ( ! System.getProperty("os.name").toLowerCase().startsWith("win") ) {
-            final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
-            final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir3"), "P1"));
-            g1.add(p1);
-            final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir4"), "P2"));
-            g1.add(p2);
-            final var p3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir5"), "P3"));
-            g1.add(p3);
-            assertEquals(Paths.get("/dir1/dir2"), g1.getCommonPath());
-        }
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+
+        final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
+        final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir3"), "P1"));
+        g1.add(p1);
+        final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir4"), "P2"));
+        g1.add(p2);
+        final var p3 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir5"), "P3"));
+        g1.add(p3);
+        assertEquals(Paths.get("/dir1/dir2"), g1.getCommonPath());
     }
 
     @Test
@@ -905,15 +905,15 @@ class SortableDefaultMutableTreeNodeTest {
 
     @Test
     void testGetCommonPathTwoPosix() {
-        if ( ! System.getProperty("os.name").toLowerCase().startsWith("win") ) {
-            final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
-            final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir3"), "P1"));
-            g1.add(p1);
-            final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir4/dir5/dir6"), "P2"));
-            g1.add(p2);
-            assertEquals(Paths.get("/"), g1.getCommonPath());
-        }
-    }
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+
+        final var g1 = new SortableDefaultMutableTreeNode(new GroupInfo("G1"));
+        final var p1 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir1/dir2/dir3"), "P1"));
+        g1.add(p1);
+        final var p2 = new SortableDefaultMutableTreeNode(new PictureInfo(new File("/dir4/dir5/dir6"), "P2"));
+        g1.add(p2);
+        assertEquals(Paths.get("/"), g1.getCommonPath());
+}
 
     @Test
     void testGetCommonPathWinMatch() {
