@@ -408,7 +408,7 @@ class SortableDefaultMutableTreeNodeTest {
         assertNotSame(group2, cloneNode);
         assertNotSame(group2.getUserObject(), cloneNode.getUserObject());
         assertNull(cloneNode.getParent());
-        assertTrue(cloneNode.getUserObject() instanceof GroupInfo);
+        assertInstanceOf(GroupInfo.class, cloneNode.getUserObject());
         assertEquals(group2.getChildCount(), cloneNode.getChildCount());
     }
 
