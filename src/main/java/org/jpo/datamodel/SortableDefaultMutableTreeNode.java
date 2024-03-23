@@ -1146,6 +1146,11 @@ public class SortableDefaultMutableTreeNode
             return path0;
         }
 
+        if ( ! FilenameUtils.getPrefix(path0.toString()).equals(FilenameUtils.getPrefix(path1.toString())) ) {
+            // windows drive letters don't match
+            return null;
+        }
+
         final var normalizedPath0 = path0.normalize();
         final var normalizedPath1 = path1.normalize();
         int minCount = Math.min(normalizedPath0.getNameCount(), normalizedPath1.getNameCount());
