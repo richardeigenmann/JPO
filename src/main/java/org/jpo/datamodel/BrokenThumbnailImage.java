@@ -11,11 +11,16 @@ import java.util.logging.Logger;
 
 public class BrokenThumbnailImage {
 
-    final static String BROKEN_THUMBNAIL_FILENAME = "org/jpo/images/broken_thumbnail.gif";
+    private static final String BROKEN_THUMBNAIL_FILENAME = "org/jpo/images/broken_thumbnail.gif";
 
-    final static String BROKEN_THUMBNAIL_SHA256 = "cb2a91f3116eee469fa3d75b1a8017e49212c96d050ca003e62af0616dcdbdc7";
+    private static final String BROKEN_THUMBNAIL_SHA256 = "cb2a91f3116eee469fa3d75b1a8017e49212c96d050ca003e62af0616dcdbdc7";
 
     private static final Logger LOGGER = Logger.getLogger(BrokenThumbnailImage.class.getName());
+
+    private BrokenThumbnailImage() {
+        throw new IllegalStateException("Utility class");
+    }
+
 
     public static BufferedImage getImage() throws IOException {
         try {
