@@ -1,7 +1,7 @@
 language: java
 os: linux
 dist: focal
-jdk: openjdk20
+jdk: openjdk21
 services:
   - xvfb
 before_install:
