@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -139,8 +140,7 @@ public class SourcePicture {
      * @param rotation Image rotation
      */
     public void loadPicture(final String sha256, final File file, final double rotation) {
-        // TODO: Don't we need synchronisation here?
-        if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
+        if (pictureStatusCode.get() == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(file);
         }
         this.sha256 = sha256;
@@ -159,8 +159,7 @@ public class SourcePicture {
      * @param rotation  The rotation 0-360 to be used on this picture
      */
     public void loadPictureInThread(final String sha256, final File imageFile, final int priority, final double rotation) {
-        // TODO: Don't we need synchronisation here?
-        if (pictureStatusCode == SOURCE_PICTURE_LOADING) {
+        if (pictureStatusCode.get() == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(imageFile);
         }
         this.sha256 = sha256;
@@ -335,7 +334,7 @@ public class SourcePicture {
             return false; // has never been used yet
         }
 
-        if (pictureStatusCode != SOURCE_PICTURE_LOADING) {
+        if (pictureStatusCode.get() != SOURCE_PICTURE_LOADING) {
             LOGGER.log(Level.FINE, "called but pointless since image is not LOADING: {0}", imageFile);
             return false;
         }
@@ -424,7 +423,7 @@ public class SourcePicture {
      * times or listeners can be attached to wait for a sourceStatusChange
      * event.
      */
-    private SourcePictureStatus pictureStatusCode = SOURCE_PICTURE_UNINITIALISED;
+    private final AtomicReference<SourcePictureStatus> pictureStatusCode = new AtomicReference<>();
 
     /**
      * This variable track the status message of the picture. It can be queried
@@ -442,7 +441,7 @@ public class SourcePicture {
      */
     private void setStatus(final SourcePictureStatus statusCode, final String statusMessage) {
         LOGGER.log(Level.FINE, "Sending status code {0} with message {1} to {2} listeners", new Object[]{statusCode, statusMessage, sourcePictureListeners.size()});
-        pictureStatusCode = statusCode;
+        pictureStatusCode.set(statusCode);
         pictureStatusMessage = statusMessage;
         synchronized (sourcePictureListeners) {
             sourcePictureListeners.forEach(sourcePictureListener ->
@@ -457,7 +456,7 @@ public class SourcePicture {
      * @return the status value
      */
     public SourcePictureStatus getStatusCode() {
-        return pictureStatusCode;
+        return pictureStatusCode.get();
     }
 
     /**
