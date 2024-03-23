@@ -32,6 +32,7 @@ import java.io.File;
  * @author Richard Eigenmann
  */
 public record FileLoadRequest(@NotNull File fileToLoad) {
+    // TODO: Switch to using nio Files
     /**
      * Constructor validates that the file exists, is readable and is not a directory.
      *

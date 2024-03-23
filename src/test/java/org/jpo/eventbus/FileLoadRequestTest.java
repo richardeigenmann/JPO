@@ -1,20 +1,25 @@
 package org.jpo.eventbus;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
-Copyright (C) 2023 Richard Eigenmann.
+Copyright (C) 2023-2024 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -49,43 +54,43 @@ class FileLoadRequestTest {
     @Test
     void makeFileLoadRequestInexistantFile() {
         try {
-            final var inexistantFile = new File("no_such_file.txt");
-            new FileLoadRequest(inexistantFile);
+            final var inexistantFile = Paths.get("no_such_file.txt");
+            new FileLoadRequest(inexistantFile.toFile());
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"no_such_file.txt\" must exist before we can load it!", e.getMessage());
         }
     }
 
+    /**
+     * Apparently on Windows you can't set the permissions of a file so that you can't read it so this is
+     * a Linux only test.
+     */
     @Test
     void makeFileLoadRequestUnreadableFile() {
-        Path tempDir = null;
-        File unreadableFile = null;
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+
+        Path unreadableFilePath = null;
         try {
-            tempDir = Files.createTempDirectory("makeFileLoadRequestUnreadableFile");
-            unreadableFile = new File(tempDir.toFile(), "unreadableFile.jpg");
-            try (final FileWriter writer = new FileWriter(unreadableFile)) {
-                writer.write("Some random text");
-            }
-            if (!unreadableFile.setReadable(false)) {
-                fail("Could not set the test file to unreadable");
-            }
-            new FileLoadRequest(unreadableFile);
+            unreadableFilePath = Files.createTempFile("unreadableFile", ".xml");
+            Files.writeString(unreadableFilePath, "Some random text", StandardCharsets.UTF_8);
+
+            Files.setPosixFilePermissions(unreadableFilePath, PosixFilePermissions.fromString("---------"));
+
+            new FileLoadRequest(unreadableFilePath.toFile());
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
-            assertEquals("File \"" + unreadableFile + "\" must be readable for FileLoadRequest!", e.getMessage());
+            assertEquals("File \"" + unreadableFilePath + "\" must be readable for FileLoadRequest!", e.getMessage());
         } catch (final IOException e) {
             fail("Something went wrong in the test: " + e.getMessage());
         } finally {
             try {
-                if (unreadableFile != null) {
-                    Files.delete(unreadableFile.toPath());
+                if ( unreadableFilePath != null ) {
+                    Files.delete(unreadableFilePath);
                 }
-                Files.delete(Objects.requireNonNull(tempDir));
             } catch (final IOException e) {
                 fail("Could no clean up from test: " + e.getMessage());
             }
-
         }
     }
 
