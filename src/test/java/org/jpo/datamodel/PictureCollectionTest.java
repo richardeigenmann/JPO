@@ -711,7 +711,11 @@ class PictureCollectionTest {
         Path path1 = Paths.get("c:/richi/Fotos/20230106/20230106_181642.jpg");
         Path path2 = Paths.get("d:/sandra/Fotos/20230118/20230118_181701.jpg");
         Path commonPath = PictureCollection.getCommonPath(path1, path2);
-        assertNull(commonPath);
+        if ( System.getProperty("os.name").toLowerCase().startsWith("win") ) {
+            assertNull(commonPath);
+        } else {
+            assertEquals(Paths.get(""), commonPath);
+        }
     }
 
     @Test
