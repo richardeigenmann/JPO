@@ -136,7 +136,8 @@ class GroupInfoTest {
             fail("Unexpected IOException");
         }
 
-        final var expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\">\n</group>\n";
+        final String newline = System. lineSeparator();
+        final var expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\">" + newline + "</group>" + newline;
 
         assertEquals(expected, stringWriter.toString());
     }

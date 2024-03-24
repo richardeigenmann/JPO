@@ -1002,7 +1002,13 @@ public class PictureCollection {
             return emptyPath;
         }
         LOGGER.log(Level.FINE, "Path1: {0} Path2: {1}", new Object[]{path1, path2});
-        var relativePath = path1.relativize(path2).normalize();
+        Path relativePath;
+        try {
+            relativePath = path1.relativize(path2).normalize();
+        } catch ( IllegalArgumentException ex ) {
+            LOGGER.log(Level.INFO, "Can not find a common path: {0}", ex.getMessage());
+            return null;
+        }
         while(relativePath != null && !relativePath.endsWith("..")) {
             relativePath = relativePath.getParent();
         }

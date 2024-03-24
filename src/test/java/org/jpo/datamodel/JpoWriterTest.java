@@ -120,9 +120,10 @@ class JpoWriterTest {
             fail("Unexpected IOException");
         }
 
+        final String newline = System. lineSeparator();
         final var expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
-                + "\" collection_protected=\"No\" basedir=\"C:/User/Tom/Pictures\">\n";
+                + "\" collection_protected=\"No\" basedir=\"C:" + File.separator + "User" + File.separator + "Tom" + File.separator + "Pictures\">" + newline;
 
         assertEquals( expected, stringWriter.toString() );
     }
@@ -148,9 +149,10 @@ class JpoWriterTest {
             fail(ex.getMessage());
         }
 
+        final String newline = System.lineSeparator();
         final var expected = "<collection collection_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\" collection_created=\""
                 + DateFormat.getDateInstance().format( Calendar.getInstance().getTime() )
-                + "\" collection_protected=\"Yes\" basedir=\"/linux/filesystem/pictures\">\n";
+                + "\" collection_protected=\"Yes\" basedir=\"" + File.separator + "linux" + File.separator + "filesystem" + File.separator + "pictures\">" + newline;
 
         assertEquals( expected, stringWriter.toString());
     }

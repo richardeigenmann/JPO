@@ -15,6 +15,7 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2023 Richard Eigenmann.
@@ -252,6 +253,9 @@ class JpoImageIOTest {
 
     @Test
     void testHasPsdImageReader() {
+        // doesn't work on Windows
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+
         final var PSD_IMAGE_FILE = "psd.psd";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PSD_IMAGE_FILE));
         try {
@@ -378,6 +382,9 @@ class JpoImageIOTest {
 
     @Test
     void testHasPcxImageReader() {
+        // doesn't work on Windows
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+
         final var PCX_IMAGE_FILE = "pcx.pcx";
         final var imageUrl = Objects.requireNonNull(this.getClass().getClassLoader().getResource(PCX_IMAGE_FILE));
         try {

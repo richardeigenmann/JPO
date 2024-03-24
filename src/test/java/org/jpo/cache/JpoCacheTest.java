@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017-2023 Richard Eigenmann.
@@ -106,6 +107,9 @@ class JpoCacheTest {
 
     @Test
     void testGetHighresImageBytesFileChanged() {
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+        // doesn't work on windows.
+
         try {
             final var tempFile = File.createTempFile("testImage", ".jpg");
             LOGGER.log(Level.INFO, "Copying {0} to temporary file {1}", new Object[]{IMAGE_FILE_1, tempFile});

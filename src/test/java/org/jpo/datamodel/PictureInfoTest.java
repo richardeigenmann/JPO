@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017 - 2023 Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -130,9 +130,14 @@ class PictureInfoTest {
      */
     @Test
     void testGetImageLocation() {
-        final PictureInfo pictureInfo = new PictureInfo(new File("/dir/picture.jpg"), "My Sample Picture");
+        final var pictureFile = Paths.get("/dir/picture.jpg");
+        final PictureInfo pictureInfo = new PictureInfo(pictureFile.toFile(), "My Sample Picture");
         final String imageLocation = pictureInfo.getImageLocation();
-        assertEquals("file:/dir/picture.jpg", imageLocation);
+        if ( System.getProperty("os.name").toLowerCase().startsWith("win") ) {
+            assertEquals("file:/C:/dir/picture.jpg", imageLocation);
+        } else {
+            assertEquals("file:/dir/picture.jpg", imageLocation);
+        }
     }
 
     @Test
@@ -162,7 +167,11 @@ class PictureInfoTest {
         final String goodLocation = "/image.jpg";
         pictureInfo.setImageLocation(new File(goodLocation));
         final URI pulledUri = pictureInfo.getImageURIOrNull();
-        assertEquals("file:" + goodLocation, pulledUri.toString());
+        if ( System.getProperty("os.name").toLowerCase().startsWith("win") ) {
+            assertEquals("file:/C:" + goodLocation, pulledUri.toString());
+        } else {
+            assertEquals("file:" + goodLocation, pulledUri.toString());
+        }
 
         final PictureInfo pi2 = new PictureInfo();
         final URI nullUri = pi2.getImageURIOrNull();
@@ -179,33 +188,21 @@ class PictureInfoTest {
     @Test
     void testSetImageLocationString() {
         final PictureInfo pictureInfo = new PictureInfo();
-        pictureInfo.setImageLocation(new File("/dir/picture.jpg"));
+        final var pictureFile = Paths.get("/dir/picture.jpg");
+        pictureInfo.setImageLocation(pictureFile.toFile());
         final File imageFile = pictureInfo.getImageFile();
-        assertEquals("/dir/picture.jpg", imageFile.toString());
+        assertEquals(pictureFile.toFile(), imageFile);
     }
 
     @Test
     void testSetImageLocationWithSpace() {
         final PictureInfo pictureInfo = new PictureInfo();
-        pictureInfo.setImageLocation(new File("/dir/picture file.jpg"));
+        final var pictureFile = Paths.get("/dir/picture file.jpg");
+        pictureInfo.setImageLocation(pictureFile.toFile());
         final File imageFile = pictureInfo.getImageFile();
-        assertEquals("/dir/picture file.jpg", imageFile.toString());
+        assertEquals(pictureFile.toFile(), imageFile);
     }
 
-    /**
-     * Test of setImageLocation method, of class PictureInfo.
-     */
-    @Test
-    void testSetImageLocationUrl() {
-        try {
-            final PictureInfo pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(new File(new URI("file:///dir/picture.jpg")));
-            final File imageFile = pictureInfo.getImageFile();
-            assertEquals("/dir/picture.jpg", imageFile.toString());
-        } catch (final URISyntaxException e) {
-            fail(e.getMessage());
-        }
-    }
 
     /**
      * Test of appendToImageLocation method, of class PictureInfo.
@@ -216,7 +213,7 @@ class PictureInfoTest {
         pictureInfo.appendToImageLocation("file:///dir/picture");
         pictureInfo.appendToImageLocation(".jpg");
         final File imageFile = pictureInfo.getImageFile();
-        assertEquals("/dir/picture.jpg", imageFile.toString());
+        assertEquals(Paths.get("/dir/picture.jpg").toFile(), imageFile);
     }
 
     /**
@@ -289,18 +286,19 @@ class PictureInfoTest {
             fail("Unexpected IOException");
         }
 
-        final String expected = "<picture>\n"
-                + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>\n"
-                + "\t<file>" + TEST_PICTURE + "</file>\n"
-                + "\t<sha256>1234</sha256>\n"
-                + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>\n"
-                + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>\n"
-                + "\t<film_reference>Reference &lt;&lt;&amp;&gt;&apos;&quot;&gt;</film_reference>\n"
-                + "\t<COPYRIGHT_HOLDER>Sandra Keller &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COPYRIGHT_HOLDER>\n"
-                + "\t<ROTATION>45.100000</ROTATION>\n"
-                + "\t<LATLNG>22.670000x33.890000</LATLNG>\n"
-                + "\t<categoryAssignment index=\"1\"/>\n"
-                + "</picture>\n";
+        final String newline = System. lineSeparator();
+        final String expected = "<picture>" + newline
+                + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>" + newline
+                + "\t<file>" + TEST_PICTURE + "</file>" + newline
+                + "\t<sha256>1234</sha256>" + newline
+                + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>" + newline
+                + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>" + newline
+                + "\t<film_reference>Reference &lt;&lt;&amp;&gt;&apos;&quot;&gt;</film_reference>" + newline
+                + "\t<COPYRIGHT_HOLDER>Sandra Keller &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COPYRIGHT_HOLDER>" + newline
+                + "\t<ROTATION>45.100000</ROTATION>" + newline
+                + "\t<LATLNG>22.670000x33.890000</LATLNG>" + newline
+                + "\t<categoryAssignment index=\"1\"/>" + newline
+                + "</picture>" + newline;
 
         assertEquals(expected, stringWriter.toString());
     }

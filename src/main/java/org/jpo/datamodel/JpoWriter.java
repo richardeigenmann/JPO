@@ -112,6 +112,7 @@ public class JpoWriter {
     private static void writeCollectionHeader(final SortableDefaultMutableTreeNode startNode, final BufferedWriter xmlOutput, final Path baseDir) throws IOException {
         final var groupInfo = (GroupInfo) startNode.getUserObject();
         final var protection = startNode.getPictureCollection().getAllowEdits();
+        final String newline = System. lineSeparator();
         xmlOutput.write("<collection collection_name=\""
             + StringEscapeUtils.escapeXml11(groupInfo.getGroupName())
             + "\" collection_created=\""
@@ -119,7 +120,7 @@ public class JpoWriter {
             + "\""
             + (protection ? " collection_protected=\"No\"" : " collection_protected=\"Yes\"")
             + " basedir=\"" + baseDir.toString() + "\""
-            + ">\n");
+            + ">" + newline);
     }
 
     /**

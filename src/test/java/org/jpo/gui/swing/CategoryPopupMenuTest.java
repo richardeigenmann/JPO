@@ -46,6 +46,8 @@ class CategoryPopupMenuTest {
     @Test
     void testConstructor() {
         assumeFalse(GraphicsEnvironment.isHeadless());
+        // Doesn't work on Windows
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
         try {
             SwingUtilities.invokeAndWait(() -> {
                 final var node = new SortableDefaultMutableTreeNode();

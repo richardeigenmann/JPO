@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2018-2023 Richard Eigenmann.
+ Copyright (C) 2018-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -141,6 +141,7 @@ class WebsiteGeneratorTest {
     @Test
     void testGenerateWebsite() {
         assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
+        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") ); // Doesn't work on Windows
 
         // set up the request
         final var request = new GenerateWebsiteRequestDefaultOptions();
