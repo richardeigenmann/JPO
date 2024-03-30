@@ -7,7 +7,7 @@
     other windows application by opening the Start menu, clicking on the cogwheel icon (Settings), choosing Apps
     in the Settings Window that opens up, scroll down to JPO and there click on the Uninstall button.</p>
 
-    <a href="https://sourceforge.net/projects/j-po/files/JPO-0.17.exe/download" rel="nofollow">
+    <a href="https://sourceforge.net/projects/j-po/files/JPO-0.21.exe/download" rel="nofollow">
         <img alt="Download JPO Java Picture Organizer for Windows" src="https://a.fsdn.com/con/app/sf-download-button">
     </a>
 
@@ -33,7 +33,7 @@
     Ticking the Override high DPI scaling behaviour, and picking System instead of Application.</p>
 
     <hr>
-    <p>Last update to this page: 3 March 2024<br>
+    <p>Last update to this page: 29 March 2024<br>
         Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include_once 'page-end.php'; ?>
