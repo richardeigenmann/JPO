@@ -203,7 +203,7 @@ class ConsolidateGroupWorkerTest {
         assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempDir.toFile()));
 
         // The image File must be in the same place
-        assertTrue(sourceImageFile.exists());
+        assertThat(sourceImageFile).exists();
     }
 
     /**
@@ -279,9 +279,9 @@ class ConsolidateGroupWorkerTest {
         // Consolidation of a readonly PictureInfo to a new directory should succeed
         assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempDirTgt.toFile()));
 
-        assertFalse(sourceImageFile.exists());
+        assertThat(sourceImageFile).doesNotExist();
         // The PictureInfo points to the readable location
-        assertTrue(pictureInfo.getImageFile().canRead());
+        assertThat(pictureInfo.getImageFile()).canRead();
 
         // File is in the new Location
         assertEquals(tempDirTgt.toFile(), pictureInfo.getImageFile().getParentFile());

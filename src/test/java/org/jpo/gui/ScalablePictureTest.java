@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -116,7 +117,7 @@ class ScalablePictureTest {
     @Test
     void testLoadingScalingWriting() {
         assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") ); // Doesn't work on Windows
-        final ScalablePicture scalablePicture = new ScalablePicture();
+        final var scalablePicture = new ScalablePicture();
         assertNotNull(scalablePicture);
 
         final var imageUrl = ScalablePictureTest.class.getClassLoader().getResource(EXIF_TEST_NIKON_D_100_1_JPG);
@@ -141,10 +142,10 @@ class ScalablePictureTest {
             final var tempFile = Files.createTempFile("testLoadingScalingWriting", "jpg");
             final var outputFile = tempFile.toFile();
             Files.delete(outputFile.toPath());
-            assertFalse(outputFile.exists());
+            assertThat(outputFile).doesNotExist();
             scalablePicture.writeScaledJpg(outputFile);
 
-            assertTrue(outputFile.exists());
+            assertThat(outputFile).exists();
 
             final var sourcePicture = new SourcePicture();
             final var hash = com.google.common.io.Files.asByteSource(outputFile).hash(Hashing.sha256());
@@ -153,7 +154,7 @@ class ScalablePictureTest {
             assertEquals(466, sourcePicture.getHeight());
 
             Files.delete(outputFile.toPath());
-            assertFalse(outputFile.exists());
+            assertThat(outputFile).doesNotExist();
         } catch (final IOException x) {
             fail(x.getMessage());
         }

@@ -13,13 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -90,7 +88,7 @@ class WebsiteGeneratorTest {
         final ArrayList<File> websiteMemberFiles = new ArrayList<>();
         WebsiteGenerator.writeCss(tempDir.toFile(), websiteMemberFiles);
         final var cssFile = new File(tempDir.toFile(), "jpo.css");
-        assertTrue(cssFile.exists());
+        assertThat(cssFile).exists();
         assertEquals(1, websiteMemberFiles.size());
     }
 
@@ -102,7 +100,7 @@ class WebsiteGeneratorTest {
         final ArrayList<File> websiteMemberFiles = new ArrayList<>();
         WebsiteGenerator.writeRobotsTxt(tempDir.toFile(), websiteMemberFiles);
         final var robotsFile = new File(tempDir.toFile(), "robots.txt");
-        assertTrue(robotsFile.exists());
+        assertThat(robotsFile).exists();
         assertEquals(1, websiteMemberFiles.size());
     }
 
@@ -208,10 +206,9 @@ class WebsiteGeneratorTest {
 
             final File generatedFile = new File(request.getTargetDirectory(), request.getDownloadZipFileName());
             try (final ZipFile generatedZipFile = new ZipFile(generatedFile)) {
-                assert (Files.exists(generatedFile.toPath()));
+                assertThat (generatedFile).exists();
                 assertEquals(1, generatedZipFile.size());
-                final ZipEntry entry = generatedZipFile.getEntry("jpo_00005_h.jpg");
-                assertNotNull(entry);
+                assertNotNull(generatedZipFile.getEntry("jpo_00005_h.jpg"));
             }
 
         } catch (final IOException | URISyntaxException e) {
@@ -228,7 +225,7 @@ class WebsiteGeneratorTest {
             WebsiteGenerator.writeFolderIconTest(request, websiteMemberFiles);
 
             assertEquals(1, websiteMemberFiles.size());
-            assert (Files.exists(websiteMemberFiles.get(0).toPath()));
+            assertThat(websiteMemberFiles.get(0)).exists();
             assertEquals(WebsiteGenerator.FOLDER_ICON, websiteMemberFiles.get(0).getName());
         } catch (final IOException e) {
             fail("Hit an unexpected IOException: " + e.getMessage());
