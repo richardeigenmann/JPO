@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import org.jpo.gui.swing.EdtViolationException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Objects;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -134,54 +134,38 @@ class ToolsTest {
     private static final String TEST_IMAGE_FILENAME = "gaga.jpg";
 
     @Test
-    void testInventFilename() {
-        try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilename");
-            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
-            assertEquals(TEST_IMAGE_FILENAME, f.getName());
-            Files.delete(tempDirWithPrefix);
-        } catch (final IOException e) {
-            fail("Could not run test testInventFilename");
-        }
+    void testInventFilename(@TempDir Path tempDir) {
+        final var file = Tools.inventFilename(tempDir.toFile(), TEST_IMAGE_FILENAME);
+        assertEquals(TEST_IMAGE_FILENAME, file.getName());
     }
 
     @Test
-    void testInventFilenameExists() {
+    void testInventFilenameExists(@TempDir Path tempDir) {
         try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilenameExists");
-            final File fExists = new File(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
+            final var fExists = new File(tempDir.toFile(), TEST_IMAGE_FILENAME);
             new FileOutputStream(fExists).close();
-            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
-            assertEquals("gaga_1.jpg", f.getName());
-            Files.delete(fExists.toPath());
-            Files.delete(tempDirWithPrefix);
+            final var file = Tools.inventFilename(tempDir.toFile(), TEST_IMAGE_FILENAME);
+            assertEquals("gaga_1.jpg", file.getName());
         } catch (final IOException e) {
             fail("Could not run test testInventFilenameExists");
         }
     }
 
     @Test
-    void testInventFilenameExists50() {
+    void testInventFilenameExists50(@TempDir Path tempDir) {
         try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("testInventFilenameExists50");
-            final File fExists = new File(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
+            final var fExists = new File(tempDir.toFile(), TEST_IMAGE_FILENAME);
             new FileOutputStream(fExists).close();
-            final File[] existingFiles = new File[50];
+            final var existingFiles = new File[50];
             for (int i = 0; i < 50; i++) {
-                final File fExists50 = new File(tempDirWithPrefix.toFile(), "gaga_" + i + ".jpg");
+                final var fExists50 = new File(tempDir.toFile(), "gaga_" + i + ".jpg");
                 new FileOutputStream(fExists50).close();
                 existingFiles[i] = fExists50;
             }
 
-            final File f = Tools.inventFilename(tempDirWithPrefix.toFile(), TEST_IMAGE_FILENAME);
+            final var file = Tools.inventFilename(tempDir.toFile(), TEST_IMAGE_FILENAME);
 
-            assertEquals(19, f.getName().length());
-
-            Files.delete(fExists.toPath());
-            for (int i = 0; i < 50; i++) {
-                Files.delete(existingFiles[i].toPath());
-            }
-            Files.delete(tempDirWithPrefix);
+            assertEquals(19, file.getName().length());
         } catch (final IOException e) {
             fail("Could not run test testInventFilenameExists50");
         }

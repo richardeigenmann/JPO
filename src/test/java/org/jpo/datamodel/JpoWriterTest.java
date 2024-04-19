@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.awt.*;
 import java.io.*;
@@ -17,22 +18,35 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+/*
+ Copyright (C) 2024 Richard Eigenmann.
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
+
 class JpoWriterTest {
 
     @Test
-    void writeCollectionDTD() {
+    void writeCollectionDTD(@TempDir Path tempDir) {
         try {
-            final Path tempDirWithPrefix = Files.createTempDirectory("TestJpoWriter");
-            final File tempDir = tempDirWithPrefix.toFile();
-            final File expectedDtdFile = new File(tempDir, "collection.dtd");
+            final File expectedDtdFile = new File(tempDir.toFile(), "collection.dtd");
             assertFalse(expectedDtdFile.exists());
-            JpoWriter.writeCollectionDTDTestOnly(tempDirWithPrefix.toFile());
+            JpoWriter.writeCollectionDTDTestOnly(tempDir.toFile());
             assertTrue(expectedDtdFile.exists());
             try (final Stream<String> s = Files.lines(expectedDtdFile.toPath())) {
                 assertEquals(78, s.count());
             }
-            Files.delete(expectedDtdFile.toPath());
-            Files.delete(tempDirWithPrefix);
         } catch (final IOException e) {
             fail(e.getMessage());
         }
@@ -42,9 +56,9 @@ class JpoWriterTest {
     void writeCategoriesBlock() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         try {
-            final File tempFile = File.createTempFile("temp", null);
-            try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
-                final PictureCollection pictureCollection = new PictureCollection();
+            final var tempFile = File.createTempFile("temp", null);
+            try (final var bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
+                final var pictureCollection = new PictureCollection();
                 pictureCollection.addCategory("Trees");
                 pictureCollection.addCategory("Houses");
                 pictureCollection.addCategory("Cats");
@@ -63,8 +77,8 @@ class JpoWriterTest {
     @Test
     void writeXmlHeader() {
         try {
-            final File tempFile = File.createTempFile("temp", null);
-            try (final BufferedWriter bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
+            final var tempFile = File.createTempFile("temp", null);
+            try (final var bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
                 JpoWriter.writeXmlHeaderTestOnly(bout);
             }
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {

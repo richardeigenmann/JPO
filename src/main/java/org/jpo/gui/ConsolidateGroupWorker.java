@@ -10,6 +10,7 @@ import org.jpo.datamodel.Tools;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -19,12 +20,12 @@ import static org.apache.commons.io.FileUtils.moveFile;
 import static org.jpo.datamodel.Tools.warnOnEDT;
 
 /*
- Copyright (C) 2002 - 2023 Richard Eigenmann.
+ Copyright (C) 2002 - 2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -169,6 +170,17 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
     public static boolean needToMovePicture( @NonNull final PictureInfo pictureInfo, @NonNull final File targetDirectory ) {
         final var parentDirectory = Objects.requireNonNull(pictureInfo.getImageFile().getParentFile());
         return ! parentDirectory.equals( targetDirectory );
+    }
+
+    /**
+     * Returns true if the picture needs to be moved, false if not
+     *
+     * @param pictureInfo the PictureInfo pointing to the image to move
+     * @param targetDirectory the target directory to move it to
+     * @return True if a move is needed False if not.
+     */
+    public static boolean needToMovePicture( @NonNull final PictureInfo pictureInfo, @NonNull final Path targetDirectory ) {
+        return needToMovePicture(pictureInfo, targetDirectory.toFile());
     }
 
     /**

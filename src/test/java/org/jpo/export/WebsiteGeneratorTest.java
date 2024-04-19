@@ -1,11 +1,11 @@
 package org.jpo.export;
 
-import org.apache.commons.io.FileUtils;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -84,62 +85,40 @@ class WebsiteGeneratorTest {
      * Test of writeCss method, of class WebsiteGenerator.
      */
     @Test
-    void testWriteCss() {
-        try {
-            final var path = Files.createTempDirectory("UnitTestsTempDir");
-            final ArrayList<File> websiteMemberFiles = new ArrayList<>();
-            WebsiteGenerator.writeCss(path.toFile(), websiteMemberFiles);
-            final var cssFile = new File(path.toFile(), "jpo.css");
-            assertTrue(cssFile.exists());
-            assertEquals(1, websiteMemberFiles.size());
-            Files.delete(cssFile.toPath());
-            Files.delete(path);
-        } catch (final IOException ex) {
-            fail(ex.getMessage());
-        }
+    void testWriteCss(@TempDir Path tempDir) {
+        final ArrayList<File> websiteMemberFiles = new ArrayList<>();
+        WebsiteGenerator.writeCss(tempDir.toFile(), websiteMemberFiles);
+        final var cssFile = new File(tempDir.toFile(), "jpo.css");
+        assertTrue(cssFile.exists());
+        assertEquals(1, websiteMemberFiles.size());
     }
 
     /**
      * Test of writeRobotsTxt method, of class WebsiteGenerator.
      */
     @Test
-    void testWriteRobotsTxt() {
-        try {
-            final var path = Files.createTempDirectory("UnitTestsTempDir");
-            final ArrayList<File> websiteMemberFiles = new ArrayList<>();
-            WebsiteGenerator.writeRobotsTxt(path.toFile(), websiteMemberFiles);
-            final var robotsFile = new File(path.toFile(), "robots.txt");
-            assertTrue(robotsFile.exists());
-            assertEquals(1, websiteMemberFiles.size());
-            Files.delete(robotsFile.toPath());
-            Files.delete(path);
-        } catch (final IOException ex) {
-            fail(ex.getMessage());
-        }
+    void testWriteRobotsTxt(@TempDir Path tempDir) {
+        final ArrayList<File> websiteMemberFiles = new ArrayList<>();
+        WebsiteGenerator.writeRobotsTxt(tempDir.toFile(), websiteMemberFiles);
+        final var robotsFile = new File(tempDir.toFile(), "robots.txt");
+        assertTrue(robotsFile.exists());
+        assertEquals(1, websiteMemberFiles.size());
     }
 
     /**
      * Test of writeJpoJs method, of class WebsiteGenerator.
      */
     @Test
-    void testWriteJpoJs() {
-
-        try {
-            final var path = Files.createTempDirectory("UnitTestsTempDir");
-            final ArrayList<File> websiteMemberFiles = new ArrayList<>();
-            WebsiteGenerator.writeJpoJs(path.toFile(), websiteMemberFiles);
-            final var jsFile = new File(path.toFile(), "jpo.js");
-            assertTrue(jsFile.exists());
-            assertEquals(1, websiteMemberFiles.size());
-            Files.delete(jsFile.toPath());
-            Files.delete(path);
-        } catch (final IOException ex) {
-            fail(ex.getMessage());
-        }
+    void testWriteJpoJs(@TempDir Path tempDir) {
+        final ArrayList<File> websiteMemberFiles = new ArrayList<>();
+        WebsiteGenerator.writeJpoJs(tempDir.toFile(), websiteMemberFiles);
+        final var jsFile = new File(tempDir.toFile(), "jpo.js");
+        assertTrue(jsFile.exists());
+        assertEquals(1, websiteMemberFiles.size());
     }
 
     @Test
-    void testGenerateWebsite() {
+    void testGenerateWebsite(@TempDir Path tempDir) {
         assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
         assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") ); // Doesn't work on Windows
 
@@ -151,9 +130,8 @@ class WebsiteGeneratorTest {
         request.setPictureNaming(GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER);
         request.setGenerateMouseover(true);
         try {
-            final var tempDirWithPrefix = Files.createTempDirectory("Website");
-            request.setTargetDirectory(tempDirWithPrefix.toFile());
-            LOGGER.log(Level.INFO, "Generating website into directory: {0}", tempDirWithPrefix);
+            request.setTargetDirectory(tempDir.toFile());
+            LOGGER.log(Level.INFO, "Generating website into directory: {0}", tempDir);
 
             final var rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
@@ -211,17 +189,10 @@ class WebsiteGeneratorTest {
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresHtml);
         assert (midresHtml.exists());
 
-        // cleanup
-        try {
-            FileUtils.deleteDirectory(request.getTargetDirectory());
-        } catch (final IOException e) {
-            LOGGER.log(Level.SEVERE, "Could not delete directory {0}  Exception: {1}", new Object[]{request.getTargetDirectory().toPath(), e.getMessage()});
-            fail(e.getMessage());
-        }
     }
 
     @Test
-    void testGenerateZipFile() {
+    void testGenerateZipFile(@TempDir Path tempDir) {
         final var request = new GenerateWebsiteRequestDefaultOptions();
         request.setGenerateZipfile(true);
         request.setPictureNaming(GenerateWebsiteRequest.PictureNamingType.PICTURE_NAMING_BY_SEQUENTIAL_NUMBER);
@@ -230,8 +201,7 @@ class WebsiteGeneratorTest {
         startNode.setUserObject(new GroupInfo("Root Node"));
         request.setStartNode(startNode);
         try {
-            final var tempDirWithPrefix = Files.createTempDirectory("GenerateZipFile");
-            request.setTargetDirectory(tempDirWithPrefix.toFile());
+            request.setTargetDirectory(tempDir.toFile());
             startNode.add(new SortableDefaultMutableTreeNode(new PictureInfo(new File(WebsiteGeneratorTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg").toURI()), "Picture 1")));
             WebsiteGenerator.generateZipfileTest(request);
 
@@ -243,26 +213,22 @@ class WebsiteGeneratorTest {
                 assertNotNull(entry);
             }
 
-            FileUtils.deleteDirectory(request.getTargetDirectory());
         } catch (final IOException | URISyntaxException e) {
             fail("Hit an unexpected IOException: " + e.getMessage());
         }
     }
 
     @Test
-    void testGenerateFolderIcon() {
+    void testGenerateFolderIcon(@TempDir Path tempDir) {
         final var request = new GenerateWebsiteRequestDefaultOptions();
         try {
-            final var tempDirWithPrefix = Files.createTempDirectory("GenerateFolderIcon");
-            request.setTargetDirectory(tempDirWithPrefix.toFile());
+            request.setTargetDirectory(tempDir.toFile());
             final List<File> websiteMemberFiles = new ArrayList<>();
             WebsiteGenerator.writeFolderIconTest(request, websiteMemberFiles);
 
             assertEquals(1, websiteMemberFiles.size());
             assert (Files.exists(websiteMemberFiles.get(0).toPath()));
             assertEquals(WebsiteGenerator.FOLDER_ICON, websiteMemberFiles.get(0).getName());
-
-            FileUtils.deleteDirectory(request.getTargetDirectory());
         } catch (final IOException e) {
             fail("Hit an unexpected IOException: " + e.getMessage());
         }

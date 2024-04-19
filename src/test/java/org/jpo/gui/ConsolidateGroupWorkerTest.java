@@ -5,19 +5,20 @@ import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2016-2023 Richard Eigenmann.
+ Copyright (C) 2016-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,19 +48,13 @@ class ConsolidateGroupWorkerTest {
      * Show that a null image file doesn't need to be moved.
      */
     @Test
-    void testNeedToMovePictureNull() {
+    void testNeedToMovePictureNull(@TempDir Path tempDir) {
         final var pictureInfo = new PictureInfo();
         try {
-            final var tempTargetDirectory = Files.createTempDirectory("testNeedToMovePictureNull").toFile();
-            tempTargetDirectory.deleteOnExit();
-            try {
-                ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory);
-                fail("the needToMovePicture should not handle null inputs; the are invalid");
-            } catch (final NullPointerException ex) {
-                // this is good
-            }
-        } catch (final IOException e) {
-            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
+            ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempDir);
+            fail("the needToMovePicture should not handle null inputs; the are invalid");
+        } catch (final NullPointerException ex) {
+            // this is good
         }
     }
 
@@ -67,89 +62,64 @@ class ConsolidateGroupWorkerTest {
      * Show that an image that doesn't exist doesn't need to be moved.
      */
     @Test
-    void testNeedToMoveNonexistentPicture() {
-        try {
-            final var tempSourceDirectory = Files.createTempDirectory("testNeedToMoveNonexistentPicture-Source").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
-            sourceImageFile.deleteOnExit();
-            // Java File object exists but not on the disk
+    void testNeedToMoveNonexistentPicture(@TempDir Path tempDirSrc, @TempDir Path tempDirTgt) {
+        final var sourceImageFile = new File(tempDirSrc.toFile(), TEMP_IMAGE_FILENAME);
+        // Java File object exists but not on the disk
 
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(sourceImageFile);
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(sourceImageFile);
 
-            final var tempTargetDirectory = Files.createTempDirectory("testNeedToMoveNonexistentPicture-Target").toFile();
-            tempTargetDirectory.deleteOnExit();
-            // Based on the info in the filenames the picture would need to be moved
-            assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory));
-        } catch (final IOException e) {
-            fail("Could not clean up after test. Exception: " + e.getMessage());
-        }
+        // Based on the info in the filenames the picture would need to be moved
+        assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempDirTgt.toFile()));
     }
 
     /**
      * Test need to move a picture to the same directory returns false
      */
     @Test
-    void testNeedToMovePictureSameDirectory() {
-        try {
-            final var tempSourceDirectory = Files.createTempDirectory("testNeedToMovePictureSameDirectory-Source").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
-            sourceImageFile.deleteOnExit();
+    void testNeedToMovePictureSameDirectory(@TempDir Path tempDir) {
+        final var sourceImageFile = new File(tempDir.toFile(), TEMP_IMAGE_FILENAME);
+        sourceImageFile.deleteOnExit();
 
-            try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-                 final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
-                IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
-            } catch (final IOException ex) {
-                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
-            }
-            // test that is really exists
-            assertTrue(sourceImageFile.canRead());
-
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(sourceImageFile);
-
-            // Consolidation of a PictureInfo to the same directory should return false as nothing was moved
-            assertFalse(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempSourceDirectory));
-        } catch (final IOException e) {
-            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
+        try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
+            Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
+            IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
+        } catch (final IOException ex) {
+            fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
         }
+        // test that is really exists
+        assertTrue(sourceImageFile.canRead());
+
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(sourceImageFile);
+
+        // Consolidation of a PictureInfo to the same directory should return false as nothing was moved
+        assertFalse(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempDir.toFile()));
     }
 
     /**
      * Test need to Move a picture to a new directory
      */
     @Test
-    void testNeedToMovePictureNewDirectory() {
-        try {
-            final var tempSourceDirectory = Files.createTempDirectory("testNeedToMovePictureNewDirectory-Source").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var imageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
-            imageFile.deleteOnExit();
+    void testNeedToMovePictureNewDirectory(@TempDir Path tempDirSrc, @TempDir Path tempDirTgt) {
+        final var imageFile = new File(tempDirSrc.toFile(), TEMP_IMAGE_FILENAME);
 
-            try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-                 final var fileOutputStream = new FileOutputStream(imageFile)) {
-                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
-                IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
-            } catch (final IOException ex) {
-                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
-            }
-            // test that is really exists
-            assertTrue(imageFile.canRead());
-
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(imageFile);
-
-            final var tempTargetDirectory = Files.createTempDirectory("testNeedToMovePictureNewDirectory-Target").toFile();
-            tempTargetDirectory.deleteOnExit();
-
-            // Consolidation of a PictureInfo to a new directory should succeed
-            assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory));
-        } catch (final IOException e) {
-            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
+        try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final var fileOutputStream = new FileOutputStream(imageFile)) {
+            Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
+            IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
+        } catch (final IOException ex) {
+            fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
         }
+        // test that is really exists
+        assertTrue(imageFile.canRead());
+
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(imageFile);
+
+        // Consolidation of a PictureInfo to a new directory should succeed
+        assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempDirTgt.toFile()));
 
     }
 
@@ -160,37 +130,30 @@ class ConsolidateGroupWorkerTest {
      * @see <a href="http://stackoverflow.com/questions/28366433/file-canwrite-and-files-iswritable-not-giving-correct-value-on-linux">Stackoverflow</a>
      */
     @Test
-    void testNeedToMoveReadonlyPicture() {
+    void testNeedToMoveReadonlyPicture(@TempDir Path tempDirSrc) {
         // This test doesn't work on CI platforms where the user is root as root can always write to a file
         assumeFalse(System.getProperty("user.name").equals("root"));
-        try {
-            final var tempSourceDirectory = Files.createTempDirectory("testNeedToMoveReadonlyPicture-Source").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");
-            sourceImageFile.deleteOnExit();
+        final var sourceImageFile = new File(tempDirSrc.toFile(), "ReadOnlyImage.jpg");
 
-            try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-                 final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
-                IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
-            } catch (final IOException ex) {
-                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
-            }
-            assertTrue(sourceImageFile.setReadOnly());
-            assertTrue(sourceImageFile.canRead());
-
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(sourceImageFile);
-
-            final var tempTargetDirectory = new File(tempSourceDirectory, "subdir");
-
-            // Consolidation of a readonly PictureInfo to a new directory should return true
-            assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempTargetDirectory));
-
-            assertTrue(sourceImageFile.setWritable(true));
-        } catch (final IOException e) {
-            fail("Could not clean up after test. Exception: " + e.getMessage());
+        try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
+            Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
+            IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
+        } catch (final IOException ex) {
+            fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
         }
+        assertTrue(sourceImageFile.setReadOnly());
+        assertTrue(sourceImageFile.canRead());
+
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(sourceImageFile);
+
+        final var tempDirTgt = new File(tempDirSrc.toFile(), "subdir");
+
+        // Consolidation of a readonly PictureInfo to a new directory should return true
+        assertTrue(ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempDirTgt));
+
+        assertTrue(sourceImageFile.setWritable(true));
     }
 
     /**
@@ -198,21 +161,13 @@ class ConsolidateGroupWorkerTest {
      * because they can't be moved.
      */
     @Test
-    void testMovePictureNull() {
+    void testMovePictureNull(@TempDir Path tempDir) {
         try {
-            final var tempTargetDirectory = Files.createTempDirectory("testMovePictureNull").toFile();
-            tempTargetDirectory.deleteOnExit();
-
-            try {
-                final var returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempTargetDirectory);
-                // Consolidation of a PictureInfo with a \"null\" highres file should return false
-                assertFalse(returnCode);
-            } catch (final NullPointerException ex) {
-                assertTrue(tempTargetDirectory.delete());
-                return;
-            }
-        } catch (IOException ex) {
-            fail(UNEXPECTED_IOEXCEPTION + ex.getMessage());
+            final var returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempDir.toFile());
+            // Consolidation of a PictureInfo with a \"null\" highres file should return false
+            assertFalse(returnCode);
+        } catch (final NullPointerException ex) {
+            return;
         }
         fail("Consolidation of a PictureInfo with a \"null\" highres file should throw a NPE");
     }
@@ -222,77 +177,73 @@ class ConsolidateGroupWorkerTest {
      * place.
      */
     @Test
-    void testMovePictureSameDirectory() {
-        try {
-            final var tempSourceDirectory = Files.createTempDirectory("testMovePictureSameDirectory").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
-            sourceImageFile.deleteOnExit();
+    void testMovePictureSameDirectory(@TempDir Path tempDir) {
+        // we need to have a picture collection so that the search for other nodes can proceed
+        final var pictureCollection = new PictureCollection();
+        Settings.setPictureCollection(pictureCollection);
 
-            try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-                 final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
-                IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
-            } catch (final IOException ex) {
-                fail("Failed to create test image file in test testMovePictureSameDirectory: " + ex.getMessage());
-            }
-            assertTrue(sourceImageFile.exists());
-            assertTrue(sourceImageFile.canRead());
+        final var sourceImageFile = new File(tempDir.toFile(), TEMP_IMAGE_FILENAME);
+        sourceImageFile.deleteOnExit();
 
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(sourceImageFile);
-
-            // Consolidation of a PictureInfo to the same directory should return true
-            assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempSourceDirectory));
-
-            // The image File must be in the same place
-            assertTrue(sourceImageFile.exists());
-        } catch (final IOException e) {
-            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
+        try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
+            Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
+            IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
+        } catch (final IOException ex) {
+            fail("Failed to create test image file in test testMovePictureSameDirectory: " + ex.getMessage());
         }
+        assertTrue(sourceImageFile.exists());
+        assertTrue(sourceImageFile.canRead());
+
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(sourceImageFile);
+
+        // Consolidation of a PictureInfo to the same directory should return true
+        assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempDir.toFile()));
+
+        // The image File must be in the same place
+        assertTrue(sourceImageFile.exists());
     }
 
     /**
      * Move a picture to a new directory
      */
     @Test
-    void testMovePictureNewDirectory() {
+    void testMovePictureNewDirectory(@TempDir Path tempDir) {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
-        try {
-            final var tempSourceDirectory = Files.createTempDirectory("testMovePictureNewDirectory").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, TEMP_IMAGE_FILENAME);
-            sourceImageFile.deleteOnExit();
+        // we need to have a picture collection so that the search for other nodes can proceed
+        final var pictureCollection = new PictureCollection();
+        Settings.setPictureCollection(pictureCollection);
 
-            try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-                 final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
-                IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
-            } catch (final IOException ex) {
-                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
-            }
-            // test that is really exists. The image File must exist and be readable
-            assertTrue(sourceImageFile.canRead());
+        final var sourceImageFile = new File(tempDir.toFile(), TEMP_IMAGE_FILENAME);
+        sourceImageFile.deleteOnExit();
 
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(sourceImageFile);
-
-            final var tempTargetDirectory = new File(tempSourceDirectory, "subdir");
-            tempTargetDirectory.deleteOnExit();
-            assertTrue(tempTargetDirectory.mkdir());
-
-            // Consolidation of a PictureInfo to a new directory should succeed
-            assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory));
-
-            // The old image File must be gone
-            assertFalse(sourceImageFile.canRead());
-            pictureInfo.getImageFile().deleteOnExit();
-            // Consolidation of a PictureInfo to a new directory should succeed
-            assertTrue(pictureInfo.getImageFile().canRead());
-        } catch (final IOException e) {
-            fail("An unexpected IOException was thrown: " + e.getMessage());
+        try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
+            Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
+            IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
+        } catch (final IOException ex) {
+            fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
         }
+        // test that is really exists. The image File must exist and be readable
+        assertTrue(sourceImageFile.canRead());
+
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(sourceImageFile);
+
+        final var tempTargetDirectory = new File(tempDir.toFile(), "subdir");
+        tempTargetDirectory.deleteOnExit();
+        assertTrue(tempTargetDirectory.mkdir());
+
+        // Consolidation of a PictureInfo to a new directory should succeed
+        assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory));
+
+        // The old image File must be gone
+        assertFalse(sourceImageFile.canRead());
+        pictureInfo.getImageFile().deleteOnExit();
+        // Consolidation of a PictureInfo to a new directory should succeed
+        assertTrue(pictureInfo.getImageFile().canRead());
     }
 
     /**
@@ -300,52 +251,40 @@ class ConsolidateGroupWorkerTest {
      * succeeds.
      */
     @Test
-    void testMoveReadonlyPictureNewDirectory() {
-        try {
-            // we need to have a picture collection so that the search for other nodes can proceed
-            final var pictureCollection = new PictureCollection();
-            Settings.setPictureCollection(pictureCollection);
+    void testMoveReadonlyPictureNewDirectory(@TempDir Path tempDirSrc, @TempDir Path tempDirTgt) {
+        // we need to have a picture collection so that the search for other nodes can proceed
+        final var pictureCollection = new PictureCollection();
+        Settings.setPictureCollection(pictureCollection);
 
-            final var tempSourceDirectory = Files.createTempDirectory("testMoveReadonlyPictureNewDirectory-Source").toFile();
-            tempSourceDirectory.deleteOnExit();
-            final var sourceImageFile = new File(tempSourceDirectory, "ReadOnlyImage.jpg");
-            sourceImageFile.deleteOnExit();
+        final var sourceImageFile = new File(tempDirSrc.toFile(), "ReadOnlyImage.jpg");
 
-            try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
-                 final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
-                Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
-                IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
-            } catch (final IOException ex) {
-                fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
-            }
-            assertTrue(sourceImageFile.setReadOnly());
-            assertTrue(sourceImageFile.canRead());
-            if (!System.getProperty("user.name").equals("root")) {
-                // on Linux as root a file is always writable therefore bypassing this non-essential check
-                assertFalse(sourceImageFile.canWrite());
-            }
-
-            final var pictureInfo = new PictureInfo();
-            pictureInfo.setImageLocation(sourceImageFile);
-
-            final var tempTargetDirectory = Files.createTempDirectory("testMoveReadonlyPictureNewDirectory-Target").toFile();
-            tempTargetDirectory.deleteOnExit();
-            // Consolidation of a readonly PictureInfo to a new directory should succeed
-            assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempTargetDirectory));
-
-            assertFalse(sourceImageFile.exists());
-            // The PictureInfo points to the readable location
-            assertTrue(pictureInfo.getImageFile().canRead());
-
-            // File is in the new Location
-            assertEquals(tempTargetDirectory, pictureInfo.getImageFile().getParentFile());
-            assertFalse(sourceImageFile.exists());
-
-            // Cleanup
-            pictureInfo.getImageFile().deleteOnExit();
-        } catch (final IOException e) {
-            fail(UNEXPECTED_IOEXCEPTION + e.getMessage());
+        try (final var inputStream = ConsolidateGroupWorkerTest.class.getClassLoader().getResourceAsStream(NIKON_D100_JPG);
+             final var fileOutputStream = new FileOutputStream(sourceImageFile)) {
+            Objects.requireNonNull(inputStream, THE_INPUT_STREAM_OF_THE_IMAGE_MUST_NOT_BE_NULL);
+            IOUtils.copy(Objects.requireNonNull(inputStream), fileOutputStream);
+        } catch (final IOException ex) {
+            fail(FAILED_TO_CREATE_TEST_IMAGE_FILE + ex.getMessage());
         }
+        assertTrue(sourceImageFile.setReadOnly());
+        assertTrue(sourceImageFile.canRead());
+        if (!System.getProperty("user.name").equals("root")) {
+            // on Linux as root a file is always writable therefore bypassing this non-essential check
+            assertFalse(sourceImageFile.canWrite());
+        }
+
+        final var pictureInfo = new PictureInfo();
+        pictureInfo.setImageLocation(sourceImageFile);
+
+        // Consolidation of a readonly PictureInfo to a new directory should succeed
+        assertTrue(ConsolidateGroupWorker.movePicture(pictureInfo, tempDirTgt.toFile()));
+
+        assertFalse(sourceImageFile.exists());
+        // The PictureInfo points to the readable location
+        assertTrue(pictureInfo.getImageFile().canRead());
+
+        // File is in the new Location
+        assertEquals(tempDirTgt.toFile(), pictureInfo.getImageFile().getParentFile());
+        assertFalse(sourceImageFile.exists());
     }
 
 }

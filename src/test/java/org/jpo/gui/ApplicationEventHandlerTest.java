@@ -8,16 +8,17 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.DeleteNodeFileHandler;
 import org.jpo.eventbus.JpoEventBus;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.*;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 /*
- Copyright (C) 2017-2023 Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -51,11 +52,9 @@ class ApplicationEventHandlerTest {
 
 
     @Test
-    void testDeleteNodeAndFile() {
+    void testDeleteNodeAndFile(@TempDir Path tempDir) {
         try {
             // Create a collection
-            final var tempDir = Files.createTempDirectory("testDeleteNodeAndFile");
-
             final var rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
 
@@ -102,13 +101,6 @@ class ApplicationEventHandlerTest {
             assertEquals(pi1, rootNode.getChildAt(0));
             assertEquals(pi3, rootNode.getChildAt(1));
             assertFalse(picture2.exists());
-
-
-            // cleanup
-            Files.delete(picture1.toPath());
-            Files.delete(picture3.toPath());
-            Files.delete(tempDir);
-
         } catch (final IOException e) {
             fail(e.getMessage());
         }
