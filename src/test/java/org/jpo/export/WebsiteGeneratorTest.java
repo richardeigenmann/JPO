@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -113,7 +114,7 @@ class WebsiteGeneratorTest {
         final ArrayList<File> websiteMemberFiles = new ArrayList<>();
         WebsiteGenerator.writeJpoJs(tempDir.toFile(), websiteMemberFiles);
         final var jsFile = new File(tempDir.toFile(), "jpo.js");
-        assertTrue(jsFile.exists());
+        assertThat(jsFile).exists();
         assertEquals(1, websiteMemberFiles.size());
     }
 
@@ -170,24 +171,24 @@ class WebsiteGeneratorTest {
 
         final var jpoCssFile = new File(request.getTargetDirectory(), "jpo.css");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", jpoCssFile);
-        assert (jpoCssFile.exists());
+        assertThat(jpoCssFile).exists();
         final var jpoJsFile = new File(request.getTargetDirectory(), "jpo.js");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", jpoJsFile);
-        assert (jpoJsFile.exists());
+        assertThat (jpoJsFile).exists();
         final var robotsFile = new File(request.getTargetDirectory(), "robots.txt");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", robotsFile);
-        assert (robotsFile.exists());
+        assertThat (robotsFile).exists();
         final var indexFile = new File(request.getTargetDirectory(), "index.htm");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", indexFile);
-        assert (indexFile.exists());
+        assertThat (indexFile).exists();
         final var lowresPicture = new File(request.getTargetDirectory(), "jpo_00001_l.jpg");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", lowresPicture);
-        assert (lowresPicture.exists());
+        assertThat (lowresPicture).exists();
         final var midresPicture = new File(request.getTargetDirectory(), "jpo_00001_m.jpg");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresPicture);
-        assert (midresPicture.exists());
+        assertThat (midresPicture).exists();
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresHtml);
-        assert (midresHtml.exists());
+        assertThat (midresHtml).exists();
 
     }
 

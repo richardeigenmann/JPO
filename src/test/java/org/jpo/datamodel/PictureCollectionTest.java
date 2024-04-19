@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -634,11 +635,11 @@ class PictureCollectionTest {
             final var tempFile = File.createTempFile("fileSaveNoPriorFile", ".xml");
             // So let's just go and delete it to ensure it's gone
             Files.delete(tempFile.toPath());
-            assertFalse(tempFile.exists());
+            assertThat(tempFile).doesNotExist();
 
             picCollection.setXmlFile(tempFile);
             picCollection.fileSave();
-            assertTrue(tempFile.exists());
+            assertThat(tempFile).exists();
             try (final var lines = Files.lines(tempFile.toPath())) {
                 assertEquals(89, lines.count());
             }

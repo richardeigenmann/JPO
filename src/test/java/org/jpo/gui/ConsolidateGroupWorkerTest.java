@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -192,8 +193,8 @@ class ConsolidateGroupWorkerTest {
         } catch (final IOException ex) {
             fail("Failed to create test image file in test testMovePictureSameDirectory: " + ex.getMessage());
         }
-        assertTrue(sourceImageFile.exists());
-        assertTrue(sourceImageFile.canRead());
+        assertThat(sourceImageFile).exists()
+                .canRead();
 
         final var pictureInfo = new PictureInfo();
         pictureInfo.setImageLocation(sourceImageFile);
@@ -284,7 +285,7 @@ class ConsolidateGroupWorkerTest {
 
         // File is in the new Location
         assertEquals(tempDirTgt.toFile(), pictureInfo.getImageFile().getParentFile());
-        assertFalse(sourceImageFile.exists());
+        assertThat(sourceImageFile).doesNotExist();
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -41,9 +42,9 @@ class JpoWriterTest {
     void writeCollectionDTD(@TempDir Path tempDir) {
         try {
             final File expectedDtdFile = new File(tempDir.toFile(), "collection.dtd");
-            assertFalse(expectedDtdFile.exists());
+            assertThat(expectedDtdFile).doesNotExist();
             JpoWriter.writeCollectionDTDTestOnly(tempDir.toFile());
-            assertTrue(expectedDtdFile.exists());
+            assertThat(expectedDtdFile).exists();
             try (final Stream<String> s = Files.lines(expectedDtdFile.toPath())) {
                 assertEquals(78, s.count());
             }
