@@ -823,7 +823,7 @@ public class PictureCollection {
                     getCategoriesTreeNode().removeAllChildren();
                     getSortedCategoryStream().forEach(categoryEntry -> {
                         LOGGER.log(Level.FINE, "Adding category {0} to Tree", categoryEntry.getValue());
-                        final CategoryQuery categoryQuery = new CategoryQuery(categoryEntry.getKey());
+                        final CategoryQuery categoryQuery = new CategoryQuery(this, categoryEntry.getKey());
                         addCategoryQueryToTreeModel(categoryQuery);
                     });
                 }

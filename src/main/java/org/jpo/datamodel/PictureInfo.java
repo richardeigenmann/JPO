@@ -1047,6 +1047,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param key the key to add
      */
     public synchronized void addCategoryAssignment(final Integer key) {
+        LOGGER.log(Level.FINE, "Adding category key: {0}, to PictureInfo {1}", new Object[]{key, description});
         if (categoryAssignments.add(key)) {
             sendCategoryAssignmentsChangedEvent();
         }

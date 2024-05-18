@@ -250,7 +250,7 @@ public class ThumbnailDescriptionController
                     );
                     categoryButton.addClickListener(e ->
                             JpoEventBus.getInstance().post(
-                                    new ShowQueryRequest(new CategoryQuery(category))
+                                    new ShowQueryRequest(new CategoryQuery(referringNode.getPictureCollection(), category))
                             )
                     );
 

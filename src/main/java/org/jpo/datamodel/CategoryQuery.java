@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 /*
- CategoryQuery.java:  A type of query for Categories
-
- Copyright (C) 2006-2023 Richard Eigenmann.
+ Copyright (C) 2006-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,6 +31,12 @@ public class CategoryQuery implements Query {
     private static final Logger LOGGER = Logger.getLogger( CategoryQuery.class.getName() );
 
     /**
+     * The collection for which this query should run
+     */
+
+    private final PictureCollection pictureCollection;
+
+    /**
      * the category key for the Query
      */
     private final Integer key;
@@ -41,14 +44,15 @@ public class CategoryQuery implements Query {
     /**
      * A List of the nodes that represent these images
      */
-    private List<SortableDefaultMutableTreeNode> resultList;
+    private List<SortableDefaultMutableTreeNode> resultList = new ArrayList<>();
 
     /**
      * Constructor for a Category Query
      *
      * @param key The key for the category
      */
-    public CategoryQuery( final Integer key ) {
+    public CategoryQuery( final PictureCollection pictureCollection, final Integer key ) {
+        this.pictureCollection = pictureCollection;
         this.key = key;
         refresh();
     }
@@ -60,10 +64,6 @@ public class CategoryQuery implements Query {
      */
     @Override
     public int getNumberOfResults() {
-        if ( resultList == null ) {
-            LOGGER.severe( "CategoryQuery.getNumberOfResults: called on a null result set." );
-            return 0;
-        }
         return resultList.size();
     }
 
@@ -76,10 +76,6 @@ public class CategoryQuery implements Query {
      */
     @Override
     public SortableDefaultMutableTreeNode getIndex( int index ) {
-        if ( resultList == null ) {
-            LOGGER.info( "CategoryQuery.getIndex: called on a null result set." );
-            return null;
-        }
         if ( ( index < 0 ) || ( index >= resultList.size() ) ) {
             return null;
         }
@@ -105,7 +101,7 @@ public class CategoryQuery implements Query {
      */
     @Override
     public String toString() {
-        return Settings.getJpoResources().getString("CategoryQuery") + Settings.getPictureCollection().getCategory(key);
+        return Settings.getJpoResources().getString("CategoryQuery") + pictureCollection.getCategory(key);
     }
 
     /**
@@ -113,8 +109,8 @@ public class CategoryQuery implements Query {
      */
     @Override
     public void refresh() {
-        resultList = null;
-        resultList = getCategoryUsageNodes(key, Settings.getPictureCollection().getRootNode());
+        resultList.clear();
+        collectMatchingNodes(key, pictureCollection.getRootNode());
     }
 
     /**
@@ -124,22 +120,13 @@ public class CategoryQuery implements Query {
      * @param startNode the node at which to start
      * @return the list of nodes
      */
-    private static List<SortableDefaultMutableTreeNode> getCategoryUsageNodes(
-            final Integer key, final SortableDefaultMutableTreeNode startNode) {
-        final var resultList = new ArrayList<SortableDefaultMutableTreeNode>();
-        final var nodes = startNode.children();
-        while (nodes.hasMoreElements()) {
-            final var node = (SortableDefaultMutableTreeNode) nodes.nextElement();
-            if (node.getUserObject() instanceof PictureInfo pi
-                    && pi.containsCategory(key)) {
-                resultList.add(node);
-            }
-            if (node.getChildCount() > 0) {
-                resultList.addAll(getCategoryUsageNodes(key, node));
-            }
-        }
-        return resultList;
+    private void collectMatchingNodes(
+            final Integer key,
+            final SortableDefaultMutableTreeNode startNode) {
+        startNode.getChildPictureNodes(true)
+                .stream()
+                .filter( node -> ((PictureInfo) node.getUserObject()).containsCategory( key ))
+                .forEach(resultList::add);
     }
-
 
 }
