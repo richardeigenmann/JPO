@@ -1,16 +1,17 @@
 package org.jpo.eventbus;
 
+import org.jpo.datamodel.PictureCollection;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /*
- Copyright (C) 2017-2022  Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -24,14 +25,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Richard Eigenmann
  */
-public class CheckDirectoriesRequestTest {
+class CheckDirectoriesRequestTest {
 
     /**
      * Constructor
      */
     @Test
-    public void testConstructor() {
-        final var checkDirectoriesRequest = new CheckDirectoriesRequest();
+    void testConstructor() {
+        final var pictureCollection = new PictureCollection();
+        final var checkDirectoriesRequest = new CheckDirectoriesRequest(pictureCollection);
         assertNotNull(checkDirectoriesRequest);
     }
 

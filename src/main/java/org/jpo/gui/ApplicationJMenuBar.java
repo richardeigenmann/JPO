@@ -363,7 +363,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         public ExtrasJMenu() {
             setMnemonic(KeyEvent.VK_X);
             editCheckDirectoriesJMenuItem.setMnemonic(KeyEvent.VK_D);
-            editCheckDirectoriesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckDirectoriesRequest()));
+            editCheckDirectoriesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckDirectoriesRequest(Settings.getPictureCollection())));
             add(editCheckDirectoriesJMenuItem);
 
             editCheckIntegrityJMenuItem.setMnemonic(KeyEvent.VK_C);
