@@ -1,7 +1,6 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
 import org.jpo.gui.IntegrityCheckerJFrame;
 
 /*
@@ -32,7 +31,7 @@ public class CheckIntegrityHandler {
      */
     @Subscribe
     public void handleEvent(final CheckIntegrityRequest request) {
-        new IntegrityCheckerJFrame(Settings.getPictureCollection().getRootNode());
+        new IntegrityCheckerJFrame(request.pictureCollection().getRootNode());
     }
 
 }

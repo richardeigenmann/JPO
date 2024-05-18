@@ -32,8 +32,9 @@ public class FindDuplicatesHandler {
      */
     @Subscribe
     public void handleEvent(final FindDuplicatesRequest request) {
-        final var duplicatesQuery = new DuplicatesQuery();
-        Settings.getPictureCollection().addQueryToTreeModel(duplicatesQuery);
+        final var pictureCollection = Settings.getPictureCollection();
+        final var duplicatesQuery = new DuplicatesQuery(pictureCollection);
+        pictureCollection.addQueryToTreeModel(duplicatesQuery);
         JpoEventBus.getInstance().post(new ShowQueryRequest(duplicatesQuery));
     }
 

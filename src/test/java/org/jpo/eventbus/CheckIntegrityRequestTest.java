@@ -1,17 +1,18 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.PictureCollection;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
- Copyright (C) 2020  Richard Eigenmann.
+ Copyright (C) 2020-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY
  without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class CheckIntegrityRequestTest {
+class CheckIntegrityRequestTest {
 
     /**
      * Constructor
@@ -36,11 +37,12 @@ public class CheckIntegrityRequestTest {
      * Test receiving an event.
      */
     @Test
-    public void testReceivingEvent() {
+    void testReceivingEvent() {
         CheckIntegrityRequestTest.EventBusSubscriber myEventBusSubscriber = new CheckIntegrityRequestTest.EventBusSubscriber();
         jpoEventBus.register( myEventBusSubscriber );
 
-        CheckIntegrityRequest newRequest = new CheckIntegrityRequest();
+        final var pictureCollection = new PictureCollection();
+        CheckIntegrityRequest newRequest = new CheckIntegrityRequest(pictureCollection);
         jpoEventBus.post( newRequest );
         // After firing a CheckIntegrityRequest we expect it to be received by the listener
         assertEquals(                receivedEvent, newRequest );

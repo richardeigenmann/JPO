@@ -367,10 +367,10 @@ public class ApplicationJMenuBar extends JMenuBar {
             add(editCheckDirectoriesJMenuItem);
 
             editCheckIntegrityJMenuItem.setMnemonic(KeyEvent.VK_C);
-            editCheckIntegrityJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckIntegrityRequest()));
+            editCheckIntegrityJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new CheckIntegrityRequest(Settings.getPictureCollection())));
             add(editCheckIntegrityJMenuItem);
 
-            findDuplicatesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FindDuplicatesRequest()));
+            findDuplicatesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new FindDuplicatesRequest(Settings.getPictureCollection())));
             add(findDuplicatesJMenuItem);
 
             editCategoriesJMenuItem.setMnemonic(KeyEvent.VK_D);

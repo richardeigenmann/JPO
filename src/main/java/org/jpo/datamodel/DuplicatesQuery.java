@@ -6,9 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- DuplicatesQuery.java:  Finds duplicates and adds them to a query object
-
- Copyright (C) 2010-2023 Richard Eigenmann.
+ Copyright (C) 2010-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,6 +33,13 @@ public class DuplicatesQuery
      */
     private static final Logger LOGGER = Logger.getLogger( DuplicatesQuery.class.getName() );
 
+    public DuplicatesQuery(final PictureCollection pictureCollection) {
+        this.pictureCollection = pictureCollection;
+        extractSearchResults();
+    }
+
+    private final PictureCollection pictureCollection;
+
     /**
      * The number of entries found
      *
@@ -56,12 +61,10 @@ public class DuplicatesQuery
      */
     @Override
     public SortableDefaultMutableTreeNode getIndex( int index ) {
-        if ( index >= getNumberOfResults() ) // forces execute of query if not yet executed
-        {
+        if ( ( index < 0 ) || ( index >= getNumberOfResults() ) ) {
             return null;
-        } else {
-            return searchResults.get( index );
         }
+        return searchResults.get( index );
     }
 
     /**
@@ -89,20 +92,20 @@ public class DuplicatesQuery
     @Override
     public void refresh() {
         LOGGER.info( "refresh called" );
+        searchResults.clear();
         extractSearchResults();
     }
 
     /**
      * ResultSet so that the query is not reexecuted every time a user clicks
      */
-    private List<SortableDefaultMutableTreeNode> searchResults;
+    private List<SortableDefaultMutableTreeNode> searchResults = new ArrayList<>();
 
     /**
      * Finds the duplicates
      */
     private void extractSearchResults() {
-        var results = new ArrayList<SortableDefaultMutableTreeNode>();
-        var nodeList = Settings.getPictureCollection().getRootNode().getChildPictureNodes(true);
+        var nodeList = pictureCollection.getRootNode().getChildPictureNodes(true);
         int size = nodeList.size();
         LOGGER.log(Level.INFO, "Built a list of {0} picture nodes.", size );
 
@@ -117,11 +120,10 @@ public class DuplicatesQuery
                 if ((baseNodePictureInfo.getImageFile().equals(compareNodePictureInfo.getImageFile()))
                         || ((!baseNodePictureInfo.getSha256().equals("")) && (baseNodePictureInfo.getSha256().equals(compareNodePictureInfo.getSha256())))) {
                     LOGGER.log(Level.INFO, "Found a duplicate: {0} = {1}", new Object[]{baseNode, nodeList.get(j)});
-                    results.add(baseNode);
-                    results.add(nodeList.get(j));
+                    searchResults.add(baseNode);
+                    searchResults.add(nodeList.get(j));
                 }
             }
         }
-        searchResults = results;
     }
 }
