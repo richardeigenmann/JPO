@@ -63,7 +63,8 @@ public class ApplicationStartupHandler {
         Settings.loadSettings();
         // This needs to happen very early on before the graphics subsystem initialises.
         System.setProperty("sun.java2d.uiScale", String.valueOf(Settings.getUiScale()));
-        Settings.setPictureCollection(new PictureCollection());
+        final var pictureCollection = new PictureCollection();
+        Settings.setPictureCollection(pictureCollection);
 
         JpoEventBus.getInstance().post(new OpenMainWindowRequest());
         JpoEventBus.getInstance().post(new StartCameraWatchDaemonRequest());
@@ -72,7 +73,7 @@ public class ApplicationStartupHandler {
 
         if ((Settings.getAutoLoad() != null) && (! Settings.getAutoLoad().isEmpty())) {
             final var xmlFile = new File(Settings.getAutoLoad());
-            JpoEventBus.getInstance().post(new FileLoadRequest(xmlFile));
+            JpoEventBus.getInstance().post(new FileLoadRequest(pictureCollection, xmlFile));
         } else {
             JpoEventBus.getInstance().post(new StartNewCollectionRequest());
         }

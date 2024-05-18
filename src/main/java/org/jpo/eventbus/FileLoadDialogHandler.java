@@ -5,7 +5,7 @@ import com.google.common.eventbus.Subscribe;
 import static org.jpo.gui.swing.Filechoosers.chooseXmlFile;
 
 /*
- Copyright (C) 2022-2023 Richard Eigenmann.
+ Copyright (C) 2022-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,7 +35,7 @@ public class FileLoadDialogHandler {
     public void handleEvent(final FileLoadDialogRequest request) {
         final var fileToLoad = chooseXmlFile();
         if (fileToLoad != null) {
-            JpoEventBus.getInstance().post(new FileLoadRequest(fileToLoad));
+            JpoEventBus.getInstance().post(new FileLoadRequest(request.pictureCollection(), fileToLoad));
         }
     }
 

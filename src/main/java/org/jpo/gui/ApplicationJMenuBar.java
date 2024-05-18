@@ -128,7 +128,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
             fileLoadJMenuItem.setMnemonic(KeyEvent.VK_O);
             fileLoadJMenuItem.setAccelerator(KeyStroke.getKeyStroke('O', InputEvent.CTRL_DOWN_MASK));
-            fileLoadJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(Settings.getPictureCollection(), new FileLoadDialogRequest())));
+            fileLoadJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(Settings.getPictureCollection(), new FileLoadDialogRequest(Settings.getPictureCollection()))));
             add(fileLoadJMenuItem);
 
             fileOpenRecentJMenu.setMnemonic(KeyEvent.VK_R);
@@ -137,7 +137,7 @@ public class ApplicationJMenuBar extends JMenuBar {
             for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
                 recentOpenedFileJMenuItem[i] = new JMenuItem();
                 final int index = i;  // the anonymous inner class needs a final variable
-                recentOpenedFileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(Settings.getPictureCollection(), new FileLoadRequest(new File(Settings.getRecentCollections()[index])))));
+                recentOpenedFileJMenuItem[i].addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new UnsavedUpdatesDialogRequest(Settings.getPictureCollection(), new FileLoadRequest(Settings.getPictureCollection(), new File(Settings.getRecentCollections()[index])))));
                 recentOpenedFileJMenuItem[i].setVisible(false);
                 recentOpenedFileJMenuItem[i].setAccelerator(KeyStroke.getKeyStroke("control " + Integer.toString(i).substring(1, 1)));
                 fileOpenRecentJMenu.add(recentOpenedFileJMenuItem[i]);

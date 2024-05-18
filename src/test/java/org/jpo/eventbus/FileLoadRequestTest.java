@@ -1,10 +1,9 @@
 package org.jpo.eventbus;
 
-import org.apache.commons.lang3.ObjectUtils;
+import org.jpo.datamodel.PictureCollection;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -41,9 +40,10 @@ class FileLoadRequestTest {
 
     @Test
     void makeFileLoadRequest() {
+        final var pictureCollection = new PictureCollection();
         try {
             final var existingFile = new File(Objects.requireNonNull(FileLoadRequestTest.class.getClassLoader().getResource("exif-test-canon-eos-350d.jpg")).toURI());
-            new FileLoadRequest(existingFile);
+            new FileLoadRequest(pictureCollection, existingFile);
         } catch (final IllegalArgumentException e) {
             fail("There wasn't supposed to be an IllegalArgumentException in this test. Exception reads: " + e.getMessage());
         } catch (final URISyntaxException e) {
@@ -53,9 +53,10 @@ class FileLoadRequestTest {
 
     @Test
     void makeFileLoadRequestInexistantFile() {
+        final var pictureCollection = new PictureCollection();
         try {
             final var inexistantFile = Paths.get("no_such_file.txt");
-            new FileLoadRequest(inexistantFile.toFile());
+            new FileLoadRequest(pictureCollection, inexistantFile.toFile());
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"no_such_file.txt\" must exist before we can load it!", e.getMessage());
@@ -70,6 +71,7 @@ class FileLoadRequestTest {
     void makeFileLoadRequestUnreadableFile() {
         assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
 
+        final var pictureCollection = new PictureCollection();
         Path unreadableFilePath = null;
         try {
             unreadableFilePath = Files.createTempFile("unreadableFile", ".xml");
@@ -77,7 +79,7 @@ class FileLoadRequestTest {
 
             Files.setPosixFilePermissions(unreadableFilePath, PosixFilePermissions.fromString("---------"));
 
-            new FileLoadRequest(unreadableFilePath.toFile());
+            new FileLoadRequest(pictureCollection, unreadableFilePath.toFile());
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"" + unreadableFilePath + "\" must be readable for FileLoadRequest!", e.getMessage());
@@ -96,9 +98,10 @@ class FileLoadRequestTest {
 
     @Test
     void makeFileLoadRequestOnDirectory() {
+        final var pictureCollection = new PictureCollection();
         try {
             final var directory = new File(".");
-            new FileLoadRequest(directory);
+            new FileLoadRequest(pictureCollection, directory);
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("\".\" is a directory. FileLoadRequest can only handle actual files.", e.getMessage());

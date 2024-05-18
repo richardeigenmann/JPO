@@ -1,11 +1,12 @@
 package org.jpo.eventbus;
 
 import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.PictureCollection;
 
 import java.io.File;
 
 /*
- Copyright (C) 2017 -2022  Richard Eigenmann.
+ Copyright (C) 2017 -2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,7 +32,7 @@ import java.io.File;
  * @param fileToLoad the file to load
  * @author Richard Eigenmann
  */
-public record FileLoadRequest(@NotNull File fileToLoad) {
+public record FileLoadRequest(@NotNull PictureCollection pictureCollection, @NotNull File fileToLoad) {
     // TODO: Switch to using nio Files
     /**
      * Constructor validates that the file exists, is readable and is not a directory.

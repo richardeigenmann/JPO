@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017 - 2022 Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,6 +16,9 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.PictureCollection;
+
 /**
  * This request indicates that the user wants to choose a file for loading
  * <p>
@@ -25,6 +28,7 @@ package org.jpo.eventbus;
  * {@code JpoEventBus.getInstance().post( new UnsavedUpdatesDialogRequest( new FileLoadRequest()) ); }
  *
  * @author Richard Eigenmann
+ * @param pictureCollection The Collection into which the file should be loaded
  */
-public class FileLoadDialogRequest {
+public record FileLoadDialogRequest(@NotNull PictureCollection pictureCollection) {
 }

@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 
 /*
- Copyright (C) 2023 Richard Eigenmann.
+ Copyright (C) 2023-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -54,7 +54,7 @@ public class FileLoadHandler {
             @Override
             public void run() {
                 try {
-                    Settings.getPictureCollection().fileLoad(fileToLoad);
+                    request.pictureCollection().fileLoad(fileToLoad);
                     Settings.pushRecentCollection(fileToLoad.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
                     JpoEventBus.getInstance().post(new ShowGroupRequest(Settings.getPictureCollection().getRootNode()));
