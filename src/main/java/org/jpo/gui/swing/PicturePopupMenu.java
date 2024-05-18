@@ -326,7 +326,7 @@ public class PicturePopupMenu extends JPopupMenu {
 
     private JMenuItem mailUnselectAllJMenuItem() {
         final var pictureMailUnselectAllJMenuItem = new JMenuItem(Settings.getJpoResources().getString("pictureMailUnselectAllJMenuItem"));
-        pictureMailUnselectAllJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ClearEmailSelectionRequest()));
+        pictureMailUnselectAllJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ClearEmailSelectionRequest(popupNode.getPictureCollection())));
         pictureMailUnselectAllJMenuItem.setVisible(popupNode.getPictureCollection().countMailSelectedNodes() > 0);
         return pictureMailUnselectAllJMenuItem;
     }

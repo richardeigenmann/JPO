@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017 - 2022 Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,10 +16,13 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.PictureCollection;
+
 /**
  * This request desires to clear all nodes from the email selection
  *
  * @author Richard Eigenmann
  */
-public class ClearEmailSelectionRequest {
+public record ClearEmailSelectionRequest(@NotNull PictureCollection pictureCollection) {
 }
