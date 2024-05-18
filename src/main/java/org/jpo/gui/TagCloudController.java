@@ -14,7 +14,7 @@ import javax.swing.*;
 import java.util.*;
 
 /*
- Copyright (C) 2009-2022  Richard Eigenmann.
+ Copyright (C) 2009-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -41,12 +41,15 @@ public class TagCloudController implements TagClickListener {
     /**
      * Constructs the Controller
      */
-    public TagCloudController() {
+    public TagCloudController(final PictureCollection pictureCollection) {
+        this.pictureCollection = pictureCollection;
         JpoEventBus.getInstance().register( TagCloudController.this );
         tagCloud.addTagClickListener(TagCloudController.this);
         tagCloud.setMaxWordsToShow(Settings.getTagCloudWords());
+
     }
 
+    private final PictureCollection pictureCollection;
 
     /**
      * Returns the tag cloud component
@@ -91,7 +94,7 @@ public class TagCloudController implements TagClickListener {
             return;
         }
 
-        final var textQuery = new TextQuery(weightedWord.getWord());
+        final var textQuery = new TextQuery(pictureCollection.getRootNode(), weightedWord.getWord());
         textQuery.setStartNode(nodeWordMapper.getRootNode());
         JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));
     }
@@ -258,7 +261,7 @@ public class TagCloudController implements TagClickListener {
         }
 
         NodeWordMapper(final ShowQueryRequest event) {
-            this.rootNode = Settings.getPictureCollection().getRootNode();
+            this.rootNode = event.query().getPictureCollection().getRootNode();
             buildListQuery(event.query());
         }
 

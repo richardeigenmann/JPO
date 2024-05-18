@@ -1,7 +1,7 @@
 package org.jpo.datamodel;
 
 /*
-Copyright (C) 2006-2023 Richard Eigenmann.
+Copyright (C) 2006-2024 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -61,4 +61,10 @@ public interface Query {
      *  Forces the results to be refreshed
      */
     void refresh();
+
+    /**
+     * A Query must be able to tell which pictureCollection is belongs to.
+     * @return The Pictgure Collection on which the query should work
+     */
+    PictureCollection getPictureCollection();
 }

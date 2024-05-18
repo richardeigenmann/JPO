@@ -228,10 +228,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         public void handleCollectionLockNotification(final CollectionLockNotification event) {
             setMenuVisibility();
 
-            final var pictureCollection = Settings.getPictureCollection();
-            if (pictureCollection == null) { return; }
-
-            if (pictureCollection.getAllowEdits() ) {
+            if (event.pictureCollection().getAllowEdits() ) {
                 editModeJMenuItem.setText(Settings.getJpoResources().getString("editModeDisable"));
             } else {
                 editModeJMenuItem.setText(Settings.getJpoResources().getString("editModeEnable"));
@@ -297,7 +294,7 @@ public class ApplicationJMenuBar extends JMenuBar {
         public ActionJMenu() {
             setMnemonic(KeyEvent.VK_A);
             emailJMenuItem.setMnemonic(KeyEvent.VK_E);
-            emailJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new SendEmailRequest()));
+            emailJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new SendEmailRequest(Settings.getPictureCollection())));
             add(emailJMenuItem);
 
             randomSlideshowJMenuItem.setMnemonic(KeyEvent.VK_S);
@@ -356,7 +353,7 @@ public class ApplicationJMenuBar extends JMenuBar {
 
         @Subscribe
         public void handleCollectionLockNotification(final CollectionLockNotification event) {
-            setVisible( Settings.getPictureCollection().getAllowEdits() );
+            setVisible( event.pictureCollection().getAllowEdits() );
         }
 
 
@@ -382,7 +379,7 @@ public class ApplicationJMenuBar extends JMenuBar {
             add(startThumbnailCreationThreadJMenuItem);
 
             final var findBaseDirJMenuItem = new JMenuItem("Find Basedir");
-            findBaseDirJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post((new FindBasedirRequest())));
+            findBaseDirJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post((new FindBasedirRequest(Settings.getPictureCollection()))));
             add(findBaseDirJMenuItem);
 
             final var scanHashCodeJMenuItem = new JMenuItem("Scan for checksums");

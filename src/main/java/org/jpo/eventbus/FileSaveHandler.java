@@ -1,7 +1,6 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,7 +46,7 @@ public class FileSaveHandler {
             final var fileSaveAsRequest = new FileSaveAsRequest(request.pictureCollection(), request.onSuccessNextRequest());
             JpoEventBus.getInstance().post(fileSaveAsRequest);
         } else {
-            LOGGER.log(Level.INFO, "Saving under the name: {0}", Settings.getPictureCollection().getXmlFile());
+            LOGGER.log(Level.INFO, "Saving under the name: {0}", request.pictureCollection().getXmlFile());
             request.pictureCollection().fileSave();
             JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {

@@ -11,7 +11,7 @@ import java.util.List;
 /*
  TextQuery.java:  The parameters for a search
 
- Copyright (C) 2002 - 2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,7 +56,8 @@ public class TextQuery implements Serializable, Query {
      * fields.
      *
      */
-    public TextQuery( final String anyField ) {
+    public TextQuery( final SortableDefaultMutableTreeNode startNode, final String anyField ) {
+        this.startNode = startNode;
         this.anyField = anyField;
     }
 
@@ -258,4 +259,9 @@ public class TextQuery implements Serializable, Query {
     public String toString() {
         return getTitle();
     }
+
+    public PictureCollection getPictureCollection() {
+        return startNode.getPictureCollection();
+    }
+
 }

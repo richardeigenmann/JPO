@@ -126,4 +126,9 @@ public class DuplicatesQuery
             }
         }
     }
+
+    public PictureCollection getPictureCollection() {
+        return pictureCollection;
+    }
+
 }

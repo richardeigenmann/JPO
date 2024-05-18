@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.ListNavigator;
+import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.WholeNumberField;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 /*
- Copyright (C) 2004-2023 Richard Eigenmann.
+ Copyright (C) 2004-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,8 +50,8 @@ public class EmailerGui extends JFrame {
     /**
      * Creates a GUI to send the selected pictures as an email
      */
-    public EmailerGui() {
-        emailSelected = Settings.getPictureCollection().getMailSelectedNodes();
+    public EmailerGui(final PictureCollection pictureCollection) {
+        emailSelected = pictureCollection.getMailSelectedNodes();
 
         // if no pictures have been selected pop up an error message
         if (emailSelected.isEmpty()) {

@@ -2,17 +2,17 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
 
 /*
  InfoPanelController.java:  The Controller for the Info Panel
 
- Copyright (C) 2009-2023 Richard Eigenmann.
+ Copyright (C) 2009-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -72,15 +72,15 @@ public class InfoPanelController {
     /**
      * Invoked to tell that we should display something
      *
-     * @param defaultMutableTreeNode The Group or Picture node to be displayed.
+     * @param node The Group or Picture node to be displayed.
      */
-    public void showInfo(final DefaultMutableTreeNode defaultMutableTreeNode) {
+    public void showInfo(final SortableDefaultMutableTreeNode node) {
         SwingUtilities.invokeLater(
                 () -> {
-                    if (defaultMutableTreeNode.getUserObject() instanceof PictureInfo) {
+                    if (node.getUserObject() instanceof PictureInfo) {
                         statsUpdateTimer.stop();
                     } else {
-                        nodeStatisticsController.updateStats(defaultMutableTreeNode);
+                        nodeStatisticsController.updateStats(node);
                         statsUpdateTimer.start();
                     }
                 }

@@ -43,7 +43,7 @@ public class FileSaveAsHandler {
         jFileChooser.setMultiSelectionEnabled(false);
         jFileChooser.setFileFilter(new XmlFilter());
         if (request.pictureCollection().getXmlFile() != null) {
-            jFileChooser.setCurrentDirectory(Settings.getPictureCollection().getXmlFile());
+            jFileChooser.setCurrentDirectory(request.pictureCollection().getXmlFile());
         } else {
             jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
         }

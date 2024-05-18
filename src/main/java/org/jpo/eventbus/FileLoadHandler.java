@@ -57,8 +57,8 @@ public class FileLoadHandler {
                     request.pictureCollection().fileLoad(fileToLoad);
                     Settings.pushRecentCollection(fileToLoad.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
-                    JpoEventBus.getInstance().post(new ShowGroupRequest(Settings.getPictureCollection().getRootNode()));
-                    JpoEventBus.getInstance().post(new CheckForCollectionProblemsRequest(Settings.getPictureCollection()));
+                    JpoEventBus.getInstance().post(new ShowGroupRequest(request.pictureCollection().getRootNode()));
+                    JpoEventBus.getInstance().post(new CheckForCollectionProblemsRequest(request.pictureCollection()));
                 } catch (final FileNotFoundException ex) {
 
                     SwingUtilities.invokeLater(() -> {

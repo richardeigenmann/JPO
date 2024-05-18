@@ -2,14 +2,10 @@ package org.jpo.gui;
 
 import org.jpo.cache.ThumbnailCreationExecutor;
 import org.jpo.cache.ThumbnailCreationQueue;
-import org.jpo.datamodel.NodeStatistics;
-import org.jpo.datamodel.NodeStatisticsBean;
-import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
+import org.jpo.datamodel.*;
 import org.jpo.gui.swing.NodeStatisticsPanel;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.logging.Logger;
 
 /*
@@ -65,8 +61,8 @@ public class NodeStatisticsController {
      *
      * @param statisticsNode The node that is being analysed.
      */
-    public void updateStats(final DefaultMutableTreeNode statisticsNode) {
-        if (Settings.getPictureCollection().isFileLoading()) {
+    public void updateStats(final SortableDefaultMutableTreeNode statisticsNode) {
+        if (statisticsNode.getPictureCollection().isFileLoading()) {
             LOGGER.info("Still busy loading the file. Aborting");
             return;
         }

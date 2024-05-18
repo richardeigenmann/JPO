@@ -108,7 +108,7 @@ public class PictureAdder
         if (request.retainDirectories()) {
             directoryNode = new SortableDefaultMutableTreeNode(new GroupInfo(dir.getName()));
             parentNode.add(directoryNode);
-            Settings.getPictureCollection().setUnsavedUpdates();
+            parentNode.getPictureCollection().setUnsavedUpdates();
         } else {
             directoryNode = parentNode;
         }

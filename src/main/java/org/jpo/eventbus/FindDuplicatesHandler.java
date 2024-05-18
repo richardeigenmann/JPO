@@ -18,7 +18,6 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.DuplicatesQuery;
-import org.jpo.datamodel.Settings;
 
 /**
  * Handler for the FindDuplicatesRequest request
@@ -32,9 +31,8 @@ public class FindDuplicatesHandler {
      */
     @Subscribe
     public void handleEvent(final FindDuplicatesRequest request) {
-        final var pictureCollection = Settings.getPictureCollection();
-        final var duplicatesQuery = new DuplicatesQuery(pictureCollection);
-        pictureCollection.addQueryToTreeModel(duplicatesQuery);
+        final var duplicatesQuery = new DuplicatesQuery(request.pictureCollection());
+        request.pictureCollection().addQueryToTreeModel(duplicatesQuery);
         JpoEventBus.getInstance().post(new ShowQueryRequest(duplicatesQuery));
     }
 

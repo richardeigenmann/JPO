@@ -332,8 +332,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     }
 
     private void doSearch(final String searchString) {
-        final var textQuery = new TextQuery(searchString);
-        textQuery.setStartNode(Settings.getPictureCollection().getRootNode());
+        final var textQuery = new TextQuery(Settings.getPictureCollection().getRootNode(), searchString);
         Settings.getPictureCollection().addQueryToTreeModel(textQuery);
         titleJPanel.hideSearchField();
         JpoEventBus.getInstance().post(new ShowQueryRequest(textQuery));

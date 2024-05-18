@@ -6,7 +6,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
- Copyright (C) 2022-2023 Richard Eigenmann.
+ Copyright (C) 2022-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,13 +29,13 @@ public class FindBasedirHandler {
 
 
     /**
-     * Deletes the file and the node
+     * Finds the base directory
      *
      * @param request the request the request
      */
     @Subscribe
     public void handleEvent(final FindBasedirRequest request) {
-        String s = Settings.getPictureCollection().getRootNode().getCommonPath().toAbsolutePath().toString();
+        String s = request.pictureCollection().getRootNode().getCommonPath().toAbsolutePath().toString();
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(), "Common path: " + s);
     }
 

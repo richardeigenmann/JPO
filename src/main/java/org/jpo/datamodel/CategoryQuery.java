@@ -129,4 +129,8 @@ public class CategoryQuery implements Query {
                 .forEach(resultList::add);
     }
 
+    public PictureCollection getPictureCollection() {
+        return pictureCollection;
+    }
+
 }

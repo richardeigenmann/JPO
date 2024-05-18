@@ -143,7 +143,7 @@ public class MainWindow extends ResizableJFrame {
                 Settings.getJpoResources().getString("jpoTabbedPaneSearches"),
                 new QueriesJTreeController(Settings.getPictureCollection()).getJComponent());
 
-        final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController().getTagCloud());
+        final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController(Settings.getPictureCollection()).getTagCloud());
         final var statsDockable = new DefaultSingleCDockable("StatsId", "Stats", statsScroller);
         final var mapsDockable = new DefaultSingleCDockable("MapId", "Map", mapWindow.getJComponent());
         final var eventBusViewerDockable = new DefaultSingleCDockable("EventBusViewerId", "EventBus", new EventBusViewer());

@@ -5,7 +5,7 @@ import org.jpo.gui.CamerasEditor;
 import org.jpo.gui.EmailerGui;
 
 /*
- Copyright (C) 2022-2023 Richard Eigenmann.
+ Copyright (C) 2022-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -29,7 +29,7 @@ public class SendEmailHandler {
      */
     @Subscribe
     public void handleEvent(final SendEmailRequest request) {
-        new EmailerGui();
+        new EmailerGui(request.pictureCollection());
     }
 
 }
