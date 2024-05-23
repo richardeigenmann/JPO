@@ -21,6 +21,8 @@ import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A Layout Manager for the Thumbnail pane
@@ -37,6 +39,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
     public ThumbnailLayoutManager( final JComponent widthProvider ) {
         this.widthProvider = widthProvider;
     }
+
+    /**
+     * The logger for the class
+     */
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailLayoutManager.class.getName());
 
     /**
      * Reference to the JViewport to query for the width to which to lay out.
@@ -73,9 +80,8 @@ public class ThumbnailLayoutManager implements LayoutManager {
     @Override
     public Dimension preferredLayoutSize( final Container parent ) {
         synchronized ( parent.getTreeLock() ) {
-            calculateCols();
-            final var columns = getCols();
-            final var width = columns * ( getThumbnailWidth() + getHorizontalGutter() );
+            final var columns = calculateCols();
+            final var width = columns * ( thumbnailWidth + getHorizontalGutter() );
             int height = 0;
 
             for ( var i = 0; i < parent.getComponentCount(); i += 2 ) {
@@ -88,6 +94,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
                     }
                 }
             }
+            LOGGER.log(Level.FINE, "preferredLayoutSize returning width: {0} height: {1}", new Object[]{width, height});
             return new Dimension( width, height );
         }
     }
@@ -103,6 +110,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
         return preferredLayoutSize( target );
     }
 
+
     /**
      * The width of the thumbnails in pixels
      */
@@ -115,15 +123,6 @@ public class ThumbnailLayoutManager implements LayoutManager {
      */
     public void setThumbnailWidth( final int newThumbnailWidth ) {
         thumbnailWidth = newThumbnailWidth;
-    }
-
-    /**
-     * Returns the thumbnail width.
-     *
-     * @return The width of the thumbnail in the layout
-     */
-    public int getThumbnailWidth() {
-        return thumbnailWidth;
     }
 
     /**
@@ -182,8 +181,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     @Override
     public void layoutContainer( final Container parent ) {
         synchronized ( parent.getTreeLock() ) {
-            calculateCols();
-            final var columns = getCols();
+            final var columns = calculateCols();
 
             var column = 0;
             var rowBaseline = -getVerticalGutter();
@@ -197,7 +195,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
                 }
 
                 // coordinates for a Thumbnail
-                final var width = getThumbnailWidth();
+                final var width = thumbnailWidth;
                 var height = parent.getComponent(i).getPreferredSize().height;
                 final var x = (column * width) + ((1 + column) * getHorizontalGutter());
                 var y = rowBaseline - height;
@@ -234,11 +232,10 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * Calculates the number of columns we have on the panel and saves the
      * result.
      */
-    public void calculateCols() {
-        final int newCols = calculateCols( widthProvider.getWidth() );
-        if ( newCols != getCols() ) {
-            setCols( newCols );
-        }
+    public int calculateCols() {
+        int availableWidth = widthProvider.getWidth();
+        LOGGER.log(Level.FINE, "AvailableWidth: {0}", availableWidth);
+        return calculateCols(availableWidth);
     }
 
     /**
@@ -248,11 +245,11 @@ public class ThumbnailLayoutManager implements LayoutManager {
      * @return the number of columns
      */
     public int calculateCols( final int width ) {
-        int newCols = ( width / ( getThumbnailWidth() + getHorizontalGutter() ) );
-        if ( newCols < 1 ) {
-            newCols = 1;
+        int cols = ( width / ( thumbnailWidth + getHorizontalGutter() ) );
+        if ( cols < 1 ) {
+            cols = 1;
         }
-        return newCols;
+        return cols;
     }
 
     /**
@@ -269,34 +266,5 @@ public class ThumbnailLayoutManager implements LayoutManager {
             queryComponent = parent.getParent();  // get the size of the JViewport
         }
         return queryComponent.getBounds().width;
-    }
-
-    /**
-     * The number of columns that are being displayed in the layout.
-     *
-     * @see #calculateCols
-     * @see #getCols
-     * @see #setCols
-     */
-    private int cols = 1;
-
-    /**
-     * Returns how many columns we are showing for the current layout. If this
-     * needs to be adjusted call {@link #calculateCols} first.
-     *
-     * @return The number of columns in the layout
-     */
-    public int getCols() {
-        return cols;
-    }
-
-    /**
-     * Sets the number of columns we are showing on the panel. This should only
-     * be set by {@link #calculateCols}.
-     *
-     * @param cols The new number of columns-
-     */
-    private void setCols( final int cols ) {
-        this.cols = cols;
     }
 }

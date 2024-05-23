@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.swing.ThumbnailPanelTitle;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
-public class ThumbnailsPanelControllerTest {
+class ThumbnailsPanelControllerTest {
 
     @BeforeAll
     public static void beforeAll() {
@@ -55,6 +56,9 @@ public class ThumbnailsPanelControllerTest {
             SwingUtilities.invokeAndWait(() -> {
                 final ThumbnailsPanelController thumbnailsPanelController = new ThumbnailsPanelController();
                 assertNotNull(thumbnailsPanelController);
+                assertInstanceOf(JScrollPane.class, thumbnailsPanelController.getView());
+                assertInstanceOf(JLayeredPane.class, ((JScrollPane) thumbnailsPanelController.getView()).getViewport().getView());
+                assertInstanceOf(ThumbnailPanelTitle.class, ((JScrollPane) thumbnailsPanelController.getView()).getColumnHeader().getView());
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
