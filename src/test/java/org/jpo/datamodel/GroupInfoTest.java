@@ -12,13 +12,13 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2023 Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- without even the implied warranty of MERCHANTABILITY or FITNESS 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -146,9 +146,9 @@ class GroupInfoTest {
     void testCompareTo() {
         final var groupInfo1 = new GroupInfo("First Group");
         final var groupInfo2 = new GroupInfo("Second Group");
-        assert (groupInfo1.compareTo(groupInfo2) < 0);
-        assert (groupInfo2.compareTo(groupInfo1) > 0);
-        assert (groupInfo1.compareTo(groupInfo1) == 0);
+        assertTrue (groupInfo1.compareTo(groupInfo2) < 0);
+        assertTrue ( groupInfo2.compareTo(groupInfo1) > 0);
+        assertEquals (0, groupInfo1.compareTo(groupInfo1));
     }
 
 }

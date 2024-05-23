@@ -11,6 +11,6 @@
 
                     <hr>
                     <p>Last update to this page: 13.9.2009<br>
-			Copyright 2009-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+			Copyright 2009-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
     <?php include 'page-end.php'; ?>

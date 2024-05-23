@@ -159,7 +159,7 @@ source code. This keeps you up to date with the latest enhancements.</p>
 
 
 <hr>
-<p>Last update to this page: 24 April 2023<br>
-    Copyright 2009-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 23 May 2024<br>
+    Copyright 2009-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include_once 'page-end.php'; ?>

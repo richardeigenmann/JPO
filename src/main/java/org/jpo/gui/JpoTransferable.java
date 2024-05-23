@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /*
  JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
 
- Copyright (C) 2002-2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

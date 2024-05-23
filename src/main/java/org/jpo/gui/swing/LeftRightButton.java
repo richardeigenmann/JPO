@@ -3,7 +3,7 @@ package org.jpo.gui.swing;
 import javax.swing.*;
 import java.util.Objects;
 /*
- Copyright (C) 2017-2020  Richard Eigenmann.
+ Copyright (C) 2017-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

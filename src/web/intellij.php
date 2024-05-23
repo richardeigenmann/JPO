@@ -16,13 +16,13 @@
 
     <p>On the right margin you have a tab "Gradle" which gives you access to the tasks"</p>
 
-    <p>Pick JPO > Tasks > build > build and it should download dependencies, 
+    <p>Pick JPO > Tasks > build > build and it should download dependencies,
     compile and run the tests.</p>
 
     <p>To run the project go to the Gradle Tasks Window click JPO > build > run.
 
     <hr>
-    <p>Last update to this page: 8 Dec 2018<br>
-        Copyright 2003-2020 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 23 May 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

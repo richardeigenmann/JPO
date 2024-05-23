@@ -38,7 +38,7 @@
     <p>Download stats <a href="https://sourceforge.net/projects/j-po/files/JPO-Installer-0.14.exe/stats/timeline?dates=2019-12-01%20to%202020-03-01&period=monthly">Sourceforge</a></p>
 
     <hr>
-    <p>Last update to this page: 25 April 2023<br>
-        Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 23 May 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include_once 'page-end.php'; ?>

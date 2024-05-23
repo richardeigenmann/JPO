@@ -47,7 +47,7 @@ flatpak run io.sourceforge.j-po
     </pre>
 
     <hr>
-    <p>Last update to this page: 21 Feb 2021<br>
-        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 23 May 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

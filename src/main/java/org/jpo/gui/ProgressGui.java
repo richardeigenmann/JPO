@@ -12,15 +12,13 @@ import java.awt.event.WindowEvent;
 
 
 /*
- ProgressGui.java:  a class that shows the progress in adding pictures
-
- Copyright (C) 2002-2020  Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -29,7 +27,7 @@ import java.awt.event.WindowEvent;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * a private class that allows the PictureAdder to show what it is doing.
+ * a private class that allows the PictureAdder to show the progress of what it is doing.
  */
 public class ProgressGui extends JFrame implements ProgressListener {
 

@@ -16,7 +16,7 @@
 <p>This part of the tutorial hasn't been written yet. Why don't you send me an email to encourage me to write it? My email address is: <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
 
 <hr>
-<p>Last update to this page: 22 Mar 2014<br>
-    Copyright 2009-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 23 May 2024<br>
+    Copyright 2009-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

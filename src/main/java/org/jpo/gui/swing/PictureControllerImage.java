@@ -4,8 +4,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /*
- PictureControllerImage.java:  The interface to define the capabilities a Picture controller requires from the provider of the BufferedImage
-
  Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License

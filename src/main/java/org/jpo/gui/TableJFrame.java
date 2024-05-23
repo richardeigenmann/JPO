@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  Originally lifted from the Swing Tutorial on the java.sun.com website. In as far as no prior copyright
  exists the following copyright shall apply. (This code was heavily modified.)
 
- Copyright (C) 2002 - 2023 Richard Eigenmann.
+ Copyright (C) 2002-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

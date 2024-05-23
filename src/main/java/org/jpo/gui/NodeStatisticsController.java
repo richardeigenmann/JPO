@@ -9,9 +9,7 @@ import javax.swing.*;
 import java.util.logging.Logger;
 
 /*
-NodeStatisticsController.java: a controller that makes the NodeStatisticsPanel show interesting stats
-
-Copyright (C) 2002 - 2022  Richard Eigenmann.
+Copyright (C) 2002-2024 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -26,7 +24,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- *  a panel that shows some counts about the collection
+ *  A panel that shows some counts about the collection
  */
 public class NodeStatisticsController {
 

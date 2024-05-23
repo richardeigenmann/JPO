@@ -31,8 +31,8 @@ the developers out there who have contributed to the pool of Open Source Softwar
 </p>
 
 <hr>
-<p>Last update to this page: 27 July 2023<br>
-Copyright 2003-2023 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+<p>Last update to this page: 23 May 2024<br>
+Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 
 </div>
 <?php include_once 'page-end.php'; ?>

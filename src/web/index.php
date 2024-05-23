@@ -57,14 +57,14 @@
     <p>JPO is a program that helps you organise your digital pictures by putting them in
         collections. There you can browse the pictures, skip through the thumbnails, share
         them by email or generate a website. A powerful picture viewer allows you to
-        see the pictures full screen with simple Zoom-in and Zoom-out with the left and 
+        see the pictures full screen with simple Zoom-in and Zoom-out with the left and
         right mouse buttons.</p>
 
-    <p>A fundamental design principle is that JPO doesn't mess with your pictures. They 
+    <p>A fundamental design principle is that JPO doesn't mess with your pictures. They
         stay unchanged on your disk unless you ask JPO to move them somewhere or to delete them.</p>
 
     <p>JPO is not a photo editing application. There are many excellent packages out there
-        with which you can touch up your pictures. You can make JPO open such a program 
+        with which you can touch up your pictures. You can make JPO open such a program
         for you.</p>
 
     <p>Richard Eigenmann from Z&uuml;rich has spent the last 21 years building and improving
@@ -121,7 +121,7 @@
     <p>Why don't you let the author know? Send him an encouraging email at <a href="mailto:richard.eigenmann@gmail.com">richard.eigenmann@gmail.com</a></p>
     <hr>
 
-    <p>Last update to this page: 15 Feb 2021<br>
-        Copyright 2003-2022 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 23 May 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

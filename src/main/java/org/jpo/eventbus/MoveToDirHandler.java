@@ -14,7 +14,7 @@ import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 import static org.jpo.gui.ApplicationStartupHandler.GENERIC_INFO;
 
 /*
- Copyright (C) 2022-2023 Richard Eigenmann.
+ Copyright (C) 2022-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

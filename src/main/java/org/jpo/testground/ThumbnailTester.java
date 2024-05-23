@@ -2,7 +2,7 @@ package org.jpo.testground;
 
 
 /*
- Copyright (C) 2020-2023 Richard Eigenmann.
+ Copyright (C) 2020-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -112,9 +112,7 @@ public class ThumbnailTester {
         buttonPanel.add(showUndecoratedButton);
 
         final var showJpgPictureButton = new JButton("Jpg image");
-        showJpgPictureButton.addActionListener((ActionEvent e) -> {
-            ((PictureInfo) pictureNode.getUserObject()).setImageLocation(imageFileJpg);
-        });
+        showJpgPictureButton.addActionListener((ActionEvent e) -> ((PictureInfo) pictureNode.getUserObject()).setImageLocation(imageFileJpg));
         buttonPanel.add(showJpgPictureButton, "wrap");
 
         final var showSelectedButton = new JButton("Selected");

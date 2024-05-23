@@ -424,7 +424,7 @@
 
 
     <hr>
-    <p>Last update to this page: 24 March 2016<br>
-        Copyright 2003-2016 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    <p>Last update to this page: 23 May 2024<br>
+        Copyright 2003-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
 <?php include 'page-end.php'; ?>

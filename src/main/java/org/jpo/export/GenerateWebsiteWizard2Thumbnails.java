@@ -10,9 +10,7 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 /*
- GenerateWebsiteWizard2Thumbnails.java:  Specify stuff about the Thumbnails
-
- Copyright (C) 2008-2020  Richard Eigenmann. Zürich
+ Copyright (C) 2008-2024  Richard Eigenmann. Zürich
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License

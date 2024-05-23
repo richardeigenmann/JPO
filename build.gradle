@@ -198,7 +198,7 @@ jar {
                 'Permissions': 'all-permissions'
         )
         attributes(
-                [ "Copy": "(c) 2001-2023, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
+                [ "Copy": "(c) 2001-2024, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
         )
     }
     into ('org/jpo/images') { from 'src/images' }

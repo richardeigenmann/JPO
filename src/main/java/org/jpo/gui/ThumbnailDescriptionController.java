@@ -25,9 +25,7 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_D
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_INFO;
 
 /*
- ThumbnailDescriptionController.java:  class that creates a panel showing the description of a thumbnail
-
- Copyright (C) 2002-2023 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

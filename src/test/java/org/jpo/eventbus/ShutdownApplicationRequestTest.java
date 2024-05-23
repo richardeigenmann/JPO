@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /*
- Copyright (C) 2020-2022 Richard Eigenmann.
+ Copyright (C) 2020-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- without even the implied warranty of MERCHANTABILITY or FITNESS
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-public class ShutdownApplicationRequestTest {
+class ShutdownApplicationRequestTest {
 
     private final JpoEventBus jpoEventBus;
     /**
@@ -32,7 +32,7 @@ public class ShutdownApplicationRequestTest {
     /**
      * Constructor
      */
-    public ShutdownApplicationRequestTest() {
+    ShutdownApplicationRequestTest() {
         jpoEventBus = JpoEventBus.getInstance();
     }
 
@@ -40,7 +40,7 @@ public class ShutdownApplicationRequestTest {
      * Test receiving an event.
      */
     @Test
-    public void testReceivingEvent() {
+    void testReceivingEvent() {
         final ShutdownApplicationRequestTest.EventBusSubscriber myEventBusSubscriber = new ShutdownApplicationRequestTest.EventBusSubscriber();
         jpoEventBus.register(myEventBusSubscriber);
 

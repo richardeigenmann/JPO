@@ -10,8 +10,6 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /*
- InfoPanelController.java:  The Controller for the Info Panel
-
  Copyright (C) 2009-2024 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -27,7 +25,7 @@ import java.awt.event.ActionEvent;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Manages the Info Panel
+ * The Controller for the Info Panel
  */
 public class InfoPanelController {
 
