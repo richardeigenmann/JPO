@@ -46,13 +46,9 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: gradle test
+      - run: gradle test sonar
       #- run: gradle compileTestJava
       #- run: gradle check sonarqube
-
-      - run:
-          name: Analyze on SonarQube Cloud
-          command: "gradle build sonar"
 
       - store_test_results:
           path: build/test-results/test

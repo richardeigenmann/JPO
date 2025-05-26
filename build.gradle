@@ -35,7 +35,8 @@ java {
 }
 
 // Define the path for generated sources. This is a standard location.
-def generatedSourcesDir = file("${project.layout.buildDirectory}/generated-sources/java")
+def generatedSourcesDir = layout.buildDirectory.dir("generated-sources/java").get().asFile
+//println "Generated sources directory: $generatedSourcesDir"
 
 // To get the Version number from the build.gradle into the source file we let gradle create a source file
 // with the current version in it.
@@ -204,7 +205,7 @@ test {
 
     testLogging {
         events "passed", "skipped", "failed"
-        exceptionFormat "full"
+        exceptionFormat = "full"
     }
     reports {
         junitXml.required = false
@@ -227,7 +228,7 @@ jacoco {
 }
 
 jacocoTestReport {
-    group 'verification'
+    group = 'verification'
     reports {
         xml.required = true
         html.required = true
@@ -257,6 +258,7 @@ sonar {
         property "sonar.host.url", "https://sonarcloud.io"
     }
 }
+
 project.tasks["sonar"].dependsOn jacocoTestReport
 
 jar {
