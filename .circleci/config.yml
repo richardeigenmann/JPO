@@ -52,7 +52,7 @@ jobs:
 
       - run:
           name: Analyze on SonarQube Cloud
-          command: "gradle build sonarqube"
+          command: "gradle build sonar"
 
       - store_test_results:
           path: build/test-results/test
