@@ -4,7 +4,7 @@ import java.awt.*;
 
 
 /*
-Copyright (C) 2006-2024 Richard Eigenmann, Zurich, Switzerland
+Copyright (C) 2006-2025 Richard Eigenmann, Zurich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,9 +33,8 @@ public class ScreenHelper {
      *
      *  @return The number of screen devices
      */
-    public static int getNumberOfScreenDevices() {
-        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
+    public static int getNumberOfScreenDevices(final GraphicsEnvironment graphicsEnvironment) {
+        final var localGraphicsEnvironmentScreenDevices = graphicsEnvironment.getScreenDevices();
         return localGraphicsEnvironmentScreenDevices.length;
     }
 
@@ -45,12 +44,11 @@ public class ScreenHelper {
      *
      *  @return   True if the environment is a Xinerama environment, False if not
      */
-    public static boolean isXinerama() {
-        if (getNumberOfScreenDevices() < 2) {
+    public static boolean isXinerama(final GraphicsEnvironment graphicsEnvironment) {
+        if (getNumberOfScreenDevices(graphicsEnvironment) < 2) {
             return false;
         }
-        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
+        final var localGraphicsEnvironmentScreenDevices = graphicsEnvironment.getScreenDevices();
         for (final var graphicsDevice : localGraphicsEnvironmentScreenDevices) {
             final var graphicsDeviceDefaultConfiguration = graphicsDevice.getDefaultConfiguration();
             final var bounds = graphicsDeviceDefaultConfiguration.getBounds();
@@ -71,9 +69,9 @@ public class ScreenHelper {
      *
      *  @return   A rectangle with the coordinates of the desktop.
      */
-    public static Rectangle getXineramaScreenBounds() {
+    public static Rectangle getXineramaScreenBounds(final GraphicsEnvironment graphicsEnvironment) {
         var virtualBounds = new Rectangle();
-        final var localGraphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        final var localGraphicsEnvironment = graphicsEnvironment;
         final var localGraphicsEnvironmentScreenDevices = localGraphicsEnvironment.getScreenDevices();
         for (final var graphicsDevice : localGraphicsEnvironmentScreenDevices) {
             final var configurations = graphicsDevice.getConfigurations();
@@ -117,7 +115,7 @@ public class ScreenHelper {
      * @return GraphicsConfiguration
      */
     public static Rectangle getSecondaryScreenBounds() {
-        if ( !isXinerama() ) {
+        if ( !isXinerama(GraphicsEnvironment.getLocalGraphicsEnvironment()) ) {
             return getSecondaryScreenGraphicsConfiguration().getBounds();
         } else {
             return getRightScreenBounds();
@@ -131,9 +129,9 @@ public class ScreenHelper {
      * @return bounds for the full screen
      */
     public static Rectangle getFullScreenBounds() {
-        if ( isXinerama() ) {
-            return getXineramaScreenBounds();
-        } else if ( getNumberOfScreenDevices() > 1 ) {
+        if ( isXinerama(GraphicsEnvironment.getLocalGraphicsEnvironment()) ) {
+            return getXineramaScreenBounds(GraphicsEnvironment.getLocalGraphicsEnvironment());
+        } else if ( getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()) > 1 ) {
             return getSecondaryScreenBounds();
         }
         return getPrimaryScreenBounds();
@@ -147,11 +145,11 @@ public class ScreenHelper {
      * @return bounds for the left window
      */
     public static Rectangle getLeftScreenBounds() {
-        if ( isXinerama() ) {
-            final var xineramaScreenBounds = getXineramaScreenBounds();
-            return new Rectangle( xineramaScreenBounds.x, xineramaScreenBounds.y, xineramaScreenBounds.width / getNumberOfScreenDevices(), xineramaScreenBounds.height );
+        if ( isXinerama(GraphicsEnvironment.getLocalGraphicsEnvironment()) ) {
+            final var xineramaScreenBounds = getXineramaScreenBounds(GraphicsEnvironment.getLocalGraphicsEnvironment());
+            return new Rectangle( xineramaScreenBounds.x, xineramaScreenBounds.y, xineramaScreenBounds.width / getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()), xineramaScreenBounds.height );
         } else {
-            if ( getNumberOfScreenDevices() > 1 ) {
+            if ( getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()) > 1 ) {
                 return getPrimaryScreenBounds();
             } else {
                 final var bounds = getPrimaryScreenBounds();
@@ -169,12 +167,12 @@ public class ScreenHelper {
      * @return bounds of the right screen
      */
     public static Rectangle getRightScreenBounds() {
-        if ( isXinerama() ) {
-            final var xineramaScreenBounds = getXineramaScreenBounds();
-            return new Rectangle( xineramaScreenBounds.x + ( xineramaScreenBounds.width / getNumberOfScreenDevices() * ( getNumberOfScreenDevices() - 1 ) ),
-                    xineramaScreenBounds.y, xineramaScreenBounds.width / getNumberOfScreenDevices(), xineramaScreenBounds.height );
+        if ( isXinerama(GraphicsEnvironment.getLocalGraphicsEnvironment()) ) {
+            final var xineramaScreenBounds = getXineramaScreenBounds(GraphicsEnvironment.getLocalGraphicsEnvironment());
+            return new Rectangle( xineramaScreenBounds.x + ( xineramaScreenBounds.width / getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()) * ( getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()) - 1 ) ),
+                    xineramaScreenBounds.y, xineramaScreenBounds.width / getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()), xineramaScreenBounds.height );
         } else {
-            if ( getNumberOfScreenDevices() > 1 ) {
+            if ( getNumberOfScreenDevices(GraphicsEnvironment.getLocalGraphicsEnvironment()) > 1 ) {
                 return getSecondaryScreenGraphicsConfiguration().getBounds();
             } else {
                 final var bounds = getPrimaryScreenBounds();
@@ -261,7 +259,7 @@ public class ScreenHelper {
                         : "it is not headless. How reassuring."));
 
 
-        if ( isXinerama() ) {
+        if ( isXinerama(GraphicsEnvironment.getLocalGraphicsEnvironment()) ) {
             sbadd( "XINERAMA: The environment is a Xinerama environment" );
         } else {
             sbadd( "XINERAMA: The environment is not a Xinerama environment" );
