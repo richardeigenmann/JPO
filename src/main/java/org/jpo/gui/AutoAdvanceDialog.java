@@ -6,11 +6,10 @@ import org.jpo.gui.swing.WholeNumberField;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann, Zürich
+ Copyright (C) 2017-2025 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -45,11 +44,6 @@ public class AutoAdvanceDialog {
         this.request = request;
         doAutoAdvanceDialog();
     }
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger(AutoAdvanceDialog.class.getName());
 
     private int showDialog(final Component parentComponent, final Object message) {
         return JOptionPane.showOptionDialog(
