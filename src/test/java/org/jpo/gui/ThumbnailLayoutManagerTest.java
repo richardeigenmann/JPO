@@ -1,5 +1,6 @@
 package org.jpo.gui;
 
+import org.assertj.swing.edt.GuiActionRunner;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
@@ -10,7 +11,9 @@ class ThumbnailLayoutManagerTest {
 
     @Test
     void testCalcCols() {
-        final var panel = new JPanel();
+        // Create the JPanel on the EDT
+        final var panel = GuiActionRunner.execute(() -> new JPanel());
+
         final var layoutManaer = new ThumbnailLayoutManager(panel);
         assertEquals( 1, layoutManaer.calculateCols(550));
         assertEquals( 2, layoutManaer.calculateCols(800));
@@ -31,11 +34,11 @@ class ThumbnailLayoutManagerTest {
 
     @Test
     void testCalcColsFromPanel() {
-        final var fixedWidth400 = new FixedWidthJComponent(400);
+        final var fixedWidth400 = GuiActionRunner.execute(() -> new FixedWidthJComponent(400));
         final var layoutManager = new ThumbnailLayoutManager(fixedWidth400);
         assertEquals( 1, layoutManager.calculateCols());
 
-        final var fixedWidth800 = new FixedWidthJComponent(800);
+        final var fixedWidth800 = GuiActionRunner.execute(() -> new FixedWidthJComponent(800));
         final var layoutManager2 = new ThumbnailLayoutManager(fixedWidth800);
         assertEquals( 2, layoutManager2.calculateCols());
 

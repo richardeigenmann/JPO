@@ -4,6 +4,7 @@ import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.eventbus.ShowGroupRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -78,6 +79,32 @@ public class CollectionJTreeControllerTest {
 
                 final var selectionPath = new TreePath(new Object[]{groupNode});
                 collectionJTree.setSelectionPath(selectionPath);
+                final var selectedNodeAfterSetting = CollectionJTreeController.getSelectedNode(collectionJTree);
+                assert(selectedNodeAfterSetting.isPresent());
+                assertEquals(groupNode, selectedNodeAfterSetting.get());
+            } );
+        } catch ( final InterruptedException | InvocationTargetException ex ) {
+            fail( ex.getCause().getMessage() );
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    @Test
+    void testSetSelection() {
+        assumeFalse( GraphicsEnvironment.isHeadless() );
+        try {
+            SwingUtilities.invokeAndWait( () -> {
+                final var pictureCollection = new PictureCollection();
+                final var groupNode = new SortableDefaultMutableTreeNode(new GroupInfo("Group Node"));
+                pictureCollection.getRootNode().add(groupNode);
+                final var collectionJTreeController = new CollectionJTreeController(pictureCollection);
+
+                final var collectionJTree = collectionJTreeController.getCollectionJTree();
+
+                final var selectedNode = CollectionJTreeController.getSelectedNode(collectionJTree);
+                assert(selectedNode.isEmpty());
+
+                collectionJTreeController.handleShowGroupRequest(new ShowGroupRequest(groupNode));
                 final var selectedNodeAfterSetting = CollectionJTreeController.getSelectedNode(collectionJTree);
                 assert(selectedNodeAfterSetting.isPresent());
                 assertEquals(groupNode, selectedNodeAfterSetting.get());

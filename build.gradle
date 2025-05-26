@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'application'
-    id "com.github.ben-manes.versions" version "0.51.0" // dependency updates
+    id "com.github.ben-manes.versions" version "0.52.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
-    id 'org.beryx.jlink' version '3.0.1'
+    id 'org.beryx.jlink' version '3.1.1'
     id "org.javamodularity.moduleplugin" version "1.8.15"
-    id "org.sonarqube" version "5.0.0.4638"
+    id "org.sonarqube" version "6.2.0.5505"
     id 'jacoco'
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -30,6 +30,10 @@ application {
     //mainClass = 'org.jpo.testground.LargePanel'
 }
 
+java {
+    modularity.inferModulePath = true // Essential for hybrid projects or mixed module/classpath dependencies
+}
+
 tasks.withType(JavaCompile) {
     options.compilerArgs += "--enable-preview"
 }
@@ -43,23 +47,23 @@ tasks.withType(JavaExec) {
 }
 
 dependencies {
-    implementation 'com.miglayout:miglayout-swing:11.3'
-    implementation 'com.miglayout:miglayout-core:11.3'
-    implementation 'org.apache.commons:commons-text:1.9' // jpackage doesn't like 1.10.0 and 1.11.0
+    implementation 'com.miglayout:miglayout-swing:11.4.2'
+    implementation 'com.miglayout:miglayout-core:11.4.2'
+    implementation 'org.apache.commons:commons-text:1.9' // jpackage doesn't like 1.10.0, 1.11.0 or 1.13.1.  1.9 works
     implementation files('libs/tagcloud.library-0.0.1.jar')
-    implementation 'org.apache.commons:commons-compress:1.26.1'
-    implementation 'org.apache.commons:commons-jcs3:3.2'
-    implementation 'org.apache.commons:commons-jcs3-core:3.2'
-    implementation 'org.apache.commons:commons-jcs3-jcache:3.2'
-    implementation 'commons-io:commons-io:2.16.1'
-    implementation 'org.apache.commons:commons-lang3:3.14.0'
-    implementation 'commons-logging:commons-logging:1.3.2'
-    implementation 'commons-net:commons-net:3.10.0'
-    implementation 'org.jetbrains:annotations:24.1.0'
+    implementation 'org.apache.commons:commons-compress:1.27.1'
+    implementation 'org.apache.commons:commons-jcs3:3.2.1'
+    implementation 'org.apache.commons:commons-jcs3-core:3.2.1'
+    implementation 'org.apache.commons:commons-jcs3-jcache:3.2.1'
+    implementation 'commons-io:commons-io:2.19.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'commons-logging:commons-logging:1.3.5'
+    implementation 'commons-net:commons-net:3.11.1'
+    implementation 'org.jetbrains:annotations:26.0.2'
     implementation 'com.google.gdata:core:1.47.1', {
         exclude group: "xpp3", module: "xpp3"
     }
-    implementation 'com.google.guava:guava:33.2.0-jre'
+    implementation 'com.google.guava:guava:33.4.8-jre'
     implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation files('libs/jwizz-0.1.4.jar')
@@ -72,49 +76,49 @@ dependencies {
     implementation files('libs/docking-frames-common.jar')
     implementation files('libs/docking-frames-core.jar')
     implementation 'com.adobe.xmp:xmpcore:6.1.11'
-    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.10.1'
-    implementation 'org.apache.xmlgraphics:batik-transcoder:1.17', {
+    implementation 'com.twelvemonkeys.imageio:imageio-batik:3.12.0'
+    implementation 'org.apache.xmlgraphics:batik-transcoder:1.19', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-anim:1.17', {
+    implementation 'org.apache.xmlgraphics:batik-anim:1.19', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.17', {
+    implementation 'org.apache.xmlgraphics:batik-rasterizer-ext:1.19', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.17'
+    implementation 'org.apache.xmlgraphics:batik-shared-resources:1.19'
 
-    implementation 'org.apache.xmlgraphics:batik-extension:1.17', {
+    implementation 'org.apache.xmlgraphics:batik-extension:1.19', {
         exclude group: "xml-apis", module: "xml-apis"
     }
-    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.9'
-    implementation 'org.apache.xmlgraphics:batik-svggen:1.17'
-    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.10.1'
-    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.10.1'
-    implementation group: 'org.json', name: 'json', version: '20240303'
+    implementation 'org.apache.xmlgraphics:xmlgraphics-commons:2.11'
+    implementation 'org.apache.xmlgraphics:batik-svggen:1.19'
+    implementation 'com.twelvemonkeys.imageio:imageio-bmp:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-clippath:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-icns:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-iff:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-jpeg:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-hdr:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-pcx:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-pdf:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-pict:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-pnm:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-psd:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-sgi:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-tiff:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-tga:3.12.0'
+    implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.12.0'
+    implementation group: 'org.json', name: 'json', version: '20250517'
     implementation 'com.jidesoft:jide-oss:3.6.18'
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0-M2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.0-RC1'
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation(platform('org.junit:junit-bom:5.11.0-M2'))
-    testImplementation 'org.assertj:assertj-core:3.25.3'
+    testImplementation(platform('org.junit:junit-bom:5.13.0-RC1'))
+    testImplementation 'org.assertj:assertj-core:4.0.0-M1'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
-    testImplementation 'org.awaitility:awaitility:4.2.1'
+    testImplementation 'org.awaitility:awaitility:4.3.0'
     implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
     implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
-    implementation 'io.github.classgraph:classgraph:4.8.172'
+    implementation 'io.github.classgraph:classgraph:4.8.179'
 }
 
 
@@ -290,7 +294,10 @@ jlink {
         name = 'JPO'
         jvmArgs = []
     }
-    //addExtraDependencies "org.apache.commons.text:commons-text:1.11.0"
+    // Try adding this to explicitly make sure it's seen by jlink
+    //addExtraDependencies "org.apache.commons:commons-lang3:3.17.0" // Use the exact version you depend on
+    //addExtraDependencies "org.apache.commons:commons-text:1.13.1" // Also ensure this is explicitly added
+
     jpackage {
         var os = OperatingSystem.current()
 

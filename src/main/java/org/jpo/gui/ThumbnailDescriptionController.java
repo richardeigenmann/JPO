@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
@@ -9,6 +8,7 @@ import org.jpo.gui.swing.CategoryButton;
 import org.jpo.gui.swing.PicturePopupMenu;
 import org.jpo.gui.swing.RenameMenuItems;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,7 @@ import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.LARGE_D
 import static org.jpo.gui.ThumbnailDescriptionController.DescriptionSize.MINI_INFO;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2025 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

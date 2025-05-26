@@ -1,11 +1,11 @@
 package org.jpo.gui;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import java.io.File;
@@ -20,7 +20,7 @@ import static org.apache.commons.io.FileUtils.moveFile;
 import static org.jpo.datamodel.Tools.warnOnEDT;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -167,7 +167,7 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param targetDirectory the target directory to move it to
      * @return True if a move is needed False if not.
      */
-    public static boolean needToMovePicture( @NonNull final PictureInfo pictureInfo, @NonNull final File targetDirectory ) {
+    public static boolean needToMovePicture(@NonNull final PictureInfo pictureInfo, @NonNull final File targetDirectory ) {
         final var parentDirectory = Objects.requireNonNull(pictureInfo.getImageFile().getParentFile());
         return ! parentDirectory.equals( targetDirectory );
     }

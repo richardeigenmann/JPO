@@ -2,10 +2,10 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import java.io.File;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import static org.jpo.gui.ApplicationStartupHandler.GENERIC_INFO;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

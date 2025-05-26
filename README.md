@@ -154,5 +154,6 @@ export GDK_SCALE=2
 Set the GDK_DPI_SCALE environment variable to the inverse of the GDK_SCALE value. This variable adjusts the DPI scaling of fonts and other elements to maintain their proper size. For example, if you set GDK_SCALE to 2, then GDK_DPI_SCALE should be set to 0.5.
 
 ```bash
+export GDK_SCALE=2
 export GDK_DPI_SCALE=0.5
 ```

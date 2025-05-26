@@ -26,11 +26,11 @@ module org.jpo {
     requires jwizz;
     requires mail;
     requires metadata.extractor;
+    requires org.apache.commons.text;
     requires org.apache.commons.compress;
     requires org.apache.commons.io;
     requires org.apache.commons.lang3;
     requires org.apache.commons.net;
-    requires org.checkerframework.checker.qual;
     requires org.jetbrains.annotations;
     requires org.json;
     requires org.tagcloud;
@@ -38,6 +38,6 @@ module org.jpo {
     requires jdk.xml.dom;
     requires org.jxmapviewer.jxmapviewer2;  // required for svg
     requires org.apache.commons.logging;
-    requires org.apache.commons.text;
+    requires org.jspecify;
 }
 

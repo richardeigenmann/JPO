@@ -1,11 +1,11 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import java.io.File;
@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2

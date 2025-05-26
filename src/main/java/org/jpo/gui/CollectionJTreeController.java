@@ -2,11 +2,11 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -16,13 +16,13 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2002-2024 Richard Eigenmann, Zurich, Switzerland This
+ * Copyright (C) 2002-2025 Richard Eigenmann, Zurich, Switzerland This
  * program is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or any later version. This
@@ -427,13 +427,13 @@ public class CollectionJTreeController {
      */
     private static final ImageIcon CLOSED_FOLDER_ICON;
 
-    private static final String CLASSLOADER_COULD_NOT_FIND_THE_FILE_0 = "Classloader could not find the file: {0}";
+    private static final String CLASSLOADER_COULD_NOT_FIND_THE_FILE = "Classloader could not find the file: {0}";
 
     static {
         final var CLOSED_FOLDER_ICON_FILE = "icon_folder_closed.gif";
         final var resource = CollectionJTreeController.class.getClassLoader().getResource(CLOSED_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, CLOSED_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE, CLOSED_FOLDER_ICON_FILE);
             CLOSED_FOLDER_ICON = null;
         } else {
             CLOSED_FOLDER_ICON = new ImageIcon(resource);
@@ -456,7 +456,7 @@ public class CollectionJTreeController {
         final var OPEN_FOLDER_ICON_FILE = "icon_folder_open.gif";
         final var resource = CollectionJTreeController.class.getClassLoader().getResource(OPEN_FOLDER_ICON_FILE);
         if (resource == null) {
-            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, OPEN_FOLDER_ICON_FILE);
+            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE, OPEN_FOLDER_ICON_FILE);
             OPEN_FOLDER_ICON = null;
         } else {
             OPEN_FOLDER_ICON = new ImageIcon(resource);
@@ -476,7 +476,7 @@ public class CollectionJTreeController {
         final var PICTURE_ICON_FILE = "icon_picture.gif";
         final var resource = CollectionJTreeController.class.getClassLoader().getResource(PICTURE_ICON_FILE);
         if (resource == null) {
-            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE_0, PICTURE_ICON_FILE);
+            LOGGER.log(Level.SEVERE, CLASSLOADER_COULD_NOT_FIND_THE_FILE, PICTURE_ICON_FILE);
             PICTURE_ICON = null;
         } else {
             PICTURE_ICON = new ImageIcon(resource);

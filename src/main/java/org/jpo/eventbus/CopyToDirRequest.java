@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,8 +16,8 @@ package org.jpo.eventbus;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jspecify.annotations.NonNull;
 
 import java.io.File;
 import java.util.Collection;
