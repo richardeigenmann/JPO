@@ -4,10 +4,9 @@ Java Picture Organizer
 [![Build Status](https://app.travis-ci.com/richardeigenmann/JPO.svg?branch=master)](https://app.travis-ci.com/richardeigenmann/JPO)
 [![CircleCI](https://circleci.com/gh/richardeigenmann/JPO/tree/master.svg?style=svg)](https://circleci.com/gh/richardeigenmann/JPO/tree/master)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/948fa1d9f4354611a6be88c422505c25)](https://app.codacy.com/gh/richardeigenmann/JPO/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=JPO)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=bugs)](https://sonarcloud.io/dashboard?id=JPO)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=ncloc)](https://sonarcloud.io/dashboard?id=JPO)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=JPO)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=richardeigenmann_JPO&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=richardeigenmann_JPO)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=richardeigenmann_JPO&metric=bugs)](https://sonarcloud.io/summary/new_code?id=richardeigenmann_JPO)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=richardeigenmann_JPO&metric=coverage)](https://sonarcloud.io/summary/new_code?id=richardeigenmann_JPO)
 [![semaphore](https://richardeigenmann.semaphoreci.com/badges/JPO.svg?style=shields)](https://richardeigenmann.semaphoreci.com/)
 
 Homepage: http://j-po.sourceforge.net/
