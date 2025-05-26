@@ -3,7 +3,7 @@ Java Picture Organizer
 
 [![Build Status](https://app.travis-ci.com/richardeigenmann/JPO.svg?branch=master)](https://app.travis-ci.com/richardeigenmann/JPO)
 [![CircleCI](https://circleci.com/gh/richardeigenmann/JPO/tree/master.svg?style=svg)](https://circleci.com/gh/richardeigenmann/JPO/tree/master)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/948fa1d9f4354611a6be88c422505c25)](https://www.codacy.com/gh/richardeigenmann/JPO/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=richardeigenmann/JPO&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/948fa1d9f4354611a6be88c422505c25)](https://app.codacy.com/gh/richardeigenmann/JPO/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=JPO)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=bugs)](https://sonarcloud.io/dashboard?id=JPO)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=JPO&metric=ncloc)](https://sonarcloud.io/dashboard?id=JPO)
