@@ -2,10 +2,9 @@ package org.jpo.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /*
- Copyright (C) 2006-2024 Richard Eigenmann.
+ Copyright (C) 2006-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -24,11 +23,6 @@ import java.util.logging.Logger;
  * attached to a category.
  */
 public class CategoryQuery implements Query {
-
-    /**
-     * Defines a logger for this class
-     */
-    private static final Logger LOGGER = Logger.getLogger( CategoryQuery.class.getName() );
 
     /**
      * The collection for which this query should run
