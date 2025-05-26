@@ -213,7 +213,7 @@ test {
         exceptionFormat = "full"
     }
     reports {
-        junitXml.required = false
+        junitXml.required = true
         html.required = true
     }
 }
