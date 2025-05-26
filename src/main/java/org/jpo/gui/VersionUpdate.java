@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
+import org.jpo.generated.GeneratedVersion;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -54,7 +55,7 @@ public class VersionUpdate {
     public VersionUpdate() {
         try {
             final var latestVersion = getLatestJpoVersion();
-            if (Float.parseFloat(latestVersion) > Float.parseFloat(Settings.JPO_VERSION)) {
+            if (Float.parseFloat(latestVersion) > Float.parseFloat(GeneratedVersion.JPO_VERSION)) {
                 EventQueue.invokeLater(() -> showOutOfDateDialog(latestVersion));
             }
         } catch (final IOException | URISyntaxException e) {
@@ -110,7 +111,7 @@ public class VersionUpdate {
     private void showOutOfDateDialog(final String latestVersion) {
         final var outdatedMessage = String.format(
                 Settings.getJpoResources().getString("VersionUpdate.outdatedMessage"),
-                Settings.JPO_VERSION, latestVersion, Settings.JPO_DOWNLOAD_URL, Settings.JPO_DOWNLOAD_URL);
+                GeneratedVersion.JPO_VERSION, latestVersion, Settings.JPO_DOWNLOAD_URL, Settings.JPO_DOWNLOAD_URL);
         final var ep = new JEditorPane("text/html", outdatedMessage);
 
         ep.addHyperlinkListener(e -> {

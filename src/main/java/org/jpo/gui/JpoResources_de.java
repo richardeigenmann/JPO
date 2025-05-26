@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.Settings;
+import org.jpo.generated.GeneratedVersion;
 
 import java.util.ListResourceBundle;
 
@@ -61,9 +61,9 @@ public class JpoResources_de extends ListResourceBundle {
             {"areYouSure", "Sind Sie sicher?"},
 
             // Help About Dialog
-            {"HelpAboutText", "JPO Version " + Settings.JPO_VERSION + " ist ein Java/Swing Programm\n"
+            {"HelpAboutText", "JPO Version " + GeneratedVersion.JPO_VERSION + " ist ein Java/Swing Programm\n"
                     + "geschrieben von Richard Eigenmann, Zürich, Schweiz\n"
-                    + "Copyright 2000 - 2024\n"
+                    + "Copyright 2000 - 2025\n"
                     + "richard.eigenmann@gmail.com\n"
                     + "http://j-po.sourceforge.net\n"
                     + "\nDie Exif Extraktion wurde von Drew Noakes entwickelt\n"

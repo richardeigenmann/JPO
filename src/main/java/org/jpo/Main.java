@@ -1,9 +1,9 @@
 package org.jpo;
 
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.ApplicationStartupRequest;
 import org.jpo.eventbus.EventBusInitializer;
 import org.jpo.eventbus.JpoEventBus;
+import org.jpo.generated.GeneratedVersion;
 
 
 /*
@@ -39,8 +39,8 @@ public class Main {
      * @param args The command line arguments
      */
     public static void main( String[] args ) {
-        System.out.println("\nJPO version " + Settings.JPO_VERSION + "\n"
-                + "Copyright (C) 2000-2024 Richard Eigenmann,\nZurich, Switzerland\n"
+        System.out.println("\nJPO version " + GeneratedVersion.JPO_VERSION + "\n"
+                + "Copyright (C) 2000-2025 Richard Eigenmann,\nZurich, Switzerland\n"
                 + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
                 + "for details Look at the Help | License menu item.\n"
                 + "This is free software, and you are welcome\n"

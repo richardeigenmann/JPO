@@ -1,6 +1,6 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.Settings;
+import org.jpo.generated.GeneratedVersion;
 
 import java.util.ListResourceBundle;
 
@@ -63,9 +63,9 @@ public class JpoResources_zh_CN extends ListResourceBundle {
             {"areYouSure", "您确认所做的操作吗？"},
 
             // Help About Dialog
-            {"HelpAboutText", "JPO 版本 " + Settings.JPO_VERSION + " 是基于Java/Swing 开发的软件\n"
+            {"HelpAboutText", "JPO 版本 " + GeneratedVersion.JPO_VERSION + " 是基于Java/Swing 开发的软件\n"
                     + "作者Richard Eigenmann在瑞士苏黎世, \n"
-                    + "版权 2000 - 2024\n"
+                    + "版权 2000 - 2025\n"
                     + "邮件地址：richard.eigenmann@gmail.com\n"
                     + "软件主页网址：http://j-po.sourceforge.net\n"
                     + "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"
