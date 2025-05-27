@@ -253,7 +253,7 @@ sonar {
     properties {
         property "sonar.projectName", "Java Picture Organizer"
         property "sonar.projectKey", "richardeigenmann_JPO"
-        property "sonar.coverage.jacoco.xmlReportPaths", project.layout.buildDirectory.dir('/reports/jacoco/test/jacocoTestReport.xml').get().asFile.absolutePath
+        property "sonar.coverage.jacoco.xmlReportPaths", project.layout.buildDirectory.dir('reports/jacoco/test/jacocoTestReport.xml').get().asFile.absolutePath
         property "sonar.sources", "src/main"
         property "sonar.tests", "src/test"
         property "sonar.java.binaries", project.layout.buildDirectory.dir('classes/java/main').get().asFile.absolutePath
