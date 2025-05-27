@@ -18,8 +18,8 @@ blocks:
             - ps aux | grep Xvfb
             - export DISPLAY=:97
             #- curl https://download.java.net/java/GA/jdk20.0.1/b4887098932d415489976708ad6d1a4b/9/GPL/openjdk-20.0.1_linux-x64_bin.tar.gz | tar xz -C ~/
-            - curl https://download.oracle.com/java/24/latest/jdk-24_linux-aarch64_bin.tar.gz | tar xz -C ~/
-            - find ~/
+            - curl https://download.oracle.com/java/24/latest/jdk-24_linux-x64_bin.tar.gz | tar xz -C ~/
+            #- find ~/
             - export JAVA_HOME=/home/semaphore/jdk-24.0.1
             - cd ~/JPO
             - ./gradlew compileTestJava
