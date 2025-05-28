@@ -128,7 +128,9 @@ class WebsiteGeneratorTest {
         request.setGenerateMouseover(true);
         try {
             request.setTargetDirectory(tempDir.toFile());
-            LOGGER.log(Level.INFO, "Generating website into directory: {0}", tempDir);
+            LOGGER.log(Level.INFO, "Generating website into directory: {0}\nAsserting that the directory exists and is writeable", tempDir);
+            assertTrue(request.getTargetDirectory().exists());
+            assertTrue(request.getTargetDirectory().canWrite());
 
             final var rootNode = new SortableDefaultMutableTreeNode();
             rootNode.setUserObject(new GroupInfo("Root Node"));
@@ -139,6 +141,7 @@ class WebsiteGeneratorTest {
 
             final var pictureNode = new SortableDefaultMutableTreeNode();
             final var imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
+            assertTrue(imageFile.canRead());
             final var pictureInfo = new PictureInfo(imageFile, "Image 1");
             pictureNode.setUserObject(pictureInfo);
             groupNode.add(pictureNode);
@@ -148,15 +151,18 @@ class WebsiteGeneratorTest {
             fail(e.getMessage());
         }
 
+        LOGGER.log(Level.INFO, "Generating website in GuiActionRunner thread now...");
         var websiteGenerator = GuiActionRunner.execute(() -> WebsiteGenerator.generateWebsite(request));
 
         final var midresHtml = new File(request.getTargetDirectory(), "jpo_00001.htm");
 
         await().until(() -> {
-            System.out.println("State Value: " + websiteGenerator.getState() + " Done: " + websiteGenerator.isDone() + " midresFile.exists: " + midresHtml.exists());
+            LOGGER.log(Level.INFO, "Await until running: State Value: {0} Done: {1} midresFile.exists: {2}", new Object[]{websiteGenerator.getState(), websiteGenerator.isDone(), midresHtml.exists()});
             return websiteGenerator.isDone() && midresHtml.exists();
         });
 
+        LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresHtml);
+        assertThat (midresHtml).exists();
         final var jpoCssFile = new File(request.getTargetDirectory(), "jpo.css");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", jpoCssFile);
         assertThat(jpoCssFile).exists();
@@ -175,8 +181,6 @@ class WebsiteGeneratorTest {
         final var midresPicture = new File(request.getTargetDirectory(), "jpo_00001_m.jpg");
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresPicture);
         assertThat (midresPicture).exists();
-        LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresHtml);
-        assertThat (midresHtml).exists();
     }
 
     @Test
