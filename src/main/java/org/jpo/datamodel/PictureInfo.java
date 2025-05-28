@@ -457,6 +457,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @throws IOException if the underlying library encounters and {@link IOException}
      */
     public static String calculateSha256(final File file) throws IOException {
+        Objects.requireNonNull(file, "Cannot calculate SHA256 for a null file input in PictureInfo.calculateSha256");
         final var hash = Files.asByteSource(file).hash(Hashing.sha256());
         if (hash == null) {
             return "";

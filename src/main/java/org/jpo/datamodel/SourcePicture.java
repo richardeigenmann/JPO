@@ -15,6 +15,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
@@ -140,6 +141,7 @@ public class SourcePicture {
      * @param rotation Image rotation
      */
     public void loadPicture(final String sha256, final File file, final double rotation) {
+        Objects.requireNonNull(file, "file parameter must not be null in SourcePicture.loadPicture");
         if (pictureStatusCode.get() == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(file);
         }
@@ -159,6 +161,7 @@ public class SourcePicture {
      * @param rotation  The rotation 0-360 to be used on this picture
      */
     public void loadPictureInThread(final String sha256, final File imageFile, final int priority, final double rotation) {
+        Objects.requireNonNull(imageFile, "imageFile parameter must not be null in SourcePicture.loadPictureInThread");
         if (pictureStatusCode.get() == SOURCE_PICTURE_LOADING) {
             stopLoadingExcept(imageFile);
         }
