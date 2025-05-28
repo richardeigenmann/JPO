@@ -46,7 +46,7 @@ jobs:
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # run tests!
-      - run: gradle test sonar
+      - run: gradle -Djava.awt.headless=true test sonar
       #- run: gradle compileTestJava
       #- run: gradle check sonarqube
       - store_test_results:
