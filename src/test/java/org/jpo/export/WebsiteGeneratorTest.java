@@ -1,5 +1,6 @@
 package org.jpo.export;
 
+import org.assertj.swing.edt.GuiActionRunner;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -7,11 +8,8 @@ import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -118,7 +116,7 @@ class WebsiteGeneratorTest {
 
     @Test
     void testGenerateWebsite(@TempDir Path tempDir) {
-        assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
+        //assumeFalse(GraphicsEnvironment.isHeadless()); // There is a Progress Bar involved
         assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") ); // Doesn't work on Windows
 
         // set up the request
@@ -139,32 +137,24 @@ class WebsiteGeneratorTest {
             groupNode.setUserObject(new GroupInfo("Group Node"));
             request.setStartNode(groupNode);
 
-            final var pi1 = new SortableDefaultMutableTreeNode();
+            final var pictureNode = new SortableDefaultMutableTreeNode();
             final var imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
             final var pictureInfo = new PictureInfo(imageFile, "Image 1");
-            pi1.setUserObject(pictureInfo);
-            groupNode.add(pi1);
+            pictureNode.setUserObject(pictureInfo);
+            groupNode.add(pictureNode);
             request.setThumbnailWidth(350);
             request.setThumbnailHeight(250);
         } catch (final IOException | URISyntaxException e) {
             fail(e.getMessage());
         }
 
-        final WebsiteGenerator[] websiteGenerator = {null};
-        try {
-            SwingUtilities.invokeAndWait(() -> websiteGenerator[0] = WebsiteGenerator.generateWebsite(request));
-        } catch (InterruptedException | InvocationTargetException e) {
-            LOGGER.severe("Why was the website generation interrupted?");
-            LOGGER.severe(e.getMessage());
-            fail(e.getMessage());
-            Thread.currentThread().interrupt();
-        }
+        var websiteGenerator = GuiActionRunner.execute(() -> WebsiteGenerator.generateWebsite(request));
 
         final var midresHtml = new File(request.getTargetDirectory(), "jpo_00001.htm");
 
         await().until(() -> {
-            System.out.println("State Value: " + websiteGenerator[0].getState() + " Done: " + websiteGenerator[0].isDone() + " midresFile.exists: " + midresHtml.exists());
-            return websiteGenerator[0].isDone() && midresHtml.exists();
+            System.out.println("State Value: " + websiteGenerator.getState() + " Done: " + websiteGenerator.isDone() + " midresFile.exists: " + midresHtml.exists());
+            return websiteGenerator.isDone() && midresHtml.exists();
         });
 
         final var jpoCssFile = new File(request.getTargetDirectory(), "jpo.css");
@@ -187,7 +177,6 @@ class WebsiteGeneratorTest {
         assertThat (midresPicture).exists();
         LOGGER.log(Level.INFO, "Asserting that file {0} exists", midresHtml);
         assertThat (midresHtml).exists();
-
     }
 
     @Test
