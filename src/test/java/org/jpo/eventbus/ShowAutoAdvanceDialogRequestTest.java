@@ -1,6 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import org.assertj.swing.edt.GuiActionRunner;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -10,11 +11,12 @@ import org.junit.jupiter.api.Test;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
  Copyright (C) 2017 - 2024 Richard Eigenmann.
@@ -53,43 +55,45 @@ class ShowAutoAdvanceDialogRequestTest {
      */
     @Test
     void testReceivingEvent() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
+        //assumeFalse(GraphicsEnvironment.isHeadless());
 
         final var myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register(myEventBusSubscriber);
 
+        final var jFrame = GuiActionRunner.execute(() -> new JFrame());
+        final var pictureInfo = new PictureInfo();
+        final File imageFile;
         try {
-            SwingUtilities.invokeAndWait(() -> {
-                final var jFrame = new JFrame();
-                final var node = new SortableDefaultMutableTreeNode(new PictureInfo());
-                final var navigator = new SingleNodeNavigator(node);
-                final var request = new ShowPictureRequest(navigator, 0);
-                final var pictureViewer = new PictureViewer(request);
-
-                final var showAutoAdvanceDialogRequest = new ShowAutoAdvanceDialogRequest(jFrame, node, pictureViewer);
-                SwingUtilities.invokeLater(() -> {
-                    try {
-                        final var r = new Robot();
-                        r.delay(200);
-                        r.keyPress(KeyEvent.VK_ENTER);
-                        r.delay(20);
-                        r.keyRelease(KeyEvent.VK_ENTER);
-                    } catch (final AWTException e) {
-                        fail(e.getMessage());
-                        Thread.currentThread().interrupt();
-                    }
-                });
-                jpoEventBus.post(showAutoAdvanceDialogRequest);
-
-                assertEquals(showAutoAdvanceDialogRequest, responseEvent);
-                assertEquals(jFrame, responseEvent.parentComponent());
-                assertEquals(node, responseEvent.currentNode());
-                assertEquals(pictureViewer, responseEvent.autoAdvanceTarget());
-            });
-        } catch (final InterruptedException | InvocationTargetException ex) {
-            fail(ex.getMessage());
-            Thread.currentThread().interrupt();
+            imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
+            pictureInfo.setImageLocation(imageFile);
+        } catch (URISyntaxException | IOException e) {
+            fail("Could not load image file: " + e.getMessage());
         }
+        final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
+        final var navigator = new SingleNodeNavigator(pictureNode);
+        final var request = new ShowPictureRequest(navigator, 0);
+        final var pictureViewer = GuiActionRunner.execute(() -> new PictureViewer(request));
+
+        final var showAutoAdvanceDialogRequest = GuiActionRunner.execute(() -> new ShowAutoAdvanceDialogRequest(jFrame, pictureNode, pictureViewer));
+        GuiActionRunner.execute(() -> {
+            try {
+                final var robot = new Robot();
+                robot.delay(200);
+                robot.keyPress(KeyEvent.VK_ENTER);
+                robot.delay(20);
+                robot.keyRelease(KeyEvent.VK_ENTER);
+            } catch (final AWTException e) {
+                fail(e.getMessage());
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        jpoEventBus.post(showAutoAdvanceDialogRequest);
+
+        assertEquals(showAutoAdvanceDialogRequest, responseEvent);
+        assertEquals(jFrame, responseEvent.parentComponent());
+        assertEquals(pictureNode, responseEvent.currentNode());
+        assertEquals(pictureViewer, responseEvent.autoAdvanceTarget());
     }
 
     /**
