@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /*
- Copyright (C) 2017 - 2024 Richard Eigenmann.
+ Copyright (C) 2017 - 2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -62,9 +62,8 @@ class ShowAutoAdvanceDialogRequestTest {
 
         final var jFrame = GuiActionRunner.execute(() -> new JFrame());
         final var pictureInfo = new PictureInfo();
-        final File imageFile;
         try {
-            imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
+            final var imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
             pictureInfo.setImageLocation(imageFile);
         } catch (URISyntaxException | IOException e) {
             fail("Could not load image file: " + e.getMessage());
