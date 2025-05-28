@@ -142,6 +142,7 @@ class WebsiteGeneratorTest {
             final var pictureNode = new SortableDefaultMutableTreeNode();
             final var imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
             assertTrue(imageFile.canRead());
+            LOGGER.log(Level.INFO, "Test image file absolute path: {0}", imageFile.getAbsolutePath());
             final var pictureInfo = new PictureInfo(imageFile, "Image 1");
             pictureNode.setUserObject(pictureInfo);
             groupNode.add(pictureNode);
