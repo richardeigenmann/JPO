@@ -1,20 +1,16 @@
 package org.jpo.gui;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.assertj.swing.edt.GuiActionRunner;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
-import java.awt.*;
-import java.lang.reflect.InvocationTargetException;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-
-public class SettingsDialogTest {
+class SettingsDialogTest {
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
@@ -22,9 +18,12 @@ public class SettingsDialogTest {
      * Tests constructing a CategoryEditorJFrame
      */
     @Test
-    public void testConstructor() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        try {
+    void testConstructor() {
+        //assumeFalse(GraphicsEnvironment.isHeadless());
+        final var jDialog = GuiActionRunner.execute(() -> new SettingsDialog(false));
+        assertNotNull(jDialog);
+        GuiActionRunner.execute(jDialog::getRid);
+        /*try {
             SwingUtilities.invokeAndWait(() -> {
                 final SettingsDialog jDialog = new SettingsDialog(false);
                 assertNotNull(jDialog);
@@ -33,7 +32,7 @@ public class SettingsDialogTest {
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
             Thread.currentThread().interrupt();
-        }
+        }*/
     }
 
 }
