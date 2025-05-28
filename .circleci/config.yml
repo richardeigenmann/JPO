@@ -31,6 +31,11 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: Install Xvfb and xvfb-run
+          command: |
+            sudo apt-get update && sudo apt-get install -y xvfb x11-utils
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -45,10 +50,15 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+
+
       # run tests!
-      - run: gradle -Djava.awt.headless=true test sonar
-      #- run: gradle compileTestJava
-      #- run: gradle check sonarqube
+      - run:
+          command: |
+            xvfb-run -a gradle test sonar
+          environment:
+            DISPLAY: ":99"
+
       - store_test_results:
           path: build/test-results/test
       #- store_artifacts:
