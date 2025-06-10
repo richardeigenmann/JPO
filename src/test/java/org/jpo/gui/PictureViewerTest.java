@@ -70,7 +70,7 @@ class PictureViewerTest {
             final var image = new File(PictureViewerTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg").toURI());
             pictureInfo.setImageLocation(image);
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            fail("Could not load image file: " + e.getMessage());
         }
         final var DESCRIPTION = "A test image";
         pictureInfo.setDescription(DESCRIPTION);
