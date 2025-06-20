@@ -58,7 +58,7 @@ hopes you will find it useful and enjoys feedback.
 Visit the SourceForge.net download page by clicking this green button. Note that the download starts directly after 5
 seconds. Install the application like any other Windows application. Note that the developer has not paid for Microsoft 
 Certifications and you will get a lot of warnings about the application being from an "Unknown Publisher". JPO does
-not collect data about you. Check the <a href="https://j-po.sourceforge.io/privacy.php.html">Privacy Policy</a>. If you
+not collect data about you. Check the <a href="https://j-po.sourceforge.io/privacy.html">Privacy Policy</a>. If you
 know how I can improve this at low cost, please let me know.
 
 You can remove it just like any other windows

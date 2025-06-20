@@ -402,7 +402,6 @@ tasks.register('uploadWebsitePages', Exec) {
             '--include="*.php"',
             '--include="*.html"',
             '--include="*.css"',
-            '--include="*.php"',
             '--include="fontconfig"',
             '--include="*.gif"',
             '--include="*.png"',

@@ -1,4 +1,4 @@
-<?php include 'page-start.php'; ?>
+<?php include 'page-start.html'; ?>
 <div class="container">
     <h1>Tutorial: Order prints from a lab</h1>
     <h3>Objective:</h3>
@@ -17,6 +17,6 @@
 
 <hr>
 <p>Last update to this page: 23 May 2024<br>
-    Copyright 2009-2024 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
+    Copyright 2009-2025 by Richard Eigenmann, Z&uuml;rich, Switzerland</p>
 </div>
-<?php include 'page-end.php'; ?>
+<?php include 'page-end.html'; ?>

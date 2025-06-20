@@ -13,9 +13,9 @@
     <developer_name>Richard Eigenmann</developer_name>
 
     <url type="homepage">https://j-po.sourceforge.io</url>
-    <url type="help">https://j-po.sourceforge.io/tutorial_gettingstarted.php</url>
+    <url type="help">https://j-po.sourceforge.io/tutorial_gettingstarted.html</url>
     <url type="bugtracker">https://github.com/richardeigenmann/JPO/issues</url>
-    <url type="contact">https://j-po.sourceforge.io/about.php</url>
+    <url type="contact">https://j-po.sourceforge.io/about.html</url>
 
     <launchable type="desktop-id">io.sourceforge.j-po.desktop</launchable>
 

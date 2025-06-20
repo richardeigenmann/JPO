@@ -108,7 +108,7 @@ public class Settings {
     /**
      * The download url for JPO
      */
-    public static final String JPO_DOWNLOAD_URL = JPO_URL + "/download.php";
+    public static final String JPO_DOWNLOAD_URL = JPO_URL + "/download.html";
     /**
      * The download url for JPO
      */
