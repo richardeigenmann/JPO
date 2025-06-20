@@ -392,24 +392,17 @@ jlink {
     }
 }
 
+
 tasks.register('uploadWebsitePages', Exec) {
     group 'website'
     description 'Publishes the JPO website pages'
+    dependsOn ':webpage:npmBuild'
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-avP',
-            '--exclude="*"',
-            '--include="*.php"',
-            '--include="*.html"',
-            '--include="*.css"',
-            '--include="fontconfig"',
-            '--include="*.gif"',
-            '--include="*.png"',
-            '--include="*.jpg"',
-            '--include="*.json"',
-            '--include="*.bat"',
-            '--include="*.flatpakref"',
-            "${projectDir}/src/web/", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
+    commandLine('rsync',
+            '-avP',
+            "${projectDir}/webpage/dist/",
+            'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
 tasks.register('uploadJavadoc', Exec) {
@@ -436,7 +429,7 @@ tasks.register('uploadDebInstaller', Exec) {
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-v', '--no-perms', "${${project.layout.buildDirectory}}/my-packaging/jpo_${version}_amd64.deb", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo_${version}_amd64.deb", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
 }
 
 tasks.register('uploadMsiInstaller', Exec) {
@@ -445,7 +438,7 @@ tasks.register('uploadMsiInstaller', Exec) {
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-v', '--no-perms', "${${project.layout.buildDirectory}}/my-packaging/jpo-${version}.msi", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
+    commandLine('rsync', '-v', '--no-perms', "${buildDir}/my-packaging/jpo-${version}.msi", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
 }
 
 tasks.register('uploadJar', Exec) {
@@ -454,7 +447,7 @@ tasks.register('uploadJar', Exec) {
     dependsOn signJar
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-avP', "${${project.layout.buildDirectory}}/jars/signed/Jpo-${version}-all.jar", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
+    commandLine('rsync', '-avP', "${buildDir}/jars/signed/Jpo-${version}-all.jar", 'richieigenmann@web.sourceforge.net:/home/frs/project/j-po/')
 }
 
 tasks.register('uploadFlatpakRepo', Exec) {
@@ -462,7 +455,7 @@ tasks.register('uploadFlatpakRepo', Exec) {
     description 'Publishes the JPO flatpak repo'
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-arvP', "${${project.layout.buildDirectory}}/flatpak-repo", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
+    commandLine('rsync', '-arvP', "${buildDir}/flatpak-repo", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
 tasks.register('uploadWebsite') {
@@ -503,3 +496,62 @@ base64 repo-public-key.gpg | tr -d '\n'
 
 flatpak --user install https://j-po.sourceforge.io/io.sourceforge.j-po.flatpakref
 */
+
+// Configure the 'webpage' subproject
+project(':webpage') {
+    // Apply a base plugin (optional, but good practice for subprojects)
+    // You don't need 'java' or 'application' here as it's not a Java project.
+    // 'base' or 'ear' are often used for non-JVM subprojects.
+    // However, if you're only using 'exec' tasks, it might not be strictly necessary
+    // but helps Gradle understand it's a project.
+    apply plugin: 'base'
+
+    // Define the directory where the Node.js project resides
+    def webpageDir = "$projectDir" // projectDir will be 'frontend/' for this subproject
+
+    // Task to install Node.js dependencies
+    tasks.register('npmInstall', Exec) {
+        inputs.file "${webpageDir}/package.json"
+        outputs.dir "${webpageDir}/node_modules"
+
+        workingDir webpageDir
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            commandLine 'cmd', '/c', 'npm install'
+        } else {
+            commandLine 'npm', 'install'
+        }
+    }
+
+    // Task to build the Astro project for production
+    tasks.register('npmBuild', Exec) {
+        inputs.dir "${webpageDir}/src" // Watch source changes
+        inputs.file "${webpageDir}/package.json" // Watch package.json changes
+        outputs.dir "${webpageDir}/dist" // Or 'out', depending on your Astro config
+
+        workingDir webpageDir
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            commandLine 'cmd', '/c', 'npm run build'
+        } else {
+            commandLine 'npm', 'run', 'build'
+        }
+        // Ensure npmInstall runs before npmBuild
+        dependsOn npmInstall
+    }
+
+    // Task to clean the Astro build output
+    tasks.register('npmClean', Delete) {
+        delete "${webpageDir}/dist" // Or 'out'
+        delete "${webpageDir}/node_modules" // Optional: delete node_modules on clean
+    }
+}
+
+// Optional: Integrate frontend tasks into the main build lifecycle
+// This ensures that when you run `gradle build` on the root, the frontend is also built.
+tasks.register('npmbuild') {
+    dependsOn ':webpage:npmBuild' // Makes root 'build' depend on frontend's 'npmBuild'
+}
+
+// Optional: Integrate frontend clean into the main clean lifecycle
+tasks.register('npmclean') {
+    dependsOn ':webpage:npmClean' // Makes root 'clean' depend on frontend's 'npmClean'
+}

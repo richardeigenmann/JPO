@@ -1,0 +1,191 @@
+---
+export interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+
+import "bootstrap/dist/css/bootstrap.min.css";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand mb-0 h1" href="/"
+          >JPO Java Picture Organizer</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="downloadDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Download
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
+                <li>
+                  <a class="dropdown-item" href="/download/">Windows 10</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/downloadLinux/">Linux</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/runJavaDirectly/"
+                    >Run Java directly</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarTutorialsDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Tutorials
+              </a>
+              <ul
+                class="dropdown-menu"
+                aria-labelledby="navbarTutorialsDropdown"
+              >
+                <li>
+                  <a class="dropdown-item" href="/tutorial_gettingstarted/"
+                    >Getting Started</a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="/tutorial_download_from_camera/"
+                    >Download from Camera</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/tutorial_order_prints/"
+                    >Order prints from a lab</a>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/support/">Support</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/license/">License</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/privacy/">Privacy</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">About the Project</a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="codeDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Code
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="codeDropdown">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://github.com/richardeigenmann/JPO">GitHub</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="https://j-po.sourceforge.io/javadoc/">Javadoc</a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" href="/windows/"
+                    >Set up Dev environment on Windows 10</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/intellij/"
+                    >Set up IntelliJ IDEA Dev environment</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/commandLineDev/"
+                    >Command Line Development</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/eclipse/"
+                    >Set up Eclipse Dev environment</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/netbeans/"
+                    >Set up Netbeans Dev environment</a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://sourceforge.net/p/j-po/git/ci/master/tree/"
+                    >Source Code Sourceforge.net</a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://sourceforge.net/projects/j-po/"
+                    >SourceForge project page</a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://travis-ci.org/github/richardeigenmann/JPO"
+                    >Travis CI Build status</a>
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item"
+                    href="https://sonarcloud.io/dashboard?id=JPO"
+                    >Sonarcloud Dashboard</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <slot />
+    <script>
+      import "bootstrap/dist/js/bootstrap.bundle.min.js";
+    </script>
+  </body>
+</html>
