@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
-Copyright (C) 2023-2024 Richard Eigenmann.
+Copyright (C) 2023-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -46,7 +46,7 @@ class FileLoadRequestTest {
             new FileLoadRequest(pictureCollection, existingFile);
         } catch (final IllegalArgumentException e) {
             fail("There wasn't supposed to be an IllegalArgumentException in this test. Exception reads: " + e.getMessage());
-        } catch (final URISyntaxException e) {
+        } catch (final URISyntaxException _) {
             fail("Test was supposed to create a request for a file that exists");
         }
     }
@@ -54,9 +54,10 @@ class FileLoadRequestTest {
     @Test
     void makeFileLoadRequestInexistantFile() {
         final var pictureCollection = new PictureCollection();
+
+        final var inexistantFile = Paths.get("no_such_file.txt").toFile();
         try {
-            final var inexistantFile = Paths.get("no_such_file.txt");
-            new FileLoadRequest(pictureCollection, inexistantFile.toFile());
+            new FileLoadRequest(pictureCollection, inexistantFile);
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"no_such_file.txt\" must exist before we can load it!", e.getMessage());
@@ -69,7 +70,7 @@ class FileLoadRequestTest {
      */
     @Test
     void makeFileLoadRequestUnreadableFile() {
-        assumeFalse( System.getProperty("os.name").toLowerCase().startsWith("win") );
+        assumeFalse(System.getProperty("os.name").toLowerCase().startsWith("win"));
 
         final var pictureCollection = new PictureCollection();
         Path unreadableFilePath = null;
@@ -78,18 +79,18 @@ class FileLoadRequestTest {
             Files.writeString(unreadableFilePath, "Some random text", StandardCharsets.UTF_8);
 
             Files.setPosixFilePermissions(unreadableFilePath, PosixFilePermissions.fromString("---------"));
-
-            new FileLoadRequest(pictureCollection, unreadableFilePath.toFile());
+        } catch (IOException e) {
+            fail("Something went wrong in the test: " + e.getMessage());
+        }
+        final var unreadableFile = unreadableFilePath.toFile();
+        try {
+            new FileLoadRequest(pictureCollection, unreadableFile);
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {
             assertEquals("File \"" + unreadableFilePath + "\" must be readable for FileLoadRequest!", e.getMessage());
-        } catch (final IOException e) {
-            fail("Something went wrong in the test: " + e.getMessage());
         } finally {
             try {
-                if ( unreadableFilePath != null ) {
-                    Files.delete(unreadableFilePath);
-                }
+                Files.delete(unreadableFilePath);
             } catch (final IOException e) {
                 fail("Could no clean up from test: " + e.getMessage());
             }
@@ -99,8 +100,8 @@ class FileLoadRequestTest {
     @Test
     void makeFileLoadRequestOnDirectory() {
         final var pictureCollection = new PictureCollection();
+        final var directory = new File(".");
         try {
-            final var directory = new File(".");
             new FileLoadRequest(pictureCollection, directory);
             fail(AN_ILLEGAL_ARGUMENT_EXCEPTION_WAS_SUPPOSED_TO_BE_THROWN);
         } catch (final IllegalArgumentException e) {

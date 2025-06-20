@@ -2,7 +2,7 @@ package org.jpo.testground;
 
 
 /*
- Copyright (C) 2020-2024 Richard Eigenmann.
+ Copyright (C) 2020-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,6 +39,8 @@ import java.util.logging.Logger;
  * A little GUI to experiment with the ThumbnailDescriptions
  */
 public class ThumbnailTester {
+
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailTester.class.getName());
 
     /**
      * An entry point for standalone screen size testing.
@@ -86,7 +88,9 @@ public class ThumbnailTester {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            LOGGER.log(Level.WARNING, "Interrupted!", e);
+            /* Clean up whatever needs to be handled before interrupting  */
+            Thread.currentThread().interrupt();
         }
         var pictureNode = rootNode.getChildPictureNodes(true).get(0);
         final var singleNodeNavigator = new SingleNodeNavigator(pictureNode);

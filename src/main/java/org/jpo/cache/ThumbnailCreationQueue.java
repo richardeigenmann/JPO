@@ -3,10 +3,12 @@ package org.jpo.cache;
 import org.jetbrains.annotations.TestOnly;
 
 import java.util.concurrent.PriorityBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2003-2024 Richard Eigenmann.
+ Copyright (C) 2003-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -30,6 +32,8 @@ public class ThumbnailCreationQueue {
     private ThumbnailCreationQueue() {
         throw new IllegalStateException("Utility class");
     }
+
+    private static final Logger LOGGER = Logger.getLogger(ThumbnailCreationQueue.class.getName());
 
     /**
      * Implemented using a PriorityBlockingQueue
@@ -90,7 +94,10 @@ public class ThumbnailCreationQueue {
      * @param requestToRemove The request to remove
      */
     public static void removeFromQueue(final ThumbnailQueueRequest requestToRemove) {
-        QUEUE.remove(requestToRemove);
+        var success = QUEUE.remove(requestToRemove);
+        if (!success) {
+            LOGGER.log(Level.WARNING, "Could not remove request from queue: {0}", requestToRemove);
+        }
     }
 
     /**

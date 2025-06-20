@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 /*
  PictureInfo.java:  the definitions for picture data
 
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -459,9 +459,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     public static String calculateSha256(final File file) throws IOException {
         Objects.requireNonNull(file, "Cannot calculate SHA256 for a null file input in PictureInfo.calculateSha256");
         final var hash = Files.asByteSource(file).hash(Hashing.sha256());
-        if (hash == null) {
-            return "";
-        }
         LOGGER.log(Level.FINE, "SHA-256 of file {0} is {1}", new Object[]{file, hash.toString().toUpperCase()});
         return hash.toString().toUpperCase();
     }
