@@ -65,7 +65,7 @@ public class JpoResources_en extends ListResourceBundle {
                     + "written by Richard Eigenmann, Zürich, Switzerland\n"
                     + "Copyright 2000 - 2025\n"
                     + "richard.eigenmann@gmail.com\n"
-                    + "http://j-po.sourceforge.net\n"
+                    + "https://j-po.sourceforge.io\n"
                     + "\nThe Exif extraction is courtesy of Drew Noakes\n"
                     + "The Table sorter is courtesy of Philip Milne\n"
                     + "Mikael Grev develops MiG Layout\n"
@@ -236,7 +236,7 @@ public class JpoResources_en extends ListResourceBundle {
 
 
             // HtmlDistillerThread
-            {"LinkToJpo", "Made with <a href=\"http://j-po.sourceforge.net\">JPO</a>"},
+            {"LinkToJpo", "Made with <a href=\"https://j-po.sourceforge.io\">JPO</a>"},
             {"htmlDistillerInterrupt", "interrupting gracefully"},
             {"CssCopyError", "Error writing file: "},
             {"HtmlDistillerPreviewFont", "SansSerif-BOLD-18"},

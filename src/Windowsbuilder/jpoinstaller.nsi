@@ -4,7 +4,7 @@
 !define PRODUCT_NAME "Java Picture Organizer"
 !define PRODUCT_VERSION "0.14"
 !define PRODUCT_PUBLISHER "Richard Eigenmann"
-!define PRODUCT_WEB_SITE "http://j-po.sourceforge.net"
+!define PRODUCT_WEB_SITE "https://j-po.sourceforge.io"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 

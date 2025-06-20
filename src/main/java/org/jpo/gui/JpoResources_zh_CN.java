@@ -67,7 +67,7 @@ public class JpoResources_zh_CN extends ListResourceBundle {
                     + "作者Richard Eigenmann在瑞士苏黎世, \n"
                     + "版权 2000 - 2025\n"
                     + "邮件地址：richard.eigenmann@gmail.com\n"
-                    + "软件主页网址：http://j-po.sourceforge.net\n"
+                    + "软件主页网址：https://j-po.sourceforge.io\n"
                     + "\nExif（可交换图像文件）的抽取部分蒙Drew Noakes的帮助\n"
                     + "表的排序部分蒙Philip Milne的帮助\n"
                     + "Mikael Grev develops MiG Layout\n"
@@ -246,7 +246,7 @@ M: 弹出菜单"""},
             {"check", "校验"},
 
             // HtmlDistillerThread
-            {"LinkToJpo", "制作工具：<A HREF=\"http://j-po.sourceforge.net\">JPO</A>"},
+            {"LinkToJpo", "制作工具：<A HREF=\"https://j-po.sourceforge.io\">JPO</A>"},
             {"htmlDistillerInterrupt", "操作已被停止"},
             {"CssCopyError", "不能拷贝样式文件: "},
             {"HtmlDistillerPreviewFont", ""},

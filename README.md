@@ -9,7 +9,7 @@ Java Picture Organizer
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=richardeigenmann_JPO&metric=coverage)](https://sonarcloud.io/summary/new_code?id=richardeigenmann_JPO)
 [![semaphore](https://richardeigenmann.semaphoreci.com/badges/JPO.svg?style=shields)](https://richardeigenmann.semaphoreci.com/)
 
-Homepage: http://j-po.sourceforge.net/
+Homepage: https://j-po.sourceforge.io/
 
 ## About JPO the Java Picture Organizer
 
