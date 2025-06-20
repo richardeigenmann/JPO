@@ -13,27 +13,31 @@ Homepage: http://j-po.sourceforge.net/
 
 ## About JPO the Java Picture Organizer
 
-JPO is a program that helps you organise your digital pictures by putting them in collections. There you can browse the
-pictures, skip through the thumbnails, share them by email or generate a website. A powerful picture viewer allows you
-to see the pictures full screen with simple Zoom-in and Zoom-out with the left and right mouse buttons.</p>
+JPO is a desktop program that helps you organise your digital pictures by putting them in collections that are saved as
+plain XML files. You can label the picture, capture its location and associate it with Keywords. 
+When you open up a collection you can browse or search the pictures, skip through the thumbnails, share them by 
+email or generate a website. A picture viewer allows you to see the pictures in full screen with simple Zoom-in and 
+Zoom-out with the left and right mouse buttons or mouse wheel.</p>
 
-A fundamental design principle is that JPO doesn't mess with your pictures. They stay unchanged on your disk unless you
-ask JPO to move them somewhere or to delete them.
+A fundamental design principle is that JPO doesn't alter your pictures. They stay unchanged on your disk unless you
+ask JPO to move them somewhere or to delete them. It does allow you to "consolidate" all the picture files into
+a directory.
 
 JPO is not a photo editing application. There are many excellent packages out there with which you can touch up your
 pictures. You can make JPO open such a program for you.
 
-Richard Eigenmann from Z&uuml;rich has spent the last 21 years building and improving JPO as an OpenSource project. He
+Richard Eigenmann from Z&uuml;rich has spent the last 22 years building and improving JPO as an OpenSource project. He
 hopes you will find it useful and enjoys feedback.
 
 ### Features
 
 * Quickly Organize digital images into collections and groups
+* Allows tagging of pictures with keywords
 * Creates web pages from your collection
 * Download pictures from Camera with the ability to load only the new ones
 * Send rescaled images and originals via email
 * View pictures as a slide show
-* Simple zoom-in and zoom-out with left / right mouse buttons
+* Simple zoom-in and zoom-out with left / right mouse buttons or mouse wheel
 * Rotation on the fly without modifying the original image
 * Browse image thumbnails
 * Automatically advancing slide shows
@@ -45,23 +49,80 @@ hopes you will find it useful and enjoys feedback.
 * Runs on Windows, Linux and macOS, anywhere Java runs
 * Can call up outside applications
 * Leaves your pictures where they are
-* Can move pictures to new locations to tidy up
+* Can move pictures to new locations to tidy up (consolidate)
 * Doesn't modify your original pictures
 * Open source license
 
 ## Installing JPO on Windows 10 & 11
 
 Visit the SourceForge.net download page by clicking this green button. Note that the download starts directly after 5
-seconds. Install the application like any other windows application. You can remove it just like any other windows
+seconds. Install the application like any other Windows application. Note that the developer has not paid for Microsoft 
+Certifications and you will get a lot of warnings about the application being from an "Unknown Publisher". JPO does
+not collect data about you. Check the <a href="https://j-po.sourceforge.io/privacy.php.html">Privacy Policy</a>. If you
+know how I can improve this at low cost, please let me know.
+
+You can remove it just like any other windows
 application by opening the Start menu, clicking on the cogwheel icon (Settings), choosing Apps in the Settings Window
-that opens up, scroll down to JPO and there click on the uninstall button.
+that opens up, scroll down to JPO and there click on the uninstall button. It is not supposed to leave any files 
+or registry settings behind.
 
 [![Download Button](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/j-po/files/JPO-0.14.exe/download)
 
-<p>Alternatively, visit the <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a></p>
+<p>Alternatively, visit the <a href="http://sourceforge.net/projects/j-po/files">SourceForge download area</a></p> 
+I apologise for the mess SourceForge have made of this page with all the ads.
 
-Why the scary warning about the Unknown Publisher? I haven't figured out how to make Microsoft recognize me as a trusted
-publisher. If you know how I can improve this, please write to me.
+## HIDPI - Problems with super high resolution displays
+
+Many Laptops have super High Resolution Displays (HiDPI) which Java doesn't deal with very well by default. The UI then
+shows up with unusably small fonts and icons. You can fix this by setting the environment variables.
+
+Set the GDK_SCALE environment variable to the desired scale factor. This variable controls the scaling of the UI elements. 
+Replace 2 with your preferred scale factor.
+
+```bash
+export GDK_SCALE=2
+```
+
+Set the GDK_DPI_SCALE environment variable to the inverse of the GDK_SCALE value. This variable adjusts the DPI scaling
+of fonts and other elements to maintain their proper size. For example, if you set GDK_SCALE to 2, then GDK_DPI_SCALE should be set to 0.5.
+
+```bash
+export GDK_SCALE=2
+export GDK_DPI_SCALE=0.5
+```
+## Connecting with the Author
+
+JPO is an Open Source project and you can contribute to it. To connect with the author simply send an email to
+<a href="mailto:richard.eigenmann@gmail.com"richard.eigenmann@gmail.com</a>
+
+
+## Developing JPO with IntelliJ IDEA
+
+As of 2025 JPO is being developed with the community edition of IntelliJ IDEA.
+
+* Ensure you have IntelliJ IDEA set up: https://www.jetbrains.com/idea/
+* Have you got a JDK 23 or later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
+
+Once you have your IntelliJ IDEA installed and working you can clone the JPO repository from GitHub and open it in IntelliJ IDEA.
+
+```bash
+git clone https://github.com/richardeigenmann/JPO.git
+```
+
+To run the project go to the Gradle Tasks Window click
+`Jpo > Tasks > application > run`.
+
+Or if you prefer the GUI, you can do the following:
+
+On the Welcome screen click on `Check out from Version Control`
+
+Enter the URL `https://github.com/richardeigenmann/JPO.git` and click `Clone`
+
+Confirm `You have checked out and IntelliJ IDEA project file: .../build.gradle`
+
+On the right margin you have a tab `Gradle` which gives you access to the tasks
+
+Pick `JPO > Tasks > build > build` and it should download dependencies compile and run the tests
 
 ## Exploring the code - with SourceTrail
 
@@ -99,28 +160,12 @@ flatpak run org.richinet.jpo
 flatpak remove org.richinet.jpo
 ```
 
-## Developing JPO with IntelliJ IDEA
-
-* Ensure you have IntelliJ IDEA set up: https://www.jetbrains.com/idea/
-* Have you got a JDK 18 or later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
-
-On the Welcome screen click on `Check out from Version Control`
-
-Enter the URL `https://github.com/richardeigenmann/JPO.git` and click `Clone`
-
-Confirm `You have checked out and IntelliJ IDEA project file: .../build.gradle`
-
-On the right margin you have a tab `Gradle` which gives you access to the tasks
-
-Pick `JPO > Tasks > build > build` and it should download dependencies compile and run the tests
-
-To run the project go to the Gradle Tasks Window click `JPO > build > run`.
 
 ## Developing JPO with Netbeans
 
 Ensure you have Netbeans set up:
 
-* Have you downloaded JDK 18 or
+* Have you downloaded JDK 23 or
   later? [Oracle Java SDK](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * Have you installed Netbeans does it start up? <https://netbeans.org> Like Version 11.2?
 * Have you got Gradle installed? <https://gradle.org/install> Use SDKMan for Linux, follow the "Installing manually" for Windows
@@ -140,19 +185,4 @@ To run the application, click on Projects in the left Panel and expand the JPO p
 JPO is a Java Swing application which uses the Guava [EventBus](https://github.com/google/guava/wiki/EventBusExplained) 
 to order and fulfil the GUI tasks.
 
-## HIDPI
 
-Determine the scale factor you want to apply. For example, if you have a HiDPI display and want to scale by a factor of 2, you can set the scale value to 2.
-
-Set the GDK_SCALE environment variable to the desired scale factor. This variable controls the scaling of the UI elements. Replace 2 with your preferred scale factor.
-
-```bash
-export GDK_SCALE=2
-```
-
-Set the GDK_DPI_SCALE environment variable to the inverse of the GDK_SCALE value. This variable adjusts the DPI scaling of fonts and other elements to maintain their proper size. For example, if you set GDK_SCALE to 2, then GDK_DPI_SCALE should be set to 0.5.
-
-```bash
-export GDK_SCALE=2
-export GDK_DPI_SCALE=0.5
-```
