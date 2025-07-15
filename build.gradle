@@ -411,7 +411,7 @@ tasks.register('uploadJavadoc', Exec) {
     dependsOn javadoc
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-avP', "${${project.layout.buildDirectory}}/docs/javadoc", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
+    commandLine('rsync', '-avP', "${project.layout.buildDirectory}/docs/javadoc", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
 tasks.register('uploadRpmInstaller', Exec) {
@@ -420,7 +420,7 @@ tasks.register('uploadRpmInstaller', Exec) {
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
-    commandLine('rsync', '-v', '--no-perms', "${${project.layout.buildDirectory}}/my-packaging/jpo-${version}-1.x86_64.rpm", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
+    commandLine('rsync', '-v', '--no-perms', "${project.layout.buildDirectory}/my-packaging/jpo-${version}-1.x86_64.rpm", "richieigenmann@web.sourceforge.net:/home/frs/project/j-po/")
 }
 
 tasks.register('uploadDebInstaller', Exec) {

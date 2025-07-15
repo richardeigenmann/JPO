@@ -47,6 +47,8 @@ hopes you will find it useful and enjoys feedback.
 * Open XML data structures
 * Pure Java, no native libraries
 * Runs on Windows, Linux and macOS, anywhere Java runs
+* No Databases
+* Runs locally without a browser
 * Can call up outside applications
 * Leaves your pictures where they are
 * Can move pictures to new locations to tidy up (consolidate)
@@ -184,5 +186,3 @@ To run the application, click on Projects in the left Panel and expand the JPO p
 
 JPO is a Java Swing application which uses the Guava [EventBus](https://github.com/google/guava/wiki/EventBusExplained) 
 to order and fulfil the GUI tasks.
-
-
