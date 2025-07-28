@@ -34,7 +34,7 @@ module org.jpo {
     requires org.jetbrains.annotations;
     requires org.json;
     requires org.tagcloud;
-    requires io.github.classgraph;
+    //requires io.github.classgraph;
     requires jdk.xml.dom;
     requires org.jxmapviewer.jxmapviewer2;  // required for svg
     requires org.apache.commons.logging;
