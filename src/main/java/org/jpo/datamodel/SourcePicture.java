@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
 import org.jpo.gui.SourcePictureListener;
@@ -64,6 +65,11 @@ public class SourcePicture {
      * the hash code of the image
      */
     private String sha256;
+
+    @TestOnly
+    public String getSha256() {
+        return sha256;
+    }
 
     /**
      * States of the source picture
