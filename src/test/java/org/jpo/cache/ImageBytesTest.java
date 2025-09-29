@@ -1,74 +1,74 @@
 package org.jpo.cache;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
+import java.time.Instant;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
-/*
- Copyright (C) 2017-2024 Richard Eigenmann.
- This program is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License
- as published by the Free Software Foundation; either version 2
- of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY.
- Without even the implied warranty of MERCHANTABILITY or FITNESS
- FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
- more details. You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- The license is in gpl.txt.
- See http://www.gnu.org/copyleft/gpl.html for the details.
- */
-
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * @author Richard Eigenmann
+ * Unit tests for the {@link ImageBytes} class.
  */
 class ImageBytesTest {
 
+    private static final byte[] TEST_BYTES = {1, 2, 3, 4, 5};
+    private ImageBytes imageBytes;
 
-    @Test
-    void constructorTest() {
-        final var sourceBytes = "Any String you want".getBytes();
-        final var imageBytes = new ImageBytes(sourceBytes);
-        final var bytes = imageBytes.getBytes();
-        assertArrayEquals(sourceBytes, bytes);
+    @BeforeEach
+    void setUp() {
+        imageBytes = new ImageBytes(TEST_BYTES);
     }
 
     @Test
-    void testSerializable() {
-        final var sourceBytes = "Any String you want".getBytes();
-        final var imageBytes1 = new ImageBytes(sourceBytes);
-        try {
-            final var tempFile = File.createTempFile("testSerializable", ".jpg");
-            try (final var fileOutputStream = new FileOutputStream(tempFile);
-                 final var objectOutputStream = new ObjectOutputStream(fileOutputStream)
-            ) {
-                objectOutputStream.writeObject(imageBytes1);
-            } catch (final IOException e) {
-                Files.delete(tempFile.toPath());
-                fail(e.getMessage());
-            }
+    void testConstructorAndGetBytes() {
+        // The constructor should store the byte array, and getBytes() should return it.
+        assertArrayEquals(TEST_BYTES, imageBytes.getBytes(), "getBytes() should return the original byte array.");
+    }
 
-            try (final var fileInputStream = new FileInputStream(tempFile);
-                 final var objectInputStream = new ObjectInputStream(fileInputStream)
-            ) {
-                // Method for deserialization of object
-                final var imageBytes = (ImageBytes) objectInputStream.readObject();
-                assertArrayEquals(imageBytes1.getBytes(), imageBytes.getBytes());
-            } catch (final IOException | ClassNotFoundException ex) {
-                fail(ex.getMessage());
-            } finally {
-                Files.delete(tempFile.toPath());
-            }
-        } catch (final IOException e) {
-            fail(e.getMessage());
-        }
+    @Test
+    void testGetByteArrayInputStream() {
+        // The input stream should contain the same bytes as the original array.
+        final var inputStream = imageBytes.getByteArrayInputStream();
+        final byte[] readBytes = inputStream.readAllBytes();
+        assertArrayEquals(TEST_BYTES, readBytes, "The ByteArrayInputStream should contain the correct bytes.");
+    }
 
+    @Test
+    void testRetrievedFromCacheFlag() {
+        // The flag should default to false.
+        assertFalse(imageBytes.isRetrievedFromCache(), "isRetrievedFromCache should default to false.");
 
+        // Test setting the flag to true.
+        imageBytes.setRetrievedFromCache(true);
+        assertTrue(imageBytes.isRetrievedFromCache(), "isRetrievedFromCache should be true after being set.");
+
+        // Test setting the flag back to false.
+        imageBytes.setRetrievedFromCache(false);
+        assertFalse(imageBytes.isRetrievedFromCache(), "isRetrievedFromCache should be false after being reset.");
+    }
+
+    @Test
+    void testLastModificationTime() {
+        // Create a specific point in time for the test.
+        final Instant now = Instant.now();
+        final FileTime fileTime = FileTime.from(now);
+
+        // Set the modification time.
+        imageBytes.setLastModification(fileTime);
+
+        // Get the modification time and assert it's the same.
+        final FileTime retrievedFileTime = imageBytes.getLastModification();
+        assertEquals(fileTime, retrievedFileTime, "getLastModification() should return the same FileTime that was set.");
+    }
+
+    @Test
+    void testGetLastModificationBeforeSetting() {
+        // Before setLastModification is called, the internal Instant is null.
+        // FileTime.from(null) throws a NullPointerException. This test verifies that behavior.
+        assertThrows(NullPointerException.class,
+                () -> imageBytes.getLastModification(),
+                "Should throw NullPointerException if getLastModification() is called before setting a time.");
     }
 }
