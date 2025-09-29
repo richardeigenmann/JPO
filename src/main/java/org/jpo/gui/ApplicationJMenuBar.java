@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,6 +25,7 @@ import java.io.File;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * Creates the menu for the JPO application. Listens to
  * RecentCollectionsChangedEvent and LocaleChangedEvent events and updates
