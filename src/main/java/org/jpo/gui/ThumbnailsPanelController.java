@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 import static java.awt.Component.TOP_ALIGNMENT;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,11 +36,11 @@ import static java.awt.Component.TOP_ALIGNMENT;
 
 /**
  * The ThumbnailPanelController manages the display of a set of thumbnails.
- * This can be a group fo pictures or a query.
+ * This can be a group of pictures or a query.
  * Real pictures are shown as a thumbnail of the image whilst groups
  * are shown as a folder icon. Each thumbnail has its caption under the image.
  * <p>
- * If the size of the component is changed the images are re-laid out and can
+ * If the size of the component is changed the images are re-laid-out and can
  * take advantage of the extra space if there is some.
  */
 public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDropTargetDropEventHandler {
@@ -48,8 +48,6 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
      * The logger for the class
      */
     private static final Logger LOGGER = Logger.getLogger(ThumbnailsPanelController.class.getName());
-
-
 
     /**
      * The panel that shows the Thumbnails

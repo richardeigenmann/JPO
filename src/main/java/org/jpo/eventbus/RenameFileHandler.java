@@ -45,16 +45,16 @@ public class RenameFileHandler {
     @Subscribe
     public void handleEvent(@NonNull final RenameFileRequest request) {
         final PictureInfo pictureInfo = (PictureInfo) request.node().getUserObject();
-        LOGGER.log(Level.INFO, "Renaming node {0} ({1} to new filename: {2}", new Object[]{request.node(), pictureInfo.getImageFile().getPath(), request.newFileName()});
+        LOGGER.log(Level.INFO, "Renaming node: {0}\nfrom File: {1}\nto new file: {2}", new Object[]{request.node(), pictureInfo.getImageFile().getPath(), request.newFileName()});
         final var imageFile = pictureInfo.getImageFile();
-        final String newName = request.newFileName();
+        final var newName = request.newFileName();
         final var newFile = new File(imageFile.getParentFile(), newName);
         if (imageFile.renameTo(newFile)) {
-            LOGGER.log(Level.INFO, "Successfully renamed: {0} to: {1}", new Object[]{imageFile, newName});
+            LOGGER.log(Level.INFO, "Successfully renamed:\n{0}\nto: {1}", new Object[]{imageFile, newName});
             pictureInfo.setImageLocation(newFile);
             request.node().getPictureCollection().setUnsavedUpdates();
         } else {
-            LOGGER.log(Level.INFO, "Rename failed from : {0} to: {1}", new Object[]{imageFile, newName});
+            LOGGER.log(Level.INFO, "Rename failed from:\n{0}\nto: {1}", new Object[]{imageFile, newName});
         }
 
     }

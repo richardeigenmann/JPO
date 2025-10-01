@@ -96,7 +96,7 @@ public class ThumbnailCreationQueue {
     public static void removeFromQueue(final ThumbnailQueueRequest requestToRemove) {
         var success = QUEUE.remove(requestToRemove);
         if (!success) {
-            LOGGER.log(Level.WARNING, "Could not remove request from queue: {0}", requestToRemove);
+            LOGGER.log(Level.FINE, "Could not remove request from queue: {0} (Which may be OK)", requestToRemove);
         }
     }
 
