@@ -39,6 +39,7 @@ module org.jpo {
     requires org.jxmapviewer.jxmapviewer2;  // required for svg
     requires org.apache.commons.logging;
     requires org.jspecify;
+    requires io.github.classgraph;
 
     //requires org.mockito.junit.jupiter;  // should be test only but feels left out
 }

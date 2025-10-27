@@ -5,7 +5,7 @@ plugins {
     id 'idea' // optional (to generate IntelliJ IDEA project files)
     id 'org.beryx.jlink' version '3.1.4-rc'
     id "org.javamodularity.moduleplugin" version "1.8.15"
-    id "org.sonarqube" version "6.3.1.5724"
+    id "org.sonarqube" version "7.0.1.6134"
     id 'jacoco'
     id("com.gradleup.shadow") version "9.2.2"
 }
@@ -175,15 +175,15 @@ dependencies {
     implementation 'com.twelvemonkeys.imageio:imageio-thumbsdb:3.12.0'
     implementation group: 'org.json', name: 'json', version: '20250517'
     implementation 'com.jidesoft:jide-oss:3.6.18'
-    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.0-RC3'
+    testImplementation 'org.junit.jupiter:junit-jupiter:6.0.0'
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation(platform('org.junit:junit-bom:6.0.0-RC3'))
+    testImplementation(platform('org.junit:junit-bom:6.0.0'))
     testImplementation 'org.assertj:assertj-core:4.0.0-M1'
     testImplementation 'org.assertj:assertj-swing:3.17.1'
     testImplementation 'org.awaitility:awaitility:4.3.0'
     implementation group: 'javax.cache', name: 'cache-api', version: '1.1.1'
     implementation group: 'javax.enterprise', name: 'cdi-api', version: '2.0'
-    implementation 'io.github.classgraph:classgraph:4.8.181'
+    implementation 'io.github.classgraph:classgraph:4.8.184'
     testImplementation 'org.mockito:mockito-core:5.20.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.20.0'  // Mockito doesn't work nicely with modularity. But it can be added to the module.into
 
