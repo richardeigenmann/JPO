@@ -5,6 +5,7 @@
 
 # Build outputs
 /dist
+.astro
 
 # Cypress
 /cypress/downloads/
