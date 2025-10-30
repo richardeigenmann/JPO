@@ -4,6 +4,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.gui.JpoResources;
 
 import java.awt.geom.Point2D;
 import java.io.*;
@@ -156,9 +157,9 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      */
     public static String getFormattedCreationTime(final Calendar dateTime) {
         if (dateTime == null) {
-            return Settings.getJpoResources().getString("failedToParse");
+            return JpoResources.getResource("failedToParse");
         }
-        return Settings.getJpoResources().getString("parsedAs")
+        return JpoResources.getResource("parsedAs")
                     + String.format("%tc", dateTime);
     }
 

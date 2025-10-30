@@ -7,6 +7,7 @@ import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.io.File;
@@ -18,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +48,7 @@ public class CopyToZipfileHandler {
     /**
      * Title for Info Boxes
      */
-    public static final String GENERIC_INFO = Settings.getJpoResources().getString("genericInfo");
+    public static final String GENERIC_INFO = JpoResources.getResource("genericInfo");
 
     /**
      * Copies the pictures of the supplied nodes to the target zipfile, creating

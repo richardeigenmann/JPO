@@ -4,6 +4,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
 import org.jpo.gui.ConsolidateGroupActionCallback;
 import org.jpo.gui.DirectoryChooser;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 /*
- Copyright (C) 2015-2024 Richard Eigenmann.
+ Copyright (C) 2015-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -42,12 +43,12 @@ public class ConsolidateGroupJFrame extends JFrame {
     /**
      * Chooser to pick the highres directory
      */
-    private final DirectoryChooser highresDirectoryChooser = new DirectoryChooser(Settings.getJpoResources().getString("highresTargetDirJTextField"), DirectoryChooser.DIR_MUST_BE_WRITABLE);
+    private final DirectoryChooser highresDirectoryChooser = new DirectoryChooser(JpoResources.getResource("highresTargetDirJTextField"), DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      * Tickbox that indicates whether pictures or the current group only should
      * be consolidated or whether the subgroups (if any) should be included.
      */
-    private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("RecurseSubgroupsLabel"));
+    private final JCheckBox recurseSubgroupsJCheckBox = new JCheckBox(JpoResources.getResource("RecurseSubgroupsLabel"));
 
     /**
      * Constructor for the Consolidate Group Dialog
@@ -55,7 +56,7 @@ public class ConsolidateGroupJFrame extends JFrame {
      * @param consolidateGroupAction the action request
      */
     public ConsolidateGroupJFrame(final ConsolidateGroupActionCallback consolidateGroupAction) {
-        super(Settings.getJpoResources().getString("ConsolidateGroupJFrameHeading"));
+        super(JpoResources.getResource("ConsolidateGroupJFrameHeading"));
         this.consolidateGroupAction = consolidateGroupAction;
         initComponents();
     }
@@ -81,9 +82,9 @@ public class ConsolidateGroupJFrame extends JFrame {
         });
         final JPanel contentJPanel = new JPanel();
         contentJPanel.setLayout(new MigLayout());
-        final JLabel consolidateGroupBlaBlaJLabel = new JLabel(Settings.getJpoResources().getString("ConsolidateGroupBlaBlaLabel"));
+        final JLabel consolidateGroupBlaBlaJLabel = new JLabel(JpoResources.getResource("ConsolidateGroupBlaBlaLabel"));
         contentJPanel.add(consolidateGroupBlaBlaJLabel, "span 2, wrap");
-        final JLabel targetDirJLabel = new JLabel(Settings.getJpoResources().getString("genericTargetDirText"));
+        final JLabel targetDirJLabel = new JLabel(JpoResources.getResource("genericTargetDirText"));
         contentJPanel.add(targetDirJLabel);
         contentJPanel.add(highresDirectoryChooser, "span 2, wrap");
         recurseSubgroupsJCheckBox.setSelected(true);
@@ -91,7 +92,7 @@ public class ConsolidateGroupJFrame extends JFrame {
 
         final JPanel buttonJPanel = new JPanel();
         // add the consolidate button
-        final JButton consolidateJButton = new JButton(Settings.getJpoResources().getString("ConsolidateButton"));
+        final JButton consolidateJButton = new JButton(JpoResources.getResource("ConsolidateButton"));
         consolidateJButton.setPreferredSize(new Dimension(120, 25));
         consolidateJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         consolidateJButton.setMaximumSize(new Dimension(120, 25));
@@ -100,7 +101,7 @@ public class ConsolidateGroupJFrame extends JFrame {
         buttonJPanel.add(consolidateJButton);
 
         // add the cancel button
-        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
+        final JButton cancelJButton = new JButton(JpoResources.getResource("genericCancelText"));
         cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMaximumSize(new Dimension(120, 25));
         buttonJPanel.add(cancelJButton);

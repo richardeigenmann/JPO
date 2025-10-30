@@ -2,13 +2,13 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 
 /*
- Copyright (C) 2008-2024 Richard Eigenmann.
+ Copyright (C) 2008-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -40,7 +40,7 @@ public class GenerateWebsiteWizard7Summary extends AbstractStep {
      * @param request Options
      */
     public GenerateWebsiteWizard7Summary(final GenerateWebsiteRequest request) {
-        super(Settings.getJpoResources().getString("summary"), Settings.getJpoResources().getString("summary"));
+        super(JpoResources.getResource("summary"), JpoResources.getResource("summary"));
         this.request = request;
     }
     /**

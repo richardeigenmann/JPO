@@ -10,9 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,11 +33,11 @@ public class ProgressGui extends JFrame implements ProgressListener {
     /**
      * button to start the export
      */
-    private final JButton okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
+    private final JButton okJButton = new JButton(JpoResources.getResource("genericOKText"));
     /**
      * button to cancel the dialog
      */
-    private final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
+    private final JButton cancelJButton = new JButton(JpoResources.getResource("genericCancelText"));
     /**
      * Progress Indicator
      */

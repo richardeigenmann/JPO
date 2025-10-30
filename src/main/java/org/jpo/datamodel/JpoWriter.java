@@ -5,6 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.io.*;
@@ -311,8 +312,8 @@ public class JpoWriter {
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("DtdCopyError") + e.getMessage(),
-                    Settings.getJpoResources().getString("genericWarning"),
+                    JpoResources.getResource("DtdCopyError") + e.getMessage(),
+                    JpoResources.getResource("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }

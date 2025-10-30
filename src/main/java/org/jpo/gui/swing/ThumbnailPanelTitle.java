@@ -2,6 +2,7 @@ package org.jpo.gui.swing;
 
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -189,7 +190,7 @@ public class ThumbnailPanelTitle extends JPanel {
             firstThumbnailsPageButton.setOpaque(false);
             firstThumbnailsPageButton.setEnabled(false);
             firstThumbnailsPageButton.setFocusPainted(false);
-            firstThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
+            firstThumbnailsPageButton.setToolTipText(JpoResources.getResource("ThumbnailToolTipPrevious"));
 
             previousThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             previousThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
@@ -197,7 +198,7 @@ public class ThumbnailPanelTitle extends JPanel {
             previousThumbnailsPageButton.setOpaque(false);
             previousThumbnailsPageButton.setEnabled(false);
             previousThumbnailsPageButton.setFocusPainted(false);
-            previousThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipPrevious"));
+            previousThumbnailsPageButton.setToolTipText(JpoResources.getResource("ThumbnailToolTipPrevious"));
 
             nextThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             nextThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
@@ -205,7 +206,7 @@ public class ThumbnailPanelTitle extends JPanel {
             nextThumbnailsPageButton.setOpaque(false);
             nextThumbnailsPageButton.setEnabled(false);
             nextThumbnailsPageButton.setFocusPainted(false);
-            nextThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
+            nextThumbnailsPageButton.setToolTipText(JpoResources.getResource("ThumbnailToolTipNext"));
 
             lastThumbnailsPageButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
             lastThumbnailsPageButton.setPreferredSize(new Dimension(25, 25));
@@ -213,7 +214,7 @@ public class ThumbnailPanelTitle extends JPanel {
             lastThumbnailsPageButton.setOpaque(false);
             lastThumbnailsPageButton.setEnabled(false);
             lastThumbnailsPageButton.setFocusPainted(false);
-            lastThumbnailsPageButton.setToolTipText(Settings.getJpoResources().getString("ThumbnailToolTipNext"));
+            lastThumbnailsPageButton.setToolTipText(JpoResources.getResource("ThumbnailToolTipNext"));
 
             add(firstThumbnailsPageButton);
             add(previousThumbnailsPageButton);

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 import static java.awt.event.ItemEvent.SELECTED;
 
 /*
- Copyright (C) 2021-2024 Richard Eigenmann.
+ Copyright (C) 2021-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -110,7 +110,7 @@ public class VersionUpdate {
 
     private void showOutOfDateDialog(final String latestVersion) {
         final var outdatedMessage = String.format(
-                Settings.getJpoResources().getString("VersionUpdate.outdatedMessage"),
+                JpoResources.getResource("VersionUpdate.outdatedMessage"),
                 GeneratedVersion.JPO_VERSION, latestVersion, Settings.JPO_DOWNLOAD_URL, Settings.JPO_DOWNLOAD_URL);
         final var ep = new JEditorPane("text/html", outdatedMessage);
 
@@ -121,7 +121,7 @@ public class VersionUpdate {
         ep.setEditable(false);
         ep.putClientProperty(JEditorPane.HONOR_DISPLAY_PROPERTIES, Boolean.TRUE);
 
-        final var snoozeJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.snoozeJCheckBox"));
+        final var snoozeJCheckBox = new JCheckBox(JpoResources.getResource("VersionUpdate.snoozeJCheckBox"));
 
         ep.setFont(snoozeJCheckBox.getFont());
 
@@ -137,7 +137,7 @@ public class VersionUpdate {
 
         snoozeJCheckBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        final var neverShowJCheckBox = new JCheckBox(Settings.getJpoResources().getString("VersionUpdate.neverShowJCheckBox"));
+        final var neverShowJCheckBox = new JCheckBox(JpoResources.getResource("VersionUpdate.neverShowJCheckBox"));
         neverShowJCheckBox.addItemListener(neverShowListener -> Settings.setIgnoreVersionAlerts(neverShowListener.getStateChange() == SELECTED));
 
         final var content = new JPanel();

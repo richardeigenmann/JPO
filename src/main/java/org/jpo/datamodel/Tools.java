@@ -3,6 +3,7 @@ package org.jpo.datamodel;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;
@@ -18,7 +19,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 /*
  Copyright (C) 2002-2025 Richard Eigenmann.
@@ -195,7 +195,7 @@ public class Tools {
         int freeMemory = (int) Runtime.getRuntime().freeMemory() / 1024 / 1024;
         int totalMemory = (int) Runtime.getRuntime().totalMemory() / 1024 / 1024;
         int maxMemory = (int) Runtime.getRuntime().maxMemory() / 1024 / 1024;
-        return (Settings.getJpoResources().getString("freeMemory") + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB");
+        return (JpoResources.getResource("freeMemory") + freeMemory + "MB/" + totalMemory + "MB/" + maxMemory + "MB");
     }
 
     /**
@@ -206,8 +206,8 @@ public class Tools {
         Tools.freeMem();
         SwingUtilities.invokeLater(
                 () -> JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("outOfMemoryError"),
-                        Settings.getJpoResources().getString("genericError"),
+                        JpoResources.getResource("outOfMemoryError"),
+                        JpoResources.getResource("genericError"),
                         JOptionPane.ERROR_MESSAGE)
         );
         LOGGER.info("JPO has now run a garbage collection.");

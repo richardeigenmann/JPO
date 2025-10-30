@@ -1,18 +1,14 @@
 package org.jpo.gui;
 
 import net.javaprog.ui.wizard.AbstractStep;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /*
- CameraDownloadWizardStep1.java: the first step in the download from Camera Wizard
-
- Copyright (C) 2007-2024 Richard Eigenmann.
+ Copyright (C) 2007-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +43,7 @@ public class CameraDownloadWizardStep1
      */
     public CameraDownloadWizardStep1( CameraDownloadWizardData dataModel ) {
         //pass step title and description
-        super(Settings.getJpoResources().getString("DownloadCameraWizardStep1Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep1Description"));
+        super(JpoResources.getResource("DownloadCameraWizardStep1Title"), JpoResources.getResource("DownloadCameraWizardStep1Description"));
         this.dataModel = dataModel;
     }
 
@@ -69,10 +65,10 @@ public class CameraDownloadWizardStep1
         JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
         // say Camera xxx detected
-        stepComponent.add(new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep1Text1") + dataModel.getCamera().getDescription() + Settings.getJpoResources().getString("DownloadCameraWizardStep1Text2")));
+        stepComponent.add(new JLabel(JpoResources.getResource("DownloadCameraWizardStep1Text1") + dataModel.getCamera().getDescription() + JpoResources.getResource("DownloadCameraWizardStep1Text2")));
         stepComponent.add(Box.createVerticalStrut(8));
 
-        JLabel analysisLabel = new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep1Text4"));
+        JLabel analysisLabel = new JLabel(JpoResources.getResource("DownloadCameraWizardStep1Text4"));
         stepComponent.add( analysisLabel );
         Thread t = new Thread( new SearchForPicturesThread( analysisLabel ), "CameraDownloadWizard" );
         t.start();
@@ -111,7 +107,7 @@ public class CameraDownloadWizardStep1
 
             final Runnable r = () -> {
                 setCanGoNext(!dataModel.getNewPictures().isEmpty());
-                progressJLabel.setText(dataModel.getNewPictures().size() + Settings.getJpoResources().getString("DownloadCameraWizardStep1Text3"));
+                progressJLabel.setText(dataModel.getNewPictures().size() + JpoResources.getResource("DownloadCameraWizardStep1Text3"));
             };
             if (SwingUtilities.isEventDispatchThread()) {
                 r.run();

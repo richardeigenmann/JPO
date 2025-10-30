@@ -21,7 +21,7 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_P
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2025 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -161,8 +161,8 @@ public class PictureViewer implements NodeNavigatorListener, AutoAdvanceInterfac
                 }
                 if (!keyEvent.isConsumed()) {
                     JOptionPane.showMessageDialog(pictureFrameController.getPictureFrame().getResizableJFrame(),
-                            Settings.getJpoResources().getString("PictureViewerKeycodes"),
-                            Settings.getJpoResources().getString("PictureViewerKeycodesTitle"),
+                            JpoResources.getResource("PictureViewerKeycodes"),
+                            JpoResources.getResource("PictureViewerKeycodesTitle"),
                             JOptionPane.INFORMATION_MESSAGE);
                 }
             }

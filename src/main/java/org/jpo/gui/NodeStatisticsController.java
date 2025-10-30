@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.util.logging.Logger;
 
 /*
-Copyright (C) 2002-2024 Richard Eigenmann.
+Copyright (C) 2002-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -90,7 +90,7 @@ public class NodeStatisticsController {
 
                 if (Settings.isDebugMode()) {
                     nodeStatisticsBean.setFreeMemory(Tools.freeMemory());
-                    nodeStatisticsBean.setQueueCount(Settings.getJpoResources().getString("queCountJLabel") + ThumbnailCreationQueue.size());
+                    nodeStatisticsBean.setQueueCount(JpoResources.getResource("queCountJLabel") + ThumbnailCreationQueue.size());
                     nodeStatisticsBean.setSelectedCount(String.format("Selected: %d", Settings.getPictureCollection().getSelection().size()));
                     nodeStatisticsBean.setThumbnailCreationFactoryCount(String.format("ThumbnailCreationFactoryThreads: %d", ThumbnailCreationExecutor.getInstance().getLiveDaemonsCount()));
                 }

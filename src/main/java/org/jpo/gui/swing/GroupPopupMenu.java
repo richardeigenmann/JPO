@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -112,13 +113,13 @@ public class GroupPopupMenu extends JPopupMenu {
 
 
     private JMenuItem getGroupShowJMenuItem() {
-        final var groupShowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupShowJMenuItem"));
+        final var groupShowJMenuItem = new JMenuItem(JpoResources.getResource("groupShowJMenuItem"));
         groupShowJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowGroupRequest(popupNode)));
         return groupShowJMenuItem;
     }
 
     private JMenuItem getGroupSlideshowJMenuItem() {
-        final var groupSlideshowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupSlideshowJMenuItem"));
+        final var groupSlideshowJMenuItem = new JMenuItem(JpoResources.getResource("groupSlideshowJMenuItem"));
         groupSlideshowJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowPictureRequest(new FlatGroupNavigator(popupNode), 0)));
         if (!popupNode.hasChildPictureNodes()) {
             groupSlideshowJMenuItem.setEnabled(false);
@@ -127,7 +128,7 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem getGroupRefreshJMenuItem() {
-        final var groupRefreshJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupRefreshJMenuItem"));
+        final var groupRefreshJMenuItem = new JMenuItem(JpoResources.getResource("groupRefreshJMenuItem"));
         groupRefreshJMenuItem.addActionListener((ActionEvent e) -> {
             final List<SortableDefaultMutableTreeNode> actionNodes = new ArrayList<>();
             if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
@@ -143,30 +144,30 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem getGroupTableJMenuItem() {
-        final var groupTableJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupTableJMenuItemLabel"));
+        final var groupTableJMenuItem = new JMenuItem(JpoResources.getResource("groupTableJMenuItemLabel"));
         groupTableJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowGroupAsTableRequest(popupNode)));
         return groupTableJMenuItem;
     }
 
     private JMenu getAddGroupJMenu() {
         //submenu which has several navigation options
-        final var addGroupJMenu = new JMenu(Settings.getJpoResources().getString("addGroupJMenuLabel"));
+        final var addGroupJMenu = new JMenu(JpoResources.getResource("addGroupJMenuLabel"));
         // menu item that allows adding a new blank group
-        final var addNewGroupJMenuItem = new JMenuItem(Settings.getJpoResources().getString("addNewGroupJMenuItemLabel"));
+        final var addNewGroupJMenuItem = new JMenuItem(JpoResources.getResource("addNewGroupJMenuItemLabel"));
         addNewGroupJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new AddEmptyGroupRequest(popupNode)));
         addGroupJMenu.add(addNewGroupJMenuItem);
 
-        final var addPicturesJMenuItem = new JMenuItem(Settings.getJpoResources().getString("addPicturesJMenuItemLabel"));
+        final var addPicturesJMenuItem = new JMenuItem(JpoResources.getResource("addPicturesJMenuItemLabel"));
         addPicturesJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ChooseAndAddPicturesToGroupRequest(popupNode)));
         addGroupJMenu.add(addPicturesJMenuItem);
 
         // Add Collections
         // submenu which offers the choice of either loading from a file or from one of the recent collections
-        final var addCollectionJMenu = new JMenu(Settings.getJpoResources().getString("addCollectionJMenuItemLabel"));
+        final var addCollectionJMenu = new JMenu(JpoResources.getResource("addCollectionJMenuItemLabel"));
         addGroupJMenu.add(addCollectionJMenu);
 
         // menu item that allows adding a collection of pictures
-        final var addCollectionFromFile = new JMenuItem(Settings.getJpoResources().getString("addCollectionFormFile"));
+        final var addCollectionFromFile = new JMenuItem(JpoResources.getResource("addCollectionFormFile"));
         addCollectionFromFile.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ChooseAndAddCollectionRequest(popupNode)));
         addCollectionJMenu.add(addCollectionFromFile);
 
@@ -181,7 +182,7 @@ public class GroupPopupMenu extends JPopupMenu {
         populateRecentFilesMenuItems();
 
         // menu item that allows adding from a list of filenames
-        final var addFlatFileJMenuItem = new JMenuItem(Settings.getJpoResources().getString("addFlatFileJMenuItemLabel"));
+        final var addFlatFileJMenuItem = new JMenuItem(JpoResources.getResource("addFlatFileJMenuItemLabel"));
         addFlatFileJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ChooseAndAddFlatfileRequest(popupNode)));
         addGroupJMenu.add(addFlatFileJMenuItem);
 
@@ -191,7 +192,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
     private JMenu getMoveGroupNodeJMenu() {
         // submenu which has several navigation options
-        final var moveGroupNodeJMenu = new JMenu(Settings.getJpoResources().getString("moveNodeJMenuLabel"));
+        final var moveGroupNodeJMenu = new JMenu(JpoResources.getResource("moveNodeJMenuLabel"));
 
         final SortableDefaultMutableTreeNode[] nodes = Settings.getRecentDropNodes().toArray(new SortableDefaultMutableTreeNode[0]);
         for (var i = 0; i < Settings.getMaxDropnodes(); i++) {
@@ -208,38 +209,38 @@ public class GroupPopupMenu extends JPopupMenu {
         populateRecentDropNodeMenuItems();
 
         //menu item that allows move to top op list
-        final var moveGroupToTopJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupToTopJMenuItem"));
+        final var moveGroupToTopJMenuItem = new JMenuItem(JpoResources.getResource("moveGroupToTopJMenuItem"));
         moveGroupToTopJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeToTopRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupToTopJMenuItem);
 
         // menu item that allows move up in the list
-        final var moveGroupUpJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupUpJMenuItem"));
+        final var moveGroupUpJMenuItem = new JMenuItem(JpoResources.getResource("moveGroupUpJMenuItem"));
         moveGroupUpJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeUpRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupUpJMenuItem);
 
         //menu item that allows move up in the list
-        final var moveGroupDownJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupDownJMenuItem"));
+        final var moveGroupDownJMenuItem = new JMenuItem(JpoResources.getResource("moveGroupDownJMenuItem"));
         moveGroupDownJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeDownRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupDownJMenuItem);
 
         // menu item that allows move to top op list
-        final var moveGroupToBottomJMenuItem = new JMenuItem(Settings.getJpoResources().getString("moveGroupToBottomJMenuItem"));
+        final var moveGroupToBottomJMenuItem = new JMenuItem(JpoResources.getResource("moveGroupToBottomJMenuItem"));
         moveGroupToBottomJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new MoveNodeToBottomRequest(List.of(popupNode))));
         moveGroupNodeJMenu.add(moveGroupToBottomJMenuItem);
         //menu item that allows indenting the group
-        final var indentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("indentJMenuItem"));
+        final var indentJMenuItem = new JMenuItem(JpoResources.getResource("indentJMenuItem"));
         indentJMenuItem.addActionListener((ActionEvent e) -> popupNode.indentNode());
         moveGroupNodeJMenu.add(indentJMenuItem);
 
         // menu item that allows out-denting the group
-        final var outdentJMenuItem = new JMenuItem(Settings.getJpoResources().getString("outdentJMenuItem"));
+        final var outdentJMenuItem = new JMenuItem(JpoResources.getResource("outdentJMenuItem"));
         outdentJMenuItem.addActionListener((ActionEvent e) -> popupNode.outdentNode());
         moveGroupNodeJMenu.add(outdentJMenuItem);
         return moveGroupNodeJMenu;
     }
 
     private JMenuItem getGroupRemove() {
-        final var groupRemove = new JMenuItem(Settings.getJpoResources().getString("groupRemoveLabel"));
+        final var groupRemove = new JMenuItem(JpoResources.getResource("groupRemoveLabel"));
         groupRemove.addActionListener((ActionEvent event) -> {
             if ((Settings.getPictureCollection().countSelectedNodes() > 0) && (Settings.getPictureCollection().isSelected(popupNode))) {
                 JpoEventBus.getInstance().post(new RemoveNodeRequest(Settings.getPictureCollection().getSelection()));
@@ -252,7 +253,7 @@ public class GroupPopupMenu extends JPopupMenu {
 
     private JMenu getSortJMenu() {
         //submenu which has several sort options
-        final var sortJMenu = new JMenu(Settings.getJpoResources().getString("sortJMenu"));
+        final var sortJMenu = new JMenu(JpoResources.getResource("sortJMenu"));
         //requests a sort by Description
         final List<SortOption> sortOptions = Settings.getSortOptions();
         final var sortByDescription = sortOptions.get(1);
@@ -293,7 +294,7 @@ public class GroupPopupMenu extends JPopupMenu {
     }
 
     private JMenuItem getGroupSelectForEmail() {
-        final var groupSelectForEmail = new JMenuItem(Settings.getJpoResources().getString("groupSelectForEmail"));
+        final var groupSelectForEmail = new JMenuItem(JpoResources.getResource("groupSelectForEmail"));
         groupSelectForEmail.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new AddGroupToEmailSelectionRequest(popupNode)));
         return groupSelectForEmail;
     }
@@ -303,34 +304,34 @@ public class GroupPopupMenu extends JPopupMenu {
      * then populate the Move submenu with the current drop nodes.
      */
     private JMenuItem getGroupEditJMenuItem() {
-        final var groupEditJMenuItem = new JMenuItem(Settings.getJpoResources().getString("groupEditJMenuItem"));
+        final var groupEditJMenuItem = new JMenuItem(JpoResources.getResource("groupEditJMenuItem"));
         groupEditJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ShowGroupInfoEditorRequest(popupNode)));
         return groupEditJMenuItem;
     }
 
     private JMenuItem getGroupExportHtml() {
-        final var groupExportHtml = new JMenuItem(Settings.getJpoResources().getString("groupExportHtmlMenuText"));
+        final var groupExportHtml = new JMenuItem(JpoResources.getResource("groupExportHtmlMenuText"));
         groupExportHtml.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ExportGroupToHtmlRequest(popupNode)));
         return groupExportHtml;
     }
 
     private JMenuItem getConsolidateMoveJMenuItem() {
         // menu item that brings a dialog to ask where to consolidate the files to
-        final var consolidateMoveJMenuItem = new JMenuItem(Settings.getJpoResources().getString("consolidateMoveLabel"));
+        final var consolidateMoveJMenuItem = new JMenuItem(JpoResources.getResource("consolidateMoveLabel"));
         consolidateMoveJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ConsolidateGroupDialogRequest(popupNode, null)));
         return consolidateMoveJMenuItem;
     }
 
     private JMenuItem getGroupExportNewCollection() {
         //  menu item that allows the user to export the group to several formats
-        final var groupExportNewCollection = new JMenuItem(Settings.getJpoResources().getString("groupExportNewCollectionMenuText"));
+        final var groupExportNewCollection = new JMenuItem(JpoResources.getResource("groupExportNewCollectionMenuText"));
         groupExportNewCollection.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ExportGroupToNewCollectionRequest(popupNode)));
         return groupExportNewCollection;
     }
 
     private JMenuItem getGroupExportFlatFile() {
         // menu item that allows the user to export the group to a flat list of filenames
-        final var groupExportFlatFile = new JMenuItem(Settings.getJpoResources().getString("groupExportFlatFileMenuText"));
+        final var groupExportFlatFile = new JMenuItem(JpoResources.getResource("groupExportFlatFileMenuText"));
         groupExportFlatFile.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new ExportGroupToFlatFileRequest(popupNode)));
         return groupExportFlatFile;
     }

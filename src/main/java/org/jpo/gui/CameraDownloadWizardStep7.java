@@ -1,12 +1,11 @@
 package org.jpo.gui;
 
 import net.javaprog.ui.wizard.AbstractStep;
-import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 
 /*
-Copyright (C) 2007-2024 Richard Eigenmann.
+Copyright (C) 2007-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -20,8 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
- *  The sixth step in the download from camera actually does the download. When it is finished the Finish button is made
+ *  The seventh step in the download from camera actually does the download. When it is finished the Finish button is made
  *  visible and the Cancel button is disabled.
  */
 public class CameraDownloadWizardStep7
@@ -31,7 +31,7 @@ public class CameraDownloadWizardStep7
      * @param dataModel Data Model
      */
     public CameraDownloadWizardStep7(final CameraDownloadWizardData dataModel) {
-        super(Settings.getJpoResources().getString("DownloadCameraWizardStep6Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep6Description"));
+        super(JpoResources.getResource("DownloadCameraWizardStep6Title"), JpoResources.getResource("DownloadCameraWizardStep6Description"));
         this.dataModel = dataModel;
     }
 

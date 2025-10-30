@@ -1,6 +1,9 @@
 package org.jpo.export;
 
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 import org.apache.commons.net.ftp.FTP;
@@ -9,6 +12,7 @@ import org.apache.commons.net.ftp.FTPReply;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.DirectoryChooser;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -27,12 +31,12 @@ import java.util.logging.Logger;
 import static org.jpo.eventbus.GenerateWebsiteRequest.OutputTarget.*;
 
 /*
- Copyright (C) 2008-2024 Richard Eigenmann.
+ Copyright (C) 2008-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
@@ -67,7 +71,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * Text field that holds the directory that the html is to be exported to.
      */
     private final DirectoryChooser targetDirJTextField
-            = new DirectoryChooser(Settings.getJpoResources().getString("HtmlDistillerChooserTitle"),
+            = new DirectoryChooser(JpoResources.getResource("HtmlDistillerChooserTitle"),
             DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      * The ftp Server
@@ -132,7 +136,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
      * @param request The data object with all the settings
      */
     public GenerateWebsiteWizard6Where(final GenerateWebsiteRequest request) {
-        super(Settings.getJpoResources().getString("HtmlDistTarget"), Settings.getJpoResources().getString("HtmlDistTarget"));
+        super(JpoResources.getResource("HtmlDistTarget"), JpoResources.getResource("HtmlDistTarget"));
         this.request = request;
 
         // load the options into the GUI components
@@ -158,7 +162,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
                     JOptionPane.showMessageDialog(
                             Settings.getAnchorFrame(),
                             "Could not create directory",
-                            Settings.getJpoResources().getString("genericSecurityException"),
+                            JpoResources.getResource("genericSecurityException"),
                             JOptionPane.ERROR_MESSAGE);
                     return false;
 
@@ -166,17 +170,17 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             } catch (SecurityException e) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistCrtDirError") + "\n" + e.getMessage(),
-                        Settings.getJpoResources().getString("genericSecurityException"),
+                        JpoResources.getResource("htmlDistCrtDirError") + "\n" + e.getMessage(),
+                        JpoResources.getResource("genericSecurityException"),
                         JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } else {
-            final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
+            final String GENERIC_ERROR = JpoResources.getResource("genericError");
             if (!targetDirectory.isDirectory()) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistIsDirError"),
+                        JpoResources.getResource("htmlDistIsDirError"),
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -184,7 +188,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             if (!targetDirectory.canWrite()) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistCanWriteError"),
+                        JpoResources.getResource("htmlDistCanWriteError"),
                         GENERIC_ERROR,
                         JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -192,7 +196,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
             if (Objects.requireNonNull(targetDirectory.listFiles()).length > 0) {
                 int option = JOptionPane.showConfirmDialog(
                         Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("htmlDistIsNotEmptyWarning"),
+                        JpoResources.getResource("htmlDistIsNotEmptyWarning"),
                         GENERIC_ERROR,
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.WARNING_MESSAGE);
@@ -235,11 +239,11 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
 
         wizardPanel.add(finalTarget, "wrap");
         final var ALIGN_LABEL = "align label";
-        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("genericTargetDirText")), ALIGN_LABEL + ", wrap");
+        wizardPanel.add(new JLabel(JpoResources.getResource("genericTargetDirText")), ALIGN_LABEL + ", wrap");
 
         wizardPanel.add(targetDirJTextField, "wrap");
 
-        final var checkButton = new JButton(Settings.getJpoResources().getString("check"));
+        final var checkButton = new JButton(JpoResources.getResource("check"));
         checkButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         checkButton.setMaximumSize(Settings.getDefaultButtonDimension());
         checkButton.addActionListener((ActionEvent arg0) -> {
@@ -423,7 +427,7 @@ public class GenerateWebsiteWizard6Where extends AbstractStep {
         sshPanel.add(sshMkdirJButton,
                 "align label, wrap");
 
-        final var errorLabelFont = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
+        final var errorLabelFont = Font.decode(JpoResources.getResource("ThumbnailDescriptionJPanelLargeFont"));
 
         sshError.setFont(errorLabelFont);
 

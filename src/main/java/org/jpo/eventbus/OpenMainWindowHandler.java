@@ -2,6 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.MainWindow;
 
 import javax.swing.*;
@@ -12,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -105,9 +106,9 @@ public class OpenMainWindowHandler {
         private void updateApplicationTitle() {
             final var xmlFile = Settings.getPictureCollection().getXmlFile();
             if (xmlFile != null) {
-                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle") + ":  " + xmlFile));
+                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(JpoResources.getResource("ApplicationTitle") + ":  " + xmlFile));
             } else {
-                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(Settings.getJpoResources().getString("ApplicationTitle")));
+                JpoEventBus.getInstance().post(new UpdateApplicationTitleRequest(JpoResources.getResource("ApplicationTitle")));
             }
         }
     }

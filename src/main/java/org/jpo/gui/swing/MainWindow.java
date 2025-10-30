@@ -18,7 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -84,7 +84,7 @@ public class MainWindow extends ResizableJFrame {
      * @see UpdateApplicationTitleRequest
      */
     public MainWindow() {
-        super(Settings.getJpoResources().getString("ApplicationTitle"));
+        super(JpoResources.getResource("ApplicationTitle"));
         initComponents();
     }
 
@@ -137,10 +137,10 @@ public class MainWindow extends ResizableJFrame {
         final Component thumbnailPanel = (new ThumbnailsPanelController()).getView();
 
         tree = new DefaultSingleCDockable("TreeId",
-                Settings.getJpoResources().getString("jpoTabbedPaneCollection"),
+                JpoResources.getResource("jpoTabbedPaneCollection"),
                 new CollectionJTreeController(Settings.getPictureCollection()).getJScrollPane());
         searches = new DefaultSingleCDockable("SearchId",
-                Settings.getJpoResources().getString("jpoTabbedPaneSearches"),
+                JpoResources.getResource("jpoTabbedPaneSearches"),
                 new QueriesJTreeController(Settings.getPictureCollection()).getJComponent());
 
         final var tagCloudDockable = new DefaultSingleCDockable("TagId", "TagCloud", new TagCloudController(Settings.getPictureCollection()).getTagCloud());

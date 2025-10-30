@@ -4,11 +4,10 @@ import net.javaprog.ui.wizard.DefaultWizardModel;
 import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 /*
-Copyright (C) 2007-2024 Richard Eigenmann.
+Copyright (C) 2007-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -65,7 +64,7 @@ public class CameraDownloadWizard {
                 new CameraDownloadWizardStep7(dataModel),
         });
         //instantiate wizard
-        final Wizard wizard = new Wizard(model, Settings.getJpoResources().getString("CameraDownloadWizard"));
+        final Wizard wizard = new Wizard(model, JpoResources.getResource("CameraDownloadWizard"));
         //show wizard
         wizard.setAlwaysOnTop(true);
         wizard.setModal(false);

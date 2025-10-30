@@ -2,6 +2,7 @@ package org.jpo.gui.swing;
 
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.ExportGroupToFlatFileRequest;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.FlatFileDistiller.DistillerResult;
 
 import javax.swing.*;
@@ -15,9 +16,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 /*
- FlatFileDistiller.java:  class that writes the filenames of the pictures to a flat file
- *
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,8 +66,8 @@ public class FlatFileDistiller extends SwingWorker<DistillerResult, String> {
         Tools.checkEDT();
         final var jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("saveFlatFileTitle"));
-        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("saveFlatFileButtonLabel"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("saveFlatFileTitle"));
+        jFileChooser.setApproveButtonText(JpoResources.getResource("saveFlatFileButtonLabel"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
         final int returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
         if (returnVal != JFileChooser.APPROVE_OPTION) {

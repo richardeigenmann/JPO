@@ -2,13 +2,14 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 
 import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -36,8 +37,8 @@ public class CopyToNewLocationHandler {
         final var jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("CopyImageDialogButton"));
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("CopyImageDialogTitle"));
+        jFileChooser.setApproveButtonText(JpoResources.getResource("CopyImageDialogButton"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("CopyImageDialogTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
         final int returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
@@ -51,7 +52,7 @@ public class CopyToNewLocationHandler {
 
         if (!targetDirectory.canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("htmlDistCanWriteError"),
+                    JpoResources.getResource("htmlDistCanWriteError"),
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;

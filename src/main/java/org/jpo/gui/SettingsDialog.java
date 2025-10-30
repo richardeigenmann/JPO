@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2025 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -87,16 +87,16 @@ public class SettingsDialog extends JDialog {
     /**
      * checkbox that indicates whether small images should be enlarged
      */
-    private final JCheckBox dontEnlargeJCheckBox = new JCheckBox(Settings.getJpoResources().getString("dontEnlargeJCheckBoxLabel"));
+    private final JCheckBox dontEnlargeJCheckBox = new JCheckBox(JpoResources.getResource("dontEnlargeJCheckBoxLabel"));
     /**
      * tickbox that indicates whether to scale the thumbnails quickly
      */
-    private final JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox(Settings.getJpoResources().getString("pictureViewerFastScale"));
+    private final JCheckBox pictureViewerFastScaleJCheckBox = new JCheckBox(JpoResources.getResource("pictureViewerFastScale"));
     /**
      * User picks the thumbnail cache directory here
      */
     private final DirectoryChooser thumbnailCacheDirPathChooser
-            = new DirectoryChooser(Settings.getJpoResources().getString("genericSelectText"),
+            = new DirectoryChooser(JpoResources.getResource("genericSelectText"),
             DirectoryChooser.DIR_MUST_BE_WRITABLE);
     /**
      * field that allows the user to capture the maximum number of thumbnails to
@@ -116,15 +116,15 @@ public class SettingsDialog extends JDialog {
     /**
      * tickbox that indicates whether to scale the thumbnails quickly
      */
-    private final JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailFastScale"));
+    private final JCheckBox thumbnailFastScaleJCheckBox = new JCheckBox(JpoResources.getResource("thumbnailFastScale"));
     /**
      * tickbox that indicates whether to show the filenames or not
      */
-    private final JCheckBox thumbnailShowFilenamesJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailShowFilenamesJCheckBox"));
+    private final JCheckBox thumbnailShowFilenamesJCheckBox = new JCheckBox(JpoResources.getResource("thumbnailShowFilenamesJCheckBox"));
     /**
      * tickbox that indicates whether to show the timestamps or not
      */
-    private final JCheckBox thumbnailShowTimestampsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("thumbnailShowTimestampsJCheckBox"));
+    private final JCheckBox thumbnailShowTimestampsJCheckBox = new JCheckBox(JpoResources.getResource("thumbnailShowTimestampsJCheckBox"));
     /**
      * Text Filed that holds the first user Function
      */
@@ -194,26 +194,26 @@ public class SettingsDialog extends JDialog {
      * Create the GUI elements
      */
     private void initComponents() {
-        setTitle(Settings.getJpoResources().getString("settingsDialogTitle"));
+        setTitle(JpoResources.getResource("settingsDialogTitle"));
         getContentPane().setLayout(new BorderLayout());
         final var tabbedPane = new JTabbedPane();
         tabbedPane.setTabPlacement(SwingConstants.TOP);
         tabbedPane.setPreferredSize(SETTINGS_DIALOG_SIZE);
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-        tabbedPane.add(Settings.getJpoResources().getString("browserWindowSettingsJPanel"), getGeneralJPanel());
-        tabbedPane.add(Settings.getJpoResources().getString("pictureViewerJPanel"), getPictureViewerJPanel());
-        tabbedPane.add(Settings.getJpoResources().getString("thumbnailSettingsJPanel"), getThumbnailsJPanel());
-        tabbedPane.add(Settings.getJpoResources().getString("userFunctionJPanel"), getUserFunctionsJPanel());
-        tabbedPane.add(Settings.getJpoResources().getString("emailJPanel"), getEmailServerJPanel());
-        tabbedPane.add(Settings.getJpoResources().getString("cacheJPanel"), getCacheJPanel());
-        tabbedPane.add(Settings.getJpoResources().getString("dockingFramesJPanel"), getDockingFramesJPanel());
+        tabbedPane.add(JpoResources.getResource("browserWindowSettingsJPanel"), getGeneralJPanel());
+        tabbedPane.add(JpoResources.getResource("pictureViewerJPanel"), getPictureViewerJPanel());
+        tabbedPane.add(JpoResources.getResource("thumbnailSettingsJPanel"), getThumbnailsJPanel());
+        tabbedPane.add(JpoResources.getResource("userFunctionJPanel"), getUserFunctionsJPanel());
+        tabbedPane.add(JpoResources.getResource("emailJPanel"), getEmailServerJPanel());
+        tabbedPane.add(JpoResources.getResource("cacheJPanel"), getCacheJPanel());
+        tabbedPane.add(JpoResources.getResource("dockingFramesJPanel"), getDockingFramesJPanel());
         getContentPane().add(tabbedPane, BorderLayout.NORTH);
 
         final var buttonContainer = new Container();
         buttonContainer.setLayout(new FlowLayout());
         buttonContainer.add(getSaveButton());
 
-        final var cancelButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
+        final var cancelButton = new JButton(JpoResources.getResource("genericCancelText"));
         cancelButton.setPreferredSize(Settings.getDefaultButtonDimension());
         cancelButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -246,17 +246,17 @@ public class SettingsDialog extends JDialog {
         scalingJSpinner.setModel(spinnerNumberModel);
         generalJPanel.add(scalingJSpinner);
 
-        final var languageJLabel = new JLabel(Settings.getJpoResources().getString("languageJLabel"));
+        final var languageJLabel = new JLabel(JpoResources.getResource("languageJLabel"));
         generalJPanel.add(languageJLabel);
         generalJPanel.add(languageJComboBox, "wrap");
 
-        generalJPanel.add(new JLabel(Settings.getJpoResources().getString("windowSizeChoicesJlabel")));
+        generalJPanel.add(new JLabel(JpoResources.getResource("windowSizeChoicesJlabel")));
 
         final DefaultComboBoxModel<String> dcbm = new DefaultComboBoxModel<>(getWindowSizeChoices());
         startupSizeDropdown.setModel(dcbm);
         generalJPanel.add(startupSizeDropdown, "wrap");
 
-        final var autoLoadJLabel = new JLabel(Settings.getJpoResources().getString("autoLoadJLabelLabel"));
+        final var autoLoadJLabel = new JLabel(JpoResources.getResource("autoLoadJLabelLabel"));
         generalJPanel.add(autoLoadJLabel);
 
         autoLoadJTextField.setPreferredSize(Settings.getFilenameFieldPreferredSize());
@@ -267,12 +267,12 @@ public class SettingsDialog extends JDialog {
 
         generalJPanel.add(getAutoLoadJButton(), "wrap");
 
-        final var wordCloudWordJLabel = new JLabel(Settings.getJpoResources().getString("wordCloudWordJLabel"));
+        final var wordCloudWordJLabel = new JLabel(JpoResources.getResource("wordCloudWordJLabel"));
         generalJPanel.add(wordCloudWordJLabel);
 
         generalJPanel.add(tagCloudWordsJSpinner, "wrap");
 
-        final var checkForUpdatesJLabel = new JLabel(Settings.getJpoResources().getString("checkForUpdatesJLabel"));
+        final var checkForUpdatesJLabel = new JLabel(JpoResources.getResource("checkForUpdatesJLabel"));
         generalJPanel.add(checkForUpdatesJLabel);
 
         final var checkForUpdatesOnStartupJCheckBox = new JCheckBox("");
@@ -280,7 +280,7 @@ public class SettingsDialog extends JDialog {
         checkForUpdatesOnStartupJCheckBox.addItemListener(itemEvent -> Settings.setIgnoreVersionAlerts(itemEvent.getStateChange() == DESELECTED));
         generalJPanel.add(checkForUpdatesOnStartupJCheckBox, "wrap");
 
-        final var debugModeJLabel = new JLabel(Settings.getJpoResources().getString("debugModeJLabel"));
+        final var debugModeJLabel = new JLabel(JpoResources.getResource("debugModeJLabel"));
         generalJPanel.add(debugModeJLabel);
 
         final var debugModeJCheckBox = new JCheckBox("");
@@ -295,21 +295,21 @@ public class SettingsDialog extends JDialog {
     private JPanel getPictureViewerJPanel() {
         final var pictureViewerJPanel = new JPanel(new MigLayout());
         // PictureViewer size stuff
-        pictureViewerJPanel.add(new JLabel(Settings.getJpoResources().getString("pictureViewerSizeChoicesJlabel")));
+        pictureViewerJPanel.add(new JLabel(JpoResources.getResource("pictureViewerSizeChoicesJlabel")));
 
         final DefaultComboBoxModel<String> viewerSizeModel = new DefaultComboBoxModel<>(getWindowSizeChoices());
         viewerSizeDropdown.setModel(viewerSizeModel);
         pictureViewerJPanel.add(viewerSizeDropdown, "wrap");
         // End of PictureViewer size stuff
 
-        final var minimumPictureSizeLabel = new JLabel(Settings.getJpoResources().getString("maximumPictureSizeLabel"));
+        final var minimumPictureSizeLabel = new JLabel(JpoResources.getResource("maximumPictureSizeLabel"));
         pictureViewerJPanel.add(minimumPictureSizeLabel);
         maximumPictureSizeJTextField.setPreferredSize(Settings.getShortNumberPreferredSize());
         maximumPictureSizeJTextField.setMinimumSize(Settings.getShortNumberMinimumSize());
         maximumPictureSizeJTextField.setMaximumSize(Settings.getShortNumberMaximumSize());
         pictureViewerJPanel.add(maximumPictureSizeJTextField, "wrap");
 
-        final var maxCacheJLabel = new JLabel(Settings.getJpoResources().getString("maxCacheLabel"));
+        final var maxCacheJLabel = new JLabel(JpoResources.getResource("maxCacheLabel"));
         pictureViewerJPanel.add(maxCacheJLabel);
 
         pictureViewerJPanel.add(dontEnlargeJCheckBox, "wrap");
@@ -321,7 +321,7 @@ public class SettingsDialog extends JDialog {
     private JPanel getThumbnailsJPanel() {
         final var thumbnailsJPanel = new JPanel(new MigLayout());
 
-        final var maxThumbnailsLabel = new JLabel(Settings.getJpoResources().getString("maxThumbnailsLabelText"));
+        final var maxThumbnailsLabel = new JLabel(JpoResources.getResource("maxThumbnailsLabelText"));
         thumbnailsJPanel.add(maxThumbnailsLabel);
 
         maxThumbnails.setPreferredSize(Settings.getShortNumberPreferredSize());
@@ -329,7 +329,7 @@ public class SettingsDialog extends JDialog {
         maxThumbnails.setMaximumSize(Settings.getShortNumberMaximumSize());
         thumbnailsJPanel.add(maxThumbnails, "wrap");
 
-        final var thumbnailSizeLabel = new JLabel(Settings.getJpoResources().getString("thumbnailSizeLabel"));
+        final var thumbnailSizeLabel = new JLabel(JpoResources.getResource("thumbnailSizeLabel"));
         thumbnailsJPanel.add(thumbnailSizeLabel);
 
         thumbnailSize.setPreferredSize(Settings.getShortNumberPreferredSize());
@@ -338,14 +338,14 @@ public class SettingsDialog extends JDialog {
         thumbnailsJPanel.add(thumbnailSize, "wrap");
 
         final var jpgQualitySlider
-                = new JLabel(Settings.getJpoResources().getString("lowresJpgQualitySlider"));
+                = new JLabel(JpoResources.getResource("lowresJpgQualitySlider"));
         thumbnailsJPanel.add(jpgQualitySlider, "wrap");
 
         //Create the label table
         final Dictionary<Integer, JLabel> labelTable = new Hashtable<>();
-        labelTable.put(0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
-        labelTable.put(80, new JLabel(Settings.getJpoResources().getString("jpgQualityGood")));
-        labelTable.put(100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));
+        labelTable.put(0, new JLabel(JpoResources.getResource("jpgQualityBad")));
+        labelTable.put(80, new JLabel(JpoResources.getResource("jpgQualityGood")));
+        labelTable.put(100, new JLabel(JpoResources.getResource("jpgQualityBest")));
         jpgQualityJSlider.setLabelTable(labelTable);
 
         jpgQualityJSlider.setMajorTickSpacing(10);
@@ -365,55 +365,55 @@ public class SettingsDialog extends JDialog {
     private JPanel getUserFunctionsJPanel() {
         // User Functions
         final var userFunctionsJPanel = new JPanel(new MigLayout());
-        final var userFunction1JLabel = new JLabel(Settings.getJpoResources().getString("userFunction1JLabel"));
+        final var userFunction1JLabel = new JLabel(JpoResources.getResource("userFunction1JLabel"));
         userFunctionsJPanel.add(userFunction1JLabel, "span, wrap");
 
         final String USER_FUNCTION_NAME_JLABEL = "userFunctionNameJLabel";
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_NAME_JLABEL)));
+        userFunctionsJPanel.add(new JLabel(JpoResources.getResource(USER_FUNCTION_NAME_JLABEL)));
         userFunction1NameJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction1NameJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction1NameJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction1NameJTextField, "wrap");
 
         final String USER_FUNCTION_CMD_JLABEL = "userFunctionCmdJLabel";
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_CMD_JLABEL)));
+        userFunctionsJPanel.add(new JLabel(JpoResources.getResource(USER_FUNCTION_CMD_JLABEL)));
         userFunction1CmdJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction1CmdJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction1CmdJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction1CmdJTextField, "wrap");
 
-        final var userFunction2JLabel = new JLabel(Settings.getJpoResources().getString("userFunction2JLabel"));
+        final var userFunction2JLabel = new JLabel(JpoResources.getResource("userFunction2JLabel"));
         userFunctionsJPanel.add(userFunction2JLabel, "span, wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_NAME_JLABEL)));
+        userFunctionsJPanel.add(new JLabel(JpoResources.getResource(USER_FUNCTION_NAME_JLABEL)));
         userFunction2NameJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction2NameJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction2NameJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction2NameJTextField, "wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_CMD_JLABEL)));
+        userFunctionsJPanel.add(new JLabel(JpoResources.getResource(USER_FUNCTION_CMD_JLABEL)));
 
         userFunction2CmdJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction2CmdJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction2CmdJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction2CmdJTextField, "wrap");
 
-        final var userFunction3JLabel = new JLabel(Settings.getJpoResources().getString("userFunction3JLabel"));
+        final var userFunction3JLabel = new JLabel(JpoResources.getResource("userFunction3JLabel"));
         userFunctionsJPanel.add(userFunction3JLabel, "span, wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_NAME_JLABEL)));
+        userFunctionsJPanel.add(new JLabel(JpoResources.getResource(USER_FUNCTION_NAME_JLABEL)));
         userFunction3NameJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction3NameJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction3NameJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction3NameJTextField, "wrap");
 
-        userFunctionsJPanel.add(new JLabel(Settings.getJpoResources().getString(USER_FUNCTION_CMD_JLABEL)));
+        userFunctionsJPanel.add(new JLabel(JpoResources.getResource(USER_FUNCTION_CMD_JLABEL)));
         userFunction3CmdJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         userFunction3CmdJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         userFunction3CmdJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         userFunctionsJPanel.add(userFunction3CmdJTextField, "wrap");
 
-        final var userFunctionHelpJTextArea = new JTextArea(Settings.getJpoResources().getString("userFunctionHelpJTextArea"));
+        final var userFunctionHelpJTextArea = new JTextArea(JpoResources.getResource("userFunctionHelpJTextArea"));
         userFunctionHelpJTextArea.setEditable(false);
         userFunctionHelpJTextArea.setWrapStyleWord(true);
         userFunctionHelpJTextArea.setLineWrap(true);
@@ -425,32 +425,32 @@ public class SettingsDialog extends JDialog {
     private JPanel getEmailServerJPanel() {
         // Email Server
         final var emailServerJPanel = new JPanel(new MigLayout());
-        final var emailJLabel = new JLabel(Settings.getJpoResources().getString("emailJLabel"));
+        final var emailJLabel = new JLabel(JpoResources.getResource("emailJLabel"));
         emailServerJPanel.add(emailJLabel, "span, wrap");
 
-        emailServerJPanel.add(new JLabel(Settings.getJpoResources().getString("predefinedEmailJLabel")));
+        emailServerJPanel.add(new JLabel(JpoResources.getResource("predefinedEmailJLabel")));
 
 
         emailServerJPanel.add(getPredefinedEmailJComboBox(), "wrap");
 
-        emailServerJPanel.add(new JLabel(Settings.getJpoResources().getString("emailServerJLabel")));
+        emailServerJPanel.add(new JLabel(JpoResources.getResource("emailServerJLabel")));
         emailServerJTextField.setPreferredSize(Settings.getTextfieldPreferredSize());
         emailServerJTextField.setMinimumSize(Settings.getTextfieldMinimumSize());
         emailServerJTextField.setMaximumSize(Settings.getTextfieldMaximumSize());
         emailServerJPanel.add(emailServerJTextField, "wrap");
 
-        emailServerJPanel.add(new JLabel(Settings.getJpoResources().getString("emailPortJLabel")));
+        emailServerJPanel.add(new JLabel(JpoResources.getResource("emailPortJLabel")));
         emailPortJTextField.setPreferredSize(Settings.getShortNumberPreferredSize());
         emailPortJTextField.setMinimumSize(Settings.getShortNumberMinimumSize());
         emailPortJTextField.setMaximumSize(Settings.getShortNumberMaximumSize());
         emailServerJPanel.add(emailPortJTextField, "wrap");
 
-        final var userNameJLabel = new JLabel(Settings.getJpoResources().getString("emailUserJLabel"));
-        final var passwordJLabel = new JLabel(Settings.getJpoResources().getString("emailPasswordJLabel"));
+        final var userNameJLabel = new JLabel(JpoResources.getResource("emailUserJLabel"));
+        final var passwordJLabel = new JLabel(JpoResources.getResource("emailPasswordJLabel"));
         final var showPasswordLabel = new JLabel();
-        final var showPasswordButton = new JButton(Settings.getJpoResources().getString("emailShowPasswordButton"));
+        final var showPasswordButton = new JButton(JpoResources.getResource("emailShowPasswordButton"));
 
-        emailServerJPanel.add(new JLabel(Settings.getJpoResources().getString("emailAuthentication")));
+        emailServerJPanel.add(new JLabel(JpoResources.getResource("emailAuthentication")));
         authenticationJComboBox.removeAllItems();
         authenticationJComboBox.addItem("None");
         authenticationJComboBox.addItem("Password");
@@ -504,7 +504,7 @@ public class SettingsDialog extends JDialog {
         // Cache Panel
         final var cacheJPanel = new JPanel(new MigLayout());
 
-        cacheJPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailDirLabel")));
+        cacheJPanel.add(new JLabel(JpoResources.getResource("thumbnailDirLabel")));
         cacheJPanel.add(thumbnailCacheDirPathChooser);
         cacheJPanel.add(new JLabel("(Needs restart)"), "wrap");
 
@@ -548,7 +548,7 @@ public class SettingsDialog extends JDialog {
 
     private String[] getWindowSizeChoices() {
         return new String[]{
-                Settings.getJpoResources().getString("windowSizeChoicesMaximum"),
+                JpoResources.getResource("windowSizeChoicesMaximum"),
                 "Primary",
                 "Secondary",
                 "Last Position"
@@ -557,7 +557,7 @@ public class SettingsDialog extends JDialog {
 
 
     private JButton getAutoLoadJButton() {
-        final var autoLoadJButton = new JButton(Settings.getJpoResources().getString("threeDotText"));
+        final var autoLoadJButton = new JButton(JpoResources.getResource("threeDotText"));
         autoLoadJButton.setPreferredSize(Settings.getThreeDotButtonSize());
         autoLoadJButton.setMinimumSize(Settings.getThreeDotButtonSize());
         autoLoadJButton.setMaximumSize(Settings.getThreeDotButtonSize());
@@ -649,7 +649,7 @@ public class SettingsDialog extends JDialog {
     }
 
     private JButton getSaveButton() {
-        final var saveButton = new JButton(Settings.getJpoResources().getString("genericSaveButtonLabel"));
+        final var saveButton = new JButton(JpoResources.getResource("genericSaveButtonLabel"));
         saveButton.setPreferredSize(Settings.getDefaultButtonDimension());
         saveButton.setMinimumSize(Settings.getDefaultButtonDimension());
         saveButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -756,10 +756,10 @@ public class SettingsDialog extends JDialog {
         jFileChooser.setFileFilter(new XmlFilter());
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("autoLoadChooserTitle"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("autoLoadChooserTitle"));
         jFileChooser.setCurrentDirectory(new File(autoLoadJTextField.getText()));
 
-        final int returnVal = jFileChooser.showDialog(this, Settings.getJpoResources().getString("genericSelectText"));
+        final int returnVal = jFileChooser.showDialog(this, JpoResources.getResource("genericSelectText"));
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             autoLoadJTextField.setText(jFileChooser.getSelectedFile().getPath());
             checkAutoLoad(autoLoadJTextField.getText());

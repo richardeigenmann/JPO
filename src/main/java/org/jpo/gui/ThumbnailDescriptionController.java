@@ -93,7 +93,7 @@ public class ThumbnailDescriptionController
         final Optional<String> oUnderscore = PicturePopupMenu.replaceUnderscore(text);
         if (oSpace.isPresent() || oUnderscore.isPresent()) {
             final var popupmenu = new JPopupMenu();
-            final var REPLACE_WITH = Settings.getJpoResources().getString("ReplaceWith");
+            final var REPLACE_WITH = JpoResources.getResource("ReplaceWith");
             if (oSpace.isPresent()) {
                 final var replaceSpace = new JMenuItem(REPLACE_WITH + oSpace.get());
                 replaceSpace.addActionListener(e1 -> textArea.setText(oSpace.get()));
@@ -204,7 +204,7 @@ public class ThumbnailDescriptionController
     private void setDescription() {
         String legend;
         if (referringNode == null) {
-            legend = Settings.getJpoResources().getString("ThumbnailDescriptionNoNodeError");
+            legend = JpoResources.getResource("ThumbnailDescriptionNoNodeError");
         } else if (referringNode.getUserObject() instanceof PictureInfo pi) {
             legend = pi.getDescription();
         } else if (referringNode.getUserObject() instanceof GroupInfo gi) {

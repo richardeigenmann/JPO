@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
-Copyright (C) 2002-2024 Richard Eigenmann.
+Copyright (C) 2002-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -88,7 +88,7 @@ public class DirectoryChooser
     /**
      * Button that brings up a file chooser for the directory
      */
-    private final JButton directoryChooserJButton = new JButton(Settings.getJpoResources().getString("threeDotText"));
+    private final JButton directoryChooserJButton = new JButton(JpoResources.getResource("threeDotText"));
 
     /**
      * creates the GUI widgets
@@ -128,7 +128,7 @@ public class DirectoryChooser
         directoryChooserJButton.addActionListener(( ActionEvent e ) -> {
             final JFileChooser jFileChooser = new JFileChooser();
             jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-            jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("genericSelectText"));
+            jFileChooser.setApproveButtonText(JpoResources.getResource("genericSelectText"));
             jFileChooser.setDialogTitle(chooserTitle);
             jFileChooser.setCurrentDirectory( new File( getText() ) );
 

@@ -2,8 +2,8 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.NodeStatistics;
-import org.jpo.datamodel.Settings;
 import org.jpo.gui.ConsolidateGroupWorker;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.ProgressGui;
 
 /*
@@ -39,7 +39,7 @@ public class ConsolidateGroupHandler {
                 request.node(),
                 request.recurseSubgroups(),
                 new ProgressGui(NodeStatistics.countPictures(request.node(), request.recurseSubgroups()),
-                        Settings.getJpoResources().getString("ConsolidateProgBarTitle"),
+                        JpoResources.getResource("ConsolidateProgBarTitle"),
                         ""));
     }
 

@@ -2,6 +2,7 @@ package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +10,7 @@ import java.awt.event.KeyEvent;
 import java.util.Objects;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2025 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -105,7 +106,7 @@ public class PictureViewerNavBar extends JToolBar {
      * Constructor for a new instance of PictureViewerNavBar
      */
     public PictureViewerNavBar() {
-        super(Settings.getJpoResources().getString("NavigationPanel"));
+        super(JpoResources.getResource("NavigationPanel"));
         Tools.checkEDT();
 
         setBackground(Settings.getPictureviewerBackgroundColor());
@@ -114,44 +115,44 @@ public class PictureViewerNavBar extends JToolBar {
         setBorderPainted( false );
 
         previousJButton.setMnemonic(KeyEvent.VK_P);
-        previousJButton.setToolTipText(Settings.getJpoResources().getString("previousJButton.ToolTipText"));
+        previousJButton.setToolTipText(JpoResources.getResource("previousJButton.ToolTipText"));
         add(previousJButton);
 
         nextJButton.setMnemonic(KeyEvent.VK_N);
-        nextJButton.setToolTipText(Settings.getJpoResources().getString("nextJButton.ToolTipText"));
+        nextJButton.setToolTipText(JpoResources.getResource("nextJButton.ToolTipText"));
         add(nextJButton);
 
         rotateLeftJButton.setMnemonic(KeyEvent.VK_L);
-        rotateLeftJButton.setToolTipText(Settings.getJpoResources().getString("rotateLeftJButton.ToolTipText"));
+        rotateLeftJButton.setToolTipText(JpoResources.getResource("rotateLeftJButton.ToolTipText"));
         add(rotateLeftJButton);
 
         rotateRightJButton.setMnemonic(KeyEvent.VK_R);
-        rotateRightJButton.setToolTipText(Settings.getJpoResources().getString("rotateRightJButton.ToolTipText"));
+        rotateRightJButton.setToolTipText(JpoResources.getResource("rotateRightJButton.ToolTipText"));
         add(rotateRightJButton);
 
-        zoomInJButton.setToolTipText(Settings.getJpoResources().getString("zoomInJButton.ToolTipText"));
+        zoomInJButton.setToolTipText(JpoResources.getResource("zoomInJButton.ToolTipText"));
         add(zoomInJButton);
 
-        zoomOutJButton.setToolTipText(Settings.getJpoResources().getString("zoomOutJButton.ToolTipText"));
+        zoomOutJButton.setToolTipText(JpoResources.getResource("zoomOutJButton.ToolTipText"));
         add(zoomOutJButton);
 
         fullScreenJButton.setMnemonic(KeyEvent.VK_F);
-        fullScreenJButton.setToolTipText(Settings.getJpoResources().getString("fullScreenJButton.ToolTipText"));
+        fullScreenJButton.setToolTipText(JpoResources.getResource("fullScreenJButton.ToolTipText"));
         add(fullScreenJButton);
 
         popupMenuJButton.setMnemonic(KeyEvent.VK_M);
-        popupMenuJButton.setToolTipText(Settings.getJpoResources().getString("popupMenuJButton.ToolTipText"));
+        popupMenuJButton.setToolTipText(JpoResources.getResource("popupMenuJButton.ToolTipText"));
         add(popupMenuJButton);
 
         infoJButton.setMnemonic(KeyEvent.VK_I);
-        infoJButton.setToolTipText(Settings.getJpoResources().getString("infoJButton.ToolTipText"));
+        infoJButton.setToolTipText(JpoResources.getResource("infoJButton.ToolTipText"));
         add(infoJButton);
 
         resetJButton.setMnemonic(KeyEvent.VK_ESCAPE);
-        resetJButton.setToolTipText(Settings.getJpoResources().getString("resetJButton.ToolTipText"));
+        resetJButton.setToolTipText(JpoResources.getResource("resetJButton.ToolTipText"));
         add(resetJButton);
 
-        clockJButton.setToolTipText(Settings.getJpoResources().getString("clockJButton.ToolTipText"));
+        clockJButton.setToolTipText(JpoResources.getResource("clockJButton.ToolTipText"));
         add(clockJButton);
 
         speedSlider.setVisible( false );
@@ -161,7 +162,7 @@ public class PictureViewerNavBar extends JToolBar {
         add( speedSlider );
 
         closeJButton.setMnemonic(KeyEvent.VK_C);
-        closeJButton.setToolTipText(Settings.getJpoResources().getString("closeJButton.ToolTipText"));
+        closeJButton.setToolTipText(JpoResources.getResource("closeJButton.ToolTipText"));
         add(closeJButton);
     }
     /**

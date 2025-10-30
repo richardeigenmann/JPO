@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import com.google.common.collect.EvictingQueue;
 import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.MainWindow;
 
 import javax.swing.*;
@@ -228,7 +229,7 @@ public class Settings {
     /**
      * Default locale if all else fails use this one.
      */
-    private static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+    public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
     /**
      * Supported Languages
      */
@@ -628,10 +629,7 @@ public class Settings {
      * The locale to be used for the application
      */
     private static Locale currentLocale = Locale.getDefault();
-    /**
-     * the resourceBundle is a Java thing that sorts out language customisation
-     */
-    private static ResourceBundle jpoResources;
+
     private static MainWindow mainWindow;
 
     /**
@@ -1477,12 +1475,12 @@ public class Settings {
     public static List<SortOption> getSortOptions() {
         final List<SortOption> sortOptions = new ArrayList<>();
         sortOptions.add(new SortOption("No Sorting", FieldCodes.NO_SORTING));
-        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByDescriptionJMenuItem"), FieldCodes.DESCRIPTION));
-        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByFilmReferenceJMenuItem"), FieldCodes.FILM_REFERENCE));
-        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByCreationTimeJMenuItem"), FieldCodes.CREATION_TIME));
-        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByCommentJMenuItem"), FieldCodes.COMMENT));
-        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByPhotographerJMenuItem"), FieldCodes.PHOTOGRAPHER));
-        sortOptions.add(new SortOption(Settings.jpoResources.getString("sortByCopyrightHolderTimeJMenuItem"), FieldCodes.COPYRIGHT_HOLDER));
+        sortOptions.add(new SortOption(JpoResources.getResource("sortByDescriptionJMenuItem"), FieldCodes.DESCRIPTION));
+        sortOptions.add(new SortOption(JpoResources.getResource("sortByFilmReferenceJMenuItem"), FieldCodes.FILM_REFERENCE));
+        sortOptions.add(new SortOption(JpoResources.getResource("sortByCreationTimeJMenuItem"), FieldCodes.CREATION_TIME));
+        sortOptions.add(new SortOption(JpoResources.getResource("sortByCommentJMenuItem"), FieldCodes.COMMENT));
+        sortOptions.add(new SortOption(JpoResources.getResource("sortByPhotographerJMenuItem"), FieldCodes.PHOTOGRAPHER));
+        sortOptions.add(new SortOption(JpoResources.getResource("sortByCopyrightHolderTimeJMenuItem"), FieldCodes.COPYRIGHT_HOLDER));
         return sortOptions;
     }
 
@@ -1907,19 +1905,19 @@ public class Settings {
             maxThumbnails = DEFAULT_MAX_THUMBNAILS;
         }
 
-        final String SETTINGS_ERROR = Settings.jpoResources.getString("settingsError");
+        final String SETTINGS_ERROR = JpoResources.getResource("settingsError");
         if (writeLog) {
             if (logfile.exists()) {
                 if (!logfile.canWrite()) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
-                            Settings.jpoResources.getString("logFileCanWriteError"),
+                            JpoResources.getResource("logFileCanWriteError"),
                             SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 }
                 if (!logfile.isFile()) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
-                            Settings.jpoResources.getString("logFileIsFileError"),
+                            JpoResources.getResource("logFileIsFileError"),
                             SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
@@ -1929,13 +1927,13 @@ public class Settings {
                 if (testFileParent == null) {
                     // the parent of root dir is null
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
-                            Settings.jpoResources.getString("logFileIsFileError"),
+                            JpoResources.getResource("logFileIsFileError"),
                             SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
                 } else if (!testFileParent.canWrite()) {
                     JOptionPane.showMessageDialog(Settings.anchorFrame,
-                            Settings.jpoResources.getString("logFileCanWriteError"),
+                            JpoResources.getResource("logFileCanWriteError"),
                             SETTINGS_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                     writeLog = false;
@@ -2203,29 +2201,16 @@ public class Settings {
     public static boolean setLocale(final Locale newLocale) {
         var oldLocale = currentLocale;
         try {
-            jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", newLocale);
+            JpoResources.setJpoResources(ResourceBundle.getBundle("org.jpo.gui.JpoResources", newLocale));
             currentLocale = newLocale;
         } catch (final MissingResourceException mre) {
             LOGGER.info(mre.getMessage());
-            jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", DEFAULT_LOCALE);
+            JpoResources.setJpoResources(ResourceBundle.getBundle("org.jpo.gui.JpoResources", DEFAULT_LOCALE));
             currentLocale = DEFAULT_LOCALE;
         }
-        titleFont = Font.decode(Settings.jpoResources.getString("SettingsTitleFont"));
+        titleFont = Font.decode(JpoResources.getResource("SettingsTitleFont"));
 
         return (!currentLocale.equals(oldLocale));
-    }
-
-    /*
-     * ------------------------------------------------------------------------------
-     * Stuff for memorizing the copy target locations
-     */
-
-    public static ResourceBundle getJpoResources() {
-        return jpoResources;
-    }
-
-    public static void setJpoResources(final ResourceBundle jpoResources) {
-        Settings.jpoResources = jpoResources;
     }
 
     public static int getMaxDropnodes() {

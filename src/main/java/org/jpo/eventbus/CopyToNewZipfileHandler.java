@@ -2,11 +2,12 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -33,7 +34,7 @@ public class CopyToNewZipfileHandler {
         final var jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("genericSelectText"));
+        jFileChooser.setApproveButtonText(JpoResources.getResource("genericSelectText"));
         jFileChooser.setDialogTitle("Pick the zipfile to which the pictures should be added");
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 

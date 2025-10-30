@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.LabelFrame;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.Settings.FieldCodes.*;
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -289,6 +290,6 @@ public class SaxEventHandler extends DefaultHandler {
      * called every hundred pictures or so.
      */
     private void informProgressGui() {
-        loadProgressGui.update(String.format(Settings.getJpoResources().getString("org.jpo.dataModel.XmlReader.progressUpdate"), groupCount, pictureCount));
+        loadProgressGui.update(String.format(JpoResources.getResource("org.jpo.dataModel.XmlReader.progressUpdate"), groupCount, pictureCount));
     }
 }

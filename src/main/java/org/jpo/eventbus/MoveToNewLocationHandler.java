@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -18,6 +18,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 @EventHandler
@@ -31,10 +32,10 @@ public class MoveToNewLocationHandler {
         final var jFileChooser = new JFileChooser();
 
         jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("MoveImageDialogTitle"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("MoveImageDialogTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
-        final int returnVal = jFileChooser.showDialog(Settings.getAnchorFrame(), Settings.getJpoResources().getString("MoveImageDialogButton"));
+        final int returnVal = jFileChooser.showDialog(Settings.getAnchorFrame(), JpoResources.getResource("MoveImageDialogButton"));
         if (returnVal != JFileChooser.APPROVE_OPTION) {
             return;
         }

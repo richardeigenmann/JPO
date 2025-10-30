@@ -5,6 +5,7 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
 import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
@@ -64,9 +65,9 @@ public class RenamePictureHandler {
             return;
         }
 
-        final var object = Settings.getJpoResources().getString("FileRenameLabel1")
+        final var object = JpoResources.getResource("FileRenameLabel1")
                 + imageFile
-                + Settings.getJpoResources().getString("FileRenameLabel2");
+                + JpoResources.getResource("FileRenameLabel2");
         final var selectedValue = JOptionPane.showInputDialog(Settings.getAnchorFrame(),
                 object,
                 imageFile.toString());
@@ -76,8 +77,8 @@ public class RenamePictureHandler {
             if (newName.exists()) {
                 final var alternativeNewName = Tools.inventFilename(newName.getParentFile(), newName.getName());
                 int alternativeAnswer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                        String.format(Settings.getJpoResources().getString("FileRenameTargetExistsText"), newName, alternativeNewName),
-                        Settings.getJpoResources().getString("FileRenameTargetExistsTitle"),
+                        String.format(JpoResources.getResource("FileRenameTargetExistsText"), newName, alternativeNewName),
+                        JpoResources.getResource("FileRenameTargetExistsTitle"),
                         JOptionPane.OK_CANCEL_OPTION);
                 if (alternativeAnswer == JOptionPane.OK_OPTION) {
                     newName = alternativeNewName;

@@ -1,5 +1,7 @@
 package org.jpo.datamodel;
 
+import org.jpo.gui.JpoResources;
+
 import javax.swing.tree.TreeNode;
 import java.io.Serial;
 import java.io.Serializable;
@@ -9,14 +11,12 @@ import java.util.Enumeration;
 import java.util.List;
 
 /*
- TextQuery.java:  The parameters for a search
-
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -248,7 +248,7 @@ public class TextQuery implements Serializable, Query {
     public String getTitle() {
         String nodeDescription = ( startNode == null ) ? "" : startNode.getUserObject().toString();
 
-        return Settings.getJpoResources().getString("ThumbnailSearchResults") + anyField + Settings.getJpoResources().getString("ThumbnailSearchResults2") + nodeDescription;
+        return JpoResources.getResource("ThumbnailSearchResults") + anyField + JpoResources.getResource("ThumbnailSearchResults2") + nodeDescription;
     }
 
     /**

@@ -34,6 +34,7 @@ import java.util.logging.Logger;
  * Place - Suite 330, Boston, MA 02111-1307, USA. The license is in gpl.txt. See
  * http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class deals with the tree representation of the picture collection
  */
@@ -335,7 +336,7 @@ public class CollectionJTreeController {
             } else if (userObject instanceof PictureInfo pictureInfo) {
                 final var highresFile = pictureInfo.getImageFile();
                 final var fileSize = highresFile == null ? "no file" : FileUtils.byteCountToDisplaySize(highresFile.length());
-                toolTip = String.format("<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), Settings.getJpoResources().getString("CollectionSizeJLabel"), fileSize);
+                toolTip = String.format("<html>Picture: %s<br>%s %s</html>", pictureInfo.getDescription(), JpoResources.getResource("CollectionSizeJLabel"), fileSize);
             }
             return toolTip;
         }

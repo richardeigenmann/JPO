@@ -170,14 +170,14 @@ public class ApplicationJMenuBar extends JMenuBar {
          * the Locale in the Settings editor.
          */
         private void setMenuTexts() {
-            setText(Settings.getJpoResources().getString("FileMenuText"));
-            fileNewJMenuItem.setText(Settings.getJpoResources().getString("FileNewJMenuItem"));
-            fileOpenRecentJMenu.setText(Settings.getJpoResources().getString("FileOpenRecentItemText"));
-            fileLoadJMenuItem.setText(Settings.getJpoResources().getString("FileLoadMenuItemText"));
-            fileAddJMenuItem.setText(Settings.getJpoResources().getString("FileAddMenuItemText"));
-            fileSaveJMenuItem.setText(Settings.getJpoResources().getString("FileSaveMenuItemText"));
-            fileSaveAsJMenuItem.setText(Settings.getJpoResources().getString("FileSaveAsMenuItemText"));
-            fileExitJMenuItem.setText(Settings.getJpoResources().getString("FileExitMenuItemText"));
+            setText(JpoResources.getResource("FileMenuText"));
+            fileNewJMenuItem.setText(JpoResources.getResource("FileNewJMenuItem"));
+            fileOpenRecentJMenu.setText(JpoResources.getResource("FileOpenRecentItemText"));
+            fileLoadJMenuItem.setText(JpoResources.getResource("FileLoadMenuItemText"));
+            fileAddJMenuItem.setText(JpoResources.getResource("FileAddMenuItemText"));
+            fileSaveJMenuItem.setText(JpoResources.getResource("FileSaveMenuItemText"));
+            fileSaveAsJMenuItem.setText(JpoResources.getResource("FileSaveAsMenuItemText"));
+            fileExitJMenuItem.setText(JpoResources.getResource("FileExitMenuItemText"));
         }
 
         /**
@@ -230,9 +230,9 @@ public class ApplicationJMenuBar extends JMenuBar {
             setMenuVisibility();
 
             if (event.pictureCollection().getAllowEdits() ) {
-                editModeJMenuItem.setText(Settings.getJpoResources().getString("editModeDisable"));
+                editModeJMenuItem.setText(JpoResources.getResource("editModeDisable"));
             } else {
-                editModeJMenuItem.setText(Settings.getJpoResources().getString("editModeEnable"));
+                editModeJMenuItem.setText(JpoResources.getResource("editModeEnable"));
             }
         }
 
@@ -268,9 +268,9 @@ public class ApplicationJMenuBar extends JMenuBar {
          * the Locale in the Settings editor.
          */
         private void setMenuTexts() {
-            setText(Settings.getJpoResources().getString("EditJMenuText"));
-            editCamerasJMenuItem.setText(Settings.getJpoResources().getString("EditCamerasJMenuItem"));
-            editSettingsJMenuItem.setText(Settings.getJpoResources().getString("EditSettingsMenuItemText"));
+            setText(JpoResources.getResource("EditJMenuText"));
+            editCamerasJMenuItem.setText(JpoResources.getResource("EditCamerasJMenuItem"));
+            editSettingsJMenuItem.setText(JpoResources.getResource("EditSettingsMenuItemText"));
         }
 
 
@@ -313,9 +313,9 @@ public class ApplicationJMenuBar extends JMenuBar {
          * the Locale in the Settings editor.
          */
         private void setMenuTexts() {
-            setText(Settings.getJpoResources().getString("actionJMenu"));
-            emailJMenuItem.setText(Settings.getJpoResources().getString("emailJMenuItem"));
-            randomSlideshowJMenuItem.setText(Settings.getJpoResources().getString("RandomSlideshowJMenuItem"));
+            setText(JpoResources.getResource("actionJMenu"));
+            emailJMenuItem.setText(JpoResources.getResource("emailJMenuItem"));
+            randomSlideshowJMenuItem.setText(JpoResources.getResource("RandomSlideshowJMenuItem"));
         }
     }
 
@@ -398,12 +398,12 @@ public class ApplicationJMenuBar extends JMenuBar {
          * the Locale in the Settings editor.
          */
         private void setMenuTexts() {
-            setText(Settings.getJpoResources().getString("ExtrasJMenu"));
-            editCheckDirectoriesJMenuItem.setText(Settings.getJpoResources().getString("EditCheckDirectoriesJMenuItemText"));
-            editCheckIntegrityJMenuItem.setText(Settings.getJpoResources().getString("EditCheckIntegrityJMenuItem"));
-            findDuplicatesJMenuItem.setText(Settings.getJpoResources().getString("FindDuplicatesJMenuItem"));
-            editCategoriesJMenuItem.setText(Settings.getJpoResources().getString("EditCategoriesJMenuItem"));
-            startThumbnailCreationThreadJMenuItem.setText(Settings.getJpoResources().getString("StartThumbnailCreationThreadJMenuItem"));
+            setText(JpoResources.getResource("ExtrasJMenu"));
+            editCheckDirectoriesJMenuItem.setText(JpoResources.getResource("EditCheckDirectoriesJMenuItemText"));
+            editCheckIntegrityJMenuItem.setText(JpoResources.getResource("EditCheckIntegrityJMenuItem"));
+            findDuplicatesJMenuItem.setText(JpoResources.getResource("FindDuplicatesJMenuItem"));
+            editCategoriesJMenuItem.setText(JpoResources.getResource("EditCategoriesJMenuItem"));
+            startThumbnailCreationThreadJMenuItem.setText(JpoResources.getResource("StartThumbnailCreationThreadJMenuItem"));
         }
 
     }
@@ -470,12 +470,12 @@ public class ApplicationJMenuBar extends JMenuBar {
          * the Locale in the Settings editor.
          */
         private void setMenuTexts() {
-            setText(Settings.getJpoResources().getString("HelpJMenuText"));
-            helpAboutJMenuItem.setText(Settings.getJpoResources().getString("HelpAboutMenuItemText"));
-            helpLicenseJMenuItem.setText(Settings.getJpoResources().getString("HelpLicenseMenuItemText"));
-            helpPrivacyJMenuItem.setText(Settings.getJpoResources().getString("HelpPrivacyMenuItemText"));
-            helpResetWindowsJMenuItem.setText(Settings.getJpoResources().getString("HelpResetWindowsJMenuItem"));
-            helpCheckForUpdatesJMenuItem.setText(Settings.getJpoResources().getString("HelpCheckForUpdates"));
+            setText(JpoResources.getResource("HelpJMenuText"));
+            helpAboutJMenuItem.setText(JpoResources.getResource("HelpAboutMenuItemText"));
+            helpLicenseJMenuItem.setText(JpoResources.getResource("HelpLicenseMenuItemText"));
+            helpPrivacyJMenuItem.setText(JpoResources.getResource("HelpPrivacyMenuItemText"));
+            helpResetWindowsJMenuItem.setText(JpoResources.getResource("HelpResetWindowsJMenuItem"));
+            helpCheckForUpdatesJMenuItem.setText(JpoResources.getResource("HelpCheckForUpdates"));
         }
 
     }

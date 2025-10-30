@@ -20,12 +20,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -53,7 +53,7 @@ public class ReconcileJFrame extends JFrame {
     /**
      * tickbox that indicates whether subdirectories are to be reconciled too
      */
-    private final JCheckBox recurseSubdirectoriesJCheckBox = new JCheckBox(Settings.getJpoResources().getString("ReconcileSubdirectories"));
+    private final JCheckBox recurseSubdirectoriesJCheckBox = new JCheckBox(JpoResources.getResource("ReconcileSubdirectories"));
 
     /**
      * the log window with the results of the reconciliation
@@ -83,7 +83,7 @@ public class ReconcileJFrame extends JFrame {
      * Creates the GUI
      */
     private void initComponents() {
-        setTitle(Settings.getJpoResources().getString("ReconcileJFrameTitle"));
+        setTitle(JpoResources.getResource("ReconcileJFrameTitle"));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener( new WindowAdapter() {
 
@@ -96,17 +96,17 @@ public class ReconcileJFrame extends JFrame {
         final JPanel controlJPanel = new JPanel();
         controlJPanel.setLayout( new MigLayout() );
 
-        controlJPanel.add(new JLabel(Settings.getJpoResources().getString("ReconcileBlaBlaLabel")), "spanx 3, wrap");
+        controlJPanel.add(new JLabel(JpoResources.getResource("ReconcileBlaBlaLabel")), "spanx 3, wrap");
 
-        controlJPanel.add(new JLabel(Settings.getJpoResources().getString("directoryJLabelLabel")));
+        controlJPanel.add(new JLabel(JpoResources.getResource("directoryJLabelLabel")));
 
         final DirectoryChooser directoryChooser
-                = new DirectoryChooser(Settings.getJpoResources().getString("directoryCheckerChooserTitle"),
+                = new DirectoryChooser(JpoResources.getResource("directoryCheckerChooserTitle"),
                 DirectoryChooser.DIR_MUST_EXIST);
 
         controlJPanel.add(directoryChooser);
 
-        final JButton okJButton = new JButton(Settings.getJpoResources().getString("ReconcileOkButtonLabel"));
+        final JButton okJButton = new JButton(JpoResources.getResource("ReconcileOkButtonLabel"));
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -121,7 +121,7 @@ public class ReconcileJFrame extends JFrame {
 
         controlJPanel.add(recurseSubdirectoriesJCheckBox, "spanx 2");
 
-        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("closeJButton"));
+        final JButton cancelJButton = new JButton(JpoResources.getResource("closeJButton"));
         cancelJButton.addActionListener((ActionEvent e) -> {
             if ((reconciler == null) || (reconciler.isDone())) {
                 getRid();
@@ -188,7 +188,7 @@ public class ReconcileJFrame extends JFrame {
         if ( reconcileDir == null ) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("ReconcileNullFileError"),
+                    JpoResources.getResource("ReconcileNullFileError"),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -199,7 +199,7 @@ public class ReconcileJFrame extends JFrame {
             if ( reconcileDir == null ) {
                 JOptionPane.showMessageDialog(
                         Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("ReconcileNullFileError"),
+                        JpoResources.getResource("ReconcileNullFileError"),
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -210,7 +210,7 @@ public class ReconcileJFrame extends JFrame {
         if ( !reconcileDir.canRead() ) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("ReconcileCantReadError"),
+                    JpoResources.getResource("ReconcileCantReadError"),
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
             return false;
@@ -290,7 +290,7 @@ public class ReconcileJFrame extends JFrame {
         private void reconcileDir(final File reconcileDir) {
             final File[] fileArray = reconcileDir.listFiles();
             if (fileArray == null) {
-                publish(Settings.getJpoResources().getString("ReconcileNoFiles"));
+                publish(JpoResources.getResource("ReconcileNoFiles"));
                 return;
             }
 
@@ -302,7 +302,7 @@ public class ReconcileJFrame extends JFrame {
                 } else {
                     final URI testFile = fileArray[i].toURI();
                     if (!collectionUris.contains(testFile)) {
-                        publish(Settings.getJpoResources().getString("ReconcileNotFound") + fileArray[i].toString() + "\n");
+                        publish(JpoResources.getResource("ReconcileNotFound") + fileArray[i].toString() + "\n");
                     }
                 }
             }
@@ -316,9 +316,9 @@ public class ReconcileJFrame extends JFrame {
         @Override
         protected void done() {
             if ( isCancelled() ) {
-                outputTextArea.append(Settings.getJpoResources().getString("ReconcileInterrupted"));
+                outputTextArea.append(JpoResources.getResource("ReconcileInterrupted"));
             } else {
-                outputTextArea.append(Settings.getJpoResources().getString("ReconcileDone"));
+                outputTextArea.append(JpoResources.getResource("ReconcileDone"));
 
             }
         }

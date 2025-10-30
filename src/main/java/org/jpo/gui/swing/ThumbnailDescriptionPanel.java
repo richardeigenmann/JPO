@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 /*
- Copyright (C) 2020-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2020-2025 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -16,7 +16,6 @@ package org.jpo.gui.swing;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
 import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
@@ -24,6 +23,7 @@ import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.CollectionLockNotification;
 import org.jpo.eventbus.JpoEventBus;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -39,11 +39,11 @@ public class ThumbnailDescriptionPanel extends JPanel {
     /**
      * Font to be used for Large Texts:
      */
-    private static final Font LARGE_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelLargeFont"));
+    private static final Font LARGE_FONT = Font.decode(JpoResources.getResource("ThumbnailDescriptionJPanelLargeFont"));
     /**
      * Font to be used for small texts:
      */
-    private static final Font SMALL_FONT = Font.decode(Settings.getJpoResources().getString("ThumbnailDescriptionJPanelSmallFont"));
+    private static final Font SMALL_FONT = Font.decode(JpoResources.getResource("ThumbnailDescriptionJPanelSmallFont"));
     final JButton categoryMenuPopupButton = new JButton("\uf0fe");
     /**
      * This object holds the description

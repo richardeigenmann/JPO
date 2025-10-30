@@ -5,11 +5,12 @@ import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.eventbus.JpoEventBus;
+import org.jpo.gui.JpoResources;
 
 import java.awt.*;
 
 /*
- Copyright (C) 2008-2024 Richard Eigenmann.
+ Copyright (C) 2008-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -86,7 +87,7 @@ public class GenerateWebsiteWizard {
             }
         } );
 
-        final Wizard wizard = new Wizard(model, Settings.getJpoResources().getString("HtmlDistillerJFrameHeading"));
+        final Wizard wizard = new Wizard(model, JpoResources.getResource("HtmlDistillerJFrameHeading"));
 
         wizard.pack();
         wizard.setLocationRelativeTo(Settings.getAnchorFrame());

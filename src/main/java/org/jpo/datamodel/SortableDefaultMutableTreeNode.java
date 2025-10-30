@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings.FieldCodes;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.JpoTransferable;
 
 import javax.swing.*;
@@ -348,13 +349,13 @@ public class SortableDefaultMutableTreeNode
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("copyPictureError1")
+                    JpoResources.getResource("copyPictureError1")
                             + sourceFile
-                            + Settings.getJpoResources().getString("copyPictureError2")
+                            + JpoResources.getResource("copyPictureError2")
                             + targetFile.toString()
-                            + Settings.getJpoResources().getString("copyPictureError3")
+                            + JpoResources.getResource("copyPictureError3")
                             + e.getMessage(),
-                    Settings.getJpoResources().getString(GENERIC_ERROR),
+                    JpoResources.getResource(GENERIC_ERROR),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -651,8 +652,8 @@ public class SortableDefaultMutableTreeNode
                     One of the transferring nodes is an ancestor of the current node which would orphan the tree.
                     """);
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("moveNodeError"),
-                    Settings.getJpoResources().getString(GENERIC_ERROR),
+                    JpoResources.getResource("moveNodeError"),
+                    JpoResources.getResource(GENERIC_ERROR),
                     JOptionPane.ERROR_MESSAGE);
             dropEvent.dropComplete(false);
 
@@ -864,7 +865,7 @@ public class SortableDefaultMutableTreeNode
             if (childBefore == null) {
                 final SortableDefaultMutableTreeNode newGroup
                         = new SortableDefaultMutableTreeNode(
-                        new GroupInfo(Settings.getJpoResources().getString("newGroup")));
+                        new GroupInfo(JpoResources.getResource("newGroup")));
                 parentNode.insert(newGroup, 0);
                 this.removeFromParent();
                 newGroup.add(this);
@@ -1064,7 +1065,7 @@ public class SortableDefaultMutableTreeNode
                                    final SortableDefaultMutableTreeNode targetNode) {
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropBefore = new JMenuItem(Settings.getJpoResources().getString("GDPMdropBefore"));
+            final JMenuItem dropBefore = new JMenuItem(JpoResources.getResource("GDPMdropBefore"));
             dropBefore.addActionListener((ActionEvent e) -> {
                 final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -1076,7 +1077,7 @@ public class SortableDefaultMutableTreeNode
             super.add(dropBefore);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropAfter = new JMenuItem(Settings.getJpoResources().getString("GDPMdropAfter"));
+            final JMenuItem dropAfter = new JMenuItem(JpoResources.getResource("GDPMdropAfter"));
             dropAfter.addActionListener((ActionEvent e) -> {
                 final SortableDefaultMutableTreeNode parentNode = targetNode.getParent();
                 sourceNode.removeFromParent();
@@ -1088,7 +1089,7 @@ public class SortableDefaultMutableTreeNode
             super.add(dropAfter);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropIntoFirst = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoFirst"));
+            final JMenuItem dropIntoFirst = new JMenuItem(JpoResources.getResource("GDPMdropIntoFirst"));
             dropIntoFirst.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -1100,7 +1101,7 @@ public class SortableDefaultMutableTreeNode
             super.add(dropIntoFirst);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropIntoLast = new JMenuItem(Settings.getJpoResources().getString("GDPMdropIntoLast"));
+            final JMenuItem dropIntoLast = new JMenuItem(JpoResources.getResource("GDPMdropIntoLast"));
             dropIntoLast.addActionListener((ActionEvent e) -> {
                 synchronized (targetNode.getRoot()) {
                     sourceNode.removeFromParent();
@@ -1113,7 +1114,7 @@ public class SortableDefaultMutableTreeNode
             super.add(dropIntoLast);
 
             // menu item that allows the user to edit the group description
-            final JMenuItem dropCancel = new JMenuItem(Settings.getJpoResources().getString("GDPMdropCancel"));
+            final JMenuItem dropCancel = new JMenuItem(JpoResources.getResource("GDPMdropCancel"));
             dropCancel.addActionListener((ActionEvent e) -> {
                 LOGGER.info("cancel drop");
                 event.dropComplete(false);

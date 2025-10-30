@@ -11,7 +11,7 @@ import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2002-2025 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -51,10 +51,10 @@ public class IntegrityCheckerJFrame
         this.startNode = startNode;
 
         // set up widgets
-        setTitle(Settings.getJpoResources().getString("IntegrityCheckerTitle"));
+        setTitle(JpoResources.getResource("IntegrityCheckerTitle"));
         final JPanel jPanel = new JPanel(new MigLayout("insets 15"));
-        jPanel.add(new JLabel(Settings.getJpoResources().getString("integrityCheckerLabel")), "wrap");
-        final JButton okJButton = new JButton(Settings.getJpoResources().getString("genericOKText"));
+        jPanel.add(new JLabel(JpoResources.getResource("integrityCheckerLabel")), "wrap");
+        final JButton okJButton = new JButton(JpoResources.getResource("genericOKText"));
         okJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         okJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         okJButton.setPreferredSize(Settings.getDefaultButtonDimension());

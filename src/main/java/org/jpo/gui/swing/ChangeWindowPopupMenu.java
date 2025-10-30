@@ -1,6 +1,6 @@
 package org.jpo.gui.swing;
 
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import static org.jpo.gui.swing.ResizableJFrame.WindowSize.*;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -38,50 +38,50 @@ public class ChangeWindowPopupMenu extends JPopupMenu
     /**
      * Menu item that indicates that a Fullscreen window should be created.
      */
-    private final JMenuItem fullScreenJMenuItem = new JMenuItem(Settings.getJpoResources().getString("fullScreenLabel"));
+    private final JMenuItem fullScreenJMenuItem = new JMenuItem(JpoResources.getResource("fullScreenLabel"));
     /**
      * Menu item that indicates that the window should be created on the LEFT
      * half of the display.
      */
-    private final JMenuItem leftWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("leftWindowLabel"));
+    private final JMenuItem leftWindowJMenuItem = new JMenuItem(JpoResources.getResource("leftWindowLabel"));
     /**
      * Menu item that indicates that the window should be created on the RIGHT
      * half of the display.
      */
-    private final JMenuItem rightWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("rightWindowLabel"));
+    private final JMenuItem rightWindowJMenuItem = new JMenuItem(JpoResources.getResource("rightWindowLabel"));
     /**
      * Menu item that indicates that the window should be created on the TOP
      * LEFT quarter of the display.
      */
-    private final JMenuItem topLeftWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("topLeftWindowLabel"));
+    private final JMenuItem topLeftWindowJMenuItem = new JMenuItem(JpoResources.getResource("topLeftWindowLabel"));
     /**
      * Menu item that indicates that the window should be created on the TOP
      * RIGHT quarter of the display.
      */
-    private final JMenuItem topRightWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("topRightWindowLabel"));
+    private final JMenuItem topRightWindowJMenuItem = new JMenuItem(JpoResources.getResource("topRightWindowLabel"));
     /**
      * Menu item that indicates that the window should be created on the BOTTOM
      * LEFT quarter of the display.
      */
-    private final JMenuItem bottomLeftWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("bottomLeftWindowLabel"));
+    private final JMenuItem bottomLeftWindowJMenuItem = new JMenuItem(JpoResources.getResource("bottomLeftWindowLabel"));
     /**
      * Menu item that indicates that the window should be created on the BOTTOM
      * RIGHT quarter of the display.
      */
-    private final JMenuItem bottomRightWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("bottomRightWindowLabel"));
+    private final JMenuItem bottomRightWindowJMenuItem = new JMenuItem(JpoResources.getResource("bottomRightWindowLabel"));
     /**
      * Menu item that indicates that the window should be created on the BOTTOM
      * RIGHT quarter of the display.
      */
-    private final JMenuItem defaultWindowJMenuItem = new JMenuItem(Settings.getJpoResources().getString("defaultWindowLabel"));
+    private final JMenuItem defaultWindowJMenuItem = new JMenuItem(JpoResources.getResource("defaultWindowLabel"));
     /**
      * Menu item that indicates that the window decorations should be shown.
      */
-    private final JMenuItem windowDecorationsJMenuItem = new JMenuItem(Settings.getJpoResources().getString("windowDecorationsLabel"));
+    private final JMenuItem windowDecorationsJMenuItem = new JMenuItem(JpoResources.getResource("windowDecorationsLabel"));
     /**
      * Menu item that indicates that the window decorations should not be shown.
      */
-    private final JMenuItem windowNoDecorationsJMenuItem = new JMenuItem(Settings.getJpoResources().getString("windowNoDecorationsLabel"));
+    private final JMenuItem windowNoDecorationsJMenuItem = new JMenuItem(JpoResources.getResource("windowNoDecorationsLabel"));
     /**
      * Object that must implement the functions dealing with the user request.
      */
@@ -166,7 +166,7 @@ public class ChangeWindowPopupMenu extends JPopupMenu
         } else {
             JOptionPane.showMessageDialog(null,
                     "Unknown event",
-                    Settings.getJpoResources().getString("genericError"),
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
         }
 

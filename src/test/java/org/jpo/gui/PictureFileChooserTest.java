@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2024 Richard Eigenmann.
+ Copyright (C) 2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -63,8 +63,8 @@ class PictureFileChooserTest {
         // this is a different, non EDT thread...
         var errorJDialog = waitForDialog("Error");
         assertNotNull(errorJDialog, "The Error Dialog Window was not found");
-        var jOptionPane = getJOptionPane(errorJDialog, Settings.getJpoResources().getString("notGroupInfo"));
-        assertNotNull(jOptionPane, String.format("The Error Dialog should show the text %s but we can't find a matching JOptionPane", Settings.getJpoResources().getString("notGroupInfo")));
+        var jOptionPane = getJOptionPane(errorJDialog, JpoResources.getResource("notGroupInfo"));
+        assertNotNull(jOptionPane, String.format("The Error Dialog should show the text %s but we can't find a matching JOptionPane", JpoResources.getResource("notGroupInfo")));
         clickJButton(getButton(errorJDialog, "OK"));
     }
 
@@ -85,7 +85,7 @@ class PictureFileChooserTest {
         });
 
         // this is a different, non EDT thread...
-        var jDialog = waitForDialog(Settings.getJpoResources().getString("PictureAdderDialogTitle"));
+        var jDialog = waitForDialog(JpoResources.getResource("PictureAdderDialogTitle"));
         assertNotNull(jDialog, "The File Choose Dialog Window was not found");
         var jFileChooser = getJFileChooser(jDialog);
         assertNotNull(jFileChooser, "Could not locate the JFileChooser");

@@ -1,11 +1,11 @@
 package org.jpo.gui.swing;
 
 import com.jidesoft.swing.JidePopupMenu;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.AddCategoriesToPictureNodesRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.OpenCategoryEditorRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.util.List;
@@ -37,7 +37,7 @@ public class CategoryPopupMenu extends JidePopupMenu {
      * @param referringNodes The node for which to create the popup menu for
      */
     public CategoryPopupMenu(final List<SortableDefaultMutableTreeNode> referringNodes) {
-        super(Settings.getJpoResources().getString("CategoryPopupMenu"));
+        super(JpoResources.getResource("CategoryPopupMenu"));
         CategoryPopupMenu.addMenuItems(this, referringNodes);
     }
 

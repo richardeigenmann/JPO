@@ -4,13 +4,14 @@ import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
 /*
- Copyright (C) 2008-2024  Richard Eigenmann. Zürich
+ Copyright (C) 2008-2025 Richard Eigenmann. Zürich
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -45,7 +46,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
      * @param request Options
      */
     public GenerateWebsiteWizard2Thumbnails(final GenerateWebsiteRequest request) {
-        super(Settings.getJpoResources().getString("HtmlDistThumbnails"), Settings.getJpoResources().getString("HtmlDistThumbnails"));
+        super(JpoResources.getResource("HtmlDistThumbnails"), JpoResources.getResource("HtmlDistThumbnails"));
         this.request = request;
 
         // load the options into the GUI components
@@ -95,11 +96,11 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
     protected JComponent createComponent() {
         final JPanel wizardPanel = new JPanel( new MigLayout( "", "[][250:250:800]" ) );
         final String ALIGN_LABEL= "align label";
-        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("picsPerRowText")), ALIGN_LABEL);
+        wizardPanel.add(new JLabel(JpoResources.getResource("picsPerRowText")), ALIGN_LABEL);
         picsPerRow.addChangeListener(changeListener -> request.setPicsPerRow(((SpinnerNumberModel) (picsPerRow.getModel())).getNumber().intValue()));
         wizardPanel.add(picsPerRow, "wrap");
 
-        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("thumbnailSizeJLabel")), ALIGN_LABEL);
+        wizardPanel.add(new JLabel(JpoResources.getResource("thumbnailSizeJLabel")), ALIGN_LABEL);
         thumbWidth.addChangeListener(changeListener -> request.setThumbnailWidth(((SpinnerNumberModel) (thumbWidth.getModel())).getNumber().intValue()));
         wizardPanel.add(thumbWidth, "split 3");
         wizardPanel.add(new JLabel(" x "));
@@ -109,15 +110,15 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         // Thumbnail Quality Slider
         wizardPanel.add(
                 new JLabel(
-                        Settings.getJpoResources().getString("lowresJpgQualitySlider")), ALIGN_LABEL);
+                        JpoResources.getResource("lowresJpgQualitySlider")), ALIGN_LABEL);
         // The JSlider wants a Dictionary which can only be a Hashtable
         Dictionary<Integer, JLabel> labelTable = new Hashtable<>();
         labelTable.put(
-                0, new JLabel(Settings.getJpoResources().getString("jpgQualityBad")));
+                0, new JLabel(JpoResources.getResource("jpgQualityBad")));
         labelTable.put(
-                80, new JLabel(Settings.getJpoResources().getString("jpgQualityGood")));
+                80, new JLabel(JpoResources.getResource("jpgQualityGood")));
         labelTable.put(
-                100, new JLabel(Settings.getJpoResources().getString("jpgQualityBest")));
+                100, new JLabel(JpoResources.getResource("jpgQualityBest")));
         lowresJpgQualityJSlider.setLabelTable(labelTable);
         lowresJpgQualityJSlider.setMajorTickSpacing(
                 10);
@@ -132,7 +133,7 @@ public class GenerateWebsiteWizard2Thumbnails extends AbstractStep {
         final JPanel sliderOwningPanel = new JPanel();
         sliderOwningPanel.add(lowresJpgQualityJSlider);
         wizardPanel.add(sliderOwningPanel, "growx, wrap");
-        wizardPanel.add(new JLabel(Settings.getJpoResources().getString("scalingSteps")));
+        wizardPanel.add(new JLabel(JpoResources.getResource("scalingSteps")));
 
         scalingSteps.addChangeListener(changeListener -> request.setScalingSteps(((SpinnerNumberModel) (scalingSteps.getModel())).getNumber().intValue()));
         wizardPanel.add(scalingSteps, "wrap");

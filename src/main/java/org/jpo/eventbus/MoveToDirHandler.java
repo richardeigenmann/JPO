@@ -5,6 +5,7 @@ import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ConsolidateGroupWorker;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.util.logging.Level;
@@ -14,7 +15,7 @@ import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 import static org.jpo.gui.ApplicationStartupHandler.GENERIC_INFO;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,7 +50,7 @@ public class MoveToDirHandler {
     public void handleEvent(final MoveToDirRequest request) {
         if (!request.targetLocation().isDirectory()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("htmlDistIsDirError"),
+                    JpoResources.getResource("htmlDistIsDirError"),
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -57,7 +58,7 @@ public class MoveToDirHandler {
 
         if (!request.targetLocation().canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("htmlDistCanWriteError"),
+                    JpoResources.getResource("htmlDistCanWriteError"),
                     GENERIC_ERROR,
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -74,7 +75,7 @@ public class MoveToDirHandler {
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                String.format(Settings.getJpoResources().getString("moveToNewLocationSuccess"), picsMoved, request.nodes().size()),
+                String.format(JpoResources.getResource("moveToNewLocationSuccess"), picsMoved, request.nodes().size()),
                 GENERIC_INFO,
                 JOptionPane.INFORMATION_MESSAGE);
     }

@@ -13,7 +13,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +47,7 @@ public class CollectionDistillerJFrame extends JFrame {
      * text field that holds the directory that the group is to be exported to
      */
     private final DirectoryChooser targetDirChooser
-            = new DirectoryChooser(Settings.getJpoResources().getString("collectionExportChooserTitle"),
+            = new DirectoryChooser(JpoResources.getResource("collectionExportChooserTitle"),
             DirectoryChooser.DIR_MUST_BE_WRITABLE);
 
     /**
@@ -59,7 +59,7 @@ public class CollectionDistillerJFrame extends JFrame {
      * JCheckBox that indicates whether the pictures are to be copied to the
      * target directory structure.
      */
-    private final JCheckBox exportPicsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("collectionExportPicturesText"));
+    private final JCheckBox exportPicsJCheckBox = new JCheckBox(JpoResources.getResource("collectionExportPicturesText"));
 
     /**
      * Constructor for the Export Dialog window.
@@ -68,7 +68,7 @@ public class CollectionDistillerJFrame extends JFrame {
      *                on.
      */
     public CollectionDistillerJFrame(final ExportGroupToNewCollectionRequest request) {
-        super(Settings.getJpoResources().getString("CollectionDistillerJFrameFrameHeading"));
+        super(JpoResources.getResource("CollectionDistillerJFrameFrameHeading"));
         this.request = request;
         initComponents();
     }
@@ -88,10 +88,10 @@ public class CollectionDistillerJFrame extends JFrame {
         final JPanel contentJPanel = new JPanel();
         contentJPanel.setLayout(new MigLayout());
 
-        contentJPanel.add(new JLabel(Settings.getJpoResources().getString("genericTargetDirText")));
+        contentJPanel.add(new JLabel(JpoResources.getResource("genericTargetDirText")));
         contentJPanel.add(targetDirChooser, "wrap");
 
-        contentJPanel.add(new JLabel(Settings.getJpoResources().getString("xmlFileNameLabel")));
+        contentJPanel.add(new JLabel(JpoResources.getResource("xmlFileNameLabel")));
 
         xmlFileNameJTextField.setPreferredSize(new Dimension(240, 20));
         xmlFileNameJTextField.setMinimumSize(new Dimension(240, 20));
@@ -120,7 +120,7 @@ public class CollectionDistillerJFrame extends JFrame {
 
         final JPanel buttonJPanel = new JPanel();
 
-        final JButton exportJButton = new JButton(Settings.getJpoResources().getString("genericExportButtonText"));
+        final JButton exportJButton = new JButton(JpoResources.getResource("genericExportButtonText"));
         exportJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         exportJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         exportJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -132,7 +132,7 @@ public class CollectionDistillerJFrame extends JFrame {
         });
         buttonJPanel.add(exportJButton);
 
-        final JButton cancelJButton = new JButton(Settings.getJpoResources().getString("genericCancelText"));
+        final JButton cancelJButton = new JButton(JpoResources.getResource("genericCancelText"));
         cancelJButton.setPreferredSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         cancelJButton.setMaximumSize(Settings.getDefaultButtonDimension());
@@ -182,8 +182,8 @@ public class CollectionDistillerJFrame extends JFrame {
 
         if (targetFile.exists()) {
             int answer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("confirmSaveAs"),
-                    Settings.getJpoResources().getString("genericWarning"),
+                    JpoResources.getResource("confirmSaveAs"),
+                    JpoResources.getResource("genericWarning"),
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
             if (answer == JOptionPane.CANCEL_OPTION) {
@@ -198,8 +198,8 @@ public class CollectionDistillerJFrame extends JFrame {
         Settings.pushRecentCollection(targetFile.toString());
         JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                Settings.getJpoResources().getString("collectionSaveBody") + targetFile,
-                Settings.getJpoResources().getString("collectionSaveTitle"),
+                JpoResources.getResource("collectionSaveBody") + targetFile,
+                JpoResources.getResource("collectionSaveTitle"),
                 JOptionPane.INFORMATION_MESSAGE);
 
     }

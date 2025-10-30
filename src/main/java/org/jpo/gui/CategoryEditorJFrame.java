@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -55,7 +55,7 @@ public class CategoryEditorJFrame
      */
     public CategoryEditorJFrame(final PictureCollection pictureCollection) {
         this.pictureCollection = pictureCollection;
-        setTitle(Settings.getJpoResources().getString("CategoryEditorJFrameTitle"));
+        setTitle(JpoResources.getResource("CategoryEditorJFrameTitle"));
         addWindowListener(new WindowAdapter() {
 
             @Override
@@ -80,7 +80,7 @@ public class CategoryEditorJFrame
         final var rightColumn = new JPanel();
         rightColumn.setLayout(new MigLayout());
 
-        final var categoryJLabel = new JLabel(Settings.getJpoResources().getString("categoryJLabel"));
+        final var categoryJLabel = new JLabel(JpoResources.getResource("categoryJLabel"));
         categoryJLabel.setHorizontalAlignment(SwingConstants.LEFT);
         rightColumn.add(categoryJLabel, "wrap");
 
@@ -109,7 +109,7 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getRenameCategoryJButton(final JList<Category> categoriesJList) {
-        final var renameCategoryJButton = new JButton(Settings.getJpoResources().getString("renameCategoryJButton"));
+        final var renameCategoryJButton = new JButton(JpoResources.getResource("renameCategoryJButton"));
         renameCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         renameCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         renameCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
@@ -132,7 +132,7 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getDeleteCategoryJButton(final JList<Category> categoriesJList) {
-        final var deleteCategoryJButton = new JButton(Settings.getJpoResources().getString("deleteCategoryJButton"));
+        final var deleteCategoryJButton = new JButton(JpoResources.getResource("deleteCategoryJButton"));
         deleteCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         deleteCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         deleteCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
@@ -145,8 +145,8 @@ public class CategoryEditorJFrame
             int count = countCategoryUsage(cat.getKey(), pictureCollection.getRootNode());
             if (count > 0) {
                 int answer = JOptionPane.showConfirmDialog(CategoryEditorJFrame.this,
-                        Settings.getJpoResources().getString("countCategoryUsageWarning1") + count + Settings.getJpoResources().getString("countCategoryUsageWarning2"),
-                        Settings.getJpoResources().getString("genericWarning"),
+                        JpoResources.getResource("countCategoryUsageWarning1") + count + JpoResources.getResource("countCategoryUsageWarning2"),
+                        JpoResources.getResource("genericWarning"),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
                 if (answer == JOptionPane.CANCEL_OPTION) {
@@ -188,7 +188,7 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getAddCategoryJButton() {
-        final var addCategoryJButton = new JButton(Settings.getJpoResources().getString("addCategoryJButton"));
+        final var addCategoryJButton = new JButton(JpoResources.getResource("addCategoryJButton"));
         addCategoryJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         addCategoryJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         addCategoryJButton.setMaximumSize(MAX_BUTTON_SIZE);
@@ -206,7 +206,7 @@ public class CategoryEditorJFrame
 
     @NotNull
     private JButton getDoneJButton() {
-        final var doneJButton = new JButton(Settings.getJpoResources().getString("doneJButton"));
+        final var doneJButton = new JButton(JpoResources.getResource("doneJButton"));
         doneJButton.setPreferredSize(DEFAULT_BUTTON_SIZE);
         doneJButton.setMinimumSize(DEFAULT_BUTTON_SIZE);
         doneJButton.setMaximumSize(MAX_BUTTON_SIZE);

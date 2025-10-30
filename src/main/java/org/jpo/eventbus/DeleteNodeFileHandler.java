@@ -5,6 +5,7 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -43,7 +44,7 @@ public class DeleteNodeFileHandler {
     /**
      * Title for error dialogs
      */
-    private static final String GENERIC_ERROR = Settings.getJpoResources().getString("genericError");
+    private static final String GENERIC_ERROR = JpoResources.getResource("genericError");
 
 
     /**
@@ -56,12 +57,12 @@ public class DeleteNodeFileHandler {
         final var textArea = new JTextArea();
         textArea.setText(getFilenames(request));
         textArea.append("\n");
-        textArea.append(Settings.getJpoResources().getString("areYouSure"));
+        textArea.append(JpoResources.getResource("areYouSure"));
 
         final int option = JOptionPane.showConfirmDialog(
                 Settings.getAnchorFrame(),
                 textArea,
-                Settings.getJpoResources().getString("FileDeleteLabel"),
+                JpoResources.getResource("FileDeleteLabel"),
                 JOptionPane.OK_CANCEL_OPTION);
 
         if (option == 0) {
@@ -71,7 +72,7 @@ public class DeleteNodeFileHandler {
                 } catch (final IOException e) {
                     LOGGER.log(Level.INFO, "File deleted failed on: {0} Exception: {1}", new Object[]{node, e.getMessage()});
                     JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                            Settings.getJpoResources().getString("fileDeleteError") + node,
+                            JpoResources.getResource("fileDeleteError") + node,
                             GENERIC_ERROR,
                             JOptionPane.ERROR_MESSAGE);
                 }

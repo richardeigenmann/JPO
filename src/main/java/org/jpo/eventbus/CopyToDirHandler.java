@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
 import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
@@ -57,7 +58,7 @@ public class CopyToDirHandler {
             }
         }
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                String.format(Settings.getJpoResources().getString("copyToNewLocationSuccess"), picsCopied, request.nodes().size()),
+                String.format(JpoResources.getResource("copyToNewLocationSuccess"), picsCopied, request.nodes().size()),
                 GENERIC_INFO,
                 JOptionPane.INFORMATION_MESSAGE);
 
@@ -87,7 +88,7 @@ public class CopyToDirHandler {
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     "IOException: " + e.getMessage(),
-                    Settings.getJpoResources().getString("genericError"),
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }

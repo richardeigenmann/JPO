@@ -1,11 +1,11 @@
 package org.jpo.datamodel;
 
 import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.SourcePictureListener;
 import org.jpo.gui.swing.PictureControllerImage;
 
 import javax.imageio.*;
-import javax.imageio.ImageIO;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
 import javax.swing.*;
@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.*;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -153,7 +153,7 @@ public class ScalablePicture
      * Constructor
      */
     public ScalablePicture() {
-        setStatus(SCALABLE_PICTURE_UNINITIALISED, Settings.getJpoResources().getString("ScalablePictureUninitialisedStatus"));
+        setStatus(SCALABLE_PICTURE_UNINITIALISED, JpoResources.getResource("ScalablePictureUninitialisedStatus"));
         setScaleFactor(1);
         sourcePicture.addListener(this);
     }
@@ -174,7 +174,7 @@ public class ScalablePicture
     public void loadAndScalePictureInThread( final String sha256, final File file, final int priority, final double rotation ) {
         this.imageFile = file;
 
-        setStatus(SCALABLE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
+        setStatus(SCALABLE_PICTURE_LOADING, JpoResources.getResource("ScalablePictureLoadingStatus"));
         scaleAfterLoad = true;
         sourcePicture.loadPictureInThread( sha256, file, priority, rotation );
         // when the thread is done it sends a sourceStatusChange message to us

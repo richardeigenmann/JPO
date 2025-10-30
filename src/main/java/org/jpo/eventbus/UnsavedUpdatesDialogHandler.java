@@ -3,11 +3,12 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,14 +48,14 @@ public class UnsavedUpdatesDialogHandler {
 
         if (Settings.getPictureCollection().getUnsavedUpdates()) {
             final Object[] options = {
-                    Settings.getJpoResources().getString("discardChanges"),
-                    Settings.getJpoResources().getString("genericSaveButtonLabel"),
-                    Settings.getJpoResources().getString("FileSaveAsMenuItemText"),
-                    Settings.getJpoResources().getString("genericCancelText")};
+                    JpoResources.getResource("discardChanges"),
+                    JpoResources.getResource("genericSaveButtonLabel"),
+                    JpoResources.getResource("FileSaveAsMenuItemText"),
+                    JpoResources.getResource("genericCancelText")};
             int option = JOptionPane.showOptionDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("unsavedChanges"),
-                    Settings.getJpoResources().getString("genericWarning"),
+                    JpoResources.getResource("unsavedChanges"),
+                    JpoResources.getResource("genericWarning"),
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,

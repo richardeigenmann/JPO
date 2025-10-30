@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
@@ -14,10 +13,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.logging.Logger;
 
-
-/* CameraDownloadWizardStep3.java: the third step in the download from Camera Wizard
-
- Copyright (C) 2007-2024 Richard Eigenmann.
+/*
+Copyright (C) 2007-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -31,6 +28,7 @@ import java.util.logging.Logger;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * The third step in the download from camera dialog asks whether to create a
  * new Group, the description for the new Group and the node for which the
@@ -50,7 +48,7 @@ public class CameraDownloadWizardStep3
      * @param dataModel The data model
      */
     public CameraDownloadWizardStep3(final CameraDownloadWizardData dataModel) {
-        super(Settings.getJpoResources().getString("DownloadCameraWizardStep3Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep3Description"));
+        super(JpoResources.getResource("DownloadCameraWizardStep3Title"), JpoResources.getResource("DownloadCameraWizardStep3Description"));
         this.dataModel = dataModel;
     }
 
@@ -69,9 +67,9 @@ public class CameraDownloadWizardStep3
     protected JComponent createComponent() {
         final JPanel stepComponent = new JPanel();
         stepComponent.setLayout( new BoxLayout( stepComponent, BoxLayout.PAGE_AXIS ) );
-        final JCheckBox createSubGroupCheckBox = new JCheckBox(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text0"));
+        final JCheckBox createSubGroupCheckBox = new JCheckBox(JpoResources.getResource("DownloadCameraWizardStep3Text0"));
         createSubGroupCheckBox.setAlignmentX( Component.LEFT_ALIGNMENT );
-        final JLabel titleLabel = new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text1"));
+        final JLabel titleLabel = new JLabel(JpoResources.getResource("DownloadCameraWizardStep3Text1"));
         titleLabel.setAlignmentX( Component.LEFT_ALIGNMENT );
         final JTextField newGroupName = new JTextField();
         newGroupName.setAlignmentX( Component.LEFT_ALIGNMENT );
@@ -85,9 +83,9 @@ public class CameraDownloadWizardStep3
         newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
         secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
         if ( createSubGroupCheckBox.isSelected() ) {
-            selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2a"));
+            selectNodeLabel.setText(JpoResources.getResource("DownloadCameraWizardStep3Text2a"));
         } else {
-            selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2b"));
+            selectNodeLabel.setText(JpoResources.getResource("DownloadCameraWizardStep3Text2b"));
         }
 
         createSubGroupCheckBox.addChangeListener(( ChangeEvent e ) -> {
@@ -96,9 +94,9 @@ public class CameraDownloadWizardStep3
             newGroupName.setVisible( createSubGroupCheckBox.isSelected() );
             secondStrut.setVisible( createSubGroupCheckBox.isSelected() );
             if ( createSubGroupCheckBox.isSelected() ) {
-                selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2a"));
+                selectNodeLabel.setText(JpoResources.getResource("DownloadCameraWizardStep3Text2a"));
             } else {
-                selectNodeLabel.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep3Text2b"));
+                selectNodeLabel.setText(JpoResources.getResource("DownloadCameraWizardStep3Text2b"));
             }
         });
         stepComponent.add( createSubGroupCheckBox );

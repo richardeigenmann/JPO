@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.jpo.eventbus.*;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -20,9 +21,8 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 
-
 /*
- * Copyright (C) 2006-2024 Richard Eigenmann, Zurich, Switzerland This program
+ * Copyright (C) 2006-2025 Richard Eigenmann, Zurich, Switzerland This program
  * is free software; you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation,
  * either version 2 of the License, or any later version. This program is
@@ -113,7 +113,7 @@ public class PictureCollection {
      * Constructs a new PictureCollection object with a root object
      */
     public PictureCollection() {
-        final var node = new SortableDefaultMutableTreeNode(new GroupInfo(Settings.getJpoResources().getString("DefaultRootNodeText")));
+        final var node = new SortableDefaultMutableTreeNode(new GroupInfo(JpoResources.getResource("DefaultRootNodeText")));
         setRootNode(node);
         node.setPictureCollection(this);
 
@@ -159,7 +159,7 @@ public class PictureCollection {
     public void clearCollection() {
         final Runnable runnable = () -> {
             getRootNode().removeAllChildren();
-            getRootNode().setUserObject(new GroupInfo(Settings.getJpoResources().getString("DefaultRootNodeText")));
+            getRootNode().setUserObject(new GroupInfo(JpoResources.getResource("DefaultRootNodeText")));
             clearQueriesTreeModel();
             categories.clear();
             clearMailSelection();
@@ -383,7 +383,7 @@ public class PictureCollection {
      * Call this method when you need to create a new TreeModel for the queries.
      */
     public void createQueriesTreeModel() {
-        setQueriesTreeModel(new DefaultTreeModel(new DefaultMutableTreeNode(Settings.getJpoResources().getString("queriesTreeModelRootNode"))));
+        setQueriesTreeModel(new DefaultTreeModel(new DefaultMutableTreeNode(JpoResources.getResource("queriesTreeModelRootNode"))));
 
         final DefaultMutableTreeNode byYearsTreeNode = new DefaultMutableTreeNode("By Year");
         setYearsTreeNode(byYearsTreeNode);

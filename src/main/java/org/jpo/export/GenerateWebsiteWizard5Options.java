@@ -2,16 +2,15 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
-
 /*
-Copyright (C) 2008-2024 Richard Eigenmann.
+Copyright (C) 2008-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -44,7 +43,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
      * @param request options
      */
     public GenerateWebsiteWizard5Options(final GenerateWebsiteRequest request) {
-        super(Settings.getJpoResources().getString("HtmlDistOptions"), Settings.getJpoResources().getString("HtmlDistOptions"));
+        super(JpoResources.getResource("HtmlDistOptions"), JpoResources.getResource("HtmlDistOptions"));
         this.request = request;
 
         // load the options into the GUI components
@@ -77,17 +76,17 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
      * Radio Button to indicate that the java hash code should be used to get
      * the image name
      */
-    private final JRadioButton hashcodeRadioButton = new JRadioButton(Settings.getJpoResources().getString("hashcodeRadioButton"));
+    private final JRadioButton hashcodeRadioButton = new JRadioButton(JpoResources.getResource("hashcodeRadioButton"));
     /**
      * Radio Button to indicate that the original name should be used to get the
      * image name
      */
-    private final JRadioButton originalNameRadioButton = new JRadioButton(Settings.getJpoResources().getString("originalNameRadioButton"));
+    private final JRadioButton originalNameRadioButton = new JRadioButton(JpoResources.getResource("originalNameRadioButton"));
     /**
      * Radio Button to indicate that a sequential number should be used to get
      * the image name
      */
-    private final JRadioButton sequentialRadioButton = new JRadioButton(Settings.getJpoResources().getString("sequentialRadioButton"));
+    private final JRadioButton sequentialRadioButton = new JRadioButton(JpoResources.getResource("sequentialRadioButton"));
     /**
      * Allow the user to specify a start number for the sequential numbering,
      * 1..999999999, start 1, increment 1 Requested by Jay Christopherson, Nov
@@ -97,7 +96,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
     /**
      * Tickbox that indicates whether to write a robots.txt
      */
-    private final JCheckBox generateRobotsJCheckBox = new JCheckBox(Settings.getJpoResources().getString("generateRobotsJCheckBox"));
+    private final JCheckBox generateRobotsJCheckBox = new JCheckBox(JpoResources.getResource("generateRobotsJCheckBox"));
 
     /**
      * Creates the GUI widgets
@@ -115,7 +114,7 @@ public class GenerateWebsiteWizard5Options extends AbstractStep {
         bg.add( originalNameRadioButton );
         wizardPanel.add( originalNameRadioButton, "wrap" );
 
-        final JLabel sequentialStartLabel = new JLabel(Settings.getJpoResources().getString("sequentialRadioButtonStart"));
+        final JLabel sequentialStartLabel = new JLabel(JpoResources.getResource("sequentialRadioButtonStart"));
         bg.add( sequentialRadioButton );
         wizardPanel.add( sequentialRadioButton, "wrap" );
         final ChangeListener radioButtonChangeListener = (changeListener -> {

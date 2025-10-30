@@ -13,9 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
-PictureAdder.java:  A Class which brings up a progress bar and adds pictures to the specified node.
-
-Copyright (C) 2009-2024 Richard Eigenmann.
+Copyright (C) 2009-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -47,8 +45,8 @@ public class PictureAdder
         this.request = request;
         LOGGER.log(Level.INFO, "Invoked for node: {0}, with {1} files, newOnly: {2}, recurseDirectories: {3}, retainDirectories: {4}", new Object[]{request.receivingNode(), request.chosenFiles().length, request.newOnly(), request.recurseDirectories(), request.retainDirectories()});
         progGui = new ProgressGui(Tools.countFiles(request.chosenFiles()),
-                Settings.getJpoResources().getString("PictureAdderProgressDialogTitle"),
-                Settings.getJpoResources().getString("picturesAdded"));
+                JpoResources.getResource("PictureAdderProgressDialogTitle"),
+                JpoResources.getResource("picturesAdded"));
         request.receivingNode().getPictureCollection().setSendModelUpdates(false);
     }
 

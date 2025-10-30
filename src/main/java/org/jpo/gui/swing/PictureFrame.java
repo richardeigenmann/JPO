@@ -2,17 +2,18 @@ package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.datamodel.ScalablePicture;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.OverlayedPictureController;
-import org.jpo.datamodel.ScalablePicture;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -74,7 +75,7 @@ public class PictureFrame {
     public PictureFrame() {
         viewerPanel = new JPanel();
         initializeGui();
-        myJFrame = new ResizableJFrame(Settings.getJpoResources().getString("PictureViewerTitle"));
+        myJFrame = new ResizableJFrame(JpoResources.getResource("PictureViewerTitle"));
         myJFrame.getContentPane().add(viewerPanel);
         myJFrame.pack();
         switch (Settings.getNewViewerSizeChoice()) {
@@ -153,7 +154,7 @@ public class PictureFrame {
 
         lowerBar.add(loadJProgressBar, "hidemode 2");
 
-        descriptionJTextField.setFont(Font.decode(Settings.getJpoResources().getString("PictureViewerDescriptionFont")));
+        descriptionJTextField.setFont(Font.decode(JpoResources.getResource("PictureViewerDescriptionFont")));
         descriptionJTextField.setWrapStyleWord(true);
         descriptionJTextField.setLineWrap(true);
         descriptionJTextField.setEditable(true);
@@ -170,7 +171,7 @@ public class PictureFrame {
         descriptionJScrollPane.setOpaque(true);
         lowerBar.add(descriptionJScrollPane);
 
-        errorTextField.setFont(Font.decode(Settings.getJpoResources().getString("PictureViewerDescriptionFont")));
+        errorTextField.setFont(Font.decode(JpoResources.getResource("PictureViewerDescriptionFont")));
         errorTextField.setWrapStyleWord(true);
         errorTextField.setLineWrap(true);
         errorTextField.setEditable(false);

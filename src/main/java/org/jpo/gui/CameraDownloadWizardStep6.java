@@ -8,9 +8,7 @@ import javax.swing.*;
 import java.util.List;
 
 /*
- CameraDownloadWizardStep6.java: the fifth step in the download from Camera Wizard
-
- Copyright (C) 2007-2024 Richard Eigenmann.
+ Copyright (C) 2007-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -26,7 +24,7 @@ import java.util.List;
  */
 
 /**
- * The fifth step in the download from camera download wizard summarises the
+ * The sixth step in the download from camera download wizard summarises the
  * action that will be performed.
  */
 public class CameraDownloadWizardStep6 extends AbstractStep {
@@ -45,7 +43,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
      * @param dataModel The data model
      */
     public CameraDownloadWizardStep6(final CameraDownloadWizardData dataModel) {
-        super(Settings.getJpoResources().getString("DownloadCameraWizardStep5Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep5Description"));
+        super(JpoResources.getResource("DownloadCameraWizardStep5Title"), JpoResources.getResource("DownloadCameraWizardStep5Description"));
         this.dataModel = dataModel;
     }
 
@@ -80,19 +78,19 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
 
         // Move|Copy xx pictures from
         if (dataModel.getCopyMode()) {
-            label1.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text1") + dataModel.getNewPictures().size() + Settings.getJpoResources().getString("DownloadCameraWizardStep5Text3"));
+            label1.setText(JpoResources.getResource("DownloadCameraWizardStep5Text1") + dataModel.getNewPictures().size() + JpoResources.getResource("DownloadCameraWizardStep5Text3"));
         } else {
-            label1.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text2") + dataModel.getNewPictures().size() + Settings.getJpoResources().getString("DownloadCameraWizardStep5Text3"));
+            label1.setText(JpoResources.getResource("DownloadCameraWizardStep5Text2") + dataModel.getNewPictures().size() + JpoResources.getResource("DownloadCameraWizardStep5Text3"));
         }
 
         // Camera xxxx
-        label2.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text4") + dataModel.getCamera().getDescription());
+        label2.setText(JpoResources.getResource("DownloadCameraWizardStep5Text4") + dataModel.getCamera().getDescription());
 
         // Adding to [new] folder xxx
         if (dataModel.getShouldCreateNewGroup()) {
-            label3.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text5") + dataModel.getNewGroupDescription());
+            label3.setText(JpoResources.getResource("DownloadCameraWizardStep5Text5") + dataModel.getNewGroupDescription());
         } else {
-            label3.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text6") + dataModel.getTargetNode().toString());
+            label3.setText(JpoResources.getResource("DownloadCameraWizardStep5Text6") + dataModel.getTargetNode().toString());
         }
 
         // Sorting by
@@ -106,7 +104,7 @@ public class CameraDownloadWizardStep6 extends AbstractStep {
         label3a.setText("Sorting by: " + sortingDescription);
 
         // Storing in xxx
-        label4.setText(Settings.getJpoResources().getString("DownloadCameraWizardStep5Text7") + dataModel.getTargetDir());
+        label4.setText(JpoResources.getResource("DownloadCameraWizardStep5Text7") + dataModel.getTargetDir());
         if (!dataModel.getTargetDir().exists() && (!dataModel.getTargetDir().mkdirs())) {
             label4.setText(String.format("Could not create directory %s", dataModel.getTargetDir()));
             setCanGoNext(false);

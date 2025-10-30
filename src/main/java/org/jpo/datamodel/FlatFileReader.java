@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.eventbus.AddFlatFileRequest;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.io.*;
@@ -15,17 +16,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- * Copyright (C) 2017-2024 Richard Eigenmann, Zurich, Switzerland This program
- * is free software; you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation;
- * either version 2 of the License, or any later version. This program is
- * distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY.
- * Without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
- * PARTICULAR PURPOSE. See the GNU General Public License for more details. You
- * should have received a copy of the GNU General Public License along with this
- * program; if not, write to the Free Software Foundation, Inc., 59 Temple Place
- * - Suite 330, Boston, MA 02111-1307, USA. The license is in gpl.txt. See
- * http://www.gnu.org/copyleft/gpl.html for the details.
+ * Copyright (C) 2017-2025 Richard Eigenmann, Zurich, Switzerland
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 2
+ of the License, or any later version. This program is distributed
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+ Without even the implied warranty of MERCHANTABILITY or FITNESS
+ FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ more details. You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ The license is in gpl.txt.
+ See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
 
@@ -77,7 +80,7 @@ public class FlatFileReader {
             LOGGER.severe( ex.getLocalizedMessage() );
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     ex.getLocalizedMessage(),
-                    Settings.getJpoResources().getString("genericError"),
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }

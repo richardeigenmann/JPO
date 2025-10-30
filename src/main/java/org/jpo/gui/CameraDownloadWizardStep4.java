@@ -1,16 +1,13 @@
 package org.jpo.gui;
 
 import net.javaprog.ui.wizard.AbstractStep;
-import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 
 /*
-CameraDownloadWizardStep4.java: the fourth step in the download from Camera Wizard
-
-Copyright (C) 2007-2024 Richard Eigenmann.
+Copyright (C) 2007-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -38,7 +35,7 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
      */
     public CameraDownloadWizardStep4(final CameraDownloadWizardData dataModel) {
         //pass step title and description
-        super(Settings.getJpoResources().getString("DownloadCameraWizardStep4Title"), Settings.getJpoResources().getString("DownloadCameraWizardStep4Description"));
+        super(JpoResources.getResource("DownloadCameraWizardStep4Title"), JpoResources.getResource("DownloadCameraWizardStep4Description"));
         this.dataModel = dataModel;
     }
     /**
@@ -54,11 +51,11 @@ public class CameraDownloadWizardStep4 extends AbstractStep {
     protected JComponent createComponent() {
         final JPanel stepComponent = new JPanel();
         stepComponent.setLayout(new BoxLayout(stepComponent, BoxLayout.PAGE_AXIS));
-        final JLabel label1 = new JLabel(Settings.getJpoResources().getString("DownloadCameraWizardStep4Text1"));
+        final JLabel label1 = new JLabel(JpoResources.getResource("DownloadCameraWizardStep4Text1"));
         label1.setAlignmentX(Component.LEFT_ALIGNMENT);
         stepComponent.add(label1);
 
-        final DirectoryChooser dirChooser = new DirectoryChooser(Settings.getJpoResources().getString("targetDirJLabel"),
+        final DirectoryChooser dirChooser = new DirectoryChooser(JpoResources.getResource("targetDirJLabel"),
                 DirectoryChooser.DIR_MUST_BE_WRITABLE);
         dirChooser.setAlignmentX(Component.LEFT_ALIGNMENT);
         stepComponent.add(dirChooser);

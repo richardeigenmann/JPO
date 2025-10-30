@@ -4,6 +4,7 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import org.jpo.gui.InterruptSemaphore;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ProgressListener;
 
@@ -16,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -48,7 +49,7 @@ public class Camera implements Serializable {
     /**
      * The description of the Camera
      */
-    private String description = Settings.getJpoResources().getString("newCamera");
+    private String description = JpoResources.getResource("newCamera");
 
     /**
      * Sets a new description for the camera
@@ -273,8 +274,8 @@ public class Camera implements Serializable {
         }
 
         final ProgressGui progressGui = new ProgressGui(count,
-                Settings.getJpoResources().getString("countingChecksum"),
-                Settings.getJpoResources().getString("countingChecksumComplete"));
+                JpoResources.getResource("countingChecksum"),
+                JpoResources.getResource("countingChecksumComplete"));
 
         buildOldImage(
                 progressGui, progressGui.getInterruptSemaphore());

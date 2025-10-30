@@ -2,11 +2,12 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,8 +36,8 @@ public class ChooseAndAddFlatfileHandler {
     public void handleEvent(final ChooseAndAddFlatfileRequest request) {
         final var jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(javax.swing.JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileOpenButtonText"));
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("addFlatFileTitle"));
+        jFileChooser.setApproveButtonText(JpoResources.getResource("fileOpenButtonText"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("addFlatFileTitle"));
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 
         final int returnVal = jFileChooser.showOpenDialog(Settings.getAnchorFrame());

@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import org.jpo.gui.JpoResources;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -10,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -64,12 +65,12 @@ class SettingsTest {
     void testSetLocaleResourceBundleEffect() {
         Settings.setLocale(Locale.GERMAN);
         // Testing the ResourceBundle change to German
-        assertEquals(Locale.GERMAN, Settings.getJpoResources().getLocale());
+        assertEquals(Locale.GERMAN, JpoResources.getJpoResources().getLocale());
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         // Testing the ResourceBundle change to Simplified Chinese
-        assertEquals(Locale.SIMPLIFIED_CHINESE, Settings.getJpoResources().getLocale());
+        assertEquals(Locale.SIMPLIFIED_CHINESE, JpoResources.getJpoResources().getLocale());
         Settings.setLocale(Locale.ENGLISH);
-        assertEquals(Locale.ENGLISH, Settings.getJpoResources().getLocale());
+        assertEquals(Locale.ENGLISH, JpoResources.getJpoResources().getLocale());
     }
 
     /**
@@ -80,12 +81,12 @@ class SettingsTest {
         Settings.setLocale(Locale.GERMAN);
         // Testing the German string
         final String FILE_NEW_JMENU_ITEM = "FileNewJMenuItem";
-        assertEquals("Neue Sammlung", Settings.getJpoResources().getString(FILE_NEW_JMENU_ITEM));
+        assertEquals("Neue Sammlung", JpoResources.getResource(FILE_NEW_JMENU_ITEM));
         Settings.setLocale(Locale.SIMPLIFIED_CHINESE);
         // Testing the Simplified Chinese string
-        assertEquals("新建图片集", Settings.getJpoResources().getString(FILE_NEW_JMENU_ITEM));
+        assertEquals("新建图片集", JpoResources.getResource(FILE_NEW_JMENU_ITEM));
         Settings.setLocale(Locale.ENGLISH);
-        assertEquals("New Collection", Settings.getJpoResources().getString(FILE_NEW_JMENU_ITEM));
+        assertEquals("New Collection", JpoResources.getResource(FILE_NEW_JMENU_ITEM));
     }
 
     /**

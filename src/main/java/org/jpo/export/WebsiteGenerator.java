@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.ProgressGui;
 
 import javax.swing.*;
@@ -19,8 +20,8 @@ import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +29,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /*
- * Copyright (C) 2002-2024 Richard Eigenmann.
+ * Copyright (C) 2002-2025 Richard Eigenmann.
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of the License,
@@ -132,8 +133,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         this.request = request;
         Tools.checkEDT();
         progressGui = new ProgressGui(Integer.MAX_VALUE,
-                Settings.getJpoResources().getString("HtmlDistillerThreadTitle"),
-                String.format(Settings.getJpoResources().getString("HtmlDistDone"), 0));
+                JpoResources.getResource("HtmlDistillerThreadTitle"),
+                String.format(JpoResources.getResource("HtmlDistDone"), 0));
 
         class GetCountWorker extends SwingWorker<Integer, Object> {
 
@@ -146,7 +147,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             protected void done() {
                 try {
                     progressGui.setMaximum(get());
-                    progressGui.setDoneString(String.format(Settings.getJpoResources().getString("HtmlDistDone"), get()));
+                    progressGui.setDoneString(String.format(JpoResources.getResource("HtmlDistDone"), get()));
                 } catch (final InterruptedException | ExecutionException ignore) {
                     Thread.currentThread().interrupt();
                 }
@@ -253,8 +254,8 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         } catch (final IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("CssCopyError") + e.getMessage(),
-                    Settings.getJpoResources().getString("genericWarning"),
+                    JpoResources.getResource("CssCopyError") + e.getMessage(),
+                    JpoResources.getResource("genericWarning"),
                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -488,7 +489,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             lowresGroupWriter.close();
 
             if (progressGui.getInterruptSemaphore().getShouldInterrupt()) {
-                progressGui.setDoneString(Settings.getJpoResources().getString("htmlDistillerInterrupt"));
+                progressGui.setDoneString(JpoResources.getResource("htmlDistillerInterrupt"));
             }
         } catch (final IOException x) {
             LOGGER.severe(x.getMessage());
@@ -555,7 +556,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
     private void writeGroupCellFooter(BufferedWriter out) throws IOException {
         out.write(String.format("%n<tr><td colspan=\"%d\">", request.getPicsPerRow()));
-        out.write(Settings.getJpoResources().getString("LinkToJpo"));
+        out.write(JpoResources.getResource("LinkToJpo"));
         out.write(END_TD + END_TR + END_TABLE);
         out.newLine();
         out.write("</body></html>");
@@ -684,7 +685,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
         writeMidresLinks(pictureNode, highresFile, midresHtmlWriter);
 
         midresHtmlWriter.newLine();
-        midresHtmlWriter.write("<p>" + Settings.getJpoResources().getString("LinkToJpo") + "</p>");
+        midresHtmlWriter.write("<p>" + JpoResources.getResource("LinkToJpo") + "</p>");
         midresHtmlWriter.newLine();
 
         if (request.isGenerateMouseover()) {

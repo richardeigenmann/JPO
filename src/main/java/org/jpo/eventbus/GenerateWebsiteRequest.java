@@ -2,12 +2,13 @@ package org.jpo.eventbus;
 
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.gui.JpoResources;
 
 import java.awt.*;
 import java.io.File;
 
 /*
- Copyright (C) 2008-2024 Richard Eigenmann, Zürich
+ Copyright (C) 2008-2025 Richard Eigenmann, Zürich
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -847,30 +848,30 @@ public class GenerateWebsiteRequest {
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(Settings.getJpoResources().getString("HtmlDistThumbnails") + "\n");
-        sb.append(Settings.getJpoResources().getString("picsPerRowText")).append(" ").append(getPicsPerRow()).append("\n");
-        sb.append(Settings.getJpoResources().getString("thumbnailSizeJLabel")).append(" ").append(getThumbnailWidth()).append(" x ").append(getThumbnailHeight()).append("\n");
-        sb.append(Settings.getJpoResources().getString("lowresJpgQualitySlider")).append(" ").append(getLowresJpgQualityPercent()).append("\n");
-        sb.append(Settings.getJpoResources().getString("scalingSteps")).append(" ").append(getScalingSteps()).append("\n");
+        StringBuilder sb = new StringBuilder(JpoResources.getResource("HtmlDistThumbnails") + "\n");
+        sb.append(JpoResources.getResource("picsPerRowText")).append(" ").append(getPicsPerRow()).append("\n");
+        sb.append(JpoResources.getResource("thumbnailSizeJLabel")).append(" ").append(getThumbnailWidth()).append(" x ").append(getThumbnailHeight()).append("\n");
+        sb.append(JpoResources.getResource("lowresJpgQualitySlider")).append(" ").append(getLowresJpgQualityPercent()).append("\n");
+        sb.append(JpoResources.getResource("scalingSteps")).append(" ").append(getScalingSteps()).append("\n");
 
-        sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistMidres")).append("\n");
-        sb.append(isGenerateMidresHtml() ? Settings.getJpoResources().getString("HtmlDistMidresHtml") + "\n" : "No medium size navigation pages\n");
-        sb.append(isGenerateMap() ? Settings.getJpoResources().getString("GenerateMap") + "\n" : "No map\n");
+        sb.append("\n").append(JpoResources.getResource("HtmlDistMidres")).append("\n");
+        sb.append(isGenerateMidresHtml() ? JpoResources.getResource("HtmlDistMidresHtml") + "\n" : "No medium size navigation pages\n");
+        sb.append(isGenerateMap() ? JpoResources.getResource("GenerateMap") + "\n" : "No map\n");
         sb.append(isGenerateMap() ? "Google Maps APIKEY: " + getGoogleMapsApiKey() + "\n" : "");
-        sb.append(isGenerateMouseover() ? Settings.getJpoResources().getString("org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox") + "\n" : "No  DHTML mouseover effects\n");
-        sb.append(Settings.getJpoResources().getString("midresSizeJLabel")).append(" ").append(getMidresWidth()).append(" x ").append(getMidresHeight()).append("\n");
-        sb.append(Settings.getJpoResources().getString("midresJpgQualitySlider")).append(" ").append(getMidresJpgQualityPercent()).append("\n");
+        sb.append(isGenerateMouseover() ? JpoResources.getResource("org.jpo.export.GenerateWebsiteWizard3Midres.generateMouseoverJCheckBox") + "\n" : "No  DHTML mouseover effects\n");
+        sb.append(JpoResources.getResource("midresSizeJLabel")).append(" ").append(getMidresWidth()).append(" x ").append(getMidresHeight()).append("\n");
+        sb.append(JpoResources.getResource("midresJpgQualitySlider")).append(" ").append(getMidresJpgQualityPercent()).append("\n");
 
-        sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistHighres")).append("\n");
+        sb.append("\n").append(JpoResources.getResource("HtmlDistHighres")).append("\n");
         sb.append(isExportHighres() ? "Export Highres Pictures\n" : "Do not export Highres Pictures\n");
         sb.append(isRotateHighres() ? "Rotate Highres Pictures\n" : "Do not rotate Highres Pictures\n");
-        sb.append(isGenerateZipfile() ? Settings.getJpoResources().getString("generateZipfileJCheckBox") + "\n" : "No Zipfile for download of Highres Pictures\n");
+        sb.append(isGenerateZipfile() ? JpoResources.getResource("generateZipfileJCheckBox") + "\n" : "No Zipfile for download of Highres Pictures\n");
         sb.append("Filename for Download Zipfile: ").append(getDownloadZipFileName()).append("\n");
-        sb.append(isLinkToHighres() ? Settings.getJpoResources().getString("linkToHighresJCheckBox") + "\n" : "No Link to high resolution pictures at current location\n");
+        sb.append(isLinkToHighres() ? JpoResources.getResource("linkToHighresJCheckBox") + "\n" : "No Link to high resolution pictures at current location\n");
 
         sb.append("\n").append("Output mode: ").append(getOutputTarget().name());
 
-        sb.append("\n").append(Settings.getJpoResources().getString("genericTargetDirText")).append(getTargetDirectory().getPath());
+        sb.append("\n").append(JpoResources.getResource("genericTargetDirText")).append(getTargetDirectory().getPath());
         sb.append("\n");
 
         sb.append( "\n" ).append( "Ftp Server: " ).append( getFtpServer() );
@@ -890,21 +891,21 @@ public class GenerateWebsiteRequest {
         sb.append("\n");
 
 
-        sb.append("\n").append(Settings.getJpoResources().getString("HtmlDistOptions")).append("\n");
-        sb.append(Settings.getJpoResources().getString("HtmlDistillerNumbering")).append(" ");
+        sb.append("\n").append(JpoResources.getResource("HtmlDistOptions")).append("\n");
+        sb.append(JpoResources.getResource("HtmlDistillerNumbering")).append(" ");
         switch (getPictureNaming()) {
-            case PICTURE_NAMING_BY_HASH_CODE -> sb.append(Settings.getJpoResources().getString("hashcodeRadioButton"));
-            case PICTURE_NAMING_BY_ORIGINAL_NAME -> sb.append(Settings.getJpoResources().getString("originalNameRadioButton"));
+            case PICTURE_NAMING_BY_HASH_CODE -> sb.append(JpoResources.getResource("hashcodeRadioButton"));
+            case PICTURE_NAMING_BY_ORIGINAL_NAME -> sb.append(JpoResources.getResource("originalNameRadioButton"));
             default -> {
-                sb.append(Settings.getJpoResources().getString("sequentialRadioButton"));
-                sb.append(Settings.getJpoResources().getString("sequentialRadioButtonStart")).append(" ").append(getSequentialStartNumber());
+                sb.append(JpoResources.getResource("sequentialRadioButton"));
+                sb.append(JpoResources.getResource("sequentialRadioButtonStart")).append(" ").append(getSequentialStartNumber());
             }
         }
 
         sb.append("\n");
         sb.append("Webpage Font Color: ").append(getFontColor().toString()).append("\n");
         sb.append("Webpage Background Color: ").append(getBackgroundColor().toString()).append("\n");
-        sb.append(isWriteRobotsTxt() ? (Settings.getJpoResources().getString("generateRobotsJCheckBox") + "\n") : "Do not write robots.txt\n");
+        sb.append(isWriteRobotsTxt() ? (JpoResources.getResource("generateRobotsJCheckBox") + "\n") : "Do not write robots.txt\n");
 
         return sb.toString();
     }

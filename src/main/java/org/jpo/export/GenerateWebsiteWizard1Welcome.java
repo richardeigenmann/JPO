@@ -3,15 +3,15 @@ package org.jpo.export;
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.NodeStatistics;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.GenerateWebsiteRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.util.concurrent.ExecutionException;
 
 /*
- Copyright (C) 2008-2024 Richard Eigenmann.
+ Copyright (C) 2008-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -50,7 +50,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
      * @param request Options
      */
     public GenerateWebsiteWizard1Welcome(final GenerateWebsiteRequest request) {
-        super(Settings.getJpoResources().getString("welcomeTitle"), Settings.getJpoResources().getString("HtmlDistillerJFrameHeading"));
+        super(JpoResources.getResource("welcomeTitle"), JpoResources.getResource("HtmlDistillerJFrameHeading"));
 
         final SortableDefaultMutableTreeNode startNode = request.getStartNode();
         class GetCountWorker extends SwingWorker<Integer, Object> {
@@ -63,7 +63,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
             @Override
             protected void done() {
                 try {
-                    welcomeLabel.setText(String.format(Settings.getJpoResources().getString("welcomeMsg"), get()));
+                    welcomeLabel.setText(String.format(JpoResources.getResource("welcomeMsg"), get()));
                 } catch (final InterruptedException | ExecutionException ignore) {
                     // Restore interrupted state...
                     Thread.currentThread().interrupt();
@@ -72,7 +72,7 @@ public class GenerateWebsiteWizard1Welcome extends AbstractStep {
         }
         (new GetCountWorker()).execute();
 
-        final String labelText = Settings.getJpoResources().getString("generateFrom")
+        final String labelText = JpoResources.getResource("generateFrom")
                 + ((startNode != null) ? startNode.toString() : "null");
         fromLabel.setText( labelText );
     }

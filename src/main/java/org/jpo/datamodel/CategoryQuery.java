@@ -1,5 +1,7 @@
 package org.jpo.datamodel;
 
+import org.jpo.gui.JpoResources;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This class implements the {@link Query} interface to show all the nodes
  * attached to a category.
@@ -95,7 +98,7 @@ public class CategoryQuery implements Query {
      */
     @Override
     public String toString() {
-        return Settings.getJpoResources().getString("CategoryQuery") + pictureCollection.getCategory(key);
+        return JpoResources.getResource("CategoryQuery") + pictureCollection.getCategory(key);
     }
 
     /**

@@ -15,9 +15,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
-
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -56,8 +55,8 @@ public class PictureFileChooser
         if (!(request.node().getUserObject() instanceof GroupInfo)) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
-                    Settings.getJpoResources().getString("notGroupInfo"),
-                    Settings.getJpoResources().getString("genericError"),
+                    JpoResources.getResource("notGroupInfo"),
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -104,7 +103,7 @@ public class PictureFileChooser
      * Checkbox that allows the user to specify that pictures already in the
      * collection should be ignored.
      */
-    private final JCheckBox showThumbnailJCheckBox = new JCheckBox(Settings.getJpoResources().getString("showThumbnailJCheckBox"));
+    private final JCheckBox showThumbnailJCheckBox = new JCheckBox(JpoResources.getResource("showThumbnailJCheckBox"));
 
     /**
      * preferred size of accessory panel
@@ -115,19 +114,19 @@ public class PictureFileChooser
      * Checkbox that allows the user to specify whether pictures in the
      * subdirectories should be added or not.
      */
-    private final JCheckBox recurseJCheckBox = new JCheckBox(Settings.getJpoResources().getString("recurseJCheckBox"));
+    private final JCheckBox recurseJCheckBox = new JCheckBox(JpoResources.getResource("recurseJCheckBox"));
 
     /**
      * Checkbox that allows the user to specify that pictures already in the
      * collection should be ignored.
      */
-    private final JCheckBox newOnlyJCheckBox = new JCheckBox(Settings.getJpoResources().getString("newOnlyJCheckBox"));
+    private final JCheckBox newOnlyJCheckBox = new JCheckBox(JpoResources.getResource("newOnlyJCheckBox"));
 
     /**
      * Checkbox that allows the user to specify whether directory structures
      * should be retained
      */
-    private final JCheckBox retainDirectoriesJCheckBox = new JCheckBox(Settings.getJpoResources().getString("retainDirectoriesJCheckBox"));
+    private final JCheckBox retainDirectoriesJCheckBox = new JCheckBox(JpoResources.getResource("retainDirectoriesJCheckBox"));
 
     /**
      * This component shows the thumbnail. It is a JLabel as we can thus use the
@@ -162,14 +161,14 @@ public class PictureFileChooser
 
         final var tabbedPane = new JTabbedPane();
         tabbedPane.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        tabbedPane.add(Settings.getJpoResources().getString("pictureAdderOptionsTab"), optionsJPanel);
-        tabbedPane.add(Settings.getJpoResources().getString("pictureAdderThumbnailTab"), thumbnailJLabel);
-        tabbedPane.add(Settings.getJpoResources().getString("pictureAdderCategoryTab"), categoryJScrollPane);
+        tabbedPane.add(JpoResources.getResource("pictureAdderOptionsTab"), optionsJPanel);
+        tabbedPane.add(JpoResources.getResource("pictureAdderThumbnailTab"), thumbnailJLabel);
+        tabbedPane.add(JpoResources.getResource("pictureAdderCategoryTab"), categoryJScrollPane);
 
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         jFileChooser.setMultiSelectionEnabled(true);
-        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileChooserAddButtonLabel"));
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("PictureAdderDialogTitle"));
+        jFileChooser.setApproveButtonText(JpoResources.getResource("fileChooserAddButtonLabel"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("PictureAdderDialogTitle"));
         jFileChooser.setAccessory(tabbedPane);
         jFileChooser.setCurrentDirectory(Settings.getDefaultSourceLocation());
         jFileChooser.addPropertyChangeListener(this);

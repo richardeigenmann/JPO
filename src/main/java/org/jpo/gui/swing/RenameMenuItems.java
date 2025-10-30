@@ -1,12 +1,12 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RenameFileRequest;
 import org.jpo.eventbus.RenamePictureRequest;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,7 +17,7 @@ import java.util.Optional;
 import static java.util.Objects.isNull;
 
 /*
- Copyright (C) 2020-2024 Richard Eigenmann.
+ Copyright (C) 2020-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -52,7 +52,7 @@ public class RenameMenuItems {
     public static Iterable<JComponent> getRenameMenuItems(final Collection<SortableDefaultMutableTreeNode> popupNodes) {
         final Collection<JComponent> menuItems = new ArrayList<>();
 
-        final var fileRenameJMenuItem = new JMenuItem(String.format(Settings.getJpoResources().getString("fileRenameJMenuItem"), popupNodes.size()));
+        final var fileRenameJMenuItem = new JMenuItem(String.format(JpoResources.getResource("fileRenameJMenuItem"), popupNodes.size()));
         fileRenameJMenuItem.addActionListener((ActionEvent e) ->
                 JpoEventBus.getInstance().post(new RenamePictureRequest(popupNodes))
         );

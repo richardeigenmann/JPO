@@ -2,13 +2,14 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -40,15 +41,15 @@ public class OpenHelpAboutFrameHandler {
     @Subscribe
     public void handleEvent(final OpenHelpAboutFrameRequest request) {
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
-                Settings.getJpoResources().getString("HelpAboutText")
-                        + Settings.getJpoResources().getString("HelpAboutUser") + System.getProperty("user.name") + "\n"
-                        + Settings.getJpoResources().getString("HelpAboutOs") + System.getProperty("os.name")
+                JpoResources.getResource("HelpAboutText")
+                        + JpoResources.getResource("HelpAboutUser") + System.getProperty("user.name") + "\n"
+                        + JpoResources.getResource("HelpAboutOs") + System.getProperty("os.name")
                         + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n"
-                        + Settings.getJpoResources().getString("HelpAboutJvm")
+                        + JpoResources.getResource("HelpAboutJvm")
                         + System.getProperty("java.vendor") + " " + System.getProperty("java.version") + "\n"
-                        + Settings.getJpoResources().getString("HelpAboutJvmMemory")
+                        + JpoResources.getResource("HelpAboutJvmMemory")
                         + Long.toString(Runtime.getRuntime().maxMemory() / 1024 / 1024, 0) + " MB\n"
-                        + Settings.getJpoResources().getString("HelpAboutJvmFreeMemory")
+                        + JpoResources.getResource("HelpAboutJvmFreeMemory")
                         + Long.toString(Runtime.getRuntime().freeMemory() / 1024 / 1024, 0) + " MB\n"
                         + "Cores: " + Runtime.getRuntime().availableProcessors() + "\n");
 

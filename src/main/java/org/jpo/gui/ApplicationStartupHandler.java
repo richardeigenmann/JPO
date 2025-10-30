@@ -40,7 +40,7 @@ public class ApplicationStartupHandler {
     /**
      * Title for Info Boxes
      */
-    public static final String GENERIC_INFO = Settings.getJpoResources().getString("genericInfo");
+    public static final String GENERIC_INFO = JpoResources.getResource("genericInfo");
 
 
     /**

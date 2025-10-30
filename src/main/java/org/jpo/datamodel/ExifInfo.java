@@ -12,6 +12,7 @@ import com.drew.metadata.exif.makernotes.CanonMakernoteDirectory;
 import com.drew.metadata.exif.makernotes.NikonType2MakernoteDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import org.apache.commons.lang3.StringUtils;
+import org.jpo.gui.JpoResources;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -24,12 +25,12 @@ import java.util.logging.Logger;
 import static com.drew.metadata.exif.ExifDirectoryBase.*;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed 
- in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS 
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for 
  more details. You should have received a copy of the GNU General Public License
@@ -340,15 +341,15 @@ public class ExifInfo {
         String latitude = "";
         // Whether it's N or S
         String latitudeRef = "";
-        return Settings.getJpoResources().getString("ExifInfoCamera") + "\t" + camera + "\n"
-                + Settings.getJpoResources().getString("ExifInfoLens") + "\t" + lens + "\n"
-                + Settings.getJpoResources().getString("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n"
-                + Settings.getJpoResources().getString("ExifInfoAperture") + "\t" + aperture + "\n"
-                + Settings.getJpoResources().getString("ExifInfoFocalLength") + "\t" + focalLength + "\n"
-                + Settings.getJpoResources().getString("ExifInfoISO") + "\t" + iso + "\n"
-                + Settings.getJpoResources().getString("ExifInfoTimeStamp") + "\t" + getCreateDateTime() + "\n"
-                + Settings.getJpoResources().getString("ExifInfoLatitude") + "\t" + latitude + " " + latitudeRef + "\n"
-                + Settings.getJpoResources().getString("ExifInfoLongitude") + "\t" + longitude + " " + longitudeRef + "\n";
+        return JpoResources.getResource("ExifInfoCamera") + "\t" + camera + "\n"
+                + JpoResources.getResource("ExifInfoLens") + "\t" + lens + "\n"
+                + JpoResources.getResource("ExifInfoShutterSpeed") + "\t" + shutterSpeed + "\n"
+                + JpoResources.getResource("ExifInfoAperture") + "\t" + aperture + "\n"
+                + JpoResources.getResource("ExifInfoFocalLength") + "\t" + focalLength + "\n"
+                + JpoResources.getResource("ExifInfoISO") + "\t" + iso + "\n"
+                + JpoResources.getResource("ExifInfoTimeStamp") + "\t" + getCreateDateTime() + "\n"
+                + JpoResources.getResource("ExifInfoLatitude") + "\t" + latitude + " " + latitudeRef + "\n"
+                + JpoResources.getResource("ExifInfoLongitude") + "\t" + longitude + " " + longitudeRef + "\n";
     }
 
     /**

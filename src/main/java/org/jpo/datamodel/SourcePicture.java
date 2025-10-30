@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.SourcePictureListener;
 
 import javax.imageio.ImageIO;
@@ -16,11 +17,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
@@ -28,9 +25,8 @@ import java.util.logging.Logger;
 
 import static org.jpo.datamodel.SourcePicture.SourcePictureStatus.*;
 
-
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -192,7 +188,7 @@ public class SourcePicture {
      */
     private void loadPicture() {
         this.abortFlag.set(false);
-        setStatus(SOURCE_PICTURE_LOADING, Settings.getJpoResources().getString("ScalablePictureLoadingStatus"));
+        setStatus(SOURCE_PICTURE_LOADING, JpoResources.getResource("ScalablePictureLoadingStatus"));
         final var start = System.currentTimeMillis();
         loadTime = 0;
         ImageBytes imageBytes;
@@ -291,7 +287,7 @@ public class SourcePicture {
             bufferedImage = fixTypeOfImage(reader.read(0));
         } catch (final OutOfMemoryError e) {
             LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
-            setStatus(SOURCE_PICTURE_ERROR, Settings.getJpoResources().getString("ScalablePictureErrorStatus"));
+            setStatus(SOURCE_PICTURE_ERROR, JpoResources.getResource("ScalablePictureErrorStatus"));
             Tools.dealOutOfMemoryError();
         } finally {
             reader.removeIIOReadProgressListener(myIIOReadProgressListener);

@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -113,7 +114,7 @@ public class NodeStatistics {
      * of the number
      */
     public String getNumberOfNodesString() {
-        return Settings.getJpoResources().getString("CollectionNodeCountLabel") + getNumberOfNodes();
+        return JpoResources.getResource("CollectionNodeCountLabel") + getNumberOfNodes();
     }
 
     /**
@@ -159,7 +160,7 @@ public class NodeStatistics {
      * @return Returns a multilingual label with the number of Groups
      */
     public String getNumberOfGroupsString() {
-        return Settings.getJpoResources().getString("CollectionGroupCountLabel") + getNumberOfGroups();
+        return JpoResources.getResource("CollectionGroupCountLabel") + getNumberOfGroups();
     }
 
     /**
@@ -179,7 +180,7 @@ public class NodeStatistics {
      * prefixed with the multilingual label
      */
     public String getNumberOfPicturesString() {
-        return Settings.getJpoResources().getString("CollectionPictureCountLabel") + getNumberOfPictures();
+        return JpoResources.getResource("CollectionPictureCountLabel") + getNumberOfPictures();
     }
 
     /**
@@ -245,7 +246,7 @@ public class NodeStatistics {
      * @return Returns the bytes of the pictures underneath the supplied node
      */
     public String getSizeOfPicturesString() {
-        return Settings.getJpoResources().getString("CollectionSizeJLabel") + FileUtils.byteCountToDisplaySize( getSizeOfPictures());
+        return JpoResources.getResource("CollectionSizeJLabel") + FileUtils.byteCountToDisplaySize( getSizeOfPictures());
     }
 
     /**

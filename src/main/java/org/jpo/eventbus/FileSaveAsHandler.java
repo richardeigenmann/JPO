@@ -3,12 +3,13 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.XmlFilter;
 
 import javax.swing.*;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -39,7 +40,7 @@ public class FileSaveAsHandler {
         final var jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         jFileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("fileSaveAsTitle"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("fileSaveAsTitle"));
         jFileChooser.setMultiSelectionEnabled(false);
         jFileChooser.setFileFilter(new XmlFilter());
         if (request.pictureCollection().getXmlFile() != null) {
@@ -54,8 +55,8 @@ public class FileSaveAsHandler {
             chosenFile = Tools.correctFilenameExtension("xml", chosenFile);
             if (chosenFile.exists()) {
                 int answer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
-                        Settings.getJpoResources().getString("confirmSaveAs"),
-                        Settings.getJpoResources().getString("genericWarning"),
+                        JpoResources.getResource("confirmSaveAs"),
+                        JpoResources.getResource("genericWarning"),
                         JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.QUESTION_MESSAGE);
                 if (answer == JOptionPane.CANCEL_OPTION) {

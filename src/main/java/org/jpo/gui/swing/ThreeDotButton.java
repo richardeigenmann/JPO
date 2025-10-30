@@ -1,16 +1,17 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 
 /*
- Copyright (C) 2010-2024 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2010-2025 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
  of the License, or any later version. This program is distributed
- in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ in the hope that it will be useful, but WITHOUT ANY WARRANTY,
  without even the implied warranty of MERCHANTABILITY or FITNESS
  FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
  more details. You should have received a copy of the GNU General Public License
@@ -31,7 +32,7 @@ public class ThreeDotButton extends JButton {
      */
     public ThreeDotButton() {
         super();
-        setText(Settings.getJpoResources().getString("threeDotText"));
+        setText(JpoResources.getResource("threeDotText"));
         setPreferredSize(Settings.THREE_DOT_BUTTON_DIMENSION);
         setMinimumSize(Settings.THREE_DOT_BUTTON_DIMENSION);
         setMaximumSize(Settings.THREE_DOT_BUTTON_DIMENSION);

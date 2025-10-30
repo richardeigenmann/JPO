@@ -1,13 +1,14 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 import org.jpo.gui.XmlFilter;
 
 import javax.swing.*;
 import java.io.File;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -35,8 +36,8 @@ public class Filechoosers {
     public static File chooseXmlFile() {
         final var jFileChooser = new JFileChooser();
         jFileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jFileChooser.setApproveButtonText(Settings.getJpoResources().getString("fileOpenButtonText"));
-        jFileChooser.setDialogTitle(Settings.getJpoResources().getString("fileOpenHeading"));
+        jFileChooser.setApproveButtonText(JpoResources.getResource("fileOpenButtonText"));
+        jFileChooser.setDialogTitle(JpoResources.getResource("fileOpenHeading"));
         jFileChooser.setFileFilter(new XmlFilter());
         jFileChooser.setCurrentDirectory(Settings.getMostRecentCopyLocation());
 

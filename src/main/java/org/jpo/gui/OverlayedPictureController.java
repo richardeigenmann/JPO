@@ -16,7 +16,7 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_P
 import static org.jpo.gui.OverlayedPictureController.InfoOverlay.*;
 
 /*
-Copyright (C) 2017-2024 Richard Eigenmann.
+Copyright (C) 2017-2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -133,7 +133,7 @@ public class OverlayedPictureController extends PictureController implements Sca
     /**
      * Font for the info if shown.
      */
-    private static final Font INFO_FONT = Font.decode(Settings.getJpoResources().getString("PicturePaneInfoFont"));
+    private static final Font INFO_FONT = Font.decode(JpoResources.getResource("PicturePaneInfoFont"));
 
     /**
      * Color for the info overly
@@ -177,28 +177,28 @@ public class OverlayedPictureController extends PictureController implements Sca
             case NO_OVERLAY -> {
             }
             case PHOTOGRAPHIC_OVERLAY -> {
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoCamera"), infoCoordinates.x, infoCoordinates.y);
+                g2d.drawString(JpoResources.getResource("ExifInfoCamera"), infoCoordinates.x, infoCoordinates.y);
                 g2d.drawString(exifInfo.getCamera(), infoCoordinates.x + TABSTOP, infoCoordinates.y);
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoLens"), infoCoordinates.x, infoCoordinates.y + (LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("ExifInfoLens"), infoCoordinates.x, infoCoordinates.y + (LINE_SPACING));
                 g2d.drawString(exifInfo.getLens(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoShutterSpeed"), infoCoordinates.x, infoCoordinates.y + (2 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("ExifInfoShutterSpeed"), infoCoordinates.x, infoCoordinates.y + (2 * LINE_SPACING));
                 g2d.drawString(exifInfo.getShutterSpeed(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (2 * LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoAperture"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("ExifInfoAperture"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
                 g2d.drawString(exifInfo.getAperture(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (3 * LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoFocalLength"), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("ExifInfoFocalLength"), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
                 g2d.drawString(exifInfo.getFocalLength(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (4 * LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoISO"), infoCoordinates.x, infoCoordinates.y + (5 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("ExifInfoISO"), infoCoordinates.x, infoCoordinates.y + (5 * LINE_SPACING));
                 g2d.drawString(exifInfo.getIso(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (5 * LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("ExifInfoTimeStamp"), infoCoordinates.x, infoCoordinates.y + (6 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("ExifInfoTimeStamp"), infoCoordinates.x, infoCoordinates.y + (6 * LINE_SPACING));
                 g2d.drawString(exifInfo.getCreateDateTime(), infoCoordinates.x + TABSTOP, infoCoordinates.y + (6 * LINE_SPACING));
             }
             case APPLICATION_OVERLAY -> {
                 g2d.drawString(legend, infoCoordinates.x, infoCoordinates.y);
-                g2d.drawString(Settings.getJpoResources().getString("PicturePaneSize")
+                g2d.drawString(JpoResources.getResource("PicturePaneSize")
                         + scalablePicture.getOriginalWidth()
                         + " x "
                         + scalablePicture.getOriginalHeight()
-                        + Settings.getJpoResources().getString("PicturePaneMidpoint")
+                        + JpoResources.getResource("PicturePaneMidpoint")
                         + focusPoint.x
                         + " x "
                         + focusPoint.y
@@ -206,8 +206,8 @@ public class OverlayedPictureController extends PictureController implements Sca
                         + TWO_DECIMAL_FORMATTER.format(scalablePicture.getScaleFactor()), infoCoordinates.x, infoCoordinates.y
                         + (LINE_SPACING));
                 g2d.drawString("File: " + scalablePicture.getFilename(), infoCoordinates.x, infoCoordinates.y + (2 * LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("PicturePaneLoadTime") + TWO_DECIMAL_FORMATTER.format(scalablePicture.getSourcePicture().getLoadTime() / 1000F) + Settings.getJpoResources().getString("PicturePaneSeconds"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
-                g2d.drawString(Settings.getJpoResources().getString("PicturePaneFreeMemory") + Tools.freeMemory(), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("PicturePaneLoadTime") + TWO_DECIMAL_FORMATTER.format(scalablePicture.getSourcePicture().getLoadTime() / 1000F) + JpoResources.getResource("PicturePaneSeconds"), infoCoordinates.x, infoCoordinates.y + (3 * LINE_SPACING));
+                g2d.drawString(JpoResources.getResource("PicturePaneFreeMemory") + Tools.freeMemory(), infoCoordinates.x, infoCoordinates.y + (4 * LINE_SPACING));
             }
             default -> {
             } // case NO_OVERLAY:
@@ -236,7 +236,7 @@ public class OverlayedPictureController extends PictureController implements Sca
         String message = pictureStatusMessage;
         if (pictureStatusCode == SCALABLE_PICTURE_READY) {
             LOGGER.log(Level.FINE,"Caught a SCALABLE_PICTURE_READY status");
-            message = Settings.getJpoResources().getString("PicturePaneReadyStatus");
+            message = JpoResources.getResource("PicturePaneReadyStatus");
             if (isCenterWhenScaled()) {
                 LOGGER.log(Level.FINE,"centering image");
                 centerImage();

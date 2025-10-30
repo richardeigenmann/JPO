@@ -2,6 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -48,15 +49,15 @@ public class AfterFileSaveHandler {
         final var panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        panel.add(new JLabel(Settings.getJpoResources().getString("collectionSaveBody") + request.pictureCollection().getXmlFile().toString()));
-        final var autoLoadJCheckBox = new JCheckBox(Settings.getJpoResources().getString("setAutoload"));
+        panel.add(new JLabel(JpoResources.getResource("collectionSaveBody") + request.pictureCollection().getXmlFile().toString()));
+        final var autoLoadJCheckBox = new JCheckBox(JpoResources.getResource("setAutoload"));
         if (Settings.getAutoLoad() != null && ((new File(Settings.getAutoLoad())).compareTo(request.pictureCollection().getXmlFile()) == 0)) {
             autoLoadJCheckBox.setSelected(true);
         }
         panel.add(autoLoadJCheckBox);
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        final var jDialog = new JDialog(Settings.getAnchorFrame(), Settings.getJpoResources().getString("collectionSaveTitle"));
+        final var jDialog = new JDialog(Settings.getAnchorFrame(), JpoResources.getResource("collectionSaveTitle"));
 
         final var okButton = new JButton("OK");
         okButton.addActionListener(e -> closeAfterFileSaveDialog(request, autoLoadJCheckBox, jDialog));
