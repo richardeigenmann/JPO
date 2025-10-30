@@ -1,5 +1,7 @@
 package org.jpo.datamodel;
 
+import org.jpo.eventbus.CollectionLockNotification;
+import org.jpo.eventbus.JpoEventBus;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.LabelFrame;
 import org.xml.sax.Attributes;
@@ -103,7 +105,8 @@ public class SaxEventHandler extends DefaultHandler {
             }
 
             currentGroup.setUserObject(groupInfo);
-            currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ) );
+            currentGroup.getPictureCollection().setAllowEdits( attrs.getValue( "collection_protected" ).equals( "No" ),
+                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(currentGroup.getPictureCollection())) );
         } else if ( "group".equalsIgnoreCase( qName ) && attrs != null ) {
             incrementGroupCount();
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null ? attrs.getValue( "group_name" ) : "" );

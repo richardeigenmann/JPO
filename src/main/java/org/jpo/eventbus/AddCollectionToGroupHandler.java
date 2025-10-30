@@ -53,7 +53,7 @@ public class AddCollectionToGroupHandler {
 
         final var newNode = popupNode.addGroupNode("New Group");
         try {
-            PictureCollection.fileLoad(fileToLoad, newNode);
+            PictureCollection.fileLoad(fileToLoad, newNode, () -> { JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection())); });
         } catch (final FileNotFoundException x) {
             LOGGER.severe(x.getMessage());
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

@@ -62,10 +62,10 @@ class JpoWriterTest {
             final var tempFile = File.createTempFile("temp", null);
             try (final var bout = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8))) {
                 final var pictureCollection = new PictureCollection();
-                pictureCollection.addCategory("Trees");
-                pictureCollection.addCategory("Houses");
-                pictureCollection.addCategory("Cats");
-                pictureCollection.addCategory("Dogs");
+                pictureCollection.addCategory("Trees", () -> {});
+                pictureCollection.addCategory("Houses", () -> {});
+                pictureCollection.addCategory("Cats", () -> {});
+                pictureCollection.addCategory("Dogs", () -> {});
                 JpoWriter.writeCategoriesBlockTestOnly(pictureCollection, bout);
             }
             try (final Stream<String> s = Files.lines(tempFile.toPath())) {
@@ -148,7 +148,7 @@ class JpoWriterTest {
         final var node = new SortableDefaultMutableTreeNode(groupInfo);
         final var pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add(node);
-        pictureCollection.setAllowEdits(true);
+        pictureCollection.setAllowEdits(true, () -> {});
 
         final var stringWriter = new StringWriter();
         try (
@@ -177,7 +177,7 @@ class JpoWriterTest {
         final var node = new SortableDefaultMutableTreeNode(groupInfo);
         final var pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add(node);
-        pictureCollection.setAllowEdits(false);
+        pictureCollection.setAllowEdits(false, () -> {});
 
         final var stringWriter = new StringWriter();
         try (

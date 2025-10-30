@@ -26,7 +26,7 @@ class CategoryQueryTest {
     @Test
     void testGetTitle() {
         final var pictureCollection = new PictureCollection();
-        final var key = pictureCollection.addCategory("Mountains");
+        final var key = pictureCollection.addCategory("Mountains", () -> {});
         final var categoryQuery = new CategoryQuery(pictureCollection, key);
         assertEquals("Category: Mountains", categoryQuery.getTitle());
     }
@@ -34,7 +34,7 @@ class CategoryQueryTest {
     @Test
     void testQuery() {
         final var pictureCollection = new PictureCollection();
-        final var key = pictureCollection.addCategory("Mountains");
+        final var key = pictureCollection.addCategory("Mountains", () -> {});
         final var categoryQuery = new CategoryQuery(pictureCollection, key);
         assertEquals(0, categoryQuery.getNumberOfResults());
 
@@ -53,7 +53,7 @@ class CategoryQueryTest {
     void testGetIndex() {
         final var pictureCollection = new PictureCollection();
         final var pictureInfo = new PictureInfo();
-        final var key = pictureCollection.addCategory("Mountains");
+        final var key = pictureCollection.addCategory("Mountains", () -> {});
         pictureInfo.addCategoryAssignment(key);
         final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
         pictureCollection.getRootNode().add(pictureNode);

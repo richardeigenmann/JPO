@@ -250,7 +250,8 @@ public class ApplicationJMenuBar extends JMenuBar {
             editCamerasJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new EditCamerasRequest()));
             add(editCamerasJMenuItem);
 
-            editModeJMenuItem.addActionListener((ActionEvent e) -> Settings.getPictureCollection().setAllowEdits(! Settings.getPictureCollection().getAllowEdits()));
+            editModeJMenuItem.addActionListener((ActionEvent e) -> Settings.getPictureCollection().setAllowEdits(! Settings.getPictureCollection().getAllowEdits(),
+                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection())) ));
             add(editModeJMenuItem);
 
             editSettingsJMenuItem.setMnemonic(KeyEvent.VK_S);

@@ -1,6 +1,9 @@
 package org.jpo.datamodel;
 
-import org.jpo.eventbus.*;
+import org.jpo.eventbus.CollectionLockNotification;
+import org.jpo.eventbus.ExportGroupToCollectionRequest;
+import org.jpo.eventbus.JpoEventBus;
+import org.jpo.eventbus.RecentCollectionsChangedEvent;
 import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
@@ -119,7 +122,7 @@ public class PictureCollection {
 
         treeModel = new DefaultTreeModel(getRootNode());
         treeModel.addTreeModelListener(new PictureCollectionTreeModelListener());
-        setAllowEdits(true);
+        setAllowEdits(true, () -> JpoEventBus.getInstance().post(new CollectionLockNotification(this)) );
         setUnsavedUpdates(false);
     }
 
@@ -129,12 +132,13 @@ public class PictureCollection {
      *
      * @param fileToLoad The File object that is to be loaded.
      * @param node       the node to load it into
+     * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException When no good
      */
-    public static void fileLoad(final File fileToLoad, final SortableDefaultMutableTreeNode node) throws FileNotFoundException {
+    public static void fileLoad(final File fileToLoad, final SortableDefaultMutableTreeNode node, final Runnable onFileLoaded) throws FileNotFoundException {
         LOGGER.log(Level.INFO, "Loading file: {0}", fileToLoad);
         final InputStream is = new FileInputStream(fileToLoad);
-        streamLoad(is, node);
+        streamLoad(is, node, onFileLoaded);
     }
 
     /**
@@ -143,13 +147,13 @@ public class PictureCollection {
      * @param is   The InputStream that is to be loaded.
      * @param node the node to load it into
      */
-    public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node) {
+    public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node, final Runnable onFileLoaded) {
         final var pictureCollection = node.getPictureCollection();
         pictureCollection.setSendModelUpdates(false); // turn off model notification of each add for performance
         XmlReader.read(is, node);
         pictureCollection.setSendModelUpdates(true);
         pictureCollection.sendNodeStructureChanged(node);
-        JpoEventBus.getInstance().post(new CollectionLockNotification(pictureCollection));
+        onFileLoaded.run();
     }
 
     /**
@@ -163,7 +167,7 @@ public class PictureCollection {
             clearQueriesTreeModel();
             categories.clear();
             clearMailSelection();
-            setAllowEdits(true);
+            setAllowEdits(true, () -> JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection())));
             setUnsavedUpdates(false);
             setXmlFile(null);
             getTreeModel().reload();
@@ -342,10 +346,10 @@ public class PictureCollection {
      *
      * @param newAllowEdits pass true to allow edits, false to forbid
      */
-    public void setAllowEdits(final boolean newAllowEdits) {
+    public void setAllowEdits(final boolean newAllowEdits, final Runnable onLockChange) {
         if ( allowEdits != newAllowEdits ) {
             allowEdits = newAllowEdits;
-            JpoEventBus.getInstance().post(new CollectionLockNotification(this));
+            onLockChange.run();
         }
     }
 
@@ -496,9 +500,11 @@ public class PictureCollection {
      * returns the corresponding Integer code for the category.
      *
      * @param category The category to save or look up
+     * @param onCategoryAdded A Lambda that will be executed if a category was added. For
+     *                        instance a posting on the EventBus for Guis to update themselves.
      * @return the number at which the category was added
      */
-    public Integer addCategory(final String category) {
+    public Integer addCategory(final String category, final Runnable onCategoryAdded) {
         synchronized (categories) { // I'm worried that concurrent modifications could mess things up
             if (categories.isEmpty()) {
                 addCategory(0, category);
@@ -518,7 +524,7 @@ public class PictureCollection {
             final Integer maxKey = Collections.max(categories.keySet());
             final Integer nextKey = maxKey + 1;
             addCategory(nextKey, category);
-            JpoEventBus.getInstance().post(new CategoriesWereModified());
+            onCategoryAdded.run();
             return nextKey;
         }
     }
@@ -528,11 +534,12 @@ public class PictureCollection {
      *
      * @param key      The Key
      * @param category The category
+     * @param onCategoryModified the Lambda to run when the category was modified
      */
-    public void renameCategory(final Integer key, final String category) {
-        removeCategory(key);
+    public void renameCategory(final Integer key, final String category, final Runnable onCategoryModified ) {
+        removeCategory(key, onCategoryModified);
         addCategory(key, category);
-        JpoEventBus.getInstance().post(new CategoriesWereModified());
+        onCategoryModified.run();
     }
 
     /**
@@ -579,9 +586,9 @@ public class PictureCollection {
      *
      * @param key The Key to be removed
      */
-    public void removeCategory(final Integer key) {
+    public void removeCategory(final Integer key, final Runnable onCategoryRemoved ) {
         categories.remove(key);
-        JpoEventBus.getInstance().post(new CategoriesWereModified());
+        onCategoryRemoved.run();
     }
 
     /**
@@ -774,9 +781,10 @@ public class PictureCollection {
      * thread.
      *
      * @param file The file
+     * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException bubble-up exception
      */
-    public void fileLoad(File file) throws FileNotFoundException {
+    public void fileLoad(File file, final Runnable onFileLoaded) throws FileNotFoundException {
         if (fileLoading) {
             LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass());
             return;
@@ -785,7 +793,7 @@ public class PictureCollection {
         clearCollection();
         setXmlFile(file);
         try {
-            fileLoad(getXmlFile(), getRootNode());
+            fileLoad(getXmlFile(), getRootNode(), onFileLoaded);
             addYearQueries();
             addCategoriesQueries();
             fileLoading = false;

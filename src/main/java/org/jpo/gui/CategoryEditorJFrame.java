@@ -3,6 +3,8 @@ package org.jpo.gui;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.*;
+import org.jpo.eventbus.CategoriesWereModified;
+import org.jpo.eventbus.JpoEventBus;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +124,7 @@ public class CategoryEditorJFrame
             final var selectedCategory = categoriesJList.getModel().getElementAt(index);
             categoriesListModel.remove(index);
             final var renamedCategory = categoryJTextField.getText();
-            pictureCollection.renameCategory(selectedCategory.getKey(), renamedCategory);
+            pictureCollection.renameCategory(selectedCategory.getKey(), renamedCategory, () -> JpoEventBus.getInstance().post(new CategoriesWereModified()) );
             final Category newCategoryObject = new Category(selectedCategory.getKey(), renamedCategory);
             categoriesListModel.insertElementAt(newCategoryObject, index);
             categoryJTextField.setText("");
@@ -157,7 +159,7 @@ public class CategoryEditorJFrame
 
             }
             categoriesListModel.remove(index);
-            pictureCollection.removeCategory(cat.getKey());
+            pictureCollection.removeCategory(cat.getKey(), () -> JpoEventBus.getInstance().post(new CategoriesWereModified()) );
         });
         return deleteCategoryJButton;
     }
@@ -195,7 +197,7 @@ public class CategoryEditorJFrame
         addCategoryJButton.addActionListener((ActionEvent evt) -> {
             final var category = categoryJTextField.getText();
             if (! category.isEmpty()) {
-                final Integer key = pictureCollection.addCategory(category);
+                final Integer key = pictureCollection.addCategory(category, () -> JpoEventBus.getInstance().post(new CategoriesWereModified()) );
                 final Category categoryObject = new Category(key, category);
                 categoriesListModel.addElement(categoryObject);
                 categoryJTextField.setText("");

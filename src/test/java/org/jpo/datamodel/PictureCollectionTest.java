@@ -663,19 +663,19 @@ class PictureCollectionTest {
         assertEquals(0, myPictureCollection.getCategoryKeySet().size());
         myPictureCollection.addCategory(0, SWITZERLAND);
         assertEquals(1, myPictureCollection.getCategoryKeySet().size());
-        myPictureCollection.addCategory(MOUNTAINS);
+        myPictureCollection.addCategory(MOUNTAINS, () -> {});
         assertEquals(2, myPictureCollection.getCategoryKeySet().size());
         // add a duplicate
-        myPictureCollection.addCategory(MOUNTAINS);
+        myPictureCollection.addCategory(MOUNTAINS, () -> {});
         assertEquals(2, myPictureCollection.getCategoryKeySet().size());
     }
 
     @Test
     void getSortedCategoryStream() {
         final PictureCollection myPictureCollection = new PictureCollection();
-        myPictureCollection.addCategory(SWITZERLAND);
-        myPictureCollection.addCategory(MOUNTAINS);
-        myPictureCollection.addCategory(LAKES);
+        myPictureCollection.addCategory(SWITZERLAND, () -> {});
+        myPictureCollection.addCategory(MOUNTAINS, () -> {});
+        myPictureCollection.addCategory(LAKES, () -> {});
         assertEquals(3, myPictureCollection.getCategoryKeySet().size());
         final String[] result = myPictureCollection.getSortedCategoryStream().map(Map.Entry::getValue).toArray(String[]::new);
         assertArrayEquals(new String[]{LAKES, MOUNTAINS, SWITZERLAND}, result);

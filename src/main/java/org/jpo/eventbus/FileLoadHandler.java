@@ -54,7 +54,7 @@ public class FileLoadHandler {
             @Override
             public void run() {
                 try {
-                    request.pictureCollection().fileLoad(fileToLoad);
+                    request.pictureCollection().fileLoad(fileToLoad, () -> {JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection()));});
                     Settings.pushRecentCollection(fileToLoad.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
                     JpoEventBus.getInstance().post(new ShowGroupRequest(request.pictureCollection().getRootNode()));
