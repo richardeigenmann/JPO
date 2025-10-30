@@ -1,5 +1,6 @@
 package org.jpo.datamodel;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.Settings.FieldCodes;
@@ -15,7 +16,8 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,10 +27,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.jpo.datamodel.Tools.copyBufferedStream;
-
 /*
- Copyright (C) 2003-2024 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003-2025 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -343,10 +343,8 @@ public class SortableDefaultMutableTreeNode
      */
     public static void copyPicture(final File sourceFile, final File targetFile) {
         LOGGER.log(Level.FINE, "Copying file {0} to file {1}", new Object[]{sourceFile, targetFile});
-        try (
-                final var bufferedInputStream = new BufferedInputStream(new FileInputStream(sourceFile));
-                final var bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(targetFile))) {
-            copyBufferedStream(bufferedInputStream, bufferedOutputStream);
+        try {
+            FileUtils.copyFile(sourceFile, targetFile);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),

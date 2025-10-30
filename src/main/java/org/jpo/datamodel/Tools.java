@@ -6,10 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -21,11 +18,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.Adler32;
 
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -143,30 +139,7 @@ public class Tools {
     }
 
 
-    /**
-     * method to copy any file from a source stream to an output stream
-     *
-     * @param bin  Buffered Input Stream
-     * @param bout Buffered Output Stream
-     * @return the crc of the file
-     * @throws IOException Exception if things went wrong
-     */
-    public static long copyBufferedStream(final BufferedInputStream bin,
-                                          final BufferedOutputStream bout)
-            throws IOException {
 
-        final Adler32 crc = new Adler32();
-        int c;
-
-        while ((c = bin.read()) != -1) {
-            bout.write(c);
-            crc.update(c);
-        }
-
-        bin.close();
-        bout.close();
-        return crc.getValue();
-    }
 
 
     /**
