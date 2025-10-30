@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2024 Richard Eigenmann.
+ Copyright (C) 2024-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -113,6 +113,28 @@ class JpoWriterTest {
         } catch (final IOException e) {
             fail(e.getMessage());
         }
+    }
+
+    /**
+     * Test dumpToXml
+     */
+    @Test
+    void testDumpToXmlNormalNodeProtected() {
+        final var groupInfo = new GroupInfo("Holiday in <Cambodia> with Kim Wilde = 1970's music & a \" sign");
+
+        final var stringWriter = new StringWriter();
+        try (
+                final var bufferedWriter = new BufferedWriter(stringWriter)) {
+            JpoWriter.dumpToXml(groupInfo, bufferedWriter, false, true);
+        } catch (final IOException ex) {
+            Logger.getLogger(GroupInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
+            fail("Unexpected IOException");
+        }
+
+        final String newline = System. lineSeparator();
+        final var expected = "<group group_name=\"Holiday in &lt;Cambodia&gt; with Kim Wilde = 1970&apos;s music &amp; a &quot; sign\">" + newline;
+
+        assertEquals(expected, stringWriter.toString());
     }
 
     /**

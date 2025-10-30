@@ -20,7 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -127,11 +127,12 @@ public class JpoWriter {
      * Accessor to write the xml header so that it can be unit tested
      */
     @TestOnly
-     public static void writeCollectionHeaderTestOnly(final SortableDefaultMutableTreeNode startNode, final BufferedWriter xmlOutput, final Path baseDir) throws IOException {
+    public static void writeCollectionHeaderTestOnly(final SortableDefaultMutableTreeNode startNode, final BufferedWriter xmlOutput, final Path baseDir) throws IOException {
         writeCollectionHeader(startNode,xmlOutput, baseDir);
     }
 
-    private static void writeXmlHeader(final BufferedWriter xmlOutput) throws IOException {
+    @TestOnly
+    public static void writeXmlHeader(final BufferedWriter xmlOutput) throws IOException {
         xmlOutput.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         xmlOutput.newLine();
     }
@@ -195,6 +196,26 @@ public class JpoWriter {
     }
 
     /**
+     * this method writes all attribute
+     * s of the group to the JPO xml data
+     * format with the highres locations passed in as parameters.
+     *
+     * @param out        The BufferedWriter receiving the xml data. I use a BufferedWriter because it has a newLine method
+     * @param rootNode   The starting node
+     * @param protection Whether the collection is protected or not
+     * @throws IOException If there was an IO error
+     */
+    @TestOnly
+    public static void dumpToXml(final GroupInfo groupInfo, final BufferedWriter out, final boolean rootNode, final boolean protection)
+            throws IOException {
+
+        if (!rootNode) {
+            out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( groupInfo.getGroupName() ) + "\">" );
+        }
+        out.newLine();
+    }
+
+    /**
      * recursively invoked method to report all groups.
      *
      * @param groupNode      The group node
@@ -208,7 +229,7 @@ public class JpoWriter {
                                        final Path baseDir) throws IOException {
         final var groupInfo = (GroupInfo) groupNode.getUserObject();
 
-        groupInfo.dumpToXml(bufferedWriter, groupNode.equals(startNode), groupNode.getPictureCollection().getAllowEdits());
+        dumpToXml(groupInfo, bufferedWriter, groupNode.equals(startNode), groupNode.getPictureCollection().getAllowEdits());
 
         final var kids = groupNode.children();
         while (kids.hasMoreElements()) {
@@ -222,7 +243,11 @@ public class JpoWriter {
             }
         }
 
-        groupInfo.endGroupXML(bufferedWriter, groupNode.equals(startNode));
+        if ( ! groupNode.equals(startNode) ) {  // if it is root Node then the XmlDistiller adds the categories and end collection tag.
+            bufferedWriter.write( "</group>" );
+        }
+        bufferedWriter.newLine();
+
     }
 
     /**

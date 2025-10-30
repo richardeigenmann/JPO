@@ -1,10 +1,7 @@
 package org.jpo.datamodel;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
@@ -123,39 +120,9 @@ public class GroupInfo implements Serializable, GroupOrPicture {
         }
     }
 
-    /**
-     * this method writes all attributes of the group to the JPO xml data
-     * format with the highres locations passed in as parameters.
-     *
-     * @param out        The BufferedWriter receiving the xml data. I use a BufferedWriter because it has a newLine method
-     * @param rootNode   The starting node
-     * @param protection Whether the collection is protected or not
-     * @throws IOException If there was an IO error
-     */
-    public void dumpToXml(final BufferedWriter out, final boolean rootNode, final boolean protection)
-            throws IOException {
 
-        if (!rootNode) {
-            out.write( "<group group_name=\"" + StringEscapeUtils.escapeXml11( getGroupName() ) + "\">" );
-        }
-        out.newLine();
-    }
 
-    /**
-     * Closes the xml output
-     *
-     * @param out The output stream
-     * @param rootNode true if this si the root node
-     * @throws IOException if something went wrong
-     */
-    public void endGroupXML( BufferedWriter out, boolean rootNode )
-            throws IOException {
 
-        if ( !rootNode ) {  // if it is root Node then the XmlDistiller adds the categories and end collection tag.
-            out.write( "</group>" );
-        }
-        out.newLine();
-    }
 
     /**
      * Creates a GroupInfoChangedEvent and sends it to inform listening objects
