@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -47,7 +47,7 @@ public class FileSaveHandler {
             JpoEventBus.getInstance().post(fileSaveAsRequest);
         } else {
             LOGGER.log(Level.INFO, "Saving under the name: {0}", request.pictureCollection().getXmlFile());
-            request.pictureCollection().fileSave();
+            request.pictureCollection().fileSave(() -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()) );
             JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {
                 JpoEventBus.getInstance().post(request.onSuccessNextRequest());

@@ -65,11 +65,11 @@ public class FileSaveAsHandler {
             }
 
             request.pictureCollection().setXmlFile(chosenFile);
-            request.pictureCollection().fileSave();
+            request.pictureCollection().fileSave(() -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()) );
 
             Settings.memorizeCopyLocation(chosenFile.getParent());
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
-            Settings.pushRecentCollection(chosenFile.toString());
+            Settings.pushRecentCollection(chosenFile.toString(), () -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()) );
             JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
             JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {

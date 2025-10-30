@@ -195,7 +195,7 @@ public class CollectionDistillerJFrame extends JFrame {
 
         Settings.memorizeCopyLocation(targetFile.getParent());
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
-        Settings.pushRecentCollection(targetFile.toString());
+        Settings.pushRecentCollection(targetFile.toString(), () -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()));
         JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 JpoResources.getResource("collectionSaveBody") + targetFile,

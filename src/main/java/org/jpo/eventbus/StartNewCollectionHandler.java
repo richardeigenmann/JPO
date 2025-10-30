@@ -6,7 +6,7 @@ import org.jpo.datamodel.Settings;
 import javax.swing.*;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,7 +34,7 @@ public class StartNewCollectionHandler {
     public void handleEvent(final StartNewCollectionRequest event) {
         SwingUtilities.invokeLater(
                 () -> {
-                    Settings.getPictureCollection().clearCollection();
+                    Settings.getPictureCollection().clearCollection(() -> JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection())));
                     JpoEventBus.getInstance().post(new ShowGroupRequest(Settings.getPictureCollection().getRootNode()));
                 }
         );

@@ -1,9 +1,6 @@
 package org.jpo.datamodel;
 
-import org.jpo.eventbus.CollectionLockNotification;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.RecentCollectionsChangedEvent;
 import org.jpo.gui.JpoResources;
 
 import javax.swing.*;
@@ -114,6 +111,7 @@ public class PictureCollection {
 
     /**
      * Constructs a new PictureCollection object with a root object
+     * Does not send round a Eventbus notification about the LockIcon change
      */
     public PictureCollection() {
         final var node = new SortableDefaultMutableTreeNode(new GroupInfo(JpoResources.getResource("DefaultRootNodeText")));
@@ -122,7 +120,7 @@ public class PictureCollection {
 
         treeModel = new DefaultTreeModel(getRootNode());
         treeModel.addTreeModelListener(new PictureCollectionTreeModelListener());
-        setAllowEdits(true, () -> JpoEventBus.getInstance().post(new CollectionLockNotification(this)) );
+        setAllowEdits(true, () -> {} );
         setUnsavedUpdates(false);
     }
 
@@ -160,14 +158,14 @@ public class PictureCollection {
      * This method wipes out the data in the picture collection. As it updates
      * the TreeModel it has been made synchronous on the EDT.
      */
-    public void clearCollection() {
+    public void clearCollection(final Runnable onCollectionCleared) {
         final Runnable runnable = () -> {
             getRootNode().removeAllChildren();
             getRootNode().setUserObject(new GroupInfo(JpoResources.getResource("DefaultRootNodeText")));
             clearQueriesTreeModel();
             categories.clear();
             clearMailSelection();
-            setAllowEdits(true, () -> JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection())));
+            setAllowEdits(true, onCollectionCleared);
             setUnsavedUpdates(false);
             setXmlFile(null);
             getTreeModel().reload();
@@ -781,16 +779,17 @@ public class PictureCollection {
      * thread.
      *
      * @param file The file
+     * @param onCollectionCleared  The Lambda to call after the collection has been cleared --> Lock Icon
      * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException bubble-up exception
      */
-    public void fileLoad(File file, final Runnable onFileLoaded) throws FileNotFoundException {
+    public void fileLoad(File file, final Runnable onCollectionCleared, final Runnable onFileLoaded) throws FileNotFoundException {
         if (fileLoading) {
             LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass());
             return;
         }
         fileLoading = true;
-        clearCollection();
+        clearCollection(onCollectionCleared);
         setXmlFile(file);
         try {
             fileLoad(getXmlFile(), getRootNode(), onFileLoaded);
@@ -841,8 +840,9 @@ public class PictureCollection {
 
     /**
      * method that saves the entire index in XML format.
+     * @param onRecentFilesChanged the Lambda to call after the file was saved. Can be used to send a message to the Gui that the recent files changed
      */
-    public void fileSave() {
+    public void fileSave(final Runnable onRecentFilesChanged) {
         if (xmlFile == null) {
             LOGGER.severe("xmlFile is null. Not saving!");
         } else {
@@ -851,8 +851,7 @@ public class PictureCollection {
             JpoWriter.write(exportRequest);
             replaceFile(xmlFile, temporaryFile);
             setUnsavedUpdates(false);
-            Settings.pushRecentCollection(xmlFile.toString());
-            JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
+            Settings.pushRecentCollection(xmlFile.toString(), onRecentFilesChanged);
         }
     }
 

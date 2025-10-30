@@ -2131,14 +2131,16 @@ public class Settings {
      * {@code JpoEventBus.getInstance().post( new RecentCollectionsChangedEvent() ); }
      *
      * @param recentFile The collection file name to be memorised
+     * @param onRecentCollectionChanged The Lambda to call when the name was added to the recent collection
      */
-    public static void pushRecentCollection(final String recentFile) {
+    public static void pushRecentCollection(final String recentFile, final Runnable onRecentCollectionChanged) {
         for (var i = 0; i < Settings.MAX_MEMORISE; i++) {
             if ((recentCollections[i] != null)
                     && (recentCollections[i].equals(recentFile))) {
                 // it was already in the list make it the first one
                 System.arraycopy(recentCollections, 0, recentCollections, 1, i);
                 recentCollections[0] = recentFile;
+                onRecentCollectionChanged.run();
                 return;
             }
         }
@@ -2147,6 +2149,7 @@ public class Settings {
         System.arraycopy(recentCollections, 0, recentCollections, 1, Settings.MAX_MEMORISE - 1);
         recentCollections[0] = recentFile;
         writeSettings();
+        onRecentCollectionChanged.run();
     }
 
     /**
