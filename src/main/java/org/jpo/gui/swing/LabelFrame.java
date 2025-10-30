@@ -1,5 +1,6 @@
 package org.jpo.gui.swing;
 
+import org.jpo.datamodel.ProgressTracker;
 import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
@@ -7,12 +8,12 @@ import java.awt.*;
 import java.lang.reflect.InvocationTargetException;
 
 /*
-Copyright (C) 2020-2024 Richard Eigenmann, Zürich, Switzerland
+Copyright (C) 2020-2025 Richard Eigenmann, Zürich, Switzerland
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
 of the License, or any later version. This program is distributed
-in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+in the hope that it will be useful, but WITHOUT ANY WARRANTY,
 without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
 more details. You should have received a copy of the GNU General Public License
@@ -25,7 +26,7 @@ See http://www.gnu.org/copyleft/gpl.html for the details.
 /**
  * Creates a JFrame that holds a centred JLabel.
  */
-public class LabelFrame {
+public class LabelFrame implements ProgressTracker {
 
     /**
      * Holds the label
@@ -54,7 +55,7 @@ public class LabelFrame {
         } else {
             try {
                 SwingUtilities.invokeAndWait(runnable );
-            } catch ( InterruptedException | InvocationTargetException ex ) {
+            } catch ( InterruptedException | InvocationTargetException _ ) {
                 // Restore interrupted state...
                 Thread.currentThread().interrupt();
             }
@@ -81,7 +82,8 @@ public class LabelFrame {
     }
 
     /**
-     * Updates the label with the supplied message
+     * Updates the label with the supplied message and makes sure to do it on the EDT;
+     * the caller can be on any thread.
      *
      * @param message the message to show in the label
      */
@@ -96,9 +98,9 @@ public class LabelFrame {
     }
 
     /**
-     * method that closes the frame and gets rid of it
+     * method that closes the frame and gets rid of it. Makes sure to do all Swing actions on the EDT
      */
-    public void getRid() {
+    public void done() {
         final Runnable runnable = () -> {
             jFrame.setVisible(false);
             jFrame.dispose();

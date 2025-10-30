@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import org.jpo.eventbus.CollectionLockNotification;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.swing.LabelFrame;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
@@ -42,7 +41,7 @@ public class SaxEventHandler extends DefaultHandler {
      * constant
      */
     public static final String INDEX = "index";
-    private final LabelFrame loadProgressGui;
+    private final ProgressTracker progressTracker;
 
     /**
      * Defines a LOGGER for this class
@@ -66,12 +65,12 @@ public class SaxEventHandler extends DefaultHandler {
      * Constructs the Sax XML parser
      *
      * @param startNode       The starting node
-     * @param loadProgressGui the progress GUI to update
+     * @param progressTracker the progress GUI to update
      * @param lowresUrls      the lowresUrls to pick up on
      */
-    public SaxEventHandler(final SortableDefaultMutableTreeNode startNode, final LabelFrame loadProgressGui, final StringBuilder lowresUrls) {
+    public SaxEventHandler(final SortableDefaultMutableTreeNode startNode, final ProgressTracker progressTracker, final StringBuilder lowresUrls) {
         currentGroup = startNode;
-        this.loadProgressGui = loadProgressGui;
+        this.progressTracker = progressTracker;
         this.lowresUrls = lowresUrls;
     }
 
@@ -293,6 +292,6 @@ public class SaxEventHandler extends DefaultHandler {
      * called every hundred pictures or so.
      */
     private void informProgressGui() {
-        loadProgressGui.update(String.format(JpoResources.getResource("org.jpo.dataModel.XmlReader.progressUpdate"), groupCount, pictureCount));
+        progressTracker.update(String.format(JpoResources.getResource("org.jpo.dataModel.XmlReader.progressUpdate"), groupCount, pictureCount));
     }
 }
