@@ -2,7 +2,6 @@ package org.jpo.datamodel;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
-import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.JpoResources;
 
@@ -17,8 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- PictureInfo.java:  the definitions for picture data
-
  Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -188,80 +185,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         return description;
     }
 
-    /**
-     * this method writes all attributes of the picture in the JPO xml data
-     * format with the highres and lowres locations passed in as parameters.
-     * This became necessary because when the XmlDistiller copies the pictures
-     * to a new location we don't want to write the URLs of the original
-     * pictures whilst all other attributes are retained.
-     *
-     * @param out The Buffered Writer receiving the xml data
-     * @throws IOException If there was an IO error
-     */
-    public void dumpToXml(final BufferedWriter out, final Path baseDir)
-            throws IOException {
-        out.write("<picture>");
-        out.newLine();
-        out.write("\t<description><![CDATA[" + getDescription() + "]]></description>");
-        out.newLine();
-
-        if ((getCreationTime() != null) && (!getCreationTime().isEmpty())) {
-            out.write("\t<CREATION_TIME><![CDATA[" + getCreationTime() + "]]></CREATION_TIME>");
-            out.newLine();
-        }
-
-        if (! getImageFile().toURI().toString().isEmpty()) {
-            final var file = getImageFile();
-            final var relativeImageFile = getRelativePath(file, baseDir);
-            out.write("\t<file>" + StringEscapeUtils.escapeXml11(relativeImageFile.toString()) + "</file>");
-            out.newLine();
-        }
-
-        if ((!sha256.equals("")) && (!sha256.equals("N/A"))) {
-            out.write("\t<sha256>" + sha256 + "</sha256>");
-            out.newLine();
-        }
-
-        if (! getComment().isEmpty()) {
-            out.write("\t<COMMENT>" + StringEscapeUtils.escapeXml11(getComment()) + "</COMMENT>");
-            out.newLine();
-        }
-
-        if (! getPhotographer().isEmpty()) {
-            out.write("\t<PHOTOGRAPHER>" + StringEscapeUtils.escapeXml11(getPhotographer()) + "</PHOTOGRAPHER>");
-            out.newLine();
-        }
-
-        if (! getFilmReference().isEmpty()) {
-            out.write("\t<film_reference>" + StringEscapeUtils.escapeXml11(getFilmReference()) + "</film_reference>");
-            out.newLine();
-        }
-
-        if (! getCopyrightHolder().isEmpty()) {
-            out.write("\t<COPYRIGHT_HOLDER>" + StringEscapeUtils.escapeXml11(getCopyrightHolder()) + "</COPYRIGHT_HOLDER>");
-            out.newLine();
-        }
-
-        if (getRotation() != 0) {
-            out.write(String.format("\t<ROTATION>%f</ROTATION>", getRotation()));
-            out.newLine();
-        }
-
-        if (latLng != null) {
-            out.write(String.format("\t<LATLNG>%fx%f</LATLNG>", latLng.x, latLng.y));
-            out.newLine();
-        }
-
-        if (categoryAssignments != null) {
-            for (final var categoryAssignment : categoryAssignments) {
-                out.write("\t<categoryAssignment index=\"" + categoryAssignment + "\"/>");
-                out.newLine();
-            }
-        }
-
-        out.write("</picture>");
-        out.newLine();
-    }
 
     public static Path getRelativePath(final File imageFile, final Path baseDir) {
         return baseDir.relativize(imageFile.toPath());

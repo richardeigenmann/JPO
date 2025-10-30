@@ -252,6 +252,83 @@ public class JpoWriter {
     }
 
     /**
+     * this method writes all attributes of the picture in the JPO xml data
+     * format with the highres and lowres locations passed in as parameters.
+     * This became necessary because when the XmlDistiller copies the pictures
+     * to a new location we don't want to write the URLs of the original
+     * pictures whilst all other attributes are retained.
+     *
+     * @param out The Buffered Writer receiving the xml data
+     * @throws IOException If there was an IO error
+     */
+    public static void dumpToXml(final PictureInfo pictureInfo, final BufferedWriter out, final Path baseDir)
+            throws IOException {
+        out.write("<picture>");
+        out.newLine();
+        out.write("\t<description><![CDATA[" + pictureInfo.getDescription() + "]]></description>");
+        out.newLine();
+
+        if ((pictureInfo.getCreationTime() != null) && (!pictureInfo.getCreationTime().isEmpty())) {
+            out.write("\t<CREATION_TIME><![CDATA[" + pictureInfo.getCreationTime() + "]]></CREATION_TIME>");
+            out.newLine();
+        }
+
+        if (! pictureInfo.getImageFile().toURI().toString().isEmpty()) {
+            final var file = pictureInfo.getImageFile();
+            final var relativeImageFile = pictureInfo.getRelativePath(file, baseDir);
+            out.write("\t<file>" + StringEscapeUtils.escapeXml11(relativeImageFile.toString()) + "</file>");
+            out.newLine();
+        }
+
+        if ((!pictureInfo.getSha256().equals("")) && (!pictureInfo.getSha256().equals("N/A"))) {
+            out.write("\t<sha256>" + pictureInfo.getSha256() + "</sha256>");
+            out.newLine();
+        }
+
+        if (! pictureInfo.getComment().isEmpty()) {
+            out.write("\t<COMMENT>" + StringEscapeUtils.escapeXml11(pictureInfo.getComment()) + "</COMMENT>");
+            out.newLine();
+        }
+
+        if (! pictureInfo.getPhotographer().isEmpty()) {
+            out.write("\t<PHOTOGRAPHER>" + StringEscapeUtils.escapeXml11(pictureInfo.getPhotographer()) + "</PHOTOGRAPHER>");
+            out.newLine();
+        }
+
+        if (! pictureInfo.getFilmReference().isEmpty()) {
+            out.write("\t<film_reference>" + StringEscapeUtils.escapeXml11(pictureInfo.getFilmReference()) + "</film_reference>");
+            out.newLine();
+        }
+
+        if (! pictureInfo.getCopyrightHolder().isEmpty()) {
+            out.write("\t<COPYRIGHT_HOLDER>" + StringEscapeUtils.escapeXml11(pictureInfo.getCopyrightHolder()) + "</COPYRIGHT_HOLDER>");
+            out.newLine();
+        }
+
+        if (pictureInfo.getRotation() != 0) {
+            out.write(String.format("\t<ROTATION>%f</ROTATION>", pictureInfo.getRotation()));
+            out.newLine();
+        }
+
+        final var latLng = pictureInfo.getLatLng();
+        if (latLng != null && latLng.x != 0 && latLng.y != 0) {
+            out.write(String.format("\t<LATLNG>%fx%f</LATLNG>", latLng.x, latLng.y));
+            out.newLine();
+        }
+
+        if (pictureInfo.getCategoryAssignments() != null) {
+            for (final var categoryAssignment : pictureInfo.getCategoryAssignments()) {
+                out.write("\t<categoryAssignment index=\"" + categoryAssignment + "\"/>");
+                out.newLine();
+            }
+        }
+
+        out.write("</picture>");
+        out.newLine();
+    }
+
+
+    /**
      * write a picture to the output
      *
      * @param pictureInfo    the picture to write
@@ -269,9 +346,9 @@ public class JpoWriter {
             FileUtils.copyFile(pictureInfo.getImageFile(), targetHighresFile);
             final var tempPictureInfo = pictureInfo.getClone();
             tempPictureInfo.setImageLocation(targetHighresFile);
-            tempPictureInfo.dumpToXml(bufferedWriter, baseDir);
+            dumpToXml(tempPictureInfo, bufferedWriter, baseDir);
         } else {
-            pictureInfo.dumpToXml(bufferedWriter, baseDir);
+            dumpToXml(pictureInfo, bufferedWriter, baseDir);
         }
     }
 

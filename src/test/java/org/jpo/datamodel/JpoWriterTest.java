@@ -5,12 +5,14 @@ import org.junit.jupiter.api.io.TempDir;
 
 import java.awt.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -193,5 +195,53 @@ class JpoWriterTest {
 
         assertEquals( expected, stringWriter.toString());
     }
+
+    @Test
+    void testDumpToXml() {
+        final var TEST_PICTURE = "exif-test-canon-eos-350d.jpg";
+        final var pictureResourceUrl = Objects.requireNonNull(PictureInfoTest.class.getClassLoader().getResource(TEST_PICTURE));
+        final var pictureInfo = new PictureInfo(new File(pictureResourceUrl.getFile()), "First <Picture> & difficult xml chars ' \"");
+        pictureInfo.setComment("Comment <<&>'\">");
+        pictureInfo.setFilmReference("Reference <<&>'\">");
+        pictureInfo.setRotation(45.1);
+        pictureInfo.setPhotographer("Richard Eigenmann <<&>'\">");
+        pictureInfo.setLatLng("22.67x33.89");
+        pictureInfo.setCopyrightHolder("Sandra Keller <<&>'\">");
+        pictureInfo.addCategoryAssignment("1");
+        pictureInfo.setSha256("1234");
+
+        Path baseDir = null;
+        try {
+            final var pathOfPicture = Paths.get(pictureResourceUrl.toURI());
+            baseDir = pathOfPicture.getParent();
+        } catch (URISyntaxException e) {
+            fail("Unexpected Exception: " + e);
+        }
+
+        final var stringWriter = new StringWriter();
+        try (final var bufferedWriter = new BufferedWriter(stringWriter)) {
+            JpoWriter.dumpToXml(pictureInfo, bufferedWriter, baseDir);
+        } catch (final IOException ex) {
+            Logger.getLogger(PictureInfoTest.class.getName()).log(Level.SEVERE, "The dumpToXml should really not throw an IOException", ex);
+            fail("Unexpected IOException");
+        }
+
+        final String newline = System. lineSeparator();
+        final String expected = "<picture>" + newline
+                + "\t<description><![CDATA[First <Picture> & difficult xml chars ' \"]]></description>" + newline
+                + "\t<file>" + TEST_PICTURE + "</file>" + newline
+                + "\t<sha256>1234</sha256>" + newline
+                + "\t<COMMENT>Comment &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COMMENT>" + newline
+                + "\t<PHOTOGRAPHER>Richard Eigenmann &lt;&lt;&amp;&gt;&apos;&quot;&gt;</PHOTOGRAPHER>" + newline
+                + "\t<film_reference>Reference &lt;&lt;&amp;&gt;&apos;&quot;&gt;</film_reference>" + newline
+                + "\t<COPYRIGHT_HOLDER>Sandra Keller &lt;&lt;&amp;&gt;&apos;&quot;&gt;</COPYRIGHT_HOLDER>" + newline
+                + "\t<ROTATION>45.100000</ROTATION>" + newline
+                + "\t<LATLNG>22.670000x33.890000</LATLNG>" + newline
+                + "\t<categoryAssignment index=\"1\"/>" + newline
+                + "</picture>" + newline;
+
+        assertEquals(expected, stringWriter.toString());
+    }
+
 
 }

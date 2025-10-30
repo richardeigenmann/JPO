@@ -14,9 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- JpoTransferable.java:  a transferable to drag and drop nodes of the Jpo application
-
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -65,10 +63,9 @@ public class JpoTransferable
      * Definition of the data flavors supported by this Transferable.
      */
     private static final DataFlavor[] flavors = {
-            jpoNodeFlavor,
-            //DataFlavor.imageFlavor,
-            DataFlavor.javaFileListFlavor,
-            DataFlavor.stringFlavor
+        jpoNodeFlavor,
+        DataFlavor.javaFileListFlavor,
+        DataFlavor.stringFlavor
     };
 
     /**
