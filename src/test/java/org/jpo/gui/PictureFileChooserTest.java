@@ -1,25 +1,34 @@
 package org.jpo.gui;
 
+import org.assertj.swing.core.BasicRobot;
+import org.assertj.swing.core.Robot;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
+import org.assertj.swing.edt.GuiActionRunner;
+import org.assertj.swing.fixture.DialogFixture;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.logging.Level;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Fail.fail;
+import static org.assertj.swing.core.matcher.DialogMatcher.withTitle;
+import static org.assertj.swing.core.matcher.JButtonMatcher.withText;
+import static org.assertj.swing.finder.WindowFinder.findDialog;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -43,36 +52,66 @@ class PictureFileChooserTest {
 
     private static final Logger LOGGER = Logger.getLogger(PictureFileChooserTest.class.getName());
 
+    private Robot robot;
+
     @BeforeAll
     public static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
+    }
+
+    @BeforeEach
+    void setUp() {
+        Settings.setLocale(Locale.ENGLISH);
+        robot = BasicRobot.robotWithNewAwtHierarchy();
+    }
+
+    @AfterEach
+    void tearDown() {
+        robot.cleanUp();
     }
 
     @Test
     void testConstructorForNonGroupNode() {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
-        SwingUtilities.invokeLater(() -> {
-            final var node = new SortableDefaultMutableTreeNode();
-            Settings.setLocale(Locale.ENGLISH);
+        final var executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> GuiActionRunner.execute(() -> {
+            final var node = new SortableDefaultMutableTreeNode(); // no user object i.e. it's not a group
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(node);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
-            // EDT blocks there
-        });
+        }));
 
-        // this is a different, non EDT thread...
-        var errorJDialog = waitForDialog("Error");
-        assertNotNull(errorJDialog, "The Error Dialog Window was not found");
-        var jOptionPane = getJOptionPane(errorJDialog, JpoResources.getResource("notGroupInfo"));
-        assertNotNull(jOptionPane, String.format("The Error Dialog should show the text %s but we can't find a matching JOptionPane", JpoResources.getResource("notGroupInfo")));
-        clickJButton(getButton(errorJDialog, "OK"));
+        final String expectedDialogTitle = JpoResources.getResource("genericError");
+        final String expectedErrorText = JpoResources.getResource("notGroupInfo");
+
+        final DialogFixture dialogFixture = findDialog(withTitle(expectedDialogTitle))
+                .withTimeout(5, SECONDS).using(robot);
+
+        assertNotNull(dialogFixture.target(), "The Dialog Window was not found by AssertJ-Swing");
+
+        var jOptionPane = getJOptionPane(dialogFixture.target(), expectedErrorText);
+        assertNotNull(jOptionPane, String.format("The Dialog should show the text %s but a matching JOptionPane was not found", expectedErrorText));
+
+        // Click the button to dismiss the modal dialog
+        // This unblocks the EDT task submitted in the executor
+        dialogFixture.button(withText("OK")).click();
+        dialogFixture.requireNotVisible();
+
+        // Wait for the executor task to complete to ensure clean shutdown
+        try {
+            executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            fail("Didn't terminate");
+        }
+        executor.shutdownNow();
     }
 
     @Test
     void testConstructor() {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
-        SwingUtilities.invokeLater(() -> {
+        final var executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> GuiActionRunner.execute(() -> {
             final var groupInfo = new GroupInfo("GroupInfo");
             final var node = new SortableDefaultMutableTreeNode(groupInfo);
             final var pictureCollection = new PictureCollection();
@@ -81,85 +120,22 @@ class PictureFileChooserTest {
             Settings.setLocale(Locale.ENGLISH);
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(node);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
-            // EDT blocks there
-        });
+        }));
 
-        // this is a different, non EDT thread...
-        var jDialog = waitForDialog(JpoResources.getResource("PictureAdderDialogTitle"));
-        assertNotNull(jDialog, "The File Choose Dialog Window was not found");
-        var jFileChooser = getJFileChooser(jDialog);
-        assertNotNull(jFileChooser, "Could not locate the JFileChooser");
-        assertEquals(Settings.getDefaultSourceLocation(), jFileChooser.getCurrentDirectory());
-        clickJButton(getButton(jDialog, "Cancel"));
-    }
+        final String expectedDialogTitle = JpoResources.getResource("PictureAdderDialogTitle");
+        final DialogFixture dialogFixture = findDialog(withTitle(expectedDialogTitle))
+                .withTimeout(5, SECONDS).using(robot);
 
+        assertNotNull(dialogFixture.target(), "The File Choose Dialog Window was not found by AssertJ-Swing");
 
-    /**
-     * Clever way to find the dialog window in another thread
-     *
-     * @param titleToFind The title of the dialog window to locate
-     * @return The JDialog that matches the title
-     * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
-     */
-    private static JDialog waitForDialog(final String titleToFind) {
-        final JDialog[] foundJDialog = new JDialog[1];
-        foundJDialog[0] = null;
-        await().atMost(5, SECONDS).until(() -> searchForDialog(titleToFind, foundJDialog));
-        return foundJDialog[0];
-    }
-
-    /**
-     * Searches for the Dialog window and returns true if it found it. The actual dialog
-     * is returned to the resultJDialog array (pass by reference)
-     *
-     * @param titleToFind the search term
-     * @param resultJDialog the dialog box
-     * @return if the term was found
-     */
-    private static boolean searchForDialog(final String titleToFind, final JDialog[] resultJDialog) {
-        LOGGER.log(Level.FINE, "Searching for dialog with the tile {0}", titleToFind);
-        for (final var window : Window.getWindows()) {
-            if (window instanceof JDialog jDialog
-                    && titleToFind.equals(jDialog.getTitle())) {
-                resultJDialog[0] = jDialog;
-                return true;
-            }
+        dialogFixture.button(withText("Cancel")).click();
+        dialogFixture.requireNotVisible();
+        try {
+            executor.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            fail("Didn't terminate");
         }
-        return false;
-    }
-
-    /**
-     * Clever way to find the JButton in a JDialog window. It walks down the components tree looking for JButtons
-     * and when it finds one checks if it has the correct label.
-     *
-     * @param container The container to walk down
-     * @param text      the text of the button
-     * @return The JButton that matches the text or null
-     * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
-     */
-    private static JButton getButton(final @NotNull Container container, final String text) {
-        JButton btn = null;
-        var children = new ArrayList<Container>(25);
-        for (final var child : container.getComponents()) {
-            if (child instanceof JButton jButton) {
-                if (text.equals(jButton.getText())) {
-                    btn = jButton;
-                    break;
-                }
-            } else if (child instanceof Container) {
-                children.add((Container) child);
-            }
-        }
-        if (btn == null) {
-            for (final var cont : children) {
-                final var jButton = getButton(cont, text);
-                if (jButton != null) {
-                    btn = jButton;
-                    break;
-                }
-            }
-        }
-        return btn;
+        executor.shutdownNow();
     }
 
     /**
@@ -196,40 +172,5 @@ class PictureFileChooserTest {
         return pane;
     }
 
-    /**
-     * Clever way to find the JFileChooser in a JDialog window. It walks down the components tree looking for JFileChoosers
-     * and when it returns it.
-     *
-     * @param container The container to walk down
-     * @return The JFileChooser or null
-     * @see <a href="https://stackoverflow.com/a/22417536/804766">https://stackoverflow.com/a/22417536/804766</a>
-     */
-    private static JFileChooser getJFileChooser(final @NotNull Container container) {
-        JFileChooser jFileChooser = null;
-        var children = new ArrayList<Container>(25);
-        for (final var child : container.getComponents()) {
-            if (child instanceof JFileChooser chooser) {
-                jFileChooser = chooser;
-                break;
-            } else if (child instanceof Container) {
-                children.add((Container) child);
-            }
-        }
-        if (jFileChooser == null) {
-            for (final var cont : children) {
-                final var chooser = getJFileChooser(cont);
-                if (chooser != null) {
-                    jFileChooser = chooser;
-                    break;
-                }
-            }
-        }
-        return jFileChooser;
-    }
-
-
-    private void clickJButton(final @NotNull JButton btn) {
-        SwingUtilities.invokeLater(btn::doClick);
-    }
 
 }

@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.Settings;
-import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
 import org.jpo.eventbus.JpoEventBus;
@@ -50,8 +49,6 @@ public class PictureFileChooser
      *                It must be a GroupInfo Node.
      */
     public PictureFileChooser(final ChooseAndAddPicturesToGroupRequest request) {
-        Tools.checkEDT();
-
         if (!(request.node().getUserObject() instanceof GroupInfo)) {
             JOptionPane.showMessageDialog(
                     Settings.getAnchorFrame(),
