@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -85,18 +85,6 @@ public class GroupInfo implements Serializable, GroupOrPicture {
      */
     public String getGroupName() {
         return groupName.toString();
-    }
-
-    /**
-     * Returns the description of the group with the HTML characters safely
-     * escaped.
-     *
-     * @return	The description of the Group.
-     * @see #getGroupName
-     *
-     */
-    public String getGroupNameHtml() {
-        return StringEscapeUtils.escapeHtml4( groupName.toString() );
     }
 
     /**

@@ -54,26 +54,6 @@ class GroupInfoTest {
         assertEquals(EXPECTED, groupInfo.getGroupName());
     }
 
-    /**
-     * Test of getGroupNameHtml method, of class GroupInfo.
-     */
-    @Test
-    void testGetGroupNameHtml() {
-        final var groupInfo = new GroupInfo("Test");
-        final var EXPECTED = "Tarrantino";
-        groupInfo.setGroupName(EXPECTED);
-        assertEquals(EXPECTED, groupInfo.getGroupNameHtml());
-
-        final var QUOTED_STRING = "Holiday in <Cambodia> a 1970's Hit by Kim Wilde";
-        final var EXPECTED_QUOTED_STRING = "Holiday in &lt;Cambodia&gt; a 1970's Hit by Kim Wilde";
-        groupInfo.setGroupName(QUOTED_STRING);
-        assertEquals(EXPECTED_QUOTED_STRING, groupInfo.getGroupNameHtml());
-        
-        final var UMLAUT_STRING = "Rüeblitorten gären im Brötlichorb";
-        final var UMLAUT_EXPECTED_STRING = "R&uuml;eblitorten g&auml;ren im Br&ouml;tlichorb";
-        groupInfo.setGroupName( UMLAUT_STRING);
-        assertEquals( UMLAUT_EXPECTED_STRING, groupInfo.getGroupNameHtml() );
-    }
 
     /**
      * Tests the change listener

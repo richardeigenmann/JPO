@@ -463,9 +463,10 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
             websiteMemberFiles.add(lowresGroupFile);
 
             final var lowresGroupWriter = new BufferedWriter(new FileWriter(lowresGroupFile));
-            final var title = ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml();
+            final var title = ((GroupInfo) groupNode.getUserObject()).getGroupName();
+            final var titleHtml = StringEscapeUtils.escapeHtml4(title);
 
-            writeHtmlHeader(lowresGroupWriter, title);
+            writeHtmlHeader(lowresGroupWriter, titleHtml);
             startGroupTable(groupNode, lowresGroupWriter, request);
             writeLinkToZipFile(groupNode, lowresGroupWriter);
             writeLinkToParentGroup(groupNode, lowresGroupWriter);
@@ -594,7 +595,7 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
 
         out.write(String.format("<tr><td colspan=\"%d\">", request.getPicsPerRow()));
 
-        out.write(String.format("<h2>%s</h2>", ((GroupInfo) groupNode.getUserObject()).getGroupNameHtml()));
+        out.write(String.format("<h2>%s</h2>", StringEscapeUtils.escapeHtml4(((GroupInfo) groupNode.getUserObject()).getGroupName())));
     }
 
     private void writeHtmlHeader(BufferedWriter out, String title) throws IOException {
