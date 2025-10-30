@@ -2,7 +2,6 @@ package org.jpo.datamodel;
 
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RemoveOldLowresThumbnailsRequest;
-import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.LabelFrame;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -54,7 +53,7 @@ public class XmlReader {
      * @param startNode   The node that becomes the root node for the nodes being. It is modified!
      *                    read.
      */
-    public static void read(final InputStream inputStream, final SortableDefaultMutableTreeNode startNode) {
+    public static void read(final InputStream inputStream, final SortableDefaultMutableTreeNode startNode, final LabelFrame loadProgressGui) {
         final var bufferedInputStream = new BufferedInputStream(inputStream);
 
         final var lowresUrls = new StringBuilder();
@@ -72,7 +71,6 @@ public class XmlReader {
             return;
         }
 
-        final var loadProgressGui = new LabelFrame(JpoResources.getResource("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
         try {
             saxParser.parse(bufferedInputStream, new SaxEventHandler(startNode, loadProgressGui, lowresUrls));
         } catch (final SAXParseException spe) {

@@ -3,6 +3,8 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
+import org.jpo.gui.JpoResources;
+import org.jpo.gui.swing.LabelFrame;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -54,8 +56,10 @@ public class FileLoadHandler {
             @Override
             public void run() {
                 try {
+                    final var loadProgressGui = new LabelFrame(JpoResources.getResource("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
                     request.pictureCollection().fileLoad(
                             fileToLoad,
+                            loadProgressGui,
                             () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection())),
                             () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection()))
                     );

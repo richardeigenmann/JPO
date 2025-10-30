@@ -4,6 +4,8 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
+import org.jpo.gui.JpoResources;
+import org.jpo.gui.swing.LabelFrame;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
@@ -53,7 +55,12 @@ public class AddCollectionToGroupHandler {
 
         final var newNode = popupNode.addGroupNode("New Group");
         try {
-            PictureCollection.fileLoad(fileToLoad, newNode, () -> JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection())));
+            final var loadProgressGui = new LabelFrame(JpoResources.getResource("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
+            PictureCollection.fileLoad(
+                    fileToLoad, 
+                    newNode,
+                    loadProgressGui,
+                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection())));
         } catch (final FileNotFoundException x) {
             LOGGER.severe(x.getMessage());
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

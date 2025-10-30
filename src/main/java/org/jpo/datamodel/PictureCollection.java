@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.swing.LabelFrame;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -133,10 +134,10 @@ public class PictureCollection {
      * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException When no good
      */
-    public static void fileLoad(final File fileToLoad, final SortableDefaultMutableTreeNode node, final Runnable onFileLoaded) throws FileNotFoundException {
+    public static void fileLoad(final File fileToLoad, final SortableDefaultMutableTreeNode node, final LabelFrame progressGui, final Runnable onFileLoaded) throws FileNotFoundException {
         LOGGER.log(Level.INFO, "Loading file: {0}", fileToLoad);
         final InputStream is = new FileInputStream(fileToLoad);
-        streamLoad(is, node, onFileLoaded);
+        streamLoad(is, node, progressGui, onFileLoaded);
     }
 
     /**
@@ -145,10 +146,10 @@ public class PictureCollection {
      * @param is   The InputStream that is to be loaded.
      * @param node the node to load it into
      */
-    public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node, final Runnable onFileLoaded) {
+    public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node, final LabelFrame progressGui, final Runnable onFileLoaded) {
         final var pictureCollection = node.getPictureCollection();
         pictureCollection.setSendModelUpdates(false); // turn off model notification of each add for performance
-        XmlReader.read(is, node);
+        XmlReader.read(is, node, progressGui);
         pictureCollection.setSendModelUpdates(true);
         pictureCollection.sendNodeStructureChanged(node);
         onFileLoaded.run();
@@ -779,11 +780,12 @@ public class PictureCollection {
      * thread.
      *
      * @param file The file
+     * @param progressGui The progress Gui to update
      * @param onCollectionCleared  The Lambda to call after the collection has been cleared --> Lock Icon
      * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException bubble-up exception
      */
-    public void fileLoad(File file, final Runnable onCollectionCleared, final Runnable onFileLoaded) throws FileNotFoundException {
+    public void fileLoad(File file, final LabelFrame progressGui, final Runnable onCollectionCleared, final Runnable onFileLoaded) throws FileNotFoundException {
         if (fileLoading) {
             LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass());
             return;
@@ -792,7 +794,11 @@ public class PictureCollection {
         clearCollection(onCollectionCleared);
         setXmlFile(file);
         try {
-            fileLoad(getXmlFile(), getRootNode(), onFileLoaded);
+            fileLoad(
+                    getXmlFile(),
+                    getRootNode(),
+                    progressGui,
+                    onFileLoaded);
             addYearQueries();
             addCategoriesQueries();
             fileLoading = false;
