@@ -573,7 +573,7 @@ class PictureCollectionTest {
         pictureCollection.addTreeModelListener(countingTreeModelListener);
         assertEquals(0, countingTreeModelListener.nodesChanged);
 
-        GuiActionRunner.execute(() -> pictureCollection.getRootNode().sortChildren(Settings.FieldCodes.DESCRIPTION));
+        GuiActionRunner.execute(() -> pictureCollection.getRootNode().sortChildren(FieldCodes.DESCRIPTION));
 
         await().until(() -> countingTreeModelListener.nodeStructureChanged == 1);
         assertEquals(0, countingTreeModelListener.nodesChanged);

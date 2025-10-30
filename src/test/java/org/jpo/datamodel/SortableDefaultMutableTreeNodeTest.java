@@ -464,7 +464,7 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(gA));
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
-                root.sortChildren(Settings.FieldCodes.DESCRIPTION);
+                root.sortChildren(FieldCodes.DESCRIPTION);
                 assertEquals(gA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(gB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(gC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -496,7 +496,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(rootNode);
 
-                rootNode.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                rootNode.sortChildren(FieldCodes.CREATION_TIME);
                 assertEquals(groupInfoA, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(0)).getUserObject());
                 assertEquals(groupInfoB, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(1)).getUserObject());
                 assertEquals(groupInfoC, ((SortableDefaultMutableTreeNode) rootNode.getChildAt(2)).getUserObject());
@@ -533,7 +533,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(groupNode);
 
-                groupNode.sortChildren(Settings.FieldCodes.DESCRIPTION);
+                groupNode.sortChildren(FieldCodes.DESCRIPTION);
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(1)).getUserObject());
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) groupNode.getChildAt(2)).getUserObject());
@@ -571,7 +571,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.FILM_REFERENCE);
+                root.sortChildren(FieldCodes.FILM_REFERENCE);
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -608,7 +608,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.COMMENT);
+                root.sortChildren(FieldCodes.COMMENT);
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -646,7 +646,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.PHOTOGRAPHER);
+                root.sortChildren(FieldCodes.PHOTOGRAPHER);
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -683,7 +683,7 @@ class SortableDefaultMutableTreeNodeTest {
                 root.add(new SortableDefaultMutableTreeNode(pA));
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
-                root.sortChildren(Settings.FieldCodes.COPYRIGHT_HOLDER);
+                root.sortChildren(FieldCodes.COPYRIGHT_HOLDER);
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -721,7 +721,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                root.sortChildren(FieldCodes.CREATION_TIME);
                 assertEquals(pE, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -753,7 +753,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                root.sortChildren(FieldCodes.CREATION_TIME);
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -783,7 +783,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.CREATION_TIME);
+                root.sortChildren(FieldCodes.CREATION_TIME);
                 assertEquals(pC, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(pB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());
                 assertEquals(pA, ((SortableDefaultMutableTreeNode) root.getChildAt(2)).getUserObject());
@@ -817,7 +817,7 @@ class SortableDefaultMutableTreeNodeTest {
                 final var pictureCollection = new PictureCollection();
                 pictureCollection.getRootNode().add(root);
 
-                root.sortChildren(Settings.FieldCodes.DESCRIPTION);
+                root.sortChildren(FieldCodes.DESCRIPTION);
 
                 assertEquals(gA, ((SortableDefaultMutableTreeNode) root.getChildAt(0)).getUserObject());
                 assertEquals(gB, ((SortableDefaultMutableTreeNode) root.getChildAt(1)).getUserObject());

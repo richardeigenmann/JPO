@@ -1271,7 +1271,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @param sortField        which attribute to use in the comparison
      * @return negative number if this is less than or Zero if same or positive number if other is less than this
      */
-    public int compareTo(final @NotNull PictureInfo otherPictureInfo, final Settings.FieldCodes sortField) {
+    public int compareTo(final @NotNull PictureInfo otherPictureInfo, final FieldCodes sortField) {
         return switch (sortField) {
             case FILM_REFERENCE -> this.getFilmReference().compareTo(otherPictureInfo.getFilmReference());
             case CREATION_TIME -> compareDates(this.getCreationTimeAsDate(), otherPictureInfo.getCreationTimeAsDate());

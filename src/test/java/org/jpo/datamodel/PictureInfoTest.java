@@ -508,39 +508,39 @@ class PictureInfoTest {
     void compareTo() {
         final var pictureInfo1 = new PictureInfo(new File("File1.jpg"), "First PictureInfo");
         final var pictureInfo2 = new PictureInfo(new File("File2.jpg"), "Second PictureInfo");
-        assert (pictureInfo1.compareTo(pictureInfo2, Settings.FieldCodes.DESCRIPTION) < 0);
-        assert (pictureInfo2.compareTo(pictureInfo1, Settings.FieldCodes.DESCRIPTION) > 0);
-        assert (pictureInfo1.compareTo(pictureInfo1, Settings.FieldCodes.DESCRIPTION) == 0);
+        assert (pictureInfo1.compareTo(pictureInfo2, FieldCodes.DESCRIPTION) < 0);
+        assert (pictureInfo2.compareTo(pictureInfo1, FieldCodes.DESCRIPTION) > 0);
+        assert (pictureInfo1.compareTo(pictureInfo1, FieldCodes.DESCRIPTION) == 0);
 
         pictureInfo1.setFilmReference("Reference 1");
         pictureInfo2.setFilmReference("Reference 2");
-        assert (pictureInfo1.compareTo(pictureInfo2, Settings.FieldCodes.FILM_REFERENCE) < 0);
-        assert (pictureInfo2.compareTo(pictureInfo1, Settings.FieldCodes.FILM_REFERENCE) > 0);
-        assert (pictureInfo1.compareTo(pictureInfo1, Settings.FieldCodes.FILM_REFERENCE) == 0);
+        assert (pictureInfo1.compareTo(pictureInfo2, FieldCodes.FILM_REFERENCE) < 0);
+        assert (pictureInfo2.compareTo(pictureInfo1, FieldCodes.FILM_REFERENCE) > 0);
+        assert (pictureInfo1.compareTo(pictureInfo1, FieldCodes.FILM_REFERENCE) == 0);
 
         pictureInfo1.setCreationTime("2021-10-02 at 14.43.23");
         pictureInfo2.setCreationTime("2021-10-02 at 14.43.24");
-        assert (pictureInfo1.compareTo(pictureInfo2, Settings.FieldCodes.CREATION_TIME) < 0);
-        assert (pictureInfo2.compareTo(pictureInfo1, Settings.FieldCodes.CREATION_TIME) > 0);
-        assert (pictureInfo1.compareTo(pictureInfo1, Settings.FieldCodes.CREATION_TIME) == 0);
+        assert (pictureInfo1.compareTo(pictureInfo2, FieldCodes.CREATION_TIME) < 0);
+        assert (pictureInfo2.compareTo(pictureInfo1, FieldCodes.CREATION_TIME) > 0);
+        assert (pictureInfo1.compareTo(pictureInfo1, FieldCodes.CREATION_TIME) == 0);
 
         pictureInfo1.setComment("Comment 1");
         pictureInfo2.setComment("Comment 2");
-        assert (pictureInfo1.compareTo(pictureInfo2, Settings.FieldCodes.COMMENT) < 0);
-        assert (pictureInfo2.compareTo(pictureInfo1, Settings.FieldCodes.COMMENT) > 0);
-        assert (pictureInfo1.compareTo(pictureInfo1, Settings.FieldCodes.COMMENT) == 0);
+        assert (pictureInfo1.compareTo(pictureInfo2, FieldCodes.COMMENT) < 0);
+        assert (pictureInfo2.compareTo(pictureInfo1, FieldCodes.COMMENT) > 0);
+        assert (pictureInfo1.compareTo(pictureInfo1, FieldCodes.COMMENT) == 0);
 
         pictureInfo1.setPhotographer("Photographer 1");
         pictureInfo2.setPhotographer("Photographer 2");
-        assert (pictureInfo1.compareTo(pictureInfo2, Settings.FieldCodes.PHOTOGRAPHER) < 0);
-        assert (pictureInfo2.compareTo(pictureInfo1, Settings.FieldCodes.PHOTOGRAPHER) > 0);
-        assert (pictureInfo1.compareTo(pictureInfo1, Settings.FieldCodes.PHOTOGRAPHER) == 0);
+        assert (pictureInfo1.compareTo(pictureInfo2, FieldCodes.PHOTOGRAPHER) < 0);
+        assert (pictureInfo2.compareTo(pictureInfo1, FieldCodes.PHOTOGRAPHER) > 0);
+        assert (pictureInfo1.compareTo(pictureInfo1, FieldCodes.PHOTOGRAPHER) == 0);
 
         pictureInfo1.setCopyrightHolder("Copyright 1");
         pictureInfo2.setCopyrightHolder("Copyright 2");
-        assert (pictureInfo1.compareTo(pictureInfo2, Settings.FieldCodes.COPYRIGHT_HOLDER) < 0);
-        assert (pictureInfo2.compareTo(pictureInfo1, Settings.FieldCodes.COPYRIGHT_HOLDER) > 0);
-        assert (pictureInfo1.compareTo(pictureInfo1, Settings.FieldCodes.COPYRIGHT_HOLDER) == 0);
+        assert (pictureInfo1.compareTo(pictureInfo2, FieldCodes.COPYRIGHT_HOLDER) < 0);
+        assert (pictureInfo2.compareTo(pictureInfo1, FieldCodes.COPYRIGHT_HOLDER) > 0);
+        assert (pictureInfo1.compareTo(pictureInfo1, FieldCodes.COPYRIGHT_HOLDER) == 0);
     }
 
 }

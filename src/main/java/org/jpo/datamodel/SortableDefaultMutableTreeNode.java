@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.datamodel.Settings.FieldCodes;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.JpoTransferable;
 
@@ -392,6 +391,8 @@ public class SortableDefaultMutableTreeNode
     public PictureCollection getPictureCollection() {
         return getRoot().myPictureCollection;
     }
+
+
 
     /**
      * Call this method to sort the Children of a node by a field.

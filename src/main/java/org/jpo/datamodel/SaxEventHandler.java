@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.datamodel.Settings.FieldCodes.*;
+import static org.jpo.datamodel.FieldCodes.*;
 
 /*
  Copyright (C) 2017-2025 Richard Eigenmann.
@@ -58,7 +58,7 @@ public class SaxEventHandler extends DefaultHandler {
      * variable used to interpret what the text is that is coming in through the
      * parser.
      */
-    private Settings.FieldCodes currentField;
+    private FieldCodes currentField;
 
     /**
      * Constructs the Sax XML parser

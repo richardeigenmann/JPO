@@ -12,9 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.*;
 import java.util.List;
 import java.util.Queue;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
@@ -2422,28 +2422,5 @@ public class Settings {
 
 
 
-    /**
-     * Codes to indicate the field
-     */
-    public enum FieldCodes {
-        NO_SORTING,
-        DESCRIPTION,
-        FILE_URL,
-        FILE,
-        FILE_LOWRES_URL,
-        FILM_REFERENCE,
-        CREATION_TIME,
-        COMMENT,
-        PHOTOGRAPHER,
-        COPYRIGHT_HOLDER,
-        ROTATION,
-        LATLNG,
-        CHECKSUM,
-        SHA256,
-        CATEGORIES,
-        CATEGORY,
-        CATEGORY_DESCRIPTION,
-        IGNORE
-    }
 
 }
