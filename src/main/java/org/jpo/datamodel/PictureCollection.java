@@ -176,7 +176,7 @@ public class PictureCollection {
         } else {
             try {
                 SwingUtilities.invokeAndWait(runnable);
-            } catch (InterruptedException | InvocationTargetException ex) {
+            } catch (InterruptedException | InvocationTargetException _) {
                 Thread.currentThread().interrupt();
             }
         }
@@ -674,7 +674,7 @@ public class PictureCollection {
     public boolean isMailSelected(final SortableDefaultMutableTreeNode node) {
         try {
             return mailSelection.contains(node);
-        } catch (final NullPointerException x) {
+        } catch (final NullPointerException _) {
             return false;
         }
     }
@@ -969,7 +969,7 @@ public class PictureCollection {
     public boolean isSelected(final SortableDefaultMutableTreeNode node) {
         try {
             return selection.contains(node);
-        } catch (final NullPointerException x) {
+        } catch (final NullPointerException _) {
             return false;
         }
     }
