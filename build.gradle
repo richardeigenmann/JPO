@@ -10,7 +10,7 @@ plugins {
     id("com.gradleup.shadow") version "9.2.2"
 }
 
-version = 0.24
+version = 0.25
 group = 'org.jpo'
 
 repositories {
@@ -286,7 +286,7 @@ jar {
                 'Permissions': 'all-permissions'
         )
         attributes(
-                [ "Copy": "(c) 2001-2024, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
+                [ "Copy": "(c) 2001-2025, Richard Eigenmann, Zürich, Switzerland" ], "Copyright"
         )
     }
     into ('org/jpo/images') { from 'src/images' }
@@ -329,7 +329,7 @@ javadoc.onlyIf { !project.hasProperty('skipJavadoc') }
 javadoc {
     options.encoding = "UTF-8"
     options.addBooleanOption('-enable-preview', true)
-    options.addStringOption('-release', '24')
+    options.addStringOption('-release', '25')
     // gradle doesn't copy the doc-files images!
     // this option is ignored
     options.docFilesSubDirs = true
