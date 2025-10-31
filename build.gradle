@@ -219,6 +219,14 @@ test {
         junitXml.required = true
         html.required = true
     }
+
+    // This setting passes arguments directly to the JVM running your tests.
+    // It is necessary because AssertJ-Swing's underlying utility (FEST-Reflect)
+    // uses reflection to access internal Java APIs (like java.util.TimerTask),
+    // which are locked down by the Java Module System (Jigsaw) in Java 9 and newer.
+    jvmArgs = [
+            '--add-opens', 'java.base/java.util=ALL-UNNAMED'
+    ]
 }
 
 /* To turn on FINE Logging add this block to the class after the LOGGER definition:
