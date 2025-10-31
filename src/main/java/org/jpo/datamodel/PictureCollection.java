@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -133,10 +134,10 @@ public class PictureCollection {
      * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException When no good
      */
-    public static void fileLoad(final File fileToLoad, final SortableDefaultMutableTreeNode node, final ProgressTracker progressTracker, final Runnable onFileLoaded) throws FileNotFoundException {
+    public static void fileLoad(final File fileToLoad, final SortableDefaultMutableTreeNode node, final ProgressTracker progressTracker, final Runnable onFileLoaded, final Consumer<StringBuilder> onLowresTagsFound) throws FileNotFoundException {
         LOGGER.log(Level.INFO, "Loading file: {0}", fileToLoad);
         final InputStream is = new FileInputStream(fileToLoad);
-        streamLoad(is, node, progressTracker, onFileLoaded);
+        streamLoad(is, node, progressTracker, onFileLoaded, onLowresTagsFound);
     }
 
     /**
@@ -145,10 +146,10 @@ public class PictureCollection {
      * @param is   The InputStream that is to be loaded.
      * @param node the node to load it into
      */
-    public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node, final ProgressTracker progressTracker, final Runnable onFileLoaded) {
+    public static void streamLoad(final InputStream is, final SortableDefaultMutableTreeNode node, final ProgressTracker progressTracker, final Runnable onFileLoaded, final Consumer<StringBuilder> onLowresTagsFound ) {
         final var pictureCollection = node.getPictureCollection();
         pictureCollection.setSendModelUpdates(false); // turn off model notification of each add for performance
-        XmlReader.read(is, node, progressTracker);
+        XmlReader.read(is, node, progressTracker, onLowresTagsFound );
         pictureCollection.setSendModelUpdates(true);
         pictureCollection.sendNodeStructureChanged(node);
         onFileLoaded.run();
@@ -784,7 +785,7 @@ public class PictureCollection {
      * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException bubble-up exception
      */
-    public void fileLoad(File file, final ProgressTracker progressTracker, final Runnable onCollectionCleared, final Runnable onFileLoaded) throws FileNotFoundException {
+    public void fileLoad(File file, final ProgressTracker progressTracker, final Runnable onCollectionCleared, final Runnable onFileLoaded,final Consumer<StringBuilder> onLowresTagsFound) throws FileNotFoundException {
         if (fileLoading) {
             LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass());
             return;
@@ -797,7 +798,9 @@ public class PictureCollection {
                     getXmlFile(),
                     getRootNode(),
                     progressTracker,
-                    onFileLoaded);
+                    onFileLoaded,
+                    onLowresTagsFound
+            );
             addYearQueries();
             addCategoriesQueries();
             fileLoading = false;

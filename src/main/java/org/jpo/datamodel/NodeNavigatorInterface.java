@@ -1,7 +1,7 @@
 package org.jpo.datamodel;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2025 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -15,6 +15,7 @@ package org.jpo.datamodel;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
+
 /**
  * This interface defines the methods that a "set of nodes" must implement so
  * that the Controller can identify the Nodes to be displayed.

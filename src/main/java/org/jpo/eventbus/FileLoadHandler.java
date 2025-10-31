@@ -61,7 +61,8 @@ public class FileLoadHandler {
                             fileToLoad,
                             loadProgressGui,
                             () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection())),
-                            () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection()))
+                            () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection())),
+                            lowresUrls -> JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls))
                     );
                     Settings.pushRecentCollection(fileToLoad.toString(), () -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()));
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());

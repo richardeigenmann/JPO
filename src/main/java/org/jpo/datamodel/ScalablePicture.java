@@ -2,7 +2,6 @@ package org.jpo.datamodel;
 
 import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.SourcePictureListener;
 import org.jpo.gui.swing.PictureControllerImage;
 
 import javax.imageio.*;

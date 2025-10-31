@@ -60,7 +60,9 @@ public class AddCollectionToGroupHandler {
                     fileToLoad, 
                     newNode,
                     loadProgressGui,
-                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection())));
+                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection())),
+                    lowresUrls -> JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls))
+            );
         } catch (final FileNotFoundException x) {
             LOGGER.severe(x.getMessage());
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),

@@ -5,7 +5,6 @@ import org.jetbrains.annotations.TestOnly;
 import org.jpo.cache.ImageBytes;
 import org.jpo.cache.JpoCache;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.SourcePictureListener;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;

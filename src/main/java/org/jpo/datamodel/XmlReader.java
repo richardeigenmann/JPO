@@ -1,7 +1,5 @@
 package org.jpo.datamodel;
 
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.RemoveOldLowresThumbnailsRequest;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -12,6 +10,7 @@ import javax.xml.parsers.SAXParserFactory;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,8 +50,9 @@ public class XmlReader {
      * @param inputStream The stream which is to be parsed
      * @param startNode   The node that becomes the root node for the nodes being. It is modified!
      *                    read.
+     * @param onLowresTagsFound Lambda to call if lowres files were found while parsing the xml
      */
-    public static void read(final InputStream inputStream, final SortableDefaultMutableTreeNode startNode, final ProgressTracker progressTracker) {
+    public static void read(final InputStream inputStream, final SortableDefaultMutableTreeNode startNode, final ProgressTracker progressTracker, final Consumer<StringBuilder> onLowresTagsFound) {
         final var bufferedInputStream = new BufferedInputStream(inputStream);
 
         final var lowresUrls = new StringBuilder();
@@ -91,7 +91,7 @@ public class XmlReader {
 
         if ( lowresUrls.length() > 1 ) {
             LOGGER.log(Level.FINE, "lowresUrls length is {0}", lowresUrls.length());
-            JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls));
+            onLowresTagsFound.accept(lowresUrls);
         }
     }
 

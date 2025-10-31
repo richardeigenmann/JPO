@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowGroupRequest;
 import org.jpo.eventbus.ShowQueryRequest;
 import org.jpo.gui.swing.MapViewer;
@@ -20,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,7 +59,6 @@ public class MapWindow {
     public MapWindow() {
         mapPanel.setLayout(new BorderLayout());
         mapPanel.add(mapViewer.getJXMapViewer(), BorderLayout.CENTER);
-        JpoEventBus.getInstance().register(this);
     }
 
     /**

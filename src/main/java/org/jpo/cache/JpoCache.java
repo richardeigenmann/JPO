@@ -21,9 +21,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /*
- Copyright (C) 2014-2024 Richard Eigenmann.
+ Copyright (C) 2014-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -120,7 +119,7 @@ public class JpoCache {
         try {
             ccfUrl = ClassLoader.getSystemResources(CACHE_DEFINITION_FILE).nextElement();
             LOGGER.log(Level.FINE, "Cache definition file found at: {0}", ccfUrl);
-        } catch (IOException e) {
+        } catch (IOException _) {
             LOGGER.log(Level.SEVERE, "Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
             return properties;
         }

@@ -1,7 +1,5 @@
 package org.jpo.gui;
 /*
- ThumbnailLayoutManger.java:  a Layout Manager for the Thumbnail pane
-
  Copyright (C) 2006-2025 Richard Eigenmann (for the modifications over the original I copied)
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License

@@ -1,7 +1,5 @@
 package org.jpo.gui.swing;
 
-import org.jpo.testground.PlayWithFontAwesome;
-
 import java.awt.*;
 import java.io.IOException;
 import java.util.Objects;
@@ -9,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2020-2024 Richard Eigenmann.
+ Copyright (C) 2020-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -43,8 +41,8 @@ public class FontAwesomeFont {
     private static Font fontAwesomeSolid24;
 
     static {
-        try (final var regular = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf");
-             final var solid = PlayWithFontAwesome.class.getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
+        try (final var regular = FontAwesomeFont.class.getResourceAsStream("/Font Awesome 5 Free-Regular-400.otf");
+             final var solid = FontAwesomeFont.class.getResourceAsStream("/Font Awesome 5 Free-Solid-900.otf")) {
             final var baseFontRegular = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(regular));
             fontAwesomeRegular24 = baseFontRegular.deriveFont(Font.PLAIN, 24f);
             fontAwesomeRegular18 = baseFontRegular.deriveFont(Font.PLAIN, 18f);

@@ -105,7 +105,7 @@ public class MainWindow extends ResizableJFrame {
         try {
             final var Windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             UIManager.setLookAndFeel(Windows);
-        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e) {
+        } catch (final ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException _) {
             LOGGER.fine("Could not set Look and Feel");
         }
 
@@ -126,6 +126,7 @@ public class MainWindow extends ResizableJFrame {
         statsScroller.getVerticalScrollBar().setUnitIncrement(20);
 
         final var mapWindow = new MapWindow();
+        JpoEventBus.getInstance().register(mapWindow);
 
         switch (Settings.getStartupSizeChoice()) {
             case 0 -> switchWindowMode(WindowSize.WINDOW_DECORATED_FULLSCREEN);
