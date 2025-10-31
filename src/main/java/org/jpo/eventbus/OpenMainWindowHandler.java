@@ -50,7 +50,8 @@ public class OpenMainWindowHandler {
         try {
             SwingUtilities.invokeAndWait(
                     () -> {
-                        new MainWindow();
+                        var mainWindow = new MainWindow();
+                        JpoEventBus.getInstance().register(mainWindow);
                         JpoEventBus.getInstance().post(new LoadDockablesPositionsRequest());
                         Settings.getPictureCollection().addTreeModelListener(new OpenMainWindowHandler.MainAppModelListener());
                     }

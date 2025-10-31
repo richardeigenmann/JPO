@@ -89,9 +89,7 @@ public class MainWindow extends ResizableJFrame {
     }
 
     private void initComponents() {
-        Settings.setMainWindow(this);
         Settings.setAnchorFrame(this);
-        JpoEventBus.getInstance().register(this);
 
         addWindowListener(new WindowAdapter() {
 

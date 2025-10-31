@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import com.google.common.collect.EvictingQueue;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.swing.MainWindow;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
@@ -43,6 +42,9 @@ import java.util.prefs.Preferences;
  */
 public class Settings {
 
+    private Settings() {
+        // Utility Class
+    }
 
     /**
      * the default value for maxThumbnails
@@ -629,8 +631,6 @@ public class Settings {
      * The locale to be used for the application
      */
     private static Locale currentLocale = Locale.getDefault();
-
-    private static MainWindow mainWindow;
 
     /**
      * Flag to prevent the showing of new version alerts
@@ -1990,7 +1990,7 @@ public class Settings {
         int i;
         n = 0;
         for (i = 0; i < Settings.MAX_USER_FUNCTIONS; i++)
-            if (userFunctionNames[i] != null && (!userFunctionNames[i].isEmpty()) && (userFunctionCmd[i] != null) && (userFunctionCmd[i].length() > 0)) {
+            if (userFunctionNames[i] != null && (!userFunctionNames[i].isEmpty()) && (userFunctionCmd[i] != null) && (!userFunctionCmd[i].isEmpty() )) {
                 prefs.put("userFunctionName-" + n, userFunctionNames[i]);
                 prefs.put("userFunctionCmd-" + n, userFunctionCmd[i]);
                 n++;
@@ -2361,14 +2361,6 @@ public class Settings {
 
     public static String[] getUserFunctionCmd() {
         return userFunctionCmd;
-    }
-
-    public static MainWindow getMainWindow() {
-        return mainWindow;
-    }
-
-    public static void setMainWindow(MainWindow newMainWindow) {
-        mainWindow = newMainWindow;
     }
 
     /**
