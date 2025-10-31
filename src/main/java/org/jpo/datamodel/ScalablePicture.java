@@ -2,7 +2,6 @@ package org.jpo.datamodel;
 
 import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.swing.PictureControllerImage;
 
 import javax.imageio.*;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
@@ -48,7 +47,7 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.*;
  * thread.
  */
 public class ScalablePicture
-        implements SourcePictureListener, PictureControllerImage {
+        implements SourcePictureListener, ScalablePictureInterface {
 
     /**
      * Defines a logger for this class

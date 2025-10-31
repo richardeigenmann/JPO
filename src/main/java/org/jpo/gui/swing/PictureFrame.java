@@ -226,6 +226,7 @@ public class PictureFrame {
      * Gets rid of the frame.
      */
     public void getRid() {
+        pictureController.getRid();
         Settings.setLastViewerCoordinates(myJFrame.getBounds());
         myJFrame.dispose();
     }

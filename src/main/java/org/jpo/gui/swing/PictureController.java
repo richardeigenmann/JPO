@@ -1,5 +1,6 @@
 package org.jpo.gui.swing;
 
+import org.jpo.datamodel.ScalablePictureInterface;
 import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.PictureControllerZoomRequest;
@@ -79,14 +80,14 @@ public class PictureController extends JComponent {
      */
     public final Point focusPoint = new Point();
 
-    private final transient PictureControllerImage pictureControllerImage;
+    private final transient ScalablePictureInterface scalablePictureInterface;
 
     /**
      * Constructs a PicturePane components.
-     * @param pictureControllerImage image
+     * @param scalablePictureInterface image
      */
-    public PictureController( final PictureControllerImage pictureControllerImage ) {
-        this.pictureControllerImage = pictureControllerImage;
+    public PictureController( final ScalablePictureInterface scalablePictureInterface) {
+        this.scalablePictureInterface = scalablePictureInterface;
         initComponents();
 
         // make graphics faster
@@ -195,7 +196,7 @@ public class PictureController extends JComponent {
      * ready and should be repainted.
      */
     public void zoomIn() {
-        final double oldScaleFactor = pictureControllerImage.getScaleFactor();
+        final double oldScaleFactor = scalablePictureInterface.getScaleFactor();
         double newScaleFactor = oldScaleFactor * 1.5;
 
         // If scaling goes from scale down to scale up, set ScaleFactor to exactly 1
@@ -204,9 +205,9 @@ public class PictureController extends JComponent {
         }
 
         // Check if the picture would get to large and cause the system to "hang"
-        if ((pictureControllerImage.getOriginalWidth() * pictureControllerImage.getScaleFactor() < Settings.getMaximumPictureSize()) && (pictureControllerImage.getOriginalHeight() * pictureControllerImage.getScaleFactor() < Settings.getMaximumPictureSize())) {
-            pictureControllerImage.setScaleFactor(newScaleFactor);
-            pictureControllerImage.createScaledPictureInThread(Thread.MAX_PRIORITY);
+        if ((scalablePictureInterface.getOriginalWidth() * scalablePictureInterface.getScaleFactor() < Settings.getMaximumPictureSize()) && (scalablePictureInterface.getOriginalHeight() * scalablePictureInterface.getScaleFactor() < Settings.getMaximumPictureSize())) {
+            scalablePictureInterface.setScaleFactor(newScaleFactor);
+            scalablePictureInterface.createScaledPictureInThread(Thread.MAX_PRIORITY);
         }
     }
 
@@ -217,8 +218,8 @@ public class PictureController extends JComponent {
      * the image is ready and should be repainted.
      */
     public void zoomOut() {
-        pictureControllerImage.setScaleFactor( pictureControllerImage.getScaleFactor() / 1.5 );
-        pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        scalablePictureInterface.setScaleFactor( scalablePictureInterface.getScaleFactor() / 1.5 );
+        scalablePictureInterface.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     /**
@@ -230,8 +231,8 @@ public class PictureController extends JComponent {
      *
      */
     public void zoomToFit() {
-        pictureControllerImage.setScaleSize( getSize() );
-        pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        scalablePictureInterface.setScaleSize( getSize() );
+        scalablePictureInterface.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     /**
@@ -241,8 +242,8 @@ public class PictureController extends JComponent {
      * ready and should be repainted.
      */
     public void zoomFull() {
-        pictureControllerImage.setScaleFactor( 1 );
-        pictureControllerImage.createScaledPictureInThread( Thread.MAX_PRIORITY );
+        scalablePictureInterface.setScaleFactor( 1 );
+        scalablePictureInterface.createScaledPictureInThread( Thread.MAX_PRIORITY );
     }
 
     ///////////////////////////////////////////////////////////////
@@ -256,9 +257,9 @@ public class PictureController extends JComponent {
      * need to take place.
      */
     public void centerImage() {
-        final int originalHeight = pictureControllerImage.getOriginalHeight();
+        final int originalHeight = scalablePictureInterface.getOriginalHeight();
         if ( originalHeight != 0 ) {
-            setCenterLocation( pictureControllerImage.getOriginalWidth() / 2, originalHeight / 2 );
+            setCenterLocation( scalablePictureInterface.getOriginalWidth() / 2, originalHeight / 2 );
             repaint();
         }
     }
@@ -283,8 +284,8 @@ public class PictureController extends JComponent {
      */
     public void scrollUp() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( pictureControllerImage.getOriginalHeight() - focusPoint.y ) * pictureControllerImage.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
-            focusPoint.y += (int) ( getSize().height * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
+        if ( ( ( scalablePictureInterface.getOriginalHeight() - focusPoint.y ) * scalablePictureInterface.getScaleFactor() ) + getSize().height / (double) 2 > getSize().height ) {
+            focusPoint.y += (int) ( getSize().height * SCROLL_FACTOR / scalablePictureInterface.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollUp rejected because bottom of picture is already showing." );
@@ -302,8 +303,8 @@ public class PictureController extends JComponent {
      * @see #scrollRight()
      */
     public void scrollDown() {
-        if ( getSize().height / (double) 2 - focusPoint.y * pictureControllerImage.getScaleFactor() < 0 ) {
-            focusPoint.y -= (int) ( getSize().height * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
+        if ( getSize().height / (double) 2 - focusPoint.y * scalablePictureInterface.getScaleFactor() < 0 ) {
+            focusPoint.y -= (int) ( getSize().height * SCROLL_FACTOR / scalablePictureInterface.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "PicturePane.scrollDown rejected because top edge is aready visible" );
@@ -323,8 +324,8 @@ public class PictureController extends JComponent {
      */
     public void scrollLeft() {
         // if the bottom edge of the picture is visible, do not scroll
-        if ( ( ( pictureControllerImage.getOriginalWidth() - focusPoint.x ) * pictureControllerImage.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
-            focusPoint.x += (int) ( getSize().width * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
+        if ( ( ( scalablePictureInterface.getOriginalWidth() - focusPoint.x ) * scalablePictureInterface.getScaleFactor() ) + getSize().width / (double) 2 > getSize().width ) {
+            focusPoint.x += (int) ( getSize().width * SCROLL_FACTOR / scalablePictureInterface.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollLeft rejected because right edge of picture is already showing." );
@@ -343,8 +344,8 @@ public class PictureController extends JComponent {
      * @see #scrollRight()
      */
     public void scrollRight() {
-        if ( getSize().width / (double) 2 - focusPoint.x * pictureControllerImage.getScaleFactor() < 0 ) {
-            focusPoint.x -= (int) ( getSize().width * SCROLL_FACTOR / pictureControllerImage.getScaleFactor() );
+        if ( getSize().width / (double) 2 - focusPoint.x * scalablePictureInterface.getScaleFactor() < 0 ) {
+            focusPoint.x -= (int) ( getSize().width * SCROLL_FACTOR / scalablePictureInterface.getScaleFactor() );
             repaint();
         } else {
             LOGGER.warning( "scrollRight rejected because left edge is aready visible" );
@@ -379,11 +380,11 @@ public class PictureController extends JComponent {
         final int windowWidth = getSize().width;
         final int windowHeight = getSize().height;
 
-        if ( pictureControllerImage.getScaledPicture() != null ) {
+        if ( scalablePictureInterface.getScaledPicture() != null ) {
             Graphics2D g2d = (Graphics2D) g;
 
-            final int xOffset = (int) ((windowWidth / 2.0) - (focusPoint.x * pictureControllerImage.getScaleFactor()));
-            final int yOffset = (int) ((windowHeight / 2.0) - (focusPoint.y * pictureControllerImage.getScaleFactor()));
+            final int xOffset = (int) ((windowWidth / 2.0) - (focusPoint.x * scalablePictureInterface.getScaleFactor()));
+            final int yOffset = (int) ((windowHeight / 2.0) - (focusPoint.y * scalablePictureInterface.getScaleFactor()));
 
             // clear damaged component area
             final Rectangle clipBounds = g2d.getClipBounds();
@@ -393,7 +394,7 @@ public class PictureController extends JComponent {
                     clipBounds.width,
                     clipBounds.height);
 
-            g2d.drawRenderedImage(pictureControllerImage.getScaledPicture(), AffineTransform.getTranslateInstance(xOffset, yOffset));
+            g2d.drawRenderedImage(scalablePictureInterface.getScaledPicture(), AffineTransform.getTranslateInstance(xOffset, yOffset));
 
         } else {
             // paint a black square
@@ -444,8 +445,8 @@ public class PictureController extends JComponent {
                 final int yOffset = e.getY() - (windowHeight / 2);
 
                 setCenterLocation(
-                        focusPoint.x + (int) (xOffset / pictureControllerImage.getScaleFactor()),
-                        focusPoint.y + (int) (yOffset / pictureControllerImage.getScaleFactor()));
+                        focusPoint.x + (int) (xOffset / scalablePictureInterface.getScaleFactor()),
+                        focusPoint.y + (int) (yOffset / scalablePictureInterface.getScaleFactor()));
                 centerWhenScaled = false;
                 JpoEventBus.getInstance().post(new PictureControllerZoomRequest(PictureController.this, Zoom.IN));
             }
@@ -470,8 +471,8 @@ public class PictureController extends JComponent {
                 int x = e.getX();
                 int y = e.getY();
 
-                focusPoint.setLocation((int) (focusPoint.x + ((lastX - x) / pictureControllerImage.getScaleFactor())),
-                        (int) (focusPoint.y + ((lastY - y) / pictureControllerImage.getScaleFactor())));
+                focusPoint.setLocation((int) (focusPoint.x + ((lastX - x) / scalablePictureInterface.getScaleFactor())),
+                        (int) (focusPoint.y + ((lastY - y) / scalablePictureInterface.getScaleFactor())));
                 lastX = x;
                 lastY = y;
 

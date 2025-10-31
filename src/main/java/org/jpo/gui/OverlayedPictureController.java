@@ -59,7 +59,10 @@ public class OverlayedPictureController extends PictureController implements Sca
         } else {
             scalablePicture.setQualityScale();
         }
+    }
 
+    public void getRid() {
+        scalablePicture.removeStatusListener(this);
     }
 
     /**

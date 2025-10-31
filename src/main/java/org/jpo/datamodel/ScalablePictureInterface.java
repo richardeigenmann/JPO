@@ -1,10 +1,10 @@
-package org.jpo.gui.swing;
+package org.jpo.datamodel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,7 +25,7 @@ import java.awt.image.BufferedImage;
  *
  * @author Richard Eigenmann
  */
-public interface PictureControllerImage {
+public interface ScalablePictureInterface {
 
     /**
      * The implementing image provider needs to return the scale factor to which the image is scaled
