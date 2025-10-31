@@ -3,7 +3,7 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.JpoResources;
 

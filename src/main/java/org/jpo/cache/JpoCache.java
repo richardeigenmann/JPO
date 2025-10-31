@@ -7,6 +7,7 @@ import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
+import org.jpo.gui.Settings;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,6 +1,6 @@
 package org.jpo.testground;
 
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.gui.ThumbnailLayoutManager;
 
 import javax.swing.*;

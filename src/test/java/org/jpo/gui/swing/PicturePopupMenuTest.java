@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
+import org.jpo.gui.Settings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +23,8 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -53,7 +53,7 @@ class PicturePopupMenuTest {
     public static final String MY_PICTURE = "My Picture";
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         FailOnThreadViolationRepaintManager.install();
     }

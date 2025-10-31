@@ -3,6 +3,7 @@ package org.jpo.gui.swing;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.ExportGroupToFlatFileRequest;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 import org.jpo.gui.swing.FlatFileDistiller.DistillerResult;
 
 import javax.swing.*;

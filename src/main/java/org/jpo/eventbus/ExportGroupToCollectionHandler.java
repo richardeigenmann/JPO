@@ -2,6 +2,11 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.JpoWriter;
+import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
+
+import javax.swing.*;
+import java.util.concurrent.ExecutionException;
 
 /*
  Copyright (C) 2022-2025 Richard Eigenmann.
@@ -27,7 +32,50 @@ public class ExportGroupToCollectionHandler {
      */
     @Subscribe
     public void handleEvent(final ExportGroupToCollectionRequest request) {
-        JpoWriter.writeInThread(request);
+        new SwingWorker<Void, Void>() {
+            /**
+             * Runs the long-running task off the EDT.
+             */
+            @Override
+            protected Void doInBackground() throws Exception {
+                // The actual blocking I/O operation
+                JpoWriter.write(request);
+                return null;
+            }
+
+            /**
+             * Executes on the Event Dispatch Thread (EDT) after doInBackground() completes.
+             * This is where UI updates (like JOptionPane) must occur.
+             */
+            @Override
+            protected void done() {
+                try {
+                    // Calling get() checks the result. If write(request) threw an exception,
+                    // get() wraps and re-throws it as an ExecutionException.
+                    get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt(); // Restore the interrupt status
+                    showError(e);
+                } catch (ExecutionException e) {
+                    // FAILURE: The exception thrown by write(request) is caught here
+                    // e.getCause() gives you the original exception
+                    showError(e.getCause());
+                }
+            }
+
+            /**
+             * Helper to safely display the error message on the EDT.
+             */
+            private void showError(Throwable e) {
+                JOptionPane.showMessageDialog(
+                        Settings.getAnchorFrame(),
+                        e.getMessage(),
+                        JpoResources.getResource("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }.execute(); // Execute starts the background thread
+
+
     }
 
 }

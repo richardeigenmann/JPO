@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
 import org.jpo.eventbus.JpoEventBus;

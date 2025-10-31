@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import com.google.common.hash.Hashing;
 import org.jpo.datamodel.ScalablePicture;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SourcePicture;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2024 Richard Eigenmann.
+ Copyright (C) 2024-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -43,10 +42,9 @@ class ScalablePictureTest {
     private static final String EXIF_TEST_NIKON_D_100_1_JPG = "exif-test-nikon-d100-1.jpg";
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         Settings.loadSettings(); // We need to start the cache
     }
-
 
     /**
      * Test that we can load a source image

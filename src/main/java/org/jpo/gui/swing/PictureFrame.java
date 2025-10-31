@@ -3,7 +3,7 @@ package org.jpo.gui.swing;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.ScalablePicture;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.OverlayedPictureController;

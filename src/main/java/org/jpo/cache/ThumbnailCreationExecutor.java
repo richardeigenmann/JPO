@@ -16,7 +16,7 @@ package org.jpo.cache;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import java.util.ArrayList;
 import java.util.Collection;

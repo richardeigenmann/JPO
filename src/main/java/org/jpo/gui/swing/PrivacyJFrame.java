@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.RecentCollectionsChangedEvent;

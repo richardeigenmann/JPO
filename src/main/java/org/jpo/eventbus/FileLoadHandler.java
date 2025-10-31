@@ -2,7 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureCollection;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.swing.LabelFrame;
 
@@ -61,10 +61,9 @@ public class FileLoadHandler {
                             fileToLoad,
                             loadProgressGui,
                             () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection())),
-                            () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection())),
                             lowresUrls -> JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls))
                     );
-                    Settings.pushRecentCollection(fileToLoad.toString(), () -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()));
+                    Settings.pushRecentCollection(fileToLoad.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
                     JpoEventBus.getInstance().post(new ShowGroupRequest(request.pictureCollection().getRootNode()));
                     JpoEventBus.getInstance().post(new CheckForCollectionProblemsRequest(request.pictureCollection()));

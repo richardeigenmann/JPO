@@ -19,7 +19,7 @@ package org.jpo.gui.swing;
 import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.CollectionLockNotification;
 import org.jpo.eventbus.JpoEventBus;

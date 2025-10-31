@@ -5,6 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.JpoTransferable;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;

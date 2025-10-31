@@ -4,7 +4,6 @@ import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.DialogFixture;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

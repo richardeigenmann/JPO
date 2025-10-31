@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.datamodel.Settings;
 import org.jpo.generated.GeneratedVersion;
 import org.json.JSONObject;
 

@@ -9,7 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.DirectoryChooser;
 import org.jpo.gui.JpoResources;

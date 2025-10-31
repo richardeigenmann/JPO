@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 

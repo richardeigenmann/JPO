@@ -2,7 +2,7 @@ package org.jpo.gui.swing;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;

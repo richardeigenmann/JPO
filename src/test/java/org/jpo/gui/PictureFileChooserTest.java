@@ -8,7 +8,6 @@ import org.assertj.swing.fixture.DialogFixture;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.ChooseAndAddPicturesToGroupRequest;
 import org.junit.jupiter.api.AfterEach;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Fail.fail;
@@ -50,12 +48,10 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 class PictureFileChooserTest {
 
-    private static final Logger LOGGER = Logger.getLogger(PictureFileChooserTest.class.getName());
-
     private Robot robot;
 
     @BeforeAll
-    public static void setUpOnce() {
+    static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
@@ -100,7 +96,7 @@ class PictureFileChooserTest {
         // Wait for the executor task to complete to ensure clean shutdown
         try {
             executor.awaitTermination(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException _) {
             fail("Didn't terminate");
         }
         executor.shutdownNow();
@@ -132,7 +128,7 @@ class PictureFileChooserTest {
         dialogFixture.requireNotVisible();
         try {
             executor.awaitTermination(1, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
+        } catch (InterruptedException _) {
             fail("Didn't terminate");
         }
         executor.shutdownNow();

@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jetbrains.annotations.NotNull;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;

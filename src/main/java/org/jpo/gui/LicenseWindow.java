@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.apache.commons.io.IOUtils;
-import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import java.awt.*;

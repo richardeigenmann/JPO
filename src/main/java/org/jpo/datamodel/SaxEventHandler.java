@@ -102,9 +102,7 @@ public class SaxEventHandler extends DefaultHandler {
             }
 
             currentGroup.setUserObject(groupInfo);
-            currentGroup.getPictureCollection().setAllowEdits(
-                    attrs.getValue( "collection_protected" ).equals( "No" ),
-                    () -> {} );
+            currentGroup.getPictureCollection().setAllowEdits(attrs.getValue( "collection_protected" ).equals( "No" ));
         } else if ( "group".equalsIgnoreCase( qName ) && attrs != null ) {
             incrementGroupCount();
             groupInfo = new GroupInfo( attrs.getValue( "group_name" ) != null ? attrs.getValue( "group_name" ) : "" );

@@ -1,11 +1,13 @@
-package org.jpo.datamodel;
+package org.jpo.eventbus;
 
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.eventbus.AddFlatFileRequest;
-import org.jpo.eventbus.JpoEventBus;
-import org.jpo.eventbus.ShowGroupRequest;
+import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.JpoImageIO;
+import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 import java.io.*;

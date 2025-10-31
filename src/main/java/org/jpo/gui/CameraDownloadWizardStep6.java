@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import net.javaprog.ui.wizard.AbstractStep;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortOption;
 
 import javax.swing.*;

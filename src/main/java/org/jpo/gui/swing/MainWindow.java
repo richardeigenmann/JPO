@@ -5,7 +5,7 @@ import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.eventbus.*;
 import org.jpo.gui.*;
 

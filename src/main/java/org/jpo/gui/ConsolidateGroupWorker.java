@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import org.jetbrains.annotations.NotNull;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 import org.jspecify.annotations.NonNull;

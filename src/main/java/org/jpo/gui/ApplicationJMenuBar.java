@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
@@ -250,8 +249,8 @@ public class ApplicationJMenuBar extends JMenuBar {
             editCamerasJMenuItem.addActionListener((ActionEvent e) -> JpoEventBus.getInstance().post(new EditCamerasRequest()));
             add(editCamerasJMenuItem);
 
-            editModeJMenuItem.addActionListener((ActionEvent e) -> Settings.getPictureCollection().setAllowEdits(! Settings.getPictureCollection().getAllowEdits(),
-                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection())) ));
+            editModeJMenuItem.addActionListener((ActionEvent e) -> Settings.getPictureCollection().setAllowEdits(! Settings.getPictureCollection().getAllowEdits()));
+            JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection()));
             add(editModeJMenuItem);
 
             editSettingsJMenuItem.setMnemonic(KeyEvent.VK_S);

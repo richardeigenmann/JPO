@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
 

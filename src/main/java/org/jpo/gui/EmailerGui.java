@@ -3,7 +3,6 @@ package org.jpo.gui;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.ListNavigator;
 import org.jpo.datamodel.PictureCollection;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.swing.WholeNumberField;
 

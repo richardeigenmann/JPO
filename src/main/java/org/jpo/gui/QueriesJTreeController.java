@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.Query;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.ShowQueryRequest;

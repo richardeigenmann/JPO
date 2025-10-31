@@ -148,7 +148,7 @@ class JpoWriterTest {
         final var node = new SortableDefaultMutableTreeNode(groupInfo);
         final var pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add(node);
-        pictureCollection.setAllowEdits(true, () -> {});
+        pictureCollection.setAllowEdits(true);
 
         final var stringWriter = new StringWriter();
         try (
@@ -177,7 +177,7 @@ class JpoWriterTest {
         final var node = new SortableDefaultMutableTreeNode(groupInfo);
         final var pictureCollection = new PictureCollection();
         pictureCollection.getRootNode().add(node);
-        pictureCollection.setAllowEdits(false, () -> {});
+        pictureCollection.setAllowEdits(false);
 
         final var stringWriter = new StringWriter();
         try (

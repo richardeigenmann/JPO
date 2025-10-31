@@ -21,6 +21,7 @@ package org.jpo.testground;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
+import org.jpo.gui.Settings;
 import org.jpo.gui.ThumbnailController;
 import org.jpo.gui.swing.ResizeSlider;
 

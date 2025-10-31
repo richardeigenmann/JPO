@@ -172,7 +172,7 @@ class PictureCollectionTest {
         // Checking that we get the same file back that we put in
         assertEquals(file, f2);
 
-        pictureCollection.clearCollection(() -> {});
+        pictureCollection.clearCollection();
         File f3 = pictureCollection.getXmlFile();
         // Check that a clearCollection sets the file name to null
         assertNull( f3 );
@@ -607,7 +607,7 @@ class PictureCollectionTest {
         try {
             final var tempFile = File.createTempFile("fileSave", ".xml");
             pictureCollection.setXmlFile(tempFile);
-            pictureCollection.fileSave( () -> {} );
+            pictureCollection.fileSave();
             assertThat(tempFile).exists();
             try (final var lines = Files.lines(tempFile.toPath())) {
                 assertEquals(89, lines.count());
@@ -623,7 +623,7 @@ class PictureCollectionTest {
         final var picCollection = new PictureCollection();
         try {
             SwingUtilities.invokeAndWait(() -> {
-                picCollection.clearCollection(() -> {});
+                picCollection.clearCollection();
             });
         } catch (final InterruptedException | InvocationTargetException ex) {
             fail(ex.getMessage());
@@ -638,7 +638,7 @@ class PictureCollectionTest {
             assertThat(tempFile).doesNotExist();
 
             picCollection.setXmlFile(tempFile);
-            picCollection.fileSave( () -> {} );
+            picCollection.fileSave();
             assertThat(tempFile).exists();
             try (final var lines = Files.lines(tempFile.toPath())) {
                 assertEquals(89, lines.count());
@@ -654,7 +654,7 @@ class PictureCollectionTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
         final var pictureCollection = getSamplePictureCollection();
         assertEquals(4, pictureCollection.getRootNode().getChildCount());
-        pictureCollection.clearCollection(() -> {});
+        pictureCollection.clearCollection();
         assertEquals(0, pictureCollection.getRootNode().getChildCount());
     }
 

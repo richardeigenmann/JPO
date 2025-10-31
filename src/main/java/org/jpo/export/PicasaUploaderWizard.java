@@ -4,7 +4,7 @@ import net.javaprog.ui.wizard.DefaultWizardModel;
 import net.javaprog.ui.wizard.Step;
 import net.javaprog.ui.wizard.Wizard;
 import net.javaprog.ui.wizard.WizardModel;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 /*
  * Copyright (C) 2012-2024 Richard Eigenmann.

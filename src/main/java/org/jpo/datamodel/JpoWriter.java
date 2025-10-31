@@ -5,9 +5,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
-import org.jpo.gui.JpoResources;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -55,22 +53,11 @@ public class JpoWriter {
     }
 
     /**
-     * Writes the collection to the file as per the request but starts a new Thread to do this.
-     *
-     * @param request The request
-     */
-    public static void writeInThread(final ExportGroupToCollectionRequest request) {
-        new Thread(()
-                -> write(request)
-        ).start();
-    }
-
-    /**
      * Writes the collection as per the request object using the tread it is called on.
      *
      * @param request The request
      */
-    public static void write(final ExportGroupToCollectionRequest request) {
+    public static void write(final ExportGroupToCollectionRequest request) throws IOException, SecurityException {
         write(request.targetFile(), request.node(), request.exportPictures());
     }
 
@@ -82,32 +69,26 @@ public class JpoWriter {
      * @param startNode     The node to start from
      * @param copyPics      whether to copy the pictures to the target dir
      */
-    private static void write(final File xmlOutputFile, final SortableDefaultMutableTreeNode startNode, final boolean copyPics) {
+    private static void write(
+            final File xmlOutputFile,
+            final SortableDefaultMutableTreeNode startNode,
+            final boolean copyPics
+        ) throws IOException, SecurityException {
         final var highresTargetDir = getHighresTargetDir(copyPics, xmlOutputFile);
         final var baseDir = startNode.getPictureCollection().getCommonPath();
-        try (final BufferedWriter xmlOutput = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlOutputFile), StandardCharsets.UTF_8))) {
-            writeXmlHeader(xmlOutput);
-            writeDTD(xmlOutput);
+        final BufferedWriter xmlOutput = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(xmlOutputFile), StandardCharsets.UTF_8));
+        writeXmlHeader(xmlOutput);
+        writeDTD(xmlOutput);
 
-            writeCollectionHeader(startNode, xmlOutput, baseDir);
-            enumerateGroup(startNode, startNode, xmlOutput, highresTargetDir, copyPics, baseDir);
-            writeCategoriesBlock(startNode.getPictureCollection(), xmlOutput);
+        writeCollectionHeader(startNode, xmlOutput, baseDir);
+        enumerateGroup(startNode, startNode, xmlOutput, highresTargetDir, copyPics, baseDir);
+        writeCategoriesBlock(startNode.getPictureCollection(), xmlOutput);
 
-            xmlOutput.write("</collection>");
-            xmlOutput.newLine();
+        xmlOutput.write("</collection>");
+        xmlOutput.newLine();
 
-            writeCollectionDTD(xmlOutputFile.getParentFile());
-        } catch (IOException x) {
-            LOGGER.log(Level.INFO, "IOException: {0}", x.getMessage());
-            JOptionPane.showMessageDialog(null, x.getMessage(),
-                    "JpoWriter: IOException",
-                    JOptionPane.ERROR_MESSAGE);
-        } catch (SecurityException x) {
-            LOGGER.log(Level.INFO, x.getMessage());
-            JOptionPane.showMessageDialog(null, x.getMessage(),
-                    "XmlDistiller: SecurityException",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        writeCollectionDTD(xmlOutputFile.getParentFile());
+        xmlOutput.close();
     }
 
     private static void writeCollectionHeader(final SortableDefaultMutableTreeNode startNode, final BufferedWriter xmlOutput, final Path baseDir) throws IOException {
@@ -376,23 +357,16 @@ public class JpoWriter {
      * Write the collection.dtd file to the target directory.
      *
      * @param directory The directory to write to
+     * @return An empty Optional on success, or an Optional containing the error message on failure.
      */
-    private static void writeCollectionDTD(final File directory) {
-        try (
-            final var bufferedInputStream = new BufferedInputStream(Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource("collection.dtd")).openStream())
-        ) {
-            final var targetFile = new File(directory, "collection.dtd");
-            Files.copy(
-                    bufferedInputStream,
-                    targetFile.toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
-        } catch (final IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    JpoResources.getResource("DtdCopyError") + e.getMessage(),
-                    JpoResources.getResource("genericWarning"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
+    private static void writeCollectionDTD(final File directory) throws IOException{
+        final var bufferedInputStream = new BufferedInputStream(Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource("collection.dtd")).openStream());
+        final var targetFile = new File(directory, "collection.dtd");
+        Files.copy(
+                bufferedInputStream,
+                targetFile.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+        bufferedInputStream.close();
     }
 
     /**
@@ -400,7 +374,7 @@ public class JpoWriter {
      * @param directory the directory to use
      */
     @TestOnly
-    public static void writeCollectionDTDTestOnly(final File directory) {
+    public static void writeCollectionDTDTestOnly(final File directory) throws IOException {
         writeCollectionDTD(directory);
     }
 

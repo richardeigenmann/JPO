@@ -4,6 +4,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;

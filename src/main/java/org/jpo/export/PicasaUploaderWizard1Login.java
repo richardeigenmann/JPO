@@ -2,7 +2,7 @@ package org.jpo.export;
 
 import net.javaprog.ui.wizard.AbstractStep;
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 import java.awt.*;

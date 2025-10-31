@@ -3,7 +3,7 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.apache.commons.io.FileUtils;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
 import org.jspecify.annotations.NonNull;

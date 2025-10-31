@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureCollection;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.*;
 
 import java.io.File;

@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jpo.datamodel.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -225,7 +224,7 @@ public class ClearThumbnailsJFrame extends JFrame {
                 try {
                     Files.delete(parentDirectory.toPath());
                     publish(String.format("Parent directory %s successfully deleted%n", parentDirectory));
-                } catch (final IOException e) {
+                } catch (final IOException _) {
                     publish(String.format("Parent directory %s failed to delete --> you have to delete this directory yourself%n", parentDirectory));
                 }
             }

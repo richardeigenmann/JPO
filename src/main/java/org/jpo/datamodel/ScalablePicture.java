@@ -2,6 +2,7 @@ package org.jpo.datamodel;
 
 import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
 import javax.imageio.*;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;

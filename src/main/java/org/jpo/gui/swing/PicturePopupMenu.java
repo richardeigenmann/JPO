@@ -6,6 +6,7 @@ import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;

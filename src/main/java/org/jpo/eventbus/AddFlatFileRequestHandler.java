@@ -1,7 +1,6 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.FlatFileReader;
 
 /*
  Copyright (C) 2023-2024 Richard Eigenmann.

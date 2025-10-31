@@ -16,8 +16,6 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
 */
 
-import org.jpo.datamodel.Settings;
-
 import java.util.ResourceBundle;
 
 /**

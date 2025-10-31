@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;

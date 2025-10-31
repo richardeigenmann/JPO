@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.PictureAdderRequest;

@@ -15,8 +15,6 @@ package org.jpo.gui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.jpo.datamodel.Settings;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;

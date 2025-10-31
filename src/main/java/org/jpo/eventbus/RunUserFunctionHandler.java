@@ -2,7 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jpo.cache.QUEUE_PRIORITY;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.*;
 

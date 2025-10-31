@@ -1,7 +1,7 @@
 package org.jpo.export;
 
 import net.javaprog.ui.wizard.*;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.eventbus.JpoEventBus;

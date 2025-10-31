@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
@@ -195,7 +194,7 @@ public class CollectionDistillerJFrame extends JFrame {
 
         Settings.memorizeCopyLocation(targetFile.getParent());
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
-        Settings.pushRecentCollection(targetFile.toString(), () -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()));
+        Settings.pushRecentCollection(targetFile.toString());
         JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
         JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                 JpoResources.getResource("collectionSaveBody") + targetFile,

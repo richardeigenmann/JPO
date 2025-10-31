@@ -1,6 +1,7 @@
 package org.jpo.datamodel;
 
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;

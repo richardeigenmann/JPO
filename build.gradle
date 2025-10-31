@@ -4,7 +4,7 @@ plugins {
     id "com.github.ben-manes.versions" version "0.53.0" // dependency updates
     id 'idea' // optional (to generate IntelliJ IDEA project files)
     id 'org.beryx.jlink' version '3.1.4-rc'
-    id "org.javamodularity.moduleplugin" version "1.8.15"
+    id "org.javamodularity.moduleplugin" version "2.0.0"
     id "org.sonarqube" version "7.0.1.6134"
     id 'jacoco'
     id("com.gradleup.shadow") version "9.2.2"

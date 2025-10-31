@@ -2,7 +2,7 @@ package org.jpo.gui.swing;
 
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.NodeStatisticsBean;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 

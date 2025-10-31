@@ -3,7 +3,7 @@ package org.jpo.gui.swing;
 import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.eventbus.CategoriesWereModified;
 import org.jpo.eventbus.CategoryAssignmentWindowRequest;
 import org.jpo.eventbus.JpoEventBus;

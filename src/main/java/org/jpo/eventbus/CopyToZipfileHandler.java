@@ -5,7 +5,7 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.JpoResources;
 
@@ -83,7 +83,7 @@ public class CopyToZipfileHandler {
                 }
             }
             zipArchiveOutputStream.finish();
-        } catch (final IOException ex) {
+        } catch (final IOException _) {
             try {
                 Files.delete(tempFile.toPath());
             } catch (final IOException e) {

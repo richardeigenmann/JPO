@@ -31,7 +31,6 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-
 /**
  * Overrides the Picture Controller with functionality to overlay the picture
  * with information

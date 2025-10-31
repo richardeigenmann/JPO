@@ -1,9 +1,12 @@
 package org.jpo.datamodel;
 
+import org.jpo.eventbus.CollectionLockNotification;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
+import org.jpo.eventbus.JpoEventBus;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -121,7 +124,7 @@ public class PictureCollection {
 
         treeModel = new DefaultTreeModel(getRootNode());
         treeModel.addTreeModelListener(new PictureCollectionTreeModelListener());
-        setAllowEdits(true, () -> {} );
+        setAllowEdits(true);
         setUnsavedUpdates(false);
     }
 
@@ -159,18 +162,17 @@ public class PictureCollection {
      * This method wipes out the data in the picture collection. As it updates
      * the TreeModel it has been made synchronous on the EDT.
      */
-    public void clearCollection(final Runnable onCollectionCleared) {
+    public void clearCollection() {
         final Runnable runnable = () -> {
             getRootNode().removeAllChildren();
             getRootNode().setUserObject(new GroupInfo(JpoResources.getResource("DefaultRootNodeText")));
             clearQueriesTreeModel();
             categories.clear();
             clearMailSelection();
-            setAllowEdits(true, onCollectionCleared);
+            setAllowEdits(true);
             setUnsavedUpdates(false);
             setXmlFile(null);
             getTreeModel().reload();
-            Settings.getRecentDropNodes().clear();
         };
         if (SwingUtilities.isEventDispatchThread()) {
             runnable.run();
@@ -345,10 +347,10 @@ public class PictureCollection {
      *
      * @param newAllowEdits pass true to allow edits, false to forbid
      */
-    public void setAllowEdits(final boolean newAllowEdits, final Runnable onLockChange) {
+    public void setAllowEdits(final boolean newAllowEdits) {
         if ( allowEdits != newAllowEdits ) {
             allowEdits = newAllowEdits;
-            onLockChange.run();
+            JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection()));
         }
     }
 
@@ -781,17 +783,16 @@ public class PictureCollection {
      *
      * @param file The file
      * @param progressTracker The progress Gui to update
-     * @param onCollectionCleared  The Lambda to call after the collection has been cleared --> Lock Icon
      * @param onFileLoaded The Lambda to call after the file has been loaded.
      * @throws FileNotFoundException bubble-up exception
      */
-    public void fileLoad(File file, final ProgressTracker progressTracker, final Runnable onCollectionCleared, final Runnable onFileLoaded,final Consumer<StringBuilder> onLowresTagsFound) throws FileNotFoundException {
+    public void fileLoad(File file, final ProgressTracker progressTracker, final Runnable onFileLoaded,final Consumer<StringBuilder> onLowresTagsFound) throws FileNotFoundException {
         if (fileLoading) {
             LOGGER.log(Level.INFO, "{0}.fileLoad: already busy loading another file. Aborting", this.getClass());
             return;
         }
         fileLoading = true;
-        clearCollection(onCollectionCleared);
+        clearCollection();
         setXmlFile(file);
         try {
             fileLoad(
@@ -845,22 +846,20 @@ public class PictureCollection {
         );
     }
 
-
     /**
      * method that saves the entire index in XML format.
-     * @param onRecentFilesChanged the Lambda to call after the file was saved. Can be used to send a message to the Gui that the recent files changed
      */
-    public void fileSave(final Runnable onRecentFilesChanged) {
+    public void fileSave() throws IOException {
         if (xmlFile == null) {
             LOGGER.severe("xmlFile is null. Not saving!");
-        } else {
-            final File temporaryFile = new File(xmlFile.getPath() + ".!!!");
-            final ExportGroupToCollectionRequest exportRequest = new ExportGroupToCollectionRequest(getRootNode(), temporaryFile, false);
-            JpoWriter.write(exportRequest);
-            replaceFile(xmlFile, temporaryFile);
-            setUnsavedUpdates(false);
-            Settings.pushRecentCollection(xmlFile.toString(), onRecentFilesChanged);
+            return;
         }
+
+        final var temporaryFile = new File(xmlFile.getPath() + ".!!!");
+        final var exportRequest = new ExportGroupToCollectionRequest(getRootNode(), temporaryFile, false);
+        JpoWriter.write(exportRequest);
+        replaceFile(xmlFile, temporaryFile);
+        setUnsavedUpdates(false);
     }
 
     /**

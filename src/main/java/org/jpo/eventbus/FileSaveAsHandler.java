@@ -1,12 +1,13 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.XmlFilter;
 
 import javax.swing.*;
+import java.io.IOException;
 
 /*
  Copyright (C) 2023-2025 Richard Eigenmann.
@@ -65,12 +66,23 @@ public class FileSaveAsHandler {
             }
 
             request.pictureCollection().setXmlFile(chosenFile);
-            request.pictureCollection().fileSave(() -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()) );
+
+            try {
+                request.pictureCollection().fileSave();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(
+                        Settings.getAnchorFrame(),
+                        e.getMessage(),
+                        JpoResources.getResource("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
 
             Settings.memorizeCopyLocation(chosenFile.getParent());
+            Settings.pushRecentCollection(chosenFile.toString());
+
             JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
-            Settings.pushRecentCollection(chosenFile.toString(), () -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()) );
-            JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
+            Settings.pushRecentCollection(chosenFile.toString());
             JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {
                 JpoEventBus.getInstance().post(request.onSuccessNextRequest());

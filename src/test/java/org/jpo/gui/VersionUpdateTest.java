@@ -1,6 +1,5 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

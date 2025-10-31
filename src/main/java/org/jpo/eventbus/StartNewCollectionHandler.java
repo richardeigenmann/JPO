@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 
@@ -34,7 +34,9 @@ public class StartNewCollectionHandler {
     public void handleEvent(final StartNewCollectionRequest event) {
         SwingUtilities.invokeLater(
                 () -> {
-                    Settings.getPictureCollection().clearCollection(() -> JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection())));
+                    Settings.getPictureCollection().clearCollection();
+                    Settings.getRecentDropNodes().clear();
+                    JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection()));
                     JpoEventBus.getInstance().post(new ShowGroupRequest(Settings.getPictureCollection().getRootNode()));
                 }
         );

@@ -2,7 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.cache.JpoCache;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import java.util.logging.Logger;
 

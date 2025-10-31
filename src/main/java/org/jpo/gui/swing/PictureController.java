@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.ScalablePictureInterface;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.PictureControllerZoomRequest;
 import org.jpo.eventbus.Zoom;

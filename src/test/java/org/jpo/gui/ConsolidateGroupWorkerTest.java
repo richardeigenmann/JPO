@@ -2,7 +2,6 @@ package org.jpo.gui;
 
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -53,7 +52,7 @@ class ConsolidateGroupWorkerTest {
         try {
             ConsolidateGroupWorker.needToMovePicture(pictureInfo, tempDir);
             fail("the needToMovePicture should not handle null inputs; the are invalid");
-        } catch (final NullPointerException ex) {
+        } catch (final NullPointerException _) {
             // this is good
         }
     }
@@ -163,7 +162,7 @@ class ConsolidateGroupWorkerTest {
             final var returnCode = ConsolidateGroupWorker.movePicture(new PictureInfo(), tempDir.toFile());
             // Consolidation of a PictureInfo with a \"null\" highres file should return false
             assertFalse(returnCode);
-        } catch (final NullPointerException ex) {
+        } catch (final NullPointerException _) {
             return;
         }
         fail("Consolidation of a PictureInfo with a \"null\" highres file should throw a NPE");

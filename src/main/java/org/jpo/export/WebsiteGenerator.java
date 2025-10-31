@@ -14,6 +14,7 @@ import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.ProgressGui;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,7 +1,7 @@
 package org.jpo.gui.swing;
 
 import org.jpo.datamodel.ProgressTracker;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 import java.awt.*;

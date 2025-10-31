@@ -2,7 +2,7 @@ package org.jpo.cache;
 
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;

@@ -1,6 +1,5 @@
 package org.jpo.gui;
 
-import org.jpo.datamodel.Settings;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -13,9 +12,8 @@ import java.util.logging.Logger;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
-
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,10 +32,10 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
-public class ThumbnailControllerTest {
+class ThumbnailControllerTest {
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         Settings.loadSettings(); // We need to start the cache
     }
 

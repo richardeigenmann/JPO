@@ -1,6 +1,6 @@
 package org.jpo.eventbus;
 
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.JpoResources;
 

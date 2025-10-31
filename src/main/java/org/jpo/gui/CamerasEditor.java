@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.Camera;
-import org.jpo.datamodel.Settings;
 import org.jpo.datamodel.Tools;
 
 import javax.swing.*;

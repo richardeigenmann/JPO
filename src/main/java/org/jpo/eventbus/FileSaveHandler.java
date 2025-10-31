@@ -1,7 +1,11 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
+import javax.swing.*;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +51,17 @@ public class FileSaveHandler {
             JpoEventBus.getInstance().post(fileSaveAsRequest);
         } else {
             LOGGER.log(Level.INFO, "Saving under the name: {0}", request.pictureCollection().getXmlFile());
-            request.pictureCollection().fileSave(() -> JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent()) );
+            try {
+                request.pictureCollection().fileSave();
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(
+                        Settings.getAnchorFrame(),
+                        e.getMessage(),
+                        JpoResources.getResource("genericError"),
+                        JOptionPane.ERROR_MESSAGE);
+
+            }
+            JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());
             JpoEventBus.getInstance().post(new AfterFileSaveRequest(request.pictureCollection()));
             if (request.onSuccessNextRequest() != null) {
                 JpoEventBus.getInstance().post(request.onSuccessNextRequest());

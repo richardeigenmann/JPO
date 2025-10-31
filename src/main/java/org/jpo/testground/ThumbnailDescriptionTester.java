@@ -19,7 +19,7 @@ package org.jpo.testground;
 
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 import org.jpo.gui.swing.CategoryButton;
 import org.jpo.gui.swing.ResizeSlider;
 import org.jpo.gui.swing.ThumbnailDescriptionPanel;

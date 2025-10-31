@@ -2,13 +2,13 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.Settings;
+import org.jpo.gui.Settings;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -49,8 +49,6 @@ public class AddEmptyGroupHandler {
         final var newNode = parentNode.addGroupNode("New Group");
         Settings.memorizeGroupOfDropLocation(newNode);
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
-        // Do not jump to the node. This is annoying when you want to create a new group and then lose the context where you were
-        //JpoEventBus.getInstance().post(new ShowGroupRequest(newNode));
     }
 
 }

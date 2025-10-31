@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jpo.datamodel.GroupInfo;
-import org.jpo.datamodel.Settings;
 import org.jpo.eventbus.ConsolidateGroupDialogRequest;
 import org.jpo.eventbus.ConsolidateGroupRequest;
 import org.jpo.eventbus.CopyLocationsChangedEvent;
