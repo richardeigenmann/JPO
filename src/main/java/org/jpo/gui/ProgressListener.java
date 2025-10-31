@@ -18,7 +18,6 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
 */
 
-
 /** 
  *  Interface to listen on progress
  *  @author Richard Eigenmann richard.eigenmann@gmail.com
@@ -29,4 +28,9 @@ public interface ProgressListener {
      */
     void progressIncrement();
 
+    public void setMaximum(int max );
+
+    public void switchToDoneMode();
+
+    public InterruptSemaphore getInterruptSemaphore();
 }

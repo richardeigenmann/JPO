@@ -5,7 +5,6 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import org.jpo.gui.InterruptSemaphore;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.ProgressGui;
 import org.jpo.gui.ProgressListener;
 
 import java.io.File;
@@ -266,21 +265,17 @@ public class Camera implements Serializable {
      * build a list of old image from the files on the camera-directory. This
      * method creates a ProgressGui.
      */
-    public void buildOldImage() {
+    public void buildOldImage(final ProgressListener progressListener) {
         int count = countFiles();
+        progressListener.setMaximum(count);
         if (count < 1) {
             LOGGER.info("No files. Not building old image on camera as the camera is probably disconnected.");
             return;
         }
 
-        final ProgressGui progressGui = new ProgressGui(count,
-                JpoResources.getResource("countingChecksum"),
-                JpoResources.getResource("countingChecksumComplete"));
+        buildOldImage(progressListener, progressListener.getInterruptSemaphore());
 
-        buildOldImage(
-                progressGui, progressGui.getInterruptSemaphore());
-
-        progressGui.switchToDoneMode();
+        progressListener.switchToDoneMode();
     }
 
     /**

@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.ResizeSlider;
@@ -573,7 +574,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         thumbnailsPane.removeAll();
         initialisedMaxThumbnails = Settings.getMaxThumbnails();
         for (var i = 0; i < Settings.getMaxThumbnails(); i++) {
-            thumbnailControllers[i] = new ThumbnailController(Settings.getThumbnailSize());
+            thumbnailControllers[i] = new ThumbnailController(CacheSettings.getThumbnailSize());
             thumbnailControllers[i].setShowTimestamp(showTimestampState);
             thumbnailDescriptionControllers[i] = new ThumbnailDescriptionController();
             thumbnailDescriptionControllers[i].showFilename(showFilenamesState);

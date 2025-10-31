@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import java.io.Serial;
 import java.io.Serializable;
 
-
 /*
  Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or

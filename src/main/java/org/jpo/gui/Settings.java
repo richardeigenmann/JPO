@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import com.google.common.collect.EvictingQueue;
+import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.GenerateWebsiteRequest;
 import org.jpo.eventbus.JpoEventBus;
@@ -52,10 +53,6 @@ public class Settings {
      * the default value for maxThumbnails
      */
     public static final int DEFAULT_MAX_THUMBNAILS = 50;
-    /**
-     * the dimension of mini thumbnails in the group folders
-     */
-    public static final Dimension miniThumbnailSize = new Dimension(100, 75);
     /**
      * The minimum width for the left panels
      */
@@ -328,17 +325,13 @@ public class Settings {
      */
     private static int dividerWidth = 12;
     /**
-     * Setting for the width of the thumbnails. Set by default to 350 pixels.
-     */
-    private static int thumbnailSize = 350;
-    /**
      * the minimum Dimension for the Thumbnail Panel
      */
-    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (thumbnailSize * 1.4f), (int) (thumbnailSize * 1.8f));
+    public static final Dimension THUMBNAIL_JSCROLLPANE_MINIMUM_SIZE = new Dimension((int) (CacheSettings.getThumbnailSize() * 1.4f), (int) (CacheSettings.getThumbnailSize() * 1.8f));
     /**
      * the preferred Dimension for the Thumbnail Panel
      */
-    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (thumbnailSize * 2.2f), 800);
+    public static final Dimension thumbnailJScrollPanePreferredSize = new Dimension((int) (CacheSettings.getThumbnailSize() * 2.2f), 800);
     /**
      * the minimum Dimension for the JPO Window
      */
@@ -405,15 +398,7 @@ public class Settings {
      * handy reference for dialog boxes and the like to have a reference object.
      */
     private static JFrame anchorFrame = null;
-    /**
-     * The maximum number of pictures to keep in memory
-     * <p>
-     * public static int maxCache;
-     */
 
-    private static String thumbnailCacheDirectory = System.getProperty("java.io.tmpdir")
-            + System.getProperty("file.separator")
-            + "Jpo-Thumbnail-Cache";
     /**
      * The maximum size a picture is zoomed to. This is to stop the Java engine
      * creating enormous temporary images which lock the computer up completely.
@@ -550,10 +535,6 @@ public class Settings {
      */
     private static String defaultHtmlSshKeyFile = "";
     /**
-     * true when thumbnails are supposed to scale fast
-     */
-    private static boolean thumbnailFastScale = true;
-    /**
      * true when Filenames are supposed to show on the Thumbnail Panel
      */
     private static boolean showFilenamesOnThumbnailPanel = false;
@@ -561,6 +542,7 @@ public class Settings {
      * true when Timestamps are supposed to show on the Thumbnail Panel
      */
     private static boolean showTimestampsOnThumbnailPanel = false;
+
     /**
      * true when the pictureViewer is supposed to scale fast
      */
@@ -803,13 +785,6 @@ public class Settings {
         Settings.maxThumbnails = maxThumbnails;
     }
 
-    public static int getThumbnailSize() {
-        return thumbnailSize;
-    }
-
-    public static void setThumbnailSize(int thumbnailSize) {
-        Settings.thumbnailSize = thumbnailSize;
-    }
 
     /**
      * Returns the file to load automatically on startup
@@ -874,9 +849,6 @@ public class Settings {
         Settings.anchorFrame = anchorFrame;
     }
 
-    public static String getThumbnailCacheDirectory() {
-        return thumbnailCacheDirectory;
-    }
 
     /**
      * Rtruns the maximum width or height the pictures may be scaled to. Intended to prevent the JVM blowing out
@@ -1365,24 +1337,6 @@ public class Settings {
     }
 
     /**
-     * returns if thumbnails should be rendered faster instead of better quality
-     *
-     * @return true if speed is desired
-     */
-    public static boolean isThumbnailFastScale() {
-        return thumbnailFastScale;
-    }
-
-    /**
-     * Stores the default choice for fast scaling
-     *
-     * @param thumbnailFastScale true is fast scaling should be used false if not.
-     */
-    public static void setThumbnailFastScale(boolean thumbnailFastScale) {
-        Settings.thumbnailFastScale = thumbnailFastScale;
-    }
-
-    /**
      * returns if filenames should be shown on the Thumbnail Pane
      *
      * @return true if filenames should be shown
@@ -1787,7 +1741,7 @@ public class Settings {
         setLocale(Locale.of(prefs.get("currentLocale", getCurrentLocale().toString())));
         maximumPictureSize = prefs.getInt("maximumPictureSize", maximumPictureSize);
         maxThumbnails = prefs.getInt("maxThumbnails", maxThumbnails);
-        thumbnailSize = prefs.getInt("thumbnailSize", thumbnailSize);
+        CacheSettings.setThumbnailSize( prefs.getInt("thumbnailSize", CacheSettings.getThumbnailSize()) );
         startupSizeChoice = prefs.getInt("startupSizeChoice", startupSizeChoice);
         lastMainFrameCoordinates.x = prefs.getInt("lastMainFrameCoordinates.x", lastMainFrameCoordinates.x);
         lastMainFrameCoordinates.y = prefs.getInt("lastMainFrameCoordinates.y", lastMainFrameCoordinates.y);
@@ -1824,7 +1778,7 @@ public class Settings {
         thumbnailCounter = prefs.getInt("thumbnailCounter", thumbnailCounter);
         writeLog = prefs.getBoolean("writeLog", writeLog);
         logfile = new File(prefs.get("logfile", logfile.getPath()));
-        thumbnailCacheDirectory = prefs.get("thumbnailCacheDirectory", thumbnailCacheDirectory);
+        CacheSettings.setThumbnailCacheDirectory(prefs.get("thumbnailCacheDirectory", CacheSettings.getThumbnailCacheDirectory()));
         defaultHtmlPicsPerRow = prefs.getInt("defaultHtmlPicsPerRow", defaultHtmlPicsPerRow);
         defaultHtmlThumbnailWidth = prefs.getInt("defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth);
         defaultHtmlThumbnailHeight = prefs.getInt("defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight);
@@ -1859,7 +1813,7 @@ public class Settings {
         defaultHtmlSshPassword = prefs.get("defaultHtmlSshPassword", defaultHtmlSshPassword);
         defaultHtmlSshTargetDir = prefs.get("defaultHtmlSshTargetDir", defaultHtmlSshTargetDir);
         defaultHtmlSshKeyFile = prefs.get("defaultHtmlSshKeyFile", defaultHtmlSshKeyFile);
-        thumbnailFastScale = prefs.getBoolean("thumbnailFastScale", thumbnailFastScale);
+        CacheSettings.setThumbnailFastScale(prefs.getBoolean("thumbnailFastScale", CacheSettings.isThumbnailFastScale()));
         pictureViewerFastScale = prefs.getBoolean("pictureViewerFastScale", pictureViewerFastScale);
         showThumbOnFileChooser = prefs.getBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         var emailSenders = prefs.getInt("emailSenders", 0);
@@ -1954,7 +1908,7 @@ public class Settings {
         prefs.put("currentLocale", getCurrentLocale().toString());
         prefs.putInt("maximumPictureSize", maximumPictureSize);
         prefs.putInt("maxThumbnails", maxThumbnails);
-        prefs.putInt("thumbnailSize", thumbnailSize);
+        prefs.putInt("thumbnailSize", CacheSettings.getThumbnailSize());
         prefs.putInt("startupSizeChoice", startupSizeChoice);
         prefs.putInt("lastMainFrameCoordinates.x", lastMainFrameCoordinates.x);
         prefs.putInt("lastMainFrameCoordinates.y", lastMainFrameCoordinates.y);
@@ -2001,7 +1955,7 @@ public class Settings {
         prefs.putInt("thumbnailCounter", thumbnailCounter);
         prefs.putBoolean("writeLog", writeLog);
         prefs.put("logfile", logfile.getPath());
-        prefs.put("thumbnailCacheDirectory", thumbnailCacheDirectory);
+        prefs.put("thumbnailCacheDirectory", CacheSettings.getThumbnailCacheDirectory());
         prefs.putInt("defaultHtmlPicsPerRow", defaultHtmlPicsPerRow);
         prefs.putInt("defaultHtmlThumbnailWidth", defaultHtmlThumbnailWidth);
         prefs.putInt("defaultHtmlThumbnailHeight", defaultHtmlThumbnailHeight);
@@ -2033,7 +1987,7 @@ public class Settings {
         prefs.put("defaultHtmlSshTargetDir", defaultHtmlSshTargetDir);
         prefs.put("defaultHtmlSshKeyFile", defaultHtmlSshKeyFile);
 
-        prefs.putBoolean("thumbnailFastScale", thumbnailFastScale);
+        prefs.putBoolean("thumbnailFastScale", CacheSettings.isThumbnailFastScale());
         prefs.putBoolean("pictureViewerFastScale", pictureViewerFastScale);
         prefs.putBoolean("showThumbOnFileChooser", showThumbOnFileChooser);
         n = 0;

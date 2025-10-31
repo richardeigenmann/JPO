@@ -58,8 +58,11 @@ public class CameraEditor
         refreshJButton.setMinimumSize(Settings.getDefaultButtonDimension());
         refreshJButton.setMaximumSize(Settings.getDefaultButtonDimension());
         refreshJButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        final ProgressGui progressGui = new ProgressGui(0,
+                JpoResources.getResource("countingChecksum"),
+                JpoResources.getResource("countingChecksumComplete"));
         refreshJButton.addActionListener((ActionEvent e) -> {
-            getCamera().buildOldImage();
+            getCamera().buildOldImage(progressGui);
             updateMemorisedPicturesJLabel();
         });
         add(refreshJButton);

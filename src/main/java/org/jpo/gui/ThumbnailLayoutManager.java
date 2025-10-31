@@ -15,6 +15,8 @@ package org.jpo.gui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+import org.jpo.cache.CacheSettings;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;
@@ -110,7 +112,7 @@ public class ThumbnailLayoutManager implements LayoutManager {
     /**
      * The width of the thumbnails in pixels
      */
-    private int thumbnailWidth = Settings.getThumbnailSize();
+    private int thumbnailWidth = CacheSettings.getThumbnailSize();
 
     /**
      * Sets the width of the thumbnails

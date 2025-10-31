@@ -19,6 +19,7 @@ package org.jpo.gui.swing;
 import com.google.common.eventbus.Subscribe;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.TestOnly;
+import org.jpo.cache.CacheSettings;
 import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.CollectionLockNotification;
@@ -81,7 +82,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
         public Dimension getMaximumSize() {
             // clamp the maximum width to the scaled tumbnail width
             final var superMaximumSize = super.getMaximumSize();
-            superMaximumSize.width = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
+            superMaximumSize.width = (int) (CacheSettings.getThumbnailSize() * thumbnailSizeFactor);
             return superMaximumSize;
         }
     };
@@ -139,8 +140,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
         pictureDescriptionJTA.setCaret(dumbCaret);
 
         this.add(categoriesJSP, "hidemode 2, wrap");
-        categoriesJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 50));
-        categoriesJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
+        categoriesJSP.setMinimumSize(new Dimension(CacheSettings.getThumbnailSize(), 50));
+        categoriesJSP.setMaximumSize(new Dimension(CacheSettings.getThumbnailSize(), 250));
 
         categoriesJPanel.setLayout(new WrapLayout());
         categoryMenuPopupButton.setFont(FontAwesomeFont.getFontAwesomeRegular18());
@@ -173,8 +174,8 @@ public class ThumbnailDescriptionPanel extends JPanel {
         });
 
         // it is the Scrollpane you must constrain, not the TextArea
-        pictureDescriptionJSP.setMinimumSize(new Dimension(Settings.getThumbnailSize(), 25));
-        pictureDescriptionJSP.setMaximumSize(new Dimension(Settings.getThumbnailSize(), 250));
+        pictureDescriptionJSP.setMinimumSize(new Dimension(CacheSettings.getThumbnailSize(), 25));
+        pictureDescriptionJSP.setMaximumSize(new Dimension(CacheSettings.getThumbnailSize(), 250));
 
         this.add(pictureDescriptionJSP);
     }
@@ -306,7 +307,7 @@ public class ThumbnailDescriptionPanel extends JPanel {
      */
     public void setTextAreaSize() {
         final Runnable runnable = () -> {
-            var targetWidth = (int) (Settings.getThumbnailSize() * thumbnailSizeFactor);
+            var targetWidth = (int) (CacheSettings.getThumbnailSize() * thumbnailSizeFactor);
             var descriptionTargetHeight = getTargetHeight(getPictureDescriptionJSP());
             final var scrollPaneSize = getPictureDescriptionJSP().getPreferredSize();
             if ((descriptionTargetHeight != scrollPaneSize.height) || (targetWidth != scrollPaneSize.width)) {

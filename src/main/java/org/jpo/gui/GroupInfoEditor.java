@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
+import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -107,7 +108,7 @@ public class GroupInfoEditor {
         nodeStatisticsController.updateStats(editNode);
         tabbedPane.addTab("Statistics", nodeStatisticsController.getJComponent());
 
-        final ThumbnailController thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
+        final ThumbnailController thumbnailController = new ThumbnailController(CacheSettings.getThumbnailSize());
         thumbnailController.setNode(new SingleNodeNavigator(editNode), 0);
         tabbedPane.addTab( "Thumbnail", thumbnailController.getThumbnail() );
 

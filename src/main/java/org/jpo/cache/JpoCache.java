@@ -7,7 +7,6 @@ import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.jetbrains.annotations.TestOnly;
 import org.jpo.datamodel.*;
-import org.jpo.gui.Settings;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -70,7 +69,7 @@ public class JpoCache {
 
         } catch (final IOException | NullPointerException ex) {
             LOGGER.log(Level.SEVERE, "Exception while statically loading it icon_folder_large.jpg: {0}", ex.getMessage());
-            groupThumbnailDimension = new Dimension(Settings.getThumbnailSize(), Settings.getThumbnailSize());
+            groupThumbnailDimension = new Dimension(CacheSettings.getThumbnailSize(), CacheSettings.getThumbnailSize());
         }
     }
 
@@ -132,8 +131,8 @@ public class JpoCache {
             return properties;
         }
 
-        LOGGER.log(Level.FINE, "setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", Settings.getThumbnailCacheDirectory());
-        properties.setProperty("jcs.auxiliary.DC.attributes.DiskPath", Settings.getThumbnailCacheDirectory());
+        LOGGER.log(Level.FINE, "setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", CacheSettings.getThumbnailCacheDirectory());
+        properties.setProperty("jcs.auxiliary.DC.attributes.DiskPath", CacheSettings.getThumbnailCacheDirectory());
 
         return properties;
     }
@@ -266,7 +265,7 @@ public class JpoCache {
         }
         // create a new thumbnail from the highres
         final var scalablePicture = new ScalablePicture();
-        if (Settings.isThumbnailFastScale()) {
+        if (CacheSettings.isThumbnailFastScale()) {
             scalablePicture.setFastScale();
         } else {
             scalablePicture.setQualityScale();
@@ -311,8 +310,8 @@ public class JpoCache {
         final var leftMargin = 15;
         final var margin = 10;
         final var topMargin = 65;
-        final var horizontalPics = (groupThumbnailDimension.width - leftMargin) / (Settings.miniThumbnailSize.width + margin);
-        final var verticalPics = (groupThumbnailDimension.height - topMargin) / (Settings.miniThumbnailSize.height + margin);
+        final var horizontalPics = (groupThumbnailDimension.width - leftMargin) / (CacheSettings.miniThumbnailSize.width + margin);
+        final var verticalPics = (groupThumbnailDimension.height - topMargin) / (CacheSettings.miniThumbnailSize.height + margin);
         final var numberOfPics = horizontalPics * verticalPics;
 
         final var usablePictures = childPictureNodes
@@ -374,7 +373,7 @@ public class JpoCache {
         var leftMargin = 15;
         var margin = 10;
         var topMargin = 65;
-        var horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (Settings.miniThumbnailSize.width + margin);
+        var horizontalPics = (groupThumbnail.getWidth() - leftMargin) / (CacheSettings.miniThumbnailSize.width + margin);
 
         var mostRecentPictureModification = FileTime.fromMillis(0);
         var picsProcessed = 0;
@@ -386,9 +385,9 @@ public class JpoCache {
                 mostRecentPictureModification = lastModification;
             }
 
-            var x = margin + ((picsProcessed % horizontalPics) * (Settings.miniThumbnailSize.width + margin));
+            var x = margin + ((picsProcessed % horizontalPics) * (CacheSettings.miniThumbnailSize.width + margin));
             final var yPos = (int) Math.round((picsProcessed / (double) horizontalPics) - 0.5f);
-            var y = topMargin + (yPos * (Settings.miniThumbnailSize.height + margin));
+            var y = topMargin + (yPos * (CacheSettings.miniThumbnailSize.height + margin));
 
             if (!JpoImageIO.jvmHasReader(pictureInfo.getImageFile())) {
                 continue;
@@ -400,10 +399,10 @@ public class JpoCache {
             final var scalablePicture = new ScalablePicture();
             scalablePicture.loadPictureImd(pictureInfo.getSha256(), pictureInfo.getImageFile(), pictureInfo.getRotation());
 
-            scalablePicture.setScaleSize(Settings.miniThumbnailSize);
+            scalablePicture.setScaleSize(CacheSettings.miniThumbnailSize);
             scalablePicture.scalePicture();
-            x += (Settings.miniThumbnailSize.width - scalablePicture.getScaledWidth()) / 2;
-            y += Settings.miniThumbnailSize.height - scalablePicture.getScaledHeight();
+            x += (CacheSettings.miniThumbnailSize.width - scalablePicture.getScaledWidth()) / 2;
+            y += CacheSettings.miniThumbnailSize.height - scalablePicture.getScaledHeight();
 
             groupThumbnailGraphics.drawImage(scalablePicture.getScaledPicture(), x, y, null);
 

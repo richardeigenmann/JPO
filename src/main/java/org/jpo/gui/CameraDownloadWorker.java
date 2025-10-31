@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -103,5 +102,21 @@ public class CameraDownloadWorker
         SwingUtilities.invokeLater(
                 () -> progressBar.setValue(progressBar.getValue() + 1)
         );
+    }
+
+    @Override
+    public void setMaximum(int max ) {
+        SwingUtilities.invokeLater(
+                () -> progressBar.setMaximum(max)
+        );
+    }
+
+    @Override
+    public void switchToDoneMode() {
+    }
+
+    @Override
+    public InterruptSemaphore getInterruptSemaphore() {
+        return new InterruptSemaphore();
     }
 }

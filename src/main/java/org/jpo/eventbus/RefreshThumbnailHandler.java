@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.gui.Settings;
+import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ThumbnailController;
@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2022-2024 Richard Eigenmann.
+ Copyright (C) 2022-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -60,7 +60,7 @@ public class RefreshThumbnailHandler {
             return;
         }
         LOGGER.log(Level.FINE, "refreshing the thumbnail on the node {0}%nAbout to create the thumbnail", this);
-        final var thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
+        final var thumbnailController = new ThumbnailController(CacheSettings.getThumbnailSize());
         thumbnailController.setNode(new SingleNodeNavigator(node), 0);
     }
 }

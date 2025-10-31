@@ -18,6 +18,7 @@ package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jpo.cache.CacheSettings;
 import org.jpo.cache.JpoCache;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.WholeNumberField;
@@ -618,11 +619,11 @@ public class SettingsDialog extends JDialog {
         maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
         dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
 
-        thumbnailCacheDirPathChooser.setText(Settings.getThumbnailCacheDirectory());
+        thumbnailCacheDirPathChooser.setText(CacheSettings.getThumbnailCacheDirectory());
         maxThumbnails.setValue(Settings.getMaxThumbnails());
-        thumbnailSize.setValue(Settings.getThumbnailSize());
+        thumbnailSize.setValue(CacheSettings.getThumbnailSize());
         jpgQualityJSlider.setValue((int) (Settings.getDefaultHtmlLowresQuality() * 100));
-        thumbnailFastScaleJCheckBox.setSelected(Settings.isThumbnailFastScale());
+        thumbnailFastScaleJCheckBox.setSelected(CacheSettings.isThumbnailFastScale());
         thumbnailShowFilenamesJCheckBox.setSelected(Settings.isShowFilenamesOnThumbnailPanel());
         thumbnailShowTimestampsJCheckBox.setSelected(Settings.isShowTimestampsOnThumbnailPanel());
 
@@ -685,9 +686,9 @@ public class SettingsDialog extends JDialog {
         Settings.setNewViewerSizeChoice(viewerSizeDropdown.getSelectedIndex());
         Settings.setPictureViewerFastScale(pictureViewerFastScaleJCheckBox.isSelected());
         Settings.setMaxThumbnails(maxThumbnails.getValue());
-        Settings.setThumbnailSize(thumbnailSize.getValue());
+        CacheSettings.setThumbnailSize(thumbnailSize.getValue());
         Settings.setDefaultHtmlLowresQuality(((float) jpgQualityJSlider.getValue()) / 100);
-        Settings.setThumbnailFastScale(thumbnailFastScaleJCheckBox.isSelected());
+        CacheSettings.setThumbnailFastScale(thumbnailFastScaleJCheckBox.isSelected());
         Settings.setShowFilenamesOnThumbnailPanel(thumbnailShowFilenamesJCheckBox.isSelected());
         Settings.setShowTimestampsOnThumbnailPanel(thumbnailShowTimestampsJCheckBox.isSelected());
 

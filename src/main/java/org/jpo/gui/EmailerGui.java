@@ -1,6 +1,7 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
+import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.ListNavigator;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
@@ -341,7 +342,7 @@ public class EmailerGui extends JFrame {
      * loads the thumbnails into the preview panel
      */
     private void loadThumbnails() {
-        final int thumbnailSize = Settings.getThumbnailSize();
+        final int thumbnailSize = CacheSettings.getThumbnailSize();
         final int desiredSize = 140;
         final float factor = desiredSize / (float) thumbnailSize;
         final ListNavigator listNavigator = new ListNavigator(emailSelected);

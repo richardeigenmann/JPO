@@ -4,6 +4,7 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
+import org.jpo.cache.CacheSettings;
 import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
@@ -75,7 +76,7 @@ public class PictureInfoEditor extends JFrame {
     /**
      * The Thumbnail Controller for the thumbnail being shown
      */
-    private final transient ThumbnailController thumbnailController = new ThumbnailController(Settings.getThumbnailSize());
+    private final transient ThumbnailController thumbnailController = new ThumbnailController(CacheSettings.getThumbnailSize());
 
     /**
      * The description of the picture
