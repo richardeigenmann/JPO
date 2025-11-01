@@ -11,8 +11,6 @@ import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
-
 /*
  Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
@@ -73,7 +71,7 @@ public class FileLoadHandler {
                                 LOGGER.log(Level.INFO, "FileNotFoundException: {0}", ex.getMessage());
                                 JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                                         ex.getMessage(),
-                                        GENERIC_ERROR,
+                                        JpoResources.getResource("genericError"),
                                         JOptionPane.ERROR_MESSAGE);
                                 JpoEventBus.getInstance().post(new StartNewCollectionRequest());
                             }

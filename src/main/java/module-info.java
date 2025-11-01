@@ -40,6 +40,7 @@ module org.jpo {
     requires org.apache.commons.logging;
     requires org.jspecify;
     requires io.github.classgraph;
+    requires java.datatransfer;
 
 
     //requires org.mockito.junit.jupiter;  // should be test only but feels left out

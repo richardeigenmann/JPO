@@ -1,12 +1,10 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.gui.Settings;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
-
-import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 
 /*
  Copyright (C) 2022-2025 Richard Eigenmann.
@@ -53,7 +51,7 @@ public class CopyToNewLocationHandler {
         if (!targetDirectory.canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     JpoResources.getResource("htmlDistCanWriteError"),
-                    GENERIC_ERROR,
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }

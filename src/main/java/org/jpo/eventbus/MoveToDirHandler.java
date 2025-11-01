@@ -2,16 +2,15 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.gui.Settings;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.ConsolidateGroupWorker;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
 import static org.jpo.gui.ApplicationStartupHandler.GENERIC_INFO;
 
 /*
@@ -51,7 +50,7 @@ public class MoveToDirHandler {
         if (!request.targetLocation().isDirectory()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     JpoResources.getResource("htmlDistIsDirError"),
-                    GENERIC_ERROR,
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -59,7 +58,7 @@ public class MoveToDirHandler {
         if (!request.targetLocation().canWrite()) {
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     JpoResources.getResource("htmlDistCanWriteError"),
-                    GENERIC_ERROR,
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
             return;
         }

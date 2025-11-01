@@ -667,7 +667,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
     @Override
     public void handleJpoDropTargetDropEvent(DropTargetDropEvent event) {
         if (myLastGroupNode != null) {
-            myLastGroupNode.executeDrop(event);
+            DragAndDrop.executeDrop(myLastGroupNode, event);
         }
     }
 }

@@ -597,6 +597,6 @@ public class ThumbnailController
 
     @Override
     public void handleJpoDropTargetDropEvent(final DropTargetDropEvent event) {
-        myNode.executeDrop(event);
+        DragAndDrop.executeDrop(myNode, event);
     }
 }

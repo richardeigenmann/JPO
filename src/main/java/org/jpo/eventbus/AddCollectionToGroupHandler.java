@@ -2,19 +2,17 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.PictureCollection;
-import org.jpo.gui.Settings;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 import org.jpo.gui.swing.LabelFrame;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
-import static org.jpo.datamodel.SortableDefaultMutableTreeNode.GENERIC_ERROR;
-
 /*
- Copyright (C) 2023-2024 Richard Eigenmann.
+ Copyright (C) 2023-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -67,7 +65,7 @@ public class AddCollectionToGroupHandler {
             LOGGER.severe(x.getMessage());
             JOptionPane.showMessageDialog(Settings.getAnchorFrame(),
                     "File not found:\n" + fileToLoad.getPath(),
-                    GENERIC_ERROR,
+                    JpoResources.getResource("genericError"),
                     JOptionPane.ERROR_MESSAGE);
         }
         newNode.getPictureCollection().setUnsavedUpdates(true);
