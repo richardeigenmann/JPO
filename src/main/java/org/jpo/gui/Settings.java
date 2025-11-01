@@ -360,10 +360,6 @@ public class Settings {
      */
     private static int thumbnailCounter = 0;
     /**
-     * a flag that indicates that small images should not be enlarged
-     */
-    private static boolean dontEnlargeSmallImages = true;
-    /**
      * variable that tracks if there are unsaved changes in these settings.
      */
     private static boolean unsavedSettingChanges = false;
@@ -813,19 +809,6 @@ public class Settings {
      */
     public static String[] getRecentCollections() {
         return recentCollections;
-    }
-
-    /**
-     * Returns whether to enlarge small images to screen size or not
-     *
-     * @return whether to enlarge images that are smaller than the screen
-     */
-    public static boolean isDontEnlargeSmallImages() {
-        return dontEnlargeSmallImages;
-    }
-
-    public static void setDontEnlargeSmallImages(boolean dontEnlargeSmallImages) {
-        Settings.dontEnlargeSmallImages = dontEnlargeSmallImages;
     }
 
     public static boolean isUnsavedSettingChanges() {
@@ -1774,7 +1757,7 @@ public class Settings {
             userFunctionNames[i] = prefs.get("userFunctionName-" + i, null);
             userFunctionCmd[i] = prefs.get("userFunctionCmd-" + i, null);
         }
-        dontEnlargeSmallImages = prefs.getBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
+        CacheSettings.setDontEnlargeSmallImages ( prefs.getBoolean("dontEnlargeSmallImages", CacheSettings.isDontEnlargeSmallImages()));
         thumbnailCounter = prefs.getInt("thumbnailCounter", thumbnailCounter);
         writeLog = prefs.getBoolean("writeLog", writeLog);
         logfile = new File(prefs.get("logfile", logfile.getPath()));
@@ -1951,7 +1934,7 @@ public class Settings {
                 prefs.put("userFunctionCmd-" + n, userFunctionCmd[i]);
                 n++;
             }
-        prefs.putBoolean("dontEnlargeSmallImages", dontEnlargeSmallImages);
+        prefs.putBoolean("dontEnlargeSmallImages", CacheSettings.isDontEnlargeSmallImages());
         prefs.putInt("thumbnailCounter", thumbnailCounter);
         prefs.putBoolean("writeLog", writeLog);
         prefs.put("logfile", logfile.getPath());

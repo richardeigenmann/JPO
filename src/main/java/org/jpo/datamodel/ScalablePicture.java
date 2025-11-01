@@ -1,8 +1,8 @@
 package org.jpo.datamodel;
 
+import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.Settings;
 
 import javax.imageio.*;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
@@ -266,7 +266,7 @@ public class ScalablePicture
             setStatus( SCALABLE_PICTURE_SCALING, "Scaling picture." );
             if ( scaleToSize ) {
                 scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
-                if ( Settings.isDontEnlargeSmallImages() && scaleFactor > 1 ) {
+                if ( CacheSettings.isDontEnlargeSmallImages() && scaleFactor > 1 ) {
                     scaleFactor = 1;
                 }
             }

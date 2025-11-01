@@ -617,7 +617,7 @@ public class SettingsDialog extends JDialog {
         viewerSizeDropdown.setSelectedIndex(Settings.getNewViewerSizeChoice());
 
         maximumPictureSizeJTextField.setValue(Settings.getMaximumPictureSize());
-        dontEnlargeJCheckBox.setSelected(Settings.isDontEnlargeSmallImages());
+        dontEnlargeJCheckBox.setSelected(CacheSettings.isDontEnlargeSmallImages());
 
         thumbnailCacheDirPathChooser.setText(CacheSettings.getThumbnailCacheDirectory());
         maxThumbnails.setValue(Settings.getMaxThumbnails());
@@ -682,7 +682,7 @@ public class SettingsDialog extends JDialog {
         Settings.setTagCloudWords((Integer) tagCloudWordsJSpinner.getValue());
         Settings.setStartupSizeChoice(startupSizeDropdown.getSelectedIndex());
         Settings.setMaximumPictureSize(maximumPictureSizeJTextField.getValue());
-        Settings.setDontEnlargeSmallImages(dontEnlargeJCheckBox.isSelected());
+        CacheSettings.setDontEnlargeSmallImages(dontEnlargeJCheckBox.isSelected());
         Settings.setNewViewerSizeChoice(viewerSizeDropdown.getSelectedIndex());
         Settings.setPictureViewerFastScale(pictureViewerFastScaleJCheckBox.isSelected());
         Settings.setMaxThumbnails(maxThumbnails.getValue());

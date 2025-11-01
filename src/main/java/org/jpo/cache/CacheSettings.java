@@ -20,6 +20,10 @@ import java.awt.*;
 
 public class CacheSettings {
 
+    private CacheSettings(){
+        // Utility Class
+    }
+
     /**
      * Setting for the width of the thumbnails. Set by default to 350 pixels.
      */
@@ -74,6 +78,24 @@ public class CacheSettings {
      */
     public static void setThumbnailFastScale(boolean newThumbnailFastScale) {
         thumbnailFastScale = newThumbnailFastScale;
+    }
+
+    /**
+     * a flag that indicates that small images should not be enlarged
+     */
+    private static boolean dontEnlargeSmallImages = true;
+
+    /**
+     * Returns whether to enlarge small images to screen size or not
+     *
+     * @return whether to enlarge images that are smaller than the screen
+     */
+    public static boolean isDontEnlargeSmallImages() {
+        return dontEnlargeSmallImages;
+    }
+
+    public static void setDontEnlargeSmallImages(boolean newDontEnlargeSmallImages) {
+        dontEnlargeSmallImages = newDontEnlargeSmallImages;
     }
 
 
