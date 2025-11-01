@@ -1,12 +1,9 @@
 package org.jpo.datamodel;
 
-import org.jpo.eventbus.CollectionLockNotification;
 import org.jpo.eventbus.ExportGroupToCollectionRequest;
-import org.jpo.eventbus.JpoEventBus;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.Settings;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -350,7 +347,6 @@ public class PictureCollection {
     public void setAllowEdits(final boolean newAllowEdits) {
         if ( allowEdits != newAllowEdits ) {
             allowEdits = newAllowEdits;
-            JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection()));
         }
     }
 

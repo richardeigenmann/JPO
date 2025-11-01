@@ -404,6 +404,7 @@ public class ThumbnailsPanelController implements NodeNavigatorListener, JpoDrop
         final var allowEdits = Settings.getPictureCollection().getAllowEdits();
         final var newState = ! allowEdits;
         Settings.getPictureCollection().setAllowEdits( newState );
+        JpoEventBus.getInstance().post(new CollectionLockNotification(Settings.getPictureCollection()));
     }
 
     private void updatePadlockButton() {
