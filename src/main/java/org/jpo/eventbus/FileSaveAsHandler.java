@@ -1,12 +1,12 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.gui.Settings;
-import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 import org.jpo.gui.XmlFilter;
 
 import javax.swing.*;
+import java.io.File;
 import java.io.IOException;
 
 /*
@@ -53,7 +53,7 @@ public class FileSaveAsHandler {
         final var returnVal = jFileChooser.showSaveDialog(Settings.getAnchorFrame());
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             var chosenFile = jFileChooser.getSelectedFile();
-            chosenFile = Tools.correctFilenameExtension("xml", chosenFile);
+            chosenFile = correctFilenameExtension("xml", chosenFile);
             if (chosenFile.exists()) {
                 int answer = JOptionPane.showConfirmDialog(Settings.getAnchorFrame(),
                         JpoResources.getResource("confirmSaveAs"),
@@ -89,5 +89,23 @@ public class FileSaveAsHandler {
             }
         }
     }
+
+    /**
+     * method that tests the file extension of a File object for being the
+     * correct extension. Either the same file object is returned or a new one
+     * is created with the correct extension. If not the correct extension is
+     * added. The case of the extension is ignored.
+     *
+     * @param extension The extension
+     * @param testFile  File to test
+     * @return the file
+     */
+    private static File correctFilenameExtension(String extension, File testFile) {
+        if (!testFile.getName().toUpperCase().endsWith(extension.toUpperCase())) {
+            return new File(testFile.getPath() + "." + extension);
+        }
+        return testFile;
+    }
+
 
 }

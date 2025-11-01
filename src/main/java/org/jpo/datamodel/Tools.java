@@ -4,7 +4,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.Settings;
 import org.jpo.gui.swing.EdtViolationException;
 
 import javax.swing.*;
@@ -62,22 +61,6 @@ public class Tools {
         throw new IllegalStateException("Utility class");
     }
 
-    /**
-     * method that tests the file extension of a File object for being the
-     * correct extension. Either the same file object is returned or a new one
-     * is created with the correct extension. If not the correct extension is
-     * added. The case of the extension is ignored.
-     *
-     * @param extension The extension
-     * @param testFile  File to test
-     * @return the file
-     */
-    public static File correctFilenameExtension(String extension, File testFile) {
-        if (!testFile.getName().toUpperCase().endsWith(extension.toUpperCase())) {
-            return new File(testFile.getPath() + "." + extension);
-        }
-        return testFile;
-    }
 
     /**
      * Counts the number of real files in the array of files.
@@ -139,10 +122,6 @@ public class Tools {
         return false;
     }
 
-
-
-
-
     /**
      * Method that returns a file object that does not exist in
      * the target directory based on the supplied name.
@@ -202,7 +181,7 @@ public class Tools {
     /**
      * Brings up a popup about having run out of memory and runs a Garbage
      * Collection
-     */
+     *
     public static void dealOutOfMemoryError() {
         Tools.freeMem();
         SwingUtilities.invokeLater(
@@ -213,7 +192,7 @@ public class Tools {
         );
         LOGGER.info("JPO has now run a garbage collection.");
         Tools.freeMem();
-    }
+    }*/
 
 
     /*
@@ -274,18 +253,6 @@ public class Tools {
     public static void checkEDT() {
         if (!SwingUtilities.isEventDispatchThread()) {
             throw new EdtViolationException("Not on EDT! Throwing error.");
-        }
-    }
-
-    /**
-     * This method writes a warning to the log that we are on the EDT and should
-     * not be. It also dumps a stack trace. Intended for debugging slow running
-     * processes that should not be on the EDT.
-     */
-    public static void warnOnEDT() {
-        if (SwingUtilities.isEventDispatchThread()) {
-            LOGGER.warning("We are on the EDT and should not be! This is inefficient Continuing normally.");
-            Thread.dumpStack();
         }
     }
 

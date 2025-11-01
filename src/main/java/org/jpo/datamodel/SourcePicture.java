@@ -282,16 +282,16 @@ public class SourcePicture {
         reader.addIIOReadProgressListener(myIIOReadProgressListener);
         reader.setInput(iis);
         BufferedImage bufferedImage = null;
-        try {
+        //try {
             bufferedImage = fixTypeOfImage(reader.read(0));
-        } catch (final OutOfMemoryError e) {
+        /*} catch (final OutOfMemoryError e) {
             LOGGER.log(Level.SEVERE, "Caught an OutOfMemoryError while loading an image: {0}", e.getMessage());
             setStatus(SOURCE_PICTURE_ERROR, JpoResources.getResource("ScalablePictureErrorStatus"));
             Tools.dealOutOfMemoryError();
-        } finally {
+        } finally {*/
             reader.removeIIOReadProgressListener(myIIOReadProgressListener);
             reader.dispose();
-        }
+        //}
         return bufferedImage;
     }
 

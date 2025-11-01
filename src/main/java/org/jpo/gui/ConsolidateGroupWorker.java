@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static org.apache.commons.io.FileUtils.moveFile;
-import static org.jpo.datamodel.Tools.warnOnEDT;
 
 /*
  Copyright (C) 2002-2025 Richard Eigenmann.
@@ -226,7 +225,6 @@ public class ConsolidateGroupWorker extends SwingWorker<String, String> {
      * @param newReference The new location of the source file
      */
     private static void correctReferences(final File oldReference, final File newReference) {
-        warnOnEDT();
         //  search for other picture nodes in the tree using this image file
         var count = 0;
         final var enumeration = Settings.getPictureCollection().getRootNode().preorderEnumeration();

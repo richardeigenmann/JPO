@@ -93,8 +93,6 @@ public class NodeStatistics {
      * supplied.
      */
     public static int countNodes( @NotNull TreeNode start ) {
-        Tools.warnOnEDT();
-
         int count = 1;
         TreeNode n;
         final Enumeration<? extends TreeNode> nodes = start.children();
@@ -140,7 +138,6 @@ public class NodeStatistics {
      * @return the number of GroupInfo nodes underneath the start node.
      */
     private static synchronized  int countGroups( TreeNode startNode ) {
-        Tools.warnOnEDT();
         int count = 0;
         DefaultMutableTreeNode n;
         final Enumeration<? extends TreeNode> nodes = startNode.children();
@@ -263,8 +260,6 @@ public class NodeStatistics {
      * @return The number of bytes
      */
     private static long sizeOfPicturesLong(final DefaultMutableTreeNode startNode) {
-        Tools.warnOnEDT(); // really?
-
         long size = 0;
         DefaultMutableTreeNode n;
 

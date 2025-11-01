@@ -262,7 +262,7 @@ public class ScalablePicture
             return;
         }
 
-        try {
+        //try {
             setStatus( SCALABLE_PICTURE_SCALING, "Scaling picture." );
             if ( scaleToSize ) {
                 scaleFactor = calcScaleSourceToTarget( sourcePicture.getWidth(), sourcePicture.getHeight(), targetSize.width, targetSize.height );
@@ -272,12 +272,12 @@ public class ScalablePicture
             }
             scaledPicture = getScaledImage(sourcePicture.getSourceBufferedImage(), scaleFactor);
             setStatus(SCALABLE_PICTURE_READY, "Scaled Picture is ready.");
-        } catch (final OutOfMemoryError e) {
+        /*} catch (final OutOfMemoryError e) {
             LOGGER.log(Level.SEVERE, "OutOfMemoryError while scaling image {0}", e.getMessage());
             setStatus(SCALABLE_PICTURE_ERROR, "Out of Memory Error while scaling " + imageFile.toString());
             scaledPicture = null;
             Tools.dealOutOfMemoryError();
-        }
+        }*/
     }
 
     private BufferedImage getScaledImage(final BufferedImage sourcePicture, final double scaleFactor) {

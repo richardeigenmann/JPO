@@ -4,7 +4,6 @@ import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.Settings;
 import org.jpo.gui.swing.LabelFrame;
@@ -49,7 +48,6 @@ public class AddCollectionToGroupHandler {
      */
     @Subscribe
     public void handleEvent(final AddCollectionToGroupRequest request) {
-        Tools.checkEDT();
         final var popupNode = request.node();
         final var fileToLoad = request.collectionFile();
 

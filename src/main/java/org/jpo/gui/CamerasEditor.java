@@ -89,7 +89,6 @@ public class CamerasEditor extends JFrame {
      * Constructor
      */
     public CamerasEditor() {
-        Tools.checkEDT();
         this.cameraJTree = new JTree(treeModel);
         setSize(500, 400);
         setLocationRelativeTo(Settings.getAnchorFrame());

@@ -132,7 +132,6 @@ public class WebsiteGenerator extends SwingWorker<Integer, String> {
      */
     private WebsiteGenerator(final GenerateWebsiteRequest request) {
         this.request = request;
-        Tools.checkEDT();
         progressGui = new ProgressGui(Integer.MAX_VALUE,
                 JpoResources.getResource("HtmlDistillerThreadTitle"),
                 String.format(JpoResources.getResource("HtmlDistDone"), 0));

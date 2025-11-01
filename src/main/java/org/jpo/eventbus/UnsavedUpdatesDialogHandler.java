@@ -1,9 +1,8 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.gui.Settings;
-import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
+import org.jpo.gui.Settings;
 
 import javax.swing.*;
 
@@ -41,8 +40,6 @@ public class UnsavedUpdatesDialogHandler {
      */
     @Subscribe
     public void handleEvent(final UnsavedUpdatesDialogRequest request) {
-        Tools.checkEDT();
-
         // a good time to save the window coordinates
         JpoEventBus.getInstance().post(new SaveDockablesPositionsRequest());
 
