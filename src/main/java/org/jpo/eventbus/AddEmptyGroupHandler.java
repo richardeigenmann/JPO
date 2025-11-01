@@ -2,6 +2,7 @@ package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
 import org.jpo.datamodel.GroupInfo;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.gui.Settings;
 
 import java.util.logging.Level;
@@ -46,7 +47,10 @@ public class AddEmptyGroupHandler {
         if (!(parentNode.getUserObject() instanceof GroupInfo)) {
             LOGGER.log(Level.WARNING, "node {0} is of type {1} instead of GroupInfo. Proceeding anyway.", new Object[]{parentNode.getUserObject(), parentNode.getUserObject().getClass()});
         }
-        final var newNode = parentNode.addGroupNode("New Group");
+        final SortableDefaultMutableTreeNode newNode
+                = new SortableDefaultMutableTreeNode(
+                new GroupInfo("New Group"));
+        parentNode.add(newNode);
         Settings.memorizeGroupOfDropLocation(newNode);
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
     }

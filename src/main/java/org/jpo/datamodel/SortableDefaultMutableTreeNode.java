@@ -1,18 +1,13 @@
 package org.jpo.datamodel;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.jpo.gui.JpoResources;
-import org.jpo.gui.Settings;
 
-import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -41,7 +36,7 @@ import java.util.stream.Stream;
  * reference to either a PictureInfo or GroupInfo object in its getUserObject.
  * <p>
  * It extends the DefaultMutableTreeNode with the Comparable Interface that
- * allows our nodes to be compared.
+ * allows our nodes to be compared. TODO: Compare to what?
  */
 public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
@@ -118,22 +113,6 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Adds a new Group to the current node with the indicated description.
-     *
-     * @param description Description for the group
-     * @return The new node is returned for convenience.
-     */
-    public SortableDefaultMutableTreeNode addGroupNode(final String description) {
-        synchronized (this.getRoot()) {
-            final SortableDefaultMutableTreeNode newNode
-                    = new SortableDefaultMutableTreeNode(
-                    new GroupInfo(description));
-            add(newNode);
-            return newNode;
-        }
-    }
-
-    /**
      * Creates and add a new picture node to the current node from an image
      * file.
      *
@@ -203,34 +182,6 @@ public class SortableDefaultMutableTreeNode
             }
         }
         return false;
-    }
-
-
-
-    /**
-     * Copy any file from sourceFile source File to sourceFile target File
-     * location.
-     *
-     * @param sourceFile the source file location
-     * @param targetFile the target file location
-
-     */
-    public static void copyPicture(final File sourceFile, final File targetFile) {
-        LOGGER.log(Level.FINE, "Copying file {0} to file {1}", new Object[]{sourceFile, targetFile});
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(
-                    Settings.getAnchorFrame(),
-                    JpoResources.getResource("copyPictureError1")
-                            + sourceFile
-                            + JpoResources.getResource("copyPictureError2")
-                            + targetFile.toString()
-                            + JpoResources.getResource("copyPictureError3")
-                            + e.getMessage(),
-                    JpoResources.getResource("genericError"),
-                    JOptionPane.ERROR_MESSAGE);
-        }
     }
 
     /**
@@ -354,47 +305,6 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Returns the next node with a picture found after current one in the
-     * current Group It uses the getNextSibling method of the
-     * DefaultMutableTreeNode.
-     *
-     * @return The SortableDefaultMutableTreeNode that represents the next
-     * picture. If no picture can be found it returns null.
-     */
-    public SortableDefaultMutableTreeNode getNextGroupPicture() {
-        synchronized (this.getRoot()) {
-            DefaultMutableTreeNode nextNode = getNextSibling();
-            while ((nextNode != null) && (!(nextNode.getUserObject() instanceof PictureInfo))) {
-                nextNode = nextNode.getNextNode();
-            }
-            return (SortableDefaultMutableTreeNode) nextNode;
-        }
-    }
-
-    /**
-     * Returns the first child node under the current node which holds a
-     * PictureInfo object.
-     *
-     * @return The first child node holding a picture or null if none can be
-     * found.
-     */
-    public SortableDefaultMutableTreeNode findFirstPicture() {
-        final Enumeration<TreeNode> e = children();
-        while (e.hasMoreElements()) {
-            SortableDefaultMutableTreeNode testNode = (SortableDefaultMutableTreeNode) e.nextElement();
-            if (testNode.getUserObject() instanceof PictureInfo) {
-                return testNode;
-            } else if (testNode.getUserObject() instanceof GroupInfo) {
-                testNode = testNode.findFirstPicture();
-                if (testNode != null) {
-                    return testNode;
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
      * This method collects all pictures under the current node and returns them
      * as an Array List.
      *
@@ -493,7 +403,6 @@ public class SortableDefaultMutableTreeNode
             groupInfo.removeGroupInfoChangeListener(this);
         }
     }
-
 
     /**
      * This is where the Nodes in the tree find out about changes in the
@@ -818,41 +727,6 @@ public class SortableDefaultMutableTreeNode
         return super.getAllowsChildren();
     }
 
-    /**
-     * Copies the pictures from the source File collection into the target node while updating a supplied progress bar
-     *
-     * @param fileCollection A Collection framework of the new picture Files
-     * @param targetDir      The target directory for the copy operation
-     * @param copyMode       Set to true if you want to copy, false if you want to
-     *                       move the pictures.
-     * @param progressBar    The optional progressBar that should be incremented.
-     */
-    public void copyAddPictures(final Collection<File> fileCollection, final File targetDir,
-                                boolean copyMode, final JProgressBar progressBar) {
-        LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir});
-        getPictureCollection().setSendModelUpdates(false);
-        for (final File file : fileCollection) {
-            LOGGER.log(Level.FINE, "Processing file {}", file);
-            if (progressBar != null) {
-                SwingUtilities.invokeLater(
-                        () -> progressBar.setValue(progressBar.getValue() + 1)
-                );
-            }
-            final File targetFile = Tools.inventFilename(targetDir, file.getName());
-            LOGGER.log(Level.FINE, "Target file name chosen as: {0}", new Object[]{targetFile});
-            copyPicture(file, targetFile);
-
-            if (!copyMode) {
-                try {
-                    Files.delete(file.toPath());
-                } catch (final IOException e) {
-                    LOGGER.log(Level.SEVERE, "File {} could not be deleted!", file);
-                }
-            }
-            addPicture(targetFile, null);
-        }
-        getPictureCollection().setSendModelUpdates(true);
-    }
 
 
     @Override

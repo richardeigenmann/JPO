@@ -42,7 +42,6 @@ module org.jpo {
     requires io.github.classgraph;
     requires java.datatransfer;
 
-
     //requires org.mockito.junit.jupiter;  // should be test only but feels left out
 }
 

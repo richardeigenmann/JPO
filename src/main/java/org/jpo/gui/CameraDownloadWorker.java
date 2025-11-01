@@ -1,10 +1,17 @@
 package org.jpo.gui;
 
+import org.apache.commons.io.FileUtils;
 import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.*;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,14 +72,19 @@ public class CameraDownloadWorker
         JpoEventBus.getInstance().post(new CopyLocationsChangedEvent());
         if (dataModel.getShouldCreateNewGroup()) {
             LOGGER.log(Level.FINE, "Adding a new group {0} to node {1}", new Object[]{dataModel.getNewGroupDescription(), dataModel.getTargetNode()});
-            SortableDefaultMutableTreeNode newGroupNode = dataModel.getTargetNode().addGroupNode(dataModel.getNewGroupDescription());
+            final SortableDefaultMutableTreeNode newGroupNode
+                    = new SortableDefaultMutableTreeNode(
+                    new GroupInfo(dataModel.getNewGroupDescription()));
+            dataModel.getTargetNode().add(newGroupNode);
             dataModel.setTargetNode(newGroupNode);
         }
         Settings.memorizeGroupOfDropLocation(dataModel.getTargetNode());
         JpoEventBus.getInstance().post(new RecentDropNodesChangedEvent());
 
         LOGGER.log(Level.FINE, "About to copyAddPictures to node {0}", dataModel.getTargetNode());
-        dataModel.getTargetNode().copyAddPictures(dataModel.getNewPictures(),
+        copyAddPictures(
+                dataModel.getTargetNode(),
+                dataModel.getNewPictures(),
                 dataModel.getTargetDir(),
                 dataModel.getCopyMode(),
                 progressBar);
@@ -84,6 +96,69 @@ public class CameraDownloadWorker
         dataModel.getCamera().buildOldImage(this, interrupter);
         Settings.writeCameraSettings();
         return "Done";
+    }
+
+    /**
+     * Copies the pictures from the source File collection into the target node while updating a supplied progress bar
+     *
+     * @param fileCollection A Collection framework of the new picture Files
+     * @param targetDir      The target directory for the copy operation
+     * @param copyMode       Set to true if you want to copy, false if you want to
+     *                       move the pictures.
+     * @param progressBar    The optional progressBar that should be incremented.
+     */
+    public void copyAddPictures(
+            final SortableDefaultMutableTreeNode targetNode,
+            final Collection<File> fileCollection, final File targetDir,
+                                boolean copyMode, final JProgressBar progressBar) {
+        LOGGER.log(Level.FINE, "Copy/Moving {0} pictures to target directory {1}", new Object[]{fileCollection.size(), targetDir});
+        targetNode.getPictureCollection().setSendModelUpdates(false);
+        for (final File file : fileCollection) {
+            LOGGER.log(Level.FINE, "Processing file {}", file);
+            if (progressBar != null) {
+                SwingUtilities.invokeLater(
+                        () -> progressBar.setValue(progressBar.getValue() + 1)
+                );
+            }
+            final File targetFile = Tools.inventFilename(targetDir, file.getName());
+            LOGGER.log(Level.FINE, "Target file name chosen as: {0}", new Object[]{targetFile});
+            copyPicture(file, targetFile);
+
+            if (!copyMode) {
+                try {
+                    Files.delete(file.toPath());
+                } catch (final IOException _) {
+                    LOGGER.log(Level.SEVERE, "File {} could not be deleted!", file);
+                }
+            }
+            targetNode.addPicture(targetFile, null);
+        }
+        targetNode.getPictureCollection().setSendModelUpdates(true);
+    }
+
+    /**
+     * Copy any file from sourceFile source File to sourceFile target File
+     * location.
+     *
+     * @param sourceFile the source file location
+     * @param targetFile the target file location
+     */
+    public static void copyPicture(final File sourceFile, final File targetFile) {
+        LOGGER.log(Level.FINE, "Copying file {0} to file {1}", new Object[]{sourceFile, targetFile});
+        try {
+            FileUtils.copyFile(sourceFile, targetFile);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(
+                    Settings.getAnchorFrame(),
+                    JpoResources.getResource("copyPictureError1")
+                            + sourceFile
+                            + JpoResources.getResource("copyPictureError2")
+                            + targetFile.toString()
+                            + JpoResources.getResource("copyPictureError3")
+                            + e.getMessage(),
+                    JpoResources.getResource("genericError"),
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     /**

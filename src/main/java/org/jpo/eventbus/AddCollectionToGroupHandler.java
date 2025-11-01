@@ -1,7 +1,9 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
+import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureCollection;
+import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.JpoResources;
 import org.jpo.gui.Settings;
@@ -51,7 +53,10 @@ public class AddCollectionToGroupHandler {
         final var popupNode = request.node();
         final var fileToLoad = request.collectionFile();
 
-        final var newNode = popupNode.addGroupNode("New Group");
+        final SortableDefaultMutableTreeNode newNode
+                = new SortableDefaultMutableTreeNode(
+                new GroupInfo("New Group"));
+        popupNode.add(newNode);
         try {
             final var loadProgressGui = new LabelFrame(JpoResources.getResource("org.jpo.dataModel.XmlReader.loadProgressGuiTitle"));
             PictureCollection.fileLoad(
