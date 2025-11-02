@@ -1,9 +1,20 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+
+
+export interface PictureDTO {
+  id: string;
+  title: string;
+  thumbnailUrl: string; // URL for the thumbnail image
+  fullImageUrl: string; // URL for the full image
+}
 
 export interface JpoNode {
+  id: number;
   label: string;
+  isGroup: boolean;
+  picture?: PictureDTO;
   children?: JpoNode[];
 }
 
@@ -52,6 +63,7 @@ export class SpringConnection {
   setConnectionStatus(newStatus: string): void {
     this._status.set(newStatus);
   }
+
 }
 
 const SPRING_CONNECTION_URL = 'http://localhost:8001/api/jpo';

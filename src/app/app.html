@@ -1,3 +1,14 @@
 <router-outlet />
 <h1>{{title()}}</h1>
-<app-collection-tree></app-collection-tree>
+
+<mat-sidenav-container class="app-container">
+
+  <mat-sidenav mode="side" opened="true" fixedInViewport="true" class="sidenav-tree">
+      <app-collection-tree></app-collection-tree>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="main-content">
+      <app-thumbnail-panel></app-thumbnail-panel>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
