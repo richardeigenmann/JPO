@@ -4,6 +4,12 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { SpringConnection } from './spring-connection';
 import { signal } from '@angular/core';
 
+const mockSpringConnectionForApp = {
+  treeData: signal([]),
+  connectionStatus: signal('Some status to avoid error'),
+  // Add any other required methods/signals
+};
+
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -11,7 +17,7 @@ describe('App', () => {
       providers: [
         provideHttpClientTesting(),
         // Provide a mock for SpringConnection to avoid instantiating the real service
-        { provide: SpringConnection, useValue: { treeData: signal([]) } }
+        { provide: SpringConnection, useValue: mockSpringConnectionForApp }
       ],
     }).compileComponents();
   });
