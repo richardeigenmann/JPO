@@ -11,6 +11,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -42,6 +43,16 @@ public class SortableDefaultMutableTreeNode
         extends DefaultMutableTreeNode
         implements PictureInfoChangeListener, GroupInfoChangeListener {
 
+    /**
+     * A concurrency safe way to create a new uniqueId for each node.
+     */
+    private static final AtomicInteger ID_GENERATOR = new AtomicInteger(1);
+
+    /**
+     * We need a uniqueId for communicating nodes across networks and GUI implementations
+     */
+    private final int uniqueId;
+
 
     /**
      * Defines a logger for this class
@@ -49,10 +60,11 @@ public class SortableDefaultMutableTreeNode
     private static final Logger LOGGER = Logger.getLogger(SortableDefaultMutableTreeNode.class.getName());
 
     /**
-     * Constructor for a new node.
+     * No Args constructor for a new node.
      */
     public SortableDefaultMutableTreeNode() {
         super();
+        this.uniqueId = ID_GENERATOR.getAndIncrement();
     }
 
     /**
@@ -62,8 +74,16 @@ public class SortableDefaultMutableTreeNode
      */
     public SortableDefaultMutableTreeNode(final GroupOrPicture userObject) {
         super();
+        this.uniqueId = ID_GENERATOR.getAndIncrement();
         setUserObject(userObject);
         userObject.setOwningNode(this);
+    }
+
+    /**
+     * Getter for the unique ID.
+     */
+    public int getUniqueId() {
+        return uniqueId;
     }
 
     private transient PictureCollection myPictureCollection;
@@ -197,9 +217,9 @@ public class SortableDefaultMutableTreeNode
     public static boolean wasNodeDeleted(
             final SortableDefaultMutableTreeNode potentiallyAffectedNode, final TreeModelEvent treeModelEvent) {
         TreePath removedChild;
-        final TreePath currentNodeTreePath = new TreePath(potentiallyAffectedNode.getPath());
-        final Object[] children = treeModelEvent.getChildren();
-        for (final Object child : children) {
+        final var currentNodeTreePath = new TreePath(potentiallyAffectedNode.getPath());
+        final var children = treeModelEvent.getChildren();
+        for (final var child : children) {
             removedChild = new TreePath(child);
             if (removedChild.isDescendant(currentNodeTreePath)) {
                 return true;

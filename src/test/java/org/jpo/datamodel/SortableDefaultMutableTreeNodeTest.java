@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2023-2024 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2023-2025 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -81,7 +81,7 @@ class SortableDefaultMutableTreeNodeTest {
      *
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         final var pictureCollection = new PictureCollection();
         rootNode = new SortableDefaultMutableTreeNode();
         pictureCollection.getRootNode().add(rootNode);
@@ -128,6 +128,31 @@ class SortableDefaultMutableTreeNodeTest {
     void testConstructor() {
         assumeFalse(GraphicsEnvironment.isHeadless());
         assertNotNull(rootNode);
+    }
+
+    @Test
+    void testUniqueId() {
+        var rootUniqueId = rootNode.getUniqueId();
+        var group1UniqueId = group1.getUniqueId();
+        var group2UniqueId = group2.getUniqueId();
+        var group3UniqueId = group3.getUniqueId();
+        var group4UniqueId = group4.getUniqueId();
+        var group5UniqueId = group5.getUniqueId();
+        // did the AtomicInteger assign a value greater than 0?
+        assertTrue(rootUniqueId > 0 );
+        assertTrue(group1UniqueId > 0 );
+        assertTrue(group2UniqueId > 0 );
+        assertTrue(group3UniqueId > 0 );
+        assertTrue(group4UniqueId > 0 );
+        assertTrue(group5UniqueId > 0 );
+        // can we find any duplicates? Could be more comprehensive
+        // but we are not likely to find a problem with such low
+        // level core Java functionality
+        assertNotEquals(rootUniqueId, group1UniqueId);
+        assertNotEquals(group1UniqueId, group2UniqueId);
+        assertNotEquals(group2UniqueId, group3UniqueId);
+        assertNotEquals(group3UniqueId, group4UniqueId);
+        assertNotEquals(group4UniqueId, group5UniqueId);
     }
 
     /**

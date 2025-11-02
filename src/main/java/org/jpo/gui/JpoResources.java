@@ -16,6 +16,7 @@ The license is in gpl.txt.
 See http://www.gnu.org/copyleft/gpl.html for the details.
 */
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -27,7 +28,7 @@ public class JpoResources {
         // prevent instantiation
     }
 
-    private static ResourceBundle jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Settings.DEFAULT_LOCALE);
+    private static ResourceBundle jpoResources = ResourceBundle.getBundle("org.jpo.gui.JpoResources", Locale.ENGLISH);
 
     public static ResourceBundle getJpoResources() {
         return jpoResources;

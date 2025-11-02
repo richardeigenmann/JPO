@@ -235,7 +235,7 @@ public class Tools {
                 final LocalDateTime parsedResult = LocalDateTime.parse(dateString, formatter);
                 LOGGER.log(Level.FINE, "Matched {0} on pattern {1}", new Object[]{dateString, pattern});
                 return GregorianCalendar.from(ZonedDateTime.of(parsedResult, ZoneId.systemDefault()));
-            } catch (final DateTimeParseException e) {
+            } catch (final DateTimeParseException _) {
                 // skip and continue with the next pattern
             }
         }

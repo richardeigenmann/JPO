@@ -214,7 +214,7 @@ public class Camera implements Serializable {
         HashCode hash;
         try {
             hash = Files.asByteSource(f).hash(Hashing.sha256());
-        } catch (IOException e) {
+        } catch (IOException _) {
             hash = null;
         }
         if (hash != null) {
@@ -314,7 +314,7 @@ public class Camera implements Serializable {
                 HashCode hash = null;
                 try {
                     hash = Files.asByteSource(f).hash(Hashing.sha256());
-                } catch (IOException e) {
+                } catch (IOException _) {
                     //
                 }
                 storePicture(
