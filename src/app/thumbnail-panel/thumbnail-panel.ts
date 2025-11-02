@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { SelectedNodeState } from '../selected-node-state';
-import { filter, switchMap } from 'rxjs';
-import { JpoNode, PictureDTO, SpringConnection } from '../spring-connection';
+import { filter } from 'rxjs';
+import { JpoNode, SpringConnection } from '../spring-connection';
 
 @Component({
   selector: 'app-thumbnail-panel',
