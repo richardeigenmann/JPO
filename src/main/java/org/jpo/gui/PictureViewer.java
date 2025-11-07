@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.datamodel.ScalablePicture.ScalablePictureStatus;
 import org.jpo.eventbus.*;

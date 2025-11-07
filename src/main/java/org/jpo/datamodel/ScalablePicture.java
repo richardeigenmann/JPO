@@ -1,6 +1,5 @@
 package org.jpo.datamodel;
 
-import org.jpo.cache.CacheSettings;
 import org.jpo.datamodel.SourcePicture.SourcePictureStatus;
 import org.jpo.gui.JpoResources;
 

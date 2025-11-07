@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
-import org.jpo.cache.CacheSettings;
+import org.jpo.datamodel.CacheSettings;
 import org.jpo.datamodel.ListNavigator;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;

@@ -18,8 +18,8 @@ package org.jpo.gui;
 
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.cache.CacheSettings;
-import org.jpo.cache.JpoCache;
+import org.jpo.datamodel.CacheSettings;
+import org.jpo.datamodel.JpoCache;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.WholeNumberField;
 

@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.gui.QUEUE_PRIORITY;
 
 import java.util.List;
 

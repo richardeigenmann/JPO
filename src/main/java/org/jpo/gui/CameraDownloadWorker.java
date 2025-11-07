@@ -1,7 +1,6 @@
 package org.jpo.gui;
 
 import org.apache.commons.io.FileUtils;
-import org.jpo.cache.QUEUE_PRIORITY;
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;

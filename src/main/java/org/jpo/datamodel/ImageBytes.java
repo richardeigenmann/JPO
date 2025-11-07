@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.datamodel;
 
 import java.io.ByteArrayInputStream;
 import java.io.Serial;

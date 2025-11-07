@@ -1,6 +1,5 @@
-package org.jpo.cache;
+package org.jpo.gui;
 
-import org.jpo.gui.Settings;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.StartThumbnailCreationDaemonRequest;
 /*

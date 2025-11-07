@@ -1,7 +1,6 @@
-package org.jpo.cache;
+package org.jpo.gui;
 
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.gui.ThumbnailController;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.*;

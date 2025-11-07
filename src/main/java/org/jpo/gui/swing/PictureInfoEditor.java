@@ -4,8 +4,8 @@ import net.miginfocom.swing.MigLayout;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.cache.CacheSettings;
-import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.datamodel.CacheSettings;
+import org.jpo.gui.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.SetPictureRotationRequest;
@@ -817,7 +817,7 @@ public class PictureInfoEditor extends JFrame {
             try {
                 highresLocationJTextField.setText(jFileChooser.getSelectedFile().toURI().toURL().toString());
 
-            } catch (MalformedURLException x) {
+            } catch (MalformedURLException _) {
                 // don't update the text field then
             }
         }

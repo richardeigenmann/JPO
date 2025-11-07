@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.datamodel;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

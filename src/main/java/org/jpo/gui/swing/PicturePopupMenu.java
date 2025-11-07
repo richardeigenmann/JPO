@@ -2,7 +2,7 @@ package org.jpo.gui.swing;
 
 import com.google.common.eventbus.Subscribe;
 import org.jetbrains.annotations.NotNull;
-import org.jpo.cache.QUEUE_PRIORITY;
+import org.jpo.gui.QUEUE_PRIORITY;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.JpoResources;

@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.gui;
 
 /*
  Copyright (C) 2002-2025 Richard Eigenmann.

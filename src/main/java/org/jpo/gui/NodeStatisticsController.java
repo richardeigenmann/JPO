@@ -1,7 +1,5 @@
 package org.jpo.gui;
 
-import org.jpo.cache.ThumbnailCreationExecutor;
-import org.jpo.cache.ThumbnailCreationQueue;
 import org.jpo.datamodel.*;
 import org.jpo.gui.swing.NodeStatisticsPanel;
 
@@ -101,7 +99,7 @@ public class NodeStatisticsController {
             protected void done() {
                 try {
                     nodeStatisticsPanel.updateStats(nodeStatisticsBean);
-                } catch (final Exception ignore) {
+                } catch (final Exception _) {
                     // noop
                 }
             }

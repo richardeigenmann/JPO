@@ -1,7 +1,7 @@
 package org.jpo.gui;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.cache.CacheSettings;
+import org.jpo.datamodel.CacheSettings;
 import org.jpo.datamodel.*;
 import org.jpo.eventbus.*;
 import org.jpo.gui.swing.ResizeSlider;

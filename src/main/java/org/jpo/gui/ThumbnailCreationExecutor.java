@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.gui;
 
 /*
  Copyright (C) 2023-2025 Richard Eigenmann.
@@ -15,8 +15,6 @@ package org.jpo.cache;
  The license is in gpl.txt.
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
-
-import org.jpo.gui.Settings;
 
 import java.util.ArrayList;
 import java.util.Collection;

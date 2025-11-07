@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.datamodel;
 
 /*
  Copyright (C) 2025 Richard Eigenmann.

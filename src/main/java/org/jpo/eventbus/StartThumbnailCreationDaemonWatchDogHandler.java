@@ -1,7 +1,7 @@
 package org.jpo.eventbus;
 
 import com.google.common.eventbus.Subscribe;
-import org.jpo.cache.ThumbnailCreationDaemonWatchDog;
+import org.jpo.gui.ThumbnailCreationDaemonWatchDog;
 
 /*
  Copyright (C) 2022-2025 Richard Eigenmann.

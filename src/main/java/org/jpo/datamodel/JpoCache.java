@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.datamodel;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.jcs3.JCS;
@@ -6,7 +6,6 @@ import org.apache.commons.jcs3.access.CacheAccess;
 import org.apache.commons.jcs3.access.exception.CacheException;
 import org.apache.commons.jcs3.engine.control.CompositeCacheManager;
 import org.jetbrains.annotations.TestOnly;
-import org.jpo.datamodel.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

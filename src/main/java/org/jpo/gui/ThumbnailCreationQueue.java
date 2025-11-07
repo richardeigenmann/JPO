@@ -1,4 +1,4 @@
-package org.jpo.cache;
+package org.jpo.gui;
 
 import org.jetbrains.annotations.TestOnly;
 

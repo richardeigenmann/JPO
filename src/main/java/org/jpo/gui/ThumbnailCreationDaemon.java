@@ -1,5 +1,6 @@
-package org.jpo.cache;
+package org.jpo.gui;
 
+import org.jpo.datamodel.JpoCache;
 import org.jpo.datamodel.*;
 
 import javax.swing.*;

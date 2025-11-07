@@ -15,7 +15,7 @@ package org.jpo.gui;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
-import org.jpo.cache.CacheSettings;
+import org.jpo.datamodel.CacheSettings;
 
 import javax.swing.*;
 import java.awt.*;
