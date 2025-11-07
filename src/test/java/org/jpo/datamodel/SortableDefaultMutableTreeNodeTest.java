@@ -155,6 +155,15 @@ class SortableDefaultMutableTreeNodeTest {
         assertNotEquals(group4UniqueId, group5UniqueId);
     }
 
+    @Test
+    void testFindNodeByUniqueId() {
+        assertEquals(SortableDefaultMutableTreeNode.getNodeById(rootNode, rootNode.getUniqueId()), rootNode);
+        assertEquals(SortableDefaultMutableTreeNode.getNodeById(rootNode, group1.getUniqueId()), group1);
+        assertEquals(SortableDefaultMutableTreeNode.getNodeById(rootNode, group2.getUniqueId()), group2);
+        assertEquals(SortableDefaultMutableTreeNode.getNodeById(rootNode, group3.getUniqueId()), group3);
+        assertEquals(SortableDefaultMutableTreeNode.getNodeById(group3, group1.getUniqueId()), group1);
+    }
+
     /**
      * tests that we can get to a previous picture
      */

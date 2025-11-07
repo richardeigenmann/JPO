@@ -86,6 +86,24 @@ public class SortableDefaultMutableTreeNode
         return uniqueId;
     }
 
+    /**
+     * A utility method that returns the node identified by the supplied id.
+     * Looks at the supplied node and jumps to the root node if the supplied node 
+     * is not already the root node. Then does a DepthFirstSearch through the tree
+     * to find the first node that matches the supplied id and returns it.
+     * @return the node identified by the id.
+     */
+    public static SortableDefaultMutableTreeNode getNodeById (final SortableDefaultMutableTreeNode node, final int id) {
+        final var startNode = node.isRoot() ? node : node.getRoot();
+
+        return Collections.list(startNode.depthFirstEnumeration()).stream()
+                .filter(SortableDefaultMutableTreeNode.class::isInstance)
+                .map(SortableDefaultMutableTreeNode.class::cast)
+                .filter(n -> n.getUniqueId() == id)
+                .findFirst()
+                .orElse(null);
+    }
+
     private transient PictureCollection myPictureCollection;
 
     /**
