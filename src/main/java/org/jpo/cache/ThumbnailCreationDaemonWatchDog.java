@@ -4,7 +4,7 @@ import org.jpo.gui.Settings;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.eventbus.StartThumbnailCreationDaemonRequest;
 /*
-Copyright (C) 2024 Richard Eigenmann.
+Copyright (C) 2025 Richard Eigenmann.
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
 as published by the Free Software Foundation; either version 2
@@ -33,7 +33,7 @@ public class ThumbnailCreationDaemonWatchDog implements Runnable {
             }
             try {
                 Thread.sleep(10000);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException _) {
                 Thread.currentThread().interrupt();
             }
         }

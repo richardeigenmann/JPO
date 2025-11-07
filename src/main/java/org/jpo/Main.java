@@ -5,9 +5,8 @@ import org.jpo.eventbus.EventBusInitializer;
 import org.jpo.eventbus.JpoEventBus;
 import org.jpo.generated.GeneratedVersion;
 
-
 /*
- Copyright (C) 2002-2024 Richard Eigenmann.
+ Copyright (C) 2002-2025 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -25,7 +24,7 @@ import org.jpo.generated.GeneratedVersion;
  * The first class to be started to get the JPO application going.
  *
  * @author Richard Eigenmann, richard.eigenmann@gmail.com
- * @version 0.21
+ * @version 0.25
  */
 public class Main {
 
@@ -39,13 +38,16 @@ public class Main {
      * @param args The command line arguments
      */
     public static void main( String[] args ) {
-        System.out.println("\nJPO version " + GeneratedVersion.JPO_VERSION + "\n"
-                + "Copyright (C) 2000-2025 Richard Eigenmann,\nZurich, Switzerland\n"
-                + "JPO comes with ABSOLUTELY NO WARRANTY;\n"
-                + "for details Look at the Help | License menu item.\n"
-                + "This is free software, and you are welcome\n"
-                + "to redistribute it under certain conditions;\n"
-                + "see Help | License for details.\n\n");
+        System.out.println(String.format("""
+                JPO Version %s
+                Copyright (C) 2000-2025 Richard Eigenmann,
+                Zurich, Switzerland.
+                JPO comes with ABSOLUTELY NO WARRANTY.
+                For details look at the Help > License menu.
+                This is free software, and you are welcome
+                to redistribute it under certain conditions.
+                See Help > License for details.
+                """, GeneratedVersion.JPO_VERSION ));
 
         EventBusInitializer.registerEventHandlers();
         JpoEventBus.getInstance().post(new ApplicationStartupRequest() );
