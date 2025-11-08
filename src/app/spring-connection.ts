@@ -22,6 +22,8 @@ export interface JpoNode {
   providedIn: 'root',
 })
 export class SpringConnection {
+  readonly SPRING_CONNECTION_URL = 'http://localhost:8001/api/jpo';
+
   treeData = signal<JpoNode[]>([]);
 
   constructor(private http: HttpClient) {
@@ -35,10 +37,10 @@ export class SpringConnection {
    * Components should call this method to load the data.
    */
   loadCollection(): void {
-    console.log('Fetching collection data from URL: ' + SPRING_CONNECTION_URL);
-    this._status.set('Fetching collection data from URL: ' + SPRING_CONNECTION_URL);
+    console.log('Fetching collection data from URL: ' + this.SPRING_CONNECTION_URL);
+    this._status.set('Fetching collection data from URL: ' + this.SPRING_CONNECTION_URL);
     this.http
-      .get<any>(SPRING_CONNECTION_URL)
+      .get<any>(this.SPRING_CONNECTION_URL)
       .pipe(
         tap((data) => {
           console.log('Collection data loaded successfully.');
@@ -65,5 +67,3 @@ export class SpringConnection {
   }
 
 }
-
-const SPRING_CONNECTION_URL = 'http://localhost:8001/api/jpo';

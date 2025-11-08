@@ -1,5 +1,14 @@
-<p>thumbnail-panel works!</p>
 <p>Id: {{myNode?.id}}</p>
 <p>Label: {{myNode?.label}}</p>
 <p>Picture: {{myNode?.picture}}</p>
 <p>IsGroup: {{myNode?.isGroup}}</p>
+@if ( ! myNode?.isGroup ) {
+  <img src="{{springService.SPRING_CONNECTION_URL}}/thumbnail/{{myNode?.id}}.jpg"/>
+} @else {
+  @for ( childNode of myNode?.children; track childNode.id ) {
+    <p>Child ID: {{childNode.id}}</p>
+    <p>Child Label: {{childNode.label}}</p>
+    <img src="{{springService.SPRING_CONNECTION_URL}}/thumbnail/{{childNode?.id}}.jpg"/>
+    <hr>
+  }
+}
