@@ -11,7 +11,6 @@ import org.jxmapviewer.painter.CompoundPainter;
 import org.jxmapviewer.painter.Painter;
 import org.jxmapviewer.viewer.*;
 
-import javax.swing.event.MouseInputListener;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -19,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.awt.Cursor.CROSSHAIR_CURSOR;
 
@@ -49,6 +50,7 @@ public class MapViewer {
      * Use 8 threads in parallel to load the tiles
      */
     private static final int THREAD_POOL_SIZE = 8;
+    private static final Logger LOGGER = Logger.getLogger(MapViewer.class.getName());
 
     /**
      * Constructs the controller which creates the Component and wires up the
@@ -61,14 +63,15 @@ public class MapViewer {
         jxMapViewer.setTileFactory(tileFactory);
 
         // Setup local file cache
-        final File cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + ".jxmapviewer2");
+        final var cacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + ".jxmapviewer2");
+        LOGGER.log(Level.INFO, "Using {0} as cache directory for the map tiles", cacheDir);
         tileFactory.setLocalCache(new FileBasedLocalCache(cacheDir, false));
 
 
         tileFactory.setThreadPoolSize(THREAD_POOL_SIZE);
 
         // Add interactions
-        final MouseInputListener mouseInputListener = new PanMouseInputListener(jxMapViewer);
+        final var mouseInputListener = new PanMouseInputListener(jxMapViewer);
         jxMapViewer.addMouseListener( mouseInputListener );
         jxMapViewer.addMouseMotionListener( mouseInputListener );
         jxMapViewer.addMouseListener( new CenterMapListener( jxMapViewer ) );
@@ -81,7 +84,7 @@ public class MapViewer {
         waypoints.add( defaultWaypoint );
 
         // Create a waypoint painter that takes all the waypoints
-        final WaypointPainter<Waypoint> waypointPainter = new WaypointPainter<>();
+        final var waypointPainter = new WaypointPainter<>();
         waypointPainter.setWaypoints( waypoints );
 
         final List<Painter<JXMapViewer>> painters = new ArrayList<>();
