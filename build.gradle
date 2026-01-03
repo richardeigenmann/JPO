@@ -132,7 +132,7 @@ dependencies {
     implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation files('libs/jwizz-0.1.4.jar')
-    implementation 'org.jxmapviewer:jxmapviewer2:2.8'
+    implementation 'org.jxmapviewer:jxmapviewer2:2.8.1'
     implementation 'com.drewnoakes:metadata-extractor:2.19.0'
     // needed to pull down 1.1.3p1 from 5 May 2018 from http://www.docking-frames.org/download.html
     // Maven dependencies don't work
