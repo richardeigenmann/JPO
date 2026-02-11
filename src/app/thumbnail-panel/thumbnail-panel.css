@@ -3,3 +3,44 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.panel-container {
+  --thumbnail-width: 150px; /* Default width */
+}
+
+.thumbnail-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.thumbnail-item {
+  width: var(--thumbnail-width);
+  display: flex;
+  flex-direction: column;
+}
+
+.image-container {
+  flex-grow: 1; /* Allow this container to grow */
+  display: flex;
+  align-items: flex-end; /* Align the image to the bottom */
+}
+
+.image-container img {
+  width: 100%;
+  height: auto; /* Let image determine its own height */
+  object-fit: contain; /* Show the whole image, letterboxed */
+  background-color: #f0f0f0; /* A light background for any letterboxing */
+}
+
+.label {
+  margin-top: 8px;
+  word-wrap: break-word; /* Ensure long labels without spaces can wrap */
+}

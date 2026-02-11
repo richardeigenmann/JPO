@@ -29,10 +29,26 @@
 @if (!myNode?.isGroup) {
   <img src="{{ springService.SPRING_CONNECTION_URL }}/thumbnail/{{ myNode?.id }}.jpg" />
 } @else {
-  @for (childNode of myNode?.children; track childNode.id) {
-    <p>Child ID: {{ childNode.id }}</p>
-    <p>Child Label: {{ childNode.label }}</p>
-    <img src="{{ springService.SPRING_CONNECTION_URL }}/thumbnail/{{ childNode?.id }}.jpg" />
-    <hr />
-  }
+  <div class="panel-container" [style.--thumbnail-width.px]="thumbnailWidth">
+    <div class="slider-container">
+      <label for="zoom">Zoom:</label>
+      <input type="range" id="zoom" name="zoom" min="5" max="100" [(ngModel)]="zoomLevel" />
+      <span>{{ zoomLevel }}%</span>
+    </div>
+    <div class="thumbnail-container">
+      @for (childNode of myNode?.children; track childNode.id) {
+      <div class="thumbnail-item">
+        <div class="image-container">
+          <img
+            src="{{ springService.SPRING_CONNECTION_URL }}/thumbnail/{{
+              childNode?.id
+            }}.jpg"
+            alt="{{ childNode.label }}"
+          />
+        </div>
+        <p class="label">{{ childNode.label }}</p>
+      </div>
+      }
+    </div>
+  </div>
 }
