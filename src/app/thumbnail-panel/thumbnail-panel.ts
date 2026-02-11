@@ -1,3 +1,4 @@
+import { MatButtonModule } from '@angular/material/button';
 import { Component, inject } from '@angular/core';
 import { SelectedNodeState } from '../selected-node-state';
 import { filter } from 'rxjs';
@@ -5,7 +6,7 @@ import { JpoNode, SpringConnection } from '../spring-connection';
 
 @Component({
   selector: 'app-thumbnail-panel',
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './thumbnail-panel.html',
   styleUrl: './thumbnail-panel.css',
   standalone: true,
