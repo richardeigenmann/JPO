@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Needed for basic directives
-import { MatTreeModule } from '@angular/material/tree';
+ import { MatTreeModule } from '@angular/material/tree';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { JpoNode, SpringConnection } from '../spring-connection';
@@ -10,7 +9,7 @@ import { SelectedNodeState } from '../selected-node-state';
 
 @Component({
   selector: 'app-collection-tree',
-  imports: [CommonModule, MatCardModule, MatTreeModule, MatButtonModule, MatIconModule],
+  imports: [MatCardModule, MatTreeModule, MatButtonModule, MatIconModule],
   templateUrl: './collection-tree.html',
   styleUrl: './collection-tree.css',
   standalone: true
