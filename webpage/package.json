@@ -11,10 +11,10 @@
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.10",
-    "astro": "^5.13.8",
-    "bootstrap": "^5.3.7"
+    "astro": "^5.17.2",
+    "bootstrap": "^5.3.8"
   },
   "devDependencies": {
-    "cypress": "^15.2.0"
+    "cypress": "^15.10.0"
   }
 }
