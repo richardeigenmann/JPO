@@ -3,7 +3,6 @@ package org.jpo.datamodel;
 import org.apache.commons.io.FilenameUtils;
 import org.jpo.gui.JpoResources;
 
-import javax.swing.event.TreeModelEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
@@ -17,7 +16,7 @@ import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 /*
- Copyright (C) 2003-2025 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2003-2026 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -223,22 +222,18 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * This method returns whether the supplied node is a descendant of the
-     * deletions that have been detected in the TreeModelListener delivered
-     * TreeModelEvent.
+     * When nodes are removed we may want to know if a particular node
+     * was part of the tree that has been removed.
      *
-     * @param potentiallyAffectedNode The node to check whether it is or is a descendant of
-     *                     the deleted node.
-     * @param treeModelEvent The TreeModelEvent that was detected
-     * @return true if successful, false if not
+     * @param potentiallyAffectedNode The node to check whether it is part of the tree of nodes that were removed
+     * @param removedNodes The nodes that were removed
+     * @return true if the potentiallyAffectedNode is part of the tree of the removedNodes
      */
     public static boolean wasNodeDeleted(
-            final SortableDefaultMutableTreeNode potentiallyAffectedNode, final TreeModelEvent treeModelEvent) {
-        TreePath removedChild;
+            final SortableDefaultMutableTreeNode potentiallyAffectedNode, final Object[] removedNodes) {
         final var currentNodeTreePath = new TreePath(potentiallyAffectedNode.getPath());
-        final var children = treeModelEvent.getChildren();
-        for (final var child : children) {
-            removedChild = new TreePath(child);
+        for (final var child : removedNodes) {
+            final var removedChild = new TreePath(child);
             if (removedChild.isDescendant(currentNodeTreePath)) {
                 return true;
             }

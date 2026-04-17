@@ -695,7 +695,7 @@ public class PictureInfoEditor extends JFrame {
      * Close the editor window and release all listeners.
      */
     public void getRid() {
-        if (myNode.getPictureCollection().getTreeModel() != null) {
+        if (myNode != null && myNode.getPictureCollection() != null && myNode.getPictureCollection().getTreeModel() != null) {
             myNode.getPictureCollection().removeTreeModelListener(myTreeModelListener);
         }
         pictureInfo.removePictureInfoChangeListener(myPictureInfoChangeListener);
@@ -865,7 +865,7 @@ public class PictureInfoEditor extends JFrame {
          */
         @Override
         public void treeNodesRemoved(final TreeModelEvent treeModelEvent) {
-            if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, treeModelEvent)) {
+            if (SortableDefaultMutableTreeNode.wasNodeDeleted(myNode, treeModelEvent.getChildren())) {
                 getRid();
             }
         }

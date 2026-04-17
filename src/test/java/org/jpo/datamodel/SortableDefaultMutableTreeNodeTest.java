@@ -58,7 +58,7 @@ class SortableDefaultMutableTreeNodeTest {
 
     private SortableDefaultMutableTreeNode group5;
 
-    private final PictureInfo pi1 = new PictureInfo(new File("/images/image1.jpg"), "Fist Picture");
+    private final PictureInfo pi1 = new PictureInfo(new File("/images/image1.jpg"), "First Picture");
 
     private SortableDefaultMutableTreeNode picture1;
 
@@ -978,4 +978,26 @@ class SortableDefaultMutableTreeNodeTest {
         assertFalse(group3.containsAnAncestor(List.of(picture1, picture2)));
         assert(group4.containsAnAncestor(List.of(group3)));
     }
+
+    @Test
+    void testWasNodeDeletedSelf() {
+        picture1.removeFromParent();
+        Object[] removedNodes = new Object[]{picture1};
+        assertTrue(SortableDefaultMutableTreeNode.wasNodeDeleted(picture1, removedNodes));
+    }
+
+    @Test
+    void testWasNodeDeletedParent() {
+        group1.removeFromParent();
+        Object[] removedNodes = new Object[]{group1};
+        assertTrue(SortableDefaultMutableTreeNode.wasNodeDeleted(picture1, removedNodes));
+    }
+
+    @Test
+    void testWasNodeDeletedOtherParent() {
+        group2.removeFromParent();
+        Object[] removedNodes = new Object[]{group2};
+        assertFalse(SortableDefaultMutableTreeNode.wasNodeDeleted(picture1, removedNodes));
+    }
+
 }

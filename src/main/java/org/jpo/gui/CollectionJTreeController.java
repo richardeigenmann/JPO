@@ -276,7 +276,7 @@ public class CollectionJTreeController {
 
         private void importNodeCopy(final JTree.DropLocation dropLocation, final SortableDefaultMutableTreeNode sourceNode) {
             final var targetNode = (SortableDefaultMutableTreeNode) dropLocation.getPath().getLastPathComponent();
-            SortableDefaultMutableTreeNode cloneNode = sourceNode.getClone();
+            final var cloneNode = sourceNode.getClone();
             if (dropLocation.getChildIndex() == -1) {
                 if (targetNode.getUserObject() instanceof GroupInfo) {
                     targetNode.add(cloneNode);
