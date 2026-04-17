@@ -414,8 +414,8 @@ jlink {
 
 
 tasks.register('uploadWebsitePages', Exec) {
-    group 'website'
-    description 'Publishes the JPO website pages'
+    group = 'website'
+    description = 'Publishes the JPO website pages'
     dependsOn ':webpage:npmBuild'
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
@@ -426,8 +426,8 @@ tasks.register('uploadWebsitePages', Exec) {
 }
 
 tasks.register('uploadJavadoc', Exec) {
-    group 'website'
-    description 'Publishes the JPO website pages'
+    group = 'website'
+    description = 'Publishes the JPO website pages'
     dependsOn javadoc
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
@@ -435,8 +435,8 @@ tasks.register('uploadJavadoc', Exec) {
 }
 
 tasks.register('uploadRpmInstaller', Exec) {
-    group 'website'
-    description 'Publishes the JPO rpm installer bundle'
+    group = 'website'
+    description = 'Publishes the JPO rpm installer bundle'
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
@@ -444,8 +444,8 @@ tasks.register('uploadRpmInstaller', Exec) {
 }
 
 tasks.register('uploadDebInstaller', Exec) {
-    group 'website'
-    description 'Publishes the JPO Debian installer bundle'
+    group = 'website'
+    description = 'Publishes the JPO Debian installer bundle'
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
@@ -453,8 +453,8 @@ tasks.register('uploadDebInstaller', Exec) {
 }
 
 tasks.register('uploadMsiInstaller', Exec) {
-    group 'website'
-    description 'Publishes the JPO MSI installer bundle'
+    group = 'website'
+    description = 'Publishes the JPO MSI installer bundle'
     dependsOn jpackage
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
@@ -462,8 +462,8 @@ tasks.register('uploadMsiInstaller', Exec) {
 }
 
 tasks.register('uploadJar', Exec) {
-    group 'website'
-    description 'Publishes the JPO shadow jar bundle'
+    group = 'website'
+    description = 'Publishes the JPO shadow jar bundle'
     dependsOn signJar
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
@@ -471,16 +471,16 @@ tasks.register('uploadJar', Exec) {
 }
 
 tasks.register('uploadFlatpakRepo', Exec) {
-    group 'website'
-    description 'Publishes the JPO flatpak repo'
+    group = 'website'
+    description = 'Publishes the JPO flatpak repo'
     // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
     // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
     commandLine('rsync', '-arvP', "${buildDir}/flatpak-repo", 'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
 }
 
 tasks.register('uploadWebsite') {
-    group 'website'
-    description 'Publishes the JPO website'
+    group = 'website'
+    description = 'Publishes the JPO website'
     dependsOn uploadWebsitePages, uploadJavadoc
 }
 
