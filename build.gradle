@@ -34,6 +34,10 @@ java {
     modularity.inferModulePath = true // Essential for hybrid projects or mixed module/classpath dependencies
 }
 
+run {
+    //environment "GDK_SCALE", "2"
+}
+
 // Define the path for generated sources. This is a standard location.
 def generatedSourcesDir = layout.buildDirectory.dir("generated-sources/java")
 
@@ -187,6 +191,7 @@ dependencies {
     implementation 'io.github.classgraph:classgraph:4.8.184'
     testImplementation 'org.mockito:mockito-core:5.21.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.21.0'  // Mockito doesn't work nicely with modularity. But it can be added to the module.into
+    implementation 'com.formdev:flatlaf:3.5'
 
 }
 

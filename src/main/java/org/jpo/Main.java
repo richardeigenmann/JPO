@@ -1,5 +1,6 @@
 package org.jpo;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import org.jpo.eventbus.ApplicationStartupRequest;
 import org.jpo.eventbus.EventBusInitializer;
 import org.jpo.eventbus.JpoEventBus;
@@ -48,6 +49,12 @@ public class Main {
                 to redistribute it under certain conditions.
                 See Help > License for details.
                 """, GeneratedVersion.JPO_VERSION ));
+
+        // 1. MUST BE FIRST: Setup the Look and Feel
+        FlatLightLaf.setup();
+
+        // 2. OPTIONAL: Force specific HiDPI behavior if KDE is still acting up
+        //System.setProperty("flatlaf.uiScale", "400%");
 
         EventBusInitializer.registerEventHandlers();
         JpoEventBus.getInstance().post(new ApplicationStartupRequest() );
