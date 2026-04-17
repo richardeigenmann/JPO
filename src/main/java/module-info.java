@@ -25,7 +25,7 @@ module org.jpo {
     requires jsr305;
     requires jwizz;
     requires mail;
-    requires metadata.extractor;
+    //requires metadata.extractor;
     requires org.apache.commons.text;
     requires org.apache.commons.compress;
     requires org.apache.commons.io;

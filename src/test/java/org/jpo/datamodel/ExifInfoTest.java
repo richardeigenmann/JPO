@@ -134,7 +134,7 @@ class ExifInfoTest {
             assertEquals( 46.80724713888888, exifInfo.getLatLng().getX());
             assertEquals( 9.812583916666668, exifInfo.getLatLng().getY());
             assertEquals( "", exifInfo.getLens());
-            assertEquals( "1/1879 sec", exifInfo.getShutterSpeed());
+            assertEquals( "1/1880 sec", exifInfo.getShutterSpeed());
             assertEquals( 0, exifInfo.getRotation());
         } catch (NullPointerException | URISyntaxException e) {
             fail(e.getMessage());
@@ -284,7 +284,7 @@ class ExifInfoTest {
             var exifInfo = new ExifInfo(new File(Objects.requireNonNull(ExifInfoTest.class.getClassLoader().getResource(CANON_EOS60D_IMAGE)).toURI()));
             exifInfo.decodeExifTags();
             assertEquals("f/11.3", exifInfo.getAperture());
-            assertEquals("1/511 sec", exifInfo.getShutterSpeed());
+            assertEquals("1/512 sec", exifInfo.getShutterSpeed());
             assertEquals("Canon EOS 60D", exifInfo.getCamera());
             assertEquals("2013:05:09 13:55:16", exifInfo.getCreateDateTime());
             assertEquals("3456 pixels", exifInfo.getExifHeight());
