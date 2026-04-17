@@ -20,6 +20,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Fail.fail;
@@ -70,7 +72,7 @@ class PictureFileChooserTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
         final var executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> GuiActionRunner.execute(() -> {
+        Future<?> future = executor.submit(() -> GuiActionRunner.execute(() -> {
             final var node = new SortableDefaultMutableTreeNode(); // no user object i.e. it's not a group
             final var chooseAndAddPicturesToGroupRequest = new ChooseAndAddPicturesToGroupRequest(node);
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
@@ -90,18 +92,19 @@ class PictureFileChooserTest {
         // Click the button to dismiss the modal dialog
         // This unblocks the EDT task submitted in the executor
         dialogFixture.button(withText("OK")).click();
+        robot.waitForIdle();
 
-        // The executor thread is blocked by GuiActionRunner.execute until the modal dialog closes.
-        // We shut down and wait for termination to ensure the dialog is gone.
-        executor.shutdown();
         try {
-            if (!executor.awaitTermination(5, SECONDS)) {
-                executor.shutdownNow();
-                fail("Executor didn't terminate - dialog likely still open");
-            }
+            // Use the future to wait for the task to complete. 
+            // This will also throw an exception if the background thread crashed.
+            future.get(10, SECONDS);
+        } catch (TimeoutException e) {
+            fail("Executor didn't terminate - dialog likely still open or blocked");
         } catch (InterruptedException _) {
             executor.shutdownNow();
             fail("Test interrupted");
+        } catch (Exception e) {
+            fail("Background task failed: " + e.getMessage());
         }
 
         dialogFixture.requireNotVisible();
@@ -112,7 +115,7 @@ class PictureFileChooserTest {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
         final var executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> GuiActionRunner.execute(() -> {
+        Future<?> future = executor.submit(() -> GuiActionRunner.execute(() -> {
             final var groupInfo = new GroupInfo("GroupInfo");
             final var node = new SortableDefaultMutableTreeNode(groupInfo);
             final var pictureCollection = new PictureCollection();
@@ -130,16 +133,17 @@ class PictureFileChooserTest {
         assertNotNull(dialogFixture.target(), "The File Choose Dialog Window was not found by AssertJ-Swing");
 
         dialogFixture.button(withText("Cancel")).click();
+        robot.waitForIdle();
 
-        executor.shutdown();
         try {
-            if (!executor.awaitTermination(5, SECONDS)) {
-                executor.shutdownNow();
-                fail("Executor didn't terminate");
-            }
+            future.get(10, SECONDS);
+        } catch (TimeoutException e) {
+            fail("Executor didn't terminate - dialog likely still open or blocked");
         } catch (InterruptedException _) {
             executor.shutdownNow();
             fail("Test interrupted");
+        } catch (Exception e) {
+            fail("Background task failed: " + e.getMessage());
         }
 
         dialogFixture.requireNotVisible();
