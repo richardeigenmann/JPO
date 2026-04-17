@@ -20,7 +20,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Fail.fail;
@@ -31,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2025 Richard Eigenmann.
+ Copyright (C) 2025-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -91,15 +90,21 @@ class PictureFileChooserTest {
         // Click the button to dismiss the modal dialog
         // This unblocks the EDT task submitted in the executor
         dialogFixture.button(withText("OK")).click();
-        dialogFixture.requireNotVisible();
 
-        // Wait for the executor task to complete to ensure clean shutdown
+        // The executor thread is blocked by GuiActionRunner.execute until the modal dialog closes.
+        // We shut down and wait for termination to ensure the dialog is gone.
+        executor.shutdown();
         try {
-            executor.awaitTermination(1, TimeUnit.SECONDS);
+            if (!executor.awaitTermination(5, SECONDS)) {
+                executor.shutdownNow();
+                fail("Executor didn't terminate - dialog likely still open");
+            }
         } catch (InterruptedException _) {
-            fail("Didn't terminate");
+            executor.shutdownNow();
+            fail("Test interrupted");
         }
-        executor.shutdownNow();
+
+        dialogFixture.requireNotVisible();
     }
 
     @Test
@@ -125,13 +130,19 @@ class PictureFileChooserTest {
         assertNotNull(dialogFixture.target(), "The File Choose Dialog Window was not found by AssertJ-Swing");
 
         dialogFixture.button(withText("Cancel")).click();
-        dialogFixture.requireNotVisible();
+
+        executor.shutdown();
         try {
-            executor.awaitTermination(1, TimeUnit.SECONDS);
+            if (!executor.awaitTermination(5, SECONDS)) {
+                executor.shutdownNow();
+                fail("Executor didn't terminate");
+            }
         } catch (InterruptedException _) {
-            fail("Didn't terminate");
+            executor.shutdownNow();
+            fail("Test interrupted");
         }
-        executor.shutdownNow();
+
+        dialogFixture.requireNotVisible();
     }
 
     /**
