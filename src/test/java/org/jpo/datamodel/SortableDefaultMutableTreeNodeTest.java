@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2023-2025 Richard Eigenmann, Zurich, Switzerland
+ Copyright (C) 2023-2026 Richard Eigenmann, Zurich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -971,12 +971,12 @@ class SortableDefaultMutableTreeNodeTest {
 
     @Test
     void testIsAncestor() {
-        assert(group1.containsAnAncestor(List.of(rootNode)));
+        assertTrue(group1.containsAnAncestor(List.of(rootNode)));
         assertFalse(rootNode.containsAnAncestor(List.of(group1, group2)));
-        assert(picture1.containsAnAncestor(List.of(group1)));
+        assertTrue(picture1.containsAnAncestor(List.of(group1)));
         assertFalse(group1.containsAnAncestor(List.of(picture1, picture2)));
         assertFalse(group3.containsAnAncestor(List.of(picture1, picture2)));
-        assert(group4.containsAnAncestor(List.of(group3)));
+        assertTrue(group4.containsAnAncestor(List.of(group3)));
     }
 
     @Test

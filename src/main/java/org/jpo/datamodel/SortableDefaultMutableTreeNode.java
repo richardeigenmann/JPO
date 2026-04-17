@@ -231,10 +231,10 @@ public class SortableDefaultMutableTreeNode
      */
     public static boolean wasNodeDeleted(
             final SortableDefaultMutableTreeNode potentiallyAffectedNode, final Object[] removedNodes) {
-        final var currentNodeTreePath = new TreePath(potentiallyAffectedNode.getPath());
-        for (final var child : removedNodes) {
-            final var removedChild = new TreePath(child);
-            if (removedChild.isDescendant(currentNodeTreePath)) {
+        final var potentiallyAffectedNodeTreePath = new TreePath(potentiallyAffectedNode.getPath());
+        for (final var removedNode : removedNodes) {
+            final var removedChild = new TreePath(removedNode);
+            if (removedChild.isDescendant(potentiallyAffectedNodeTreePath)) {
                 return true;
             }
         }
