@@ -303,41 +303,6 @@ public class SortableDefaultMutableTreeNode
     }
 
     /**
-     * Returns the first node with a picture before the current one in the tree.
-     * It uses the getPreviousNode method of DefaultMutableTreeNode.
-     *
-     * @return the first node with a picture in preorder traversal or null if
-     * none found.
-     */
-    public SortableDefaultMutableTreeNode getPreviousPicture() {
-        synchronized (this.getRoot()) {
-            var prevNode = getPreviousNode();
-            while ((prevNode != null) && (!(prevNode.getUserObject() instanceof PictureInfo))) {
-                prevNode = prevNode.getPreviousNode();
-            }
-            return (SortableDefaultMutableTreeNode) prevNode;
-        }
-    }
-
-    /**
-     * Returns the next node with a picture found after current one in the tree.
-     * This can be in another Group. It uses the getNextNode method of the
-     * DefaultMutableTreeNode.
-     *
-     * @return The SortableDefaultMutableTreeNode that represents the next
-     * picture. If no picture can be found it returns null.
-     */
-    public SortableDefaultMutableTreeNode getNextPicture() {
-        synchronized (this.getRoot()) {
-            DefaultMutableTreeNode nextNode = getNextNode();
-            while ((nextNode != null) && (!(nextNode.getUserObject() instanceof PictureInfo))) {
-                nextNode = nextNode.getNextNode();
-            }
-            return (SortableDefaultMutableTreeNode) nextNode;
-        }
-    }
-
-    /**
      * This method collects all pictures under the current node and returns them
      * as an Array List.
      *
@@ -422,7 +387,7 @@ public class SortableDefaultMutableTreeNode
             }
             case null, default ->
                 // fall back on the default behaviour
-                    super.setUserObject(userObject);
+                super.setUserObject(userObject);
         }
         if (getPictureCollection() != null && getPictureCollection().getSendModelUpdates()) {
             getPictureCollection().sendNodeChanged(this);
@@ -532,7 +497,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized (this.getRoot()) {
-            final SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final var parentNode = this.getParent();
             // abort if this action was attempted on the top node
             if (parentNode.getIndex(this) < 1) {
                 return;
@@ -552,7 +517,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized (this.getRoot()) {
-            final SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final var parentNode = this.getParent();
             int currentIndex = parentNode.getIndex(this);
             // abort if this action was attempted on the top node or not a child
             if (currentIndex < 1) {
@@ -572,7 +537,7 @@ public class SortableDefaultMutableTreeNode
             return;  // don't do anything with a root node.
         }
         synchronized (this.getRoot()) {
-            final SortableDefaultMutableTreeNode parentNode = this.getParent();
+            final var parentNode = this.getParent();
             int childCount = parentNode.getChildCount();
             int currentIndex = parentNode.getIndex(this);
             // abort if this action was attempted on the bottom node
@@ -618,15 +583,14 @@ public class SortableDefaultMutableTreeNode
         }
 
         synchronized (this.getRoot()) {
-            final SortableDefaultMutableTreeNode parentNode = this.getParent();
-            SortableDefaultMutableTreeNode childBefore = this;
+            final var parentNode = this.getParent();
+            var childBefore = this;
             do {
                 childBefore = (SortableDefaultMutableTreeNode) parentNode.getChildBefore(childBefore);
             } while ((childBefore != null) && (!(childBefore.getUserObject() instanceof GroupInfo)));
 
             if (childBefore == null) {
-                final SortableDefaultMutableTreeNode newGroup
-                        = new SortableDefaultMutableTreeNode(
+                final var newGroup = new SortableDefaultMutableTreeNode(
                         new GroupInfo(JpoResources.getResource("newGroup")));
                 parentNode.insert(newGroup, 0);
                 this.removeFromParent();
@@ -647,13 +611,13 @@ public class SortableDefaultMutableTreeNode
         if (this.isRoot()) {
             return;  // don't do anything with a root node.
         }
-        final SortableDefaultMutableTreeNode parentNode = this.getParent();
+        final var parentNode = this.getParent();
         if (parentNode.isRoot()) {
             return;  // don't do anything with a root parent node.
         }
 
         synchronized (this.getRoot()) {
-            final SortableDefaultMutableTreeNode grandParentNode = parentNode.getParent();
+            final var grandParentNode = parentNode.getParent();
             int index = grandParentNode.getIndex(parentNode);
 
             this.removeFromParent();

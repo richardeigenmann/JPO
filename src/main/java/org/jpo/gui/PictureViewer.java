@@ -20,7 +20,7 @@ import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_P
 import static org.jpo.datamodel.ScalablePicture.ScalablePictureStatus.SCALABLE_PICTURE_READY;
 
 /*
- Copyright (C) 2002-2025 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2002-2026 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -292,10 +292,7 @@ public class PictureViewer implements NodeNavigatorListener, AutoAdvanceInterfac
     }
 
     /**
-     * Request the PictureViewer to display the next picture. It calls
-     * {@link SortableDefaultMutableTreeNode#getNextPicture} to find the image.
-     * If the call returned a non-null node {@link #showNode} is called to
-     * request the loading and display of the new picture.
+     * Request the PictureViewer to display the next picture.
      *
      * @see #requestPriorPicture()
      */

@@ -104,10 +104,10 @@ class SortableDefaultMutableTreeNodeTest {
          !----group2
               !----picture3
               !----picture4
-         !----group3
-              !----picture5
-              !----group4
-         !----group5
+              !----group3
+                   !----picture5
+                   !----group4
+                        !----group5
          */
         rootNode.add(group1);
         rootNode.add(group2);
@@ -162,33 +162,6 @@ class SortableDefaultMutableTreeNodeTest {
         assertEquals(SortableDefaultMutableTreeNode.getNodeById(rootNode, group2.getUniqueId()), group2);
         assertEquals(SortableDefaultMutableTreeNode.getNodeById(rootNode, group3.getUniqueId()), group3);
         assertEquals(SortableDefaultMutableTreeNode.getNodeById(group3, group1.getUniqueId()), group1);
-    }
-
-    /**
-     * tests that we can get to a previous picture
-     */
-    @Test
-    void testGetPreviousPicture() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        assertSame(picture3, picture4.getPreviousPicture());
-    }
-
-    /**
-     * tests that we can go to a next picture across a group boundary
-     */
-    @Test
-    void testGetPreviousPictureAcrossGroupBoundary() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        assertSame(picture2, picture3.getPreviousPicture());
-    }
-
-    /**
-     * test that we can't go back further than the beginning
-     */
-    @Test
-    void testGetPreviousPictureAtBeginning() {
-        assumeFalse(GraphicsEnvironment.isHeadless());
-        assertSame(null, picture1.getPreviousPicture());
     }
 
     /**
@@ -998,6 +971,136 @@ class SortableDefaultMutableTreeNodeTest {
         group2.removeFromParent();
         Object[] removedNodes = new Object[]{group2};
         assertFalse(SortableDefaultMutableTreeNode.wasNodeDeleted(picture1, removedNodes));
+    }
+
+
+    @Test
+    void testMoveNodeToTop() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group2.moveNodeToTop();
+        assertEquals(group2, rootNode.getFirstChild());
+        assertEquals(group1, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeToTopRootNode() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        rootNode.moveNodeToTop();
+        // Nothing changes
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeToTopAlreadyTop() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group1.moveNodeToTop();
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+
+    @Test
+    void testMoveNodeUp() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group2.moveNodeUp();
+        assertEquals(group2, rootNode.getFirstChild());
+        assertEquals(group1, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeUpRootNode() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        rootNode.moveNodeUp();
+        // Nothing changes
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeUpAlreadyTop() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group1.moveNodeUp();
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeDown() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group1.moveNodeDown();
+        assertEquals(group2, rootNode.getFirstChild());
+        assertEquals(group1, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeDownRootNode() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        rootNode.moveNodeDown();
+        // Nothing changes
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeDownAlreadyBottom() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group2.moveNodeDown();
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeToBottom() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group1.moveNodeToBottom();
+        assertEquals(group2, rootNode.getFirstChild());
+        assertEquals(group1, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeToBottomRootNode() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        rootNode.moveNodeToBottom();
+        // Nothing changes
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testMoveNodeToBottomAlreadyBottom() {
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+        group2.moveNodeToBottom();
+        assertEquals(group1, rootNode.getFirstChild());
+        assertEquals(group2, rootNode.getLastChild());
+    }
+
+    @Test
+    void testIndentNode() {
+        assertFalse(group1.isNodeChild(group2));
+        group2.indentNode();
+        assertTrue(group1.isNodeChild(group2));
+    }
+
+    @Test
+    void testOutdentNode() {
+        assertTrue(group2.isNodeChild(group3));
+        assertFalse(rootNode.isNodeChild(group3));
+        group3.outdentNode();
+        assertFalse(group2.isNodeChild(group3));
+        assertTrue(rootNode.isNodeChild(group3));
     }
 
 }
