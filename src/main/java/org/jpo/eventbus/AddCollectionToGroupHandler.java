@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2025 Richard Eigenmann.
+ Copyright (C) 2023-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -61,8 +61,7 @@ public class AddCollectionToGroupHandler {
                     fileToLoad, 
                     newNode,
                     loadProgressGui,
-                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection())),
-                    lowresUrls -> JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls))
+                    () -> JpoEventBus.getInstance().post(new CollectionLockNotification(newNode.getPictureCollection()))
             );
         } catch (final FileNotFoundException x) {
             LOGGER.severe(x.getMessage());

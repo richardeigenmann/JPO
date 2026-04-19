@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
@@ -47,8 +48,8 @@ class JpoWriterTest {
             assertThat(expectedDtdFile).doesNotExist();
             JpoWriter.writeCollectionDTDTestOnly(tempDir.toFile());
             assertThat(expectedDtdFile).exists();
-            try (final Stream<String> s = Files.lines(expectedDtdFile.toPath())) {
-                assertEquals(78, s.count());
+            try (final var lines = Files.lines(expectedDtdFile.toPath())) {
+                assertEquals(72, lines.count());
             }
         } catch (final IOException e) {
             fail(e.getMessage());
@@ -205,7 +206,7 @@ class JpoWriterTest {
         pictureInfo.setFilmReference("Reference <<&>'\">");
         pictureInfo.setRotation(45.1);
         pictureInfo.setPhotographer("Richard Eigenmann <<&>'\">");
-        pictureInfo.setLatLng("22.67x33.89");
+        pictureInfo.setLatLng(new Point2D.Double(22.67, 33.89));
         pictureInfo.setCopyrightHolder("Sandra Keller <<&>'\">");
         pictureInfo.addCategoryAssignment("1");
         pictureInfo.setSha256("1234");

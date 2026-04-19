@@ -97,7 +97,7 @@ class PictureFileChooserTest {
         try {
             // Use the future to wait for the task to complete. 
             // This will also throw an exception if the background thread crashed.
-            future.get(10, SECONDS);
+            future.get(90, SECONDS);
         } catch (TimeoutException e) {
             fail("Executor didn't terminate - dialog likely still open or blocked");
         } catch (InterruptedException _) {

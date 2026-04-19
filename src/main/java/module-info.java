@@ -42,6 +42,7 @@ module org.jpo {
     requires io.github.classgraph;
     requires java.datatransfer;
     requires com.formdev.flatlaf;
+    requires com.drew.metadata;
 
     //requires org.mockito.junit.jupiter;  // should be test only but feels left out
 }

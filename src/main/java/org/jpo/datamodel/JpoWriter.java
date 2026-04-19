@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2025 Richard Eigenmann.
+ Copyright (C) 2002-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -357,7 +357,6 @@ public class JpoWriter {
      * Write the collection.dtd file to the target directory.
      *
      * @param directory The directory to write to
-     * @return An empty Optional on success, or an Optional containing the error message on failure.
      */
     private static void writeCollectionDTD(final File directory) throws IOException{
         final var bufferedInputStream = new BufferedInputStream(Objects.requireNonNull(JpoWriter.class.getClassLoader().getResource("collection.dtd")).openStream());

@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2023-2025 Richard Eigenmann.
+ Copyright (C) 2023-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -58,8 +58,7 @@ public class FileLoadHandler {
                     request.pictureCollection().fileLoad(
                             fileToLoad,
                             loadProgressGui,
-                            () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection())),
-                            lowresUrls -> JpoEventBus.getInstance().post(new RemoveOldLowresThumbnailsRequest(lowresUrls))
+                            () -> JpoEventBus.getInstance().post(new CollectionLockNotification(request.pictureCollection()))
                     );
                     Settings.pushRecentCollection(fileToLoad.toString());
                     JpoEventBus.getInstance().post(new RecentCollectionsChangedEvent());

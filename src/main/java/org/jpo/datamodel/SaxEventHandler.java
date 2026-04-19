@@ -5,6 +5,8 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,7 +16,7 @@ import java.util.logging.Logger;
 import static org.jpo.datamodel.FieldCodes.*;
 
 /*
- Copyright (C) 2017-2025 Richard Eigenmann.
+ Copyright (C) 2017-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -51,25 +53,23 @@ public class SaxEventHandler extends DefaultHandler {
      */
     private SortableDefaultMutableTreeNode currentGroup;
 
-    private final StringBuilder lowresUrls;
-
     /**
      * variable used to interpret what the text is that is coming in through the
      * parser.
      */
     private FieldCodes currentField;
 
+    private StringBuilder currentString;
+
     /**
      * Constructs the Sax XML parser
      *
      * @param startNode       The starting node
      * @param progressTracker the progress GUI to update
-     * @param lowresUrls      the lowresUrls to pick up on
      */
-    public SaxEventHandler(final SortableDefaultMutableTreeNode startNode, final ProgressTracker progressTracker, final StringBuilder lowresUrls) {
+    public SaxEventHandler(final SortableDefaultMutableTreeNode startNode, final ProgressTracker progressTracker) {
         currentGroup = startNode;
         this.progressTracker = progressTracker;
-        this.lowresUrls = lowresUrls;
     }
 
     /**
@@ -92,6 +92,7 @@ public class SaxEventHandler extends DefaultHandler {
                              final String lName,
                              final String qName,
                              final Attributes attrs ) {
+        currentString = new StringBuilder();
         GroupInfo groupInfo;
         if ( ( "collection".equals( qName ) ) && ( attrs != null ) ) {
             groupInfo = new GroupInfo( attrs.getValue( "collection_name" ) );
@@ -116,12 +117,8 @@ public class SaxEventHandler extends DefaultHandler {
             currentGroup.add( currentPicture );
         } else if ( "description".equalsIgnoreCase( qName ) ) {
             currentField = DESCRIPTION;
-        } else if ( "file_url".equalsIgnoreCase( qName ) ) {
-            currentField = FILE_URL;
         } else if ( "file".equalsIgnoreCase( qName ) ) {
             currentField = FILE;
-        } else if ( "file_lowres_url".equalsIgnoreCase( qName ) ) {
-            currentField = FILE_LOWRES_URL;
         } else if ( "film_reference".equalsIgnoreCase( qName ) ) {
             currentField = FILM_REFERENCE;
         } else if ( "creation_time".equalsIgnoreCase( qName ) ) {
@@ -136,18 +133,16 @@ public class SaxEventHandler extends DefaultHandler {
             currentField = ROTATION;
         } else if ( "latlng".equalsIgnoreCase( qName ) ) {
             currentField = LATLNG;
-        } else if ("checksum".equalsIgnoreCase(qName)) {
-            currentField = IGNORE;
         } else if ("sha256".equalsIgnoreCase(qName)) {
             currentField = SHA256;
-        } else if ("categoryAssignment".equalsIgnoreCase(qName) && attrs != null && attrs.getValue(INDEX) != null) {
+        } else if ("categoryassignment".equalsIgnoreCase(qName) && attrs != null && attrs.getValue(INDEX) != null) {
             ((PictureInfo) currentPicture.getUserObject()).addCategoryAssignment(attrs.getValue(INDEX));
         } else if ("categories".equalsIgnoreCase(qName)) {
             currentField = CATEGORIES;
         } else if ("category".equalsIgnoreCase(qName) && attrs != null && attrs.getValue(INDEX) != null) {
             temporaryCategoryIndex = attrs.getValue(INDEX);
             currentField = CATEGORY;
-        } else if ("categoryDescription".equalsIgnoreCase(qName)) {
+        } else if ("categorydescription".equalsIgnoreCase(qName)) {
             currentField = CATEGORY_DESCRIPTION;
         } else {
             LOGGER.log(Level.INFO, "XmlReader: Don''t know what to do with ELEMENT: {0}", qName);
@@ -178,12 +173,19 @@ public class SaxEventHandler extends DefaultHandler {
                            final String qName // qualified name
     ) {
         if ( null != qName ) {
-            switch (qName) {
+            switch (qName.toLowerCase()) {
                 case "group" -> currentGroup = currentGroup.getParent();
-                case "file_lowres_URL" -> lowresUrls.append(LINE_SEPERATOR);
-                case "ROTATION" -> ((PictureInfo) currentPicture.getUserObject()).parseRotation();
-                case "LATLNG" -> ((PictureInfo) currentPicture.getUserObject()).parseLatLng();
-                case "categoryDescription" -> {
+                case "description" -> ((PictureInfo) currentPicture.getUserObject()).setDescription(currentString.toString());
+                case "file" -> ((PictureInfo) currentPicture.getUserObject()).setImageLocation(new File(baseDir.toFile(), currentString.toString()));
+                case "film_reference" -> ((PictureInfo) currentPicture.getUserObject()).setFilmReference(currentString.toString());
+                case "creation_time" -> ((PictureInfo) currentPicture.getUserObject()).setCreationTime(currentString.toString());
+                case "comment" -> ((PictureInfo) currentPicture.getUserObject()).setComment(currentString.toString());
+                case "photographer" -> ((PictureInfo) currentPicture.getUserObject()).setPhotographer(currentString.toString());
+                case "copyright_holder" -> ((PictureInfo) currentPicture.getUserObject()).setCopyrightHolder(currentString.toString());
+                case "rotation" -> ((PictureInfo) currentPicture.getUserObject()).setRotation(Double.parseDouble(currentString.toString()));
+                case "latlng" -> ((PictureInfo) currentPicture.getUserObject()).setLatLng(parseLatLng(currentString.toString()));
+                case "sha256" -> ((PictureInfo) currentPicture.getUserObject()).setSha256(currentString.toString());
+                case "categorydescription" -> {
                     currentGroup.getPictureCollection().addCategory(Integer.parseInt(temporaryCategoryIndex), temporaryCategory);
                     temporaryCategory = "";
                 }
@@ -192,6 +194,18 @@ public class SaxEventHandler extends DefaultHandler {
                 }
             }
         }
+    }
+
+    public static Point2D.Double parseLatLng(String s) {
+        try {
+            final var latLngArray = s.split("x");
+            final var lat = Double.parseDouble(latLngArray[0]);
+            final var lng = Double.parseDouble(latLngArray[1]);
+            return new Point2D.Double(lat, lng);
+        } catch (final NumberFormatException x) {
+            LOGGER.info(String.format("Failed to parse string %s into latitude and longitude", s));
+        }
+        return new Point2D.Double(0, 0);
     }
 
     /**
@@ -207,18 +221,16 @@ public class SaxEventHandler extends DefaultHandler {
     public void characters(final char[] buf, final int offset, final int len ) {
         final var readString = new String(buf, offset, len);
         switch (currentField) {
-            case DESCRIPTION -> ((PictureInfo) currentPicture.getUserObject()).appendToDescription(readString);
-            case FILE_URL -> ((PictureInfo) currentPicture.getUserObject()).appendToImageLocation(readString);
-            case FILE -> ((PictureInfo) currentPicture.getUserObject()).appendToImageFile(readString, baseDir);
-            case FILE_LOWRES_URL -> lowresUrls.append(readString);
-            case FILM_REFERENCE -> ((PictureInfo) currentPicture.getUserObject()).appendToFilmReference(readString);
-            case CREATION_TIME -> ((PictureInfo) currentPicture.getUserObject()).appendToCreationTime(readString);
-            case COMMENT -> ((PictureInfo) currentPicture.getUserObject()).appendToComment(readString);
-            case PHOTOGRAPHER -> ((PictureInfo) currentPicture.getUserObject()).appendToPhotographer(readString);
-            case COPYRIGHT_HOLDER -> ((PictureInfo) currentPicture.getUserObject()).appendToCopyrightHolder(readString);
-            case ROTATION -> ((PictureInfo) currentPicture.getUserObject()).appendToRotation(readString);
-            case LATLNG -> ((PictureInfo) currentPicture.getUserObject()).appendToLatLng(readString);
-            case SHA256 -> ((PictureInfo) currentPicture.getUserObject()).appendToSha256(readString);
+            case DESCRIPTION -> currentString.append(readString);
+            case FILE -> currentString.append(readString);
+            case FILM_REFERENCE -> currentString.append(readString);
+            case CREATION_TIME -> currentString.append(readString);
+            case COMMENT -> currentString.append(readString);
+            case PHOTOGRAPHER -> currentString.append(readString);
+            case COPYRIGHT_HOLDER -> currentString.append(readString);
+            case ROTATION -> currentString.append(readString);
+            case LATLNG -> currentString.append(readString);
+            case SHA256 -> currentString.append(readString);
             case CATEGORIES -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORIES: {0}", readString);
             case CATEGORY -> LOGGER.log(Level.INFO, "XmlReader: parsing string on CATEGORY: {0}", readString);
             case CATEGORY_DESCRIPTION -> {

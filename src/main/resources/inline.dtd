@@ -14,9 +14,6 @@
 
         <!ELEMENT picture (description,
                 CREATION_TIME?,
-                file_URL?,
-                checksum?,
-                file_lowres_URL?,
                 file?,
                 sha256?,
                 COMMENT?,
@@ -32,26 +29,16 @@
              it specifies the subject or purpose of the image. -->
         <!ELEMENT description (#PCDATA)>
 
-        <!-- The location of the high resolution source Image -->
-        <!ELEMENT file_URL (#PCDATA)>
-
         <!-- The location the image file as a typical filename -->
         <!ELEMENT file (#PCDATA)>
 
-        <!-- The Adler32 checksum of the source Image -->
-        <!ELEMENT checksum (#PCDATA)>
-
         <!-- The SHA256 checksum of the source Image -->
         <!ELEMENT sha256 (#PCDATA)>
-
-        <!-- The location of the generated Thumbnail that may be overwritten -->
-        <!ELEMENT file_lowres_URL (#PCDATA)>
 
         <!-- The time the image was created. This should be the original
              time when the shutter snapped closed and not the time of
              scanning etc. -->
         <!ELEMENT CREATION_TIME (#PCDATA)>
-
 
         <!-- A handy spare field where stuff can be captured that doesn't fit -->
         <!ELEMENT COMMENT (#PCDATA)>

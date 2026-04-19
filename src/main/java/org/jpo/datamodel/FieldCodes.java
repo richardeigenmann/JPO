@@ -6,9 +6,7 @@ package org.jpo.datamodel;
 public enum FieldCodes {
     NO_SORTING,
     DESCRIPTION,
-    FILE_URL,
     FILE,
-    FILE_LOWRES_URL,
     FILM_REFERENCE,
     CREATION_TIME,
     COMMENT,

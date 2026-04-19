@@ -16,7 +16,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.Assertions.*;
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -98,17 +98,6 @@ class PictureInfoTest {
         assertEquals("A picture description", pictureInfo.getDescription());
         // Expecting no new change event because it was the same that went in
         assertEquals(1, countEvents[0]);
-    }
-
-    /**
-     * Test of appendToDescription method, of class PictureInfo.
-     */
-    @Test
-    void testAppendToDescription() {
-        final PictureInfo pictureInfo = new PictureInfo();
-        pictureInfo.setDescription("A picture description");
-        pictureInfo.appendToDescription(" concatenated from two texts");
-        assertEquals("A picture description concatenated from two texts", pictureInfo.getDescription());
     }
 
     /**
@@ -197,19 +186,6 @@ class PictureInfoTest {
         pictureInfo.setImageLocation(pictureFile.toFile());
         final File imageFile = pictureInfo.getImageFile();
         assertEquals(pictureFile.toFile(), imageFile);
-    }
-
-
-    /**
-     * Test of appendToImageLocation method, of class PictureInfo.
-     */
-    @Test
-    void testAppendToImageLocation() {
-        final PictureInfo pictureInfo = new PictureInfo();
-        pictureInfo.appendToImageLocation("file:///dir/picture");
-        pictureInfo.appendToImageLocation(".jpg");
-        final File imageFile = pictureInfo.getImageFile();
-        assertEquals(Paths.get("/dir/picture.jpg").toFile(), imageFile);
     }
 
     /**
@@ -353,26 +329,6 @@ class PictureInfoTest {
 
         pictureInfo.rotate(15.0);
         assertEquals(105.0, pictureInfo.getRotation());
-    }
-
-    @Test
-    void appendParseRotation() {
-        final PictureInfo pictureInfo = new PictureInfo();
-        pictureInfo.appendToRotation("270");
-        pictureInfo.parseRotation();
-        assertEquals(270.0, pictureInfo.getRotation());
-
-        pictureInfo.appendToRotation("");
-        assertEquals(270.0, pictureInfo.getRotation());
-
-        pictureInfo.appendToRotation("5");
-        pictureInfo.appendToRotation("6");
-        pictureInfo.parseRotation();
-        assertEquals(56.0, pictureInfo.getRotation());
-
-        pictureInfo.appendToRotation("ABCD is not a number");
-        pictureInfo.parseRotation();
-        assertEquals(0.0, pictureInfo.getRotation());
     }
 
     @Test

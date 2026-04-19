@@ -2,6 +2,7 @@ package org.jpo.gui;
 
 import org.jpo.datamodel.GroupInfo;
 import org.jpo.datamodel.PictureInfo;
+import org.jpo.datamodel.SaxEventHandler;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 
 import javax.swing.*;
@@ -206,7 +207,7 @@ public class TableJFrame extends JFrame {
                     case 5 -> pi.setComment(newString);
                     case 6 -> pi.setPhotographer(newString);
                     case 7 -> pi.setCopyrightHolder(newString);
-                    case 8 -> pi.setLatLng(newString);
+                    case 8 -> pi.setLatLng(SaxEventHandler.parseLatLng(newString));
                     case 9 -> pi.setSha256(newString);
                     default -> LOGGER.log(Level.INFO, "Bad column: {0}", Integer.toString(col));
                 }

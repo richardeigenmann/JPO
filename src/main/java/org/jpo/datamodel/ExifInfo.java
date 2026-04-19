@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import static com.drew.metadata.exif.ExifDirectoryBase.*;
 
 /*
- Copyright (C) 2002-2025 Richard Eigenmann.
+ Copyright (C) 2002-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -40,7 +40,7 @@ import static com.drew.metadata.exif.ExifDirectoryBase.*;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 /**
- * Class that interacts with Drew Noake's library and extracts the Exif
+ * Class that interacts with Drew Noakes' library and extracts the Exif
  * information
  *
  * @author Richard Eigenmann

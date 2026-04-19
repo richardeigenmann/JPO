@@ -2,13 +2,16 @@ package org.jpo.datamodel;
 
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jpo.gui.JpoResources;
 
 import java.awt.geom.Point2D;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.text.NumberFormat;
 import java.util.*;
@@ -16,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2002-2025 Richard Eigenmann.
+ Copyright (C) 2002-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -64,11 +67,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * The description of the image.
      */
     private String description = "";
-    //----------------------------------------
     private File imageFile;
-    private String myImageLocation = "";
-
-    //----------------------------------------
     /**
      * the hash code of the contents of the file. We use SHA-256 here in 2020.
      */
@@ -102,19 +101,9 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      */
     private double rotation;  // default is 0
     /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String rotationString = "";
-    /**
      * The copyright holder of the image.
      */
     private Point2D.Double latLng;
-    /**
-     * Temporary variable to allow appending of characters as the XML file is
-     * being read.
-     */
-    private String latLngString = "";
     /**
      * The category assignments are held in the categoryAssignments HashSet.
      */
@@ -124,8 +113,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * being read.
      */
     private String categoryAssignmentString = "";
-
-    //----------------------------------------
 
     /**
      * Constructor without options. All strings are set to blanks
@@ -142,6 +129,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     public PictureInfo(final File imageFile, final String description) {
         setImageLocation(imageFile);
         this.description = description;
+        this.latLng = new Point2D.Double(0, 0);
         filmReference = "";
     }
 
@@ -214,17 +202,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         }
     }
 
-    /**
-     * Appends the text fragment to the description.
-     *
-     * @param s The text fragment to append.
-     */
-    public synchronized void appendToDescription(final String s) {
-        if (!s.isEmpty()) {
-            description = description.concat(s);
-            sendDescriptionChangedEvent();
-        }
-    }
+
 
     /**
      * Checks whether the searchString parameter is contained in the
@@ -234,7 +212,8 @@ public class PictureInfo implements Serializable, GroupOrPicture {
      * @return true if found. false if not.
      */
     public synchronized boolean descriptionContains(final String searchString) {
-        return description.toUpperCase().contains(searchString.toUpperCase());
+        //return description.toUpperCase().contains(searchString.toUpperCase());
+        return StringUtils.containsIgnoreCase(description, searchString);
     }
 
     /**
@@ -308,43 +287,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     }
 
     /**
-     * Appends the text to the field (used by XML parser).
-     *
-     * @param s The text fragment to be added to the image Location
-     */
-    public synchronized void appendToImageLocation(final String s) {
-        if (!s.isEmpty()) {
-            myImageLocation = myImageLocation.concat(s);
-            try {
-                imageFile = new File(new URI(myImageLocation));
-            } catch (final URISyntaxException e) {
-                // Ignore it
-                LOGGER.log(Level.INFO, "Exception when parsing ImageLocation: {0} Exception: {1}", new Object[]{myImageLocation, e.getMessage()});
-            }
-            sendImageLocationChangedEvent();
-        }
-    }
-
-
-    private String myImageFile = "";
-
-    /**
-     * Appends the text to the field (used by XML parser).
-     *
-     * @param s The text fragment to be added to the image Location
-     */
-    public synchronized void appendToImageFile(final String s, final Path baseDir) {
-        if (!s.isEmpty()) {
-            myImageFile = myImageFile.concat(s);
-            imageFile = new File(baseDir.toFile(), myImageFile);
-            sendImageLocationChangedEvent();
-        }
-    }
-
-
-    //----------------------------------------
-
-    /**
      * Creates a PictureChangedEvent and sends it to inform listening objects
      * that the image location was updated.
      */
@@ -370,9 +312,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     public synchronized String getSha256() {
         return sha256;
     }
-
-    //----------------------------------------
-
 
     /**
      * calculates the SHA-256 hash of the picture.
@@ -445,20 +384,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     }
 
 
-    //----------------------------------------
-
-    /**
-     * Appends the string to the filmReference field.
-     *
-     * @param s Fragment to append to Film Reference
-     */
-    public synchronized void appendToFilmReference(final String s) {
-        if (!s.isEmpty()) {
-            filmReference = filmReference.concat(s);
-            sendFilmReferenceChangedEvent();
-        }
-    }
-
     /**
      * Returns the film reference.
      *
@@ -500,19 +425,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         }
     }
 
-    /**
-     * appends the text fragment to the creation time.
-     *
-     * @param textFragment The text fragment to add.
-     */
-    public synchronized void appendToCreationTime(final String textFragment) {
-        if (!textFragment.isEmpty()) {
-            creationTime = creationTime.concat(textFragment);
-            sendCreationTimeChangedEvent();
-        }
-    }
-
-    //----------------------------------------
 
     /**
      * Returns the creation Time.
@@ -576,20 +488,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         }
     }
 
-    //----------------------------------------
-
-    /**
-     * Appends the text fragment to the comment.
-     *
-     * @param textFragment the text fragment
-     */
-    public synchronized void appendToComment(final String textFragment) {
-        if (!textFragment.isEmpty()) {
-            comment = comment.concat(textFragment);
-            sendCommentChangedEvent();
-        }
-    }
-
     /**
      * Returns the comment.
      *
@@ -631,21 +529,7 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         }
     }
 
-    /**
-     * Appends the text fragment to the photographer field.
-     *
-     * @param textFragment The photographer.
-     */
-    public synchronized void appendToPhotographer(final String textFragment) {
-        if (!textFragment.isEmpty()) {
-            photographer = photographer.concat(textFragment);
-            sendPhotographerChangedEvent();
-        }
-    }
-
-    //----------------------------------------
-
-    /**
+     /**
      * Returns the photographer.
      *
      * @return The Photographer.
@@ -683,18 +567,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
             pictureInfoChangeEvent.setPhotographerChanged();
             sendPictureInfoChangedEvent(pictureInfoChangeEvent);
             pictureCollection.setUnsavedUpdates();
-        }
-    }
-
-    /**
-     * appends the text fragment to the copyright holder field.
-     *
-     * @param textFragment The text fragment.
-     */
-    public synchronized void appendToCopyrightHolder(final String textFragment) {
-        if (!textFragment.isEmpty()) {
-            copyrightHolder = copyrightHolder.concat(textFragment);
-            sendCopyrightHolderChangedEvent();
         }
     }
 
@@ -738,35 +610,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
             pictureCollection.setUnsavedUpdates();
         }
     }
-
-    /**
-     * Appends the text fragment to the rotation field.
-     * does not send a rotationChangedEvent as the rotation has not yet been parsed
-     *
-     * @param textFragment Text fragment
-     */
-    public synchronized void appendToRotation(final String textFragment) {
-        if (!textFragment.isEmpty()) {
-            rotationString = rotationString.concat(textFragment);
-        }
-    }
-
-    /**
-     * Converts the temporary rotationString to the rotation double.
-     */
-    public synchronized void parseRotation() {
-        try {
-            rotation = Double.parseDouble(rotationString);
-            rotationString = "";
-        } catch (NumberFormatException x) {
-            LOGGER.severe(String.format("Can't parse rotation: %s", rotationString));
-            rotation = 0;
-        }
-        sendRotationChangedEvent();
-
-    }
-
-    //----------------------------------------
 
     /**
      * Returns the rotation.
@@ -827,31 +670,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
         }
     }
 
-    /**
-     * appends the text fragment to the latlng string.
-     *
-     * @param textFragment The text fragment.
-     */
-    public synchronized void appendToLatLng(final String textFragment) {
-        if (!textFragment.isEmpty()) {
-            latLngString = latLngString.concat(textFragment);
-        }
-    }
-
-    /**
-     * Converts the temporary latLngString to a LatLng Point.
-     */
-    public synchronized void parseLatLng() {
-        try {
-            final var latLngArray = latLngString.split("x");
-            final var lat = Double.parseDouble(latLngArray[0]);
-            final var lng = Double.parseDouble(latLngArray[1]);
-            setLatLng(new Point2D.Double(lat, lng));
-            latLngString = null;
-        } catch (final NumberFormatException x) {
-            LOGGER.info(String.format("Failed to parse string %s into latitude and longitude", latLngString));
-        }
-    }
 
     /**
      * returns the Latitude and Longitude.
@@ -875,19 +693,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
             latLng = newLatLng;
             sendLatLngChangedEvent();
         }
-    }
-
-    //----------------------------------------
-
-    /**
-     * Sets the Latitude and Longitude.
-     *
-     * @param newLatLng The latitude and longitude in the format of 2 doubles
-     *                  with an x
-     */
-    public synchronized void setLatLng(final String newLatLng) {
-        this.latLngString = newLatLng;
-        parseLatLng();
     }
 
     /**
@@ -937,17 +742,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     public synchronized void clearCategoryAssignments() {
         sendCategoryAssignmentsChangedEvent();
         categoryAssignments.clear();
-    }
-
-    /**
-     * Appends the text fragment to the categoryAssignmentString field.
-     *
-     * @param string Text fragment
-     */
-    public synchronized void appendToCategoryAssignment(final String string) {
-        if (!string.isEmpty()) {
-            categoryAssignmentString = categoryAssignmentString.concat(string);
-        }
     }
 
     /**
@@ -1208,8 +1002,6 @@ public class PictureInfo implements Serializable, GroupOrPicture {
     /**
      * Becomes 0001-01-01 00:00:00
      */
-
-
     private int compareDates(final Calendar myCalendar, final Calendar otherCalendar){
         var myCorrectedCalendar = myCalendar != null ? myCalendar : MinimumCalendar.getInstance().getMinimumCalendar();
         var otherCorrectedCalendar = otherCalendar != null ? otherCalendar : MinimumCalendar.getInstance().getMinimumCalendar();

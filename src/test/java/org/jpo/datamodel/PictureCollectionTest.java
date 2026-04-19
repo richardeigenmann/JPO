@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /*
- Copyright (C) 2017-2024 Richard Eigenmann.
+ Copyright (C) 2017-2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -610,7 +610,7 @@ class PictureCollectionTest {
             pictureCollection.fileSave();
             assertThat(tempFile).exists();
             try (final var lines = Files.lines(tempFile.toPath())) {
-                assertEquals(89, lines.count());
+                assertEquals(76, lines.count());
             }
         } catch (final IOException e) {
             fail(e.getMessage());
@@ -641,7 +641,7 @@ class PictureCollectionTest {
             picCollection.fileSave();
             assertThat(tempFile).exists();
             try (final var lines = Files.lines(tempFile.toPath())) {
-                assertEquals(89, lines.count());
+                assertEquals(76, lines.count());
             }
             Files.delete(tempFile.toPath());
         } catch (final IOException e) {
