@@ -26,11 +26,14 @@
 
 name: SonarQube analysis
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
@@ -50,7 +53,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'oracle' # Oracle provides consistent Early Access builds for Java 25
+          distribution: 'zulu' # Oracle provides consistent Early Access builds for Java 25
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -69,12 +72,5 @@ jobs:
           ./gradlew sonar \
             -Dsonar.projectKey=richardeigenmann-github \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-            # Comma-separated paths to directories containing main source files.
-            #-Dsonar.sources= # optional, default is project base directory
-            # When you need the analysis to take place in a directory other than the one from which it was launched
-            #-Dsonar.projectBaseDir= # optional, default is .
-            # Comma-separated paths to directories containing test source files.
-            #-Dsonar.tests= # optional. For more info about Code Coverage, please refer to https://docs.sonarcloud.io/enriching/test-coverage/overview/
-            # Adds more detail to both client and server-side analysis logs, activating DEBUG mode for the scanner, and adding client-side environment variables and system properties to the server-side log of analysis report processing.
-            #-Dsonar.verbose= # optional, default is false
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.gradle.skipCompile=true
