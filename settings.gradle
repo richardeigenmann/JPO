@@ -1,2 +1,4 @@
 rootProject.name = 'JPO'
+include 'core'
+include 'gui'
 include 'webpage'

@@ -1,0 +1,55 @@
+plugins {
+    id 'base'
+}
+
+// Task to install Node.js dependencies
+tasks.register('npmInstall', Exec) {
+    group = 'build'
+    description = 'Installs npm dependencies'
+    inputs.file file("${projectDir}/package.json")
+    outputs.dir file("${projectDir}/node_modules")
+
+    workingDir projectDir
+    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        commandLine 'cmd', '/c', 'npm install'
+    } else {
+        commandLine 'npm', 'install'
+    }
+}
+
+// Task to build the Astro project for production
+tasks.register('npmBuild', Exec) {
+    group = 'build'
+    description = 'Builds the Astro project'
+    inputs.dir file("${projectDir}/src")
+    inputs.file file("${projectDir}/package.json")
+    outputs.dir file("${projectDir}/dist")
+
+    workingDir projectDir
+    if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+        commandLine 'cmd', '/c', 'npm run build'
+    } else {
+        commandLine 'npm', 'run', 'build'
+    }
+    dependsOn npmInstall
+}
+
+// Integrate with standard Gradle lifecycle tasks
+assemble.dependsOn npmBuild
+
+clean {
+    delete "${projectDir}/dist", "${projectDir}/node_modules"
+}
+
+
+tasks.register('uploadWebsitePages', Exec) {
+    group = 'website'
+    description = 'Publishes the JPO website pages'
+    dependsOn ':webpage:npmBuild'
+    // note that the ssh key of sourceforge needs to be in /home/richi/.ssh/id_rsa
+    // and that the known_hosts needs to have the host key ssh-keyscan -t rsa web.sourceforge.net
+    commandLine('rsync',
+            '-avP',
+            "${projectDir}/webpage/dist/",
+            'richieigenmann@web.sourceforge.net:/home/project-web/j-po/htdocs/')
+}

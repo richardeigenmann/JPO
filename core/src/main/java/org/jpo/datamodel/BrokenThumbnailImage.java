@@ -1,0 +1,57 @@
+package org.jpo.datamodel;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+
+/*
+Copyright (C) 2024-2026 Richard Eigenmann.
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or any later version. This program is distributed
+in the hope that it will be useful, but WITHOUT ANY WARRANTY.
+Without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+more details. You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+The license is in gpl.txt.
+See http://www.gnu.org/copyleft/gpl.html for the details.
+ */
+
+public class BrokenThumbnailImage {
+
+    private static final String BROKEN_THUMBNAIL_FILENAME = "broken_thumbnail.gif";
+    private static final String BROKEN_THUMBNAIL_SHA256 = "cb2a91f3116eee469fa3d75b1a8017e49212c96d050ca003e62af0616dcdbdc7";
+
+    private BrokenThumbnailImage() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    /**
+     * Loads the BROKEN_THUMBNAIL image into the supplied scalablePicture
+     * @param scalablePicture the ScalablePicture object into which to load the image
+     * @throws IOException if the image cannot be loaded
+     */
+    public static void getImage(final ScalablePicture scalablePicture) throws IOException {
+        // Using getResourceAsStream is JAR-safe and works in both IDE and modular environments
+        try (InputStream is = BrokenThumbnailImage.class.getClassLoader().getResourceAsStream(BROKEN_THUMBNAIL_FILENAME)) {
+            if (is == null) {
+                throw new IOException("Internal resource not found: " + BROKEN_THUMBNAIL_FILENAME);
+            }
+
+            // Create a temporary file to act as a bridge for APIs requiring java.io.File
+            Path tempFile = Files.createTempFile("jpo_broken_thumb", ".gif");
+            tempFile.toFile().deleteOnExit();
+            
+            Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
+            
+            scalablePicture.loadPictureImd(BROKEN_THUMBNAIL_SHA256, tempFile.toFile(), 0f);
+        } catch (IOException e) {
+            throw new IOException("Failed to load broken_thumbnail resource: " + e.getMessage(), e);
+        }
+    }
+}
