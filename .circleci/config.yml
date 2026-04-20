@@ -5,16 +5,11 @@
 version: 2.1
 
 orbs:
-  #gradle: circleci/gradle@3.0.0
-  gradle-orb: entur/gradle-orb@0.2.1
+  gradle: circleci/gradle@3.0.0
 jobs:
   build:
     docker:
-      # specify the version you desire here
       # from https://hub.docker.com/r/cimg/openjdk
-      #- image: cimg/openjdk:19.0.2
-      #- image: cimg/openjdk:20.0.1
-      #- image: cimg/openjdk:23.0.2
       - image: cimg/openjdk:25.0
 
       # Specify service dependencies here if necessary
@@ -26,44 +21,33 @@ jobs:
 
     environment:
       # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
+      # We set max workers to 1 and disable the daemon to prevent OOM crashes in CI
+      GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.workers.max=1 -Xmx3000m
       TERM: dumb
 
     steps:
       - checkout
 
       - run:
-          name: Install Xvfb and xvfb-run
+          name: Install X11 Utilities
           command: |
             sudo apt-get update && sudo apt-get install -y xvfb x11-utils
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      - run: gradle dependencies
-
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
-
-
-
-      # run tests!
-      - run:
-          command: |
-            xvfb-run -a gradle test sonar
-          environment:
-            DISPLAY: ":99"
+      - gradle/with_cache:
+          steps:
+            - run:
+                name: Run Tests and Sonar
+                # -a: auto-servernum finding
+                # -s: set screen size to 1280x1024x24 to prevent GUI components being off-screen
+                command: |
+                  chmod +x gradlew
+                  xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew test sonar \
+                    -Dsonar.projectKey=richardeigenmann-github \
+                    -Dsonar.host.url=$SONAR_HOST_URL \
+                    -Dsonar.token=$SONAR_TOKEN
 
       - store_test_results:
           path: build/test-results/test
-      #- store_artifacts:
-      #    path: build
 
 workflows:
   main:

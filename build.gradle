@@ -209,12 +209,21 @@ test {
     if (System.properties.containsKey('java.awt.headless')) {
         systemProperty 'java.awt.headless', System.getProperty('java.awt.headless')
     }
-    maxParallelForks = 8
+
+    // Reduce forks for CI stability. High parallelism in GUI tests causes crashes.
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 
     useJUnitPlatform()
 
     moduleOptions {
         runOnClasspath = true
+    }
+
+    // Ensure we see standard output and error in the CI logs when a crash occurs
+    testLogging {
+        showStandardStreams = true
+        showExceptions = true
+        showCauses = true
     }
 
     testLogging {
@@ -231,7 +240,11 @@ test {
     // uses reflection to access internal Java APIs (like java.util.TimerTask),
     // which are locked down by the Java Module System (Jigsaw) in Java 9 and newer.
     jvmArgs = [
-            '--add-opens', 'java.base/java.util=ALL-UNNAMED'
+            '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/sun.awt=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/java.awt=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/javax.swing=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/sun.swing=ALL-UNNAMED'
     ]
 }
 
