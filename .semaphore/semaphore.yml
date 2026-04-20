@@ -3,26 +3,28 @@ name: Java
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu2004
+    os_image: ubuntu2204
 blocks:
   - name: Gradle
     task:
+      env_vars:
+        - name: FORCE_JAVASCRIPT_ACTIONS_TO_NODE24
+          value: "true"
       jobs:
         - name: Build
           commands:
-            #- sem-version java 20
             - checkout
-            - sudo apt update
-            - sudo apt install -y xvfb nsis
-            - Xvfb :97 &
-            - ps aux | grep Xvfb
-            - export DISPLAY=:97
-            #- curl https://download.java.net/java/GA/jdk20.0.1/b4887098932d415489976708ad6d1a4b/9/GPL/openjdk-20.0.1_linux-x64_bin.tar.gz | tar xz -C ~/
-            - curl https://download.oracle.com/java/24/latest/jdk-24_linux-x64_bin.tar.gz | tar xz -C ~/
-            #- find ~/
-            - export JAVA_HOME=/home/semaphore/jdk-24.0.1
-            - cd ~/JPO
-            - ./gradlew compileTestJava
-            #- ./gradlew check buildWindowsExecutable buildWindowsInstaller
-            #- ls -l build/libs/
-            #- ls -l build/executables
+            - sudo apt-get update && sudo apt-get install -y xvfb nsis jq
+            - curl -L https://download.oracle.com/java/25/latest/jdk-25_linux-x64_bin.tar.gz | tar xz -C ~/
+            - export JAVA_HOME=$(ls -d ~/jdk-25*)
+            - export PATH=$JAVA_HOME/bin:$PATH
+            - cache restore
+            - chmod +x gradlew
+            - xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew test sonar
+                -Dsonar.projectKey=richardeigenmann-github
+                -Dsonar.organization=richardeigenmann
+                -Dsonar.branch.name=$SEMAPHORE_GIT_BRANCH
+                -Dsonar.host.url=https://sonarcloud.io
+                -Dsonar.token=$SONAR_TOKEN
+                -Dsonar.gradle.skipCompile=true
+            - cache store
