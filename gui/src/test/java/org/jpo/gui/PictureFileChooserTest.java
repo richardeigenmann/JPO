@@ -14,6 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +48,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  See http://www.gnu.org/copyleft/gpl.html for the details.
  */
 
+@Isolated
 class PictureFileChooserTest {
 
     private Robot robot;
@@ -58,7 +60,7 @@ class PictureFileChooserTest {
 
     @BeforeEach
     void setUp() {
-        Settings.setLocale(Locale.ENGLISH);
+        //Settings.setLocale(Locale.ENGLISH);
         robot = BasicRobot.robotWithNewAwtHierarchy();
     }
 
