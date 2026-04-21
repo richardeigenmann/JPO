@@ -1,0 +1,54 @@
+<h1>{{ myNode?.label }}</h1>
+<p class="flex-center">Id: {{ myNode?.id }}
+  @if (myNode?.isGroup) {
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="#1f1f1f"
+    >
+      <path
+        d="M480-400 40-640l440-240 440 240-440 240Zm0 160L63-467l84-46 333 182 333-182 84 46-417 227Zm0 160L63-307l84-46 333 182 333-182 84 46L480-80Zm0-411 273-149-273-149-273 149 273 149Zm0-149Z"
+      />
+    </svg>
+  } @else {
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      fill="#1f1f1f"
+    >
+      <path
+        d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm160-120h320v-240H320v240ZM160-240v-480 480Z"
+      />
+    </svg>
+  }
+</p>
+@if (!myNode?.isGroup) {
+  <img src="{{ springService.SPRING_CONNECTION_URL }}/thumbnail/{{ myNode?.id }}.jpg" />
+} @else {
+  <div class="panel-container" [style.--thumbnail-width.px]="thumbnailWidth">
+    <div class="slider-container">
+      <label for="zoom">Zoom:</label>
+      <input type="range" id="zoom" name="zoom" min="5" max="100" [(ngModel)]="zoomLevel" />
+      <span>{{ zoomLevel }}%</span>
+    </div>
+    <div class="thumbnail-container">
+      @for (childNode of myNode?.children; track childNode.id) {
+      <div class="thumbnail-item">
+        <div class="image-container">
+          <img
+            src="{{ springService.SPRING_CONNECTION_URL }}/thumbnail/{{
+              childNode?.id
+            }}.jpg"
+            alt="{{ childNode.label }}"
+          />
+        </div>
+        <p class="label">{{ childNode.label }}</p>
+      </div>
+      }
+    </div>
+  </div>
+}

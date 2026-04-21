@@ -1,0 +1,30 @@
+plugins {
+    id "com.github.node-gradle.node" version "7.0.1"
+}
+
+node {
+    version = "24.15.0" // Use a recent LTS Node.js version
+    npmVersion = "11.12.1" // Use a recent npm version
+    download = true // Download Node.js and npm if not found
+}
+
+//tasks.register('npmInstall', NpmTask) {
+//  args = ['install']
+//}
+
+tasks.register('angularBuild', NpmTask) {
+  dependsOn npmInstall
+  args = ['run', 'build'] // Assumes 'build' script is defined in package.json
+  // If your build output needs to go to a specific directory for the Spring Boot app,
+  // you might need to add an output path here, e.g., args = ['run', 'build', '--', '--output-path=../api/src/main/resources/static']
+}
+
+//clean {
+//    delete fileTree('dist') // Assumes Angular builds to a 'dist' folder
+//    delete fileTree('.gradle')
+//    delete fileTree('node_modules')
+//}
+
+//build {
+//    dependsOn angularBuild
+//}

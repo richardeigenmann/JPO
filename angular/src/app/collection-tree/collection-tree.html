@@ -1,0 +1,43 @@
+<mat-card class="p-4 shadow-lg min-w-[300px]">
+  <mat-card-header>
+    <mat-card-title class="text-lg font-semibold text-gray-800">
+      JPO Collection Tree (Signal)
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="mt-4">
+    <mat-tree #tree [dataSource]="treeData()" [childrenAccessor]="childrenAccessor">
+      <!-- This is the tree node template for leaf nodes -->
+      <mat-tree-node
+        *matTreeNodeDef="let node"
+        matTreeNodePadding
+        class="cursor-pointer hover:bg-indigo-50 transition duration-150"
+        (click)="handleNodeClick(node)"
+      >
+        <!-- use a disabled button to provide padding for tree leaf -->
+        <button matIconButton disabled></button>
+        {{ node.label }}
+      </mat-tree-node>
+      <!-- This is the tree node template for expandable nodes -->
+      <mat-tree-node
+        *matTreeNodeDef="let node; when: hasChild"
+        matTreeNodePadding
+        matTreeNodeToggle
+        [cdkTreeNodeTypeaheadLabel]="node.label"
+        class="cursor-pointer hover:bg-indigo-50 transition duration-150"
+        (click)="handleNodeClick(node)"
+      >
+        <button matIconButton matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.label">
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{ tree.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        {{ node.label }}
+      </mat-tree-node>
+    </mat-tree>
+
+    <div class="mt-4 p-2 bg-gray-100 rounded text-sm text-gray-600">
+      <p>Service Status: {{ springService.connectionStatus() }}</p>
+      <p>Last Clicked: {{ clickedNodeLabel() }}</p>
+    </div>
+  </mat-card-content>
+</mat-card>
