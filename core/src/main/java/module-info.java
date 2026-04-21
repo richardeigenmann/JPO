@@ -30,6 +30,8 @@ module org.jpo.datamodel {
     requires java.datatransfer;
     requires com.drew.metadata;
     requires org.apache.tika.core;
+    requires org.slf4j; // for tika
+    requires java.sql; // for tika
 
     //requires org.mockito.junit.jupiter;  // should be test only but feels left out
 }

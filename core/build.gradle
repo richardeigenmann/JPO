@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'java-test-fixtures'
-    id "com.github.ben-manes.versions" version "0.53.0" // dependency updates
+    id "com.github.ben-manes.versions" version "0.54.0" // dependency updates
     id "org.javamodularity.moduleplugin" version "2.0.0"
     id "org.sonarqube" version "7.2.3.7755"
     id 'jacoco'
@@ -13,8 +13,6 @@ java {
 
 // Define the path for generated sources. This is a standard location.
 def generatedSourcesDir = layout.buildDirectory.dir("generated-sources/java")
-
-//println "Generated sources directory: $generatedSourcesDir"
 
 // To get the Version number from the build.gradle into the source file we let gradle create a source file
 // with the current version in it.
@@ -152,7 +150,9 @@ dependencies {
     implementation 'io.github.classgraph:classgraph:4.8.184'
     testImplementation 'org.mockito:mockito-core:5.23.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.23.0'  // Mockito doesn't work nicely with modularity. But it can be added to the module.into
-    implementation 'org.apache.tika:tika-core:2.9.2' // improved file type detection
+    implementation 'org.apache.tika:tika-core:3.3.0' // improved file type detection
+    implementation 'org.slf4j:slf4j-api:2.1.0-alpha1' // for tika logging
+    implementation 'ch.qos.logback:logback-classic:1.5.32' // for tika logging
 }
 
 
@@ -320,10 +320,6 @@ tasks.register('openJavadocInBrowser') {
         Desktop.getDesktop().browse(docFile.toURI())
     }
 }
-
-
-
-
 
 tasks.register('uploadCoreJavadoc', Exec) {
     group = 'website'
