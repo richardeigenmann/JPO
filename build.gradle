@@ -1,5 +1,5 @@
 allprojects {
-    group = 'org.jpop.music'
+    group = 'org.jpo'
     version = '0.25'
 
     repositories {

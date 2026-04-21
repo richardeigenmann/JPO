@@ -19,12 +19,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.assertj.core.api.Fail.fail;
 import static org.assertj.swing.core.matcher.DialogMatcher.withTitle;
 import static org.assertj.swing.core.matcher.JButtonMatcher.withText;
 import static org.assertj.swing.finder.WindowFinder.findDialog;
@@ -68,7 +68,7 @@ class PictureFileChooserTest {
     }
 
     @Test
-    void testConstructorForNonGroupNode() {
+    void testConstructorForNonGroupNode() throws InterruptedException, TimeoutException, ExecutionException {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
         final var executor = Executors.newSingleThreadExecutor();
@@ -78,10 +78,10 @@ class PictureFileChooserTest {
             new PictureFileChooser(chooseAndAddPicturesToGroupRequest);
         }));
 
-        final String expectedDialogTitle = JpoResources.getResource("genericError");
-        final String expectedErrorText = JpoResources.getResource("notGroupInfo");
+        final var expectedDialogTitle = JpoResources.getResource("genericError");
+        final var expectedErrorText = JpoResources.getResource("notGroupInfo");
 
-        final DialogFixture dialogFixture = findDialog(withTitle(expectedDialogTitle))
+        final var dialogFixture = findDialog(withTitle(expectedDialogTitle))
                 .withTimeout(5, SECONDS).using(robot);
 
         assertNotNull(dialogFixture.target(), "The Dialog Window was not found by AssertJ-Swing");
@@ -94,24 +94,15 @@ class PictureFileChooserTest {
         dialogFixture.button(withText("OK")).click();
         robot.waitForIdle();
 
-        try {
-            // Use the future to wait for the task to complete. 
+            // Use the future to wait for the task to complete.
             // This will also throw an exception if the background thread crashed.
-            future.get(90, SECONDS);
-        } catch (TimeoutException e) {
-            fail("Executor didn't terminate - dialog likely still open or blocked");
-        } catch (InterruptedException _) {
-            executor.shutdownNow();
-            fail("Test interrupted");
-        } catch (Exception e) {
-            fail("Background task failed: " + e.getMessage());
-        }
+        future.get(10, SECONDS);
 
         dialogFixture.requireNotVisible();
     }
 
     @Test
-    void testConstructor() {
+    void testConstructor() throws ExecutionException, InterruptedException, TimeoutException {
         assumeFalse(GraphicsEnvironment.isHeadless());
 
         final var executor = Executors.newSingleThreadExecutor();
@@ -135,16 +126,7 @@ class PictureFileChooserTest {
         dialogFixture.button(withText("Cancel")).click();
         robot.waitForIdle();
 
-        try {
-            future.get(10, SECONDS);
-        } catch (TimeoutException e) {
-            fail("Executor didn't terminate - dialog likely still open or blocked");
-        } catch (InterruptedException _) {
-            executor.shutdownNow();
-            fail("Test interrupted");
-        } catch (Exception e) {
-            fail("Background task failed: " + e.getMessage());
-        }
+        future.get(10, SECONDS);
 
         dialogFixture.requireNotVisible();
     }

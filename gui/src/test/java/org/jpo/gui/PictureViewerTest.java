@@ -5,18 +5,18 @@ import org.assertj.swing.edt.GuiActionRunner;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
 import org.jpo.eventbus.ShowPictureRequest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /*
- Copyright (C) 2017 - 2025 Richard Eigenmann.
+ Copyright (C) 2017 - 2026 Richard Eigenmann.
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -44,16 +44,10 @@ class PictureViewerTest {
     }
 
     @Test
-    void testConstructor() {
+    void testConstructor() throws IOException {
         final var pictureInfo = new PictureInfo();
-        try {
-            final var imageFile = new File(ClassLoader.getSystemResources("exif-test-nikon-d100-1.jpg").nextElement().toURI());
-            pictureInfo.setImageLocation(imageFile);
-
-            pictureInfo.setImageLocation(imageFile);
-        } catch (URISyntaxException | IOException e) {
-            fail("Could not load image file: " + e.getMessage());
-        }
+        final var imageFile = Tools.copyResourceToTempFile("/exif-test-nikon-d100-1.jpg");
+        pictureInfo.setImageLocation(imageFile);
         final var node = new SortableDefaultMutableTreeNode(pictureInfo);
         final var navigator = new SingleNodeNavigator(node);
         final var request = new ShowPictureRequest(navigator,0 );
@@ -64,14 +58,10 @@ class PictureViewerTest {
 
 
     @Test
-    void testShowPicture() {
+    void testShowPicture() throws IOException {
         final var pictureInfo = new PictureInfo();
-        try {
-            final var image = new File(PictureViewerTest.class.getClassLoader().getResource("exif-test-nikon-d100-1.jpg").toURI());
-            pictureInfo.setImageLocation(image);
-        } catch (URISyntaxException e) {
-            fail("Could not load image file: " + e.getMessage());
-        }
+        final var image = Tools.copyResourceToTempFile("/exif-test-nikon-d100-1.jpg");
+        pictureInfo.setImageLocation(image);
         final var DESCRIPTION = "A test image";
         pictureInfo.setDescription(DESCRIPTION);
         final var node = new SortableDefaultMutableTreeNode(pictureInfo);

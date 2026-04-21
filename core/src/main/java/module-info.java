@@ -2,6 +2,7 @@ module org.jpo.datamodel {
     exports org.jpo.datamodel;
 
     opens org.jpo.datamodel to com.google.common;
+    exports org.jpo.generated;
 
     requires activation;
     requires com.google.common;
