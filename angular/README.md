@@ -1,14 +1,22 @@
 # JpoAngular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.1.
+This is a early version of a Web-UI for JPO. It uses the core JPO software with Spring Boot 
+REST API and consumes that in an Angular frontend.
 
-## Development server
+## Get started
 
-To start a local development server, run:
+run the gradle api > Tasks > application > bootRun  (:core:bootRun)
 
+That starts the Spring backend and opens up the hard coded collection
+You can check it on http://localhost:8001
+
+Then
 ```bash
-ng serve
+cd ./angular
+ng serve -o 
 ```
+
+This opens the browser at http://localhost:4200 and if you are lucky you will see the GUI there
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
