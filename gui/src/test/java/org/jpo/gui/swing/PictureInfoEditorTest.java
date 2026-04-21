@@ -1,19 +1,22 @@
 package org.jpo.gui.swing;
 
 import org.assertj.swing.edt.FailOnThreadViolationRepaintManager;
-import org.jpo.gui.ThumbnailCreationQueue;
 import org.jpo.datamodel.PictureCollection;
 import org.jpo.datamodel.PictureInfo;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
+import org.jpo.datamodel.Tools;
+import org.jpo.gui.ThumbnailCreationQueue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
 
+import static org.jpo.datamodel.Tools.copyResourceToTempFile;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
@@ -38,6 +41,7 @@ import static org.junit.jupiter.api.Assumptions.assumeFalse;
  *
  * @author Richard Eigenmann
  */
+@Isolated
 class PictureInfoEditorTest {
 
     @BeforeAll
@@ -46,62 +50,57 @@ class PictureInfoEditorTest {
     }
 
     @Test
-    void testConstructor() {
+    void testConstructor() throws InterruptedException, InvocationTargetException {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                final var pictureInfo = new PictureInfo();
-                final var JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-                final var imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
-                pictureInfo.setImageLocation(new File(imageUrl.getFile()));
+        SwingUtilities.invokeAndWait(() -> {
+            final var pictureInfo = new PictureInfo();
+            final var JPG_IMAGE_FILE = "/exif-test-nikon-d100-1.jpg";
+            try {
+                pictureInfo.setImageLocation(copyResourceToTempFile(JPG_IMAGE_FILE));
+            } catch (IOException e) {
+                fail(e.getMessage());
+            }
 
-                final var node = new SortableDefaultMutableTreeNode(pictureInfo);
-                final var pictureCollection = new PictureCollection();
-                pictureCollection.getRootNode().add(node);
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            final var pictureCollection = new PictureCollection();
+            pictureCollection.getRootNode().add(node);
 
-                final var pictureInfoEditor = new PictureInfoEditor(node);
-                assertNotNull( pictureInfoEditor );
-                ThumbnailCreationQueue.clear(); // the created request confuses other tests
-                pictureInfoEditor.getRid();
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( "This test didn't work. Exception: " + ex.getMessage() );
-            Thread.currentThread().interrupt();
-        }
+            final var pictureInfoEditor = new PictureInfoEditor(node);
+            assertNotNull( pictureInfoEditor );
+            ThumbnailCreationQueue.clear(); // the created request confuses other tests
+            pictureInfoEditor.getRid();
+        } );
     }
 
 
     @Test
-    void testFileNameCorruption() {
+    void testFileNameCorruption() throws InterruptedException, InvocationTargetException {
         assumeFalse(GraphicsEnvironment.isHeadless());
-        try {
-            SwingUtilities.invokeAndWait(() -> {
-                final var pictureInfo = new PictureInfo();
-                final var JPG_IMAGE_FILE = "exif-test-nikon-d100-1.jpg";
-                final var imageUrl = Objects.requireNonNull(PictureInfoEditorTest.class.getClassLoader().getResource(JPG_IMAGE_FILE));
+        SwingUtilities.invokeAndWait(() -> {
+            final var pictureInfo = new PictureInfo();
+            final var JPG_IMAGE_FILE = "/exif-test-nikon-d100-1.jpg";
+            final File imageFile;
+            try {
+                imageFile = Tools.copyResourceToTempFile(JPG_IMAGE_FILE);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            pictureInfo.setImageLocation(imageFile);
+            assertEquals(pictureInfo.getImageFile(), imageFile);
 
-                final var imageFile = new File(imageUrl.getFile());
-                pictureInfo.setImageLocation(imageFile);
-                assertEquals(pictureInfo.getImageFile(), imageFile);
+            final var node = new SortableDefaultMutableTreeNode(pictureInfo);
+            final var pictureCollection = new PictureCollection();
+            pictureCollection.getRootNode().add(node);
 
-                final var node = new SortableDefaultMutableTreeNode( pictureInfo );
-                final var pictureCollection = new PictureCollection();
-                pictureCollection.getRootNode().add(node);
+            final var pictureInfoEditor = new PictureInfoEditor(node);
+            assertNotNull(pictureInfoEditor);
 
-                final var pictureInfoEditor = new PictureInfoEditor(node);
-                assertNotNull( pictureInfoEditor );
-
-                pictureInfoEditor.callSaveFieldData();
-                // Expectation is that after saving without changing file stays the same
-                assertEquals( imageFile, pictureInfo.getImageFile());
-                ThumbnailCreationQueue.clear();  // the created request confuses other tests
-                pictureInfoEditor.getRid();
-            } );
-        } catch ( InterruptedException | InvocationTargetException ex ) {
-            fail( ex.getMessage() );
-            Thread.currentThread().interrupt();
-        }
+            pictureInfoEditor.callSaveFieldData();
+            // Expectation is that after saving without changing file stays the same
+            assertEquals(imageFile, pictureInfo.getImageFile());
+            ThumbnailCreationQueue.clear();  // the created request confuses other tests
+            pictureInfoEditor.getRid();
+        });
     }
-
 
 }
