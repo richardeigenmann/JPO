@@ -100,7 +100,6 @@ dependencies {
         exclude group: "xpp3", module: "xpp3"
     }
     implementation 'com.google.guava:guava:33.6.0-jre'
-    implementation 'javax.activation:activation:1.1.1'
     implementation 'com.jcraft:jsch:0.1.55'
     implementation 'com.drewnoakes:metadata-extractor:2.20.0'
     implementation 'com.adobe.xmp:xmpcore:6.1.11'
