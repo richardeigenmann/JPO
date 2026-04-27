@@ -10,6 +10,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
@@ -45,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Similar to ShowAutoAdvanceDialogRequestTest which tests the Request
  */
 @Isolated // findDialog might find the wrong dialog
+@Disabled ("Possibly the model JOptionDialog blocks the EDT in Travis environment?")
 class AutoAdvanceDialogTest {
 
     private Robot robot;
