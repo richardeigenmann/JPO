@@ -186,3 +186,12 @@ To run the application, click on Projects in the left Panel and expand the JPO p
 
 JPO is a Java Swing application which uses the Guava [EventBus](https://github.com/google/guava/wiki/EventBusExplained) 
 to order and fulfil the GUI tasks.
+
+
+## Notes
+
+To check the hanging JOptionPane EDT blocking tests on your own computer run
+
+```bash
+xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew check
+```
