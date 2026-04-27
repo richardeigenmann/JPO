@@ -22,14 +22,17 @@ class CollectionLoader(private val jpoPictureCollection: JpoPictureCollection) :
 
         val collectionFile = File("/richi/Fotos/tools/RichardsCollection.xml")
 
-        // Kotlin allows passing empty lambdas {} for Runnable/Consumer functional interfaces
-        jpoPictureCollection.pictureCollection.fileLoad(
-            collectionFile,
-            MyProgressTracker(),
-            { }          // onStart/Success lambda
-        )
-
-        LOGGER.log(Level.INFO, "Done Loading Collection")
+        if (collectionFile.exists()) {
+            // Kotlin allows passing empty lambdas {} for Runnable/Consumer functional interfaces
+            jpoPictureCollection.pictureCollection.fileLoad(
+                collectionFile,
+                MyProgressTracker(),
+                { }          // onStart/Success lambda
+            )
+            LOGGER.log(Level.INFO, "Done Loading Collection")
+        } else {
+            LOGGER.log(Level.WARNING, "Collection file NOT FOUND at: ${collectionFile.absolutePath}. Skipping load.")
+        }
     }
 
     inner class MyProgressTracker : ProgressTracker {
