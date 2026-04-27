@@ -3,17 +3,16 @@ package org.jpo.eventbus;
 import com.google.common.eventbus.Subscribe;
 import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.edt.GuiActionRunner;
-import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SingleNodeNavigator;
-import org.jpo.datamodel.SortableDefaultMutableTreeNode;
-import org.jpo.datamodel.Tools;
-import org.jpo.gui.PictureViewer;
+import org.jpo.datamodel.*;
+import org.jpo.gui.AutoAdvanceInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -59,25 +58,24 @@ class ShowAutoAdvanceDialogRequestTest {
         final var myEventBusSubscriber = new EventBusSubscriber();
         jpoEventBus.register(myEventBusSubscriber);
 
-        final var jFrame = GuiActionRunner.execute(() -> new JFrame());
+        final var jPanel = GuiActionRunner.execute(() -> new JPanel());
         final var pictureInfo = new PictureInfo();
         final var imageFile = Tools.copyResourceToTempFile("/exif-test-nikon-d100-1.jpg");
         pictureInfo.setImageLocation(imageFile);
         final var pictureNode = new SortableDefaultMutableTreeNode(pictureInfo);
-        final var navigator = new SingleNodeNavigator(pictureNode);
-        final var request = new ShowPictureRequest(navigator, 0);
-        final var pictureViewer = GuiActionRunner.execute(() -> new PictureViewer(request));
+        final var myAutoAdvanceImplementation = new MyAutoAdvanceImplementation();
 
-        final var showAutoAdvanceDialogRequest = GuiActionRunner.execute(() -> new ShowAutoAdvanceDialogRequest(jFrame, pictureNode, pictureViewer));
+        final var showAutoAdvanceDialogRequest = GuiActionRunner.execute(
+                () -> new ShowAutoAdvanceDialogRequest(jPanel, pictureNode, myAutoAdvanceImplementation));
         var robot = BasicRobot.robotWithNewAwtHierarchy();
         robot.pressAndReleaseKey(KeyEvent.VK_ENTER);
 
         jpoEventBus.post(showAutoAdvanceDialogRequest);
 
         assertEquals(showAutoAdvanceDialogRequest, responseEvent);
-        assertEquals(jFrame, responseEvent.parentComponent());
+        assertEquals(jPanel, responseEvent.parentComponent());
         assertEquals(pictureNode, responseEvent.currentNode());
-        assertEquals(pictureViewer, responseEvent.autoAdvanceTarget());
+        assertEquals(myAutoAdvanceImplementation, responseEvent.autoAdvanceTarget());
     }
 
     /**
@@ -96,4 +94,19 @@ class ShowAutoAdvanceDialogRequestTest {
         }
     }
 
+
+
+    class MyAutoAdvanceImplementation implements AutoAdvanceInterface {
+        private static final Logger LOGGER = Logger.getLogger(ShowAutoAdvanceDialogRequestTest.MyAutoAdvanceImplementation.class.getName());
+
+        @Override
+        public void startAdvanceTimer(int seconds) {
+            LOGGER.info("Auto advance timer started for " + seconds + " seconds.");
+        }
+
+        @Override
+        public void showNode(NodeNavigatorInterface mySetOfNodes, int myIndex) {
+            LOGGER.log(Level.INFO, "showNode called with NodeNavigatorInterface {0} and index {1}", new Object[]{ mySetOfNodes, myIndex});
+        }
+    }
 }
