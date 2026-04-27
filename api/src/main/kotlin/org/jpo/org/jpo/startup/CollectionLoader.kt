@@ -2,6 +2,7 @@ package org.jpo.org.jpo.startup
 
 import org.jpo.datamodel.ProgressTracker
 import org.jpo.service.JpoPictureCollection
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
@@ -11,7 +12,11 @@ import java.util.logging.Logger
 
 @Component
 @Order(1) // lower number = higher priority
-class CollectionLoader(private val jpoPictureCollection: JpoPictureCollection) : CommandLineRunner {
+class CollectionLoader(
+    private val jpoPictureCollection: JpoPictureCollection,
+    @Value("\${app.collection.file-path:}")
+    private val collectionFilePath: String
+) : CommandLineRunner {
 
     companion object {
         private val LOGGER = Logger.getLogger(CollectionLoader::class.java.name)
@@ -20,7 +25,7 @@ class CollectionLoader(private val jpoPictureCollection: JpoPictureCollection) :
     override fun run(vararg args: String) {
         LOGGER.log(Level.INFO, "--- Loading Collection ---")
 
-        val collectionFile = File("/richi/Fotos/tools/RichardsCollection.xml")
+        val collectionFile = File(collectionFilePath)
 
         if (collectionFile.exists()) {
             // Kotlin allows passing empty lambdas {} for Runnable/Consumer functional interfaces
