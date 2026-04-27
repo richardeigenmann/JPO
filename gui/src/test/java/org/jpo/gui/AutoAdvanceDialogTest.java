@@ -4,14 +4,12 @@ import org.assertj.swing.core.BasicRobot;
 import org.assertj.swing.core.Robot;
 import org.assertj.swing.edt.GuiActionRunner;
 import org.assertj.swing.fixture.DialogFixture;
+import org.jpo.datamodel.NodeNavigatorInterface;
 import org.jpo.datamodel.PictureInfo;
-import org.jpo.datamodel.SingleNodeNavigator;
 import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.eventbus.ShowAutoAdvanceDialogRequest;
-import org.jpo.eventbus.ShowPictureRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 
@@ -19,6 +17,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.swing.finder.WindowFinder.findDialog;
@@ -42,9 +42,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
- * Duplicate of ShowAutoAdvanceDialogRequestTest
+ * Similar to ShowAutoAdvanceDialogRequestTest which tests the Request
  */
-@Isolated
+@Isolated // findDialog might find the wrong dialog
 class AutoAdvanceDialogTest {
 
     private Robot robot;
@@ -60,30 +60,37 @@ class AutoAdvanceDialogTest {
         robot.cleanUp();
     }
 
+    class MyAutoAdvanceImplementation implements AutoAdvanceInterface {
+        private static final Logger LOGGER = Logger.getLogger(MyAutoAdvanceImplementation.class.getName());
+
+        @Override
+        public void startAdvanceTimer(int seconds) {
+            LOGGER.info("Auto advance timer started for " + seconds + " seconds.");
+        }
+
+        @Override
+        public void showNode(NodeNavigatorInterface mySetOfNodes, int myIndex) {
+            LOGGER.log(Level.INFO, "showNode called with NodeNavigatorInterface {0} and index {1}", new Object[]{ mySetOfNodes, myIndex});
+        }
+    }
+
     @Test
-    @Disabled
+    //@Disabled
     void testDialogClosesWhenCancelButtonIsClicked() throws IOException {
-        // Run the blocking JOptionPane code on a separate thread
         final var executor = Executors.newSingleThreadExecutor();
         final var imageFile = org.jpo.datamodel.Tools.copyResourceToTempFile("/exif-test-nikon-d100-1.jpg");
         final var pi = new PictureInfo(imageFile, "Picture");
         final var node = new SortableDefaultMutableTreeNode(pi);
-        final var nodeNavigator = new SingleNodeNavigator(node);
-        final var showPictureRequest = new ShowPictureRequest(nodeNavigator, 0);
 
         executor.submit(() -> GuiActionRunner.execute(
                 () -> {
-                    final var frame = new JFrame();
-                    frame.pack();
-                    frame.setVisible(true);
-                    final var pictureViewer = new PictureViewer(showPictureRequest);
-
-                    new AutoAdvanceDialog(new ShowAutoAdvanceDialogRequest(frame, node, pictureViewer));
+                    final var jpanel = new JPanel();
+                    new AutoAdvanceDialog(new ShowAutoAdvanceDialogRequest(jpanel, node, new MyAutoAdvanceImplementation()));
                 }));
 
-        // Use WindowFinder to wait for the dialog to appear, identifying it by its mocked title.
+        // Portential race condition if a concurrent test were to open a dialog that might be found
         final DialogFixture dialogFixture = findDialog(JDialog.class)
-                .withTimeout(5, SECONDS).using(robot);
+                .withTimeout(2, SECONDS).using(robot);
 
         // Could there be an issue with different locale settings?
         assertEquals("Start Automatic Advance Timer",dialogFixture.target().getTitle() );

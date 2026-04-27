@@ -9,6 +9,7 @@ import org.jpo.datamodel.SortableDefaultMutableTreeNode;
 import org.jpo.datamodel.Tools;
 import org.jpo.gui.PictureViewer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Richard Eigenmann
  */
+@Isolated
 class ShowAutoAdvanceDialogRequestTest {
 
     /**
@@ -50,7 +52,7 @@ class ShowAutoAdvanceDialogRequestTest {
 
     /**
      * Test receiving an event.
-     * Duplicate of AutoAdvanceDialogTest. Note that this test does not show much code coverage of the AutoAdvanceDialog
+     * Similar to AutoAdvanceDialogTest but focussed on the event
      */
     @Test
     void testReceivingEvent() throws IOException {
