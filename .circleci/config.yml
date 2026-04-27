@@ -41,10 +41,11 @@ jobs:
                 # -s: set screen size to 1280x1024x24 to prevent GUI components being off-screen
                 command: |
                   chmod +x gradlew
-                  xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew test sonar \
-                    -Dsonar.projectKey=richardeigenmann-github \
-                    -Dsonar.host.url=$SONAR_HOST_URL \
-                    -Dsonar.token=$SONAR_TOKEN
+                  xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew test
+#                   sonar \
+#                    -Dsonar.projectKey=richardeigenmann-github \
+#                    -Dsonar.host.url=$SONAR_HOST_URL \
+#                    -Dsonar.token=$SONAR_TOKEN
 
       - store_test_results:
           path: build/test-results/test
