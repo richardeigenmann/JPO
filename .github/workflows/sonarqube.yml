@@ -56,7 +56,7 @@ jobs:
           distribution: 'zulu' # Oracle provides consistent Early Access builds for Java 25
 
       - name: Cache SonarQube packages
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -71,7 +71,7 @@ jobs:
           chmod +x gradlew
           ./gradlew sonar \
             -Dsonar.projectKey=richardeigenmann-github \
-            -Dsonar.branch.name=${{ github.ref_name }} \
+             ${{ github.ref_name != 'master' && format('-Dsonar.branch.name={0}', github.ref_name) || '' }} \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.gradle.skipCompile=true
