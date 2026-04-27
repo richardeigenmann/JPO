@@ -21,6 +21,10 @@ repositories {
     mavenCentral()
 }
 
+configurations.configureEach {
+    exclude group: 'com.vaadin.external.google', module: 'android-json'
+}
+
 dependencies {
     implementation project(':core')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
@@ -28,8 +32,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'tools.jackson.module:jackson-module-kotlin'
-    implementation project(':core')
-    implementation project(':core')
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
