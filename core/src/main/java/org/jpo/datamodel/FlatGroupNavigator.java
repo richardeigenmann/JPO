@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*
- Copyright (C) 2006-2024 Richard Eigenmann, Zürich, Switzerland
+ Copyright (C) 2006-2026 Richard Eigenmann, Zürich, Switzerland
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 2
@@ -34,7 +34,8 @@ public class FlatGroupNavigator
     private static final Logger LOGGER = Logger.getLogger(FlatGroupNavigator.class.getName());
 
     /**
-     * Constructor for a FlatGroupNavigator.
+     * Constructor for a FlatGroupNavigator which navigates through only the direct
+     * Picture child nodes of the supplied group
      *
      * @param groupNode The groupNode under which the pictures should be
      *                  displayed.
