@@ -52,6 +52,7 @@ public class ProgressGui extends JFrame implements ProgressListener {
     
     /**
      * how long the gui should show after it has finished.
+     * 5 Minutes
      */
     private static final int TIMEOUT = 5 * 60 * 1000;
     /**
@@ -68,7 +69,6 @@ public class ProgressGui extends JFrame implements ProgressListener {
      *
      */
     public ProgressGui( final int max, final String title, String doneString ) {
-        Tools.checkEDT();
         initComponents( doneString, max, title );
     }
     /**

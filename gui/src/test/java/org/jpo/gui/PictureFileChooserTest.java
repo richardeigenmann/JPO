@@ -84,7 +84,7 @@ class PictureFileChooserTest {
         final var expectedErrorText = JpoResources.getResource("notGroupInfo");
 
         final var dialogFixture = findDialog(withTitle(expectedDialogTitle))
-                .withTimeout(5, SECONDS).using(robot);
+                .withTimeout(2, SECONDS).using(robot);
 
         assertNotNull(dialogFixture.target(), "The Dialog Window was not found by AssertJ-Swing");
 
@@ -98,7 +98,7 @@ class PictureFileChooserTest {
 
             // Use the future to wait for the task to complete.
             // This will also throw an exception if the background thread crashed.
-        future.get(10, SECONDS);
+        future.get(2, SECONDS);
 
         dialogFixture.requireNotVisible();
     }
@@ -121,14 +121,14 @@ class PictureFileChooserTest {
 
         final String expectedDialogTitle = JpoResources.getResource("PictureAdderDialogTitle");
         final DialogFixture dialogFixture = findDialog(withTitle(expectedDialogTitle))
-                .withTimeout(5, SECONDS).using(robot);
+                .withTimeout(2, SECONDS).using(robot);
 
         assertNotNull(dialogFixture.target(), "The File Choose Dialog Window was not found by AssertJ-Swing");
 
         dialogFixture.button(withText("Cancel")).click();
         robot.waitForIdle();
 
-        future.get(10, SECONDS);
+        future.get(2, SECONDS);
 
         dialogFixture.requireNotVisible();
     }
