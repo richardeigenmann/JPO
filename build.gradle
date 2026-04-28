@@ -21,7 +21,7 @@ sonar {
 }
 
 subprojects {
-    if (project.name != "angular") {
+    if (project.name != "angular" && project.name != "webpage") {
         sonar {
             properties {
                 property "sonar.sources", "src/main"
@@ -39,6 +39,26 @@ project(":angular") {
             property "sonar.projectLanguage", "ts"
             // Optional: point to coverage if you run 'ng test'
             property "sonar.typescript.lcov.reportPaths", "coverage/lcov.info"
+        }
+    }
+}
+
+project(":webpage") {
+    sonar {
+        properties {
+            // Astro projects keep source in 'src'
+            property "sonar.sources", "src"
+
+            // Exclude compiled files and test evidence
+            property "sonar.exclusions", "dist/**, build/**, public/**"
+
+            // Tell Sonar where the Cypress tests are so they aren't treated as production code
+            property "sonar.tests", "cypress/e2e"
+            property "sonar.test.inclusions", "cypress/e2e/**/*.cy.js, cypress/e2e/**/*.ts"
+
+            // Optional: If you want to see Astro files, ensure the plugin is allowed to see them
+            // Sonar treats .astro files as HTML/JS
+            property "sonar.lang.opt.html.file.suffixes", ".html,.cshtml,.erb,.astro"
         }
     }
 }
