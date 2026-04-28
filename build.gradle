@@ -1,8 +1,29 @@
+plugins {
+    id "org.sonarqube" version "7.2.3.7755"
+}
+
 allprojects {
     group = 'org.jpo'
     version = '0.25'
 
     repositories {
         mavenCentral()
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "richardeigenmann-github"
+        property "sonar.organization", "richardeigenmann-github"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.scanAll", "true"
+    }
+}
+
+subprojects {
+    sonar {
+        properties {
+            property "sonar.sources", "src/main"
+        }
     }
 }
