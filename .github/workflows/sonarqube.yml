@@ -53,7 +53,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '25'
-          distribution: 'zulu' # Oracle provides consistent Early Access builds for Java 25
+          distribution: 'zulu'
 
       - name: Cache SonarQube packages
         uses: actions/cache@v5
