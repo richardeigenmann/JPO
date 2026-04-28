@@ -69,9 +69,8 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           chmod +x gradlew
-          ./gradlew sonar \
+          ./gradlew check sonar --info -Dsonar.gradle.skipCompile=true \
             -Dsonar.projectKey=richardeigenmann-github \
-            -Dsonar.branch.name= \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.gradle.skipCompile=true
