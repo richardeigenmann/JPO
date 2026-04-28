@@ -21,9 +21,24 @@ sonar {
 }
 
 subprojects {
+    if (project.name != "angular") {
+        sonar {
+            properties {
+                property "sonar.sources", "src/main"
+            }
+        }
+    }
+}
+
+project(":angular") {
     sonar {
         properties {
-            property "sonar.sources", "src/main"
+            // Angular source is usually just 'src'
+            property "sonar.sources", "src"
+            // Tell Sonar this is TypeScript/HTML, not Java
+            property "sonar.projectLanguage", "ts"
+            // Optional: point to coverage if you run 'ng test'
+            property "sonar.typescript.lcov.reportPaths", "coverage/lcov.info"
         }
     }
 }
