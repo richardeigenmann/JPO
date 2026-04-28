@@ -3,7 +3,7 @@ name: Java
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu2204
+    os_image: ubuntu2404
 blocks:
   - name: Gradle
     task:
@@ -16,15 +16,16 @@ blocks:
             - checkout
             - sudo apt-get update && sudo apt-get install -y xvfb nsis jq
             - curl -L https://download.oracle.com/java/25/latest/jdk-25_linux-x64_bin.tar.gz | tar xz -C ~/
-            - export JAVA_HOME=$(ls -d ~/jdk-25*)
+            - export JAVA_HOME=$HOME/$(ls -F ~/ | grep 'jdk-25' | head -n 1 | tr -d '/')
             - export PATH=$JAVA_HOME/bin:$PATH
-            - cache restore
+            - cache restore gradle-deps-$(checksum build.gradle),gradle-deps-master
             - chmod +x gradlew
-            - xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew test sonar
-                -Dsonar.projectKey=richardeigenmann-github
-                -Dsonar.organization=richardeigenmann
-                -Dsonar.branch.name=$SEMAPHORE_GIT_BRANCH
-                -Dsonar.host.url=https://sonarcloud.io
-                -Dsonar.token=$SONAR_TOKEN
-                -Dsonar.gradle.skipCompile=true
-            - cache store
+            - xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew check
+#              sonar
+#                -Dsonar.projectKey=richardeigenmann-github
+#                -Dsonar.organization=richardeigenmann
+#                -Dsonar.branch.name=$SEMAPHORE_GIT_BRANCH
+#                -Dsonar.host.url=https://sonarcloud.io
+#                -Dsonar.token=$SONAR_TOKEN
+#                -Dsonar.gradle.skipCompile=true
+            - cache store gradle-deps-$(checksum build.gradle) ~/.gradle/caches ~/.gradle/wrapper
