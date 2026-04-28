@@ -68,8 +68,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
+          sudo apt-get update && sudo apt-get install -y xvfb nsis jq
           chmod +x gradlew
-          ./gradlew check sonar --info -Dsonar.gradle.skipCompile=true \
+          xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew check sonar --info -Dsonar.gradle.skipCompile=true \
             -Dsonar.projectKey=richardeigenmann-github \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
