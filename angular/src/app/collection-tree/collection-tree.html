@@ -36,7 +36,12 @@
     </mat-tree>
 
     <div class="mt-4 p-2 bg-gray-100 rounded text-sm text-gray-600">
-      <p>Service Status: {{ springService.connectionStatus() }}</p>
+      <p>
+        Service Status: 
+        @if (springService.isLoading()) { Loading... }
+        @else if (springService.error()) { Error loading data }
+        @else { Connected }
+      </p>
       <p>Last Clicked: {{ clickedNodeLabel() }}</p>
     </div>
   </mat-card-content>

@@ -7,7 +7,7 @@
     <span>{{ zoomLevel }}%</span>
   </div>
   <div class="thumbnail-container">
-    @for (node of nodes; track node.id) {
+    @for (node of nodes(); track node.id) {
     <div class="thumbnail-item" (click)="onThumbnailClick(node)">
       <div class="image-container">
         <img

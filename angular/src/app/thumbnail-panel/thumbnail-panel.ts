@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SelectedNodeState } from '../selected-node-state';
 import { JpoNode, SpringConnection } from '../spring-connection';
 import { CommonModule } from '@angular/common';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-thumbnail-panel',
@@ -16,16 +15,10 @@ export class ThumbnailPanel {
   springService = inject(SpringConnection);
   nodeStateService = inject(SelectedNodeState);
 
-  navigator = toSignal(this.nodeStateService.navigator$);
-  zoomLevel = 30; // 5 to 100
-
-  get thumbnailWidth(): number {
-    const minWidth = 50;
-    const maxWidth = 350;
-    return minWidth + (maxWidth - minWidth) * (this.zoomLevel - 5) / 95;
-  }
-
-  get nodes(): JpoNode[] {
+  // Derived signals using computed
+  navigator = this.nodeStateService.navigator;
+  
+  nodes = computed(() => {
     const nav = this.navigator();
     if (!nav) return [];
     const count = nav.getNumberOfNodes();
@@ -35,6 +28,14 @@ export class ThumbnailPanel {
       if (node) result.push(node);
     }
     return result;
+  });
+
+  zoomLevel = 30; // 5 to 100
+
+  get thumbnailWidth(): number {
+    const minWidth = 50;
+    const maxWidth = 350;
+    return minWidth + (maxWidth - minWidth) * (this.zoomLevel - 5) / 95;
   }
 
   onThumbnailClick(node: JpoNode): void {

@@ -5,7 +5,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content">
-      @if (nodeStateService.selectedChild$ | async; as selectedChild) {
+      @if (nodeStateService.selectedChild(); as selectedChild) {
         <app-picture-viewer [node]="selectedChild"></app-picture-viewer>
       } @else {
         <app-thumbnail-panel></app-thumbnail-panel>

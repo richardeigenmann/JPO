@@ -1,5 +1,4 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Injectable, signal, computed } from '@angular/core';
 import { JpoNode } from './spring-connection';
 import { NodeNavigator, GroupNavigator } from './node-navigator';
 
@@ -7,18 +6,20 @@ import { NodeNavigator, GroupNavigator } from './node-navigator';
   providedIn: 'root',
 })
 export class SelectedNodeState {
-  private navigatorSubject = new BehaviorSubject<NodeNavigator | null>(null);
-  public navigator$: Observable<NodeNavigator | null> = this.navigatorSubject.asObservable();
+  // Private signals for state
+  private _navigator = signal<NodeNavigator | null>(null);
+  private _selectedChild = signal<JpoNode | null>(null);
 
-  private selectedChildSubject = new BehaviorSubject<JpoNode | null>(null);
-  public selectedChild$: Observable<JpoNode | null> = this.selectedChildSubject.asObservable();
+  // Public readonly signals
+  public readonly navigator = this._navigator.asReadonly();
+  public readonly selectedChild = this._selectedChild.asReadonly();
 
   /**
    * Sets a new navigator.
    */
   setNavigator(navigator: NodeNavigator): void {
-    this.navigatorSubject.next(navigator);
-    this.selectedChildSubject.next(null);
+    this._navigator.set(navigator);
+    this._selectedChild.set(null);
   }
 
   /**
@@ -36,7 +37,7 @@ export class SelectedNodeState {
     if (node?.isGroup) {
       this.setGroupNavigator(node);
     } else {
-      this.selectedChildSubject.next(node);
+      this._selectedChild.set(node);
     }
   }
 
@@ -44,8 +45,8 @@ export class SelectedNodeState {
    * Navigates to the next node in the current navigator.
    */
   next(): void {
-    const nav = this.navigatorSubject.getValue();
-    const current = this.selectedChildSubject.getValue();
+    const nav = this._navigator();
+    const current = this._selectedChild();
     if (nav && current) {
       const index = nav.getIndex(current);
       if (index !== -1 && index < nav.getNumberOfNodes() - 1) {
@@ -58,8 +59,8 @@ export class SelectedNodeState {
    * Navigates to the previous node in the current navigator.
    */
   previous(): void {
-    const nav = this.navigatorSubject.getValue();
-    const current = this.selectedChildSubject.getValue();
+    const nav = this._navigator();
+    const current = this._selectedChild();
     if (nav && current) {
       const index = nav.getIndex(current);
       if (index > 0) {
@@ -68,14 +69,12 @@ export class SelectedNodeState {
     }
   }
 
-  // Compatibility with old code if needed
-  public selectedJpoNode$: Observable<JpoNode | null> = this.selectedChild$;
-
+  // Compatibility methods
   setSelectedNodeId(node: JpoNode): void {
     this.setSelectedChild(node);
   }
 
   getCurrentNodeId(): JpoNode | null {
-    return this.selectedChildSubject.getValue();
+    return this._selectedChild();
   }
 }
