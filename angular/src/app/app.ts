@@ -1,5 +1,4 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
 import { CollectionTree } from "./collection-tree/collection-tree";
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ThumbnailPanel } from "./thumbnail-panel/thumbnail-panel";
@@ -9,7 +8,7 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CollectionTree, MatSidenavModule, ThumbnailPanel, PictureViewer, CommonModule],
+  imports: [CollectionTree, MatSidenavModule, ThumbnailPanel, PictureViewer, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
   standalone: true,
