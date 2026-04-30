@@ -1,0 +1,26 @@
+<div class="viewer-container">
+  <div class="header">
+    <button mat-icon-button (click)="onBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>{{ node.label }}</h2>
+  </div>
+
+  <div class="content">
+    <button mat-fab class="nav-button prev" (click)="onPrevious()">
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <div class="image-wrapper">
+      <img
+        [src]="springService.SPRING_CONNECTION_URL + '/full/' + node.id + '.jpg'"
+        [alt]="node.label"
+        class="main-image"
+      />
+    </div>
+
+    <button mat-fab class="nav-button next" (click)="onNext()">
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+</div>

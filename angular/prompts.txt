@@ -1,0 +1,18 @@
+I want the angular frontend to have a global state of truth object for the GuiState as a Service.
+
+To track what the user has clicked we should borrow the concept coded in the JPO core module and used
+in the SWING gui module of the NodeNavigatorInterface and the abstract NodeNavigator.
+In particular we should support the GroupNavigator, the ListNavigator, the QueryNavigator, the RandomNavigator and the SingleNodeNavigator.
+
+Clicks in the collection-tree will become GroupNavigator objects. A click on a group has no specific child
+selected. A click on a picture in the tree updates the selected child in the GroupNavigator.
+
+The right side panel in the app.html should use the thumbnail-panel component to show the children of
+the currently selected group. If a child node is set, the thumbnail-panel should be replaced with a picture
+viewer panel that shows the picture of that node in big. There is the case where the child node could be
+a group itself. In that case the collection-tree or whoever is updating the global sate should really
+set a new GroupNavigator with no selected child as the global state (which in turn makes the
+thumbnail-viewer show again with all the thumbnails).
+
+The pictureviewer component should have left and right buttons to advance through the picture nodes
+of the GroupNavigator.

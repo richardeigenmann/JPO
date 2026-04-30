@@ -29,7 +29,7 @@ export class CollectionTree {
 
   handleNodeClick(node: JpoNode): void {
     console.log('Node clicked:', node);
-    this.nodeStateService.setSelectedNodeId(node);
+    this.nodeStateService.setSelectedChild(node);
     this.clickedNodeLabel.set(node.label);
     // Optional: toggle expansion for parent nodes on click (in addition to the icon)
     if (this.hasChild(0, node)) {

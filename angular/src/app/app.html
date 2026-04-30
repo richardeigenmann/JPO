@@ -1,6 +1,3 @@
-<router-outlet />
-<h1>{{title()}}</h1>
-
 <mat-sidenav-container class="app-container">
 
   <mat-sidenav mode="side" opened="true" fixedInViewport="true" class="sidenav-tree">
@@ -8,7 +5,11 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content">
-      <app-thumbnail-panel></app-thumbnail-panel>
+      @if (nodeStateService.selectedChild$ | async; as selectedChild) {
+        <app-picture-viewer [node]="selectedChild"></app-picture-viewer>
+      } @else {
+        <app-thumbnail-panel></app-thumbnail-panel>
+      }
   </mat-sidenav-content>
 
 </mat-sidenav-container>

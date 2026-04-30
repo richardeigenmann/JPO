@@ -11,7 +11,7 @@ export interface PictureDTO {
 }
 
 export interface JpoNode {
-  id: number;
+  id: string;
   label: string;
   isGroup: boolean;
   picture?: PictureDTO;
