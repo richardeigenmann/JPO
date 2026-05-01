@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'org.jpo'
-version = '0.0.1-SNAPSHOT'
+version = '25.0.7'
 description = 'api'
 
 java {

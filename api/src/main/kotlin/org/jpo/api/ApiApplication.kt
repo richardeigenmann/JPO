@@ -6,10 +6,26 @@ import org.springframework.context.annotation.Bean
 import org.springframework.web.servlet.config.annotation.CorsRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.Resource
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.resource.PathResourceResolver
+
+import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
+
+@Controller
+class RootController {
+    @GetMapping("/")
+    fun index(): String {
+        return "forward:/index.html"
+    }
+
+    @GetMapping("/api")
+    fun apiIndex(): String {
+        return "api/index"
+    }
+}
 
 @SpringBootApplication(scanBasePackages = ["org.jpo"])
 class ApiApplication {
@@ -19,13 +35,16 @@ class ApiApplication {
         return object : WebMvcConfigurer {
             override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
                 registry.addResourceHandler("/**")
-                    .addResourceLocations("classpath:/static/browser/")
+                    .addResourceLocations("classpath:/static/browser/") // Point to the folder
                     .resourceChain(true)
                     .addResolver(object : PathResourceResolver() {
-                        override fun getResource(resourcePath: String, location: org.springframework.core.io.Resource): org.springframework.core.io.Resource? {
-                            val requestedResource = location.createRelative(resourcePath)
-                            return if (requestedResource.exists() && requestedResource.isReadable) {
-                                requestedResource
+                        override fun getResource(resourcePath: String, location: Resource): Resource? {
+                            val resource = location.createRelative(resourcePath)
+
+                            // If the file exists (like a .js or .png), return it.
+                            // If it DOESN'T exist, return index.html (the SPA fallback)
+                            return if (resource.exists() && resource.isReadable) {
+                                resource
                             } else {
                                 ClassPathResource("/static/browser/index.html")
                             }

@@ -27,7 +27,7 @@ describe('SpringConnection', () => {
     expect(service).toBeTruthy();
     // The service constructor calls `loadCollection`, which makes an HTTP GET request.
     // We need to expect this request and flush it for the test to complete.
-    const req = httpMock.expectOne('http://localhost:8001/api/jpo');
+    const req = httpMock.expectOne('http://localhost:8086/api/jpo');
     expect(req.request.method).toBe('GET');
     req.flush([]); // Flush a mock response
   });

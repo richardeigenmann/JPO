@@ -20,7 +20,7 @@ export interface JpoNode {
   providedIn: 'root',
 })
 export class SpringConnection {
-  readonly SPRING_CONNECTION_URL = 'http://localhost:8001/api/jpo';
+  readonly SPRING_CONNECTION_URL = 'http://localhost:8086/api/jpo';
 
   // Modern way to fetch data in Angular 19+
   readonly resource = httpResource<JpoNode[]>(() => this.SPRING_CONNECTION_URL);
