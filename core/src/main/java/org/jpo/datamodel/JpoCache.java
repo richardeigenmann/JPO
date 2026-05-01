@@ -113,21 +113,17 @@ public class JpoCache {
      */
     public static Properties loadProperties() {
         final var CACHE_DEFINITION_FILE = "cache.ccf";
-        final URL ccfUrl;
         final var properties = new Properties();
-        try {
-            ccfUrl = ClassLoader.getSystemResources(CACHE_DEFINITION_FILE).nextElement();
-            LOGGER.log(Level.FINE, "Cache definition file found at: {0}", ccfUrl);
-        } catch (IOException _) {
-            LOGGER.log(Level.SEVERE, "Classloader didn''t find file {0}", CACHE_DEFINITION_FILE);
-            return properties;
-        }
 
-        try (final var inStream = ccfUrl.openStream()) {
-            properties.load(inStream);
+        try (final var inStream = JpoCache.class.getClassLoader().getResourceAsStream(CACHE_DEFINITION_FILE)) {
+            if (inStream == null) {
+                LOGGER.log(Level.SEVERE, "Could not find resource {0}", CACHE_DEFINITION_FILE);
+            } else {
+                properties.load(inStream);
+                LOGGER.log(Level.FINE, "Cache definition file loaded");
+            }
         } catch (final IOException e) {
-            LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + "IOException: " + e.getLocalizedMessage());
-            return properties;
+            LOGGER.severe("Failed to load " + CACHE_DEFINITION_FILE + " IOException: " + e.getLocalizedMessage());
         }
 
         LOGGER.log(Level.FINE, "setting jcs.auxiliary.DC.attributes.DiskPath to: {0}", CacheSettings.getThumbnailCacheDirectory());
