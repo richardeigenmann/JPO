@@ -21,3 +21,4 @@ repo
 .flatpak-builder
 /repo-public-key.gpg
 /.kotlin/
+/mydeployment/

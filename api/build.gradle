@@ -51,3 +51,37 @@ kotlin {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+
+bootBuildImage {
+    def isNative = project.findProperty('native')?.toString() == 'true'
+
+    project.logger.lifecycle(">>> Configuring bootBuildImage: native=${isNative}")
+
+    imageName = "${dockerHubUsername}/jpoviewer:latest"
+    tags = ["${dockerHubUsername}/jpoviewer:${version}"]
+
+    if (isNative) {
+        // Native build configuration
+        builder = "paketobuildpacks/builder-jammy-tiny"
+        environment = [
+                "BP_NATIVE_IMAGE": "true"
+        ]
+    } else {
+        // Standard JVM build configuration
+        // Using builder-jammy-base and explicitly forcing the JVM-only buildpack
+        builder = "paketobuildpacks/builder-jammy-base"
+        buildpacks = ["paketo-buildpacks/java"]
+        environment = [
+                "BP_NATIVE_IMAGE": "false",
+                "BP_JVM_VERSION": "25",
+                "JAVA_TOOL_OPTIONS": "-XX:MaxDirectMemorySize=256M"
+        ]
+    }
+}
+
+tasks.register('pushDocker', Exec) {
+    dependsOn 'bootBuildImage'
+    group = 'docker'
+    commandLine 'sh', '-c', "docker push ${dockerHubUsername}/jpoviewer:${version} && docker push ${dockerHubUsername}/jpoviewer:latest"
+}
