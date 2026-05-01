@@ -22,3 +22,6 @@ repo
 /repo-public-key.gpg
 /.kotlin/
 /mydeployment/
+/api/src/main/resources/static/browser/
+/api/src/main/resources/static/3rdpartylicenses.txt
+/api/src/main/resources/static/prerendered-routes.json

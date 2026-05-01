@@ -53,7 +53,12 @@ tasks.named('test') {
 }
 
 
+tasks.named('processResources') {
+    dependsOn ':angular:angularBuild'
+}
+
 bootBuildImage {
+    dependsOn ':angular:angularBuild'
     def isNative = project.findProperty('native')?.toString() == 'true'
 
     project.logger.lifecycle(">>> Configuring bootBuildImage: native=${isNative}")

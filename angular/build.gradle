@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.node-gradle.node" version "7.0.1"
+    id "com.github.node-gradle.node" version "7.1.0"
 }
 
 node {
@@ -13,11 +13,21 @@ node {
 //}
 
 tasks.register('angularBuild', NpmTask) {
-  dependsOn npmInstall
-  args = ['run', 'build'] // Assumes 'build' script is defined in package.json
-  // If your build output needs to go to a specific directory for the Spring Boot app,
-  // you might need to add an output path here, e.g., args = ['run', 'build', '--', '--output-path=../api/src/main/resources/static']
-}
+    dependsOn npmInstall
+    // Use --output-path to send build to Spring Boot's static resources directory
+    args = ['run', 'build', '--', '--output-path=../api/src/main/resources/static']
+
+    // Ensure the task doesn't re-run unnecessarily
+    inputs.dir('src')
+    inputs.file('package.json')
+    inputs.file('angular.json')
+    outputs.dir('../api/src/main/resources/static')
+    }
+
+// Ensure the build lifecycle includes angularBuild
+// tasks.named('build') {
+//     dependsOn angularBuild
+// }
 
 //clean {
 //    delete fileTree('dist') // Assumes Angular builds to a 'dist' folder
