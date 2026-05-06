@@ -7,8 +7,12 @@
   <mat-sidenav-content class="main-content">
       @if (nodeStateService.selectedChild(); as selectedChild) {
         <app-picture-viewer [node]="selectedChild"></app-picture-viewer>
-      } @else {
+      } @else if (nodeStateService.searchResults()) {
         <app-thumbnail-panel></app-thumbnail-panel>
+      } @else if (nodeStateService.navigator()) {
+        <app-thumbnail-panel></app-thumbnail-panel>
+      } @else {
+        <app-welcome></app-welcome>
       }
   </mat-sidenav-content>
 
