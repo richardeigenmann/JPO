@@ -9,16 +9,22 @@ export class SelectedNodeState {
   // Private signals for state
   private _navigator = signal<NodeNavigator | null>(null);
   private _selectedChild = signal<JpoNode | null>(null);
+  private _searchResults = signal<JpoNode[] | null>(null);
 
   // Public readonly signals
   public readonly navigator = this._navigator.asReadonly();
   public readonly selectedChild = this._selectedChild.asReadonly();
+  public readonly searchResults = this._searchResults.asReadonly();
 
-  /**
-   * Sets a new navigator.
-   */
+  setSearchResults(nodes: JpoNode[]): void {
+    this._searchResults.set(nodes);
+    this._navigator.set(null);
+    this._selectedChild.set(null);
+  }
+
   setNavigator(navigator: NodeNavigator): void {
     this._navigator.set(navigator);
+    this._searchResults.set(null);
     this._selectedChild.set(null);
   }
 

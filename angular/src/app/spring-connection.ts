@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
-import { httpResource } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface PictureDTO {
   id: string;
@@ -20,6 +21,7 @@ export interface JpoNode {
   providedIn: 'root',
 })
 export class SpringConnection {
+  private http = inject(HttpClient);
   readonly SPRING_CONNECTION_URL = '/api/jpo';
 
   // Modern way to fetch data in Angular 19+
@@ -34,4 +36,7 @@ export class SpringConnection {
     console.log('SpringConnectionService Initialized with httpResource.');
   }
 
+  search(term: string): Observable<JpoNode[]> {
+    return this.http.get<JpoNode[]>(`${this.SPRING_CONNECTION_URL}/search?query=${term}`);
+  }
 }

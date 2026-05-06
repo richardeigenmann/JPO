@@ -19,6 +19,9 @@ export class ThumbnailPanel {
   navigator = this.nodeStateService.navigator;
   
   nodes = computed(() => {
+    const searchResults = this.nodeStateService.searchResults();
+    if (searchResults) return searchResults;
+
     const nav = this.navigator();
     if (!nav) return [];
     const count = nav.getNumberOfNodes();
@@ -31,11 +34,19 @@ export class ThumbnailPanel {
   });
 
   zoomLevel = 30; // 5 to 100
+  searchTerm = '';
 
   get thumbnailWidth(): number {
     const minWidth = 50;
     const maxWidth = 350;
     return minWidth + (maxWidth - minWidth) * (this.zoomLevel - 5) / 95;
+  }
+
+  onSearch(): void {
+    if (this.searchTerm.trim() === '') return;
+    this.springService.search(this.searchTerm).subscribe(results => {
+       this.nodeStateService.setSearchResults(results);
+    });
   }
 
   onThumbnailClick(node: JpoNode): void {

@@ -1,11 +1,14 @@
 package org.jpo.api
 
 import org.jpo.datamodel.GroupInfo
+import org.jpo.datamodel.QueryNavigator
 import org.jpo.datamodel.SortableDefaultMutableTreeNode
+import org.jpo.datamodel.TextQuery
 import org.jpo.org.jpo.model.TreeNodeDTO
 import org.jpo.service.JpoPictureCollection
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.swing.tree.TreeNode
 
@@ -17,6 +20,24 @@ class JpoController(private val jpoPictureCollection: JpoPictureCollection) {
     fun getAll(): List<TreeNodeDTO> {
         // This is the clean, final API call. The Service handles the complex traversal.
         return getTreeModelAsDTO()
+    }
+
+    @GetMapping("/search")
+    fun search(@RequestParam("query") term: String): List<TreeNodeDTO> {
+        val root = jpoPictureCollection.pictureCollection?.treeModel?.root as? SortableDefaultMutableTreeNode
+            ?: return emptyList()
+
+        val textQuery = TextQuery(root, term)
+        val queryNavigator = QueryNavigator(textQuery)
+        
+        val results = mutableListOf<TreeNodeDTO>()
+        for (i in 0 until queryNavigator.numberOfNodes) {
+            val node = queryNavigator.getNode(i)
+            if (node != null) {
+                results.add(mapNodeToDTO(node))
+            }
+        }
+        return results
     }
 
     /**
