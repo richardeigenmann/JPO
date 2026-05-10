@@ -24,7 +24,7 @@ Once the server is running, open your browser and navigate to `http://localhost:
 
 ```bash
 ng update
-npx npm-check-updates -u
+npx npm-check-updates -x typescript -u
 ng test
 
 ```
