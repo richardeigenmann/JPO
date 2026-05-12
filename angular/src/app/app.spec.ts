@@ -1,23 +1,33 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { SpringConnection } from './spring-connection';
+import { SelectedNodeState } from './selected-node-state';
 import { signal } from '@angular/core';
 
-const mockSpringConnectionForApp = {
-  treeData: signal([]),
-  connectionStatus: signal('Some status to avoid error'),
-  // Add any other required methods/signals
-};
-
 describe('App', () => {
+  const mockSpringConnection = {
+    treeData: signal([]),
+    isLoading: signal(false),
+    error: signal(null),
+    connectionStatus: signal('Some status to avoid error'),
+  };
+
+  const mockNodeStateService = {
+    navigator: signal(null),
+    selectedChild: signal(null),
+    searchResults: signal(null),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
+        provideHttpClient(),
         provideHttpClientTesting(),
-        // Provide a mock for SpringConnection to avoid instantiating the real service
-        { provide: SpringConnection, useValue: mockSpringConnectionForApp }
+        { provide: SpringConnection, useValue: mockSpringConnection },
+        { provide: SelectedNodeState, useValue: mockNodeStateService },
       ],
     }).compileComponents();
   });
@@ -32,6 +42,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('JpoAngular');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Welcome to JPO');
   });
 });

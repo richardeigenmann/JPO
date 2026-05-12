@@ -9,26 +9,39 @@ describe('SpringConnection', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [],
-      providers: [provideHttpClient(), provideHttpClientTesting(), SpringConnection],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        SpringConnection
+      ],
     });
     service = TestBed.inject(SpringConnection);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
-    // Verify that there are no outstanding HTTP requests.
-    if (httpMock) {
-      httpMock.verify();
-    }
+    httpMock.verify();
   });
 
-  it('should be created', () => {
+  it('should be created', async () => {
     expect(service).toBeTruthy();
-    // The service constructor calls `loadCollection`, which makes an HTTP GET request.
-    // We need to expect this request and flush it for the test to complete.
+    
+    // Accessing value to trigger the resource
+    service.resource.value();
+
+    // Small delay to allow internal effects to run
+    await new Promise(resolve => setTimeout(resolve, 0));
+
     const req = httpMock.expectOne('/api/jpo');
     expect(req.request.method).toBe('GET');
-    req.flush([]); // Flush a mock response
+    req.flush([]); 
+  });
+
+  it('search should make a GET request', () => {
+    service.search('test').subscribe();
+
+    const req = httpMock.expectOne('/api/jpo/search?query=test');
+    expect(req.request.method).toBe('GET');
+    req.flush([]);
   });
 });

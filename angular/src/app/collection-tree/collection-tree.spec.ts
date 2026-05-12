@@ -1,43 +1,45 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CollectionTree } from './collection-tree';
 import { SpringConnection } from '../spring-connection';
 import { signal } from '@angular/core';
-
-const mockSpringConnection = {
-  // Use a real signal() to mock the behavior
-  treeData: signal([]),
-  connectionStatus: signal('Test Status MOCKED'),
-
-  // Note: If you had any methods (like loadCollection), they must also be mocked:
-  // loadCollection: () => {},
-};
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { SelectedNodeState } from '../selected-node-state';
 
 describe('CollectionTree', () => {
   let component: CollectionTree;
   let fixture: ComponentFixture<CollectionTree>;
 
+  const mockSpringConnection = {
+    treeData: signal([]),
+    isLoading: signal(false),
+    error: signal(null),
+    connectionStatus: signal('Test Status MOCKED'),
+  };
+
+  const mockNodeStateService = {
+    setSelectedChild: jasmine.createSpy('setSelectedChild'),
+  };
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CollectionTree,],
+      imports: [CollectionTree],
       providers: [
-        // Provide a mock for SpringConnection. This is better for isolating the component
-        // and avoids needing the HttpClient provider here.
-        { provide: SpringConnection,
-          useValue: mockSpringConnection }
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: SpringConnection, useValue: mockSpringConnection },
+        { provide: SelectedNodeState, useValue: mockNodeStateService },
       ],
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CollectionTree);
     component = fixture.componentInstance;
-    //mockService = TestBed.inject(SpringConnection);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.textContent).toContain('Test Status MOCKED');
+    expect(compiled.textContent).toContain('Connected');
     expect(component).toBeTruthy();
   });
 });
