@@ -55,8 +55,8 @@ importers:
         specifier: ~6.0.0
         version: 6.0.0
       baseline-browser-mapping:
-        specifier: ^2.10.28
-        version: 2.10.28
+        specifier: ^2.10.29
+        version: 2.10.29
       jasmine-core:
         specifier: ~6.2.0
         version: 6.2.0
@@ -1404,6 +1404,11 @@ packages:
 
   baseline-browser-mapping@2.10.28:
     resolution: {integrity: sha512-Ic44hnOtFIgravCunj1ifSoQPSUrkNiJuH9Mf6jr2jjoA74icqV8wU0KuadXeOR8zuIJMOoTv0GuQjZ9ZYNMeA==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
+  baseline-browser-mapping@2.10.29:
+    resolution: {integrity: sha512-Asa2krT+XTPZINCS+2QcyS8WTkObE77RwkydwF7h6DmnKqbvlalz93m/dnphUyCa6SWSP51VgtEUf2FN+gelFQ==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -4065,6 +4070,8 @@ snapshots:
   base64id@2.0.0: {}
 
   baseline-browser-mapping@2.10.28: {}
+
+  baseline-browser-mapping@2.10.29: {}
 
   beasties@0.4.1:
     dependencies:
