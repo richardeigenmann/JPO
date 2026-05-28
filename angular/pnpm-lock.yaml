@@ -85,6 +85,12 @@ importers:
         specifier: 21.2.13
         version: 21.2.13
 
+  .angular/cache/angular-cli-tmp-packages-hleJPg:
+    dependencies:
+      '@angular/cli':
+        specifier: 21.2.13
+        version: 21.2.13
+
   .angular/cache/angular-cli-tmp-packages-uhQH6g:
     dependencies:
       '@angular/cli':
