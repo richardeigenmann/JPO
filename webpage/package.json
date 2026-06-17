@@ -10,12 +10,12 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "@types/bootstrap": "^5.2.10",
-    "astro": "^6.4.0",
+    "@types/bootstrap": "^5.2.11",
+    "astro": "^6.4.8",
     "bootstrap": "^5.3.8"
   },
   "devDependencies": {
-    "cypress": "^15.16.0",
+    "cypress": "^15.17.0",
     "typescript": "^6.0.3"
   }
 }
