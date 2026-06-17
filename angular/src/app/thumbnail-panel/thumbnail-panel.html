@@ -1,4 +1,19 @@
-<h1>{{ navigator()?.getTitle() }}</h1>
+<div class="panel-header">
+  <h1>{{ navigator()?.getTitle() }}</h1>
+  @if (springService.user(); as user) {
+    <div class="user-profile">
+      @if (user.picture) {
+        <img [src]="user.picture" alt="User profile icon" class="user-avatar" referrerPolicy="no-referrer" />
+      } @else {
+        <div class="user-avatar-placeholder">{{ user.name?.charAt(0) || 'U' }}</div>
+      }
+      <div class="user-details">
+        <span class="user-name">{{ user.name }}</span>
+        <button class="logout-btn" (click)="springService.logout()">Log out</button>
+      </div>
+    </div>
+  }
+</div>
 
 <div class="panel-container" [style.--thumbnail-width.px]="thumbnailWidth">
   <div class="slider-container">

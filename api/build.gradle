@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     // Version is managed by Spring Boot BOM
     implementation 'tools.jackson.module:jackson-module-kotlin' 
@@ -51,6 +52,11 @@ kotlin {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.named('bootRun') {
+    // Ensures that the forked process inherits the environment variables set in the IDE
+    environment = System.getenv()
 }
 
 

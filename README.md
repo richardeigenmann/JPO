@@ -205,3 +205,20 @@ You can put this in intellij on the bootRun task (Modify Run Configuration)
 The backend and frontend for the web viewer bind to port 8086. So make sure that is free and 
 start it up with ./gradlew bootRun
 You can now point your browser at http://localhost:8086/api
+
+You need to set up the google OAuth validation:
+
+Configure Google Cloud Console
+
+You need to register your application with Google to receive a Client ID and Client Secret.
+
+Go to the Google Cloud Console.Create a project and navigate to APIs & Services > Credentials.  
+
+Create an OAuth Client ID (select "Web Application").  Add your local development URL 
+
+(e.g., http://localhost:8086) as an authorized redirect URI.
+
+Then set up the two environment variables SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID  
+and SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET in your IntelliJ bootRun environment.
+
+

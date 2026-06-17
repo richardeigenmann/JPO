@@ -1,19 +1,41 @@
-<mat-sidenav-container class="app-container">
+@if (springService.isUnauthenticated()) {
+  <div class="login-wrapper">
+    <div class="login-card">
+      <div class="logo-container">
+        <mat-icon class="logo-icon">photo_library</mat-icon>
+      </div>
+      <h1 class="login-title">Welcome to JPO</h1>
+      <p class="login-status">you are not logged in</p>
+      
+      <button mat-flat-button class="login-btn" (click)="loginWithGoogle()">
+        <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
+          <path fill="#EA4335" d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.48 14.99 1 12 1 7.35 1 3.39 3.67 1.41 7.56l3.87 3C6.21 7.56 8.87 5.04 12 5.04z"/>
+          <path fill="#4285F4" d="M23.49 12.27c0-.81-.07-1.59-.2-2.36H12v4.51h6.46c-.29 1.48-1.14 2.73-2.4 3.58l3.76 2.91c2.2-2.03 3.67-5.02 3.67-8.64z"/>
+          <path fill="#FBBC05" d="M5.28 14.56c-.24-.72-.38-1.5-.38-2.31s.14-1.59.38-2.31L1.41 6.94C.51 8.75 0 10.79 0 12s.51 3.25 1.41 5.06l3.87-3z"/>
+          <path fill="#34A853" d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.76-2.91c-1.1.74-2.5 1.18-4.2 1.18-3.13 0-5.79-2.52-6.72-5.52l-3.87 3C3.39 20.33 7.35 23 12 23z"/>
+        </svg>
+        <span>Sign in with Google</span>
+      </button>
+    </div>
+  </div>
+} @else {
+  <mat-sidenav-container class="app-container">
 
-  <mat-sidenav mode="side" opened="true" fixedInViewport="true" class="sidenav-tree">
-      <app-collection-tree></app-collection-tree>
-  </mat-sidenav>
+    <mat-sidenav mode="side" opened="true" fixedInViewport="true" class="sidenav-tree">
+        <app-collection-tree></app-collection-tree>
+    </mat-sidenav>
 
-  <mat-sidenav-content class="main-content">
-      @if (nodeStateService.selectedChild(); as selectedChild) {
-        <app-picture-viewer [node]="selectedChild"></app-picture-viewer>
-      } @else if (nodeStateService.searchResults()) {
-        <app-thumbnail-panel></app-thumbnail-panel>
-      } @else if (nodeStateService.navigator()) {
-        <app-thumbnail-panel></app-thumbnail-panel>
-      } @else {
-        <app-welcome></app-welcome>
-      }
-  </mat-sidenav-content>
+    <mat-sidenav-content class="main-content">
+        @if (nodeStateService.selectedChild(); as selectedChild) {
+          <app-picture-viewer [node]="selectedChild"></app-picture-viewer>
+        } @else if (nodeStateService.searchResults()) {
+          <app-thumbnail-panel></app-thumbnail-panel>
+        } @else if (nodeStateService.navigator()) {
+          <app-thumbnail-panel></app-thumbnail-panel>
+        } @else {
+          <app-welcome></app-welcome>
+        }
+    </mat-sidenav-content>
 
-</mat-sidenav-container>
+  </mat-sidenav-container>
+}
