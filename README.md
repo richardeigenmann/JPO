@@ -195,3 +195,13 @@ To check the hanging JOptionPane EDT blocking tests on your own computer run
 ```bash
 xvfb-run -a -s "-screen 0 1280x1024x24" ./gradlew check
 ```
+
+## The Web Viewer
+
+The collection that opens is supplied in the application.yml file or in your environment variable
+APP_COLLECTION_FILE_PATH=/path/to/file/your-collection.xml
+You can put this in intellij on the bootRun task (Modify Run Configuration)
+
+The backend and frontend for the web viewer bind to port 8086. So make sure that is free and 
+start it up with ./gradlew bootRun
+You can now point your browser at http://localhost:8086/api

@@ -1,6 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, InjectionToken } from '@angular/core';
 import { HttpClient, httpResource } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { API_BASE_URL } from './app.config.tokens';
 
 export interface PictureDTO {
   id: string;
@@ -22,10 +23,10 @@ export interface JpoNode {
 })
 export class SpringConnection {
   private http = inject(HttpClient);
-  readonly SPRING_CONNECTION_URL = '/api/jpo';
+  public readonly baseUrl = inject(API_BASE_URL);
 
   // Modern way to fetch data in Angular 19+
-  readonly resource = httpResource<JpoNode[]>(() => this.SPRING_CONNECTION_URL);
+  readonly resource = httpResource<JpoNode[]>(() => this.baseUrl);
 
   // Computed signals for backward compatibility and ease of use
   readonly treeData = () => this.resource.value() ?? [];
@@ -33,10 +34,10 @@ export class SpringConnection {
   readonly error = this.resource.error;
 
   constructor() {
-    console.log('SpringConnectionService Initialized with httpResource.');
+    console.log(`SpringConnectionService Initialized with URL: ${this.baseUrl}`);
   }
 
   search(term: string): Observable<JpoNode[]> {
-    return this.http.get<JpoNode[]>(`${this.SPRING_CONNECTION_URL}/search?query=${term}`);
+    return this.http.get<JpoNode[]>(`${this.baseUrl}/search?query=${term}`);
   }
 }

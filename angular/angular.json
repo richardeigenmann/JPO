@@ -59,7 +59,8 @@
               "buildTarget": "JpoAngular:build:production"
             },
             "development": {
-              "buildTarget": "JpoAngular:build:development"
+              "buildTarget": "JpoAngular:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -15,7 +15,7 @@
     <div class="thumbnail-item" (click)="onThumbnailClick(node)">
       <div class="image-container">
         <img
-          src="{{ springService.SPRING_CONNECTION_URL }}/thumbnail/{{
+          src="{{ springService.baseUrl }}/thumbnail/{{
             node?.id
           }}.jpg"
           alt="{{ node.label }}"
