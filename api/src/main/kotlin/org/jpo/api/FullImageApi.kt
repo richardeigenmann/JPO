@@ -28,7 +28,7 @@ class FullImageApi(private val jpoPictureCollection: JpoPictureCollection) {
 
         val nodeId = id.substringBeforeLast(".").toIntOrNull() ?: return ResponseEntity.notFound().build()
 
-        val rootNode = jpoPictureCollection.pictureCollection?.rootNode
+        val rootNode = jpoPictureCollection.pictureCollection.rootNode
         val desiredNode = SortableDefaultMutableTreeNode.getNodeById(rootNode, nodeId)
             ?: return ResponseEntity.notFound().build()
 

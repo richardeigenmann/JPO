@@ -1,10 +1,9 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.3.10'
-    id 'org.jetbrains.kotlin.plugin.spring' version '2.3.10'
-    id 'org.springframework.boot' version '4.0.5'
+    id 'org.jetbrains.kotlin.jvm' version '2.4.0'
+    id 'org.jetbrains.kotlin.plugin.spring' version '2.4.0'
+    id 'org.springframework.boot' version '4.1.0'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'org.graalvm.buildtools.native' version '0.11.5'
-    id "com.github.ben-manes.versions" version "0.54.0" // dependency updates
+    id 'org.graalvm.buildtools.native' version '1.1.2'
 }
 
 group = 'org.jpo'
@@ -31,14 +30,16 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
-    implementation 'tools.jackson.module:jackson-module-kotlin'
+    // Version is managed by Spring Boot BOM
+    implementation 'tools.jackson.module:jackson-module-kotlin' 
+    
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
-    implementation("org.apache.commons:commons-lang3:3.20.0")
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
 }
 
 kotlin {

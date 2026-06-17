@@ -24,7 +24,7 @@ class JpoController(private val jpoPictureCollection: JpoPictureCollection) {
 
     @GetMapping("/search")
     fun search(@RequestParam("query") term: String): List<TreeNodeDTO> {
-        val root = jpoPictureCollection.pictureCollection?.treeModel?.root as? SortableDefaultMutableTreeNode
+        val root = jpoPictureCollection.pictureCollection.treeModel?.root as? SortableDefaultMutableTreeNode
             ?: return emptyList()
 
         val textQuery = TextQuery(root, term)
@@ -46,7 +46,7 @@ class JpoController(private val jpoPictureCollection: JpoPictureCollection) {
      * @return The list of top-level nodes (children of the hidden root).
      */
     fun getTreeModelAsDTO(): List<TreeNodeDTO> {
-        val root = jpoPictureCollection.pictureCollection?.treeModel?.root as? SortableDefaultMutableTreeNode
+        val root = jpoPictureCollection.pictureCollection.treeModel?.root as? SortableDefaultMutableTreeNode
             ?: return emptyList()
 
         // We skip the root node and return its children to represent the logical top level

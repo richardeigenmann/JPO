@@ -1,40 +1,37 @@
 plugins {
+    id "base"
     id "com.github.node-gradle.node" version "7.1.0"
 }
 
 node {
     version = "24.15.0" // Use a recent LTS Node.js version
-    npmVersion = "11.12.1" // Use a recent npm version
+    pnpmVersion = "11.7.0" // Use a recent pnpm version
     download = true // Download Node.js and npm if not found
 }
 
-//tasks.register('npmInstall', NpmTask) {
-//  args = ['install']
-//}
-
-tasks.register('angularBuild', NpmTask) {
-    dependsOn npmInstall
+tasks.register('angularBuild', com.github.gradle.node.pnpm.task.PnpmTask) {
+    dependsOn pnpmInstall
     // Use --output-path to send build to Spring Boot's static resources directory
-    args = ['run', 'build', '--', '--output-path=../api/src/main/resources/static']
+    args = ['build', '--output-path=../api/src/main/resources/static']
 
     // Ensure the task doesn't re-run unnecessarily
     inputs.dir('src')
     inputs.file('package.json')
-    inputs.file('angular.json')
-    outputs.dir('../api/src/main/resources/static')
+    if (file('angular.json').exists()) {
+        inputs.file('angular.json')
     }
+    if (file('pnpm-lock.yaml').exists()) {
+        inputs.file('pnpm-lock.yaml')
+    }
+    outputs.dir('../api/src/main/resources/static')
+}
 
-// Ensure the build lifecycle includes angularBuild
-// tasks.named('build') {
-//     dependsOn angularBuild
-// }
+tasks.named('assemble') {
+    dependsOn angularBuild
+}
 
-//clean {
-//    delete fileTree('dist') // Assumes Angular builds to a 'dist' folder
-//    delete fileTree('.gradle')
-//    delete fileTree('node_modules')
-//}
-
-//build {
-//    dependsOn angularBuild
-//}
+clean {
+    delete "../api/src/main/resources/static"
+    delete ".gradle"
+    delete "node_modules"
+}

@@ -3,12 +3,3 @@ allowBuilds:
   esbuild: true
   lmdb: true
   msgpackr-extract: true
-minimumReleaseAgeExclude:
-  - '@angular-devkit/architect@0.2102.13'
-  - '@angular-devkit/core@21.2.13'
-  - '@angular-devkit/schematics@21.2.13'
-  - '@angular/build@21.2.13'
-  - '@angular/cdk@21.2.13'
-  - '@angular/cli@21.2.13'
-  - '@angular/material@21.2.13'
-  - '@schematics/angular@21.2.13'
