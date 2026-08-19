@@ -3,12 +3,12 @@ entries:
   jpo-api:
   - apiVersion: v2
     appVersion: "0.25"
-    created: "2026-08-19T11:11:27.846143767+02:00"
+    created: "2026-08-19T11:27:23.058483923+02:00"
     description: A Helm chart for Kubernetes
-    digest: ee457ddc0102d08d979f9eb6316defb1f03d433aad02e5ba3f2cf7727b4c6684
+    digest: cade77e097f48bc4ad0e54eed837e85488561cccc12e29198ddd26739f263615
     name: jpo-api
     type: application
     urls:
     - https://richardeigenmann.github.io/JPO/jpo-api-0.25.tgz
     version: "0.25"
-generated: "2026-08-19T11:11:27.845418928+02:00"
+generated: "2026-08-19T11:27:23.057493355+02:00"
